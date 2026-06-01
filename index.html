@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurasense — Realtime Human Street Sensor</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #0a0a0a;
+    color: #f0f0f0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .container {
+    max-width: 600px;
+    text-align: center;
+  }
+  .aura {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #a78bfa, #6d28d9, #1e1b4b);
+    margin: 0 auto 2rem;
+    animation: pulse 3s ease-in-out infinite;
+    box-shadow: 0 0 60px rgba(167,139,250,0.3);
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); box-shadow: 0 0 60px rgba(167,139,250,0.3); }
+    50% { transform: scale(1.05); box-shadow: 0 0 80px rgba(167,139,250,0.5); }
+  }
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem;
+    color: #f0f0f0;
+  }
+  .subtitle {
+    font-size: 0.95rem;
+    color: #888;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .mission {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #ccc;
+    margin-bottom: 3rem;
+    font-weight: 300;
+  }
+  .mission em {
+    color: #a78bfa;
+    font-style: normal;
+  }
+  .notify {
+    display: inline-block;
+    margin-top: 1rem;
+    padding: 0.75rem 2rem;
+    border: 1px solid #a78bfa;
+    border-radius: 50px;
+    color: #a78bfa;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    background: transparent;
+    letter-spacing: 0.05em;
+  }
+  .notify:hover {
+    background: #a78bfa;
+    color: #0a0a0a;
+  }
+  .tagline {
+    margin-top: 3rem;
+    font-size: 0.85rem;
+    color: #555;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="aura"></div>
+  <h1>Aurasense</h1>
+  <p class="subtitle">Realtime Human Street Sensor</p>
+  <p class="mission">
+    A community-mapped sensory intelligence platform.<br>
+    Know what a place <em>really</em> feels like before you move there.<br>
+    Built by and for those who sense the world most deeply.
+  </p>
+  <p class="mission">
+    <em>An end to involuntary loneliness.</em>
+  </p>
+  <button class="notify">Notify me when we launch</button>
+  <p class="tagline">"Second star to the right and straight on 'til morning."</p>
+</div>
+</body>
+</html>
