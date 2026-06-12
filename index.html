@@ -440,22 +440,41 @@ function showMsg(txt){
 }
 function closeExplore(){const ep=document.getElementById('explore-panel');if(ep)ep.classList.remove('open');}
 
+const ZOOM_LEVELS=[15,13,10,6];
+let lastViews=[
+  {lat:51.508,lng:-0.128,zoom:15},
+  {lat:51.508,lng:-0.128,zoom:13},
+  {lat:51.508,lng:-0.128,zoom:10},
+  {lat:54.5,lng:-3,zoom:6}
+];
+let lastStreetView={lat:51.508,lng:-0.128,zoom:15};
+let isMovingProgrammatically=false;
+
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=()=>{
     const i=+tab.dataset.i;
     if(i===4){showPlanet();return;}
+    if(document.getElementById('planet-view').style.display==='flex'){
+      hidePlanet();
+      auraLevel=i;
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      return;
+    }
     auraLevel=i;
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
-    if(document.getElementById('planet-view').style.display==='flex'){hidePlanet();return;}
     const lv=lastViews[i];
+    isMovingProgrammatically=true;
     map.flyTo([lv.lat,lv.lng],lv.zoom,{duration:2,easeLinearity:.35});
   };
 });
+
 map.on('moveend',()=>{
+  if(isMovingProgrammatically){isMovingProgrammatically=false;return;}
   const c=map.getCenter(),z=map.getZoom();
-  if(auraLevel===0)lastStreetView={lat:c.lat,lng:c.lng,zoom:z};
   lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
+  if(auraLevel===0)lastStreetView={lat:c.lat,lng:c.lng,zoom:z};
 });
 
 document.getElementById('ebtn').onclick=()=>{const ep=document.getElementById('explore-panel');if(ep)ep.classList.toggle('open');};
