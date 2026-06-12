@@ -238,6 +238,7 @@ function drawPlanet(){
   });
   requestAnimationFrame(drawPlanet);
 }
+let lastViews={0:{lat:51.508,lng:-0.128,zoom:15},1:{lat:51.508,lng:-0.128,zoom:13},2:{lat:51.508,lng:-0.128,zoom:10},3:{lat:54.5,lng:-3,zoom:6}};
 let lastStreetView={lat:51.508,lng:-0.128,zoom:15};
 function showPlanet(){
   planetActive=true;
@@ -447,13 +448,14 @@ document.querySelectorAll('.tab').forEach(tab=>{
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
     if(document.getElementById('planet-view').style.display==='flex'){hidePlanet();return;}
-    const z=ZOOMS[i];
-    if(i===0){map.flyTo([lastStreetView.lat,lastStreetView.lng],lastStreetView.zoom,{duration:2,easeLinearity:.35});}
-    else{map.flyTo(z,z[2],{duration:2,easeLinearity:.35});}
+    const lv=lastViews[i];
+    map.flyTo([lv.lat,lv.lng],lv.zoom,{duration:2,easeLinearity:.35});
   };
 });
 map.on('moveend',()=>{
-  if(auraLevel===0){const c=map.getCenter();lastStreetView={lat:c.lat,lng:c.lng,zoom:map.getZoom()};}
+  const c=map.getCenter(),z=map.getZoom();
+  if(auraLevel===0)lastStreetView={lat:c.lat,lng:c.lng,zoom:z};
+  lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
 });
 
 document.getElementById('ebtn').onclick=()=>{const ep=document.getElementById('explore-panel');if(ep)ep.classList.toggle('open');};
