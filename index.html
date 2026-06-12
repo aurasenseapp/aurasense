@@ -10,7 +10,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a10;color:#f0f0f0;height:100vh;overflow:hidden}
 #map{position:absolute;inset:0;transition:opacity .6s}
-.leaflet-tile{filter:brightness(0.28) saturate(0.3) hue-rotate(200deg)}
+.leaflet-tile{filter:brightness(0.45) saturate(0.4) hue-rotate(200deg)}
 .leaflet-container{background:#08080f}
 canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:1000}
@@ -238,8 +238,23 @@ function drawPlanet(){
   });
   requestAnimationFrame(drawPlanet);
 }
-function showPlanet(){planetActive=true;document.getElementById('planet-view').classList.add('show');document.getElementById('map').style.opacity='0';drawPlanet();}
-function hidePlanet(){planetActive=false;document.getElementById('planet-view').classList.remove('show');document.getElementById('map').style.opacity='1';}
+let lastStreetView={lat:51.508,lng:-0.128,zoom:15};
+function showPlanet(){
+  planetActive=true;
+  const pv=document.getElementById('planet-view');
+  pv.style.opacity='0';pv.style.display='flex';
+  document.getElementById('map').style.opacity='0';
+  setTimeout(()=>{pv.style.transition='opacity 1.2s ease';pv.style.opacity='1';},50);
+  drawPlanet();
+}
+function hidePlanet(){
+  const pv=document.getElementById('planet-view');
+  pv.style.transition='opacity 0.8s ease';pv.style.opacity='0';
+  document.getElementById('map').style.transition='opacity 0.8s ease';
+  document.getElementById('map').style.opacity='1';
+  setTimeout(()=>{planetActive=false;pv.style.display='none';},800);
+  map.flyTo([lastStreetView.lat,lastStreetView.lng],lastStreetView.zoom,{duration:1.8});
+}
 document.getElementById('planet-back').onclick=hidePlanet;
 
 // Personal aura
@@ -431,8 +446,14 @@ document.querySelectorAll('.tab').forEach(tab=>{
     auraLevel=i;
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
-    map.flyTo(ZOOMS[i],ZOOMS[i][2],{duration:2,easeLinearity:.35});
+    if(document.getElementById('planet-view').style.display==='flex'){hidePlanet();return;}
+    const z=ZOOMS[i];
+    if(i===0){map.flyTo([lastStreetView.lat,lastStreetView.lng],lastStreetView.zoom,{duration:2,easeLinearity:.35});}
+    else{map.flyTo(z,z[2],{duration:2,easeLinearity:.35});}
   };
+});
+map.on('moveend',()=>{
+  if(auraLevel===0){const c=map.getCenter();lastStreetView={lat:c.lat,lng:c.lng,zoom:map.getZoom()};}
 });
 
 document.getElementById('ebtn').onclick=()=>{const ep=document.getElementById('explore-panel');if(ep)ep.classList.toggle('open');};
@@ -501,7 +522,7 @@ document.getElementById('sg').onclick=async()=>{
   try{
     const res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`);
     const d=await res.json();
-    if(d&&d.length){map.flyTo([+d[0].lat,+d[0].lon],15,{duration:2});showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');}
+    if(d&&d.length){map.flyTo([+d[0].lat,+d[0].lon],17,{duration:2});showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');}
     else showMsg('Location not found — try a postcode or town name');
   }catch(e){showMsg('Search unavailable — try again shortly');}
 };
