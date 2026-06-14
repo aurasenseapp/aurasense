@@ -493,7 +493,16 @@ map.on('click',async function(e){
 
 function submit(lat,lng,text){
   const s=SENSES.find(s=>s.id===selSense);if(!s)return;
-  fetch(`${SUPABASE_URL}/rest/v1/sense_sharings`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify({text,sense:selSense,location_name:'',lat,lng})}).catch(e=>console.log('save error',e));
+  fetch(`${SUPABASE_URL}/rest/v1/sense_sharings`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUfetch(`${SUPABASE_URL}/rest/v1/sense_sharings`,{
+  method:'POST',
+  headers:{
+    'Content-Type':'application/json',
+    'apikey':SUPABASE_KEY,
+    'Authorization':'Bearer '+SUPABASE_KEY,
+    'Prefer':'return=minimal'
+  },
+  body:JSON.stringify({text:text,sense:sense,location_name:'',lat:lat,lng:lng})
+}).then(r=>console.log('saved:',r.status)).catch(e=>console.log('error:',e));
   auraPoints.push({lat,lng,sense:selSense,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2});
   ripples.push({lat,lng,color:s.color,age:0});
   if(!planetColors.includes(s.color))planetColors.push(s.color);
