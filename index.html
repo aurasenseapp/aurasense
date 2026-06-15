@@ -532,8 +532,8 @@ function submit(lat,lng,text){
 
 document.getElementById('sbtn').onclick=()=>{
   const v=document.getElementById('inp').value.trim();if(!v)return;
-  const c=map.getCenter(),j=()=>(Math.random()-.5)*.003;
-  submit(c.lat+j(),c.lng+j(),v);document.getElementById('inp').value='';
+  const c=map.getCenter();
+  submit(c.lat,c.lng,v);document.getElementById('inp').value='';
 };
 document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sbtn').click()});
 
