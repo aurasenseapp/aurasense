@@ -434,6 +434,11 @@ function addFeed(text,sense,time,glow,lat,lng){
   auraPoints.push({...s,born:Date.now()-Math.random()*8000,intensity:.5+Math.random()*.4,phase:Math.random()*Math.PI*2});
   addFeed(s.text,s.sense,s.time,false,s.lat,s.lng);
 });
+  let movingSense=null;
+function startMovingSense(point){
+  movingSense=point;
+  showMsg('Tap the map to place this sense precisely');
+}
 async function loadSavedSenses(){
   try{
     const res=await fetch(`${SUPABASE_URL}/rest/v1/sense_sharings?select=*&order=created_at.desc&limit=50`,{
