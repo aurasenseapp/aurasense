@@ -434,7 +434,23 @@ function addFeed(text,sense,time,glow,lat,lng){
   auraPoints.push({...s,born:Date.now()-Math.random()*8000,intensity:.5+Math.random()*.4,phase:Math.random()*Math.PI*2});
   addFeed(s.text,s.sense,s.time,false,s.lat,s.lng);
 });
-
+async function loadSavedSenses(){
+  try{
+    const res=await fetch(`${SUPABASE_URL}/rest/v1/sense_sharings?select=*&order=created_at.desc&limit=50`,{
+      headers:{'apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY}
+    });
+    const data=await res.json();
+    if(Array.isArray(data)){
+      data.forEach(row=>{
+        if(row.lat&&row.lng&&row.sense){
+          auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:Date.now()-Math.random()*10000,intensity:.6+Math.random()*.3,phase:Math.random()*Math.PI*2});
+          addFeed(row.text||'',row.sense,'shared',false,row.lat,row.lng);
+        }
+      });
+    }
+  }catch(e){console.log('load error',e);}
+}
+loadSavedSenses();
 function showMsg(txt){
   const el=document.getElementById('pmsg');
   el.textContent=txt;el.classList.add('show');
