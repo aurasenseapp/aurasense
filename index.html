@@ -536,28 +536,29 @@ map.on('click',async function(e){
   `).openOn(map);
 });
 
-function submit(lat,lng,text){
+async function submit(lat,lng,text){
   const s=SENSES.find(s=>s.id===selSense);if(!s)return;
-  fetch(`${SUPABASE_URL}/rest/v1/sense_sharings`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify({text,sense:selSense,lat,lng})}).catch(e=>console.log('save error',e));
+  let placeName='';
+  try{
+    const geo=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14`);
+    const gd=await geo.json();
+    if(gd&&gd.address){
+      const a=gd.address;
+      const town=a.city||a.town||a.village||a.suburb||a.county||'';
+      const road=a.road||'';
+      placeName=[road,town].filter(Boolean).join(', ')||gd.display_name?.split(',').slice(0,2).join(',')||'';
+    }
+  }catch(_){}
+  fetch(`${SUPABASE_URL}/rest/v1/sense_sharings`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY},body:JSON.stringify({text,sense:selSense,lat,lng,location_name:placeName})}).catch(e=>console.log('save error',e));
   lastPlaced={lat,lng,sense:selSense,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2};
-auraPoints.push(lastPlaced);
+  auraPoints.push(lastPlaced);
   ripples.push({lat,lng,color:s.color,age:0});
   if(!planetColors.includes(s.color))planetColors.push(s.color);
-  addFeed(text,selSense,'just now',true,lat,lng,'');
+  addFeed(text,selSense,'just now',true,lat,lng,placeName);
   playSound(selSense);
   shareCount++;myShareCount++;
   triggerWave(s.color);
-  if(shareCount%4===0&&auraLevel<4){
-    auraLevel++;
-    setTimeout(()=>{
-      showMsg(LEVEL_MSGS[auraLevel]);
-      if(auraLevel===4){showPlanet();return;}
-      map.flyTo(ZOOMS[auraLevel],ZOOMS[auraLevel][2],{duration:2.5,easeLinearity:.35});
-      setTimeout(()=>map.flyTo(ZOOMS[0],ZOOMS[0][2],{duration:2.5,easeLinearity:.35}),4000);
-    },6000);
-  } else {
-    setTimeout(()=>showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]),500);
-  }
+  setTimeout(()=>showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]),500);
 }
 let lastPlaced=null;
 document.getElementById('reposition-btn').onclick=function(){
