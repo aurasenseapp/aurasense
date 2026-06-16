@@ -422,12 +422,13 @@ SENSES.forEach(s=>{
 });
 
 // Feed
-function addFeed(text,sense,time,glow,lat,lng){
+function addFeed(text,sense,time,glow,lat,lng,location){
   const s=SENSES.find(x=>x.id===sense);if(!s)return;
   const feed=document.getElementById('feed');
   const d=document.createElement('div');
   d.className='fi'+(glow?' glow':'');
-  d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${s.icon} ${s.label}</div><div class="fi-text">"${text}"</div><div class="fi-meta">${time}</div>`;
+  const locHTML=location?`<div class="fi-meta" style="color:#9d8fcc">📍 ${location}</div>`:'';
+  d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${s.icon} ${s.label}</div><div class="fi-text">"${text}"</div>${locHTML}<div class="fi-meta">${time}</div>`;
   if(lat!=null&&lng!=null)d.onclick=()=>map.flyTo([lat,lng],16,{duration:1.2});
   feed.insertBefore(d,feed.firstChild);
   if(glow)setTimeout(()=>d.classList.remove('glow'),5000);
@@ -455,16 +456,30 @@ async function loadSavedSenses(){
     });
     const data=await res.json();
     if(Array.isArray(data)){
-      data.forEach(row=>{
+      data.slice().reverse().forEach(row=>{
         if(row.lat&&row.lng&&row.sense){
           auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:Date.now()-Math.random()*10000,intensity:.6+Math.random()*.3,phase:Math.random()*Math.PI*2});
-          addFeed(row.text||'',row.sense,'shared',false,row.lat,row.lng);
+          addFeed(row.text||'',row.sense,relativeTime(row.created_at),false,row.lat,row.lng,row.location_name||'');
         }
       });
     }
   }catch(e){console.log('load error',e);}
 }
 loadSavedSenses();
+  function relativeTime(ts){
+  if(!ts)return 'just now';
+  const then=new Date(ts).getTime();
+  const secs=Math.floor((Date.now()-then)/1000);
+  if(secs<60)return 'just now';
+  const mins=Math.floor(secs/60);
+  if(mins<60)return mins+(mins===1?' min ago':' mins ago');
+  const hrs=Math.floor(mins/60);
+  if(hrs<24)return hrs+(hrs===1?' hour ago':' hours ago');
+  const days=Math.floor(hrs/24);
+  if(days<30)return days+(days===1?' day ago':' days ago');
+  const months=Math.floor(days/30);
+  return months+(months===1?' month ago':' months ago');
+}
 function showMsg(txt){
   const el=document.getElementById('pmsg');
   el.textContent=txt;el.classList.add('show');
@@ -528,7 +543,7 @@ function submit(lat,lng,text){
 auraPoints.push(lastPlaced);
   ripples.push({lat,lng,color:s.color,age:0});
   if(!planetColors.includes(s.color))planetColors.push(s.color);
-  addFeed(text,selSense,'just now',true,lat,lng);
+  addFeed(text,selSense,'just now',true,lat,lng,'');
   playSound(selSense);
   shareCount++;myShareCount++;
   triggerWave(s.color);
