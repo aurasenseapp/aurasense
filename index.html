@@ -582,15 +582,22 @@ document.getElementById('sg').onclick=async()=>{
   const q=document.getElementById('si').value.trim();if(!q)return;
   showMsg('Sensing the aura of '+q+'...');
   try{
-    const res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`);
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&q=${encodeURIComponent(q)}&limit=1`);
     const d=await res.json();
     if(d&&d.length){
       currentPlace={lat:+d[0].lat,lng:+d[0].lon};
-      auraLevel=1;
+      const cls=d[0].class,type=d[0].type,at=d[0].addresstype||'';
+      let lvl=1;
+      if(at==='road'||type==='road'||cls==='highway'||at==='house'||at==='building')lvl=0;
+      else if(at==='city'||at==='town'||at==='village'||at==='suburb'||type==='city'||type==='town'||type==='village')lvl=1;
+      else if(at==='county'||at==='state_district'||at==='region'||type==='county')lvl=2;
+      else if(at==='state'||at==='country'||type==='country'||type==='state')lvl=3;
+      else lvl=1;
+      auraLevel=lvl;
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      const townTab=document.querySelector('.tab[data-i="1"]');
-      if(townTab)townTab.classList.add('active');
-      map.flyTo([currentPlace.lat,currentPlace.lng],ZOOM_FOR_LEVEL[1],{duration:2,easeLinearity:.35});
+      const tb=document.querySelector('.tab[data-i="'+lvl+'"]');
+      if(tb)tb.classList.add('active');
+      map.flyTo([currentPlace.lat,currentPlace.lng],ZOOM_FOR_LEVEL[lvl],{duration:2,easeLinearity:.35});
       showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');
     }
     else showMsg('Location not found — try a postcode or town name');
