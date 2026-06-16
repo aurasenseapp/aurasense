@@ -537,7 +537,7 @@ auraPoints.push(lastPlaced);
   }
 }
 let lastPlaced=null;
-function enableReposition(){
+window.enableReposition=function(){
   if(!lastPlaced){showMsg('Place a sense first, then you can reposition it');return;}
   showMsg('Tap anywhere on the map to reposition your last sense');
   map.once('click',function(e){
