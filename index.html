@@ -151,7 +151,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   <div id="stip"></div>
   <div id="panel">
     <div id="pi">
-      <div id="ptitle">Energize the aura with your senses <span onclick="enableReposition()" style="cursor:pointer;color:#a78bfa;font-size:11px;margin-left:8px">↔ reposition last sense</span></div>
+      <div id="ptitle">Energize the aura with your senses <span id="reposition-btn" style="cursor:pointer;color:#a78bfa;font-size:11px;margin-left:8px">↔ reposition last sense</span></div>
       <div id="scats"></div>
       <div id="srow">
         <input id="inp" placeholder="What does this place feel like right now?"/>
@@ -545,7 +545,15 @@ window.enableReposition=function(){
     lastPlaced.lng=e.latlng.lng;
     showMsg('Your sense has been repositioned');
   });
-}
+}document.getElementById('reposition-btn').onclick=function(){
+  if(!lastPlaced){showMsg('Place a sense first, then you can reposition it');return;}
+  showMsg('Tap anywhere on the map to reposition your last sense');
+  map.once('click',function(e){
+    lastPlaced.lat=e.latlng.lat;
+    lastPlaced.lng=e.latlng.lng;
+    showMsg('Your sense has been repositioned');
+  });
+};
 document.getElementById('sbtn').onclick=()=>{
   const v=document.getElementById('inp').value.trim();if(!v)return;
   const c=map.getCenter();
