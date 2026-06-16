@@ -176,7 +176,8 @@ const SENSES=[
   {id:"anomaly",label:"Anomaly",icon:"⟁",color:"#c27ba0",freqs:[[432,.0,.13,.18,3.2],[288,.25,.09,.15,2.5],[576,.6,.06,.12,2.0]],examples:["Three lights in formation — not aircraft. Others saw it.","An overwhelming feeling of being watched here","Something shifted in the air around 3am"]},
 ];
 const MSGS=["The aura of this place just shifted.","Your sense is now part of this street.","The collective aura grows.","Another Aurasenser heard.","This place knows it is seen.","Your gift has reached the aura."];
-const ZOOMS=[[51.508,-0.128,15],[51.508,-0.128,13],[51.508,-0.128,10],[54.5,-3,6],[20,0,3]];
+const ZOOM_FOR_LEVEL=[16,13,9,5,3];
+let currentPlace={lat:51.508,lng:-0.128};
 const LEVEL_MSGS=["Your sense ripples through the street.","The town aura begins to stir.","The region feels the shift.","The nation senses it.","The planet receives your gift."];
 const LEVEL_NAMES=['Aurasenser','Sensing','Awakening','Resonant','Radiant','Luminous'];
 const ORB_IDS=['orb0','orb1','orb2','orb3','orb4'];
@@ -467,18 +468,16 @@ document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=()=>{
     const i=+tab.dataset.i;
     if(i===4){showPlanet();return;}
+    if(document.getElementById('planet-view').style.display==='flex')hidePlanet();
     auraLevel=i;
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
-    if(document.getElementById('planet-view').style.display==='flex'){hidePlanet();return;}
-    const lv=lastViews[i];
-    map.flyTo([lv.lat,lv.lng],lv.zoom,{duration:2,easeLinearity:.35});
+    map.flyTo([currentPlace.lat,currentPlace.lng],ZOOM_FOR_LEVEL[i],{duration:1.8,easeLinearity:.35});
   };
 });
 map.on('moveend',()=>{
-  const c=map.getCenter(),z=map.getZoom();
-  if(auraLevel===0)lastStreetView={lat:c.lat,lng:c.lng,zoom:z};
-  lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
+  const c=map.getCenter();
+  currentPlace={lat:c.lat,lng:c.lng};
 });
 
 document.getElementById('ebtn').onclick=()=>{const ep=document.getElementById('explore-panel');if(ep)ep.classList.toggle('open');};
@@ -559,7 +558,15 @@ document.getElementById('sg').onclick=async()=>{
   try{
     const res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`);
     const d=await res.json();
-    if(d&&d.length){map.flyTo([+d[0].lat,+d[0].lon],17,{duration:2});showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');}
+    if(d&&d.length){
+      currentPlace={lat:+d[0].lat,lng:+d[0].lon};
+      auraLevel=1;
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      const townTab=document.querySelector('.tab[data-i="1"]');
+      if(townTab)townTab.classList.add('active');
+      map.flyTo([currentPlace.lat,currentPlace.lng],ZOOM_FOR_LEVEL[1],{duration:2,easeLinearity:.35});
+      showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');
+    }
     else showMsg('Location not found — try a postcode or town name');
   }catch(e){showMsg('Search unavailable — try again shortly');}
 };
