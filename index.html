@@ -496,6 +496,7 @@ document.getElementById('ep4').onclick=()=>{showMsg('Conscious Trajectory — co
 
 map.on('click',async function(e){
   closeExplore();
+  window.lastClickedPoint={lat:e.latlng.lat,lng:e.latlng.lng};
   const input=document.getElementById('inp');
   if(input.value.trim()){submit(e.latlng.lat,e.latlng.lng,input.value);input.value='';return;}
   const existing=auraPoints.filter(p=>map.distance([p.lat,p.lng],[e.latlng.lat,e.latlng.lng])<100);
@@ -555,8 +556,9 @@ document.getElementById('reposition-btn').onclick=function(){
 };
 document.getElementById('sbtn').onclick=()=>{
   const v=document.getElementById('inp').value.trim();if(!v)return;
-  const c=map.getCenter();
-  submit(c.lat,c.lng,v);document.getElementById('inp').value='';
+  const c=window.lastClickedPoint||map.getCenter();
+  submit(c.lat,c.lng,v);
+  window.lastClickedPoint=null;document.getElementById('inp').value='';
 };
 document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sbtn').click()});
 
