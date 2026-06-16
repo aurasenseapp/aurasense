@@ -540,7 +540,7 @@ async function submit(lat,lng,text){
   const s=SENSES.find(s=>s.id===selSense);if(!s)return;
   let placeName='';
   try{
-    const geo=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=14`);
+    const geo=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=18`);
     const gd=await geo.json();
     if(gd&&gd.address){
       const a=gd.address;
