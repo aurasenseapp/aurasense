@@ -189,7 +189,13 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).a
 L.control.zoom({position:'bottomright'}).addTo(map);
 
 const canvas=document.getElementById('ac'),ctx=canvas.getContext('2d');
-function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+function resize(){
+  const rect=document.getElementById('map').getBoundingClientRect();
+  canvas.width=rect.width;
+  canvas.height=rect.height;
+  canvas.style.width=rect.width+'px';
+  canvas.style.height=rect.height+'px';
+}
 resize();window.addEventListener('resize',resize);
 
 // Planet
