@@ -535,7 +535,16 @@ function submit(lat,lng,text){
     setTimeout(()=>showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]),500);
   }
 }
-
+let lastPlaced=null;
+function enableReposition(){
+  if(!lastPlaced){showMsg('Place a sense first, then you can reposition it');return;}
+  showMsg('Tap anywhere on the map to reposition your last sense');
+  map.once('click',function(e){
+    lastPlaced.lat=e.latlng.lat;
+    lastPlaced.lng=e.latlng.lng;
+    showMsg('Your sense has been repositioned');
+  });
+}
 document.getElementById('sbtn').onclick=()=>{
   const v=document.getElementById('inp').value.trim();if(!v)return;
   const c=map.getCenter();
