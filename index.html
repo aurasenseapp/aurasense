@@ -586,13 +586,15 @@ document.getElementById('sg').onclick=async()=>{
     const d=await res.json();
     if(d&&d.length){
       currentPlace={lat:+d[0].lat,lng:+d[0].lon};
-      const cls=d[0].class,type=d[0].type,at=d[0].addresstype||'';
       let lvl=1;
-      if(at==='road'||type==='road'||cls==='highway'||at==='house'||at==='building')lvl=0;
-      else if(at==='city'||at==='town'||at==='village'||at==='suburb'||type==='city'||type==='town'||type==='village')lvl=1;
-      else if(at==='county'||at==='state_district'||at==='region'||type==='county')lvl=2;
-      else if(at==='state'||at==='country'||type==='country'||type==='state')lvl=3;
-      else lvl=1;
+      if(d[0].boundingbox){
+        const bb=d[0].boundingbox.map(Number);
+        const span=Math.max(Math.abs(bb[1]-bb[0]),Math.abs(bb[3]-bb[2]));
+        if(span<0.01)lvl=0;        // street
+        else if(span<0.15)lvl=1;   // town
+        else if(span<2)lvl=2;      // region
+        else lvl=3;                // nation
+      }
       auraLevel=lvl;
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
       const tb=document.querySelector('.tab[data-i="'+lvl+'"]');
