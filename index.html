@@ -182,7 +182,7 @@ const LEVEL_MSGS=["Your sense ripples through the street.","The town aura begins
 const LEVEL_NAMES=['Aurasenser','Sensing','Awakening','Resonant','Radiant','Luminous'];
 const ORB_IDS=['orb0','orb1','orb2','orb3','orb4'];
 let selSense=SENSES[0].id,auraLevel=0,shareCount=0,myShareCount=0;
-let auraPoints=[],ripples=[],planetColors=['#a78bfa'];
+let auraPoints=[],ripples=[],planetColors=['#a78bfa'],placeAuraName='';
 
 const map=L.map('map',{zoomControl:false,attributionControl:false}).setView([51.508,-0.128],15);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
@@ -342,6 +342,14 @@ let T=0;
     const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,cr);
     cg.addColorStop(0,'rgba(235,225,255,.95)');cg.addColorStop(.55,'rgba(210,190,255,.4)');cg.addColorStop(1,'rgba(210,190,255,0)');
     ctx.beginPath();ctx.arc(cx,cy,cr,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
+    if(placeAuraName){
+      ctx.save();
+      ctx.font='500 16px -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif';
+      ctx.textAlign='center';ctx.textBaseline='middle';
+      ctx.shadowColor='rgba(167,139,250,.9)';ctx.shadowBlur=16;
+      ctx.fillStyle='rgba(232,224,255,.96)';
+      ctx.fillText('The Current Aura of '+placeAuraName,cx,cy-105);
+      ctx.restore();
   }
   if(!zoomedOut)auraPoints.forEach(p=>{
     const pt=map.latLngToContainerPoint([p.lat,p.lng]);
@@ -530,6 +538,17 @@ document.querySelectorAll('.tab').forEach(tab=>{
 map.on('moveend',()=>{
   const c=map.getCenter();
   currentPlace={lat:c.lat,lng:c.lng};
+  const z=map.getZoom();
+  if(z>=15){placeAuraName='';return;}
+  fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${c.lat}&lon=${c.lng}&zoom=12`)
+    .then(r=>r.json()).then(d=>{
+      if(d&&d.address){
+        const a=d.address;
+        placeAuraName = z>=10 ? (a.city||a.town||a.village||a.hamlet||a.suburb||a.municipality||a.county||'')
+                      : z>=6 ? (a.county||a.state_district||a.state||a.region||'')
+                      : (a.country||'');
+      }
+    }).catch(()=>{});
 });
 
 document.getElementById('ebtn').onclick=()=>{const ep=document.getElementById('explore-panel');if(ep)ep.classList.toggle('open');};
