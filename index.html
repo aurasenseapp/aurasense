@@ -321,7 +321,7 @@ let T=0;
     if(!pts.length)pts=auraPoints;
     let sx=0,sy=0;const byCol={};
     pts.forEach(p=>{const pt=map.latLngToContainerPoint([p.lat,p.lng]);sx+=pt.x;sy+=pt.y;const s=SENSES.find(x=>x.id===p.sense);const c=s?s.color:'#a78bfa';byCol[c]=(byCol[c]||0)+1;});
-    const n=pts.length,cx=sx/n,cy=sy/n,pulse=1+Math.sin(T*1.2)*.06;
+    const n=pts.length,cx=sx/n,cy=sy/n,pulse=1+Math.sin(T*1.0)*.1;
     const cols=Object.keys(byCol);
     cols.forEach((c,i)=>{
       const share=byCol[c]/n;
@@ -330,7 +330,7 @@ let T=0;
       const gx=cx+Math.cos(ang)*off,gy=cy+Math.sin(ang)*off;
       const R=(60+Math.min(n,40)*5+share*40)*pulse;
       for(let ring=3;ring>=1;ring--){
-        const r=R*(ring/1.6),alpha=(0.08/ring)*Math.min(1,0.4+share);
+        const r=R*(ring/1.6),alpha=(0.18/ring)*Math.min(1,0.55+share);
         const g=ctx.createRadialGradient(gx,gy,0,gx,gy,r);
         g.addColorStop(0,c+Math.floor(alpha*4*255).toString(16).padStart(2,'0'));
         g.addColorStop(.5,c+Math.floor(alpha*255).toString(16).padStart(2,'0'));
@@ -338,9 +338,10 @@ let T=0;
         ctx.beginPath();ctx.arc(gx,gy,r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
       }
     });
-    const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,10);
-    cg.addColorStop(0,'rgba(230,220,255,.9)');cg.addColorStop(1,'rgba(230,220,255,0)');
-    ctx.beginPath();ctx.arc(cx,cy,10,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
+    const cr=14*pulse;
+    const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,cr);
+    cg.addColorStop(0,'rgba(235,225,255,.95)');cg.addColorStop(.55,'rgba(210,190,255,.4)');cg.addColorStop(1,'rgba(210,190,255,0)');
+    ctx.beginPath();ctx.arc(cx,cy,cr,0,Math.PI*2);ctx.fillStyle=cg;ctx.fill();
   }
   if(!zoomedOut)auraPoints.forEach(p=>{
     const pt=map.latLngToContainerPoint([p.lat,p.lng]);
