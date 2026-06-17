@@ -609,7 +609,17 @@ document.getElementById('sg').onclick=async()=>{
           map.flyTo([currentPlace.lat,currentPlace.lng],3,{duration:2});
         }
       }else{
+        if(d[0].boundingbox){
+        const b=d[0].boundingbox.map(Number);
+        const lonSpan=b[3]-b[2];
+        if(lonSpan>0&&lonSpan<=180){
+          map.flyToBounds([[b[0],b[2]],[b[1],b[3]]],{duration:2,padding:[40,40],maxZoom:17});
+        }else{
+          map.flyTo([currentPlace.lat,currentPlace.lng],3,{duration:2});
+        }
+      }else{
         map.flyTo([currentPlace.lat,currentPlace.lng],ZOOM_FOR_LEVEL[lvl],{duration:2,easeLinearity:.35});
+      }
       }
       showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');
     }
