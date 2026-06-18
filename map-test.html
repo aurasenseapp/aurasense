@@ -80,7 +80,7 @@
     auraPoints.forEach((pt, i) => {
       const p = map.project([pt.lng, pt.lat]); // a place -> its position on screen
       const breath = 0.85 + Math.sin(t * 1.0 + i) * 0.15;
-      const r = 70 * breath;
+      const r = 70 * breath * Math.pow(2, (map.getZoom() - 14) * 0.7);
 
       const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
       glow.addColorStop(0,   hexA(pt.color, 0.75));
