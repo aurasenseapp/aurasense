@@ -84,7 +84,7 @@
 
       const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
       glow.addColorStop(0,   hexA(pt.color, 0.75));
-      glow.addColorStop(0.4, hexA(pt.color, 0.25));
+      glow.addColorStop(0.5, hexA(pt.color, 0.4));
       glow.addColorStop(1,   hexA(pt.color, 0));
       ctx.fillStyle = glow;
       ctx.beginPath();
