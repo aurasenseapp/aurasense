@@ -350,6 +350,7 @@ let T=0;
       ctx.fillStyle='rgba(232,224,255,.96)';
       ctx.fillText('The Current Aura of '+placeAuraName,cx,cy-105);
       ctx.restore();
+    }
   }
   if(!zoomedOut)auraPoints.forEach(p=>{
     const pt=map.latLngToContainerPoint([p.lat,p.lng]);
