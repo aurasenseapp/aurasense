@@ -522,6 +522,17 @@ function setActiveTab(i){
   auraLevel=i;
   document.querySelectorAll('.tab').forEach(t=>{
     t.classList.toggle('active', +t.dataset.i===i);
+    t.style.color='';
+  });
+  // Clear any leftover inline orb styles from the wave animation and set the orb
+  // directly, so the lit orb always matches the active tab (no sticking on Street).
+  ORB_IDS.forEach((id,k)=>{
+    const orb=document.getElementById(id);if(!orb)return;
+    if(k===i){
+      orb.style.cssText='width:7px;height:7px;border-radius:50%;background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9);opacity:1;flex-shrink:0;transition:all .3s ease;';
+    } else {
+      orb.style.cssText='width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);box-shadow:none;opacity:.5;flex-shrink:0;transition:all .3s ease;';
+    }
   });
 }
 const MAPBOX_TOKEN='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
