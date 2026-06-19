@@ -1,117 +1,570 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Aurasense — Map Proof of Concept</title>
-<link href="https://api.mapbox.com/mapbox-gl-js/v3.24.1/mapbox-gl.css" rel="stylesheet" />
-<script src="https://api.mapbox.com/mapbox-gl-js/v3.24.1/mapbox-gl.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurasense — The Living Aura of Humanity</title>
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.js"></script>
 <style>
-  html, body { margin: 0; height: 100%; background: #000; }
-  #map  { position: absolute; inset: 0; }
-  #aura { position: absolute; inset: 0; pointer-events: none; }
-  #note {
-    position: absolute; top: 12px; left: 12px; z-index: 2;
-    font: 13px/1.45 -apple-system, "Segoe UI", Roboto, sans-serif;
-    color: #d7d2ec; background: rgba(20, 16, 40, .6);
-    padding: 9px 13px; border-radius: 11px;
-    backdrop-filter: blur(6px); max-width: 250px;
-  }
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a10;color:#f0f0f0;height:100vh;overflow:hidden}
+#map{position:absolute;inset:0;transition:opacity .6s}
+.mapboxgl-ctrl-logo,.mapboxgl-ctrl-attrib{display:none!important}
+canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
+#ui{position:absolute;inset:0;pointer-events:none;z-index:1000}
+#planet-view{position:absolute;inset:0;background:#000008;display:none;align-items:center;justify-content:center;z-index:600;flex-direction:column}
+#planet-view.show{display:flex}
+#planet-canvas{border-radius:50%}
+#planet-label{margin-top:20px;font-size:13px;color:#9d8fcc;letter-spacing:.08em;text-align:center;font-style:italic}
+#planet-back{margin-top:14px;padding:7px 18px;border-radius:10px;border:0.5px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:12px;cursor:pointer;font-family:inherit;pointer-events:all;transition:all .2s}
+#planet-back:hover{background:rgba(167,139,250,.22)}
+#hdr1{position:absolute;top:14px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;pointer-events:all}
+#logo h1{font-size:17px;font-weight:400;letter-spacing:.1em;color:#e0d8ff;text-transform:uppercase}
+#logo p{font-size:10px;color:#6860a0;letter-spacing:.05em;margin-top:1px}
+#social{display:flex;gap:5px;align-items:center}
+.soc-btn{width:28px;height:28px;border-radius:50%;border:0.5px solid rgba(255,255,255,.1);background:rgba(10,10,20,.88);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;transition:all .2s;color:#9d8fcc;font-weight:600}
+.soc-btn:hover{border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.12);transform:scale(1.1)}
+.soc-tip{position:fixed;background:rgba(15,12,25,.98);border:0.5px solid rgba(167,139,250,.3);border-radius:8px;padding:5px 9px;font-size:10px;color:#9d8fcc;white-space:nowrap;z-index:9999;pointer-events:none;display:none}
+#hdr2{position:absolute;top:52px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;pointer-events:all;gap:10px}
+#tabs{display:flex;gap:1px;background:rgba(10,10,20,.88);border:0.5px solid rgba(255,255,255,.08);border-radius:20px;padding:4px 5px;backdrop-filter:blur(8px);flex-shrink:0}
+.tab{font-size:11px;padding:5px 9px;border-radius:14px;border:none;background:transparent;color:#7870a0;cursor:pointer;transition:color .3s;letter-spacing:.03em;display:flex;align-items:center;gap:4px;font-family:inherit;white-space:nowrap;pointer-events:all}
+.tab:hover{color:#c4b5fd}
+.tab.active{color:#c4b5fd}
+.tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0}
+#search-box{display:flex;gap:5px;flex-shrink:0}
+#si{background:rgba(10,10,20,.9);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;font-size:11px;color:#e0d8ff;outline:none;width:160px;font-family:inherit}
+#si::placeholder{color:#5a5270}
+#si:focus{border-color:rgba(167,139,250,.4)}
+#sg{padding:6px 10px;border-radius:10px;border:0.5px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s}
+#sg:hover{background:rgba(167,139,250,.2)}
+#my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
+#my-aura-title{font-size:9px;color:#9d8fcc;text-align:center;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+#pac{display:block;margin:0 auto}
+#my-aura-label{font-size:10px;color:#7870a0;text-align:center;margin-top:3px}
+#explore-btn{position:absolute;left:110px;top:148px;pointer-events:all}
+#ebtn{padding:6px 12px;border-radius:10px;border:0.5px solid rgba(167,139,250,.25);background:rgba(10,10,20,.88);color:#9d8fcc;font-size:11px;cursor:pointer;font-family:inherit;transition:all .3s;backdrop-filter:blur(6px)}
+#ebtn:hover{border-color:rgba(167,139,250,.5);color:#c4b5fd;background:rgba(167,139,250,.1)}
+#explore-panel{position:absolute;left:16px;top:182px;width:268px;background:rgba(10,10,20,.96);border:0.5px solid rgba(167,139,250,.2);border-radius:14px;padding:13px 14px;backdrop-filter:blur(12px);pointer-events:all;display:none}
+#explore-panel.open{display:block}
+.ep-title{font-size:11px;color:#9d8fcc;margin-bottom:10px;letter-spacing:.03em}
+.ep-opt{padding:9px 12px;border-radius:10px;border:0.5px solid rgba(255,255,255,.08);background:transparent;margin-bottom:6px;cursor:pointer;transition:all .25s;text-align:left;font-family:inherit;width:100%}
+.ep-opt:hover{border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.07)}
+.ep-opt-title{font-size:12px;color:#c4b5fd;margin-bottom:2px}
+.ep-opt-sub{font-size:10px;color:#7870a0;line-height:1.5}
+#feed{position:absolute;right:16px;top:100px;width:205px;max-height:50vh;overflow-y:auto;pointer-events:all}
+#feed::-webkit-scrollbar{width:2px}
+#feed::-webkit-scrollbar-thumb{background:rgba(167,139,250,.3);border-radius:2px}
+.fi{background:rgba(10,10,20,.9);border:0.5px solid rgba(255,255,255,.06);border-radius:10px;padding:8px 10px;margin-bottom:5px;animation:fadeUp .4s ease;cursor:pointer;transition:border-color .4s,box-shadow .4s}
+.fi:hover{border-color:rgba(167,139,250,.3)}
+.fi.glow{border-color:rgba(167,139,250,.55);box-shadow:0 0 18px rgba(167,139,250,.28)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.fi-sense{font-size:10px;font-weight:500;margin-bottom:3px;letter-spacing:.04em}
+.fi-text{font-size:11px;color:#c0b8d8;line-height:1.5;font-style:italic}
+.fi-meta{font-size:10px;color:#4a4260;margin-top:3px}
+#stip{position:fixed;background:rgba(10,8,20,.97);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 13px;font-size:11px;color:#c0b8d8;max-width:185px;line-height:1.6;pointer-events:none;opacity:0;transition:opacity .2s;z-index:9999;font-style:italic}
+#panel{position:absolute;bottom:16px;left:16px;right:16px;pointer-events:all}
+#pi{background:rgba(10,10,20,.93);border:0.5px solid rgba(167,139,250,.18);border-radius:16px;padding:12px 14px;backdrop-filter:blur(12px)}
+#ptitle{font-size:12px;color:#9d8fcc;margin-bottom:9px}
+#scats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.sc{font-size:11px;padding:4px 9px;border-radius:20px;border:0.5px solid rgba(255,255,255,.1);background:transparent;color:#9d8fcc;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;gap:3px}
+.sc:hover,.sc.sel{border-color:var(--c);color:var(--c);background:rgba(255,255,255,.05)}
+#srow{display:flex;gap:7px}
+#inp{flex:1;background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 11px;font-size:12px;color:#e0d8ff;outline:none;font-family:inherit}
+#inp::placeholder{color:#5a5270}
+#inp:focus{border-color:rgba(167,139,250,.35)}
+#sbtn{padding:8px 13px;border-radius:10px;border:0.5px solid rgba(167,139,250,.35);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap}
+#sbtn:hover{background:rgba(167,139,250,.25);box-shadow:0 0 14px rgba(167,139,250,.2)}
+#pmsg{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);font-size:13px;color:#c4b5fd;font-style:italic;opacity:0;pointer-events:none;text-align:center;text-shadow:0 0 22px rgba(167,139,250,.9);transition:opacity .5s;letter-spacing:.03em;white-space:nowrap}
+#pmsg.show{opacity:1}
+.aura-popup .mapboxgl-popup-content{background:rgba(10,10,20,.96)!important;border:0.5px solid rgba(167,139,250,.3)!important;border-radius:12px!important;box-shadow:0 0 20px rgba(167,139,250,.15)!important;color:#e0d8ff!important}
+.aura-popup .mapboxgl-popup-tip{background:rgba(10,10,20,.96)!important}
+.aura-popup .mapboxgl-popup-content-inner{margin:11px 13px!important;font-size:12px;line-height:1.6}
+.pop-title{font-size:13px;color:#e0d8ff;font-weight:500;margin-bottom:2px}
+.pop-street{font-size:11px;color:#a78bfa;margin-bottom:4px;font-style:italic}
+.pop-aura{font-size:11px;margin-bottom:4px}
+.pop-action{font-size:11px;color:#7870a0;font-style:italic}
+.pop-sense-list{margin-top:5px;display:flex;flex-direction:column;gap:3px}
+.pop-sense-item{font-size:11px;color:#c0b8d8;font-style:italic;padding:4px 8px;background:rgba(255,255,255,.04);border-radius:6px;cursor:pointer;border-left:2px solid transparent;transition:background .2s}
+.pop-sense-item:hover{background:rgba(167,139,250,.1)}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-  <div id="map"></div>
-  <canvas id="aura"></canvas>
-  <div id="note">Aurasense map test — pan and zoom around. The auras should stay pinned to their places and gently breathe.</div>
-
+<div id="map"></div>
+<canvas id="ac"></canvas>
+<div id="planet-view">
+  <canvas id="planet-canvas" width="340" height="340"></canvas>
+  <div id="planet-label">The living aura of humanity<br><span style="font-size:11px;opacity:.6">sensing the world together</span></div>
+  <button id="planet-back">← Return to street view</button>
+</div>
+<div id="ui">
+  <div id="hdr1">
+    <div id="logo"><h1>Aurasense</h1><p>The living aura of humanity, sensed together</p></div>
+    <div id="social">
+      <div class="soc-btn" data-tip="Share to X">𝕏</div>
+      <div class="soc-btn" data-tip="Share to Instagram">◎</div>
+      <div class="soc-btn" data-tip="Share to Facebook">f</div>
+      <div class="soc-btn" data-tip="Copy aura link">⌁</div>
+      <div class="soc-tip" id="soc-tip-el"></div>
+    </div>
+  </div>
+  <div id="hdr2">
+    <div id="tabs">
+      <button class="tab active" data-i="0"><span class="tab-orb" id="orb0"></span>Street</button>
+      <button class="tab" data-i="1"><span class="tab-orb" id="orb1"></span>Town</button>
+      <button class="tab" data-i="2"><span class="tab-orb" id="orb2"></span>Region</button>
+      <button class="tab" data-i="3"><span class="tab-orb" id="orb3"></span>Nation</button>
+      <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>Planet</button>
+    </div>
+    <div id="search-box">
+      <input id="si" placeholder="Street, town, postcode..."/>
+      <button id="sg">Go</button>
+    </div>
+  </div>
+  <div id="my-aura">
+    <div id="my-aura-title">My Aura</div>
+    <canvas id="pac" width="80" height="80"></canvas>
+    <div id="my-aura-label">Aurasenser</div>
+  </div>
+  <div id="explore-btn"><button id="ebtn">✦ Read the aura of this place</button></div>
+  <div id="explore-panel">
+    <div class="ep-title">How would you like to read this aura?</div>
+    <button class="ep-opt" id="ep1">
+      <div class="ep-opt-title">What Aurasensers felt here</div>
+      <div class="ep-opt-sub">Sense sharings from people who live, lived, or passed through</div>
+    </button>
+    <button class="ep-opt" id="ep2">
+      <div class="ep-opt-title">What Aurasensers are feeling here</div>
+      <div class="ep-opt-sub">Live sense sharings from people present in this area right now</div>
+    </button>
+    <button class="ep-opt" id="ep3">
+      <div class="ep-opt-title">Aura pulse from the wider world</div>
+      <div class="ep-opt-sub">Public sentiment, news and social media — coming in v1</div>
+    </button>
+    <button class="ep-opt" id="ep4">
+      <div class="ep-opt-title">Conscious Trajectory</div>
+      <div class="ep-opt-sub">Where this place's aura is heading — coming in v1</div>
+    </button>
+  </div>
+  <div id="feed"></div>
+  <div id="stip"></div>
+  <div id="panel">
+    <div id="pi">
+      <div id="ptitle">Energize the aura with your senses</div>
+      <div id="scats"></div>
+      <div id="srow">
+        <input id="inp" placeholder="What does this place feel like right now?"/>
+        <button id="sbtn">Offer your sense to the aura</button>
+      </div>
+    </div>
+  </div>
+  <div id="pmsg"></div>
+</div>
 <script>
-  // ──────────────────────────────────────────────────────────────
-  //  PASTE YOUR MAPBOX TOKEN BELOW — the long string starting "pk."
-  // ──────────────────────────────────────────────────────────────
-  mapboxgl.accessToken = 'pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
+document.addEventListener('DOMContentLoaded',function(){
+const SENSES=[
+  {id:"sound",label:"Sound",icon:"♪",color:"#6d9eeb",freqs:[[528,.0,.18,.05,2.2],[660,.2,.09,.05,1.0]],examples:["Birdsong every morning — no traffic until 8am","Bass from the pub shakes the walls on Fridays","Church bells at noon, gentle and distant"]},
+  {id:"smell",label:"Smell",icon:"〜",color:"#93c47d",freqs:[[396,.0,.15,.1,2.4],[528,.35,.09,.1,1.5]],examples:["Pine air in the evenings — first time I breathed deeply","Weed smoke drifts through the walls after 9pm","Fresh bread from the bakery at 7am"]},
+  {id:"light",label:"Light",icon:"✦",color:"#b39ddb",freqs:[[741,.0,.17,.04,2.0],[988,.12,.09,.04,1.3]],examples:["Proper darkness at night — stars visible, finally slept","Street light opposite the bedroom, inescapable","Golden hour hits this street perfectly every evening"]},
+  {id:"atmosphere",label:"Atmosphere",icon:"◉",color:"#76a5af",freqs:[[174,.0,.35,.12,3.0],[261,.2,.20,.1,2.2]],examples:["A calm I have never felt anywhere before","Social tension in the air — people seem stressed","Something peaceful about this corner, hard to explain"]},
+  {id:"nature",label:"Nature",icon:"❧",color:"#6aa84f",freqs:[[528,.0,.15,.08,1.8],[660,.28,.10,.06,1.2],[792,.5,.07,.06,1.0]],examples:["Fox family living under the garden shed","No green space within walking distance","Hedgehogs in the garden, bats at dusk"]},
+  {id:"safety",label:"Safety",icon:"◈",color:"#e69138",freqs:[[174,.0,.24,.1,2.5],[220,.18,.15,.1,1.8]],examples:["Feel completely safe walking here at any hour","Cars speed through this residential street dangerously","Community watches out for one another quietly"]},
+  {id:"belonging",label:"Belonging",icon:"♡",color:"#f6b26b",freqs:[[528,.0,.17,.06,2.0],[660,.12,.13,.06,1.8],[792,.24,.10,.06,1.6]],examples:["Neighbour left homegrown tomatoes on my doorstep","Felt invisible here — no acknowledgement","People say good morning — first time this happened"]},
+  {id:"anomaly",label:"Anomaly",icon:"⟁",color:"#c27ba0",freqs:[[432,.0,.13,.18,3.2],[288,.25,.09,.15,2.5],[576,.6,.06,.12,2.0]],examples:["Three lights in formation — not aircraft. Others saw it.","An overwhelming feeling of being watched here","Something shifted in the air around 3am"]},
+];
+const MSGS=["The aura of this place just shifted.","Your sense is now part of this street.","The collective aura grows.","Another Aurasenser heard.","This place knows it is seen.","Your gift has reached the aura."];
+const ZOOMS=[[51.508,-0.128,15],[51.508,-0.128,13],[51.508,-0.128,10],[54.5,-3,6],[20,0,3]];
+const LEVEL_MSGS=["Your sense ripples through the street.","The town aura begins to stir.","The region feels the shift.","The nation senses it.","The planet receives your gift."];
+const LEVEL_NAMES=['Aurasenser','Sensing','Awakening','Resonant','Radiant','Luminous'];
+const ORB_IDS=['orb0','orb1','orb2','orb3','orb4'];
+let selSense=SENSES[0].id,auraLevel=0,shareCount=0,myShareCount=0;
+let auraPoints=[],ripples=[],planetColors=['#a78bfa'];
 
-  const map = new mapboxgl.Map({
-    container: 'map',
-    style: 'mapbox://styles/aurasense/cmqjxke2e00h401soguspgmck',
-    center: [-0.128, 51.508],   // London — note Mapbox order is [longitude, latitude]
-    zoom: 14
+mapboxgl.accessToken='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
+const map=new mapboxgl.Map({container:'map',style:'mapbox://styles/aurasense/cmqjxke2e00h401soguspgmck',center:[-0.128,51.508],zoom:15});
+map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
+
+const canvas=document.getElementById('ac'),ctx=canvas.getContext('2d');
+function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+resize();window.addEventListener('resize',resize);
+
+// Planet
+const pc=document.getElementById('planet-canvas'),pctx2=pc.getContext('2d');
+let planetT=0,planetActive=false;
+function drawPlanet(){
+  if(!planetActive)return;
+  planetT+=0.008;
+  const W=340,H=340,cx=170,cy=170,R=110;
+  pctx2.clearRect(0,0,W,H);
+  pctx2.fillStyle='#000008';pctx2.fillRect(0,0,W,H);
+  if(!drawPlanet.stars)drawPlanet.stars=Array.from({length:180},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2,o:Math.random()}));
+  drawPlanet.stars.forEach(s=>{
+    const tw=s.o*(0.5+0.5*Math.sin(planetT*2+s.x));
+    pctx2.beginPath();pctx2.arc(s.x,s.y,s.r,0,Math.PI*2);
+    pctx2.fillStyle=`rgba(255,255,255,${tw.toFixed(2)})`;pctx2.fill();
   });
+  planetColors.forEach((col,ci)=>{
+    const[r,g,b]=[parseInt(col.slice(1,3),16),parseInt(col.slice(3,5),16),parseInt(col.slice(5,7),16)];
+    for(let h=4;h>=1;h--){
+      const hr=R+h*18+Math.sin(planetT+ci*0.4+h)*6;
+      const alpha=(0.04/h)*(0.7+0.3*Math.sin(planetT*0.7+ci));
+      const grad=pctx2.createRadialGradient(cx,cy,R*0.9,cx,cy,hr);
+      grad.addColorStop(0,`rgba(${r},${g},${b},${(alpha*3).toFixed(3)})`);
+      grad.addColorStop(0.5,`rgba(${r},${g},${b},${alpha.toFixed(3)})`);
+      grad.addColorStop(1,`rgba(${r},${g},${b},0)`);
+      pctx2.beginPath();pctx2.arc(cx,cy,hr,0,Math.PI*2);pctx2.fillStyle=grad;pctx2.fill();
+    }
+  });
+  const sphere=pctx2.createRadialGradient(cx-30,cy-30,10,cx,cy,R);
+  sphere.addColorStop(0,'#1a1440');sphere.addColorStop(0.4,'#0d0d28');sphere.addColorStop(1,'#050510');
+  pctx2.beginPath();pctx2.arc(cx,cy,R,0,Math.PI*2);pctx2.fillStyle=sphere;pctx2.fill();
+  pctx2.save();pctx2.beginPath();pctx2.arc(cx,cy,R,0,Math.PI*2);pctx2.clip();
+  [{x:cx-20,y:cy-30,w:55,h:40,rot:.3},{x:cx+30,y:cy+10,w:35,h:50,rot:-.2},{x:cx-55,y:cy+20,w:40,h:30,rot:.5},{x:cx-10,y:cy+40,w:60,h:25,rot:.1}].forEach(l=>{
+    pctx2.save();pctx2.translate(l.x,l.y);pctx2.rotate(l.rot+planetT*0.01);
+    pctx2.beginPath();pctx2.ellipse(0,0,l.w,l.h,0,0,Math.PI*2);
+    pctx2.fillStyle='rgba(20,35,20,0.6)';pctx2.fill();pctx2.restore();
+  });
+  pctx2.restore();
+  const rim=pctx2.createRadialGradient(cx,cy,R-8,cx,cy,R+20);
+  rim.addColorStop(0,'rgba(100,80,200,0)');rim.addColorStop(0.5,'rgba(100,80,200,0.12)');rim.addColorStop(1,'rgba(60,40,160,0)');
+  pctx2.beginPath();pctx2.arc(cx,cy,R+20,0,Math.PI*2);pctx2.fillStyle=rim;pctx2.fill();
+  [0,0.33,0.66].forEach((off,i)=>{
+    const a=((planetT*0.3+off)%1),rr=R+a*80,al=(1-a)*0.3;
+    const col=planetColors[i%planetColors.length];
+    const[r2,g2,b2]=[parseInt(col.slice(1,3),16),parseInt(col.slice(3,5),16),parseInt(col.slice(5,7),16)];
+    pctx2.beginPath();pctx2.arc(cx,cy,rr,0,Math.PI*2);
+    pctx2.strokeStyle=`rgba(${r2},${g2},${b2},${al.toFixed(3)})`;pctx2.lineWidth=1.5;pctx2.stroke();
+  });
+  requestAnimationFrame(drawPlanet);
+}
+let lastViews={0:{lat:51.508,lng:-0.128,zoom:15},1:{lat:51.508,lng:-0.128,zoom:13},2:{lat:51.508,lng:-0.128,zoom:10},3:{lat:54.5,lng:-3,zoom:6}};
+let lastStreetView={lat:51.508,lng:-0.128,zoom:15};
+function showPlanet(){
+  planetActive=true;
+  const pv=document.getElementById('planet-view');
+  pv.style.opacity='0';pv.style.display='flex';
+  document.getElementById('map').style.opacity='0';
+  setTimeout(()=>{pv.style.transition='opacity 1.2s ease';pv.style.opacity='1';},50);
+  drawPlanet();
+}
+function hidePlanet(){
+  const pv=document.getElementById('planet-view');
+  pv.style.transition='opacity 0.8s ease';pv.style.opacity='0';
+  document.getElementById('map').style.transition='opacity 0.8s ease';
+  document.getElementById('map').style.opacity='1';
+  setTimeout(()=>{planetActive=false;pv.style.display='none';},800);
+  map.flyTo({center:[lastStreetView.lng,lastStreetView.lat],zoom:lastStreetView.zoom,duration:1800});
+}
+document.getElementById('planet-back').onclick=hidePlanet;
 
-  // A handful of sample senses around London, just to feel the look.
-  // Each is { lng, lat, color }.
-  const auraPoints = [
-    { lng: -0.128, lat: 51.508, color: '#a78bfa' }, // violet
-    { lng: -0.122, lat: 51.511, color: '#5eead4' }, // teal
-    { lng: -0.131, lat: 51.505, color: '#fbbf24' }, // amber
-    { lng: -0.124, lat: 51.506, color: '#fb7185' }, // rose
-    { lng: -0.135, lat: 51.510, color: '#38bdf8' }  // sky
-  ];
-
-  const canvas = document.getElementById('aura');
-  const ctx = canvas.getContext('2d');
-
-  // Keep the canvas the same size as the map, sharp on retina screens.
-  function sizeCanvas() {
-    const dpr = window.devicePixelRatio || 1;
-    const w = map.getContainer().clientWidth;
-    const h = map.getContainer().clientHeight;
-    canvas.width = w * dpr;
-    canvas.height = h * dpr;
-    canvas.style.width = w + 'px';
-    canvas.style.height = h + 'px';
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+// Personal aura
+const pac=document.getElementById('pac'),pctx=pac.getContext('2d');
+let paT=0;
+(function drawPA(){
+  pctx.clearRect(0,0,80,80);paT+=0.02;
+  const cx=40,cy=40,level=Math.min(myShareCount,20);
+  const rings=1+Math.floor(level/4);
+  const cols=SENSES.slice(0,Math.max(1,Math.min(myShareCount,8))).map(s=>s.color);
+  for(let r=rings;r>=1;r--){
+    const br=10+r*6,pulse=br*(1+Math.sin(paT+r)*.09);
+    const col=cols[(r-1)%cols.length]||'#a78bfa',alpha=0.07+level*.006;
+    const g=pctx.createRadialGradient(cx,cy,0,cx,cy,pulse);
+    g.addColorStop(0,col+Math.floor(alpha*4*255).toString(16).padStart(2,'0'));
+    g.addColorStop(.5,col+Math.floor(alpha*255).toString(16).padStart(2,'0'));
+    g.addColorStop(1,col+'00');
+    pctx.beginPath();pctx.arc(cx,cy,pulse,0,Math.PI*2);pctx.fillStyle=g;pctx.fill();
   }
+  const cg=pctx.createRadialGradient(cx,cy,0,cx,cy,8);
+  cg.addColorStop(0,'rgba(220,210,255,.95)');cg.addColorStop(1,'rgba(167,139,250,0)');
+  pctx.beginPath();pctx.arc(cx,cy,8,0,Math.PI*2);pctx.fillStyle=cg;pctx.fill();
+  document.getElementById('my-aura-label').textContent=LEVEL_NAMES[Math.min(5,Math.floor(myShareCount/3))];
+  requestAnimationFrame(drawPA);
+})();
 
-  // Turn '#rrggbb' plus an alpha into an 'rgba(...)' string.
-  function hexA(hex, a) {
-    const n = parseInt(hex.slice(1), 16);
-    const r = (n >> 16) & 255, g = (n >> 8) & 255, b = n & 255;
-    return 'rgba(' + r + ',' + g + ',' + b + ',' + a + ')';
-  }
-
-  function draw() {
-    const w = map.getContainer().clientWidth;
-    const h = map.getContainer().clientHeight;
-    ctx.clearRect(0, 0, w, h);
-    ctx.globalCompositeOperation = 'lighter'; // glows add together where they overlap
-
-    const t = performance.now() / 1000;
-
-    auraPoints.forEach((pt, i) => {
-      const p = map.project([pt.lng, pt.lat]); // a place -> its position on screen
-      const breath = 0.85 + Math.sin(t * 1.0 + i) * 0.15;
-      const r = 70 * breath * Math.pow(2, (map.getZoom() - 14) * 0.7);
-
-      const glow = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, r);
-      glow.addColorStop(0,   hexA(pt.color, 0.75));
-      glow.addColorStop(0.5, hexA(pt.color, 0.4));
-      glow.addColorStop(1,   hexA(pt.color, 0));
-      ctx.fillStyle = glow;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, r, 0, Math.PI * 2);
-      ctx.fill();
-
-      const cr = 6 * breath; // bright little core
-      const core = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, cr);
-      core.addColorStop(0, hexA('#ffffff', 0.9));
-      core.addColorStop(1, hexA(pt.color, 0));
-      ctx.fillStyle = core;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, cr, 0, Math.PI * 2);
-      ctx.fill();
+// Audio
+let actx=null;
+function playSound(id){
+  try{
+    if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
+    const s=SENSES.find(x=>x.id===id);if(!s)return;
+    s.freqs.forEach(([freq,delay,vol,at,dur])=>{
+      const o=actx.createOscillator(),g=actx.createGain();
+      o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;
+      g.gain.setValueAtTime(0,actx.currentTime+delay);
+      g.gain.linearRampToValueAtTime(vol,actx.currentTime+delay+at);
+      g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);
+      o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);
     });
+  }catch(e){}
+}
 
-    ctx.globalCompositeOperation = 'source-over';
-    requestAnimationFrame(draw);
-  }
-
-  map.on('load', () => {
-    sizeCanvas();
-    requestAnimationFrame(draw);
+// Main draw
+let T=0;
+(function draw(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);T+=0.016;
+  auraPoints.forEach(p=>{
+    const pt=map.project([p.lng,p.lat]);
+    const x=pt.x,y=pt.y;
+    const s=SENSES.find(s=>s.id===p.sense),col=s?s.color:'#a78bfa';
+    const life=Math.min(1,(Date.now()-p.born)/2000);
+    const pulse=1+Math.sin(T*1.4+p.phase)*.07;
+    const baseR=(45+p.intensity*35)*pulse*Math.pow(2,(map.getZoom()-14)*0.7);
+    for(let ring=3;ring>=1;ring--){
+      const r=baseR*(ring/1.5)*life,alpha=(0.07/ring)*life*p.intensity;
+      const g=ctx.createRadialGradient(x,y,0,x,y,r);
+      g.addColorStop(0,col+Math.floor(alpha*4*255).toString(16).padStart(2,'0'));
+      g.addColorStop(.5,col+Math.floor(alpha*255).toString(16).padStart(2,'0'));
+      g.addColorStop(1,col+'00');
+      ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fillStyle=g;ctx.fill();
+    }
+    ctx.beginPath();ctx.arc(x,y,4.5*life,0,Math.PI*2);ctx.fillStyle=col+'dd';ctx.fill();
   });
-  map.on('resize', sizeCanvas);
-  window.addEventListener('resize', sizeCanvas);
+  ripples=ripples.filter(r=>r.age<1);
+  ripples.forEach(r=>{
+    r.age+=0.004;
+    const pt=map.project([r.lng,r.lat]);
+    const x=pt.x,y=pt.y;
+    [1,.65,.35].forEach((scale,i)=>{
+      const delay=i*.18;
+      if(r.age>delay){
+        const a=r.age-delay,rad=a*260*scale,al=(1-a)*.5*(1-i*.2);
+        ctx.beginPath();ctx.arc(x,y,rad,0,Math.PI*2);
+        ctx.strokeStyle=r.color+Math.floor(Math.max(0,al)*255).toString(16).padStart(2,'0');
+        ctx.lineWidth=1.5-i*.4;ctx.stroke();
+      }
+    });
+  });
+  requestAnimationFrame(draw);
+})();
+
+// KITT wave
+let waveRaf=null,waveStartTs=0,waveColor='#a78bfa';
+const WAVE_DUR=9000;
+function easeIO(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2}
+function hexRGB(hex){return[parseInt(hex.slice(1,3),16),parseInt(hex.slice(3,5),16),parseInt(hex.slice(5,7),16)]}
+function haversine(la1,lo1,la2,lo2){const R=6371000,toR=Math.PI/180;const dLa=(la2-la1)*toR,dLo=(lo2-lo1)*toR;const a=Math.sin(dLa/2)**2+Math.cos(la1*toR)*Math.cos(la2*toR)*Math.sin(dLo/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+function animateWave(ts){
+  try{
+    const elapsed=ts-waveStartTs,progress=Math.min(elapsed/WAVE_DUR,1);
+    let crest;
+    if(progress<0.38)crest=easeIO(progress/0.38);
+    else if(progress<0.62)crest=1;
+    else crest=easeIO(1-(progress-0.62)/0.38);
+    const[r,g,b]=hexRGB(waveColor);
+    ORB_IDS.forEach((id,i)=>{
+      const orb=document.getElementById(id);if(!orb)return;
+      const pos=i/4,dist=Math.abs(crest-pos);
+      const bloom=Math.exp(-dist*dist*9);
+      const shimmer=0.86+0.14*Math.sin(ts*0.004+i*0.95);
+      const intensity=Math.min(1,bloom*shimmer);
+      if(intensity>0.015){
+        const sz=7+intensity*11,glow=Math.round(intensity*44);
+        orb.style.cssText=`width:${sz}px;height:${sz}px;border-radius:50%;background:${waveColor};box-shadow:0 0 ${glow}px ${Math.round(glow/2)}px rgba(${r},${g},${b},${(intensity*.95).toFixed(3)}),0 0 ${glow*2.2}px ${glow}px rgba(${r},${g},${b},${(intensity*.45).toFixed(3)}),0 0 ${glow*4}px ${glow*1.8}px rgba(${r},${g},${b},${(intensity*.18).toFixed(3)});opacity:${(0.18+intensity*0.82).toFixed(3)};flex-shrink:0;transition:none;`;
+        const tab=orb.parentElement;
+        if(tab)tab.style.color=`rgba(230,220,255,${(0.45+intensity*0.55).toFixed(2)})`;
+      } else {
+        orb.style.cssText=`width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,0.1);box-shadow:none;opacity:0.18;flex-shrink:0;transition:none;`;
+        const tab=orb.parentElement;if(tab)tab.style.color='';
+      }
+    });
+    if(progress<1){waveRaf=requestAnimationFrame(animateWave);}
+    else{
+      waveRaf=null;
+      ORB_IDS.forEach((id,i)=>{
+        const orb=document.getElementById(id);if(!orb)return;
+        const tab=orb.parentElement;
+        if(i<=auraLevel){
+          orb.style.cssText=`width:7px;height:7px;border-radius:50%;background:#a78bfa;box-shadow:0 0 9px 3px rgba(167,139,250,0.55);opacity:1;flex-shrink:0;transition:all 1s ease;`;
+          if(tab){tab.classList.add('active');tab.style.color='';}
+        } else {
+          orb.style.cssText=`width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,0.1);box-shadow:none;opacity:0.3;flex-shrink:0;transition:all 1s ease;`;
+          if(tab){tab.classList.remove('active');tab.style.color='';}
+        }
+      });
+    }
+  }catch(e){waveRaf=null;}
+}
+function triggerWave(color){
+  if(waveRaf){cancelAnimationFrame(waveRaf);waveRaf=null;}
+  waveColor=color||'#a78bfa';
+  requestAnimationFrame(ts=>{waveStartTs=ts;waveRaf=requestAnimationFrame(animateWave);});
+}
+
+// Sense buttons
+const scatsEl=document.getElementById('scats'),stip=document.getElementById('stip');
+SENSES.forEach(s=>{
+  const b=document.createElement('button');
+  b.className='sc'+(s.id===selSense?' sel':'');
+  b.style.setProperty('--c',s.color);
+  b.innerHTML=`<span style="font-size:11px">${s.icon}</span>${s.label}`;
+  b.onclick=()=>{selSense=s.id;document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};
+  b.onmouseenter=e=>{
+    const ex=s.examples[Math.floor(Math.random()*s.examples.length)];
+    stip.innerHTML=`<span style="color:${s.color}">${s.icon} ${s.label}</span><br><br>"${ex}"`;
+    stip.style.opacity='1';
+    const rect=b.getBoundingClientRect();
+    stip.style.left=Math.min(rect.left,window.innerWidth-205)+'px';
+    stip.style.top=(rect.top-88)+'px';
+  };
+  b.onmouseleave=()=>{stip.style.opacity='0'};
+  scatsEl.appendChild(b);
+});
+
+// Feed
+function addFeed(text,sense,time,glow,lat,lng){
+  const s=SENSES.find(x=>x.id===sense);if(!s)return;
+  const feed=document.getElementById('feed');
+  const d=document.createElement('div');
+  d.className='fi'+(glow?' glow':'');
+  d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${s.icon} ${s.label}</div><div class="fi-text">"${text}"</div><div class="fi-meta">${time}</div>`;
+  if(lat!=null&&lng!=null)d.onclick=()=>map.flyTo({center:[lng,lat],zoom:16,duration:1200});
+  feed.insertBefore(d,feed.firstChild);
+  if(glow)setTimeout(()=>d.classList.remove('glow'),5000);
+  if(feed.children.length>12)feed.removeChild(feed.lastChild);
+}
+
+[{lat:51.508,lng:-0.128,sense:'sound',text:'Perfect silence after 10pm. Heard the rain.',time:'4m ago'},
+ {lat:51.506,lng:-0.131,sense:'belonging',text:'Someone left homegrown tomatoes on my doorstep.',time:'12m ago'},
+ {lat:51.510,lng:-0.125,sense:'nature',text:'A fox family lives under the garden shed.',time:'28m ago'},
+ {lat:51.504,lng:-0.133,sense:'atmosphere',text:'A calm I have never felt anywhere before.',time:'1h ago'},
+ {lat:51.512,lng:-0.127,sense:'anomaly',text:'Three lights in formation. Not aircraft. Others saw it.',time:'2h ago'},
+].forEach(s=>{
+  auraPoints.push({...s,born:Date.now()-Math.random()*8000,intensity:.5+Math.random()*.4,phase:Math.random()*Math.PI*2});
+  addFeed(s.text,s.sense,s.time,false,s.lat,s.lng);
+});
+
+function showMsg(txt){
+  const el=document.getElementById('pmsg');
+  el.textContent=txt;el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2800);
+}
+function closeExplore(){const ep=document.getElementById('explore-panel');if(ep)ep.classList.remove('open');}
+
+const ZOOM_LEVELS=[15,13,10,6];
+let lastViews=[
+  {lat:51.508,lng:-0.128,zoom:15},
+  {lat:51.508,lng:-0.128,zoom:13},
+  {lat:51.508,lng:-0.128,zoom:10},
+  {lat:54.5,lng:-3,zoom:6}
+];
+let lastStreetView={lat:51.508,lng:-0.128,zoom:15};
+let isMovingProgrammatically=false;
+
+document.querySelectorAll('.tab').forEach(tab=>{
+  tab.onclick=()=>{
+    const i=+tab.dataset.i;
+    if(i===4){showPlanet();return;}
+    if(document.getElementById('planet-view').style.display==='flex'){
+      hidePlanet();
+      auraLevel=i;
+      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+      tab.classList.add('active');
+      return;
+    }
+    auraLevel=i;
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    const lv=lastViews[i];
+    isMovingProgrammatically=true;
+    map.flyTo({center:[lv.lng,lv.lat],zoom:lv.zoom,duration:2000});
+  };
+});
+
+map.on('moveend',()=>{
+  if(isMovingProgrammatically){isMovingProgrammatically=false;return;}
+  const c=map.getCenter(),z=map.getZoom();
+  lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
+  if(auraLevel===0)lastStreetView={lat:c.lat,lng:c.lng,zoom:z};
+});
+
+document.getElementById('ebtn').onclick=()=>{const ep=document.getElementById('explore-panel');if(ep)ep.classList.toggle('open');};
+document.getElementById('ep1').onclick=()=>{showMsg('Sensing Aurasenser contributions for this area...');closeExplore();};
+document.getElementById('ep2').onclick=()=>{showMsg('Sensing live Aurasenser activity in this area...');closeExplore();};
+document.getElementById('ep3').onclick=()=>{showMsg('Aura pulse from the wider world — coming in v1');closeExplore();};
+document.getElementById('ep4').onclick=()=>{showMsg('Conscious Trajectory — coming in v1');closeExplore();};
+
+map.on('click',async function(e){
+  closeExplore();
+  const clat=e.lngLat.lat,clng=e.lngLat.lng;
+  const input=document.getElementById('inp');
+  if(input.value.trim()){submit(clat,clng,input.value);input.value='';return;}
+  const existing=auraPoints.filter(p=>haversine(p.lat,p.lng,clat,clng)<100);
+  const s=SENSES.find(s=>s.id===selSense);
+  let streetName='this location';
+  try{
+    const res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${clat}&lon=${clng}&zoom=17`);
+    const d=await res.json();
+    if(d&&d.address)streetName=d.address.road||d.address.pedestrian||d.address.footway||d.display_name?.split(',')[0]||streetName;
+  }catch(_){streetName=`${clat.toFixed(4)}°N, ${Math.abs(clng).toFixed(4)}°${clng<0?'W':'E'}`;}
+  const senseListHTML=existing.length?'<div class="pop-sense-list">'+existing.slice(0,3).map(p=>{
+    const ps=SENSES.find(x=>x.id===p.sense);
+    return `<div class="pop-sense-item" style="border-left-color:${ps.color}">${ps.icon} "${p.text.substring(0,52)}${p.text.length>52?'…':''}"</div>`;
+  }).join('')+'</div>':'';
+  new mapboxgl.Popup({className:'aura-popup',closeButton:true,maxWidth:'250px'}).setLngLat([clng,clat]).setHTML(`
+    <div class="mapboxgl-popup-content-inner">
+    <div class="pop-title">${existing.length?'Aura detected':'Aura forming'}</div>
+    <div class="pop-street">📍 ${streetName}</div>
+    <div class="pop-aura" style="color:${s.color}">${existing.length?`${existing.length} sense${existing.length>1?'s':''} shared here`:'No senses shared yet — be the first'}</div>
+    ${senseListHTML}
+    <div class="pop-action" style="margin-top:5px">${existing.length?'Type below and click here to add your sense':'Type below and click here to energize this spot'}</div>
+    </div>
+  `).addTo(map);
+});
+
+function submit(lat,lng,text){
+  const s=SENSES.find(s=>s.id===selSense);if(!s)return;
+  auraPoints.push({lat,lng,sense:selSense,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2});
+  ripples.push({lat,lng,color:s.color,age:0});
+  if(!planetColors.includes(s.color))planetColors.push(s.color);
+  addFeed(text,selSense,'just now',true,lat,lng);
+  playSound(selSense);
+  shareCount++;myShareCount++;
+  triggerWave(s.color);
+  if(shareCount%4===0&&auraLevel<4){
+    auraLevel++;
+    setTimeout(()=>{
+      showMsg(LEVEL_MSGS[auraLevel]);
+      if(auraLevel===4){showPlanet();return;}
+      map.flyTo({center:[ZOOMS[auraLevel][1],ZOOMS[auraLevel][0]],zoom:ZOOMS[auraLevel][2],duration:2500});
+      setTimeout(()=>map.flyTo({center:[ZOOMS[0][1],ZOOMS[0][0]],zoom:ZOOMS[0][2],duration:2500}),4000);
+    },6000);
+  } else {
+    setTimeout(()=>showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]),500);
+  }
+}
+
+document.getElementById('sbtn').onclick=()=>{
+  const v=document.getElementById('inp').value.trim();if(!v)return;
+  const c=map.getCenter(),j=()=>(Math.random()-.5)*.003;
+  submit(c.lat+j(),c.lng+j(),v);document.getElementById('inp').value='';
+};
+document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sbtn').click()});
+
+document.getElementById('sg').onclick=async()=>{
+  const q=document.getElementById('si').value.trim();if(!q)return;
+  showMsg('Sensing the aura of '+q+'...');
+  try{
+    const res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`);
+    const d=await res.json();
+    if(d&&d.length){map.flyTo({center:[+d[0].lon,+d[0].lat],zoom:17,duration:2000});showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');}
+    else showMsg('Location not found — try a postcode or town name');
+  }catch(e){showMsg('Search unavailable — try again shortly');}
+};
+document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
+
+const socTip=document.getElementById('soc-tip-el');
+document.querySelectorAll('.soc-btn').forEach(b=>{
+  b.onmouseenter=e=>{
+    socTip.textContent=b.dataset.tip+' — coming soon';
+    socTip.style.display='block';
+    socTip.style.top=(e.clientY+12)+'px';
+    socTip.style.left=Math.min(e.clientX-30,window.innerWidth-180)+'px';
+  };
+  b.onmouseleave=()=>{socTip.style.display='none'};
+  b.onclick=()=>showMsg('Social sharing — coming in v1');
+});
+});
 </script>
 </body>
 </html>
-
