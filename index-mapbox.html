@@ -310,12 +310,12 @@ let T=0;
     const r=(45+p.intensity*35)*breath*life*Math.pow(2,(map.getZoom()-14)*0.7);
     // Outer glow: single clean gradient, brighter stops (from map-test)
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
-    glow.addColorStop(0,   hexA(col,0.75*p.intensity*life));
+    glow.addColorStop(0,   hexA(col,0.92*p.intensity*life));
     glow.addColorStop(0.5, hexA(col,0.40*p.intensity*life));
     glow.addColorStop(1,   hexA(col,0));
     ctx.fillStyle=glow;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
     // Bright little core (from map-test) — the 'harder, more present' centre
-    const cr=6*breath*life;
+    const cr=11*breath*life;
     const core=ctx.createRadialGradient(x,y,0,x,y,cr);
     core.addColorStop(0,hexA('#ffffff',0.9*life));
     core.addColorStop(1,hexA(col,0));
