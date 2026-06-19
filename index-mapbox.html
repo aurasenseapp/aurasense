@@ -492,7 +492,7 @@ function dropSearchMarker(center){
   if(searchMarker){searchMarker.remove();searchMarker=null;}
   // Outer wrapper is what Mapbox positions (it owns the wrapper's transform).
   const el=document.createElement('div');
-  el.style.cssText='width:18px;height:18px;display:flex;align-items:center;justify-content:center;transition:opacity 1.4s ease;opacity:0;';
+  el.style.cssText='width:18px;height:18px;display:flex;align-items:center;justify-content:center;transition:opacity 3.5s ease-in-out;opacity:0;';
   // Inner dot carries the pulse — separate element so its scale-transform doesn't
   // collide with the transform Mapbox applies to the wrapper for positioning.
   const dot=document.createElement('div');
@@ -504,11 +504,11 @@ function dropSearchMarker(center){
   // generating that 'living' appearance rather than popping in mid-flight.
   map.once('moveend',()=>{ if(el)el.style.opacity='1'; });
   // Safety: if no moveend fires, still show it.
-  setTimeout(()=>{ if(el)el.style.opacity='1'; },2400);
+  setTimeout(()=>{ if(el&&el.style.opacity==='0')el.style.opacity='1'; },4000);
   // Pulse (living potential — an invitation to contribute) for a good while, then stop
   // pulsing and settle to a soft, still-clearly-visible glow that lingers as an anchor.
   setTimeout(()=>{ if(dot)dot.style.animation='none'; },14000);
-  setTimeout(()=>{ if(el){el.style.transition='opacity 6s ease';el.style.opacity='0.6';} },14000);
+  setTimeout(()=>{ if(el){el.style.transition='opacity 10s ease-in-out';el.style.opacity='0.55';} },15000);
 }
 function setActiveTab(i){
   if(planetActive && i!==4) hidePlanet();
@@ -523,7 +523,7 @@ let flyTimer=null;
 function flyToBounds(bounds){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
-  map.fitBounds(bounds,{padding:{top:30,bottom:90,left:20,right:150},duration:2000,maxZoom:14.5});
+  map.fitBounds(bounds,{padding:{top:50,bottom:60,left:30,right:160},duration:2000,maxZoom:7});
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
 }
 function flyProgrammatic(opts){
@@ -621,14 +621,16 @@ document.getElementById('sg').onclick=async()=>{
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
       setActiveTab(t in levelFor?levelFor[t]:0);
-      if(f.bbox && t!=='address' && t!=='poi'){
-        // Areas: fit to bounds but a touch tighter so countries don't sit too loose.
+      // Big areas (country / large region) frame nicely by bounds.
+      // Everything smaller flies to its centre at a chosen zoom — no bbox/padding
+      // tug-of-war, so towns land properly close instead of springing back out.
+      const bigArea = (t==='country'||t==='region') && f.bbox;
+      if(bigArea){
         flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]]);
       }else{
-        // Precise points (house/POI) — go in close to help pinpoint.
-        const z={country:5.6,region:8.5,district:10.5,place:14,locality:14,
-                 neighborhood:15.5,postcode:15,address:17.5,poi:16.5}[t]||14.5;
-        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:[-80,-70]});
+        const z={country:6,region:9,district:11,place:14.5,locality:14.5,
+                 neighborhood:15.5,postcode:15.5,address:17.5,poi:16.5}[t]||14.5;
+        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:[-70,-90]});
         if(t==='address'||t==='poi') dropSearchMarker(f.center);
       }
       showMsg('Sensing the aura of '+name+'...');
