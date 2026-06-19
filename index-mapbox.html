@@ -310,9 +310,10 @@ let T=0;
     const r=(45+p.intensity*35)*breath*life*Math.pow(2,(map.getZoom()-14)*0.7);
     // Outer glow: single clean gradient, brighter stops (from map-test)
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
-    glow.addColorStop(0,   hexA(col,(0.78+0.20*((breath-0.52)/0.60))*p.intensity*life));
-    glow.addColorStop(0.5, hexA(col,0.40*p.intensity*life));
-    glow.addColorStop(1,   hexA(col,0));
+    const swell=(breath-0.52)/0.60; // 0..1 across the breath
+    glow.addColorStop(0,    hexA(col,(0.95+0.05*swell)*life));
+    glow.addColorStop(0.35, hexA(col,(0.55+0.10*swell)*life));
+    glow.addColorStop(1,    hexA(col,0));
     ctx.fillStyle=glow;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
     // Bright little core (from map-test) — the 'harder, more present' centre
     const cr=11*breath*life;
@@ -320,6 +321,13 @@ let T=0;
     core.addColorStop(0,hexA('#ffffff',0.9*life));
     core.addColorStop(1,hexA(col,0));
     ctx.fillStyle=core;ctx.beginPath();ctx.arc(x,y,cr,0,Math.PI*2);ctx.fill();
+    // slow rotating lobe — a hint of the chakra vortex, catches the eye through motion
+    const ang=T*0.6+i*2.1;
+    const lx=x+Math.cos(ang)*r*0.28, ly=y+Math.sin(ang)*r*0.28;
+    const lobe=ctx.createRadialGradient(lx,ly,0,lx,ly,r*0.55);
+    lobe.addColorStop(0,hexA(col,0.35*life*(0.6+0.4*swell)));
+    lobe.addColorStop(1,hexA(col,0));
+    ctx.fillStyle=lobe;ctx.beginPath();ctx.arc(lx,ly,r*0.55,0,Math.PI*2);ctx.fill();
   });
   ripples=ripples.filter(r=>r.age<1);
   ripples.forEach(r=>{
