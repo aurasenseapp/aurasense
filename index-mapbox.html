@@ -31,7 +31,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .tab{font-size:11px;padding:5px 9px;border-radius:14px;border:none;background:transparent;color:#7870a0;cursor:pointer;transition:color .3s;letter-spacing:.03em;display:flex;align-items:center;gap:4px;font-family:inherit;white-space:nowrap;pointer-events:all}
 .tab:hover{color:#c4b5fd}
 .tab.active{color:#c4b5fd}
-.tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0}
+.tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0;transition:background .3s,box-shadow .3s}
+.tab.active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
 #search-box{display:flex;gap:5px;flex-shrink:0}
 #si{background:rgba(10,10,20,.9);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;font-size:11px;color:#e0d8ff;outline:none;width:160px;font-family:inherit}
 #si::placeholder{color:#5a5270}
@@ -467,9 +468,7 @@ document.querySelectorAll('.tab').forEach(tab=>{
     if(i===4){showPlanet();return;}
     const wasPlanet=document.getElementById('planet-view').style.display==='flex';
     if(wasPlanet)hidePlanet();
-    auraLevel=i;
-    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
+    setActiveTab(i);
     const lv=lastViews[i];
     flyProgrammatic({center:[lv.lng,lv.lat],zoom:lv.zoom,duration:2000});
   };
@@ -478,13 +477,35 @@ document.querySelectorAll('.tab').forEach(tab=>{
 // Helper: fly the map ourselves, and ignore the move events it generates.
 // A timer (a little longer than the flight) clears the flag no matter how many
 // intermediate events Mapbox fires — robust where a single-event reset was not.
+// One place that controls which level tab is lit (text + glowing orb),
+// closes Planet if it was open, and keeps auraLevel in sync.
+let searchMarker=null;
+// Drop a soft pin where a precise address/POI was found, to help the user pinpoint it.
+function dropSearchMarker(center){
+  if(searchMarker){searchMarker.remove();searchMarker=null;}
+  const el=document.createElement('div');
+  el.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(196,181,253,.9);'+
+    'box-shadow:0 0 12px 4px rgba(167,139,250,.7);border:1.5px solid #fff;'+
+    'transition:opacity 1s ease;opacity:1;';
+  searchMarker=new mapboxgl.Marker({element:el}).setLngLat(center).addTo(map);
+  // fade and remove after a few seconds so it doesn't clutter
+  setTimeout(()=>{ if(el)el.style.opacity='0'; },6000);
+  setTimeout(()=>{ if(searchMarker){searchMarker.remove();searchMarker=null;} },7200);
+}
+function setActiveTab(i){
+  if(planetActive && i!==4) hidePlanet();
+  auraLevel=i;
+  document.querySelectorAll('.tab').forEach(t=>{
+    t.classList.toggle('active', +t.dataset.i===i);
+  });
+}
 const MAPBOX_TOKEN='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
 let flyTimer=null;
 // Frame an animated flight to a bounding box, ignoring our own move events.
 function flyToBounds(bounds){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
-  map.fitBounds(bounds,{padding:60,duration:2000,maxZoom:16});
+  map.fitBounds(bounds,{padding:30,duration:2000,maxZoom:15});
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
 }
 function flyProgrammatic(opts){
@@ -576,15 +597,20 @@ document.getElementById('sg').onclick=async()=>{
     if(d&&d.features&&d.features.length){
       const f=d.features[0];
       const name=f.text||f.place_name.split(',')[0];
-      if(f.bbox){
-        // bbox is [west,south,east,north] — fit the map to it, with gentle padding.
+      const t=(f.place_type&&f.place_type[0])||'';
+      // Map a found place-type to one of our four levels, and light that tab.
+      const levelFor={country:3,region:2,district:2,postcode:1,place:1,
+                      locality:1,neighborhood:0,address:0,poi:0,street:0};
+      setActiveTab(t in levelFor?levelFor[t]:0);
+      if(f.bbox && t!=='address' && t!=='poi'){
+        // Areas: fit to bounds but a touch tighter so countries don't sit too loose.
         flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]]);
       }else{
-        // No bbox (a precise point like a house): choose zoom by result type.
-        const t=(f.place_type&&f.place_type[0])||'';
-        const z={country:5,region:7,district:9,place:11,locality:12,
-                 neighborhood:14,postcode:13,address:16,poi:16}[t]||14;
+        // Precise points (house/POI) — go in close to help pinpoint.
+        const z={country:5.2,region:7.5,district:9.5,place:12.5,locality:13,
+                 neighborhood:15,postcode:14,address:17,poi:16.5}[t]||14;
         flyProgrammatic({center:f.center,zoom:z,duration:2000});
+        if(t==='address'||t==='poi') dropSearchMarker(f.center);
       }
       showMsg('Sensing the aura of '+name+'...');
     } else showMsg('Location not found — try a postcode, town, or full address');
