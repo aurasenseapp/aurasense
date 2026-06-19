@@ -174,7 +174,7 @@ const SENSES=[
   {id:"anomaly",label:"Anomaly",icon:"⟁",color:"#c27ba0",freqs:[[432,.0,.13,.18,3.2],[288,.25,.09,.15,2.5],[576,.6,.06,.12,2.0]],examples:["Three lights in formation — not aircraft. Others saw it.","An overwhelming feeling of being watched here","Something shifted in the air around 3am"]},
 ];
 const MSGS=["The aura of this place just shifted.","Your sense is now part of this street.","The collective aura grows.","Another Aurasenser heard.","This place knows it is seen.","Your gift has reached the aura."];
-const ZOOMS=[[51.508,-0.128,15],[51.508,-0.128,13],[51.508,-0.128,10],[54.5,-3,6],[20,0,3]];
+const ZOOMS=[[51.508,-0.128,15],[51.508,-0.128,13],[51.508,-0.128,10],[54.7,-4.2,5.2],[20,0,3]];
 const LEVEL_MSGS=["Your sense ripples through the street.","The town aura begins to stir.","The region feels the shift.","The nation senses it.","The planet receives your gift."];
 const LEVEL_NAMES=['Aurasenser','Sensing','Awakening','Resonant','Radiant','Luminous'];
 const ORB_IDS=['orb0','orb1','orb2','orb3','orb4'];
@@ -456,7 +456,7 @@ let lastViews=[
   {lat:51.508,lng:-0.128,zoom:15},
   {lat:51.508,lng:-0.128,zoom:13},
   {lat:51.508,lng:-0.128,zoom:10},
-  {lat:54.5,lng:-3,zoom:6}
+  {lat:54.7,lng:-4.2,zoom:5.2}
 ];
 let lastStreetView={lat:51.508,lng:-0.128,zoom:15};
 let isMovingProgrammatically=false;
@@ -478,7 +478,15 @@ document.querySelectorAll('.tab').forEach(tab=>{
 // Helper: fly the map ourselves, and ignore the move events it generates.
 // A timer (a little longer than the flight) clears the flag no matter how many
 // intermediate events Mapbox fires — robust where a single-event reset was not.
+const MAPBOX_TOKEN='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
 let flyTimer=null;
+// Frame an animated flight to a bounding box, ignoring our own move events.
+function flyToBounds(bounds){
+  isMovingProgrammatically=true;
+  if(flyTimer)clearTimeout(flyTimer);
+  map.fitBounds(bounds,{padding:60,duration:2000,maxZoom:16});
+  flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
+}
 function flyProgrammatic(opts){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
@@ -559,10 +567,27 @@ document.getElementById('sg').onclick=async()=>{
   const q=document.getElementById('si').value.trim();if(!q)return;
   showMsg('Sensing the aura of '+q+'...');
   try{
-    const res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`);
+    // Mapbox geocoding: returns a bounding box + result type, so we can frame
+    // the find correctly — a country fills the view, a street zooms in close.
+    const url=`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json`+
+              `?access_token=${MAPBOX_TOKEN}&limit=1`;
+    const res=await fetch(url);
     const d=await res.json();
-    if(d&&d.length){flyProgrammatic({center:[+d[0].lon,+d[0].lat],zoom:17,duration:2000});showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');}
-    else showMsg('Location not found — try a postcode or town name');
+    if(d&&d.features&&d.features.length){
+      const f=d.features[0];
+      const name=f.text||f.place_name.split(',')[0];
+      if(f.bbox){
+        // bbox is [west,south,east,north] — fit the map to it, with gentle padding.
+        flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]]);
+      }else{
+        // No bbox (a precise point like a house): choose zoom by result type.
+        const t=(f.place_type&&f.place_type[0])||'';
+        const z={country:5,region:7,district:9,place:11,locality:12,
+                 neighborhood:14,postcode:13,address:16,poi:16}[t]||14;
+        flyProgrammatic({center:f.center,zoom:z,duration:2000});
+      }
+      showMsg('Sensing the aura of '+name+'...');
+    } else showMsg('Location not found — try a postcode, town, or full address');
   }catch(e){showMsg('Search unavailable — try again shortly');}
 };
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
