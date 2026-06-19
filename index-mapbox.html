@@ -252,7 +252,7 @@ function hidePlanet(){
   document.getElementById('map').style.transition='opacity 0.8s ease';
   document.getElementById('map').style.opacity='1';
   setTimeout(()=>{planetActive=false;pv.style.display='none';},800);
-  map.flyTo({center:[lastStreetView.lng,lastStreetView.lat],zoom:lastStreetView.zoom,duration:1800});
+  flyProgrammatic({center:[lastStreetView.lng,lastStreetView.lat],zoom:lastStreetView.zoom,duration:1800});
 }
 document.getElementById('planet-back').onclick=hidePlanet;
 
@@ -428,7 +428,7 @@ function addFeed(text,sense,time,glow,lat,lng){
   const d=document.createElement('div');
   d.className='fi'+(glow?' glow':'');
   d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${s.icon} ${s.label}</div><div class="fi-text">"${text}"</div><div class="fi-meta">${time}</div>`;
-  if(lat!=null&&lng!=null)d.onclick=()=>map.flyTo({center:[lng,lat],zoom:16,duration:1200});
+  if(lat!=null&&lng!=null)d.onclick=()=>flyProgrammatic({center:[lng,lat],zoom:16,duration:1200});
   feed.insertBefore(d,feed.firstChild);
   if(glow)setTimeout(()=>d.classList.remove('glow'),5000);
   if(feed.children.length>12)feed.removeChild(feed.lastChild);
@@ -465,25 +465,29 @@ document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=()=>{
     const i=+tab.dataset.i;
     if(i===4){showPlanet();return;}
-    if(document.getElementById('planet-view').style.display==='flex'){
-      hidePlanet();
-      auraLevel=i;
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      tab.classList.add('active');
-      return;
-    }
+    const wasPlanet=document.getElementById('planet-view').style.display==='flex';
+    if(wasPlanet)hidePlanet();
     auraLevel=i;
     document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
     tab.classList.add('active');
     const lv=lastViews[i];
-    isMovingProgrammatically=true;
-    map.flyTo({center:[lv.lng,lv.lat],zoom:lv.zoom,duration:2000});
+    flyProgrammatic({center:[lv.lng,lv.lat],zoom:lv.zoom,duration:2000});
   };
 });
 
+// Helper: fly the map ourselves, and ignore the move events it generates.
+// A timer (a little longer than the flight) clears the flag no matter how many
+// intermediate events Mapbox fires — robust where a single-event reset was not.
+let flyTimer=null;
+function flyProgrammatic(opts){
+  isMovingProgrammatically=true;
+  if(flyTimer)clearTimeout(flyTimer);
+  map.flyTo(opts);
+  flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },(opts.duration||2000)+250);
+}
 map.on('moveend',()=>{
-  if(isMovingProgrammatically){isMovingProgrammatically=false;return;}
-  const c=map.getCenter(),z=map.getZoom();
+  if(isMovingProgrammatically)return;            // a flight we caused — don't record
+  const c=map.getCenter(),z=map.getZoom();        // genuine user pan/zoom
   lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
   if(auraLevel===0)lastStreetView={lat:c.lat,lng:c.lng,zoom:z};
 });
@@ -536,8 +540,8 @@ function submit(lat,lng,text){
     setTimeout(()=>{
       showMsg(LEVEL_MSGS[auraLevel]);
       if(auraLevel===4){showPlanet();return;}
-      map.flyTo({center:[ZOOMS[auraLevel][1],ZOOMS[auraLevel][0]],zoom:ZOOMS[auraLevel][2],duration:2500});
-      setTimeout(()=>map.flyTo({center:[ZOOMS[0][1],ZOOMS[0][0]],zoom:ZOOMS[0][2],duration:2500}),4000);
+      flyProgrammatic({center:[ZOOMS[auraLevel][1],ZOOMS[auraLevel][0]],zoom:ZOOMS[auraLevel][2],duration:2500});
+      setTimeout(()=>flyProgrammatic({center:[ZOOMS[0][1],ZOOMS[0][0]],zoom:ZOOMS[0][2],duration:2500}),4000);
     },6000);
   } else {
     setTimeout(()=>showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]),500);
@@ -557,7 +561,7 @@ document.getElementById('sg').onclick=async()=>{
   try{
     const res=await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(q)}&limit=1`);
     const d=await res.json();
-    if(d&&d.length){map.flyTo({center:[+d[0].lon,+d[0].lat],zoom:17,duration:2000});showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');}
+    if(d&&d.length){flyProgrammatic({center:[+d[0].lon,+d[0].lat],zoom:17,duration:2000});showMsg('Sensing the aura of '+d[0].display_name.split(',')[0]+'...');}
     else showMsg('Location not found — try a postcode or town name');
   }catch(e){showMsg('Search unavailable — try again shortly');}
 };
