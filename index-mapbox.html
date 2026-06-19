@@ -514,6 +514,8 @@ async function contextualZoom(level){
 // closes Planet if it was open, and keeps auraLevel in sync.
 let searchMarker=null;
 let lastSearchPoint=null;  // [lng,lat] of last precise address/POI search
+let lastSearchLabel=null;  // the label DOM element of the current marker
+let lastSearchName=null;   // the place name string of the current marker
 // Drop a soft pin where a precise address/POI was found, to help the user pinpoint it.
 function dropSearchMarker(center,placeName){
   if(searchMarker){searchMarker.remove();searchMarker=null;}
@@ -526,6 +528,7 @@ function dropSearchMarker(center,placeName){
   // Label above the pin — invites an offering if none exists yet.
   const lbl=document.createElement('div');
   lbl.textContent=hasAura?('✨ '+(placeName||'This place')):('Awaiting aura offering at '+(placeName||'this place'));
+  lastSearchLabel=lbl; lastSearchName=(placeName||'this place');
   lbl.style.cssText='font-size:10.5px;font-style:italic;color:#d8ccff;background:rgba(10,8,20,.82);'+
     'padding:3px 8px;border-radius:8px;white-space:nowrap;margin-bottom:5px;'+
     'text-shadow:0 0 8px rgba(167,139,250,.6);border:0.5px solid rgba(167,139,250,.25);';
@@ -667,6 +670,12 @@ document.getElementById('sbtn').onclick=()=>{
   // place the aura EXACTLY there (no random jitter). Otherwise use map centre.
   if(lastSearchPoint && haversine(lastSearchPoint[1],lastSearchPoint[0],c.lat,c.lng)<150){
     submit(lastSearchPoint[1],lastSearchPoint[0],v);
+    // Update the marker label to celebrate the fresh offering, then mellow after an hour.
+    if(lastSearchLabel){
+      lastSearchLabel.textContent='✨ Aura just offered at '+lastSearchName;
+      const lblRef=lastSearchLabel, nameRef=lastSearchName;
+      setTimeout(()=>{ if(lblRef)lblRef.textContent='✨ Aura offered at '+nameRef; },3600000);
+    }
   } else {
     const j=()=>(Math.random()-.5)*.0006;  // tiny jitter only, ~30m, so stacked auras don't overlap exactly
     submit(c.lat+j(),c.lng+j(),v);
