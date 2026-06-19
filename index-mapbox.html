@@ -470,17 +470,40 @@ document.querySelectorAll('.tab').forEach(tab=>{
     const wasPlanet=document.getElementById('planet-view').style.display==='flex';
     if(wasPlanet)hidePlanet();
     setActiveTab(i);
-    if(i===3){
-      // Nation: frame the whole UK by bounds (matches a 'United Kingdom' search,
-      // so the tips aren't clipped by the page edge).
-      flyToBounds([[-8.7,49.8],[1.8,60.9]]);
-    } else {
-      const lv=lastViews[i];
-      flyProgrammatic({center:[lv.lng,lv.lat],zoom:lv.zoom,duration:2000});
-    }
+    contextualZoom(i);
   };
 });
 
+// Zoom the tab levels relative to WHERE THE USER CURRENTLY IS (not fixed London).
+// Street stays a close view of the current centre; Town/Region/Nation reverse-geocode
+// the current centre and fit the matching real-world boundary.
+async function contextualZoom(level){
+  const c=map.getCenter();
+  if(level===0){ // Street — just a close view of where we are
+    flyProgrammatic({center:[c.lng,c.lat],zoom:15,duration:1800});
+    return;
+  }
+  // Which boundary type to fit for each level:
+  const typeFor={1:'place',2:'region',3:'country'}[level];
+  try{
+    const url=`https://api.mapbox.com/geocoding/v5/mapbox.places/${c.lng},${c.lat}.json`+
+              `?access_token=${MAPBOX_TOKEN}&types=${typeFor}&limit=1`;
+    const r=await fetch(url);const d=await r.json();
+    if(d&&d.features&&d.features.length&&d.features[0].bbox){
+      const b=d.features[0].bbox;
+      flyToBounds([[b[0],b[1]],[b[2],b[3]]]);
+      return;
+    }
+    if(d&&d.features&&d.features.length&&d.features[0].center){
+      const z={1:11,2:8,3:5.5}[level];
+      flyProgrammatic({center:d.features[0].center,zoom:z,duration:2000});
+      return;
+    }
+  }catch(e){}
+  // Fallback if lookup fails: just zoom out from current centre.
+  const z={1:11,2:8,3:5.5}[level];
+  flyProgrammatic({center:[c.lng,c.lat],zoom:z,duration:2000});
+}
 // Helper: fly the map ourselves, and ignore the move events it generates.
 // A timer (a little longer than the flight) clears the flag no matter how many
 // intermediate events Mapbox fires — robust where a single-event reset was not.
