@@ -484,15 +484,20 @@ let searchMarker=null;
 // Drop a soft pin where a precise address/POI was found, to help the user pinpoint it.
 function dropSearchMarker(center){
   if(searchMarker){searchMarker.remove();searchMarker=null;}
+  // Outer wrapper is what Mapbox positions (it owns the wrapper's transform).
   const el=document.createElement('div');
-  el.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(196,181,253,.95);'+
-    'border:1.5px solid #fff;opacity:1;'+
-    'animation:searchPulse 2.4s ease-in-out infinite;'+
-    'transition:opacity 4s ease;';
+  el.style.cssText='width:18px;height:18px;display:flex;align-items:center;justify-content:center;transition:opacity 5s ease;opacity:1;';
+  // Inner dot carries the pulse — separate element so its scale-transform doesn't
+  // collide with the transform Mapbox applies to the wrapper for positioning.
+  const dot=document.createElement('div');
+  dot.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(196,181,253,.95);'+
+    'border:1.5px solid #fff;animation:searchPulse 2.4s ease-in-out infinite;';
+  el.appendChild(dot);
   searchMarker=new mapboxgl.Marker({element:el}).setLngLat(center).addTo(map);
-  // Pulse (living potential — an invitation to contribute) for a while, then stop
+  // Pulse (living potential — an invitation to contribute) for a good while, then stop
   // pulsing and very gently settle to a soft half-glow that lingers as an anchor.
-  setTimeout(()=>{ if(el){el.style.animation='none';el.style.opacity='0.4';} },9000);
+  setTimeout(()=>{ if(dot)dot.style.animation='none'; },12000);
+  setTimeout(()=>{ if(el)el.style.opacity='0.4'; },12000);
 }
 function setActiveTab(i){
   if(planetActive && i!==4) hidePlanet();
@@ -507,7 +512,7 @@ let flyTimer=null;
 function flyToBounds(bounds){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
-  map.fitBounds(bounds,{padding:{top:50,bottom:170,left:40,right:210},duration:2000,maxZoom:16});
+  map.fitBounds(bounds,{padding:{top:30,bottom:90,left:30,right:120},duration:2000,maxZoom:16.5});
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
 }
 function flyProgrammatic(opts){
@@ -592,8 +597,9 @@ document.getElementById('sg').onclick=async()=>{
   try{
     // Mapbox geocoding: returns a bounding box + result type, so we can frame
     // the find correctly — a country fills the view, a street zooms in close.
+    const cc=map.getCenter();
     const url=`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json`+
-              `?access_token=${MAPBOX_TOKEN}&limit=1`;
+              `?access_token=${MAPBOX_TOKEN}&limit=1&proximity=${cc.lng},${cc.lat}`;
     const res=await fetch(url);
     const d=await res.json();
     if(d&&d.features&&d.features.length){
