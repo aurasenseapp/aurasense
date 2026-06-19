@@ -33,6 +33,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .tab.active{color:#c4b5fd}
 .tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0;transition:background .3s,box-shadow .3s}
 .tab.active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
+@keyframes searchPulse{0%{transform:scale(1);box-shadow:0 0 10px 3px rgba(167,139,250,.6)}50%{transform:scale(1.35);box-shadow:0 0 18px 7px rgba(167,139,250,.9)}100%{transform:scale(1);box-shadow:0 0 10px 3px rgba(167,139,250,.6)}}
 #search-box{display:flex;gap:5px;flex-shrink:0}
 #si{background:rgba(10,10,20,.9);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:6px 10px;font-size:11px;color:#e0d8ff;outline:none;width:160px;font-family:inherit}
 #si::placeholder{color:#5a5270}
@@ -484,13 +485,14 @@ let searchMarker=null;
 function dropSearchMarker(center){
   if(searchMarker){searchMarker.remove();searchMarker=null;}
   const el=document.createElement('div');
-  el.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(196,181,253,.9);'+
-    'box-shadow:0 0 12px 4px rgba(167,139,250,.7);border:1.5px solid #fff;'+
-    'transition:opacity 1s ease;opacity:1;';
+  el.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(196,181,253,.95);'+
+    'border:1.5px solid #fff;opacity:1;'+
+    'animation:searchPulse 2.4s ease-in-out infinite;'+
+    'transition:opacity 4s ease;';
   searchMarker=new mapboxgl.Marker({element:el}).setLngLat(center).addTo(map);
-  // After a while, settle to a gentle half-glow so it stays as a quiet anchor
-  // (it remains until the next search replaces it).
-  setTimeout(()=>{ if(el)el.style.opacity='0.45'; },8000);
+  // Pulse (living potential — an invitation to contribute) for a while, then stop
+  // pulsing and very gently settle to a soft half-glow that lingers as an anchor.
+  setTimeout(()=>{ if(el){el.style.animation='none';el.style.opacity='0.4';} },9000);
 }
 function setActiveTab(i){
   if(planetActive && i!==4) hidePlanet();
@@ -505,7 +507,7 @@ let flyTimer=null;
 function flyToBounds(bounds){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
-  map.fitBounds(bounds,{padding:{top:60,bottom:60,left:60,right:200},duration:2000,maxZoom:15});
+  map.fitBounds(bounds,{padding:{top:50,bottom:170,left:40,right:210},duration:2000,maxZoom:16});
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
 }
 function flyProgrammatic(opts){
@@ -607,9 +609,9 @@ document.getElementById('sg').onclick=async()=>{
         flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]]);
       }else{
         // Precise points (house/POI) — go in close to help pinpoint.
-        const z={country:5.2,region:7.5,district:9.5,place:12.5,locality:13,
-                 neighborhood:15,postcode:14,address:17,poi:16.5}[t]||14;
-        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:[-70,0]});
+        const z={country:5.6,region:7.8,district:9.8,place:13,locality:13.5,
+                 neighborhood:15,postcode:14.5,address:17.5,poi:16.5}[t]||14;
+        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:[-80,-70]});
         if(t==='address'||t==='poi') dropSearchMarker(f.center);
       }
       showMsg('Sensing the aura of '+name+'...');
