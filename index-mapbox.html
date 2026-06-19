@@ -510,9 +510,11 @@ async function contextualZoom(level){
 // One place that controls which level tab is lit (text + glowing orb),
 // closes Planet if it was open, and keeps auraLevel in sync.
 let searchMarker=null;
+let lastSearchPoint=null;  // [lng,lat] of last precise address/POI search
 // Drop a soft pin where a precise address/POI was found, to help the user pinpoint it.
 function dropSearchMarker(center,placeName){
   if(searchMarker){searchMarker.remove();searchMarker=null;}
+  lastSearchPoint=center;  // remember exact spot for precise submission
   // Does this spot already have any aura offerings nearby? (within ~80m)
   const hasAura=auraPoints.some(p=>haversine(p.lat,p.lng,center[1],center[0])<80);
   // Outer wrapper is what Mapbox positions (it owns the wrapper's transform).
@@ -640,8 +642,16 @@ function submit(lat,lng,text){
 
 document.getElementById('sbtn').onclick=()=>{
   const v=document.getElementById('inp').value.trim();if(!v)return;
-  const c=map.getCenter(),j=()=>(Math.random()-.5)*.003;
-  submit(c.lat+j(),c.lng+j(),v);document.getElementById('inp').value='';
+  const c=map.getCenter();
+  // If a precise address/POI was just searched and we're still right by it,
+  // place the aura EXACTLY there (no random jitter). Otherwise use map centre.
+  if(lastSearchPoint && haversine(lastSearchPoint[1],lastSearchPoint[0],c.lat,c.lng)<150){
+    submit(lastSearchPoint[1],lastSearchPoint[0],v);
+  } else {
+    const j=()=>(Math.random()-.5)*.0006;  // tiny jitter only, ~30m, so stacked auras don't overlap exactly
+    submit(c.lat+j(),c.lng+j(),v);
+  }
+  document.getElementById('inp').value='';
 };
 document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sbtn').click()});
 
