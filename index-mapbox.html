@@ -493,7 +493,7 @@ async function contextualZoom(level){
     const r=await fetch(url);const d=await r.json();
     if(d&&d.features&&d.features.length&&d.features[0].bbox){
       const b=d.features[0].bbox;
-      const mz={1:15.5,2:10,3:8}[level];
+      const mz={1:16,2:11,3:9}[level];
       flyToBounds([[b[0],b[1]],[b[2],b[3]]],mz);
       return;
     }
@@ -570,7 +570,7 @@ let searching=false;  // true while a SEARCH flight is happening (don't record i
 function flyToBounds(bounds,maxZoom){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
-  map.fitBounds(bounds,{padding:{top:90,bottom:40,left:45,right:110},duration:2000,maxZoom:maxZoom||15});
+  map.fitBounds(bounds,{padding:{top:50,bottom:75,left:35,right:140},duration:2000,maxZoom:maxZoom||15});
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
 }
 function flyProgrammatic(opts){
@@ -698,8 +698,8 @@ document.getElementById('sg').onclick=async()=>{
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
         // Allow small places to come in close; keep big areas appropriately wide.
-        const mz={place:15.5,locality:15.5,district:13,postcode:15.5,
-                  neighborhood:16,region:10,country:8}[t]||15;
+        const mz={place:16,locality:16,district:14,postcode:16,
+                  neighborhood:16.5,region:11,country:9}[t]||15.5;
         flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]],mz);
       }else{
         // No bbox = a precise point (address / POI). Go in close and pin it.
