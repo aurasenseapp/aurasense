@@ -306,11 +306,11 @@ let T=0;
     const x=pt.x,y=pt.y;
     const s=SENSES.find(s=>s.id===p.sense),col=s?s.color:'#a78bfa';
     const life=Math.min(1,(Date.now()-p.born)/2000);
-    const breath=0.85+Math.sin(T*1.0+i)*0.15;
+    const breath=0.82+Math.sin(T*0.55+i*1.3)*0.30;
     const r=(45+p.intensity*35)*breath*life*Math.pow(2,(map.getZoom()-14)*0.7);
     // Outer glow: single clean gradient, brighter stops (from map-test)
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
-    glow.addColorStop(0,   hexA(col,0.92*p.intensity*life));
+    glow.addColorStop(0,   hexA(col,(0.78+0.20*((breath-0.52)/0.60))*p.intensity*life));
     glow.addColorStop(0.5, hexA(col,0.40*p.intensity*life));
     glow.addColorStop(1,   hexA(col,0));
     ctx.fillStyle=glow;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
