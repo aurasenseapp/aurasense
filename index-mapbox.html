@@ -493,7 +493,8 @@ async function contextualZoom(level){
     const r=await fetch(url);const d=await r.json();
     if(d&&d.features&&d.features.length&&d.features[0].bbox){
       const b=d.features[0].bbox;
-      flyToBounds([[b[0],b[1]],[b[2],b[3]]]);
+      const mz={1:14.5,2:9,3:6.5}[level];
+      flyToBounds([[b[0],b[1]],[b[2],b[3]]],mz);
       return;
     }
     if(d&&d.features&&d.features.length&&d.features[0].center){
@@ -566,10 +567,10 @@ const MAPBOX_TOKEN='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHpla
 let flyTimer=null;
 let searching=false;  // true while a SEARCH flight is happening (don't record into tab memory)
 // Frame an animated flight to a bounding box, ignoring our own move events.
-function flyToBounds(bounds){
+function flyToBounds(bounds,maxZoom){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
-  map.fitBounds(bounds,{padding:{top:60,bottom:80,left:50,right:120},duration:2000,maxZoom:13.5});
+  map.fitBounds(bounds,{padding:{top:55,bottom:70,left:45,right:110},duration:2000,maxZoom:maxZoom||15});
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
 }
 function flyProgrammatic(opts){
@@ -696,9 +697,10 @@ document.getElementById('sg').onclick=async()=>{
       searching=true;                       // tell moveend: don't record this move
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
-        // Size the frame from the bbox's REAL extent — a village gets a close frame,
-        // a country a wide one — automatically, no per-type guessing. Padding clears panels.
-        flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]]);
+        // Allow small places to come in close; keep big areas appropriately wide.
+        const mz={place:14.5,locality:14.5,district:12,postcode:14.5,
+                  neighborhood:15.5,region:9,country:6.5}[t]||14;
+        flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]],mz);
       }else{
         // No bbox = a precise point (address / POI). Go in close and pin it.
         const z=(t==='address')?17.5:(t==='poi')?16.5:15;
