@@ -488,11 +488,20 @@ document.querySelectorAll('.tab').forEach(tab=>{
 // closes Planet if it was open, and keeps auraLevel in sync.
 let searchMarker=null;
 // Drop a soft pin where a precise address/POI was found, to help the user pinpoint it.
-function dropSearchMarker(center){
+function dropSearchMarker(center,placeName){
   if(searchMarker){searchMarker.remove();searchMarker=null;}
+  // Does this spot already have any aura offerings nearby? (within ~80m)
+  const hasAura=auraPoints.some(p=>haversine(p.lat,p.lng,center[1],center[0])<80);
   // Outer wrapper is what Mapbox positions (it owns the wrapper's transform).
   const el=document.createElement('div');
-  el.style.cssText='width:18px;height:18px;display:flex;align-items:center;justify-content:center;transition:opacity 3.5s ease-in-out;opacity:0;';
+  el.style.cssText='display:flex;flex-direction:column;align-items:center;transition:opacity 4.5s ease-in-out;opacity:0;';
+  // Label above the pin — invites an offering if none exists yet.
+  const lbl=document.createElement('div');
+  lbl.textContent=hasAura?('✨ '+(placeName||'This place')):('Awaiting aura offering at '+(placeName||'this place'));
+  lbl.style.cssText='font-size:10.5px;font-style:italic;color:#d8ccff;background:rgba(10,8,20,.82);'+
+    'padding:3px 8px;border-radius:8px;white-space:nowrap;margin-bottom:5px;'+
+    'text-shadow:0 0 8px rgba(167,139,250,.6);border:0.5px solid rgba(167,139,250,.25);';
+  el.appendChild(lbl);
   // Inner dot carries the pulse — separate element so its scale-transform doesn't
   // collide with the transform Mapbox applies to the wrapper for positioning.
   const dot=document.createElement('div');
@@ -500,15 +509,13 @@ function dropSearchMarker(center){
     'border:1.5px solid #fff;animation:searchPulse 2.4s ease-in-out infinite;';
   el.appendChild(dot);
   searchMarker=new mapboxgl.Marker({element:el}).setLngLat(center).addTo(map);
-  // Fade the marker IN only once the map has settled — so it arrives with the place,
-  // generating that 'living' appearance rather than popping in mid-flight.
+  // Fade the marker IN only once the map has settled — arrives with the place, mystically.
   map.once('moveend',()=>{ if(el)el.style.opacity='1'; });
-  // Safety: if no moveend fires, still show it.
-  setTimeout(()=>{ if(el&&el.style.opacity==='0')el.style.opacity='1'; },4000);
-  // Pulse (living potential — an invitation to contribute) for a good while, then stop
-  // pulsing and settle to a soft, still-clearly-visible glow that lingers as an anchor.
-  setTimeout(()=>{ if(dot)dot.style.animation='none'; },14000);
-  setTimeout(()=>{ if(el){el.style.transition='opacity 10s ease-in-out';el.style.opacity='0.55';} },15000);
+  setTimeout(()=>{ if(el&&el.style.opacity==='0')el.style.opacity='1'; },4500);
+  // Pulse (the living invitation) for a good while, then stop and VERY slowly ease
+  // down to a soft, still-present glow that lingers as an anchor.
+  setTimeout(()=>{ if(dot)dot.style.animation='none'; },16000);
+  setTimeout(()=>{ if(el){el.style.transition='opacity 18s ease-in-out';el.style.opacity='0.6';} },17000);
 }
 function setActiveTab(i){
   if(planetActive && i!==4) hidePlanet();
@@ -519,11 +526,12 @@ function setActiveTab(i){
 }
 const MAPBOX_TOKEN='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
 let flyTimer=null;
+let searching=false;  // true while a SEARCH flight is happening (don't record into tab memory)
 // Frame an animated flight to a bounding box, ignoring our own move events.
 function flyToBounds(bounds){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
-  map.fitBounds(bounds,{padding:{top:50,bottom:60,left:30,right:160},duration:2000,maxZoom:7});
+  map.fitBounds(bounds,{padding:{top:60,bottom:80,left:50,right:120},duration:2000,maxZoom:13.5});
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
 }
 function flyProgrammatic(opts){
@@ -533,8 +541,9 @@ function flyProgrammatic(opts){
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },(opts.duration||2000)+250);
 }
 map.on('moveend',()=>{
-  if(isMovingProgrammatically)return;            // a flight we caused — don't record
-  const c=map.getCenter(),z=map.getZoom();        // genuine user pan/zoom
+  if(searching){ searching=false; return; }      // a search flight — never record this
+  if(isMovingProgrammatically)return;            // a tab flight we caused — don't record
+  const c=map.getCenter(),z=map.getZoom();        // genuine user pan/zoom only
   lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
   if(auraLevel===0)lastStreetView={lat:c.lat,lng:c.lng,zoom:z};
 });
@@ -617,22 +626,22 @@ document.getElementById('sg').onclick=async()=>{
       const f=d.features[0];
       const name=f.text||f.place_name.split(',')[0];
       const t=(f.place_type&&f.place_type[0])||'';
-      // Map a found place-type to one of our four levels, and light that tab.
+      // Light the matching level tab WITHOUT letting this search overwrite the
+      // tabs' remembered home positions (that leak caused 'Region -> last search').
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
+      searching=true;                       // tell moveend: don't record this move
       setActiveTab(t in levelFor?levelFor[t]:0);
-      // Big areas (country / large region) frame nicely by bounds.
-      // Everything smaller flies to its centre at a chosen zoom — no bbox/padding
-      // tug-of-war, so towns land properly close instead of springing back out.
-      const bigArea = (t==='country'||t==='region') && f.bbox;
-      if(bigArea){
+      if(f.bbox){
+        // Size the frame from the bbox's REAL extent — a village gets a close frame,
+        // a country a wide one — automatically, no per-type guessing. Padding clears panels.
         flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]]);
       }else{
-        const z={country:6,region:9,district:11,place:14.5,locality:14.5,
-                 neighborhood:15.5,postcode:15.5,address:17.5,poi:16.5}[t]||14.5;
-        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:[-70,-90]});
-        if(t==='address'||t==='poi') dropSearchMarker(f.center);
+        // No bbox = a precise point (address / POI). Go in close and pin it.
+        const z=(t==='address')?17.5:(t==='poi')?16.5:15;
+        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:[-60,-80]});
       }
+      if(t==='address'||t==='poi') dropSearchMarker(f.center,name);
       showMsg('Sensing the aura of '+name+'...');
     } else showMsg('Location not found — try a postcode, town, or full address');
   }catch(e){showMsg('Search unavailable — try again shortly');}
