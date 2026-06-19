@@ -175,7 +175,7 @@ const SENSES=[
   {id:"anomaly",label:"Anomaly",icon:"⟁",color:"#c27ba0",freqs:[[432,.0,.13,.18,3.2],[288,.25,.09,.15,2.5],[576,.6,.06,.12,2.0]],examples:["Three lights in formation — not aircraft. Others saw it.","An overwhelming feeling of being watched here","Something shifted in the air around 3am"]},
 ];
 const MSGS=["The aura of this place just shifted.","Your sense is now part of this street.","The collective aura grows.","Another Aurasenser heard.","This place knows it is seen.","Your gift has reached the aura."];
-const ZOOMS=[[51.508,-0.128,15],[51.508,-0.128,13],[51.508,-0.128,10],[54.7,-4.2,5.2],[20,0,3]];
+const ZOOMS=[[51.508,-0.128,15],[51.508,-0.128,13.5],[51.508,-0.128,10],[54.7,-4.2,5.2],[20,0,3]];
 const LEVEL_MSGS=["Your sense ripples through the street.","The town aura begins to stir.","The region feels the shift.","The nation senses it.","The planet receives your gift."];
 const LEVEL_NAMES=['Aurasenser','Sensing','Awakening','Resonant','Radiant','Luminous'];
 const ORB_IDS=['orb0','orb1','orb2','orb3','orb4'];
@@ -455,7 +455,7 @@ function closeExplore(){const ep=document.getElementById('explore-panel');if(ep)
 const ZOOM_LEVELS=[15,13,10,6];
 let lastViews=[
   {lat:51.508,lng:-0.128,zoom:15},
-  {lat:51.508,lng:-0.128,zoom:13},
+  {lat:51.508,lng:-0.128,zoom:13.5},
   {lat:51.508,lng:-0.128,zoom:10},
   {lat:54.7,lng:-4.2,zoom:5.2}
 ];
@@ -465,7 +465,7 @@ let isMovingProgrammatically=false;
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=()=>{
     const i=+tab.dataset.i;
-    if(i===4){showPlanet();return;}
+    if(i===4){setActiveTab(4);showPlanet();return;}
     const wasPlanet=document.getElementById('planet-view').style.display==='flex';
     if(wasPlanet)hidePlanet();
     setActiveTab(i);
@@ -488,9 +488,9 @@ function dropSearchMarker(center){
     'box-shadow:0 0 12px 4px rgba(167,139,250,.7);border:1.5px solid #fff;'+
     'transition:opacity 1s ease;opacity:1;';
   searchMarker=new mapboxgl.Marker({element:el}).setLngLat(center).addTo(map);
-  // fade and remove after a few seconds so it doesn't clutter
-  setTimeout(()=>{ if(el)el.style.opacity='0'; },6000);
-  setTimeout(()=>{ if(searchMarker){searchMarker.remove();searchMarker=null;} },7200);
+  // After a while, settle to a gentle half-glow so it stays as a quiet anchor
+  // (it remains until the next search replaces it).
+  setTimeout(()=>{ if(el)el.style.opacity='0.45'; },8000);
 }
 function setActiveTab(i){
   if(planetActive && i!==4) hidePlanet();
@@ -505,7 +505,7 @@ let flyTimer=null;
 function flyToBounds(bounds){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
-  map.fitBounds(bounds,{padding:30,duration:2000,maxZoom:15});
+  map.fitBounds(bounds,{padding:{top:60,bottom:60,left:60,right:200},duration:2000,maxZoom:15});
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
 }
 function flyProgrammatic(opts){
@@ -609,7 +609,7 @@ document.getElementById('sg').onclick=async()=>{
         // Precise points (house/POI) — go in close to help pinpoint.
         const z={country:5.2,region:7.5,district:9.5,place:12.5,locality:13,
                  neighborhood:15,postcode:14,address:17,poi:16.5}[t]||14;
-        flyProgrammatic({center:f.center,zoom:z,duration:2000});
+        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:[-70,0]});
         if(t==='address'||t==='poi') dropSearchMarker(f.center);
       }
       showMsg('Sensing the aura of '+name+'...');
