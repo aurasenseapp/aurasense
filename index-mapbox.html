@@ -522,29 +522,32 @@ function dropSearchMarker(center,placeName){
   lastSearchPoint=center;  // remember exact spot for precise submission
   // Does this spot already have any aura offerings nearby? (within ~80m)
   const hasAura=auraPoints.some(p=>haversine(p.lat,p.lng,center[1],center[0])<80);
-  // Outer wrapper is what Mapbox positions (it owns the wrapper's transform).
+  // Wrapper Mapbox positions; the DOT is the anchor point (sits on the place).
+  // The label floats ABOVE via absolute positioning + a connector, so the canvas
+  // glow (which paints over the marker area) can't hide it.
   const el=document.createElement('div');
-  el.style.cssText='display:flex;flex-direction:column;align-items:center;transition:opacity 4.5s ease-in-out;opacity:0;';
-  // Label above the pin — invites an offering if none exists yet.
+  el.style.cssText='position:relative;width:16px;height:16px;transition:opacity 4.5s ease-in-out;opacity:0;z-index:550;';
+  // Floating label, lifted ~80px above the dot, centred over it.
   const lbl=document.createElement('div');
   lbl.textContent=hasAura?('✨ '+(placeName||'This place')):('Awaiting aura offering at '+(placeName||'this place'));
   lastSearchLabel=lbl; lastSearchName=(placeName||'this place');
-  lbl.style.cssText='font-size:10.5px;font-style:italic;color:#f0e9ff;background:rgba(10,8,20,.95);'+
-    'padding:4px 10px;border-radius:8px;white-space:nowrap;position:relative;z-index:30;'+
+  lbl.style.cssText='position:absolute;left:50%;bottom:80px;transform:translateX(-50%);'+
+    'font-size:10.5px;font-style:italic;color:#f0e9ff;background:rgba(10,8,20,.95);'+
+    'padding:4px 10px;border-radius:8px;white-space:nowrap;z-index:30;'+
     'text-shadow:0 0 10px rgba(167,139,250,.9);border:0.5px solid rgba(167,139,250,.5);box-shadow:0 0 14px rgba(0,0,0,.7);';
   el.appendChild(lbl);
-  // A thin connector line drops from the label down to the glowing point, so the
-  // label can float well clear of the glow while still clearly belonging to it.
+  // Connector line from just under the label down toward the dot.
   const conn=document.createElement('div');
-  conn.style.cssText='width:1px;height:58px;background:linear-gradient(rgba(196,181,253,.7),rgba(196,181,253,0));margin:2px auto 0;';
+  conn.style.cssText='position:absolute;left:50%;bottom:18px;transform:translateX(-50%);'+
+    'width:1px;height:62px;background:linear-gradient(rgba(196,181,253,.7),rgba(196,181,253,0));z-index:29;';
   el.appendChild(conn);
-  // Inner dot carries the pulse — separate element so its scale-transform doesn't
-  // collide with the transform Mapbox applies to the wrapper for positioning.
+  // Inner dot carries the pulse; sits at the wrapper origin = exact place.
   const dot=document.createElement('div');
   dot.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(196,181,253,.95);'+
-    'border:1.5px solid #fff;animation:searchPulse 2.4s ease-in-out infinite;';
+    'border:1.5px solid #fff;animation:searchPulse 2.4s ease-in-out infinite;position:relative;z-index:28;';
   el.appendChild(dot);
   searchMarker=new mapboxgl.Marker({element:el}).setLngLat(center).addTo(map);
+  if(searchMarker.getElement().parentElement)searchMarker.getElement().parentElement.style.zIndex='550';
   // Fade the marker IN only once the map has settled — arrives with the place, mystically.
   map.once('moveend',()=>{ if(el)el.style.opacity='1'; });
   setTimeout(()=>{ if(el&&el.style.opacity==='0')el.style.opacity='1'; },4500);
