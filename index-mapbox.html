@@ -529,10 +529,15 @@ function dropSearchMarker(center,placeName){
   const lbl=document.createElement('div');
   lbl.textContent=hasAura?('✨ '+(placeName||'This place')):('Awaiting aura offering at '+(placeName||'this place'));
   lastSearchLabel=lbl; lastSearchName=(placeName||'this place');
-  lbl.style.cssText='font-size:10.5px;font-style:italic;color:#f0e9ff;background:rgba(10,8,20,.92);'+
-    'padding:3px 9px;border-radius:8px;white-space:nowrap;margin-bottom:16px;position:relative;z-index:20;'+
-    'text-shadow:0 0 10px rgba(167,139,250,.8);border:0.5px solid rgba(167,139,250,.4);box-shadow:0 0 10px rgba(0,0,0,.5);';
+  lbl.style.cssText='font-size:10.5px;font-style:italic;color:#f0e9ff;background:rgba(10,8,20,.95);'+
+    'padding:4px 10px;border-radius:8px;white-space:nowrap;position:relative;z-index:30;'+
+    'text-shadow:0 0 10px rgba(167,139,250,.9);border:0.5px solid rgba(167,139,250,.5);box-shadow:0 0 14px rgba(0,0,0,.7);';
   el.appendChild(lbl);
+  // A thin connector line drops from the label down to the glowing point, so the
+  // label can float well clear of the glow while still clearly belonging to it.
+  const conn=document.createElement('div');
+  conn.style.cssText='width:1px;height:58px;background:linear-gradient(rgba(196,181,253,.7),rgba(196,181,253,0));margin:2px auto 0;';
+  el.appendChild(conn);
   // Inner dot carries the pulse — separate element so its scale-transform doesn't
   // collide with the transform Mapbox applies to the wrapper for positioning.
   const dot=document.createElement('div');
@@ -628,7 +633,21 @@ async function lookupPlace(lat,lng){
   try{
     const r=await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}&types=address,poi,neighborhood,place&limit=1`);
     const d=await r.json();
-    if(d&&d.features&&d.features.length)return d.features[0].text||d.features[0].place_name.split(',')[0];
+    if(d&&d.features&&d.features.length){
+      const f=d.features[0];
+      // Street name (no house number) from the result itself.
+      const street=f.text||'';
+      // Town and country come from the result's context hierarchy.
+      let town='',country='';
+      (f.context||[]).forEach(cx=>{
+        const id=cx.id||'';
+        if(id.startsWith('place'))town=cx.text;
+        else if(id.startsWith('country'))country=cx.text;
+      });
+      // Build 'Street, Town, Country' skipping any missing/duplicate parts.
+      const parts=[street,town,country].filter((p,idx,arr)=>p&&arr.indexOf(p)===idx);
+      return parts.join(', ');
+    }
   }catch(e){}
   return null;
 }
