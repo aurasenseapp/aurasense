@@ -697,9 +697,9 @@ document.getElementById('sg').onclick=async()=>{
     const d=await res.json();
     if(d&&d.features&&d.features.length){
       const f=d.features[0];
+      const t=(f.place_type&&f.place_type[0])||'';
       let name=f.text||f.place_name.split(',')[0];
       if(t==='address'&&f.address)name=f.address+' '+name;  // prepend house number
-      const t=(f.place_type&&f.place_type[0])||'';
       // Light the matching level tab WITHOUT letting this search overwrite the
       // tabs' remembered home positions (that leak caused 'Region -> last search').
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
