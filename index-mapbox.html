@@ -529,9 +529,9 @@ function dropSearchMarker(center,placeName){
   const lbl=document.createElement('div');
   lbl.textContent=hasAura?('✨ '+(placeName||'This place')):('Awaiting aura offering at '+(placeName||'this place'));
   lastSearchLabel=lbl; lastSearchName=(placeName||'this place');
-  lbl.style.cssText='font-size:10.5px;font-style:italic;color:#d8ccff;background:rgba(10,8,20,.82);'+
-    'padding:3px 8px;border-radius:8px;white-space:nowrap;margin-bottom:5px;'+
-    'text-shadow:0 0 8px rgba(167,139,250,.6);border:0.5px solid rgba(167,139,250,.25);';
+  lbl.style.cssText='font-size:10.5px;font-style:italic;color:#f0e9ff;background:rgba(10,8,20,.92);'+
+    'padding:3px 9px;border-radius:8px;white-space:nowrap;margin-bottom:16px;position:relative;z-index:20;'+
+    'text-shadow:0 0 10px rgba(167,139,250,.8);border:0.5px solid rgba(167,139,250,.4);box-shadow:0 0 10px rgba(0,0,0,.5);';
   el.appendChild(lbl);
   // Inner dot carries the pulse — separate element so its scale-transform doesn't
   // collide with the transform Mapbox applies to the wrapper for positioning.
@@ -697,7 +697,8 @@ document.getElementById('sg').onclick=async()=>{
     const d=await res.json();
     if(d&&d.features&&d.features.length){
       const f=d.features[0];
-      const name=f.text||f.place_name.split(',')[0];
+      let name=f.text||f.place_name.split(',')[0];
+      if(t==='address'&&f.address)name=f.address+' '+name;  // prepend house number
       const t=(f.place_type&&f.place_type[0])||'';
       // Light the matching level tab WITHOUT letting this search overwrite the
       // tabs' remembered home positions (that leak caused 'Region -> last search').
