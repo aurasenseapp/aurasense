@@ -707,7 +707,7 @@ document.getElementById('ep4').onclick=()=>{showMsg('Conscious Trajectory — co
 map.on('click',async function(e){
   closeExplore();
   const clat=e.lngLat.lat,clng=e.lngLat.lng;
-  lastClickPoint=[clng,clat];
+  lastClickPoint=[clng,clat];console.log('click stored:',lastClickPoint);
   const input=document.getElementById('inp');
   if(input.value.trim()){submit(clat,clng,input.value);input.value='';return;}
   const existing=auraPoints.filter(p=>haversine(p.lat,p.lng,clat,clng)<100);
@@ -795,7 +795,7 @@ document.getElementById('sbtn').onclick=()=>{
   const c=map.getCenter();
   // If a precise address/POI was just searched and we're still right by it,
   // place the aura EXACTLY there (no random jitter). Otherwise use map centre.
-  if(lastClickPoint && haversine(lastClickPoint[1],lastClickPoint[0],c.lat,c.lng)<200){
+  console.log('submit check, lastClickPoint:',lastClickPoint,'mapCenter:',c.lat,c.lng);if(lastClickPoint && haversine(lastClickPoint[1],lastClickPoint[0],c.lat,c.lng)<200){
     submit(lastClickPoint[1],lastClickPoint[0],v);
     lastClickPoint=null;
   } else 
