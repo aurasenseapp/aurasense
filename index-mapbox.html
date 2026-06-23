@@ -788,7 +788,6 @@ function submit(lat,lng,text){
       setTimeout(()=>flyProgrammatic({center:[here.lng,here.lat],zoom:hereZoom,duration:2500}),4000);
     },6000);
   } else {
-  } else {
     setTimeout(()=>showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]),500);
   }
 }
