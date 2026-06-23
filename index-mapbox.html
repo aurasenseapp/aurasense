@@ -801,7 +801,7 @@ document.getElementById('sbtn').onclick=()=>{
   if(lastClickPoint && haversine(lastClickPoint[1],lastClickPoint[0],c.lat,c.lng)<200){
     submit(lastClickPoint[1],lastClickPoint[0],v);
     lastClickPoint=null;
-  } else if(lastSearchPoint && haversine(lastSearchPoint[1],lastSearchPoint[0],c.lat,c.lng)<150){
+  if(lastSearchPoint && haversine(lastSearchPoint[1],lastSearchPoint[0],c.lat,c.lng)<150){
     submit(lastSearchPoint[1],lastSearchPoint[0],v);
     // Update the marker label to celebrate the fresh offering, then mellow after an hour.
     if(lastSearchLabel){
