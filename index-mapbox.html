@@ -781,6 +781,7 @@ function submit(lat,lng,text){
     const here=map.getCenter();
     const hereZoom=map.getZoom();
     const tourZooms=[hereZoom,12,9,5.7];
+    showMsg(LEVEL_MSGS[auraLevel]);
     setTimeout(()=>{
       showMsg(LEVEL_MSGS[auraLevel]);
       if(auraLevel===4){showPlanet();return;}
