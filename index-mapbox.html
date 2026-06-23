@@ -612,6 +612,7 @@ async function contextualZoom(level){
 // closes Planet if it was open, and keeps auraLevel in sync.
 let searchMarker=null;
 let lastSearchPoint=null;  // [lng,lat] of last precise address/POI search
+let lastClickPoint=null;   // [lng,lat] of last map click — used when typing then clicking submit
 let lastSearchLabel=null;  // the label DOM element of the current marker
 let lastSearchName=null;   // the place name string of the current marker
 // Drop a soft pin where a precise address/POI was found, to help the user pinpoint it.
@@ -797,7 +798,10 @@ document.getElementById('sbtn').onclick=()=>{
   const c=map.getCenter();
   // If a precise address/POI was just searched and we're still right by it,
   // place the aura EXACTLY there (no random jitter). Otherwise use map centre.
-  if(lastSearchPoint && haversine(lastSearchPoint[1],lastSearchPoint[0],c.lat,c.lng)<150){
+  if(lastClickPoint && haversine(lastClickPoint[1],lastClickPoint[0],c.lat,c.lng)<200){
+    submit(lastClickPoint[1],lastClickPoint[0],v);
+    lastClickPoint=null;
+  } else if(lastSearchPoint && haversine(lastSearchPoint[1],lastSearchPoint[0],c.lat,c.lng)<150){
     submit(lastSearchPoint[1],lastSearchPoint[0],v);
     // Update the marker label to celebrate the fresh offering, then mellow after an hour.
     if(lastSearchLabel){
