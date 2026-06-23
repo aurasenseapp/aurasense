@@ -473,7 +473,7 @@ function animateWave(ts){
       ORB_IDS.forEach((id,i)=>{
         const orb=document.getElementById(id);if(!orb)return;
         const tab=orb.parentElement;
-        if(i<=auraLevel){
+        if(i===auraLevel){
           orb.style.cssText=`width:7px;height:7px;border-radius:50%;background:#a78bfa;box-shadow:0 0 9px 3px rgba(167,139,250,0.55);opacity:1;flex-shrink:0;transition:all 1s ease;`;
           if(tab){tab.classList.add('active');tab.style.color='';}
         } else {
@@ -705,6 +705,7 @@ document.getElementById('ep4').onclick=()=>{showMsg('Conscious Trajectory — co
 map.on('click',async function(e){
   closeExplore();
   const clat=e.lngLat.lat,clng=e.lngLat.lng;
+  lastClickPoint=[clng,clat];
   const input=document.getElementById('inp');
   if(input.value.trim()){submit(clat,clng,input.value);input.value='';return;}
   const existing=auraPoints.filter(p=>haversine(p.lat,p.lng,clat,clng)<100);
@@ -774,10 +775,18 @@ function submit(lat,lng,text){
     auraLevel++;
     setTimeout(()=>{
       showMsg(LEVEL_MSGS[auraLevel]);
+      if(shareCount%4===0&&auraLevel<4){
+    auraLevel++;
+    const here=map.getCenter();
+    const hereZoom=map.getZoom();
+    const tourZooms=[hereZoom,12,9,5.7];
+    setTimeout(()=>{
+      showMsg(LEVEL_MSGS[auraLevel]);
       if(auraLevel===4){showPlanet();return;}
-      flyProgrammatic({center:[ZOOMS[auraLevel][1],ZOOMS[auraLevel][0]],zoom:ZOOMS[auraLevel][2],duration:2500});
-      setTimeout(()=>flyProgrammatic({center:[ZOOMS[0][1],ZOOMS[0][0]],zoom:ZOOMS[0][2],duration:2500}),4000);
+      flyProgrammatic({center:[here.lng,here.lat],zoom:tourZooms[auraLevel],duration:2500});
+      setTimeout(()=>flyProgrammatic({center:[here.lng,here.lat],zoom:hereZoom,duration:2500}),4000);
     },6000);
+  } else {
   } else {
     setTimeout(()=>showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]),500);
   }
