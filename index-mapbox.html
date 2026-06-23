@@ -772,16 +772,12 @@ function submit(lat,lng,text){
   playSound(selSense);
   shareCount++;myShareCount++;
   triggerWave(s.color);
-  if(shareCount%4===0&&auraLevel<4){
-    auraLevel++;
-    setTimeout(()=>{
-      showMsg(LEVEL_MSGS[auraLevel]);
-      if(shareCount%4===0&&auraLevel<4){
-    auraLevel++;
+  if(auraLevel<4){
     const here=map.getCenter();
     const hereZoom=map.getZoom();
     const tourZooms=[hereZoom,12,9,5.7];
-    showMsg(LEVEL_MSGS[auraLevel]);
+    if(shareCount%4!==0)return;
+    auraLevel++;
     setTimeout(()=>{
       showMsg(LEVEL_MSGS[auraLevel]);
       if(auraLevel===4){showPlanet();return;}
