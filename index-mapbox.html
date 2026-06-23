@@ -352,12 +352,12 @@ let T=0;
         const prog=cyc/rp.active,rad=(0.08+prog*1.0)*r;
         const flash=Math.min(1,prog*9)*Math.pow(1-prog,1.5),op2=flash*0.32*bright,rc=fc(Math.min(0.97,prog));
         const feather=[-7,-5,-3,-1.5,0,1.5,3,5,7],weights=[0.05,0.14,0.28,0.42,0.5,0.42,0.28,0.14,0.05];
-        for(let fi=0;fi<feather.length;fi++){ctx.lineWidth=1.6;ctx.strokeStyle=rgbaArr(rc,op2*weights[fi]);ctx.beginPath();ctx.arc(x,y,rad+feather[fi],0,Math.PI*2);ctx.stroke();}
+        for(let fi=0;fi<feather.length;fi++){ctx.lineWidth=1.6;ctx.strokeStyle=rgbaArr(rc,op2*weights[fi]);ctx.beginPath();ctx.arc(x,y,Math.max(0,rad+feather[fi]),0,Math.PI*2);ctx.stroke();}
       }
     }
     const rimC=fc(0.97),rimOp=(0.13+0.06*Math.sin(T*0.6+i))*bright;
     const feather2=[-6,-4,-2,0,2,4,6],weights2=[0.08,0.2,0.38,0.5,0.38,0.2,0.08];
-    for(let fi2=0;fi2<feather2.length;fi2++){ctx.lineWidth=1.8;ctx.strokeStyle=rgbaArr(rimC,rimOp*weights2[fi2]);ctx.beginPath();ctx.arc(x,y,0.97*r+feather2[fi2],0,Math.PI*2);ctx.stroke();}
+    for(let fi2=0;fi2<feather2.length;fi2++){ctx.lineWidth=1.8;ctx.strokeStyle=rgbaArr(rimC,rimOp*weights2[fi2]);ctx.beginPath();ctx.arc(x,y,Math.max(0,0.97*r+feather2[fi2]),0,Math.PI*2);ctx.stroke();}
     for(let ei=0;ei<m.edge.length;ei++){
       const ep=m.edge[ei];const rr2=ep.r*r;const ex=x+Math.cos(ep.a)*rr2,ey=y+Math.sin(ep.a)*rr2;
       const tw2=Math.sin(T*ep.sp+ep.ph)*0.5+0.5,twS2=Math.pow(tw2,3);
