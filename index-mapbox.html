@@ -8,6 +8,22 @@
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
+.as-breathe{transform-box:fill-box;transform-origin:center;animation:as-br 6s ease-in-out infinite}
+@keyframes as-br{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.07);opacity:1}}
+.as-shimmer{animation:as-sh 5s ease-in-out infinite}
+@keyframes as-sh{0%,100%{opacity:.45}50%{opacity:.95}}
+.as-drift{transform-box:fill-box;transform-origin:center;animation:as-dr 6s ease-in-out infinite}
+@keyframes as-dr{0%,100%{transform:translateY(2px)}50%{transform:translateY(-3px)}}
+.as-wave{transform-box:fill-box;transform-origin:center;animation:as-wv 4.5s ease-in-out infinite}
+@keyframes as-wv{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+.as-flicker{animation:as-fl 3.7s ease-in-out infinite}
+@keyframes as-fl{0%,100%{opacity:.5}22%{opacity:.95}38%{opacity:.4}61%{opacity:.85}80%{opacity:.45}}
+@keyframes as-gr{0%,100%{stroke-dashoffset:0.4}50%{stroke-dashoffset:0}}
+.as-growShimmer{animation:as-gr 8s ease-in-out infinite, as-sh 5s ease-in-out infinite}
+.as-slowShimmer{animation:as-ssh 13s ease-in-out infinite}
+@keyframes as-ssh{0%,100%{opacity:.55}50%{opacity:.97}}
+.as-wiggle{transform-box:fill-box;transform-origin:center;animation:as-wg 5.5s ease-in-out infinite}
+@keyframes as-wg{0%,100%{transform:translateX(-1.2px)}50%{transform:translateX(1.2px)}}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a10;color:#f0f0f0;height:100vh;overflow:hidden}
 #map{position:absolute;inset:0;transition:opacity .6s}
 .mapboxgl-ctrl-logo,.mapboxgl-ctrl-attrib{display:none!important}
@@ -176,6 +192,16 @@ const SENSES=[
   {id:"belonging",label:"Belonging",icon:"♡",color:"#f6b26b",freqs:[[528,.0,.17,.06,2.0],[660,.12,.13,.06,1.8],[792,.24,.10,.06,1.6]],examples:["Neighbour left homegrown tomatoes on my doorstep","Felt invisible here — no acknowledgement","People say good morning — first time this happened"]},
   {id:"anomaly",label:"Anomaly",icon:"⟁",color:"#c27ba0",freqs:[[432,.0,.13,.18,3.2],[288,.25,.09,.15,2.5],[576,.6,.06,.12,2.0]],examples:["Three lights in formation — not aircraft. Others saw it.","An overwhelming feeling of being watched here","Something shifted in the air around 3am"]},
 ];
+const SENSE_SYMBOLS={
+sound:'<svg width="16" height="16" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block"><defs><radialGradient id="as-sndCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#dceeff" stop-opacity="0.95"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><g class="as-wave"><path d="M6 48 Q 20 30, 34 48 T 62 48 T 90 48" fill="none" stroke="#6d9eeb" stroke-width="2" stroke-linecap="round" opacity="0.85" class="as-shimmer"/><path d="M6 48 Q 20 38, 34 48 T 62 48 T 90 48" fill="none" stroke="#6d9eeb" stroke-width="1.3" stroke-linecap="round" opacity="0.45"/><path d="M24 64 Q 32 58, 40 64 T 56 64 T 72 64" fill="none" stroke="#6d9eeb" stroke-width="1.4" stroke-linecap="round" opacity="0.55"/></g><circle cx="48" cy="48" r="13" fill="url(#as-sndCore)" class="as-breathe"/></svg>',
+smell:'<svg width="16" height="16" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block"><defs><radialGradient id="as-smlCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8f5df" stop-opacity="0.95"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient></defs><g class="as-drift"><path d="M40 78 C 36 60, 50 52, 42 36 C 36 24, 48 18, 44 8" fill="none" stroke="#93c47d" stroke-width="2" stroke-linecap="round" opacity="0.75" class="as-shimmer"/><path d="M55 78 C 59 58, 47 50, 57 34 C 63 22, 51 16, 57 6" fill="none" stroke="#93c47d" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/><g class="as-wiggle"><path d="M47 74 C 52 60, 43 52, 50 38 C 54 30, 45 26, 49 20" fill="none" stroke="#93c47d" stroke-width="1.2" stroke-linecap="round" opacity="0.42"/></g></g><ellipse cx="48" cy="80" rx="15" ry="6" fill="url(#as-smlCore)" class="as-breathe"/></svg>',
+light:'<svg width="16" height="16" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block"><defs><linearGradient id="as-ligFlame" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fffaf0" stop-opacity="0.97"/><stop offset="55%" stop-color="#d9c8f0" stop-opacity="0.85"/><stop offset="100%" stop-color="#b39ddb" stop-opacity="0.55"/></linearGradient><filter id="as-ligSoft" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="2.4"/></filter></defs><ellipse cx="48" cy="49" rx="23" ry="35" fill="none" stroke="#b39ddb" stroke-width="1" opacity="0.3"/><path d="M48 20 C 42 32, 34 42, 36 56 C 37 66, 44 72, 48 72 C 52 72, 59 66, 60 56 C 62 42, 54 32, 48 20" fill="url(#as-ligFlame)" filter="url(#as-ligSoft)" class="as-slowShimmer"/></svg>',
+atmosphere:'<svg width="16" height="16" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block"><defs><radialGradient id="as-atmGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e5f2f2" stop-opacity="0.95"/><stop offset="100%" stop-color="#76a5af" stop-opacity="0"/></radialGradient></defs><path d="M28 60 Q 48 76, 68 60" fill="none" stroke="#76a5af" stroke-width="0.9" stroke-linecap="round" opacity="0.4" class="as-slowShimmer"/><path d="M28 60 Q 36 50, 42 42" fill="none" stroke="#76a5af" stroke-width="0.9" stroke-linecap="round" opacity="0.4" class="as-slowShimmer"/><path d="M68 60 Q 60 50, 54 42" fill="none" stroke="#76a5af" stroke-width="0.9" stroke-linecap="round" opacity="0.4" class="as-slowShimmer"/><circle cx="28" cy="60" r="8" fill="url(#as-atmGlow)" class="as-shimmer"/><circle cx="68" cy="60" r="8" fill="url(#as-atmGlow)" class="as-shimmer"/><circle cx="48" cy="36" r="9" fill="url(#as-atmGlow)" class="as-shimmer"/></svg>',
+nature:'<svg width="16" height="16" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block"><defs><radialGradient id="as-natCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e3f0da" stop-opacity="0.95"/><stop offset="100%" stop-color="#6aa84f" stop-opacity="0"/></radialGradient></defs><g class="as-drift"><path d="M48 82 C 48 60, 46 40, 50 16" fill="none" stroke="#6aa84f" stroke-width="2" stroke-linecap="round" opacity="0.85"/><path pathLength="1" stroke-dasharray="1" d="M48 50 C 40 44, 32 46, 26 38" fill="none" stroke="#6aa84f" stroke-width="1.7" stroke-linecap="round" opacity="0.65" class="as-growShimmer"/><path pathLength="1" stroke-dasharray="1" d="M48 32 C 58 26, 66 28, 72 20" fill="none" stroke="#6aa84f" stroke-width="1.7" stroke-linecap="round" opacity="0.65" class="as-growShimmer"/></g><ellipse cx="48" cy="84" rx="13" ry="5.5" fill="url(#as-natCore)" class="as-breathe"/></svg>',
+safety:'<svg width="16" height="16" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block"><defs><radialGradient id="as-safCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff1de" stop-opacity="0.95"/><stop offset="100%" stop-color="#e69138" stop-opacity="0"/></radialGradient></defs><path d="M18 58 A 30 30 0 0 1 78 58" fill="none" stroke="#e69138" stroke-width="3" stroke-linecap="round" opacity="0.8" class="as-breathe"/><path d="M26 58 A 22 22 0 0 1 70 58" fill="none" stroke="#e69138" stroke-width="1.5" stroke-linecap="round" opacity="0.35"/><circle cx="48" cy="65" r="12" fill="url(#as-safCore)" class="as-shimmer"/></svg>',
+belonging:'<svg width="16" height="16" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block"><defs><radialGradient id="as-belCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff4e6" stop-opacity="0.95"/><stop offset="100%" stop-color="#f6b26b" stop-opacity="0"/></radialGradient></defs><g class="as-breathe"><path d="M24 30 C 8 46, 8 60, 24 76" fill="none" stroke="#f6b26b" stroke-width="3" stroke-linecap="round" opacity="0.8"/><path d="M72 30 C 88 46, 88 60, 72 76" fill="none" stroke="#f6b26b" stroke-width="3" stroke-linecap="round" opacity="0.8"/></g><circle cx="48" cy="53" r="14" fill="url(#as-belCore)" class="as-shimmer"/></svg>',
+anomaly:'<svg width="16" height="16" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block"><defs><radialGradient id="as-anoRed" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffb8b0" stop-opacity="0.95"/><stop offset="40%" stop-color="#d44a4a" stop-opacity="0.7"/><stop offset="100%" stop-color="#7a1818" stop-opacity="0"/></radialGradient><filter id="as-anoShell" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="3"/></filter></defs><path d="M48 14 C 26 30, 26 66, 48 82 C 70 66, 70 30, 48 14 Z" fill="none" stroke="#6d9eeb" stroke-width="4" opacity="0.65" filter="url(#as-anoShell)" class="as-flicker"/><path d="M48 14 C 26 30, 26 66, 48 82 C 70 66, 70 30, 48 14 Z" fill="none" stroke="#a8c8ee" stroke-width="0.9" opacity="0.7" class="as-slowShimmer"/><ellipse cx="48" cy="48" rx="9" ry="14" fill="url(#as-anoRed)" class="as-flicker"/></svg>'
+};
 const MSGS=["The aura of this place just shifted.","Your sense is now part of this street.","The collective aura grows.","Another Aurasenser heard.","This place knows it is seen.","Your gift has reached the aura."];
 const ZOOMS=[[51.508,-0.128,15],[51.508,-0.128,13.5],[51.508,-0.128,10],[54.7,-4.2,5.2],[20,0,3]];
 const LEVEL_MSGS=["Your sense ripples through the street.","The town aura begins to stir.","The region feels the shift.","The nation senses it.","The planet receives your gift."];
@@ -470,7 +496,7 @@ SENSES.forEach(s=>{
   const b=document.createElement('button');
   b.className='sc'+(s.id===selSense?' sel':'');
   b.style.setProperty('--c',s.color);
-  b.innerHTML=`<span style="font-size:11px">${s.icon}</span>${s.label}`;
+  b.innerHTML=`<span>${SENSE_SYMBOLS[s.id]}</span>${s.label}`;
   b.onclick=()=>{selSense=s.id;document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel')};
   b.onmouseenter=e=>{
     const ex=s.examples[Math.floor(Math.random()*s.examples.length)];
@@ -491,7 +517,7 @@ function addFeed(text,sense,time,glow,lat,lng,place){
   const d=document.createElement('div');
   d.className='fi'+(glow?' glow':'');
   const loc=place?`<div class="fi-loc">📍 ${place}</div>`:'';
-  d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${s.icon} ${s.label}</div><div class="fi-text">"${text}"</div>${loc}<div class="fi-meta">${time}</div>`;
+  d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${SENSE_SYMBOLS[s.id]} ${s.label}</div><div class="fi-text">"${text}"</div>${loc}<div class="fi-meta">${time}</div>`;
   if(lat!=null&&lng!=null)d.onclick=()=>flyProgrammatic({center:[lng,lat],zoom:16,duration:1200});
   feed.insertBefore(d,feed.firstChild);
   if(glow)setTimeout(()=>d.classList.remove('glow'),5000);
@@ -691,7 +717,7 @@ map.on('click',async function(e){
   }catch(_){streetName=`${clat.toFixed(4)}°N, ${Math.abs(clng).toFixed(4)}°${clng<0?'W':'E'}`;}
   const senseListHTML=existing.length?'<div class="pop-sense-list">'+existing.slice(0,3).map(p=>{
     const ps=SENSES.find(x=>x.id===p.sense);
-    return `<div class="pop-sense-item" style="border-left-color:${ps.color}">${ps.icon} "${p.text.substring(0,52)}${p.text.length>52?'…':''}"</div>`;
+    return `<div class="pop-sense-item" style="border-left-color:${ps.color}">${SENSE_SYMBOLS[ps.id]} "${p.text.substring(0,52)}${p.text.length>52?'…':''}"</div>`;
   }).join('')+'</div>':'';
   new mapboxgl.Popup({className:'aura-popup',closeButton:true,maxWidth:'250px'}).setLngLat([clng,clat]).setHTML(`
     <div class="mapboxgl-popup-content-inner">
