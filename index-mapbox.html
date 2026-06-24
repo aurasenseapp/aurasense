@@ -35,8 +35,9 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:1000}
 #materialize{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;z-index:1500;pointer-events:none}
 #materialize.show{display:flex}
-#mat-name{font-size:clamp(20px,4.5vw,40px);letter-spacing:.14em;color:#f0e9ff;text-transform:uppercase;font-weight:300;margin-bottom:20px;opacity:0;transition:opacity .8s ease;text-shadow:0 0 30px rgba(167,139,250,.85)}
-#mat-symbol{width:min(46vw,300px);height:min(46vw,300px);opacity:0;will-change:transform,opacity}
+#mat-backdrop{position:absolute;inset:0;opacity:0;transition:opacity .85s ease;background:radial-gradient(circle at 50% 46%,rgba(14,11,30,.9) 0%,rgba(9,7,22,.78) 42%,rgba(6,5,16,.5) 75%,rgba(6,5,16,.18) 100%);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+#mat-name{position:relative;font-size:clamp(20px,4.5vw,40px);letter-spacing:.14em;color:#f5efff;text-transform:uppercase;font-weight:300;margin-bottom:20px;opacity:0;transition:opacity .8s ease;text-shadow:0 0 34px rgba(167,139,250,.95),0 0 12px rgba(255,255,255,.5)}
+#mat-symbol{position:relative;width:min(50vw,330px);height:min(50vw,330px);opacity:0;will-change:transform,opacity;filter:drop-shadow(0 0 48px rgba(167,139,250,.55)) drop-shadow(0 0 14px rgba(255,255,255,.35))}
 #planet-view{position:absolute;inset:0;background:#000008;display:none;align-items:center;justify-content:center;z-index:600;flex-direction:column}
 #planet-view.show{display:flex}
 #planet-canvas{border-radius:50%}
@@ -67,7 +68,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #sg:hover{background:rgba(167,139,250,.2)}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
 #my-aura-title{font-size:9px;color:#9d8fcc;text-align:center;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
-#pac{display:block;margin:0 auto}
+#pac{display:block;margin:0 auto;cursor:pointer;border-radius:50%;transition:filter .3s}
+#my-aura:hover #pac{filter:drop-shadow(0 0 10px rgba(196,181,253,.6))}
 #my-aura-label{font-size:10px;color:#7870a0;text-align:center;margin-top:3px}
 #explore-btn{position:absolute;left:110px;top:148px;pointer-events:all}
 #ebtn{padding:6px 12px;border-radius:10px;border:0.5px solid rgba(167,139,250,.25);background:rgba(10,10,20,.88);color:#9d8fcc;font-size:11px;cursor:pointer;font-family:inherit;transition:all .3s;backdrop-filter:blur(6px)}
@@ -93,7 +95,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #panel{position:absolute;bottom:16px;left:16px;right:16px;pointer-events:all}
 #pi{background:rgba(10,10,20,.93);border:0.5px solid rgba(167,139,250,.18);border-radius:16px;padding:12px 14px;backdrop-filter:blur(12px)}
 #ptitle{font-size:12px;color:#9d8fcc;margin-bottom:9px}
-#scats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.srealm-label{font-size:9px;color:#7e76a8;letter-spacing:.07em;text-transform:uppercase;margin:1px 0 5px 2px}
+.scats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
 .sc{font-size:11px;padding:4px 9px;border-radius:20px;border:0.5px solid rgba(255,255,255,.1);background:transparent;color:#9d8fcc;cursor:pointer;transition:all .2s;font-family:inherit;display:flex;align-items:center;gap:3px}
 .sc:hover,.sc.sel{border-color:var(--c);color:var(--c);background:rgba(255,255,255,.05)}
 #srow{display:flex;gap:7px}
@@ -111,6 +114,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .pop-street{font-size:11px;color:#a78bfa;margin-bottom:4px;font-style:italic}
 .pop-aura{font-size:11px;margin-bottom:4px}
 .pop-action{font-size:11px;color:#7870a0;font-style:italic}
+.pop-action.pop-link{cursor:pointer;transition:color .2s}
+.pop-action.pop-link:hover{color:#c4b5fd}
 .pop-sense-list{margin-top:5px;display:flex;flex-direction:column;gap:3px}
 .pop-sense-item{font-size:11px;color:#c0b8d8;font-style:italic;padding:4px 8px;background:rgba(255,255,255,.04);border-radius:6px;cursor:pointer;border-left:2px solid transparent;transition:background .2s}
 .pop-sense-item:hover{background:rgba(167,139,250,.1)}
@@ -179,7 +184,10 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   <div id="panel">
     <div id="pi">
       <div id="ptitle">Energize the aura with your senses</div>
-      <div id="scats"></div>
+      <div class="srealm-label">The world around you</div>
+      <div class="scats" id="scats-ext"></div>
+      <div class="srealm-label">How it makes you feel</div>
+      <div class="scats" id="scats-int"></div>
       <div id="srow">
         <input id="inp" placeholder="What does this place feel like right now?"/>
         <button id="sbtn">Offer your sense to the aura</button>
@@ -187,30 +195,30 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
     </div>
   </div>
   <div id="pmsg"></div>
-  <div id="materialize"><div id="mat-name"></div><div id="mat-symbol"></div></div>
+  <div id="materialize"><div id="mat-backdrop"></div><div id="mat-name"></div><div id="mat-symbol"></div></div>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
 const SENSES=[
-  {id:"sound",label:"Sound",icon:"♪",color:"#6d9eeb",freqs:[[528,.0,.18,.05,2.2],[660,.2,.09,.05,1.0]],examples:["Birdsong every morning — no traffic until 8am","Bass from the pub shakes the walls on Fridays","Church bells at noon, gentle and distant"]},
-  {id:"smell",label:"Smell",icon:"〜",color:"#93c47d",freqs:[[396,.0,.15,.1,2.4],[528,.35,.09,.1,1.5]],examples:["Pine air in the evenings — first time I breathed deeply","Weed smoke drifts through the walls after 9pm","Fresh bread from the bakery at 7am"]},
-  {id:"light",label:"Light",icon:"✦",color:"#b39ddb",freqs:[[741,.0,.17,.04,2.0],[988,.12,.09,.04,1.3]],examples:["Proper darkness at night — stars visible, finally slept","Street light opposite the bedroom, inescapable","Golden hour hits this street perfectly every evening"]},
-  {id:"atmosphere",label:"Atmosphere",icon:"◉",color:"#76a5af",freqs:[[174,.0,.35,.12,3.0],[261,.2,.20,.1,2.2]],examples:["A calm I have never felt anywhere before","Social tension in the air — people seem stressed","Something peaceful about this corner, hard to explain"]},
-  {id:"nature",label:"Nature",icon:"❧",color:"#6aa84f",freqs:[[528,.0,.15,.08,1.8],[660,.28,.10,.06,1.2],[792,.5,.07,.06,1.0]],examples:["Fox family living under the garden shed","No green space within walking distance","Hedgehogs in the garden, bats at dusk"]},
-  {id:"safety",label:"Safety",icon:"◈",color:"#e69138",freqs:[[174,.0,.24,.1,2.5],[220,.18,.15,.1,1.8]],examples:["Feel completely safe walking here at any hour","Cars speed through this residential street dangerously","Community watches out for one another quietly"]},
-  {id:"belonging",label:"Belonging",icon:"♡",color:"#f6b26b",freqs:[[528,.0,.17,.06,2.0],[660,.12,.13,.06,1.8],[792,.24,.10,.06,1.6]],examples:["Neighbour left homegrown tomatoes on my doorstep","Felt invisible here — no acknowledgement","People say good morning — first time this happened"]},
-  {id:"anomaly",label:"Anomaly",icon:"⟁",color:"#c27ba0",freqs:[[432,.0,.13,.18,3.2],[288,.25,.09,.15,2.5],[576,.6,.06,.12,2.0]],examples:["Three lights in formation — not aircraft. Others saw it.","An overwhelming feeling of being watched here","Something shifted in the air around 3am"]},
-  {id:"chronosception",label:"Chronosception",icon:"⧗",color:"#8b9dde",freqs:[[400,.0,.14,.08,2.4],[300,.3,.08,.06,1.6]],examples:["Time moves slowly here — unhurried, gentle","The hours seem to vanish in this place","A timeless quality, like the past is still present"]},
-  {id:"intuition",label:"Intuition",icon:"✶",color:"#b57edc",freqs:[[639,.0,.15,.06,2.6],[852,.2,.09,.06,1.8]],examples:["A strong feeling I should not linger here","Something tells me this place is kind","An inexplicable pull toward this corner"]},
-  {id:"stress",label:"Stress",icon:"҂",color:"#d97777",freqs:[[210,.0,.18,.04,1.6],[180,.15,.12,.04,1.2]],examples:["The air feels tense and on edge","A pressure here I can't quite name","Everyone seems rushed and wound tight"]},
-  {id:"hunger",label:"Hunger",icon:"◡",color:"#e0a050",freqs:[[280,.0,.16,.1,2.0]],examples:["A hollow, wanting feeling in this place","Something here leaves me craving more","An emptiness that asks to be filled"]},
-  {id:"hydration",label:"Hydration",icon:"◍",color:"#6ec5d4",freqs:[[480,.0,.14,.1,2.2]],examples:["The air is fresh and quenching here","A dry, thirsting quality to this place","Cool and replenishing, like spring water"]},
-  {id:"internal_temp",label:"Internal Temp",icon:"❂",color:"#e08a5a",freqs:[[330,.0,.16,.1,2.4]],examples:["A deep inner warmth settles in here","This place warms me from within","A cosy, glowing heat held close"]},
-  {id:"external_heat",label:"External Heat",icon:"♨",color:"#e8643c",freqs:[[360,.0,.15,.06,2.0]],examples:["Heat radiates off the walls in waves","The sun bakes this street all afternoon","A shimmering, rising warmth in the air"]},
-  {id:"external_cold",label:"External Cold",icon:"❄",color:"#7ec8e8",freqs:[[600,.0,.13,.05,1.8]],examples:["A crisp chill sits over this place","Cold air pools here, sharp and clear","Frost-bright and bracing in the morning"]},
-  {id:"pain",label:"Pain",icon:"✸",color:"#d44a4a",freqs:[[220,.0,.2,.02,1.2],[440,.1,.1,.02,1.0]],examples:["A sharp, aching quality to this place","Something here registers as hurt","A raw, tender feeling I can't shake"]},
-  {id:"vibration",label:"Vibration",icon:"≈",color:"#d89cc0",freqs:[[520,.0,.14,.04,1.6]],examples:["A subtle hum you can feel in the ground","The whole place seems to softly buzz","Gentle pulses ripple through the air"]},
-  {id:"proprioception",label:"Proprioception",icon:"⟀",color:"#7fb3a0",freqs:[[450,.0,.15,.08,2.2]],examples:["I feel grounded and balanced here","An easy sense of where my body sits","This space holds me steady and centred"]},
+  {id:"sound",realm:"external",label:"Sound",icon:"♪",color:"#6d9eeb",freqs:[[528,.0,.18,.05,2.2],[660,.2,.09,.05,1.0]],examples:["Birdsong every morning — no traffic until 8am","Bass from the pub shakes the walls on Fridays","Church bells at noon, gentle and distant"]},
+  {id:"smell",realm:"external",label:"Smell",icon:"〜",color:"#93c47d",freqs:[[396,.0,.15,.1,2.4],[528,.35,.09,.1,1.5]],examples:["Pine air in the evenings — first time I breathed deeply","Weed smoke drifts through the walls after 9pm","Fresh bread from the bakery at 7am"]},
+  {id:"light",realm:"external",label:"Light",icon:"✦",color:"#b39ddb",freqs:[[741,.0,.17,.04,2.0],[988,.12,.09,.04,1.3]],examples:["Proper darkness at night — stars visible, finally slept","Street light opposite the bedroom, inescapable","Golden hour hits this street perfectly every evening"]},
+  {id:"atmosphere",realm:"external",label:"Atmosphere",icon:"◉",color:"#76a5af",freqs:[[174,.0,.35,.12,3.0],[261,.2,.20,.1,2.2]],examples:["A calm I have never felt anywhere before","Social tension in the air — people seem stressed","Something peaceful about this corner, hard to explain"]},
+  {id:"nature",realm:"external",label:"Nature",icon:"❧",color:"#6aa84f",freqs:[[528,.0,.15,.08,1.8],[660,.28,.10,.06,1.2],[792,.5,.07,.06,1.0]],examples:["Fox family living under the garden shed","No green space within walking distance","Hedgehogs in the garden, bats at dusk"]},
+  {id:"external_heat",realm:"external",label:"External Heat",icon:"♨",color:"#e8643c",freqs:[[360,.0,.15,.06,2.0]],examples:["Heat radiates off the walls in waves","The sun bakes this street all afternoon","A shimmering, rising warmth in the air"]},
+  {id:"external_cold",realm:"external",label:"External Cold",icon:"❄",color:"#7ec8e8",freqs:[[600,.0,.13,.05,1.8]],examples:["A crisp chill sits over this place","Cold air pools here, sharp and clear","Frost-bright and bracing in the morning"]},
+  {id:"vibration",realm:"external",label:"Vibration",icon:"≈",color:"#d89cc0",freqs:[[520,.0,.14,.04,1.6]],examples:["A subtle hum you can feel in the ground","The whole place seems to softly buzz","Gentle pulses ripple through the air"]},
+  {id:"anomaly",realm:"external",label:"Anomaly",icon:"⟁",color:"#c27ba0",freqs:[[432,.0,.13,.18,3.2],[288,.25,.09,.15,2.5],[576,.6,.06,.12,2.0]],examples:["Three lights in formation — not aircraft. Others saw it.","An overwhelming feeling of being watched here","Something shifted in the air around 3am"]},
+  {id:"safety",realm:"internal",label:"Safety",icon:"◈",color:"#e69138",freqs:[[174,.0,.24,.1,2.5],[220,.18,.15,.1,1.8]],examples:["Feel completely safe walking here at any hour","Cars speed through this residential street dangerously","Community watches out for one another quietly"]},
+  {id:"belonging",realm:"internal",label:"Belonging",icon:"♡",color:"#f6b26b",freqs:[[528,.0,.17,.06,2.0],[660,.12,.13,.06,1.8],[792,.24,.10,.06,1.6]],examples:["Neighbour left homegrown tomatoes on my doorstep","Felt invisible here — no acknowledgement","People say good morning — first time this happened"]},
+  {id:"intuition",realm:"internal",label:"Intuition",icon:"✶",color:"#b57edc",freqs:[[639,.0,.15,.06,2.6],[852,.2,.09,.06,1.8]],examples:["A strong feeling I should not linger here","Something tells me this place is kind","An inexplicable pull toward this corner"]},
+  {id:"chronosception",realm:"internal",label:"Chronosception",icon:"⧗",color:"#8b9dde",freqs:[[400,.0,.14,.08,2.4],[300,.3,.08,.06,1.6]],examples:["Time moves slowly here — unhurried, gentle","The hours seem to vanish in this place","A timeless quality, like the past is still present"]},
+  {id:"stress",realm:"internal",label:"Stress",icon:"҂",color:"#d97777",freqs:[[210,.0,.18,.04,1.6],[180,.15,.12,.04,1.2]],examples:["The air feels tense and on edge","A pressure here I can't quite name","Everyone seems rushed and wound tight"]},
+  {id:"hunger",realm:"internal",label:"Hunger",icon:"◡",color:"#e0a050",freqs:[[280,.0,.16,.1,2.0]],examples:["A hollow, wanting feeling in this place","Something here leaves me craving more","An emptiness that asks to be filled"]},
+  {id:"hydration",realm:"internal",label:"Hydration",icon:"◍",color:"#6ec5d4",freqs:[[480,.0,.14,.1,2.2]],examples:["The air is fresh and quenching here","A dry, thirsting quality to this place","Cool and replenishing, like spring water"]},
+  {id:"internal_temp",realm:"internal",label:"Internal Temp",icon:"❂",color:"#e08a5a",freqs:[[330,.0,.16,.1,2.4]],examples:["A deep inner warmth settles in here","This place warms me from within","A cosy, glowing heat held close"]},
+  {id:"pain",realm:"internal",label:"Pain",icon:"✸",color:"#d44a4a",freqs:[[220,.0,.2,.02,1.2],[440,.1,.1,.02,1.0]],examples:["A sharp, aching quality to this place","Something here registers as hurt","A raw, tender feeling I can't shake"]},
+  {id:"proprioception",realm:"internal",label:"Proprioception",icon:"⟀",color:"#7fb3a0",freqs:[[450,.0,.15,.08,2.2]],examples:["I feel grounded and balanced here","An easy sense of where my body sits","This space holds me steady and centred"]},
 ];
 const SENSE_SYMBOLS={
 sound:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(180,200,255,0.5))"><defs><radialGradient id="as-sndCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient><radialGradient id="as-sndHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8c8ff" stop-opacity="0.35"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-sndHalo)"/><g class="as-wave"><path d="M6 48 Q 20 28, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="3" stroke-linecap="round" opacity="1" class="as-shimmer"/><path d="M6 48 Q 20 36, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.6"/><path d="M24 64 Q 32 56, 40 64 T 56 64 T 72 64" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/></g><circle cx="48" cy="48" r="14" fill="url(#as-sndCore)" class="as-breathe"/></svg>',
@@ -230,7 +238,7 @@ internal_temp:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-a
 external_heat:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,100,60,0.5))"><defs><radialGradient id="as-ehHalo" cx="50%" cy="55%" r="55%"><stop offset="0%" stop-color="#f08a64" stop-opacity="0.26"/><stop offset="100%" stop-color="#e8643c" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="52" r="45" fill="url(#as-ehHalo)"/><g class="as-wiggle"><path d="M34 74 C 30 62 38 56 34 44 C 31 34 37 30 34 20" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.9" class="as-shimmer"/><path d="M48 76 C 44 62 52 56 48 42 C 45 32 51 28 48 16" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/><path d="M62 74 C 58 62 66 56 62 44 C 59 34 65 30 62 20" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.9" class="as-shimmer"/></g></svg>',
 external_cold:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(126,200,232,0.55))"><defs><radialGradient id="as-ecCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#7ec8e8" stop-opacity="0"/></radialGradient><radialGradient id="as-ecHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8def0" stop-opacity="0.3"/><stop offset="100%" stop-color="#7ec8e8" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-ecHalo)"/><g class="as-shiver" stroke="#b0e2f4" stroke-width="2" stroke-linecap="round"><path d="M48 24 L48 72"/><path d="M27 36 L69 60"/><path d="M69 36 L27 60"/><path d="M48 30 L43 36 M48 30 L53 36"/><path d="M48 66 L43 60 M48 66 L53 60"/></g><circle cx="48" cy="48" r="6" fill="url(#as-ecCore)" class="as-shimmer"/></svg>',
 pain:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(212,74,74,0.6))"><defs><radialGradient id="as-painCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="45%" stop-color="#e85858" stop-opacity="0.85"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient><radialGradient id="as-painHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e87878" stop-opacity="0.3"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-painHalo)"/><path d="M48 18 L54 42 L78 48 L54 54 L48 78 L42 54 L18 48 L42 42 Z" fill="url(#as-painCore)" stroke="#f09696" stroke-width="1" class="as-flicker"/></svg>',
-vibration:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(216,156,192,0.5))"><defs><radialGradient id="as-vibCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#d89cc0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="10" fill="none" stroke="#e8b8d4" stroke-width="2" opacity="0.85" class="as-ring"/><circle cx="48" cy="48" r="10" fill="none" stroke="#e8b8d4" stroke-width="1.6" opacity="0.7" class="as-ring" style="animation-delay:0.8s"/><circle cx="48" cy="48" r="10" fill="none" stroke="#e8b8d4" stroke-width="1.2" opacity="0.55" class="as-ring" style="animation-delay:1.6s"/><circle cx="48" cy="48" r="6" fill="url(#as-vibCore)" class="as-breathe"/></svg>',
+vibration:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(216,156,192,0.55))"><defs><radialGradient id="as-vibCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#d89cc0" stop-opacity="0"/></radialGradient><radialGradient id="as-vibHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e8b8d4" stop-opacity="0.3"/><stop offset="100%" stop-color="#d89cc0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-vibHalo)"/><g class="as-shimmer" stroke="#e8b8d4" stroke-width="2" stroke-linecap="round" fill="none" opacity="0.7"><path d="M30 28 Q 24 34 30 40"/><path d="M22 23 Q 13 34 22 45"/><path d="M66 28 Q 72 34 66 40"/><path d="M74 23 Q 83 34 74 45"/></g><g class="as-shiver" stroke="#f0cce0" stroke-width="3" stroke-linecap="round" fill="none"><path d="M40 16 L40 46"/><path d="M56 16 L56 46"/><path d="M40 46 Q 40 57 48 57 Q 56 57 56 46"/><path d="M48 57 L48 82"/></g><circle cx="48" cy="57" r="7" fill="url(#as-vibCore)" class="as-breathe"/></svg>',
 proprioception:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(127,179,160,0.5))"><defs><radialGradient id="as-prCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#7fb3a0" stop-opacity="0"/></radialGradient><radialGradient id="as-prHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9fcbb8" stop-opacity="0.28"/><stop offset="100%" stop-color="#7fb3a0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-prHalo)"/><g class="as-drift"><path d="M24 66 L46 44 L70 52" fill="none" stroke="#a3cebb" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><circle cx="24" cy="66" r="4" fill="#a3cebb" opacity="0.85"/><circle cx="70" cy="52" r="4" fill="#a3cebb" opacity="0.85"/><circle cx="46" cy="44" r="6" fill="url(#as-prCore)" class="as-breathe"/></g></svg>'
 };
 const MSGS=["The aura of this place just shifted.","Your sense is now part of this street.","The collective aura grows.","Another Aurasenser heard.","This place knows it is seen.","Your gift has reached the aura."];
@@ -306,36 +314,46 @@ function showPlanet(){
   setTimeout(()=>{pv.style.transition='opacity 1.2s ease';pv.style.opacity='1';},50);
   drawPlanet();
 }
-function hidePlanet(){
+// Restore the map view from planet without moving the camera (flag flips immediately
+// so other handlers don't double-trigger a fly).
+function restorePlanetVisual(){
+  planetActive=false;
   const pv=document.getElementById('planet-view');
   pv.style.transition='opacity 0.8s ease';pv.style.opacity='0';
-  document.getElementById('map').style.transition='opacity 0.8s ease';
-  document.getElementById('map').style.opacity='1';
-  setTimeout(()=>{planetActive=false;pv.style.display='none';},800);
-  flyProgrammatic({center:[lastStreetView.lng,lastStreetView.lat],zoom:lastStreetView.zoom,duration:1800});
+  const mp=document.getElementById('map');
+  mp.style.transition='opacity 0.8s ease';mp.style.opacity='1';
+  setTimeout(()=>{pv.style.display='none';},800);
+}
+function hidePlanet(){
+  restorePlanetVisual();
+  const a=lastOfferedPoint||lastStreetView||{lng:-0.128,lat:51.508,zoom:15};
+  flyProgrammatic({center:[a.lng,a.lat],zoom:(a.zoom||15),duration:1800});
 }
 document.getElementById('planet-back').onclick=hidePlanet;
 
 // Personal aura
 const pac=document.getElementById('pac'),pctx=pac.getContext('2d');
-let paT=0;
+let paT=0,paAbsorb=0;
 (function drawPA(){
   pctx.clearRect(0,0,80,80);paT+=0.02;
+  if(paAbsorb>0.002)paAbsorb*=0.93;else paAbsorb=0;
+  const boost=1+paAbsorb*0.35;
   const cx=40,cy=40,level=Math.min(myShareCount,20);
   const rings=1+Math.floor(level/4);
   const cols=SENSES.slice(0,Math.max(1,Math.min(myShareCount,8))).map(s=>s.color);
   for(let r=rings;r>=1;r--){
-    const br=10+r*6,pulse=br*(1+Math.sin(paT+r)*.09);
-    const col=cols[(r-1)%cols.length]||'#a78bfa',alpha=0.07+level*.006;
+    const br=10+r*6,pulse=br*(1+Math.sin(paT+r)*.09)*boost;
+    const col=cols[(r-1)%cols.length]||'#a78bfa',alpha=(0.07+level*.006)*(1+paAbsorb*0.9);
     const g=pctx.createRadialGradient(cx,cy,0,cx,cy,pulse);
-    g.addColorStop(0,col+Math.floor(alpha*4*255).toString(16).padStart(2,'0'));
-    g.addColorStop(.5,col+Math.floor(alpha*255).toString(16).padStart(2,'0'));
+    g.addColorStop(0,col+Math.floor(Math.min(1,alpha*4)*255).toString(16).padStart(2,'0'));
+    g.addColorStop(.5,col+Math.floor(Math.min(1,alpha)*255).toString(16).padStart(2,'0'));
     g.addColorStop(1,col+'00');
     pctx.beginPath();pctx.arc(cx,cy,pulse,0,Math.PI*2);pctx.fillStyle=g;pctx.fill();
   }
-  const cg=pctx.createRadialGradient(cx,cy,0,cx,cy,8);
+  const ccr=8*boost;
+  const cg=pctx.createRadialGradient(cx,cy,0,cx,cy,ccr);
   cg.addColorStop(0,'rgba(220,210,255,.95)');cg.addColorStop(1,'rgba(167,139,250,0)');
-  pctx.beginPath();pctx.arc(cx,cy,8,0,Math.PI*2);pctx.fillStyle=cg;pctx.fill();
+  pctx.beginPath();pctx.arc(cx,cy,ccr,0,Math.PI*2);pctx.fillStyle=cg;pctx.fill();
   document.getElementById('my-aura-label').textContent=LEVEL_NAMES[Math.min(5,Math.floor(myShareCount/3))];
   requestAnimationFrame(drawPA);
 })();
@@ -356,7 +374,6 @@ function playSound(id){
     });
   }catch(e){}
 }
-
 // Main draw
 let T=0;
 (function draw(){
@@ -444,7 +461,6 @@ let T=0;
   });
   requestAnimationFrame(draw);
 })();
-
 // KITT wave
 let waveRaf=null,waveStartTs=0,waveColor='#a78bfa';
 const WAVE_DUR=9000;
@@ -472,6 +488,29 @@ function buildMotion(){
   return {grain,wisps,ripples,edge,motes,fieldColor:null};
 }
 function haversine(la1,lo1,la2,lo2){const R=6371000,toR=Math.PI/180;const dLa=(la2-la1)*toR,dLo=(lo2-lo1)*toR;const a=Math.sin(dLa/2)**2+Math.cos(la1*toR)*Math.cos(la2*toR)*Math.sin(dLo/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
+// A sense, once offered, also flows into the user's own aura. A spark rises from where it
+// landed to the My Aura orb, and the personal aura swells. Both external and internal senses do this.
+function feedMyAura(lat,lng,color){
+  const orb=document.getElementById('pac');
+  if(!orb)return;
+  const oRect=orb.getBoundingClientRect();
+  const ox=oRect.left+oRect.width/2, oy=oRect.top+oRect.height/2;
+  let sx=window.innerWidth/2, sy=window.innerHeight/2;
+  try{const pt=map.project([lng,lat]);sx=pt.x;sy=pt.y;}catch(e){}
+  const spark=document.createElement('div');
+  spark.style.cssText='position:fixed;left:'+sx+'px;top:'+sy+'px;width:13px;height:13px;border-radius:50%;'+
+    'background:radial-gradient(circle,#ffffff 0%,'+color+' 70%,'+hexA(color,0)+' 100%);'+
+    'box-shadow:0 0 14px 5px '+hexA(color,0.8)+';z-index:1400;pointer-events:none;'+
+    'transform:translate(-50%,-50%) scale(1);opacity:1;'+
+    'transition:left 1.15s cubic-bezier(.5,0,.25,1),top 1.15s cubic-bezier(.5,0,.25,1),opacity 1.15s ease,transform 1.15s ease;';
+  document.body.appendChild(spark);
+  requestAnimationFrame(()=>{
+    spark.style.left=ox+'px';spark.style.top=oy+'px';
+    spark.style.transform='translate(-50%,-50%) scale(0.35)';spark.style.opacity='0.15';
+  });
+  setTimeout(()=>{ paAbsorb=1; },1050);
+  setTimeout(()=>{ if(spark&&spark.parentNode)spark.parentNode.removeChild(spark); },1300);
+}
 function animateWave(ts){
   try{
     const elapsed=ts-waveStartTs,progress=Math.min(elapsed/WAVE_DUR,1);
@@ -518,9 +557,9 @@ function triggerWave(color){
   waveColor=color||'#a78bfa';
   requestAnimationFrame(ts=>{waveStartTs=ts;waveRaf=requestAnimationFrame(animateWave);});
 }
-
-// Sense buttons
-const scatsEl=document.getElementById('scats'),stip=document.getElementById('stip');
+// Sense buttons — two rows: the world around you (external) and how it makes you feel (internal)
+const stip=document.getElementById('stip');
+const extEl=document.getElementById('scats-ext'),intEl=document.getElementById('scats-int');
 SENSES.forEach(s=>{
   const b=document.createElement('button');
   b.className='sc'+(s.id===selSense?' sel':'');
@@ -536,7 +575,7 @@ SENSES.forEach(s=>{
     stip.style.top=(rect.top-88)+'px';
   };
   b.onmouseleave=()=>{stip.style.opacity='0'};
-  scatsEl.appendChild(b);
+  (s.realm==='internal'?intEl:extEl).appendChild(b);
 });
 
 // Feed
@@ -578,36 +617,50 @@ let lastViews=[
   {lat:54.7,lng:-4.2,zoom:5.2}
 ];
 let lastStreetView={lat:51.508,lng:-0.128,zoom:15};
+let lastOfferedPoint=null;
 let isMovingProgrammatically=false;
-
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=()=>{
     const i=+tab.dataset.i;
     if(i===4){setActiveTab(4);showPlanet();return;}
-    const wasPlanet=document.getElementById('planet-view').style.display==='flex';
-    if(wasPlanet)hidePlanet();
+    // Coming back from Planet, anchor on the spot last offered to (not the drifted centre),
+    // so Town/Region/Nation/Street all return to where the senser actually was.
+    const wasPlanet=planetActive;
+    let aLng,aLat;
+    if(wasPlanet){
+      restorePlanetVisual();
+      const a=lastOfferedPoint||lastStreetView;
+      aLng=a.lng;aLat=a.lat;
+    }else{
+      const c=map.getCenter();aLng=c.lng;aLat=c.lat;
+    }
     setActiveTab(i);
-    contextualZoom(i);
+    if(i===0){
+      const z=wasPlanet?((lastOfferedPoint&&lastOfferedPoint.zoom)||lastStreetView.zoom||15):15;
+      flyProgrammatic({center:[aLng,aLat],zoom:z,duration:1800});
+    }else{
+      contextualZoom(i,aLng,aLat);
+    }
   };
 });
 
-async function contextualZoom(level){
-  const c=map.getCenter();
+async function contextualZoom(level,aLng,aLat){
+  if(aLng==null||aLat==null){const c=map.getCenter();aLng=c.lng;aLat=c.lat;}
   if(level===0){
-    flyProgrammatic({center:[c.lng,c.lat],zoom:15,duration:1800});
+    flyProgrammatic({center:[aLng,aLat],zoom:15,duration:1800});
     return;
   }
   const typeFor={1:'place',2:'region',3:'country'}[level];
   const z={1:12,2:8.5,3:5.7}[level];
-  const inUK=(c.lng>-8.7&&c.lng<2&&c.lat>49.8&&c.lat<61);
+  const inUK=(aLng>-8.7&&aLng<2&&aLat>49.8&&aLat<61);
   if(inUK&&level===2){
-    flyProgrammatic({center:[-0.118,51.509],zoom:9.3,duration:2000,offset:[0,-20]});return;
+    flyProgrammatic({center:[aLng,aLat],zoom:9.3,duration:2000,offset:[0,-20]});return;
   }
   if(inUK&&level===3){
     flyToBounds([[-8.2,49.9],[1.8,59.5]],6);return;
   }
   try{
-    const url=`https://api.mapbox.com/geocoding/v5/mapbox.places/${c.lng},${c.lat}.json`+
+    const url=`https://api.mapbox.com/geocoding/v5/mapbox.places/${aLng},${aLat}.json`+
               `?access_token=${MAPBOX_TOKEN}&types=${typeFor}&limit=1`;
     const r=await fetch(url);const d=await r.json();
     if(d&&d.features&&d.features.length&&d.features[0].center){
@@ -620,7 +673,7 @@ async function contextualZoom(level){
       return;
     }
   }catch(e){}
-  flyProgrammatic({center:[c.lng,c.lat],zoom:z,duration:2000,offset:[0,-30]});
+  flyProgrammatic({center:[aLng,aLat],zoom:z,duration:2000,offset:[0,-30]});
 }
 let searchMarker=null;
 let lastSearchPoint=null;
@@ -692,14 +745,64 @@ map.on('moveend',()=>{
   if(isMovingProgrammatically)return;
   const c=map.getCenter(),z=map.getZoom();
   lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
-  if(auraLevel===0)lastStreetView={lat:c.lat,lng:c.lng,zoom:z};
+  if(auraLevel===0){lastStreetView={lat:c.lat,lng:c.lng,zoom:z};lastOfferedPoint={lat:c.lat,lng:c.lng,zoom:z};}
 });
-
 document.getElementById('ebtn').onclick=()=>{const ep=document.getElementById('explore-panel');if(ep)ep.classList.toggle('open');};
 document.getElementById('ep1').onclick=()=>{showMsg('Sensing Aurasenser contributions for this area...');closeExplore();};
 document.getElementById('ep2').onclick=()=>{showMsg('Sensing live Aurasenser activity in this area...');closeExplore();};
 document.getElementById('ep3').onclick=()=>{showMsg('Aura pulse from the wider world — coming in v1');closeExplore();};
 document.getElementById('ep4').onclick=()=>{showMsg('Conscious Trajectory — coming in v1');closeExplore();};
+
+// One popup at a time, so the post-submit box replaces any "forming" box rather than stacking.
+let currentPopup=null;
+function openPopup(lng,lat,html){
+  if(currentPopup){currentPopup.remove();currentPopup=null;}
+  currentPopup=new mapboxgl.Popup({className:'aura-popup',closeButton:true,maxWidth:'250px'}).setLngLat([lng,lat]).setHTML(html).addTo(map);
+  return currentPopup;
+}
+// Reverse-geocode to a house-number + street line (falls back to the nearest named place).
+async function reverseAddress(lat,lng){
+  try{
+    const r=await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}&types=address,poi,neighborhood,place&limit=1`);
+    const d=await r.json();
+    if(d&&d.features&&d.features.length){
+      const f=d.features[0];
+      let line=f.text||'';
+      if(f.place_type&&f.place_type[0]==='address'&&f.address)line=f.address+' '+line;
+      return line||(f.place_name?f.place_name.split(',')[0]:null);
+    }
+  }catch(e){}
+  return null;
+}
+// The arrowed box after an offering: confirms the share, the address with house number,
+// the symbol and sense, and links to share again or share to social.
+function showSharedPopup(lat,lng,senseId,text,placeLabel){
+  const s=SENSES.find(x=>x.id===senseId);if(!s)return;
+  const loc=placeLabel||'this spot';
+  const sym=SENSE_SYMBOLS[senseId]||'';
+  const safeText=(text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const html=`<div class="mapboxgl-popup-content-inner">
+    <div class="pop-title">✨ Aurasense just shared</div>
+    <div class="pop-street">📍 ${loc}</div>
+    <div class="pop-aura" style="color:${s.color}">${sym} ${s.label}</div>
+    <div class="pop-sense-list"><div class="pop-sense-item" style="border-left-color:${s.color}">"${safeText}"</div></div>
+    <div class="pop-action pop-link pop-again" style="margin-top:7px;color:#c4b5fd">↻ Share another Aurasense here</div>
+    <div class="pop-action pop-link pop-social" style="margin-top:3px">⤴ Share this Aurasense on social media</div>
+  </div>`;
+  const p=openPopup(lng,lat,html);
+  const elp=p.getElement();
+  if(elp){
+    const again=elp.querySelector('.pop-again');
+    if(again)again.addEventListener('click',()=>{
+      lastClickPoint=[lng,lat];
+      const inp=document.getElementById('inp');if(inp)inp.focus();
+      showMsg('Add another sense here — type below and offer it');
+      if(currentPopup){currentPopup.remove();currentPopup=null;}
+    });
+    const social=elp.querySelector('.pop-social');
+    if(social)social.addEventListener('click',()=>showMsg('Social sharing — coming in v1'));
+  }
+}
 
 map.on('click',async function(e){
   closeExplore();
@@ -709,17 +812,12 @@ map.on('click',async function(e){
   if(input.value.trim()){materializeAndSubmit(clat,clng,input.value);input.value='';return;}
   const existing=auraPoints.filter(p=>haversine(p.lat,p.lng,clat,clng)<100);
   const s=SENSES.find(s=>s.id===selSense);
-  let streetName='this location';
-  try{
-    const res=await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${clat}&lon=${clng}&zoom=17`);
-    const d=await res.json();
-    if(d&&d.address)streetName=d.address.road||d.address.pedestrian||d.address.footway||d.display_name?.split(',')[0]||streetName;
-  }catch(_){streetName=`${clat.toFixed(4)}°N, ${Math.abs(clng).toFixed(4)}°${clng<0?'W':'E'}`;}
+  const streetName=(await reverseAddress(clat,clng))||`${clat.toFixed(4)}°N, ${Math.abs(clng).toFixed(4)}°${clng<0?'W':'E'}`;
   const senseListHTML=existing.length?'<div class="pop-sense-list">'+existing.slice(0,3).map(p=>{
     const ps=SENSES.find(x=>x.id===p.sense);
     return `<div class="pop-sense-item" style="border-left-color:${ps.color}">${SENSE_SYMBOLS[ps.id]} "${p.text.substring(0,52)}${p.text.length>52?'…':''}"</div>`;
   }).join('')+'</div>':'';
-  new mapboxgl.Popup({className:'aura-popup',closeButton:true,maxWidth:'250px'}).setLngLat([clng,clat]).setHTML(`
+  openPopup(clng,clat,`
     <div class="mapboxgl-popup-content-inner">
     <div class="pop-title">${existing.length?'Aura detected':'Aura forming'}</div>
     <div class="pop-street">📍 ${streetName}</div>
@@ -727,9 +825,8 @@ map.on('click',async function(e){
     ${senseListHTML}
     <div class="pop-action" style="margin-top:5px">${existing.length?'Type below and click here to add your sense':'Type below and click here to energize this spot'}</div>
     </div>
-  `).addTo(map);
+  `);
 });
-
 async function lookupPlace(lat,lng){
   try{
     const r=await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}&types=address,poi,neighborhood,place&limit=1`);
@@ -750,11 +847,19 @@ async function lookupPlace(lat,lng){
   return null;
 }
 function submit(lat,lng,text){
-  const s=SENSES.find(s=>s.id===selSense);if(!s)return;
-  auraPoints.push({lat,lng,sense:selSense,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2});
+  const sid=selSense;
+  const s=SENSES.find(x=>x.id===sid);if(!s)return;
+  auraPoints.push({lat,lng,sense:sid,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2});
   ripples.push({lat,lng,color:s.color,age:0});
   if(!planetColors.includes(s.color))planetColors.push(s.color);
-  addFeed(text,selSense,'just now',true,lat,lng);
+  addFeed(text,sid,'just now',true,lat,lng);
+  // Remember the offered spot so the tabs and the return from Planet come back here, not a random place.
+  const sz=Math.min(17,Math.max(14,map.getZoom()));
+  lastOfferedPoint={lat,lng,zoom:sz};
+  lastStreetView={lat,lng,zoom:sz};
+  lastViews[0]={lat,lng,zoom:sz};
+  // The offering also flows into the personal aura — a spark rises to the My Aura orb.
+  feedMyAura(lat,lng,s.color);
   lookupPlace(lat,lng).then(place=>{
     if(!place)return;
     const first=document.getElementById('feed').firstChild;
@@ -764,7 +869,9 @@ function submit(lat,lng,text){
       first.insertBefore(el,meta);
     }
   });
-  playSound(selSense);
+  // Leave the shared sense showing in the arrowed box, with the full house-number address.
+  reverseAddress(lat,lng).then(addr=>showSharedPopup(lat,lng,sid,text,addr));
+  playSound(sid);
   shareCount++;myShareCount++;
   triggerWave(s.color);
   if(shareCount%4===0&&auraLevel<4){
@@ -773,6 +880,7 @@ function submit(lat,lng,text){
     const tourZooms=[hereZoom,12,9,5.7];
     auraLevel++;
     setTimeout(()=>{
+      if(currentPopup){currentPopup.remove();currentPopup=null;}
       showMsg(LEVEL_MSGS[auraLevel]);
       if(auraLevel===4){showPlanet();return;}
       flyProgrammatic({center:[here.lng,here.lat],zoom:tourZooms[auraLevel],duration:2500});
@@ -783,14 +891,14 @@ function submit(lat,lng,text){
   }
 }
 
-// Full-screen materialization: the chosen sense symbol appears large with its name,
-// is observed for a few seconds, then descends to the exact spot it was offered,
-// where the living aura takes its place.
+// Full-screen materialization: the chosen sense symbol blooms large with its name against a
+// darkened backdrop so it stands out, holds, then descends to the exact spot it was offered.
 function materializeAndSubmit(lat,lng,text){
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);
   if(!s){submit(lat,lng,text);return;}
   const overlay=document.getElementById('materialize');
+  const backdrop=document.getElementById('mat-backdrop');
   const nameEl=document.getElementById('mat-name');
   const symEl=document.getElementById('mat-symbol');
   if(!overlay||!symEl){submit(lat,lng,text);return;}
@@ -799,11 +907,13 @@ function materializeAndSubmit(lat,lng,text){
   const svg=symEl.querySelector('svg');
   if(svg){svg.setAttribute('width','100%');svg.setAttribute('height','100%');}
   overlay.classList.add('show');
+  if(backdrop)backdrop.style.opacity='0';
   symEl.style.transition='none';
   symEl.style.transform='translate(0px,0px) scale(1)';
   symEl.style.opacity='0';
   nameEl.style.opacity='0';
   requestAnimationFrame(()=>{
+    if(backdrop)backdrop.style.opacity='1';
     symEl.style.transition='opacity 1s ease';
     symEl.style.opacity='1';
     nameEl.style.opacity='1';
@@ -816,6 +926,7 @@ function materializeAndSubmit(lat,lng,text){
     const dx=pt.x-startX;
     const dy=pt.y-startY;
     nameEl.style.opacity='0';
+    if(backdrop)backdrop.style.opacity='0';
     symEl.style.transition='transform 1.6s cubic-bezier(.4,0,.2,1), opacity 1.6s ease';
     symEl.style.transform='translate('+dx+'px,'+dy+'px) scale(0.12)';
     symEl.style.opacity='0';
@@ -823,7 +934,6 @@ function materializeAndSubmit(lat,lng,text){
     setTimeout(()=>{ overlay.classList.remove('show'); },1750);
   },2600);
 }
-
 document.getElementById('sbtn').onclick=()=>{
   const v=document.getElementById('inp').value.trim();if(!v)return;
   const c=map.getCenter();
@@ -864,6 +974,8 @@ document.getElementById('sg').onclick=async()=>{
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
       searching=true;
+      // Searching a place makes it the spot the tabs and Planet return to.
+      if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
         const mz={place:16,locality:16,district:14,postcode:16,
@@ -891,6 +1003,10 @@ document.querySelectorAll('.soc-btn').forEach(b=>{
   b.onmouseleave=()=>{socTip.style.display='none'};
   b.onclick=()=>showMsg('Social sharing — coming in v1');
 });
+
+// My Aura is becoming a space the senser can open and nurture — for now it acknowledges the tap.
+const pacEl=document.getElementById('pac');
+if(pacEl)pacEl.addEventListener('click',()=>showMsg('Your personal aura — a space to nurture it is coming soon'));
 });
 </script>
 </body>
