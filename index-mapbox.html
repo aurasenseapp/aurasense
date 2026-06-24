@@ -119,6 +119,43 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .pop-sense-list{margin-top:5px;display:flex;flex-direction:column;gap:3px}
 .pop-sense-item{font-size:11px;color:#c0b8d8;font-style:italic;padding:4px 8px;background:rgba(255,255,255,.04);border-radius:6px;cursor:pointer;border-left:2px solid transparent;transition:background .2s}
 .pop-sense-item:hover{background:rgba(167,139,250,.1)}
+/* the arrowed box must read above the aura glow */
+.mapboxgl-popup{z-index:900}
+/* My Aura — hover preview and invitation */
+#my-aura{transition:transform .3s}
+#my-aura:hover #pac{transform:scale(1.4)}
+#ma-hover-hint{position:absolute;left:50%;top:84px;transform:translateX(-50%);width:130px;text-align:center;font-size:9.5px;color:#cbbef0;background:rgba(10,8,20,.92);border:0.5px solid rgba(167,139,250,.3);border-radius:8px;padding:5px 7px;opacity:0;pointer-events:none;transition:opacity .3s;line-height:1.45;font-style:italic;z-index:30}
+#my-aura:hover #ma-hover-hint{opacity:1}
+/* My Aura — the full page */
+#myaura-page{position:fixed;inset:0;z-index:1600;background:radial-gradient(ellipse at 50% 118%,#0d0b24 0%,#070611 58%,#040409 100%);display:none;flex-direction:column;color:#e8e2ff;overflow:hidden}
+#myaura-page.show{display:flex}
+#ma-back{position:absolute;top:16px;left:18px;z-index:8;padding:8px 16px;border-radius:10px;border:0.5px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
+#ma-back:hover{background:rgba(167,139,250,.22)}
+#ma-title{position:absolute;top:19px;left:50%;transform:translateX(-50%);font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:#d8cfff;font-weight:300;z-index:8}
+#ma-layout{flex:1;display:flex;align-items:stretch;min-height:0}
+.ma-col{width:27%;padding:62px 22px 26px;overflow-y:auto}
+.ma-col::-webkit-scrollbar{width:3px}.ma-col::-webkit-scrollbar-thumb{background:rgba(167,139,250,.3);border-radius:2px}
+#ma-left{border-right:0.5px solid rgba(167,139,250,.1)}
+#ma-right{border-left:0.5px solid rgba(167,139,250,.1)}
+#ma-center{flex:1;position:relative;overflow:hidden}
+#ma-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#ma-tree-hint{position:absolute;top:34%;left:50%;transform:translateX(-50%);font-size:12px;font-style:italic;color:#dcd2ff;letter-spacing:.05em;text-shadow:0 0 18px rgba(167,139,250,.85);opacity:0;transition:opacity .6s;pointer-events:none;text-align:center}
+#ma-center:hover #ma-tree-hint{opacity:.92}
+.ma-h{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9d8fcc;margin:22px 0 10px;font-weight:500}
+.ma-col .ma-h:first-child{margin-top:0}
+.ma-offering{border-left:2px solid transparent;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px}
+.ma-offering .s{font-size:11px;font-weight:500;margin-bottom:2px}
+.ma-offering .t{font-size:10.5px;color:#bdb4d8;font-style:italic;line-height:1.5}
+.ma-offering .m{font-size:9px;color:#5b5478;margin-top:3px}
+.ma-line{font-size:11px;color:#c4bce0;line-height:1.55;margin-bottom:7px;padding-left:14px;position:relative}
+.ma-line:before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--lc,#a78bfa);box-shadow:0 0 7px var(--lc,#a78bfa)}
+.ma-empty{font-size:11px;color:#6a6390;font-style:italic;line-height:1.65}
+#ma-privacy{margin-top:26px;padding:11px 12px;border:0.5px solid rgba(167,139,250,.22);border-radius:10px;background:rgba(167,139,250,.05);cursor:help}
+#ma-privacy .pk{font-size:11px;color:#c4b5fd;letter-spacing:.03em}
+#ma-privacy .sub{font-size:9.5px;color:#7e76a8;margin-top:3px;font-style:italic}
+#ma-policy{font-size:10px;color:#9b93c0;line-height:1.65;margin-top:10px;display:none}
+#ma-privacy:hover #ma-policy{display:block}
+.ma-soon{margin-top:22px;font-size:9.5px;color:#5b5478;font-style:italic;line-height:1.6;border-top:0.5px solid rgba(167,139,250,.1);padding-top:12px}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -158,6 +195,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
     <div id="my-aura-title">My Aura</div>
     <canvas id="pac" width="80" height="80"></canvas>
     <div id="my-aura-label">Aurasenser</div>
+    <div id="ma-hover-hint">Click to see how your aura is progressing</div>
   </div>
   <div id="explore-btn"><button id="ebtn">✦ Read the aura of this place</button></div>
   <div id="explore-panel">
@@ -196,6 +234,43 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   </div>
   <div id="pmsg"></div>
   <div id="materialize"><div id="mat-backdrop"></div><div id="mat-name"></div><div id="mat-symbol"></div></div>
+</div>
+<!--
+  MY AURA — identity & support model (recorded here; some parts arrive after launch):
+  • An offered aura is visible to all, but never tied to who placed it unless that person allows it.
+  • Step 1: to request someone's identity, you must first offer them an aura of good intention (peace, understanding).
+  • Step 2: if they accept, you see only their Aurasenser name — never their real name.
+  • Step 3: to message them / learn more, you make a monetary offering. If they accept it, the moment you ask,
+    you give up your own identity to them in return (mutual, by choice — Aurasense never supplies real names at any stage).
+  • Every monetary offering is split: half to the person, half to Aurasense. This is one way Aurasense runs with
+    no ads and without ever selling an ounce of anyone's data.
+  • Before this stage, Aurasensers communicate through the alphasense symbols — refined as the language grows.
+-->
+<div id="myaura-page">
+  <button id="ma-back">← Return to the map</button>
+  <div id="ma-title">My Aura</div>
+  <div id="ma-layout">
+    <div class="ma-col" id="ma-left">
+      <div class="ma-h">What you have offered</div>
+      <div id="ma-offerings"></div>
+    </div>
+    <div id="ma-center">
+      <canvas id="ma-canvas"></canvas>
+      <div id="ma-tree-hint">See your Aura in the Cosmic Tree</div>
+    </div>
+    <div class="ma-col" id="ma-right">
+      <div class="ma-h">How it changed your aura</div>
+      <div id="ma-aura-changes"></div>
+      <div class="ma-h">How you have touched the world</div>
+      <div id="ma-world-changes"></div>
+      <div id="ma-privacy">
+        <div class="pk">Who can see your auras?</div>
+        <div class="sub">Hover to read how identity works on Aurasense</div>
+        <div id="ma-policy"></div>
+      </div>
+      <div class="ma-soon">Coming as Aurasense grows: speak through alphasense symbols, offer an aura of good intention to request a name, and — only by mutual choice — open a private channel.</div>
+    </div>
+  </div>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
@@ -333,26 +408,37 @@ document.getElementById('planet-back').onclick=hidePlanet;
 
 // Personal aura
 const pac=document.getElementById('pac'),pctx=pac.getContext('2d');
-let paT=0,paAbsorb=0;
+let paT=0,paFeedAt=0,paFeedColor='#a78bfa';
+let myAuraColors=[],myOfferings=[];
+function paPalette(){return myAuraColors.length?myAuraColors.slice(-8):['#a78bfa'];}
 (function drawPA(){
   pctx.clearRect(0,0,80,80);paT+=0.02;
-  if(paAbsorb>0.002)paAbsorb*=0.93;else paAbsorb=0;
-  const boost=1+paAbsorb*0.35;
+  const since=performance.now()-paFeedAt;
+  let absorb=0,tint=0;
+  if(paFeedAt&&since<3200){
+    const t=since/3200,fall=1-t,throb=0.5+0.5*Math.sin(since*0.0065);
+    absorb=fall*(0.55+0.45*throb);   // pronounced, pulsing, fading over ~3.2s — invites a look
+    tint=fall*0.5;                    // gentle colour shift toward the sense just offered
+  }
+  const boost=1+absorb*0.55;
   const cx=40,cy=40,level=Math.min(myShareCount,20);
   const rings=1+Math.floor(level/4);
-  const cols=SENSES.slice(0,Math.max(1,Math.min(myShareCount,8))).map(s=>s.color);
+  const pal=paPalette();
+  const feedRGB=hexRGB(paFeedColor);
   for(let r=rings;r>=1;r--){
     const br=10+r*6,pulse=br*(1+Math.sin(paT+r)*.09)*boost;
-    const col=cols[(r-1)%cols.length]||'#a78bfa',alpha=(0.07+level*.006)*(1+paAbsorb*0.9);
+    const rgb=mixRGB(hexRGB(pal[(r-1)%pal.length]||'#a78bfa'),feedRGB,tint);
+    const alpha=Math.min(1,(0.07+level*.006)*(1+absorb*1.1));
     const g=pctx.createRadialGradient(cx,cy,0,cx,cy,pulse);
-    g.addColorStop(0,col+Math.floor(Math.min(1,alpha*4)*255).toString(16).padStart(2,'0'));
-    g.addColorStop(.5,col+Math.floor(Math.min(1,alpha)*255).toString(16).padStart(2,'0'));
-    g.addColorStop(1,col+'00');
+    g.addColorStop(0,rgbaArr(rgb,Math.min(1,alpha*4)));
+    g.addColorStop(.5,rgbaArr(rgb,alpha));
+    g.addColorStop(1,rgbaArr(rgb,0));
     pctx.beginPath();pctx.arc(cx,cy,pulse,0,Math.PI*2);pctx.fillStyle=g;pctx.fill();
   }
   const ccr=8*boost;
+  const coreRGB=mixRGB([220,210,255],feedRGB,tint*0.6);
   const cg=pctx.createRadialGradient(cx,cy,0,cx,cy,ccr);
-  cg.addColorStop(0,'rgba(220,210,255,.95)');cg.addColorStop(1,'rgba(167,139,250,0)');
+  cg.addColorStop(0,rgbaArr(coreRGB,.95));cg.addColorStop(1,rgbaArr(coreRGB,0));
   pctx.beginPath();pctx.arc(cx,cy,ccr,0,Math.PI*2);pctx.fillStyle=cg;pctx.fill();
   document.getElementById('my-aura-label').textContent=LEVEL_NAMES[Math.min(5,Math.floor(myShareCount/3))];
   requestAnimationFrame(drawPA);
@@ -497,19 +583,36 @@ function feedMyAura(lat,lng,color){
   const ox=oRect.left+oRect.width/2, oy=oRect.top+oRect.height/2;
   let sx=window.innerWidth/2, sy=window.innerHeight/2;
   try{const pt=map.project([lng,lat]);sx=pt.x;sy=pt.y;}catch(e){}
-  const spark=document.createElement('div');
-  spark.style.cssText='position:fixed;left:'+sx+'px;top:'+sy+'px;width:13px;height:13px;border-radius:50%;'+
-    'background:radial-gradient(circle,#ffffff 0%,'+color+' 70%,'+hexA(color,0)+' 100%);'+
-    'box-shadow:0 0 14px 5px '+hexA(color,0.8)+';z-index:1400;pointer-events:none;'+
-    'transform:translate(-50%,-50%) scale(1);opacity:1;'+
-    'transition:left 1.15s cubic-bezier(.5,0,.25,1),top 1.15s cubic-bezier(.5,0,.25,1),opacity 1.15s ease,transform 1.15s ease;';
-  document.body.appendChild(spark);
-  requestAnimationFrame(()=>{
-    spark.style.left=ox+'px';spark.style.top=oy+'px';
-    spark.style.transform='translate(-50%,-50%) scale(0.35)';spark.style.opacity='0.15';
-  });
-  setTimeout(()=>{ paAbsorb=1; },1050);
-  setTimeout(()=>{ if(spark&&spark.parentNode)spark.parentNode.removeChild(spark); },1300);
+  const DUR=1300;
+  // a bright comet with a short trailing stream — pronounced flight to the orb
+  for(let i=0;i<4;i++){
+    const lead=(i===0),sz=lead?20:11-i*1.4;
+    const sp=document.createElement('div');
+    sp.style.cssText='position:fixed;left:'+sx+'px;top:'+sy+'px;width:'+sz+'px;height:'+sz+'px;border-radius:50%;'+
+      'background:radial-gradient(circle,#ffffff 0%,'+color+' 62%,'+hexA(color,0)+' 100%);'+
+      'box-shadow:0 0 '+(lead?24:13)+'px '+(lead?9:4)+'px '+hexA(color,lead?0.9:0.55)+';z-index:1400;pointer-events:none;'+
+      'transform:translate(-50%,-50%) scale(1);opacity:'+(lead?1:0.7)+';'+
+      'transition:left '+DUR+'ms cubic-bezier(.5,0,.25,1) '+(i*70)+'ms,top '+DUR+'ms cubic-bezier(.5,0,.25,1) '+(i*70)+'ms,opacity '+DUR+'ms ease '+(i*70)+'ms,transform '+DUR+'ms ease '+(i*70)+'ms;';
+    document.body.appendChild(sp);
+    requestAnimationFrame(()=>{
+      sp.style.left=ox+'px';sp.style.top=oy+'px';
+      sp.style.transform='translate(-50%,-50%) scale('+(lead?0.45:0.3)+')';sp.style.opacity='0.12';
+    });
+    setTimeout(()=>{ if(sp.parentNode)sp.parentNode.removeChild(sp); },DUR+i*70+220);
+  }
+  // arrival: start the orb's longer pulse + colour shift, and a soft expanding ring to draw the eye
+  setTimeout(()=>{
+    paFeedAt=performance.now();
+    paFeedColor=color;
+    const ring=document.createElement('div');
+    ring.style.cssText='position:fixed;left:'+ox+'px;top:'+oy+'px;width:22px;height:22px;border-radius:50%;'+
+      'border:2px solid '+hexA(color,0.85)+';box-shadow:0 0 14px '+hexA(color,0.7)+';'+
+      'transform:translate(-50%,-50%) scale(.4);opacity:.9;z-index:1390;pointer-events:none;'+
+      'transition:transform 1.2s ease-out,opacity 1.2s ease-out;';
+    document.body.appendChild(ring);
+    requestAnimationFrame(()=>{ring.style.transform='translate(-50%,-50%) scale(3.4)';ring.style.opacity='0';});
+    setTimeout(()=>{ if(ring.parentNode)ring.parentNode.removeChild(ring); },1300);
+  },DUR);
 }
 function animateWave(ts){
   try{
@@ -853,6 +956,10 @@ function submit(lat,lng,text){
   ripples.push({lat,lng,color:s.color,age:0});
   if(!planetColors.includes(s.color))planetColors.push(s.color);
   addFeed(text,sid,'just now',true,lat,lng);
+  // This offering becomes a thread in the senser's own aura.
+  myAuraColors.push(s.color);
+  myOfferings.unshift({sense:sid,label:s.label,color:s.color,text:text,time:'just now',place:null});
+  if(myOfferings.length>50)myOfferings.pop();
   // Remember the offered spot so the tabs and the return from Planet come back here, not a random place.
   const sz=Math.min(17,Math.max(14,map.getZoom()));
   lastOfferedPoint={lat,lng,zoom:sz};
@@ -862,6 +969,7 @@ function submit(lat,lng,text){
   feedMyAura(lat,lng,s.color);
   lookupPlace(lat,lng).then(place=>{
     if(!place)return;
+    if(myOfferings[0])myOfferings[0].place=place;
     const first=document.getElementById('feed').firstChild;
     if(first&&!first.querySelector('.fi-loc')){
       const el=document.createElement('div');el.className='fi-loc';el.textContent='📍 '+place;
@@ -1005,8 +1113,117 @@ document.querySelectorAll('.soc-btn').forEach(b=>{
 });
 
 // My Aura is becoming a space the senser can open and nurture — for now it acknowledges the tap.
+// ---- My Aura page ----
+let maRaf=null,maT=0,maTreeReveal=0,maHover=false,maSegs=[],maStriations=[],maStars=[];
+function maLine(text,color){return '<div class="ma-line" style="--lc:'+(color||'#a78bfa')+'">'+text+'</div>';}
+function openMyAuraPage(){
+  const page=document.getElementById('myaura-page');if(!page)return;
+  const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const off=document.getElementById('ma-offerings');
+  if(myOfferings.length){
+    off.innerHTML=myOfferings.map(o=>{
+      const sym=SENSE_SYMBOLS[o.sense]||'';
+      const place=o.place?'<div class="m">📍 '+esc(o.place)+'</div>':'';
+      return '<div class="ma-offering" style="border-left-color:'+o.color+'"><div class="s" style="color:'+o.color+'">'+sym+' '+o.label+'</div><div class="t">"'+esc(o.text)+'"</div>'+place+'</div>';
+    }).join('');
+  } else off.innerHTML='<div class="ma-empty">You have not offered any senses yet. Each sense you place on the map becomes a thread of light in your own aura here.</div>';
+  const ac=document.getElementById('ma-aura-changes');
+  if(myOfferings.length){
+    const last=myOfferings[0],senses=new Set(myOfferings.map(o=>o.sense)).size;
+    ac.innerHTML=maLine('Your aura just drew in a thread of <b style="color:'+last.color+'">'+last.label+'</b>.',last.color)
+      +maLine('It now carries '+myOfferings.length+' offering'+(myOfferings.length>1?'s':'')+' across '+senses+' sense'+(senses>1?'s':'')+'.','#a78bfa')
+      +maLine('Your resonance has grown to <b>'+LEVEL_NAMES[Math.min(5,Math.floor(myShareCount/3))]+'</b>.','#c4b5fd');
+  } else ac.innerHTML='<div class="ma-empty">Offer a sense and watch your aura take on its colour.</div>';
+  const wc=document.getElementById('ma-world-changes');
+  if(myOfferings.length){
+    const last=myOfferings[0];
+    wc.innerHTML=maLine('The street aura warmed toward <b style="color:'+last.color+'">'+last.label+'</b> where you offered it.',last.color)
+      +maLine('The town aura felt your offering ripple outward.','#8b9dde')
+      +maLine('Every sense you give reaches the wider, collective aura.','#76a5af');
+  } else wc.innerHTML='<div class="ma-empty">When you offer a sense, see how it shifts the street and town here.</div>';
+  page.classList.add('show');
+  maStartCanvas();
+}
+function closeMyAuraPage(){
+  const page=document.getElementById('myaura-page');if(page)page.classList.remove('show');
+  if(maRaf){cancelAnimationFrame(maRaf);maRaf=null;}
+}
+function maBranch(x,y,a,len,depth){
+  if(depth<=0||len<6)return;
+  const x2=x+Math.cos(a)*len, y2=y+Math.sin(a)*len;
+  maSegs.push({x1:x,y1:y,x2:x2,y2:y2,depth:depth});
+  const n=depth>4?2:(Math.random()<0.45?3:2);
+  for(let i=0;i<n;i++){
+    const spread=(i-(n-1)/2);
+    maBranch(x2,y2,a+spread*0.4+(Math.random()-0.5)*0.14,len*(0.7+Math.random()*0.12),depth-1);
+  }
+}
+function maBuild(){
+  const cv=document.getElementById('ma-canvas');if(!cv)return;
+  const W=cv.clientWidth||Math.round(window.innerWidth*0.46),H=cv.clientHeight||Math.round(window.innerHeight*0.9);
+  cv.width=W;cv.height=H;
+  const seaY=H*0.62, cx=W/2, cap=H*0.16;
+  maStriations=[];
+  for(let i=0;i<150;i++)maStriations.push({x:Math.random()*W,h:8+Math.random()*cap,sp:1.5+Math.random()*3,ph:Math.random()*Math.PI*2,w:0.6+Math.random()*1.2});
+  maStars=[];
+  for(let i=0;i<90;i++)maStars.push({x:Math.random()*W,y:Math.random()*seaY*0.92,r:Math.random()*1.1,o:Math.random(),sp:0.5+Math.random()*2});
+  maSegs=[];
+  maBranch(cx,seaY,-Math.PI/2,seaY*0.30,6);
+}
+function maStartCanvas(){
+  maBuild();
+  if(maRaf)cancelAnimationFrame(maRaf);
+  const draw=()=>{
+    const cv=document.getElementById('ma-canvas');if(!cv){maRaf=null;return;}
+    const c=cv.getContext('2d'),W=cv.width,H=cv.height,seaY=H*0.62,cx=W/2;
+    maT+=0.016;
+    maTreeReveal+=((maHover?1:0)-maTreeReveal)*0.06;
+    c.clearRect(0,0,W,H);
+    maStars.forEach(s=>{const tw=s.o*(0.4+0.6*Math.sin(maT*s.sp+s.x));c.beginPath();c.arc(s.x,s.y,s.r,0,Math.PI*2);c.fillStyle='rgba(210,205,255,'+(0.5*tw).toFixed(3)+')';c.fill();});
+    // personal aura, gathering at the bottom and rising into the sea of light
+    const pal=paPalette(),auraR=Math.min(W*0.32,H*0.34),ay=seaY+auraR*0.34;
+    for(let ri=pal.length;ri>=1;ri--){
+      const rad=auraR*(ri/pal.length)*(1+Math.sin(maT*0.7+ri)*0.03),rgb=hexRGB(pal[(ri-1)%pal.length]||'#a78bfa');
+      const g=c.createRadialGradient(cx,ay,0,cx,ay,rad);
+      g.addColorStop(0,rgbaArr(rgb,0.17));g.addColorStop(0.6,rgbaArr(rgb,0.09));g.addColorStop(1,rgbaArr(rgb,0));
+      c.beginPath();c.arc(cx,ay,rad,0,Math.PI*2);c.fillStyle=g;c.fill();
+    }
+    // the cosmic tree, growing from the sea line upward (revealed as the cursor rises)
+    if(maTreeReveal>0.01){
+      c.save();c.globalAlpha=maTreeReveal;
+      maSegs.forEach(s=>{
+        const lw=Math.max(0.6,s.depth*0.9),sway=Math.sin(maT*0.6+s.y*0.02)*(7-s.depth)*0.6*(1-s.depth/7);
+        c.beginPath();c.moveTo(s.x1,s.y1);c.lineTo(s.x2+sway,s.y2);
+        c.strokeStyle='rgba(206,196,255,'+(0.10+s.depth*0.05).toFixed(3)+')';c.lineWidth=lw;c.lineCap='round';c.stroke();
+        if(s.depth<=2){const tw=0.5+0.5*Math.sin(maT*2+s.x);c.beginPath();c.arc(s.x2+sway,s.y2,1.6+tw*1.4,0,Math.PI*2);c.fillStyle='rgba(245,240,255,'+(0.5+0.4*tw).toFixed(3)+')';c.fill();}
+      });
+      c.restore();
+    }
+    // sea of light — a luminous band with sparkling silver/white striations of capped height
+    const band=c.createLinearGradient(0,seaY-30,0,seaY+30);
+    band.addColorStop(0,'rgba(200,210,255,0)');band.addColorStop(0.5,'rgba(226,229,255,0.22)');band.addColorStop(1,'rgba(200,210,255,0)');
+    c.fillStyle=band;c.fillRect(0,seaY-30,W,60);
+    maStriations.forEach(st=>{
+      const tw=0.35+0.65*Math.abs(Math.sin(maT*st.sp+st.ph)),h=st.h*(0.7+0.3*Math.sin(maT*0.8+st.ph));
+      const g=c.createLinearGradient(st.x,seaY,st.x,seaY-h);
+      g.addColorStop(0,'rgba(255,255,255,'+(0.5*tw).toFixed(3)+')');g.addColorStop(1,'rgba(220,225,255,0)');
+      c.strokeStyle=g;c.lineWidth=st.w;c.beginPath();c.moveTo(st.x,seaY);c.lineTo(st.x,seaY-h);c.stroke();
+      if(tw>0.86){c.beginPath();c.arc(st.x,seaY-h,1,0,Math.PI*2);c.fillStyle='rgba(255,255,255,'+tw.toFixed(3)+')';c.fill();}
+    });
+    maRaf=requestAnimationFrame(draw);
+  };
+  maRaf=requestAnimationFrame(draw);
+}
+const maBackBtn=document.getElementById('ma-back');
+if(maBackBtn)maBackBtn.onclick=closeMyAuraPage;
+const maCenter=document.getElementById('ma-center');
+if(maCenter){maCenter.addEventListener('mouseenter',()=>{maHover=true;});maCenter.addEventListener('mouseleave',()=>{maHover=false;});}
+window.addEventListener('resize',()=>{const p=document.getElementById('myaura-page');if(p&&p.classList.contains('show'))maBuild();});
+const maPolicy=document.getElementById('ma-policy');
+if(maPolicy)maPolicy.textContent="When you offer an aura, others can see it — but never who placed it, unless you allow it. First, someone must offer you an aura of good intention (peace, understanding). If you accept, they see only your Aurasenser name, never your real name. To message you, they make a monetary offering to learn who you are; if you accept it, the moment they ask, they give up their own identity to you in return — so any name or detail you share is always your choice, never supplied by Aurasense. Half of every offering goes to you, half to Aurasense: one of the ways we run with no ads, and without ever selling an ounce of anyone's data. Until then, Aurasensers speak through the alphasense symbols.";
+
 const pacEl=document.getElementById('pac');
-if(pacEl)pacEl.addEventListener('click',()=>showMsg('Your personal aura — a space to nurture it is coming soon'));
+if(pacEl)pacEl.addEventListener('click',openMyAuraPage);
 });
 </script>
 </body>
