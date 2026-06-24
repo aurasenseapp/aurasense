@@ -24,11 +24,19 @@
 @keyframes as-ssh{0%,100%{opacity:.55}50%{opacity:.97}}
 .as-wiggle{transform-box:fill-box;transform-origin:center;animation:as-wg 5.5s ease-in-out infinite}
 @keyframes as-wg{0%,100%{transform:translateX(-1.2px)}50%{transform:translateX(1.2px)}}
+.as-shiver{transform-box:fill-box;transform-origin:center;animation:as-sv .3s ease-in-out infinite}
+@keyframes as-sv{0%,100%{transform:translateX(-.6px)}50%{transform:translateX(.6px)}}
+.as-ring{transform-box:fill-box;transform-origin:center;animation:as-rg 2.4s ease-out infinite}
+@keyframes as-rg{0%{transform:scale(.3);opacity:.9}100%{transform:scale(1.05);opacity:0}}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a10;color:#f0f0f0;height:100vh;overflow:hidden}
 #map{position:absolute;inset:0;transition:opacity .6s}
 .mapboxgl-ctrl-logo,.mapboxgl-ctrl-attrib{display:none!important}
 canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #ui{position:absolute;inset:0;pointer-events:none;z-index:1000}
+#materialize{position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;z-index:1500;pointer-events:none}
+#materialize.show{display:flex}
+#mat-name{font-size:clamp(20px,4.5vw,40px);letter-spacing:.14em;color:#f0e9ff;text-transform:uppercase;font-weight:300;margin-bottom:20px;opacity:0;transition:opacity .8s ease;text-shadow:0 0 30px rgba(167,139,250,.85)}
+#mat-symbol{width:min(46vw,300px);height:min(46vw,300px);opacity:0;will-change:transform,opacity}
 #planet-view{position:absolute;inset:0;background:#000008;display:none;align-items:center;justify-content:center;z-index:600;flex-direction:column}
 #planet-view.show{display:flex}
 #planet-canvas{border-radius:50%}
@@ -179,6 +187,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
     </div>
   </div>
   <div id="pmsg"></div>
+  <div id="materialize"><div id="mat-name"></div><div id="mat-symbol"></div></div>
 </div>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
@@ -191,6 +200,17 @@ const SENSES=[
   {id:"safety",label:"Safety",icon:"◈",color:"#e69138",freqs:[[174,.0,.24,.1,2.5],[220,.18,.15,.1,1.8]],examples:["Feel completely safe walking here at any hour","Cars speed through this residential street dangerously","Community watches out for one another quietly"]},
   {id:"belonging",label:"Belonging",icon:"♡",color:"#f6b26b",freqs:[[528,.0,.17,.06,2.0],[660,.12,.13,.06,1.8],[792,.24,.10,.06,1.6]],examples:["Neighbour left homegrown tomatoes on my doorstep","Felt invisible here — no acknowledgement","People say good morning — first time this happened"]},
   {id:"anomaly",label:"Anomaly",icon:"⟁",color:"#c27ba0",freqs:[[432,.0,.13,.18,3.2],[288,.25,.09,.15,2.5],[576,.6,.06,.12,2.0]],examples:["Three lights in formation — not aircraft. Others saw it.","An overwhelming feeling of being watched here","Something shifted in the air around 3am"]},
+  {id:"chronosception",label:"Chronosception",icon:"⧗",color:"#8b9dde",freqs:[[400,.0,.14,.08,2.4],[300,.3,.08,.06,1.6]],examples:["Time moves slowly here — unhurried, gentle","The hours seem to vanish in this place","A timeless quality, like the past is still present"]},
+  {id:"intuition",label:"Intuition",icon:"✶",color:"#b57edc",freqs:[[639,.0,.15,.06,2.6],[852,.2,.09,.06,1.8]],examples:["A strong feeling I should not linger here","Something tells me this place is kind","An inexplicable pull toward this corner"]},
+  {id:"stress",label:"Stress",icon:"҂",color:"#d97777",freqs:[[210,.0,.18,.04,1.6],[180,.15,.12,.04,1.2]],examples:["The air feels tense and on edge","A pressure here I can't quite name","Everyone seems rushed and wound tight"]},
+  {id:"hunger",label:"Hunger",icon:"◡",color:"#e0a050",freqs:[[280,.0,.16,.1,2.0]],examples:["A hollow, wanting feeling in this place","Something here leaves me craving more","An emptiness that asks to be filled"]},
+  {id:"hydration",label:"Hydration",icon:"◍",color:"#6ec5d4",freqs:[[480,.0,.14,.1,2.2]],examples:["The air is fresh and quenching here","A dry, thirsting quality to this place","Cool and replenishing, like spring water"]},
+  {id:"internal_temp",label:"Internal Temp",icon:"❂",color:"#e08a5a",freqs:[[330,.0,.16,.1,2.4]],examples:["A deep inner warmth settles in here","This place warms me from within","A cosy, glowing heat held close"]},
+  {id:"external_heat",label:"External Heat",icon:"♨",color:"#e8643c",freqs:[[360,.0,.15,.06,2.0]],examples:["Heat radiates off the walls in waves","The sun bakes this street all afternoon","A shimmering, rising warmth in the air"]},
+  {id:"external_cold",label:"External Cold",icon:"❄",color:"#7ec8e8",freqs:[[600,.0,.13,.05,1.8]],examples:["A crisp chill sits over this place","Cold air pools here, sharp and clear","Frost-bright and bracing in the morning"]},
+  {id:"pain",label:"Pain",icon:"✸",color:"#d44a4a",freqs:[[220,.0,.2,.02,1.2],[440,.1,.1,.02,1.0]],examples:["A sharp, aching quality to this place","Something here registers as hurt","A raw, tender feeling I can't shake"]},
+  {id:"vibration",label:"Vibration",icon:"≈",color:"#d89cc0",freqs:[[520,.0,.14,.04,1.6]],examples:["A subtle hum you can feel in the ground","The whole place seems to softly buzz","Gentle pulses ripple through the air"]},
+  {id:"proprioception",label:"Proprioception",icon:"⟀",color:"#7fb3a0",freqs:[[450,.0,.15,.08,2.2]],examples:["I feel grounded and balanced here","An easy sense of where my body sits","This space holds me steady and centred"]},
 ];
 const SENSE_SYMBOLS={
 sound:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(180,200,255,0.5))"><defs><radialGradient id="as-sndCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient><radialGradient id="as-sndHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8c8ff" stop-opacity="0.35"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-sndHalo)"/><g class="as-wave"><path d="M6 48 Q 20 28, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="3" stroke-linecap="round" opacity="1" class="as-shimmer"/><path d="M6 48 Q 20 36, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.6"/><path d="M24 64 Q 32 56, 40 64 T 56 64 T 72 64" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/></g><circle cx="48" cy="48" r="14" fill="url(#as-sndCore)" class="as-breathe"/></svg>',
@@ -200,7 +220,18 @@ atmosphere:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-alig
 nature:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(155,225,130,0.5))"><defs><radialGradient id="as-natCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#6aa84f" stop-opacity="0"/></radialGradient><radialGradient id="as-natHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9be182" stop-opacity="0.32"/><stop offset="100%" stop-color="#6aa84f" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-natHalo)"/><g class="as-drift"><path d="M48 82 C 48 60, 46 40, 50 16" fill="none" stroke="#9be182" stroke-width="3" stroke-linecap="round" opacity="1"/><path pathLength="1" stroke-dasharray="1" d="M48 50 C 40 44, 32 46, 26 38" fill="none" stroke="#9be182" stroke-width="2.4" stroke-linecap="round" opacity="0.8" class="as-growShimmer"/><path pathLength="1" stroke-dasharray="1" d="M48 32 C 58 26, 66 28, 72 20" fill="none" stroke="#9be182" stroke-width="2.4" stroke-linecap="round" opacity="0.8" class="as-growShimmer"/></g><ellipse cx="48" cy="84" rx="14" ry="6" fill="url(#as-natCore)" class="as-breathe"/></svg>',
 safety:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(250,190,110,0.5))"><defs><radialGradient id="as-safCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#e69138" stop-opacity="0"/></radialGradient><radialGradient id="as-safHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fabe6e" stop-opacity="0.3"/><stop offset="100%" stop-color="#e69138" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="55" r="45" fill="url(#as-safHalo)"/><path d="M18 58 A 30 30 0 0 1 78 58" fill="none" stroke="#fabe6e" stroke-width="4" stroke-linecap="round" opacity="1" class="as-breathe"/><path d="M26 58 A 22 22 0 0 1 70 58" fill="none" stroke="#fabe6e" stroke-width="2" stroke-linecap="round" opacity="0.55"/><circle cx="48" cy="65" r="13" fill="url(#as-safCore)" class="as-shimmer"/></svg>',
 belonging:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(250,195,140,0.5))"><defs><radialGradient id="as-belCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#f6b26b" stop-opacity="0"/></radialGradient><radialGradient id="as-belHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#facb96" stop-opacity="0.3"/><stop offset="100%" stop-color="#f6b26b" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="53" r="45" fill="url(#as-belHalo)"/><g class="as-breathe"><path d="M24 30 C 8 46, 8 60, 24 76" fill="none" stroke="#facb96" stroke-width="4" stroke-linecap="round" opacity="1"/><path d="M72 30 C 88 46, 88 60, 72 76" fill="none" stroke="#facb96" stroke-width="4" stroke-linecap="round" opacity="1"/></g><circle cx="48" cy="53" r="15" fill="url(#as-belCore)" class="as-shimmer"/></svg>',
-anomaly:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(255,140,140,0.5))"><defs><radialGradient id="as-anoRed" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd8d4" stop-opacity="1"/><stop offset="40%" stop-color="#ff5454" stop-opacity="0.85"/><stop offset="100%" stop-color="#7a1818" stop-opacity="0"/></radialGradient><radialGradient id="as-anoHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#88b8ff" stop-opacity="0.3"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-anoHalo)"/><path d="M48 14 C 26 30, 26 66, 48 82 C 70 66, 70 30, 48 14 Z" fill="none" stroke="#88b8ff" stroke-width="5" opacity="0.6" class="as-flicker"/><path d="M48 14 C 26 30, 26 66, 48 82 C 70 66, 70 30, 48 14 Z" fill="none" stroke="#c8dcff" stroke-width="1.2" opacity="0.85" class="as-slowShimmer"/><ellipse cx="48" cy="48" rx="10" ry="16" fill="url(#as-anoRed)" class="as-flicker"/></svg>'
+anomaly:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(255,140,140,0.5))"><defs><radialGradient id="as-anoRed" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd8d4" stop-opacity="1"/><stop offset="40%" stop-color="#ff5454" stop-opacity="0.85"/><stop offset="100%" stop-color="#7a1818" stop-opacity="0"/></radialGradient><radialGradient id="as-anoHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#88b8ff" stop-opacity="0.3"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-anoHalo)"/><path d="M48 14 C 26 30, 26 66, 48 82 C 70 66, 70 30, 48 14 Z" fill="none" stroke="#88b8ff" stroke-width="5" opacity="0.6" class="as-flicker"/><path d="M48 14 C 26 30, 26 66, 48 82 C 70 66, 70 30, 48 14 Z" fill="none" stroke="#c8dcff" stroke-width="1.2" opacity="0.85" class="as-slowShimmer"/><ellipse cx="48" cy="48" rx="10" ry="16" fill="url(#as-anoRed)" class="as-flicker"/></svg>',
+chronosception:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(150,165,225,0.5))"><defs><radialGradient id="as-chrCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#8b9dde" stop-opacity="0"/></radialGradient><radialGradient id="as-chrHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#aeb8e8" stop-opacity="0.3"/><stop offset="100%" stop-color="#8b9dde" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-chrHalo)"/><path d="M30 18 L66 18 L48 48 L66 78 L30 78 L48 48 Z" fill="none" stroke="#b6c0ec" stroke-width="2.6" stroke-linejoin="round" opacity="0.9" class="as-slowShimmer"/><path d="M48 40 L48 56" stroke="#dfe5f8" stroke-width="2" stroke-linecap="round" opacity="0.8" class="as-shimmer"/><circle cx="48" cy="48" r="5" fill="url(#as-chrCore)" class="as-breathe"/></svg>',
+intuition:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(190,140,225,0.55))"><defs><radialGradient id="as-intCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#cfa6e8" stop-opacity="0.6"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient><radialGradient id="as-intHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#cfa6e8" stop-opacity="0.3"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="52" r="45" fill="url(#as-intHalo)"/><path d="M30 56 Q 48 38 66 56" fill="none" stroke="#d7b6ee" stroke-width="2.4" stroke-linecap="round" opacity="0.8" class="as-slowShimmer"/><path d="M36 62 Q 48 50 60 62" fill="none" stroke="#d7b6ee" stroke-width="1.6" stroke-linecap="round" opacity="0.55"/><circle cx="48" cy="56" r="9" fill="url(#as-intCore)" class="as-breathe"/><circle cx="48" cy="28" r="3" fill="#f0e2fb" class="as-shimmer"/></svg>',
+stress:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,130,130,0.5))"><defs><radialGradient id="as-strCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient><radialGradient id="as-strHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e89a9a" stop-opacity="0.28"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-strHalo)"/><path d="M48 28 L55 40 L66 42 L57 50 L61 63 L48 56 L35 63 L39 50 L30 42 L41 40 Z" fill="none" stroke="#ec9e9e" stroke-width="2" stroke-linejoin="miter" opacity="0.9" class="as-shiver"/><circle cx="48" cy="48" r="6" fill="url(#as-strCore)" class="as-flicker"/></svg>',
+hunger:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,165,90,0.5))"><defs><radialGradient id="as-hunCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe8c8" stop-opacity="0.9"/><stop offset="100%" stop-color="#e0a050" stop-opacity="0"/></radialGradient><radialGradient id="as-hunHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ecc488" stop-opacity="0.28"/><stop offset="100%" stop-color="#e0a050" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="52" r="45" fill="url(#as-hunHalo)"/><path d="M26 48 A 22 22 0 0 0 70 48" fill="none" stroke="#eec690" stroke-width="3" stroke-linecap="round" opacity="0.9" class="as-breathe"/><circle cx="48" cy="54" r="5" fill="url(#as-hunCore)" class="as-flicker"/></svg>',
+hydration:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(110,197,212,0.5))"><defs><radialGradient id="as-hydCore" cx="50%" cy="42%" r="60%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#9ad8e4" stop-opacity="0.7"/><stop offset="100%" stop-color="#6ec5d4" stop-opacity="0.15"/></radialGradient><radialGradient id="as-hydHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9ad8e4" stop-opacity="0.3"/><stop offset="100%" stop-color="#6ec5d4" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="50" r="45" fill="url(#as-hydHalo)"/><path d="M48 20 C 38 40 32 50 32 58 A 16 16 0 0 0 64 58 C 64 50 58 40 48 20 Z" fill="url(#as-hydCore)" stroke="#a8e0ec" stroke-width="1.4" class="as-breathe"/></svg>',
+internal_temp:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,138,90,0.5))"><defs><radialGradient id="as-itCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe6cc" stop-opacity="1"/><stop offset="55%" stop-color="#f0a878" stop-opacity="0.8"/><stop offset="100%" stop-color="#e08a5a" stop-opacity="0"/></radialGradient><radialGradient id="as-itHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#eab088" stop-opacity="0.26"/><stop offset="100%" stop-color="#e08a5a" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-itHalo)"/><circle cx="48" cy="48" r="27" fill="none" stroke="#eab088" stroke-width="1.6" opacity="0.5"/><circle cx="48" cy="48" r="13" fill="url(#as-itCore)" class="as-breathe"/></svg>',
+external_heat:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,100,60,0.5))"><defs><radialGradient id="as-ehHalo" cx="50%" cy="55%" r="55%"><stop offset="0%" stop-color="#f08a64" stop-opacity="0.26"/><stop offset="100%" stop-color="#e8643c" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="52" r="45" fill="url(#as-ehHalo)"/><g class="as-wiggle"><path d="M34 74 C 30 62 38 56 34 44 C 31 34 37 30 34 20" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.9" class="as-shimmer"/><path d="M48 76 C 44 62 52 56 48 42 C 45 32 51 28 48 16" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/><path d="M62 74 C 58 62 66 56 62 44 C 59 34 65 30 62 20" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.9" class="as-shimmer"/></g></svg>',
+external_cold:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(126,200,232,0.55))"><defs><radialGradient id="as-ecCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#7ec8e8" stop-opacity="0"/></radialGradient><radialGradient id="as-ecHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8def0" stop-opacity="0.3"/><stop offset="100%" stop-color="#7ec8e8" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-ecHalo)"/><g class="as-shiver" stroke="#b0e2f4" stroke-width="2" stroke-linecap="round"><path d="M48 24 L48 72"/><path d="M27 36 L69 60"/><path d="M69 36 L27 60"/><path d="M48 30 L43 36 M48 30 L53 36"/><path d="M48 66 L43 60 M48 66 L53 60"/></g><circle cx="48" cy="48" r="6" fill="url(#as-ecCore)" class="as-shimmer"/></svg>',
+pain:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(212,74,74,0.6))"><defs><radialGradient id="as-painCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="45%" stop-color="#e85858" stop-opacity="0.85"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient><radialGradient id="as-painHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e87878" stop-opacity="0.3"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-painHalo)"/><path d="M48 18 L54 42 L78 48 L54 54 L48 78 L42 54 L18 48 L42 42 Z" fill="url(#as-painCore)" stroke="#f09696" stroke-width="1" class="as-flicker"/></svg>',
+vibration:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(216,156,192,0.5))"><defs><radialGradient id="as-vibCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#d89cc0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="10" fill="none" stroke="#e8b8d4" stroke-width="2" opacity="0.85" class="as-ring"/><circle cx="48" cy="48" r="10" fill="none" stroke="#e8b8d4" stroke-width="1.6" opacity="0.7" class="as-ring" style="animation-delay:0.8s"/><circle cx="48" cy="48" r="10" fill="none" stroke="#e8b8d4" stroke-width="1.2" opacity="0.55" class="as-ring" style="animation-delay:1.6s"/><circle cx="48" cy="48" r="6" fill="url(#as-vibCore)" class="as-breathe"/></svg>',
+proprioception:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(127,179,160,0.5))"><defs><radialGradient id="as-prCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#7fb3a0" stop-opacity="0"/></radialGradient><radialGradient id="as-prHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9fcbb8" stop-opacity="0.28"/><stop offset="100%" stop-color="#7fb3a0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-prHalo)"/><g class="as-drift"><path d="M24 66 L46 44 L70 52" fill="none" stroke="#a3cebb" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><circle cx="24" cy="66" r="4" fill="#a3cebb" opacity="0.85"/><circle cx="70" cy="52" r="4" fill="#a3cebb" opacity="0.85"/><circle cx="46" cy="44" r="6" fill="url(#as-prCore)" class="as-breathe"/></g></svg>'
 };
 const MSGS=["The aura of this place just shifted.","Your sense is now part of this street.","The collective aura grows.","Another Aurasenser heard.","This place knows it is seen.","Your gift has reached the aura."];
 const ZOOMS=[[51.508,-0.128,15],[51.508,-0.128,13.5],[51.508,-0.128,10],[54.7,-4.2,5.2],[20,0,3]];
@@ -337,14 +368,12 @@ let T=0;
     const life=Math.min(1,(Date.now()-p.born)/2000);
     const breath=0.82+Math.sin(T*0.55+i*1.3)*0.30;
     const r=(45+p.intensity*35)*breath*life*Math.pow(2,(map.getZoom()-14)*0.7);
-    // Outer glow: single clean gradient, brighter stops (from map-test)
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
-    const swell=(breath-0.52)/0.60; // 0..1 across the breath
+    const swell=(breath-0.52)/0.60;
     glow.addColorStop(0,    hexA(col,(0.95+0.05*swell)*life));
     glow.addColorStop(0.35, hexA(col,(0.55+0.10*swell)*life));
     glow.addColorStop(1,    hexA(col,0));
     ctx.fillStyle=glow;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
-    // Bright little core (from map-test) — the 'harder, more present' centre
     const cr=11*breath*life;
     const core=ctx.createRadialGradient(x,y,0,x,y,cr);
     core.addColorStop(0,hexA('#ffffff',0.9*life));
@@ -562,30 +591,19 @@ document.querySelectorAll('.tab').forEach(tab=>{
   };
 });
 
-// Zoom the tab levels relative to WHERE THE USER CURRENTLY IS (not fixed London).
-// Street stays a close view of the current centre; Town/Region/Nation reverse-geocode
-// the current centre and fit the matching real-world boundary.
 async function contextualZoom(level){
   const c=map.getCenter();
-  if(level===0){ // Street — just a close view of where we are
+  if(level===0){
     flyProgrammatic({center:[c.lng,c.lat],zoom:15,duration:1800});
     return;
   }
-  // Which boundary type to look up for each level:
   const typeFor={1:'place',2:'region',3:'country'}[level];
-  // Fly to the place's CENTRE at a controlled zoom. We deliberately don't fit the
-  // returned bbox for region/nation — a 'region' like England, or a country's full
-  // bbox, is so large it zooms right out (the cause of 'Region -> whole UK' and the
-  // 'Nation too far / sea on top'). A fixed zoom per level frames it sensibly.
   const z={1:12,2:8.5,3:5.7}[level];
-  // Known-good framing when inside the UK (the reverse-geocode is unreliable for
-  // London's region/nation; this guarantees sensible frames until the full
-  // contextual pass is done).
   const inUK=(c.lng>-8.7&&c.lng<2&&c.lat>49.8&&c.lat<61);
-  if(inUK&&level===2){ // Region -> Greater London area
+  if(inUK&&level===2){
     flyProgrammatic({center:[-0.118,51.509],zoom:9.3,duration:2000,offset:[0,-20]});return;
   }
-  if(inUK&&level===3){ // Nation -> whole UK, framed properly
+  if(inUK&&level===3){
     flyToBounds([[-8.2,49.9],[1.8,59.5]],6);return;
   }
   try{
@@ -593,7 +611,6 @@ async function contextualZoom(level){
               `?access_token=${MAPBOX_TOKEN}&types=${typeFor}&limit=1`;
     const r=await fetch(url);const d=await r.json();
     if(d&&d.features&&d.features.length&&d.features[0].center){
-      // Town can still frame nicely by bbox if it's small; region/nation use centre+zoom.
       if(level===1&&d.features[0].bbox){
         flyToBounds([[d.features[0].bbox[0],d.features[0].bbox[1]],
                      [d.features[0].bbox[2],d.features[0].bbox[3]]],14.5);
@@ -605,29 +622,17 @@ async function contextualZoom(level){
   }catch(e){}
   flyProgrammatic({center:[c.lng,c.lat],zoom:z,duration:2000,offset:[0,-30]});
 }
-// Helper: fly the map ourselves, and ignore the move events it generates.
-// A timer (a little longer than the flight) clears the flag no matter how many
-// intermediate events Mapbox fires — robust where a single-event reset was not.
-// One place that controls which level tab is lit (text + glowing orb),
-// closes Planet if it was open, and keeps auraLevel in sync.
 let searchMarker=null;
-let lastSearchPoint=null;  // [lng,lat] of last precise address/POI search
-
-let lastClickPoint=null;   // [lng,lat] of last map click — used when typing then clicking submit
-let lastSearchLabel=null;  // the label DOM element of the current marker
-let lastSearchName=null;   // the place name string of the current marker
-// Drop a soft pin where a precise address/POI was found, to help the user pinpoint it.
+let lastSearchPoint=null;
+let lastClickPoint=null;
+let lastSearchLabel=null;
+let lastSearchName=null;
 function dropSearchMarker(center,placeName){
   if(searchMarker){searchMarker.remove();searchMarker=null;}
-  lastSearchPoint=center;  // remember exact spot for precise submission
-  // Does this spot already have any aura offerings nearby? (within ~80m)
+  lastSearchPoint=center;
   const hasAura=auraPoints.some(p=>haversine(p.lat,p.lng,center[1],center[0])<80);
-  // Wrapper Mapbox positions; the DOT is the anchor point (sits on the place).
-  // The label floats ABOVE via absolute positioning + a connector, so the canvas
-  // glow (which paints over the marker area) can't hide it.
   const el=document.createElement('div');
   el.style.cssText='position:relative;width:16px;height:16px;transition:opacity 4.5s ease-in-out;opacity:0;z-index:550;';
-  // Floating label, lifted ~80px above the dot, centred over it.
   const lbl=document.createElement('div');
   lbl.textContent=hasAura?('✨ '+(placeName||'This place')):('Awaiting aura offering at '+(placeName||'this place'));
   lastSearchLabel=lbl; lastSearchName=(placeName||'this place');
@@ -636,23 +641,18 @@ function dropSearchMarker(center,placeName){
     'padding:4px 10px;border-radius:8px;white-space:nowrap;z-index:30;'+
     'text-shadow:0 0 10px rgba(167,139,250,.9);border:0.5px solid rgba(167,139,250,.5);box-shadow:0 0 14px rgba(0,0,0,.7);';
   el.appendChild(lbl);
-  // Connector line from just under the label down toward the dot.
   const conn=document.createElement('div');
   conn.style.cssText='position:absolute;left:50%;bottom:18px;transform:translateX(-50%);'+
     'width:1px;height:62px;background:linear-gradient(rgba(196,181,253,.7),rgba(196,181,253,0));z-index:29;';
   el.appendChild(conn);
-  // Inner dot carries the pulse; sits at the wrapper origin = exact place.
   const dot=document.createElement('div');
   dot.style.cssText='width:16px;height:16px;border-radius:50%;background:rgba(196,181,253,.95);'+
     'border:1.5px solid #fff;animation:searchPulse 2.4s ease-in-out infinite;position:relative;z-index:28;';
   el.appendChild(dot);
   searchMarker=new mapboxgl.Marker({element:el}).setLngLat(center).addTo(map);
   if(searchMarker.getElement().parentElement)searchMarker.getElement().parentElement.style.zIndex='550';
-  // Fade the marker IN only once the map has settled — arrives with the place, mystically.
   map.once('moveend',()=>{ if(el)el.style.opacity='1'; });
   setTimeout(()=>{ if(el&&el.style.opacity==='0')el.style.opacity='1'; },4500);
-  // Pulse (the living invitation) for a good while, then stop and VERY slowly ease
-  // down to a soft, still-present glow that lingers as an anchor.
   setTimeout(()=>{ if(dot)dot.style.animation='none'; },16000);
   setTimeout(()=>{ if(el){el.style.transition='opacity 18s ease-in-out';el.style.opacity='0.6';} },17000);
 }
@@ -663,8 +663,6 @@ function setActiveTab(i){
     t.classList.toggle('active', +t.dataset.i===i);
     t.style.color='';
   });
-  // Clear any leftover inline orb styles from the wave animation and set the orb
-  // directly, so the lit orb always matches the active tab (no sticking on Street).
   ORB_IDS.forEach((id,k)=>{
     const orb=document.getElementById(id);if(!orb)return;
     if(k===i){
@@ -676,8 +674,7 @@ function setActiveTab(i){
 }
 const MAPBOX_TOKEN='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
 let flyTimer=null;
-let searching=false;  // true while a SEARCH flight is happening (don't record into tab memory)
-// Frame an animated flight to a bounding box, ignoring our own move events.
+let searching=false;
 function flyToBounds(bounds,maxZoom){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
@@ -691,9 +688,9 @@ function flyProgrammatic(opts){
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },(opts.duration||2000)+250);
 }
 map.on('moveend',()=>{
-  if(searching){ searching=false; return; }      // a search flight — never record this
-  if(isMovingProgrammatically)return;            // a tab flight we caused — don't record
-  const c=map.getCenter(),z=map.getZoom();        // genuine user pan/zoom only
+  if(searching){ searching=false; return; }
+  if(isMovingProgrammatically)return;
+  const c=map.getCenter(),z=map.getZoom();
   lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
   if(auraLevel===0)lastStreetView={lat:c.lat,lng:c.lng,zoom:z};
 });
@@ -707,9 +704,9 @@ document.getElementById('ep4').onclick=()=>{showMsg('Conscious Trajectory — co
 map.on('click',async function(e){
   closeExplore();
   const clat=e.lngLat.lat,clng=e.lngLat.lng;
-  lastClickPoint=[clng,clat];console.log('click stored:',lastClickPoint);
+  lastClickPoint=[clng,clat];
   const input=document.getElementById('inp');
-  if(input.value.trim()){submit(clat,clng,input.value);input.value='';return;}
+  if(input.value.trim()){materializeAndSubmit(clat,clng,input.value);input.value='';return;}
   const existing=auraPoints.filter(p=>haversine(p.lat,p.lng,clat,clng)<100);
   const s=SENSES.find(s=>s.id===selSense);
   let streetName='this location';
@@ -739,16 +736,13 @@ async function lookupPlace(lat,lng){
     const d=await r.json();
     if(d&&d.features&&d.features.length){
       const f=d.features[0];
-      // Street name (no house number) from the result itself.
       const street=f.text||'';
-      // Town and country come from the result's context hierarchy.
       let town='',country='';
       (f.context||[]).forEach(cx=>{
         const id=cx.id||'';
         if(id.startsWith('place'))town=cx.text;
         else if(id.startsWith('country'))country=cx.text;
       });
-      // Build 'Street, Town, Country' skipping any missing/duplicate parts.
       const parts=[street,town,country].filter((p,idx,arr)=>p&&arr.indexOf(p)===idx);
       return parts.join(', ');
     }
@@ -777,7 +771,6 @@ function submit(lat,lng,text){
     const here=map.getCenter();
     const hereZoom=map.getZoom();
     const tourZooms=[hereZoom,12,9,5.7];
-    
     auraLevel++;
     setTimeout(()=>{
       showMsg(LEVEL_MSGS[auraLevel]);
@@ -790,26 +783,65 @@ function submit(lat,lng,text){
   }
 }
 
+// Full-screen materialization: the chosen sense symbol appears large with its name,
+// is observed for a few seconds, then descends to the exact spot it was offered,
+// where the living aura takes its place.
+function materializeAndSubmit(lat,lng,text){
+  const sid=selSense;
+  const s=SENSES.find(x=>x.id===sid);
+  if(!s){submit(lat,lng,text);return;}
+  const overlay=document.getElementById('materialize');
+  const nameEl=document.getElementById('mat-name');
+  const symEl=document.getElementById('mat-symbol');
+  if(!overlay||!symEl){submit(lat,lng,text);return;}
+  nameEl.textContent=s.label;
+  symEl.innerHTML=SENSE_SYMBOLS[sid]||'';
+  const svg=symEl.querySelector('svg');
+  if(svg){svg.setAttribute('width','100%');svg.setAttribute('height','100%');}
+  overlay.classList.add('show');
+  symEl.style.transition='none';
+  symEl.style.transform='translate(0px,0px) scale(1)';
+  symEl.style.opacity='0';
+  nameEl.style.opacity='0';
+  requestAnimationFrame(()=>{
+    symEl.style.transition='opacity 1s ease';
+    symEl.style.opacity='1';
+    nameEl.style.opacity='1';
+  });
+  setTimeout(()=>{
+    const pt=map.project([lng,lat]);
+    const rect=symEl.getBoundingClientRect();
+    const startX=rect.left+rect.width/2;
+    const startY=rect.top+rect.height/2;
+    const dx=pt.x-startX;
+    const dy=pt.y-startY;
+    nameEl.style.opacity='0';
+    symEl.style.transition='transform 1.6s cubic-bezier(.4,0,.2,1), opacity 1.6s ease';
+    symEl.style.transform='translate('+dx+'px,'+dy+'px) scale(0.12)';
+    symEl.style.opacity='0';
+    setTimeout(()=>{ submit(lat,lng,text); },1250);
+    setTimeout(()=>{ overlay.classList.remove('show'); },1750);
+  },2600);
+}
+
 document.getElementById('sbtn').onclick=()=>{
   const v=document.getElementById('inp').value.trim();if(!v)return;
   const c=map.getCenter();
-  // If a precise address/POI was just searched and we're still right by it,
-  // place the aura EXACTLY there (no random jitter). Otherwise use map centre.
-  console.log('submit check, lastClickPoint:',lastClickPoint,'mapCenter:',c.lat,c.lng);if(lastClickPoint && haversine(lastClickPoint[1],lastClickPoint[0],c.lat,c.lng)<200){
-    submit(lastClickPoint[1],lastClickPoint[0],v);
+  // A clicked spot is the user's exact intent, so the aura lands there.
+  // Otherwise use a searched location, or fall back to the map centre.
+  if(lastClickPoint){
+    materializeAndSubmit(lastClickPoint[1],lastClickPoint[0],v);
     lastClickPoint=null;
-  } else 
-  if(lastSearchPoint && haversine(lastSearchPoint[1],lastSearchPoint[0],c.lat,c.lng)<150){
-    submit(lastSearchPoint[1],lastSearchPoint[0],v);
-    // Update the marker label to celebrate the fresh offering, then mellow after an hour.
+  } else if(lastSearchPoint && haversine(lastSearchPoint[1],lastSearchPoint[0],c.lat,c.lng)<150){
+    materializeAndSubmit(lastSearchPoint[1],lastSearchPoint[0],v);
     if(lastSearchLabel){
       lastSearchLabel.textContent='✨ Aura just offered at '+lastSearchName;
       const lblRef=lastSearchLabel, nameRef=lastSearchName;
       setTimeout(()=>{ if(lblRef)lblRef.textContent='✨ Aura offered at '+nameRef; },3600000);
     }
   } else {
-    const j=()=>(Math.random()-.5)*.0006;  // tiny jitter only, ~30m, so stacked auras don't overlap exactly
-    submit(c.lat+j(),c.lng+j(),v);
+    const j=()=>(Math.random()-.5)*.0006;
+    materializeAndSubmit(c.lat+j(),c.lng+j(),v);
   }
   document.getElementById('inp').value='';
 };
@@ -819,8 +851,6 @@ document.getElementById('sg').onclick=async()=>{
   const q=document.getElementById('si').value.trim();if(!q)return;
   showMsg('Sensing the aura of '+q+'...');
   try{
-    // Mapbox geocoding: returns a bounding box + result type, so we can frame
-    // the find correctly — a country fills the view, a street zooms in close.
     const cc=map.getCenter();
     const url=`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json`+
               `?access_token=${MAPBOX_TOKEN}&limit=1&proximity=${cc.lng},${cc.lat}`;
@@ -830,20 +860,16 @@ document.getElementById('sg').onclick=async()=>{
       const f=d.features[0];
       const t=(f.place_type&&f.place_type[0])||'';
       let name=f.text||f.place_name.split(',')[0];
-      if(t==='address'&&f.address)name=f.address+' '+name;  // prepend house number
-      // Light the matching level tab WITHOUT letting this search overwrite the
-      // tabs' remembered home positions (that leak caused 'Region -> last search').
+      if(t==='address'&&f.address)name=f.address+' '+name;
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
-      searching=true;                       // tell moveend: don't record this move
+      searching=true;
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
-        // Allow small places to come in close; keep big areas appropriately wide.
         const mz={place:16,locality:16,district:14,postcode:16,
                   neighborhood:16.5,region:11,country:9}[t]||15.5;
         flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]],mz);
       }else{
-        // No bbox = a precise point (address / POI). Go in close and pin it.
         const z=(t==='address')?17.5:(t==='poi')?16.5:15;
         flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:[-60,-80]});
       }
