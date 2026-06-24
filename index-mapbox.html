@@ -67,10 +67,10 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #sg{padding:6px 10px;border-radius:10px;border:0.5px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s}
 #sg:hover{background:rgba(167,139,250,.2)}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
-#my-aura-title{font-size:9px;color:#9d8fcc;text-align:center;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+#my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
 #pac{display:block;margin:0 auto;cursor:pointer;border-radius:50%;transition:filter .3s}
 #my-aura:hover #pac{filter:drop-shadow(0 0 10px rgba(196,181,253,.6))}
-#my-aura-label{font-size:10px;color:#7870a0;text-align:center;margin-top:3px}
+#my-aura-label{font-size:11px;color:#c4b5fd;text-align:center;margin-top:4px;letter-spacing:.04em;text-shadow:0 0 10px rgba(167,139,250,.6)}
 #explore-btn{position:absolute;left:110px;top:148px;pointer-events:all}
 #ebtn{padding:6px 12px;border-radius:10px;border:0.5px solid rgba(167,139,250,.25);background:rgba(10,10,20,.88);color:#9d8fcc;font-size:11px;cursor:pointer;font-family:inherit;transition:all .3s;backdrop-filter:blur(6px)}
 #ebtn:hover{border-color:rgba(167,139,250,.5);color:#c4b5fd;background:rgba(167,139,250,.1)}
@@ -139,8 +139,10 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #ma-right{border-left:0.5px solid rgba(167,139,250,.1)}
 #ma-center{flex:1;position:relative;overflow:hidden}
 #ma-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-#ma-tree-hint{position:absolute;top:34%;left:50%;transform:translateX(-50%);font-size:12px;font-style:italic;color:#dcd2ff;letter-spacing:.05em;text-shadow:0 0 18px rgba(167,139,250,.85);opacity:0;transition:opacity .6s;pointer-events:none;text-align:center}
-#ma-center:hover #ma-tree-hint{opacity:.92}
+#ma-feed-label{position:absolute;bottom:6%;left:50%;transform:translateX(-50%);font-size:12.5px;font-style:italic;color:#efe8ff;letter-spacing:.04em;text-shadow:0 0 20px rgba(167,139,250,.95),0 0 8px rgba(255,255,255,.4);text-align:center;pointer-events:none;opacity:.8;transition:opacity .4s}
+#ma-center:hover #ma-feed-label{opacity:1}
+#ma-top-hint{position:absolute;top:5.5%;left:50%;transform:translateX(-50%);width:250px;font-size:11px;font-style:italic;color:#f3eaff;letter-spacing:.04em;text-shadow:0 0 16px rgba(255,228,180,.85);text-align:center;pointer-events:none;opacity:0;transition:opacity .5s}
+#ma-branch-tip{position:absolute;max-width:215px;font-size:10.5px;line-height:1.5;color:#e6dfff;background:rgba(8,7,20,.93);border:0.5px solid rgba(167,139,250,.35);border-radius:9px;padding:8px 11px;pointer-events:none;opacity:0;transition:opacity .22s;z-index:5;box-shadow:0 0 18px rgba(0,0,0,.6);font-style:italic}
 .ma-h{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9d8fcc;margin:22px 0 10px;font-weight:500}
 .ma-col .ma-h:first-child{margin-top:0}
 .ma-offering{border-left:2px solid transparent;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px}
@@ -256,7 +258,9 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
     </div>
     <div id="ma-center">
       <canvas id="ma-canvas"></canvas>
-      <div id="ma-tree-hint">See your Aura in the Cosmic Tree</div>
+      <div id="ma-feed-label">Feed Your Aura Energy to the Cosmic Tree</div>
+      <div id="ma-top-hint">To see the top, fill the tree with more aura energy</div>
+      <div id="ma-branch-tip"></div>
     </div>
     <div class="ma-col" id="ma-right">
       <div class="ma-h">How it changed your aura</div>
@@ -411,6 +415,12 @@ const pac=document.getElementById('pac'),pctx=pac.getContext('2d');
 let paT=0,paFeedAt=0,paFeedColor='#a78bfa';
 let myAuraColors=[],myOfferings=[];
 function paPalette(){return myAuraColors.length?myAuraColors.slice(-8):['#a78bfa'];}
+function paDistinct(n){
+  const seen=[],out=[];
+  for(let i=myAuraColors.length-1;i>=0&&out.length<n;i--){if(seen.indexOf(myAuraColors[i])<0){seen.push(myAuraColors[i]);out.push(myAuraColors[i]);}}
+  if(!out.length)out.push('#a78bfa');
+  return out; // most recent first
+}
 (function drawPA(){
   pctx.clearRect(0,0,80,80);paT+=0.02;
   const since=performance.now()-paFeedAt;
@@ -422,24 +432,27 @@ function paPalette(){return myAuraColors.length?myAuraColors.slice(-8):['#a78bfa
   }
   const boost=1+absorb*0.55;
   const cx=40,cy=40,level=Math.min(myShareCount,20);
-  const rings=1+Math.floor(level/4);
-  const pal=paPalette();
   const feedRGB=hexRGB(paFeedColor);
-  for(let r=rings;r>=1;r--){
-    const br=10+r*6,pulse=br*(1+Math.sin(paT+r)*.09)*boost;
-    const rgb=mixRGB(hexRGB(pal[(r-1)%pal.length]||'#a78bfa'),feedRGB,tint);
-    const alpha=Math.min(1,(0.07+level*.006)*(1+absorb*1.1));
-    const g=pctx.createRadialGradient(cx,cy,0,cx,cy,pulse);
-    g.addColorStop(0,rgbaArr(rgb,Math.min(1,alpha*4)));
-    g.addColorStop(.5,rgbaArr(rgb,alpha));
+  // coloured layers — one per recent sense, marbled around the centre and blurred where they meet
+  const cols=paDistinct(6);
+  const baseR=15+Math.min(level,16)*0.7;
+  for(let i=cols.length-1;i>=0;i--){
+    const rgb=mixRGB(hexRGB(cols[i]),feedRGB,i===0?tint:tint*0.4);
+    const ang=(i/cols.length)*Math.PI*2+paT*0.25, off=(i===0?0:3.4);
+    const lx=cx+Math.cos(ang)*off, ly=cy+Math.sin(ang)*off;
+    const rad=baseR*(1-i*0.07)*(1+Math.sin(paT*0.9+i)*0.05)*boost;
+    const a=Math.min(1,(0.17-i*0.012)*(1+absorb*1.2));
+    const g=pctx.createRadialGradient(lx,ly,0,lx,ly,rad);
+    g.addColorStop(0,rgbaArr(rgb,Math.min(1,a*1.7)));
+    g.addColorStop(0.55,rgbaArr(rgb,a));
     g.addColorStop(1,rgbaArr(rgb,0));
-    pctx.beginPath();pctx.arc(cx,cy,pulse,0,Math.PI*2);pctx.fillStyle=g;pctx.fill();
+    pctx.fillStyle=g;pctx.beginPath();pctx.arc(lx,ly,rad,0,Math.PI*2);pctx.fill();
   }
-  const ccr=8*boost;
-  const coreRGB=mixRGB([220,210,255],feedRGB,tint*0.6);
+  const ccr=7.5*boost;
+  const coreRGB=mixRGB([225,216,255],feedRGB,tint*0.55);
   const cg=pctx.createRadialGradient(cx,cy,0,cx,cy,ccr);
-  cg.addColorStop(0,rgbaArr(coreRGB,.95));cg.addColorStop(1,rgbaArr(coreRGB,0));
-  pctx.beginPath();pctx.arc(cx,cy,ccr,0,Math.PI*2);pctx.fillStyle=cg;pctx.fill();
+  cg.addColorStop(0,rgbaArr(coreRGB,.92));cg.addColorStop(1,rgbaArr(coreRGB,0));
+  pctx.fillStyle=cg;pctx.beginPath();pctx.arc(cx,cy,ccr,0,Math.PI*2);pctx.fill();
   document.getElementById('my-aura-label').textContent=LEVEL_NAMES[Math.min(5,Math.floor(myShareCount/3))];
   requestAnimationFrame(drawPA);
 })();
@@ -473,6 +486,13 @@ let T=0;
     const r=(45+p.intensity*35)*breath*life*Math.pow(2,(map.getZoom()-14)*0.7);
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
     const swell=(breath-0.52)/0.60;
+    // a wide misty halo just beyond the edge, glowing broadly in the sense colour — misty and mysterious
+    const halo=ctx.createRadialGradient(x,y,r*0.6,x,y,r*1.95);
+    halo.addColorStop(0,hexA(col,0));
+    halo.addColorStop(0.45,hexA(col,(0.12+0.06*swell)*life));
+    halo.addColorStop(0.7,hexA(col,(0.06+0.03*swell)*life));
+    halo.addColorStop(1,hexA(col,0));
+    ctx.fillStyle=halo;ctx.beginPath();ctx.arc(x,y,r*1.95,0,Math.PI*2);ctx.fill();
     glow.addColorStop(0,    hexA(col,(0.95+0.05*swell)*life));
     glow.addColorStop(0.35, hexA(col,(0.55+0.10*swell)*life));
     glow.addColorStop(1,    hexA(col,0));
@@ -1113,20 +1133,220 @@ document.querySelectorAll('.soc-btn').forEach(b=>{
 });
 
 // My Aura is becoming a space the senser can open and nurture — for now it acknowledges the tap.
-// ---- My Aura page ----
-let maRaf=null,maT=0,maTreeReveal=0,maHover=false,maSegs=[],maStriations=[],maStars=[];
+// ---- My Aura page : the Cosmic Tree ----
+let maRaf=null,maT=0,maOpenAt=0,maHoverBranch=-1,maOverAura=false;
+let maFeed={active:false,start:0};
+let maGeo=null;
+const TWO=Math.PI*2;
 function maLine(text,color){return '<div class="ma-line" style="--lc:'+(color||'#a78bfa')+'">'+text+'</div>';}
+function maRng(seed){let s=seed>>>0;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
+function maMakeUniverse(w,h,rng){
+  const stars=[],ns=Math.round(12+w*0.06);
+  for(let i=0;i<ns;i++)stars.push({x:(rng()-0.5)*w*0.92,y:(rng()-0.5)*h*0.92,r:rng()*1.2+0.2,sp:0.5+rng()*2.6,ph:rng()*TWO});
+  const neb=[],nn=2+Math.floor(rng()*2),pal=[[120,150,255],[200,90,140],[90,120,230],[160,110,210]];
+  for(let i=0;i<nn;i++){const col=pal[Math.floor(rng()*pal.length)];neb.push({x:(rng()-0.5)*w*0.6,y:(rng()-0.5)*h*0.6,r:(0.3+rng()*0.4)*Math.min(w,h),col:col,ph:rng()*TWO});}
+  const gal=[],ng=1+Math.floor(rng()*2);
+  for(let i=0;i<ng;i++)gal.push({x:(rng()-0.5)*w*0.55,y:(rng()-0.5)*h*0.5,r:(0.10+rng()*0.12)*w,rot:rng()*TWO,dir:rng()<0.5?1:-1});
+  return {stars,neb,gal};
+}
+function maAlmond(c,w,h){
+  c.beginPath();c.moveTo(-w/2,0);
+  c.bezierCurveTo(-w*0.28,-h*0.5,w*0.28,-h*0.5,w/2,0);
+  c.bezierCurveTo(w*0.28,h*0.5,-w*0.28,h*0.5,-w/2,0);
+  c.closePath();
+}
+function maDrawLeaf(c,lf,bright,t){
+  c.save();c.translate(lf.cx,lf.cy);c.rotate(lf.angle);
+  maAlmond(c,lf.w,lf.h);
+  c.save();c.clip();
+  c.fillStyle='#05050d';c.fillRect(-lf.w,-lf.h,lf.w*2,lf.h*2);
+  const u=lf.uni;
+  u.neb.forEach(n=>{
+    const a=(0.10+0.16*bright)*(0.7+0.3*Math.sin(t*0.5+n.ph));
+    const g=c.createRadialGradient(n.x,n.y,0,n.x,n.y,n.r);
+    g.addColorStop(0,'rgba('+n.col[0]+','+n.col[1]+','+n.col[2]+','+a.toFixed(3)+')');
+    g.addColorStop(1,'rgba('+n.col[0]+','+n.col[1]+','+n.col[2]+',0)');
+    c.fillStyle=g;c.beginPath();c.arc(n.x,n.y,n.r,0,TWO);c.fill();
+  });
+  u.gal.forEach(gx=>{
+    c.save();c.translate(gx.x,gx.y);c.rotate(gx.rot+t*0.05*gx.dir);
+    for(let a=0;a<2;a++){
+      c.beginPath();
+      for(let p=0;p<20;p++){const th=p/19*Math.PI*1.6+a*Math.PI;const rr=(p/19)*gx.r;c.lineTo(Math.cos(th)*rr*gx.dir,Math.sin(th)*rr);}
+      c.strokeStyle='rgba(220,225,255,'+(0.05+0.12*bright).toFixed(3)+')';c.lineWidth=1.1;c.stroke();
+    }
+    const cg=c.createRadialGradient(0,0,0,0,0,gx.r*0.5);
+    cg.addColorStop(0,'rgba(255,250,255,'+(0.25+0.4*bright).toFixed(3)+')');cg.addColorStop(1,'rgba(255,250,255,0)');
+    c.fillStyle=cg;c.beginPath();c.arc(0,0,gx.r*0.5,0,TWO);c.fill();
+    c.restore();
+  });
+  u.stars.forEach(s=>{const tw=(0.4+0.6*Math.abs(Math.sin(t*s.sp+s.ph)))*(0.5+0.5*bright);c.beginPath();c.arc(s.x,s.y,s.r,0,TWO);c.fillStyle='rgba(255,255,255,'+tw.toFixed(3)+')';c.fill();});
+  c.restore();
+  for(let k=0;k<3;k++){const sc=1-k*0.2;maAlmond(c,lf.w*sc,lf.h*sc);c.strokeStyle='rgba(175,240,228,'+((0.5-k*0.12)*(0.6+0.4*bright)).toFixed(3)+')';c.lineWidth=Math.max(0.7,(2-k*0.5));c.stroke();}
+  c.restore();
+}
+function maBranchGeo(side,level,trunkX,attachY,W,H,seaY){
+  const scale=1-level*0.2,reach=W*0.30*scale,dirY=(level%2===0)?0.04:-0.02;
+  const tipX=trunkX+side*reach,tipY=attachY-reach*0.10+reach*dirY;
+  const leafW0=W*0.155*scale,leafH0=leafW0*0.62,ang=Math.atan2(tipY-attachY,side*reach),leaves=[];
+  for(let k=0;k<4;k++){
+    const sc=1-k*0.2,back=k*leafW0*0.42;
+    const lx=tipX-side*back*0.78-side*leafW0*0.34,ly=tipY+back*0.12-sc*4;
+    const seed=(side+2)*7919+level*104729+k*1299709;
+    leaves.push({cx:lx,cy:ly,w:leafW0*sc,h:leafH0*sc,angle:ang,uni:maMakeUniverse(leafW0*sc,leafH0*sc,maRng(seed))});
+  }
+  const hx=tipX-side*leafW0*0.4,hy=tipY;
+  return {side,level,attachX:trunkX,attachY,tipX,tipY,leaves,hit:{x:hx,y:hy,rx:leafW0*0.95,ry:leafH0*0.95},ny:(seaY-attachY)/(seaY-H*0.13)};
+}
+function maAssignBranchLabels(){
+  const counts={};myOfferings.forEach(o=>{counts[o.sense]=(counts[o.sense]||0)+1;});
+  const ranked=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
+  return {counts,ranked};
+}
+function maBuild(){
+  const cv=document.getElementById('ma-canvas');if(!cv)return;
+  const W=cv.clientWidth||Math.round(window.innerWidth*0.46),H=cv.clientHeight||Math.round(window.innerHeight*0.9);
+  cv.width=W;cv.height=H;
+  const trunkX=W/2,auraR=Math.min(W*0.34,H*0.30),seaY=H*0.70,auraY=seaY+auraR*0.42,topY=H*0.12;
+  const branches=[],lab=maAssignBranchLabels();let order=0;
+  for(let level=0;level<4;level++){
+    const attachY=seaY-26-(seaY-topY)*((level+0.5)/4.3);
+    [-1,1].forEach(side=>{
+      const b=maBranchGeo(side,level,trunkX,attachY,W,H,seaY);
+      const sid=lab.ranked[order];
+      if(sid){const s=SENSES.find(x=>x.id===sid);b.repr={label:s?s.label:sid,color:s?s.color:'#a78bfa',count:lab.counts[sid]};}else b.repr=null;
+      order++;branches.push(b);
+    });
+  }
+  const topLeaves=[];
+  [-1,1].forEach(side=>{
+    const lw=W*0.052,lh=lw*0.6,lx=trunkX+side*W*0.075,ly=topY+lh*0.2,seed=999983+(side+2);
+    topLeaves.push({cx:lx,cy:ly,w:lw,h:lh,angle:side*0.12,uni:maMakeUniverse(lw,lh,maRng(seed))});
+  });
+  maGeo={W,H,trunkX,auraR,auraY,seaY,topY,branches,topLeaves};
+}
+function maEnergyLevel(){return Math.min(1,0.22+myShareCount*0.045);}
+function maDrawAuraDome(c,G,energy){
+  const cx=G.trunkX,ay=G.auraY,R=G.auraR,cols=paDistinct(6);
+  const fb=maFeed.active?Math.sin(((performance.now()-maFeed.start)/2600)*Math.PI):0;
+  for(let i=cols.length-1;i>=0;i--){
+    const rgb=hexRGB(cols[i]),ang=(i/cols.length)*TWO+maT*0.18,off=(i===0?0:R*0.10);
+    const lx=cx+Math.cos(ang)*off,ly=ay+Math.sin(ang)*off*0.7;
+    const rad=R*(1-i*0.07)*(1+Math.sin(maT*0.7+i)*0.04)*(1+fb*0.05),a=(0.22-i*0.02)*(1+fb*0.4);
+    const g=c.createRadialGradient(lx,ly,0,lx,ly,rad);
+    g.addColorStop(0,rgbaArr(rgb,Math.min(1,a*1.3)));g.addColorStop(0.55,rgbaArr(rgb,a));g.addColorStop(1,rgbaArr(rgb,0));
+    c.fillStyle=g;c.beginPath();c.arc(lx,ly,rad,0,TWO);c.fill();
+  }
+  for(let k=0;k<24;k++){
+    const a2=maT*0.3+k*0.7,rr=R*(0.2+0.7*((k*0.13)%1));
+    const mx=cx+Math.cos(a2)*rr*0.7,my=ay+Math.sin(a2)*rr*0.5,tw=0.5+0.5*Math.sin(maT*1.3+k);
+    c.beginPath();c.arc(mx,my,0.8+tw*1.0,0,TWO);c.fillStyle='rgba(255,251,255,'+(0.12+0.18*tw).toFixed(3)+')';c.fill();
+  }
+  const hg=c.createRadialGradient(cx,ay,0,cx,ay,R*0.4);
+  hg.addColorStop(0,'rgba(240,236,255,'+(0.4+fb*0.4).toFixed(3)+')');hg.addColorStop(1,'rgba(220,210,255,0)');
+  c.fillStyle=hg;c.beginPath();c.arc(cx,ay,R*0.4,0,TWO);c.fill();
+}
+function maDrawSea(c,G){
+  const cx=G.trunkX,R=G.auraR,seaY=G.seaY,span=R*1.5,steps=130;
+  for(let i=0;i<=steps;i++){
+    const tt=i/steps,x=cx-span+tt*span*2,dx=(x-cx)/R;
+    if(Math.abs(dx)>1.18)continue;
+    const curve=1-Math.min(1,dx*dx),y=seaY-curve*R*0.16;
+    const tw=0.4+0.6*Math.abs(Math.sin(maT*1.4+x*0.03));
+    const h=(6+(1-Math.abs(dx))*22)*(0.6+0.4*Math.sin(maT*0.9+x*0.05));
+    const g=c.createLinearGradient(x,y,x,y-h);
+    g.addColorStop(0,'rgba(255,255,255,'+(0.42*tw).toFixed(3)+')');g.addColorStop(1,'rgba(220,228,255,0)');
+    c.strokeStyle=g;c.lineWidth=1.1;c.beginPath();c.moveTo(x,y+4);c.lineTo(x,y-h);c.stroke();
+    if(tw>0.9){c.beginPath();c.arc(x,y-h,1,0,TWO);c.fillStyle='rgba(255,255,255,'+tw.toFixed(3)+')';c.fill();}
+  }
+  const wash=c.createRadialGradient(cx,seaY-R*0.1,R*0.2,cx,seaY-R*0.1,R*1.2);
+  wash.addColorStop(0,'rgba(226,230,255,0.16)');wash.addColorStop(0.6,'rgba(210,216,255,0.06)');wash.addColorStop(1,'rgba(210,216,255,0)');
+  c.fillStyle=wash;c.fillRect(cx-span,seaY-R*0.5,span*2,R*0.7);
+}
+function maDrawTrunk(c,G,feedFront,feedSurge){
+  const cx=G.trunkX,baseY=G.seaY+G.auraR*0.1,topY=G.topY+G.auraR*0.05;
+  const baseW=Math.max(10,G.W*0.018),topW=baseW*0.4;
+  const grad=c.createLinearGradient(cx-baseW,0,cx+baseW,0);
+  grad.addColorStop(0,'rgba(20,70,68,0.85)');grad.addColorStop(0.5,'rgba(90,180,170,0.95)');grad.addColorStop(1,'rgba(20,70,68,0.85)');
+  c.beginPath();c.moveTo(cx-baseW,baseY);
+  c.quadraticCurveTo(cx-baseW*0.5,(baseY+topY)/2,cx-topW,topY);
+  c.lineTo(cx+topW,topY);
+  c.quadraticCurveTo(cx+baseW*0.5,(baseY+topY)/2,cx+baseW,baseY);
+  c.closePath();c.fillStyle=grad;c.fill();
+  c.strokeStyle='rgba(230,255,250,0.55)';c.lineWidth=Math.max(2,baseW*0.3);c.lineCap='round';
+  c.beginPath();c.moveTo(cx,baseY);c.lineTo(cx,topY);c.stroke();
+  if(feedFront>=0){
+    for(let i=0;i<10;i++){
+      const yy=baseY+(topY-baseY)*Math.min(1,feedFront*1.1)+i*8*(1-feedFront);
+      if(yy<topY||yy>baseY)continue;
+      const a=feedSurge*(1-i/10);
+      c.beginPath();c.arc(cx+(Math.random()-0.5)*baseW*0.8,yy,1.4+Math.random()*1.6,0,TWO);c.fillStyle='rgba(255,255,255,'+(0.5*a).toFixed(3)+')';c.fill();
+    }
+    const ny=baseY+(topY-baseY)*Math.min(1,feedFront);
+    const ng=c.createRadialGradient(cx,ny,0,cx,ny,18);
+    ng.addColorStop(0,'rgba(255,255,255,'+(0.8*feedSurge).toFixed(3)+')');ng.addColorStop(1,'rgba(255,255,255,0)');
+    c.fillStyle=ng;c.beginPath();c.arc(cx,ny,18,0,TWO);c.fill();
+  }
+}
+function maDrawBranch(c,G,b,bright){
+  const x1=b.attachX,y1=b.attachY,x2=b.tipX-b.side*G.auraR*0.05,y2=b.tipY,midX=(x1+x2)/2,midY=(y1+y2)/2-8;
+  for(let r=-2;r<=2;r++){
+    c.beginPath();c.moveTo(x1,y1+r*2.0);c.quadraticCurveTo(midX,midY+r*3.0,x2,y2+r*2.2);
+    c.strokeStyle='rgba(90,180,168,'+(0.18+0.10*(2-Math.abs(r))).toFixed(3)+')';c.lineWidth=1.4;c.stroke();
+  }
+  c.beginPath();c.moveTo(x1,y1);c.quadraticCurveTo(midX,midY,x2,y2);
+  c.strokeStyle='rgba(200,245,235,'+(0.3+0.3*bright).toFixed(3)+')';c.lineWidth=1.6;c.stroke();
+}
+function maDrawTop(c,G,energy,feedSurge){
+  const cx=G.trunkX,ty=G.topY,intensity=0.6+0.4*Math.sin(maT*1.5)+feedSurge*0.6;
+  G.topLeaves.forEach(lf=>maDrawLeaf(c,lf,Math.min(1,energy+feedSurge),maT));
+  const burstH=G.auraR*1.1;
+  const lg=c.createLinearGradient(cx,ty+burstH*0.5,cx,ty-burstH*0.6);
+  lg.addColorStop(0,'rgba(255,240,210,0)');lg.addColorStop(0.5,'rgba(255,250,235,'+(0.5*intensity).toFixed(3)+')');lg.addColorStop(1,'rgba(255,255,255,0)');
+  c.fillStyle=lg;c.fillRect(cx-14,ty-burstH*0.6,28,burstH*1.1);
+  const fl=c.createRadialGradient(cx,ty,0,cx,ty,burstH*0.7);
+  fl.addColorStop(0,'rgba(255,255,255,'+Math.min(1,0.85*intensity).toFixed(3)+')');
+  fl.addColorStop(0.25,'rgba(255,244,220,'+(0.4*intensity).toFixed(3)+')');
+  fl.addColorStop(1,'rgba(255,230,180,0)');
+  c.fillStyle=fl;c.beginPath();c.arc(cx,ty,burstH*0.7,0,TWO);c.fill();
+  for(let i=0;i<14;i++){const a=maT*1.2+i,rr=burstH*(0.2+0.5*((i*0.1)%1));c.beginPath();c.arc(cx+Math.cos(a)*rr*0.5,ty+Math.sin(a)*rr*0.4,1+Math.random(),0,TWO);c.fillStyle='rgba(255,250,240,'+(0.4*intensity).toFixed(3)+')';c.fill();}
+}
+function maDraw(){
+  const cv=document.getElementById('ma-canvas');if(!cv){maRaf=null;return;}
+  if(!maGeo)maBuild();
+  const c=cv.getContext('2d'),G=maGeo,W=G.W,H=G.H;
+  maT+=0.016;
+  const fadeIn=Math.min(1,(performance.now()-maOpenAt)/1400);
+  c.clearRect(0,0,W,H);c.globalAlpha=fadeIn;
+  let feedFront=-1,feedSurge=0;
+  if(maFeed.active){const fp=(performance.now()-maFeed.start)/2600;if(fp>=1){maFeed.active=false;}else{feedFront=fp;feedSurge=Math.sin(fp*Math.PI);}}
+  const energy=maEnergyLevel();
+  const bg=c.createRadialGradient(G.trunkX,G.topY+40,10,G.trunkX,G.topY+40,H*0.85);
+  bg.addColorStop(0,'rgba(60,28,20,0.34)');bg.addColorStop(0.4,'rgba(30,16,26,0.18)');bg.addColorStop(1,'rgba(6,5,16,0)');
+  c.fillStyle=bg;c.fillRect(0,0,W,H);
+  maDrawAuraDome(c,G,energy);
+  maDrawSea(c,G);
+  maDrawTrunk(c,G,feedFront,feedSurge);
+  G.branches.forEach((b,i)=>{
+    const reached=feedFront<0?0:Math.max(0,Math.min(1,(feedFront-(1-b.ny)*0.55)*3));
+    const bright=Math.min(1,energy*(0.7+0.3*Math.sin(maT*0.6+i))+reached*0.7+(maHoverBranch===i?0.25:0));
+    maDrawBranch(c,G,b,bright);
+    b.leaves.forEach(lf=>maDrawLeaf(c,lf,bright,maT));
+  });
+  maDrawTop(c,G,energy,feedSurge);
+  c.globalAlpha=1;
+  maRaf=requestAnimationFrame(maDraw);
+}
 function openMyAuraPage(){
   const page=document.getElementById('myaura-page');if(!page)return;
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const off=document.getElementById('ma-offerings');
   if(myOfferings.length){
     off.innerHTML=myOfferings.map(o=>{
-      const sym=SENSE_SYMBOLS[o.sense]||'';
-      const place=o.place?'<div class="m">📍 '+esc(o.place)+'</div>':'';
+      const sym=SENSE_SYMBOLS[o.sense]||'',place=o.place?'<div class="m">📍 '+esc(o.place)+'</div>':'';
       return '<div class="ma-offering" style="border-left-color:'+o.color+'"><div class="s" style="color:'+o.color+'">'+sym+' '+o.label+'</div><div class="t">"'+esc(o.text)+'"</div>'+place+'</div>';
     }).join('');
-  } else off.innerHTML='<div class="ma-empty">You have not offered any senses yet. Each sense you place on the map becomes a thread of light in your own aura here.</div>';
+  } else off.innerHTML='<div class="ma-empty">You have not offered any senses yet. Each sense you place on the map becomes a thread of light in your aura — and, in time, a universe in your Cosmic Tree.</div>';
   const ac=document.getElementById('ma-aura-changes');
   if(myOfferings.length){
     const last=myOfferings[0],senses=new Set(myOfferings.map(o=>o.sense)).size;
@@ -1142,86 +1362,50 @@ function openMyAuraPage(){
       +maLine('Every sense you give reaches the wider, collective aura.','#76a5af');
   } else wc.innerHTML='<div class="ma-empty">When you offer a sense, see how it shifts the street and town here.</div>';
   page.classList.add('show');
-  maStartCanvas();
+  maOpenAt=performance.now();maFeed.active=false;
+  maBuild();
+  if(!maRaf)maRaf=requestAnimationFrame(maDraw);
 }
 function closeMyAuraPage(){
   const page=document.getElementById('myaura-page');if(page)page.classList.remove('show');
   if(maRaf){cancelAnimationFrame(maRaf);maRaf=null;}
 }
-function maBranch(x,y,a,len,depth){
-  if(depth<=0||len<6)return;
-  const x2=x+Math.cos(a)*len, y2=y+Math.sin(a)*len;
-  maSegs.push({x1:x,y1:y,x2:x2,y2:y2,depth:depth});
-  const n=depth>4?2:(Math.random()<0.45?3:2);
-  for(let i=0;i<n;i++){
-    const spread=(i-(n-1)/2);
-    maBranch(x2,y2,a+spread*0.4+(Math.random()-0.5)*0.14,len*(0.7+Math.random()*0.12),depth-1);
-  }
-}
-function maBuild(){
-  const cv=document.getElementById('ma-canvas');if(!cv)return;
-  const W=cv.clientWidth||Math.round(window.innerWidth*0.46),H=cv.clientHeight||Math.round(window.innerHeight*0.9);
-  cv.width=W;cv.height=H;
-  const seaY=H*0.62, cx=W/2, cap=H*0.16;
-  maStriations=[];
-  for(let i=0;i<150;i++)maStriations.push({x:Math.random()*W,h:8+Math.random()*cap,sp:1.5+Math.random()*3,ph:Math.random()*Math.PI*2,w:0.6+Math.random()*1.2});
-  maStars=[];
-  for(let i=0;i<90;i++)maStars.push({x:Math.random()*W,y:Math.random()*seaY*0.92,r:Math.random()*1.1,o:Math.random(),sp:0.5+Math.random()*2});
-  maSegs=[];
-  maBranch(cx,seaY,-Math.PI/2,seaY*0.30,6);
-}
-function maStartCanvas(){
-  maBuild();
-  if(maRaf)cancelAnimationFrame(maRaf);
-  const draw=()=>{
-    const cv=document.getElementById('ma-canvas');if(!cv){maRaf=null;return;}
-    const c=cv.getContext('2d'),W=cv.width,H=cv.height,seaY=H*0.62,cx=W/2;
-    maT+=0.016;
-    maTreeReveal+=((maHover?1:0)-maTreeReveal)*0.06;
-    c.clearRect(0,0,W,H);
-    maStars.forEach(s=>{const tw=s.o*(0.4+0.6*Math.sin(maT*s.sp+s.x));c.beginPath();c.arc(s.x,s.y,s.r,0,Math.PI*2);c.fillStyle='rgba(210,205,255,'+(0.5*tw).toFixed(3)+')';c.fill();});
-    // personal aura, gathering at the bottom and rising into the sea of light
-    const pal=paPalette(),auraR=Math.min(W*0.32,H*0.34),ay=seaY+auraR*0.34;
-    for(let ri=pal.length;ri>=1;ri--){
-      const rad=auraR*(ri/pal.length)*(1+Math.sin(maT*0.7+ri)*0.03),rgb=hexRGB(pal[(ri-1)%pal.length]||'#a78bfa');
-      const g=c.createRadialGradient(cx,ay,0,cx,ay,rad);
-      g.addColorStop(0,rgbaArr(rgb,0.17));g.addColorStop(0.6,rgbaArr(rgb,0.09));g.addColorStop(1,rgbaArr(rgb,0));
-      c.beginPath();c.arc(cx,ay,rad,0,Math.PI*2);c.fillStyle=g;c.fill();
-    }
-    // the cosmic tree, growing from the sea line upward (revealed as the cursor rises)
-    if(maTreeReveal>0.01){
-      c.save();c.globalAlpha=maTreeReveal;
-      maSegs.forEach(s=>{
-        const lw=Math.max(0.6,s.depth*0.9),sway=Math.sin(maT*0.6+s.y*0.02)*(7-s.depth)*0.6*(1-s.depth/7);
-        c.beginPath();c.moveTo(s.x1,s.y1);c.lineTo(s.x2+sway,s.y2);
-        c.strokeStyle='rgba(206,196,255,'+(0.10+s.depth*0.05).toFixed(3)+')';c.lineWidth=lw;c.lineCap='round';c.stroke();
-        if(s.depth<=2){const tw=0.5+0.5*Math.sin(maT*2+s.x);c.beginPath();c.arc(s.x2+sway,s.y2,1.6+tw*1.4,0,Math.PI*2);c.fillStyle='rgba(245,240,255,'+(0.5+0.4*tw).toFixed(3)+')';c.fill();}
-      });
-      c.restore();
-    }
-    // sea of light — a luminous band with sparkling silver/white striations of capped height
-    const band=c.createLinearGradient(0,seaY-30,0,seaY+30);
-    band.addColorStop(0,'rgba(200,210,255,0)');band.addColorStop(0.5,'rgba(226,229,255,0.22)');band.addColorStop(1,'rgba(200,210,255,0)');
-    c.fillStyle=band;c.fillRect(0,seaY-30,W,60);
-    maStriations.forEach(st=>{
-      const tw=0.35+0.65*Math.abs(Math.sin(maT*st.sp+st.ph)),h=st.h*(0.7+0.3*Math.sin(maT*0.8+st.ph));
-      const g=c.createLinearGradient(st.x,seaY,st.x,seaY-h);
-      g.addColorStop(0,'rgba(255,255,255,'+(0.5*tw).toFixed(3)+')');g.addColorStop(1,'rgba(220,225,255,0)');
-      c.strokeStyle=g;c.lineWidth=st.w;c.beginPath();c.moveTo(st.x,seaY);c.lineTo(st.x,seaY-h);c.stroke();
-      if(tw>0.86){c.beginPath();c.arc(st.x,seaY-h,1,0,Math.PI*2);c.fillStyle='rgba(255,255,255,'+tw.toFixed(3)+')';c.fill();}
-    });
-    maRaf=requestAnimationFrame(draw);
-  };
-  maRaf=requestAnimationFrame(draw);
+function maFeedTree(){if(!maFeed.active){maFeed.active=true;maFeed.start=performance.now();}}
+const maCanvas=document.getElementById('ma-canvas');
+if(maCanvas){
+  maCanvas.addEventListener('mousemove',e=>{
+    if(!maGeo)return;
+    const rect=maCanvas.getBoundingClientRect();
+    const mx=(e.clientX-rect.left)*(maGeo.W/rect.width),my=(e.clientY-rect.top)*(maGeo.H/rect.height);
+    const dxa=(mx-maGeo.trunkX)/(maGeo.auraR),dya=(my-maGeo.auraY)/(maGeo.auraR*0.8);
+    maOverAura=(dxa*dxa+dya*dya)<1;
+    let hb=-1;
+    for(let i=0;i<maGeo.branches.length;i++){const b=maGeo.branches[i];const dx=(mx-b.hit.x)/b.hit.rx,dy=(my-b.hit.y)/b.hit.ry;if(dx*dx+dy*dy<1){hb=i;break;}}
+    maHoverBranch=hb;
+    const tip=document.getElementById('ma-branch-tip');
+    if(hb>=0&&tip){
+      const b=maGeo.branches[hb];
+      tip.innerHTML=b.repr?('<b style="color:'+b.repr.color+'">'+b.repr.label+'</b> — '+b.repr.count+' offering'+(b.repr.count>1?'s':'')+'. Galaxies kindled by what you have sensed; they brighten with every Aurasense you give.'):'A branch not yet grown. Offer more senses and a universe of your own will bloom here.';
+      tip.style.left=Math.min(mx+16,maGeo.W-232)+'px';tip.style.top=Math.max(8,my-10)+'px';tip.style.opacity='1';
+    } else if(tip){tip.style.opacity='0';}
+    const topHint=document.getElementById('ma-top-hint');
+    if(topHint)topHint.style.opacity=(my<maGeo.H*0.2)?'1':'0';
+    maCanvas.style.cursor=maOverAura?'pointer':'default';
+  });
+  maCanvas.addEventListener('mouseleave',()=>{maHoverBranch=-1;const t=document.getElementById('ma-branch-tip');if(t)t.style.opacity='0';const th=document.getElementById('ma-top-hint');if(th)th.style.opacity='0';});
+  maCanvas.addEventListener('click',e=>{
+    if(!maGeo)return;
+    const rect=maCanvas.getBoundingClientRect();
+    const mx=(e.clientX-rect.left)*(maGeo.W/rect.width),my=(e.clientY-rect.top)*(maGeo.H/rect.height);
+    const dxa=(mx-maGeo.trunkX)/(maGeo.auraR),dya=(my-maGeo.auraY)/(maGeo.auraR*0.8);
+    if((dxa*dxa+dya*dya)<1.1)maFeedTree();
+  });
 }
 const maBackBtn=document.getElementById('ma-back');
 if(maBackBtn)maBackBtn.onclick=closeMyAuraPage;
-const maCenter=document.getElementById('ma-center');
-if(maCenter){maCenter.addEventListener('mouseenter',()=>{maHover=true;});maCenter.addEventListener('mouseleave',()=>{maHover=false;});}
 window.addEventListener('resize',()=>{const p=document.getElementById('myaura-page');if(p&&p.classList.contains('show'))maBuild();});
 const maPolicy=document.getElementById('ma-policy');
 if(maPolicy)maPolicy.textContent="When you offer an aura, others can see it — but never who placed it, unless you allow it. First, someone must offer you an aura of good intention (peace, understanding). If you accept, they see only your Aurasenser name, never your real name. To message you, they make a monetary offering to learn who you are; if you accept it, the moment they ask, they give up their own identity to you in return — so any name or detail you share is always your choice, never supplied by Aurasense. Half of every offering goes to you, half to Aurasense: one of the ways we run with no ads, and without ever selling an ounce of anyone's data. Until then, Aurasensers speak through the alphasense symbols.";
-
 const pacEl=document.getElementById('pac');
 if(pacEl)pacEl.addEventListener('click',openMyAuraPage);
 });
