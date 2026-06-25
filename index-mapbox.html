@@ -200,7 +200,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #rg-create:hover{transform:translateY(-1px);box-shadow:0 0 42px rgba(124,92,255,.7)}
 #rg-foot{font-size:11px;color:#7e76a6;text-align:center;line-height:1.5}
 /* Registration entry button on the map */
-#register-btn{position:absolute;bottom:18px;left:16px;z-index:40;background:rgba(20,16,40,.72);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:12px;padding:9px 15px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s,box-shadow .3s;box-shadow:0 0 18px rgba(124,92,255,.25)}
+#register-btn{position:absolute;top:96px;right:16px;z-index:40;background:rgba(20,16,40,.72);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:12px;padding:9px 15px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s,box-shadow .3s;box-shadow:0 0 18px rgba(124,92,255,.25)}
 #register-btn:hover{background:rgba(44,34,78,.85);box-shadow:0 0 26px rgba(124,92,255,.45)}
 /* My Aura offering action buttons */
 .ma-oact{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
@@ -238,7 +238,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #qz-thanks .big{font-size:24px;color:#efe8ff;font-weight:300;text-shadow:0 0 26px rgba(167,139,250,.8)}
 #qz-thanks .sm{font-size:13px;color:#b4a9d8;margin-top:12px;max-width:380px;line-height:1.6}
 /* Live aura feed */
-#livefeed-btn{position:absolute;bottom:60px;left:16px;z-index:40;background:rgba(20,16,40,.72);border:0.5px solid rgba(124,200,255,.4);color:#bfe2ff;font-size:12px;padding:9px 15px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s}
+#livefeed-btn{position:absolute;top:134px;right:16px;z-index:40;background:rgba(20,16,40,.72);border:0.5px solid rgba(124,200,255,.4);color:#bfe2ff;font-size:12px;padding:9px 15px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s}
 #livefeed-btn:hover{background:rgba(28,40,68,.85)}
 #lf-inner{max-width:620px;margin:0 auto;padding:64px 22px 60px}
 #lf-title{font-size:24px;font-weight:300;letter-spacing:.04em;color:#efe8ff;text-align:center;text-shadow:0 0 22px rgba(124,200,255,.5)}
@@ -264,15 +264,24 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 /* Onboarding coachmarks */
 #onboard{position:fixed;inset:0;z-index:1900;pointer-events:none;display:none}
 #onboard.show{display:block}
-.ob-bub{position:absolute;max-width:230px;background:rgba(16,13,34,.97);border:1px solid rgba(167,139,250,.5);border-radius:14px;padding:14px 16px;pointer-events:auto;box-shadow:0 0 30px rgba(124,92,255,.4)}
-.ob-bub .obt{font-size:13px;color:#efe8ff;line-height:1.5;font-weight:500}
-.ob-bub .obs{font-size:11.5px;color:#b4a9d8;line-height:1.5;margin-top:5px}
-.ob-row{display:flex;justify-content:space-between;align-items:center;margin-top:11px}
-.ob-step{font-size:10px;color:#7e76a6}
-.ob-next{background:rgba(167,139,250,.25);border:0.5px solid rgba(167,139,250,.5);color:#fff;font-size:11px;padding:6px 13px;border-radius:12px;cursor:pointer}
-.ob-next:hover{background:rgba(167,139,250,.4)}
-.ob-arrow{position:absolute;font-size:26px;color:#a78bfa;pointer-events:none;text-shadow:0 0 12px rgba(167,139,250,.9);animation:obFloat 1.4s ease-in-out infinite}
+.ob-bub{position:absolute;max-width:310px;background:rgba(14,11,30,.98);border:2px solid rgba(255,255,255,.92);border-radius:18px;padding:20px 22px;pointer-events:auto;box-shadow:0 0 0 4px rgba(124,92,255,.22),0 0 44px rgba(124,92,255,.6);font-family:Georgia,'Times New Roman',serif}
+.ob-bub .obt{font-size:18px;color:#fff;line-height:1.4;font-weight:600;letter-spacing:.01em;text-shadow:0 0 18px rgba(167,139,250,.7)}
+.ob-bub .obs{font-size:14px;color:#cfc6ec;line-height:1.55;margin-top:8px}
+.ob-next{background:rgba(167,139,250,.3);border:1px solid rgba(255,255,255,.6);color:#fff;font-size:13px;font-weight:600;padding:8px 18px;border-radius:14px;cursor:pointer;font-family:Georgia,serif}
+.ob-next:hover{background:rgba(167,139,250,.5)}
+.ob-arrow{position:absolute;font-size:34px;color:#fff;pointer-events:none;text-shadow:0 0 16px rgba(167,139,250,1),0 0 6px rgba(255,255,255,.9);animation:obFloat 1.4s ease-in-out infinite}
+.ob-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.ob-step{font-size:11px;color:#9a8fc2}
 @keyframes obFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+/* My Aura: person / selfie */
+#ma-video{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scaleX(-1);width:34%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:none;z-index:5;box-shadow:0 0 40px rgba(167,139,250,.6);border:2px solid rgba(236,241,255,.6)}
+#ma-selfie-wrap{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:6}
+#ma-selfie-btn{background:rgba(20,16,40,.8);border:0.5px solid rgba(167,139,250,.45);color:#d8ccff;font-size:12px;padding:9px 16px;border-radius:18px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s}
+#ma-selfie-btn:hover{background:rgba(44,34,78,.9)}
+#ma-selfie-actions{display:none;gap:8px}
+#ma-selfie-actions button{border:0.5px solid rgba(167,139,250,.5);color:#fff;font-size:12px;padding:9px 16px;border-radius:18px;cursor:pointer}
+#ma-capture{background:linear-gradient(135deg,#7c5cff,#a78bfa);box-shadow:0 0 20px rgba(124,92,255,.5)}
+#ma-cancel-selfie{background:rgba(28,22,52,.7);color:#b6acdc}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -375,9 +384,12 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
     </div>
     <div id="ma-center">
       <canvas id="ma-canvas"></canvas>
-      <div id="ma-feed-label">Feed Your Aura Energy to the Cosmic Tree</div>
-      <div id="ma-top-hint">To see the top, fill the tree with more aura energy</div>
+      <video id="ma-video" playsinline autoplay muted></video>
       <div id="ma-branch-tip"></div>
+      <div id="ma-selfie-wrap">
+        <button id="ma-selfie-btn">📷 Take a selfie</button>
+        <div id="ma-selfie-actions"><button id="ma-capture">Capture</button><button id="ma-cancel-selfie">Cancel</button></div>
+      </div>
     </div>
     <div class="ma-col" id="ma-right">
       <div class="ma-h">How it changed your aura</div>
@@ -391,7 +403,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
       </div>
       <div id="ma-quest">
         <div class="pk">Aura questionnaires<span class="opt">optional</span></div>
-        <div class="sub">Gentle, private prompts that reveal more of your aura — its colours, its energy, the areas most alive in you. Each one you take adds depth to your aura and your Cosmic Tree.</div>
+        <div class="sub">Gentle, private prompts that reveal more of your aura — its colours, its energy, the areas most alive in you. Each one you take adds depth and colour to your aura.</div>
         <button id="ma-open-quest" class="ma-btn-soft">Explore questionnaires</button>
         <div id="ma-quest-note">Your questionnaires are being prepared with care — you'll be able to take them right here soon, and watch your aura deepen as you do.</div>
       </div>
@@ -482,7 +494,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
     <div id="qz-active" style="display:none"></div>
     <button id="qz-submit" style="display:none">Share with my aura</button>
   </div>
-  <div id="qz-thanks"><div class="big">Thank you for sharing</div><div class="sm">Your aura has drawn this in — see how its colours and your Cosmic Tree have shifted.</div></div>
+  <div id="qz-thanks"><div class="big">Thank you for sharing</div><div class="sm">Your aura has drawn this in — see how its colours and layers have shifted.</div></div>
 </div>
 <div id="livefeed-page">
   <button class="qz-back" id="lf-back">← Return to the map</button>
@@ -959,26 +971,19 @@ let lastViews=[
 ];
 let lastStreetView={lat:51.508,lng:-0.128,zoom:15};
 let lastOfferedPoint=null;
+let anchorPoint={lat:51.508,lng:-0.128,zoom:15};
 let isMovingProgrammatically=false;
 document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=()=>{
     const i=+tab.dataset.i;
     if(i===4){setActiveTab(4);showPlanet();return;}
-    // Coming back from Planet, anchor on the spot last offered to (not the drifted centre),
-    // so Town/Region/Nation/Street all return to where the senser actually was.
-    const wasPlanet=planetActive;
-    let aLng,aLat;
-    if(wasPlanet){
-      restorePlanetVisual();
-      const a=lastOfferedPoint||lastStreetView;
-      aLng=a.lng;aLat=a.lat;
-    }else{
-      const c=map.getCenter();aLng=c.lng;aLat=c.lat;
-    }
+    // Anchor every level on the same stable point (where the senser actually is),
+    // so Street->Town->Street, or Region and back, always return to the same spot.
+    if(planetActive)restorePlanetVisual();
+    const aLng=anchorPoint.lng,aLat=anchorPoint.lat;
     setActiveTab(i);
     if(i===0){
-      const z=wasPlanet?((lastOfferedPoint&&lastOfferedPoint.zoom)||lastStreetView.zoom||15):15;
-      flyProgrammatic({center:[aLng,aLat],zoom:z,duration:1800});
+      flyProgrammatic({center:[aLng,aLat],zoom:anchorPoint.zoom||15,duration:1800});
     }else{
       contextualZoom(i,aLng,aLat);
     }
@@ -1086,7 +1091,8 @@ map.on('moveend',()=>{
   if(isMovingProgrammatically)return;
   const c=map.getCenter(),z=map.getZoom();
   lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
-  if(auraLevel===0){lastStreetView={lat:c.lat,lng:c.lng,zoom:z};lastOfferedPoint={lat:c.lat,lng:c.lng,zoom:z};}
+  if(auraLevel===0){lastStreetView={lat:c.lat,lng:c.lng,zoom:z};lastOfferedPoint={lat:c.lat,lng:c.lng,zoom:z};anchorPoint={lat:c.lat,lng:c.lng,zoom:z};}
+  else{anchorPoint.lat=c.lat;anchorPoint.lng=c.lng;}
 });
 document.getElementById('ebtn').onclick=()=>{const ep=document.getElementById('explore-panel');if(ep)ep.classList.toggle('open');};
 document.getElementById('ep1').onclick=()=>{showMsg('Sensing Aurasenser contributions for this area...');closeExplore();};
@@ -1122,8 +1128,10 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
   const loc=placeLabel||'this spot';
   const sym=SENSE_SYMBOLS[senseId]||'';
   const safeText=(text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const hereCount=auraPoints.filter(p=>haversine(p.lat,p.lng,lat,lng)<80).length;
+  const sharedTitle=hereCount>1?('✨ '+hereCount+' auras shared here'):'✨ Aurasense just shared';
   const html=`<div class="mapboxgl-popup-content-inner">
-    <div class="pop-title">✨ Aurasense just shared</div>
+    <div class="pop-title">${sharedTitle}</div>
     <div class="pop-street">📍 ${loc}</div>
     <div class="pop-aura" style="color:${s.color}">${sym} ${s.label}</div>
     <div class="pop-sense-list"><div class="pop-sense-item" style="border-left-color:${s.color}">"${safeText}"</div></div>
@@ -1149,6 +1157,7 @@ map.on('click',async function(e){
   closeExplore();
   const clat=e.lngLat.lat,clng=e.lngLat.lng;
   lastClickPoint=[clng,clat];
+  anchorPoint={lat:clat,lng:clng,zoom:Math.min(17,Math.max(14,map.getZoom()))};
   const input=document.getElementById('inp');
   if(input.value.trim()){materializeAndSubmit(clat,clng,input.value);input.value='';return;}
   const existing=auraPoints.filter(p=>haversine(p.lat,p.lng,clat,clng)<100);
@@ -1201,6 +1210,7 @@ function submit(lat,lng,text){
   // Remember the offered spot so the tabs and the return from Planet come back here, not a random place.
   const sz=Math.min(17,Math.max(14,map.getZoom()));
   lastOfferedPoint={lat,lng,zoom:sz};
+  anchorPoint={lat,lng,zoom:sz};
   lastStreetView={lat,lng,zoom:sz};
   lastViews[0]={lat,lng,zoom:sz};
   // The offering also flows into the personal aura — a spark rises to the My Aura orb.
@@ -1327,7 +1337,7 @@ document.getElementById('sg').onclick=async()=>{
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
       searching=true;
       // Searching a place makes it the spot the tabs and Planet return to.
-      if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
+      if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
         const mz={place:16,locality:16,district:14,postcode:16,
@@ -1357,269 +1367,65 @@ document.querySelectorAll('.soc-btn').forEach(b=>{
 });
 
 // My Aura is becoming a space the senser can open and nurture — for now it acknowledges the tap.
-// ---- My Aura page : the Cosmic Tree ----
-let maRaf=null,maT=0,maOpenAt=0,maHoverBranch=-1,maOverAura=false;
-let maFeed={active:false,start:0};
-let maHasFed=false,maReveal=0;
-let maGeo=null;
+// ---- My Aura page : your living aura ----
+let maRaf=null,maT=0,maOpenAt=0;
+let maLayers=[],maHoverLayer=-1;
+let maSelfieImg=null,maStream=null;
 const TWO=Math.PI*2;
-const MA_FEED_MS=3000;
 function maLine(text,color){return '<div class="ma-line" style="--lc:'+(color||'#a78bfa')+'">'+text+'</div>';}
-function maRng(seed){let s=(seed>>>0)||1;return function(){s=(s*1664525+1013904223)>>>0;return s/4294967296;};}
-function maBez(p0,p1,p2,p3,s){const u=1-s;return u*u*u*p0+3*u*u*s*p1+3*u*s*s*p2+s*s*s*p3;}
-function maAlmondPath(c,w,h){c.beginPath();c.moveTo(-w/2,0);c.bezierCurveTo(-w*0.28,-h*0.5,w*0.28,-h*0.5,w/2,0);c.bezierCurveTo(w*0.28,h*0.5,-w*0.28,h*0.5,-w/2,0);c.closePath();}
-function maAlmondPoint(w,h,t){
-  if(t<0.5){const s=t*2;return {x:maBez(-w/2,-w*0.28,w*0.28,w/2,s),y:maBez(0,-h*0.5,-h*0.5,0,s)};}
-  const s=(t-0.5)*2;return {x:maBez(w/2,w*0.28,-w*0.28,-w/2,s),y:maBez(0,h*0.5,h*0.5,0,s)};
+function maBuildLayers(){
+  const counts={},order=[];
+  myOfferings.forEach(o=>{if(counts[o.sense]==null){counts[o.sense]=0;order.push(o.sense);}counts[o.sense]++;});
+  const ranked=order.slice().sort((a,b)=>counts[b]-counts[a]);
+  maLayers=ranked.map(sid=>{const s=SENSES.find(x=>x.id===sid);return {sid:sid,color:s?s.color:'#a78bfa',label:s?s.label:sid,count:counts[sid],realm:s?s.realm:''};});
 }
-function maPaintGalaxy(c,rng,gx,gy,R){
-  c.save();c.translate(gx,gy);c.rotate(rng()*TWO);c.scale(1,0.5+rng()*0.35);
-  const dir=rng()<0.5?1:-1;
-  const dg=c.createRadialGradient(0,0,0,0,0,R);
-  dg.addColorStop(0,'rgba(180,200,255,0.16)');dg.addColorStop(0.5,'rgba(120,140,220,0.07)');dg.addColorStop(1,'rgba(120,140,220,0)');
-  c.fillStyle=dg;c.beginPath();c.arc(0,0,R,0,TWO);c.fill();
-  const arms=2+Math.floor(rng()*2),pts=Math.round(R*2.6);
-  for(let a=0;a<arms;a++){
-    const base=a*(TWO/arms);
-    for(let i=0;i<pts;i++){
-      const tt=i/pts,ang=base+tt*Math.PI*2.3*dir+(rng()-0.5)*0.55,rad=tt*R*0.94;
-      const spread=(rng()-0.5)*R*0.12*(0.35+tt);
-      const x=Math.cos(ang)*rad+Math.cos(ang+1.57)*spread,y=Math.sin(ang)*rad+Math.sin(ang+1.57)*spread;
-      let col;const rr=rng();
-      if(tt<0.22)col='255,238,205';else if(rr>0.93)col='255,150,190';else col=(rr>0.5?'200,220,255':'255,255,255');
-      const a2=(0.45+rng()*0.55)*(1-tt*0.25),sz=tt<0.2?(0.5+rng()*0.8):(0.3+rng()*0.55);
-      c.beginPath();c.arc(x,y,sz,0,TWO);c.fillStyle='rgba('+col+','+a2.toFixed(2)+')';c.fill();
-    }
-  }
-  const cg=c.createRadialGradient(0,0,0,0,0,R*0.3);
-  cg.addColorStop(0,'rgba(255,250,235,0.95)');cg.addColorStop(0.4,'rgba(255,234,198,0.5)');cg.addColorStop(1,'rgba(255,220,170,0)');
-  c.fillStyle=cg;c.beginPath();c.arc(0,0,R*0.3,0,TWO);c.fill();
-  c.restore();
-}
-function maMakeLeaf(W,H,seed,detail){
-  const pad=Math.max(12,W*0.30),cw=Math.ceil(W+pad*2),ch=Math.ceil(H+pad*2);
-  const cv=document.createElement('canvas');cv.width=cw;cv.height=ch;
-  const c=cv.getContext('2d'),rng=maRng(seed);
-  c.translate(cw/2,ch/2);
-  c.save();maAlmondPath(c,W,H);c.clip();
-  c.fillStyle='#03030a';c.fillRect(-cw,-ch,cw*2,ch*2);
-  const dgrad=c.createRadialGradient(0,0,0,0,0,W*0.6);
-  dgrad.addColorStop(0,'rgba(22,20,44,0.5)');dgrad.addColorStop(1,'rgba(3,3,10,0)');
-  c.fillStyle=dgrad;c.fillRect(-cw,-ch,cw*2,ch*2);
-  const npal=[[120,150,255],[235,90,150],[90,180,210],[170,110,230],[255,140,90]];
-  const nNeb=detail?3+Math.floor(rng()*3):1;
-  for(let i=0;i<nNeb;i++){
-    const col=npal[Math.floor(rng()*npal.length)],nx=(rng()-0.5)*W*0.6,ny=(rng()-0.5)*H*0.6,nr=(0.3+rng()*0.5)*W*0.6;
-    for(let j=0;j<4;j++){
-      const ox=nx+(rng()-0.5)*nr*0.6,oy=ny+(rng()-0.5)*nr*0.6,orr=nr*(0.4+rng()*0.6),a=(0.05+rng()*0.08);
-      const g=c.createRadialGradient(ox,oy,0,ox,oy,orr);
-      g.addColorStop(0,'rgba('+col[0]+','+col[1]+','+col[2]+','+a.toFixed(3)+')');g.addColorStop(1,'rgba('+col[0]+','+col[1]+','+col[2]+',0)');
-      c.fillStyle=g;c.beginPath();c.arc(ox,oy,orr,0,TWO);c.fill();
-    }
-  }
-  const nGal=detail?1+Math.floor(rng()*2):0;
-  for(let i=0;i<nGal;i++){const gr=(0.16+rng()*0.16)*W;maPaintGalaxy(c,rng,(rng()-0.5)*W*0.4,(rng()-0.5)*H*0.4,gr);}
-  const nStars=detail?Math.round(W*1.7):Math.round(W*0.5);
-  const spal=['255,255,255','210,225,255','255,240,210','255,210,210','225,210,255'];
-  for(let i=0;i<nStars;i++){
-    const sx=(rng()-0.5)*W*0.96,sy=(rng()-0.5)*H*0.96,big=rng()>0.94,sr=big?(1+rng()*1.2):(0.25+rng()*0.7),col=spal[Math.floor(rng()*spal.length)],a=0.4+rng()*0.6;
-    c.beginPath();c.arc(sx,sy,sr,0,TWO);c.fillStyle='rgba('+col+','+a.toFixed(2)+')';c.fill();
-    if(big){const gg=c.createRadialGradient(sx,sy,0,sx,sy,sr*4);gg.addColorStop(0,'rgba('+col+',0.5)');gg.addColorStop(1,'rgba('+col+',0)');c.fillStyle=gg;c.beginPath();c.arc(sx,sy,sr*4,0,TWO);c.fill();}
-  }
-  c.restore();
-  c.save();c.shadowColor='rgba(150,235,225,0.9)';c.shadowBlur=detail?10:6;
-  maAlmondPath(c,W,H);c.lineWidth=detail?2:1.3;c.strokeStyle='rgba(212,250,243,0.92)';c.stroke();c.restore();
-  maAlmondPath(c,W,H);c.lineWidth=detail?5:3;c.strokeStyle='rgba(140,225,215,0.2)';c.stroke();
-  if(detail){
-    const gpal=['255,255,255','190,220,255','215,190,255','255,235,190','190,255,235','255,200,225'],gn=Math.round(W*2.4);
-    for(let i=0;i<gn;i++){
-      const p=maAlmondPoint(W,H,rng()),jx=(rng()-0.5)*2,jy=(rng()-0.5)*2,col=gpal[Math.floor(rng()*gpal.length)],a=0.28+rng()*0.62,r=0.3+rng()*0.55;
-      c.beginPath();c.arc(p.x+jx,p.y+jy,r,0,TWO);c.fillStyle='rgba('+col+','+a.toFixed(2)+')';c.fill();
-    }
-  }
-  return {canvas:cv,cw,ch};
-}
-function maBranchGeo(side,level,trunkX,attachY,W,H,seaY){
-  const scale=1-level*0.17,reach=W*0.075*scale;
-  const tipX=trunkX+side*reach,tipY=attachY-reach*0.4;
-  const frontW=W*0.40*scale,frontH=frontW*0.6,ang=Math.atan2(tipY-attachY,(side*reach)||(side*1));
-  const fcx=tipX+side*frontW*0.44,fcy=tipY;
-  const leaves=[];
-  for(let k=3;k>=1;k--){
-    const sc=[0,0.78,0.66,0.55][k],hw=frontW*sc,hh=frontH*sc;
-    const hx=fcx-side*k*frontW*0.13,hy=fcy-k*frontH*0.085;
-    leaves.push({cx:hx,cy:hy,w:hw,h:hh,angle:0,detail:false,ph:Math.random()*TWO,img:maMakeLeaf(hw,hh,(side+2)*131+level*977+k*43,false)});
-  }
-  leaves.push({cx:fcx,cy:fcy,w:frontW,h:frontH,angle:0,detail:true,ph:Math.random()*TWO,img:maMakeLeaf(frontW,frontH,(side+2)*53+level*97,true)});
-  return {side,level,attachX:trunkX,attachY,tipX,tipY,leaves,hit:{x:fcx,y:fcy,rx:frontW*0.55,ry:frontH*0.62},ny:(seaY-attachY)/(seaY-H*0.13)};
-}
-function maAssignBranchLabels(){
-  const counts={};myOfferings.forEach(o=>{counts[o.sense]=(counts[o.sense]||0)+1;});
-  const ranked=Object.keys(counts).sort((a,b)=>counts[b]-counts[a]);
-  return {counts,ranked};
-}
-function maBuild(){
-  const cv=document.getElementById('ma-canvas');if(!cv)return;
-  const W=cv.clientWidth||Math.round(window.innerWidth*0.46),H=cv.clientHeight||Math.round(window.innerHeight*0.9);
-  cv.width=W;cv.height=H;
-  const trunkX=W/2,auraR=Math.min(W*0.34,H*0.30),seaY=H*0.66,auraY=seaY+auraR*0.5,topY=H*0.115;
-  const branches=[],lab=maAssignBranchLabels();let order=0;
-  for(let level=0;level<4;level++){
-    const attachY=seaY-20-(seaY-topY)*((level+0.4)/4.2);
-    [-1,1].forEach(side=>{
-      const b=maBranchGeo(side,level,trunkX,attachY,W,H,seaY);
-      const sid=lab.ranked[order];
-      if(sid){const s=SENSES.find(x=>x.id===sid);b.repr={label:s?s.label:sid,color:s?s.color:'#a78bfa',count:lab.counts[sid]};}else b.repr=null;
-      order++;branches.push(b);
-    });
-  }
-  const topLeaves=[];
-  [-1,1].forEach(side=>{
-    const lw=W*0.085,lh=lw*0.56,lx=trunkX+side*W*0.10,ly=topY+lh*0.3;
-    topLeaves.push({cx:lx,cy:ly,w:lw,h:lh,angle:0,detail:true,ph:Math.random()*TWO,img:maMakeLeaf(lw,lh,999983+side,true)});
-  });
-  // sea of light filaments — independent random heights & shapes (no global wave)
-  const span=auraR*1.7,sea=[],SN=Math.round(span*1.3);
-  for(let i=0;i<SN;i++){const r=maRng(7+i*131);sea.push({tx:r(),h0:0.5+r()*0.9,segs:3+Math.floor(r()*5)});}
-  maGeo={W,H,trunkX,auraR,auraY,seaY,topY,branches,topLeaves,sea,span};
-}
-function maEnergyLevel(){return Math.min(1,0.4+myShareCount*0.05+(myProfile&&myProfile.auraBoost?myProfile.auraBoost*0.04:0));}
-function maDrawLeaf(c,lf,bright,t){
-  const im=lf.img;if(!im)return;
-  c.save();c.translate(lf.cx,lf.cy);
-  const breath=1+Math.sin(t*0.8+lf.ph)*0.02;
-  c.globalAlpha=Math.min(1,(0.72+0.28*bright))*breath;
-  c.drawImage(im.canvas,-im.cw/2,-im.ch/2);
-  c.globalAlpha=1;
-  if(bright>0.74&&lf.detail){
-    const ig=(bright-0.74)/0.26;c.globalCompositeOperation='lighter';
-    const g=c.createRadialGradient(0,0,0,0,0,lf.w*0.6);
-    g.addColorStop(0,'rgba(255,255,255,'+(0.2*ig).toFixed(3)+')');g.addColorStop(0.5,'rgba(210,235,255,'+(0.09*ig).toFixed(3)+')');g.addColorStop(1,'rgba(210,235,255,0)');
-    c.fillStyle=g;c.beginPath();c.arc(0,0,lf.w*0.6,0,TWO);c.fill();
-    for(let i=0;i<8;i++){const a=Math.random();if(a>0.62){c.beginPath();c.arc((Math.random()-0.5)*lf.w*0.8,(Math.random()-0.5)*lf.h*0.8,0.5+Math.random(),0,TWO);c.fillStyle='rgba(255,255,255,'+(0.5*a).toFixed(2)+')';c.fill();}}
-    c.globalCompositeOperation='source-over';
-  }
-  c.restore();
-}
-function maDrawAuraDome(c,G,energy){
-  const cx=G.trunkX,ay=G.auraY,R=G.auraR,cols=paDistinct(6);
-  const fb=maFeed.active?Math.sin(((performance.now()-maFeed.start)/MA_FEED_MS)*Math.PI):0;
-  for(let i=cols.length-1;i>=0;i--){
-    const rgb=hexRGB(cols[i]),ang=(i/cols.length)*TWO+maT*0.18,off=(i===0?0:R*0.11);
-    const lx=cx+Math.cos(ang)*off,ly=ay+Math.sin(ang)*off*0.7;
-    const rad=R*(1-i*0.07)*(1+Math.sin(maT*0.7+i)*0.04)*(1+fb*0.06),a=(0.24-i*0.02)*(1+fb*0.45);
-    const g=c.createRadialGradient(lx,ly,0,lx,ly,rad);
-    g.addColorStop(0,rgbaArr(rgb,Math.min(1,a*1.3)));g.addColorStop(0.55,rgbaArr(rgb,a));g.addColorStop(1,rgbaArr(rgb,0));
-    c.fillStyle=g;c.beginPath();c.arc(lx,ly,rad,0,TWO);c.fill();
-  }
-  for(let k=0;k<30;k++){
-    const a2=maT*0.3+k*0.7,rr=R*(0.2+0.7*((k*0.13)%1)),mx=cx+Math.cos(a2)*rr*0.7,my=ay+Math.sin(a2)*rr*0.5,tw=0.5+0.5*Math.sin(maT*1.3+k);
-    c.beginPath();c.arc(mx,my,0.8+tw*1.1,0,TWO);c.fillStyle='rgba(255,251,255,'+(0.12+0.2*tw).toFixed(3)+')';c.fill();
-  }
-  const hg=c.createRadialGradient(cx,ay,0,cx,ay,R*0.42);
-  hg.addColorStop(0,'rgba(242,238,255,'+(0.42+fb*0.45).toFixed(3)+')');hg.addColorStop(1,'rgba(220,210,255,0)');
-  c.fillStyle=hg;c.beginPath();c.arc(cx,ay,R*0.42,0,TWO);c.fill();
-  // the aura's energy rising into the sea — a seamless luminous extension at the crown
-  const topG=cols.length?hexRGB(cols[0]):[167,139,250];
-  const eg=c.createLinearGradient(cx,ay-R*0.2,cx,G.seaY-R*0.05);
-  eg.addColorStop(0,rgbaArr(topG,0.18));eg.addColorStop(1,rgbaArr(topG,0));
-  c.fillStyle=eg;c.fillRect(cx-R*0.9,ay-R*0.6,R*1.8,R*0.7);
-}
-function maDrawSea(c,G){
-  const cx=G.trunkX,R=G.auraR,seaY=G.seaY,span=G.span,F=G.sea;
-  for(let i=0;i<F.length;i++){
-    const f=F[i],x=cx-span+f.tx*span*2,dx=(x-cx)/R;
-    if(Math.abs(dx)>1.25)continue;
-    const crown=1-Math.min(1,dx*dx*0.85),baseY=seaY-crown*R*0.14;
-    const flick=f.h0*(0.25+0.75*Math.random()),h=(R*0.16+crown*R*0.34)*flick;
-    c.beginPath();c.moveTo(x,baseY+5);
-    for(let s2=1;s2<=f.segs;s2++){c.lineTo(x+(Math.random()-0.5)*5.5,baseY-(h*s2/f.segs));}
-    const op=0.18+0.6*Math.random();
-    c.strokeStyle='rgba('+(200+(Math.random()*55|0))+',232,255,'+op.toFixed(3)+')';
-    c.lineWidth=0.6+Math.random()*1.0;c.lineCap='round';c.stroke();
-    if(Math.random()>0.86){c.beginPath();c.arc(x+(Math.random()-0.5)*4,baseY-h,1,0,TWO);c.fillStyle='rgba(255,255,255,0.85)';c.fill();}
-  }
-  const wash=c.createLinearGradient(0,seaY-R*0.3,0,seaY+R*0.12);
-  wash.addColorStop(0,'rgba(200,225,255,0)');wash.addColorStop(0.55,'rgba(214,230,255,0.13)');wash.addColorStop(1,'rgba(200,222,255,0)');
-  c.fillStyle=wash;c.fillRect(cx-span,seaY-R*0.3,span*2,R*0.42);
-}
-function maDrawTrunk(c,G,feedFront,feedSurge){
-  const cx=G.trunkX,baseY=G.seaY+G.auraR*0.2,topY=G.topY+G.auraR*0.1;
-  const baseW=Math.max(20,G.W*0.05),topW=baseW*0.3,N=16;
-  const aura=c.createLinearGradient(cx-baseW*2.4,0,cx+baseW*2.4,0);
-  aura.addColorStop(0,'rgba(70,165,152,0)');aura.addColorStop(0.5,'rgba(110,205,188,0.16)');aura.addColorStop(1,'rgba(70,165,152,0)');
-  c.fillStyle=aura;c.fillRect(cx-baseW*2.4,topY,baseW*4.8,baseY-topY);
+function maSizeCanvas(){const cv=document.getElementById('ma-canvas');if(!cv)return;const W=cv.clientWidth||Math.round(window.innerWidth*0.42),H=cv.clientHeight||Math.round(window.innerHeight*0.7);cv.width=W;cv.height=H;}
+function maLayerRadius(i,baseR,breath){return baseR*(1-i*0.14)*breath;}
+function maDrawPerson(c,cx,cy,r,alpha){
+  c.save();c.globalAlpha=alpha;
+  c.strokeStyle='rgba(236,241,255,0.6)';c.lineWidth=Math.max(1.5,r*0.04);c.lineCap='round';c.lineJoin='round';
+  c.shadowColor='rgba(205,222,255,0.75)';c.shadowBlur=r*0.2;
+  const hr=r*0.34,hy=cy-r*0.34;
+  c.beginPath();c.arc(cx,hy,hr,0,TWO);c.stroke();
   c.beginPath();
-  for(let i=0;i<=N;i++){const tt=i/N,y=baseY+(topY-baseY)*tt,w=baseW+(topW-baseW)*tt,wob=Math.sin(tt*6+0.5)*w*0.06;const X=cx-w-wob;if(i===0)c.moveTo(X,y);else c.lineTo(X,y);}
-  for(let i=N;i>=0;i--){const tt=i/N,y=baseY+(topY-baseY)*tt,w=baseW+(topW-baseW)*tt,wob=Math.sin(tt*6+1.7)*w*0.06;c.lineTo(cx+w+wob,y);}
-  c.closePath();
-  const grad=c.createLinearGradient(cx-baseW,0,cx+baseW,0);
-  grad.addColorStop(0,'rgba(18,66,62,0.95)');grad.addColorStop(0.4,'rgba(70,170,158,0.97)');grad.addColorStop(0.5,'rgba(122,216,201,0.98)');grad.addColorStop(0.6,'rgba(70,170,158,0.97)');grad.addColorStop(1,'rgba(18,66,62,0.95)');
-  c.fillStyle=grad;c.fill();
-  c.save();c.clip();
-  for(let s2=0;s2<7;s2++){const fx=cx+(s2-3)*baseW*0.22;c.beginPath();c.moveTo(fx,baseY);c.lineTo(cx+(s2-3)*topW*0.22,topY);c.strokeStyle='rgba(200,245,238,'+(0.08+0.08*Math.abs(Math.sin(s2*1.3))).toFixed(3)+')';c.lineWidth=baseW*0.12;c.stroke();}
-  c.strokeStyle='rgba(240,255,250,0.65)';c.lineWidth=baseW*0.26;c.lineCap='round';c.beginPath();c.moveTo(cx,baseY);c.lineTo(cx,topY);c.stroke();
-  if(feedFront>=0){
-    const ny=baseY+(topY-baseY)*Math.min(1,feedFront);
-    for(let i=0;i<16;i++){const yy=ny+i*10*(1-feedFront);if(yy<topY||yy>baseY)continue;const a=feedSurge*(1-i/16);c.beginPath();c.arc(cx+(Math.random()-0.5)*baseW*0.9,yy,1.6+Math.random()*2.2,0,TWO);c.fillStyle='rgba(255,255,255,'+(0.6*a).toFixed(3)+')';c.fill();}
-    const ng=c.createRadialGradient(cx,ny,0,cx,ny,28);ng.addColorStop(0,'rgba(255,255,255,'+(0.9*feedSurge).toFixed(3)+')');ng.addColorStop(1,'rgba(255,255,255,0)');c.fillStyle=ng;c.beginPath();c.arc(cx,ny,28,0,TWO);c.fill();
-  }
+  c.moveTo(cx-r*0.72,cy+r*0.78);c.quadraticCurveTo(cx-r*0.66,cy+r*0.05,cx-hr*1.05,hy+hr*0.95);
+  c.moveTo(cx+r*0.72,cy+r*0.78);c.quadraticCurveTo(cx+r*0.66,cy+r*0.05,cx+hr*1.05,hy+hr*0.95);
+  c.stroke();
   c.restore();
-}
-function maDrawBranch(c,G,b,bright,benergy){
-  const x1=b.attachX,y1=b.attachY,x2=b.tipX,y2=b.tipY,midX=(x1+x2)/2,midY=(y1+y2)/2-12;
-  const w0=Math.max(10,G.W*0.026)*(1-b.level*0.13);
-  c.lineCap='round';c.lineJoin='round';
-  c.beginPath();c.moveTo(x1,y1);c.quadraticCurveTo(midX,midY,x2,y2);c.strokeStyle='rgba(20,72,66,0.95)';c.lineWidth=w0;c.stroke();
-  c.beginPath();c.moveTo(x1,y1);c.quadraticCurveTo(midX,midY,x2,y2);c.strokeStyle='rgba(78,172,158,0.97)';c.lineWidth=w0*0.62;c.stroke();
-  c.beginPath();c.moveTo(x1,y1-w0*0.16);c.quadraticCurveTo(midX,midY-w0*0.16,x2,y2-w0*0.16);c.strokeStyle='rgba(150,222,206,0.45)';c.lineWidth=w0*0.1;c.stroke();
-  c.beginPath();c.moveTo(x1,y1);c.quadraticCurveTo(midX,midY,x2,y2);c.strokeStyle='rgba(205,248,238,'+(0.32+0.4*bright).toFixed(3)+')';c.lineWidth=w0*0.18;c.stroke();
-  if(benergy>0){
-    const p=Math.min(1,benergy),qx=(1-p)*(1-p)*x1+2*(1-p)*p*midX+p*p*x2,qy=(1-p)*(1-p)*y1+2*(1-p)*p*midY+p*p*y2;
-    const g=c.createRadialGradient(qx,qy,0,qx,qy,w0*1.7);g.addColorStop(0,'rgba(255,255,255,'+(0.9*Math.sin(p*Math.PI)).toFixed(3)+')');g.addColorStop(1,'rgba(255,255,255,0)');
-    c.fillStyle=g;c.beginPath();c.arc(qx,qy,w0*1.7,0,TWO);c.fill();
-  }
-}
-function maDrawTop(c,G,intensity){
-  const cx=G.trunkX,ty=G.topY,burstH=G.auraR*1.4;
-  const lg=c.createLinearGradient(cx,ty+burstH*0.7,cx,ty-burstH*0.9);
-  lg.addColorStop(0,'rgba(255,238,205,0)');lg.addColorStop(0.4,'rgba(255,246,225,'+(0.5*intensity).toFixed(3)+')');lg.addColorStop(0.7,'rgba(255,252,240,'+(0.7*intensity).toFixed(3)+')');lg.addColorStop(1,'rgba(255,255,255,0)');
-  c.fillStyle=lg;c.fillRect(cx-26,ty-burstH*0.9,52,burstH*1.6);
-  for(let d=-1;d<=1;d++){const ang=-Math.PI/2+d*0.5,len=burstH*(d===0?1.0:0.6),ex=cx+Math.cos(ang)*len,ey=ty+Math.sin(ang)*len;const rg=c.createLinearGradient(cx,ty,ex,ey);rg.addColorStop(0,'rgba(255,252,240,'+(0.5*intensity).toFixed(3)+')');rg.addColorStop(1,'rgba(255,240,210,0)');c.strokeStyle=rg;c.lineWidth=d===0?9:5;c.lineCap='round';c.beginPath();c.moveTo(cx,ty);c.lineTo(ex,ey);c.stroke();}
-  const fl=c.createRadialGradient(cx,ty,0,cx,ty,burstH);
-  fl.addColorStop(0,'rgba(255,255,255,'+Math.min(1,0.95*intensity).toFixed(3)+')');fl.addColorStop(0.18,'rgba(255,248,228,'+(0.6*intensity).toFixed(3)+')');fl.addColorStop(0.45,'rgba(255,225,180,'+(0.2*intensity).toFixed(3)+')');fl.addColorStop(1,'rgba(255,210,150,0)');
-  c.fillStyle=fl;c.beginPath();c.arc(cx,ty,burstH,0,TWO);c.fill();
-  for(let i=0;i<18;i++){const a=Math.random();if(a>0.5){const rr=burstH*Math.random()*0.6,aa=Math.random()*TWO;c.beginPath();c.arc(cx+Math.cos(aa)*rr,ty+Math.sin(aa)*rr*0.8,0.5+Math.random()*1.2,0,TWO);c.fillStyle='rgba(255,250,235,'+(0.5*a*intensity).toFixed(2)+')';c.fill();}}
 }
 function maDraw(){
   const cv=document.getElementById('ma-canvas');if(!cv){maRaf=null;return;}
-  if(!maGeo)maBuild();
-  const c=cv.getContext('2d'),G=maGeo,W=G.W,H=G.H;
-  maT+=0.016;maReveal+=((maHasFed?1:0)-maReveal)*0.06;
-  const fadeIn=Math.min(1,(performance.now()-maOpenAt)/1400);
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2;
+  maT+=0.016;
+  const fadeIn=Math.min(1,(performance.now()-maOpenAt)/1200);
   c.clearRect(0,0,W,H);c.globalAlpha=fadeIn;
-  let feedFront=-1,feedSurge=0;
-  if(maFeed.active){const fp=(performance.now()-maFeed.start)/MA_FEED_MS;if(fp>=1){maFeed.active=false;}else{feedFront=fp;feedSurge=Math.sin(fp*Math.PI);}}
-  const energy=maEnergyLevel();
-  const bg=c.createRadialGradient(G.trunkX,G.topY+40,10,G.trunkX,G.topY+40,H*0.9);
-  bg.addColorStop(0,'rgba(58,28,22,0.28)');bg.addColorStop(0.4,'rgba(28,16,26,0.15)');bg.addColorStop(1,'rgba(6,5,16,0)');
+  const baseR=Math.min(W,H)*0.40,breath=1+Math.sin(maT*0.8)*0.03;
+  const energy=Math.min(1,0.5+(myProfile&&myProfile.auraBoost?myProfile.auraBoost*0.04:0));
+  const bg=c.createRadialGradient(cx,cy,0,cx,cy,baseR*1.7);
+  bg.addColorStop(0,'rgba(30,24,54,0.5)');bg.addColorStop(1,'rgba(10,9,22,0)');
   c.fillStyle=bg;c.fillRect(0,0,W,H);
-  maDrawAuraDome(c,G,energy);
-  if(maReveal>0.01){c.globalAlpha=fadeIn*maReveal;maDrawTrunk(c,G,feedFront,feedSurge);c.globalAlpha=fadeIn;}
-  maDrawSea(c,G);
-  if(maReveal>0.01){
-    c.globalAlpha=fadeIn*maReveal;
-    G.branches.forEach((b,i)=>{
-      let benergy=0;if(feedFront>=0){benergy=(feedFront-b.ny)/0.16;benergy=Math.max(0,Math.min(1.3,benergy));}
-      const ignite=benergy>0?Math.sin(Math.min(1,benergy)*Math.PI):0;
-      const bright=Math.min(1,0.55+energy*0.45+ignite*0.5+(maHoverBranch===i?0.2:0));
-      maDrawBranch(c,G,b,bright,benergy);
-      b.leaves.forEach(lf=>maDrawLeaf(c,lf,bright,maT));
-    });
-    G.topLeaves.forEach(lf=>maDrawLeaf(c,lf,Math.min(1,0.6+energy*0.4+feedSurge),maT));
-    c.globalAlpha=fadeIn;
+  const layers=maLayers.length?maLayers:[{color:'#a78bfa',label:'Your aura',count:0}];
+  for(let i=0;i<layers.length;i++){
+    const L=layers[i],rgb=hexRGB(L.color),rr=maLayerRadius(i,baseR,breath),hover=(maHoverLayer===i);
+    const a=(0.32+(hover?0.24:0))*(0.7+energy*0.4);
+    const g=c.createRadialGradient(cx,cy,rr*0.42,cx,cy,rr);
+    g.addColorStop(0,rgbaArr(rgb,a*0.22));g.addColorStop(0.72,rgbaArr(rgb,a));g.addColorStop(1,rgbaArr(rgb,0));
+    c.fillStyle=g;c.beginPath();c.arc(cx,cy,rr,0,TWO);c.fill();
+    if(hover){c.strokeStyle=rgbaArr(rgb,0.85);c.lineWidth=1.5;c.beginPath();c.arc(cx,cy,rr*0.85,0,TWO);c.stroke();}
   }
-  maDrawTop(c,G,0.3+0.5*maReveal+feedSurge*0.4);
+  for(let k=0;k<28;k++){const ang=maT*0.3+k*0.7,radm=baseR*(0.2+0.75*((k*0.13)%1)),mx=cx+Math.cos(ang)*radm*0.8,my=cy+Math.sin(ang)*radm*0.8,tw=0.5+0.5*Math.sin(maT*1.3+k);c.beginPath();c.arc(mx,my,0.8+tw*1.2,0,TWO);c.fillStyle='rgba(255,251,255,'+(0.10+0.18*tw).toFixed(3)+')';c.fill();}
+  const coreR=baseR*0.34;
+  const cg=c.createRadialGradient(cx,cy,0,cx,cy,coreR*1.15);
+  cg.addColorStop(0,'rgba(245,242,255,0.5)');cg.addColorStop(1,'rgba(220,210,255,0)');
+  c.fillStyle=cg;c.beginPath();c.arc(cx,cy,coreR*1.15,0,TWO);c.fill();
+  if(maSelfieImg&&maSelfieImg.complete){
+    c.save();c.beginPath();c.arc(cx,cy,coreR,0,TWO);c.clip();
+    const iw=maSelfieImg.width,ih=maSelfieImg.height,scale=Math.max(coreR*2/iw,coreR*2/ih);
+    c.globalAlpha=fadeIn;c.drawImage(maSelfieImg,cx-iw*scale/2,cy-ih*scale/2,iw*scale,ih*scale);c.restore();
+    c.strokeStyle='rgba(236,241,255,0.55)';c.lineWidth=2;c.shadowColor='rgba(205,222,255,0.7)';c.shadowBlur=coreR*0.2;c.beginPath();c.arc(cx,cy,coreR,0,TWO);c.stroke();c.shadowBlur=0;
+  } else {
+    maDrawPerson(c,cx,cy,coreR*1.45,0.9*fadeIn);
+  }
   c.globalAlpha=1;
   maRaf=requestAnimationFrame(maDraw);
 }
@@ -1633,12 +1439,12 @@ function openMyAuraPage(){
       return '<div class="ma-offering" style="border-left-color:'+o.color+'"><div class="s" style="color:'+o.color+'">'+sym+' '+o.label+'</div><div class="t">"'+esc(o.text)+'"</div>'+place+'<div class="ma-oact"><button class="ma-act" data-act="see" data-i="'+idx+'">See aura activity</button><button class="ma-act" data-act="ask" data-i="'+idx+'">Ask a question</button><button class="ma-act ma-bond" data-act="bond" data-i="'+idx+'" title="I connect with this aura intention">Aurabond</button></div></div>';
     }).join('');
     off.querySelectorAll('.ma-act').forEach(btn=>btn.addEventListener('click',()=>maOfferingAction(btn.getAttribute('data-act'),parseInt(btn.getAttribute('data-i'),10),btn)));
-  } else off.innerHTML='<div class="ma-empty">You have not offered any senses yet. Each sense you place on the map becomes a thread of light in your aura — and, in time, a universe in your Cosmic Tree.</div>';
+  } else off.innerHTML='<div class="ma-empty">You have not offered any senses yet. Each sense you place on the map becomes a layer of light in your aura — its colour, hover to see which energy it carries.</div>';
   const ac=document.getElementById('ma-aura-changes');
   if(myOfferings.length){
     const last=myOfferings[0],senses=new Set(myOfferings.map(o=>o.sense)).size;
-    ac.innerHTML=maLine('Your aura just drew in a thread of <b style="color:'+last.color+'">'+last.label+'</b>.',last.color)
-      +maLine('It now carries '+myOfferings.length+' offering'+(myOfferings.length>1?'s':'')+' across '+senses+' sense'+(senses>1?'s':'')+'.','#a78bfa')
+    ac.innerHTML=maLine('Your aura just drew in a layer of <b style="color:'+last.color+'">'+last.label+'</b>.',last.color)
+      +maLine('It now holds '+myOfferings.length+' offering'+(myOfferings.length>1?'s':'')+' across '+senses+' sense'+(senses>1?'s':'')+' — hover any layer to feel which energy it is.','#a78bfa')
       +maLine('Your resonance has grown to <b>'+LEVEL_NAMES[Math.min(5,Math.floor(myShareCount/3))]+'</b>.','#c4b5fd');
   } else ac.innerHTML='<div class="ma-empty">Offer a sense and watch your aura take on its colour.</div>';
   const wc=document.getElementById('ma-world-changes');
@@ -1649,42 +1455,64 @@ function openMyAuraPage(){
       +maLine('Every sense you give reaches the wider, collective aura.','#76a5af');
   } else wc.innerHTML='<div class="ma-empty">When you offer a sense, see how it shifts the street and town here.</div>';
   const qd=document.getElementById('ma-quest-done');if(qd)qd.style.display=(myProfile&&myProfile.questCount)?'block':'none';
+  maBuildLayers();
   page.classList.add('show');
-  maOpenAt=performance.now();maFeed.active=false;maHasFed=false;maReveal=0;
-  const fl=document.getElementById('ma-feed-label');if(fl)fl.style.opacity='';
-  maBuild();
+  maOpenAt=performance.now();maHoverLayer=-1;
+  maStopStream();
+  const v=document.getElementById('ma-video');if(v)v.style.display='none';
+  const sa=document.getElementById('ma-selfie-actions');if(sa)sa.style.display='none';
+  const sb=document.getElementById('ma-selfie-btn');if(sb){sb.style.display='';sb.textContent=maSelfieImg?'📷 Retake selfie':'📷 Take a selfie';}
+  maSizeCanvas();
   if(!maRaf)maRaf=requestAnimationFrame(maDraw);
 }
-function closeMyAuraPage(){const page=document.getElementById('myaura-page');if(page)page.classList.remove('show');if(maRaf){cancelAnimationFrame(maRaf);maRaf=null;}}
-function maFeedTree(){if(!maFeed.active){maFeed.active=true;maFeed.start=performance.now();}maHasFed=true;const fl=document.getElementById('ma-feed-label');if(fl)setTimeout(()=>{fl.style.opacity='0';},700);}
+function closeMyAuraPage(){const page=document.getElementById('myaura-page');if(page)page.classList.remove('show');if(maRaf){cancelAnimationFrame(maRaf);maRaf=null;}maStopStream();const v=document.getElementById('ma-video');if(v)v.style.display='none';}
 function maOfferingAction(act,i,btn){
   const o=myOfferings[i];if(!o)return;
-  if(act==='see'){closeMyAuraPage();if(o.lng!=null&&o.lat!=null&&typeof map!=='undefined'){map.flyTo({center:[o.lng,o.lat],zoom:15,duration:2600});}}
+  if(act==='see'){closeMyAuraPage();if(o.lng!=null&&o.lat!=null&&typeof map!=='undefined'&&map.flyTo){map.flyTo({center:[o.lng,o.lat],zoom:15,duration:2600});}}
   else if(act==='ask'){if(btn){btn.textContent='Channel opens as Aurasense grows';btn.disabled=true;}}
   else if(act==='bond'){myProfile.auraBoost=(myProfile.auraBoost||0)+1;myAuraColors.push(o.color);paFeedAt=performance.now();paFeedColor=o.color;if(btn){btn.textContent='✓ Bonded';btn.classList.add('bonded');}}
 }
+function maStopStream(){if(maStream){maStream.getTracks().forEach(t=>t.stop());maStream=null;}}
 const maCanvas=document.getElementById('ma-canvas');
 if(maCanvas){
   maCanvas.addEventListener('mousemove',e=>{
-    if(!maGeo)return;
     const rect=maCanvas.getBoundingClientRect();
-    const mx=(e.clientX-rect.left)*(maGeo.W/rect.width),my=(e.clientY-rect.top)*(maGeo.H/rect.height);
-    const dxa=(mx-maGeo.trunkX)/(maGeo.auraR),dya=(my-maGeo.auraY)/(maGeo.auraR*0.85);
-    maOverAura=(dxa*dxa+dya*dya)<1;
-    let hb=-1;
-    if(maReveal>0.5){for(let i=0;i<maGeo.branches.length;i++){const b=maGeo.branches[i];const dx=(mx-b.hit.x)/b.hit.rx,dy=(my-b.hit.y)/b.hit.ry;if(dx*dx+dy*dy<1){hb=i;break;}}}
-    maHoverBranch=hb;
+    const mx=(e.clientX-rect.left)*(maCanvas.width/rect.width),my=(e.clientY-rect.top)*(maCanvas.height/rect.height);
+    const cx=maCanvas.width/2,cy=maCanvas.height/2,baseR=Math.min(maCanvas.width,maCanvas.height)*0.40;
+    const dist=Math.hypot(mx-cx,my-cy);
+    const layers=maLayers;let best=-1,bestD=1e9;
+    for(let i=0;i<layers.length;i++){const rr=maLayerRadius(i,baseR,1)*0.78;const d=Math.abs(dist-rr);if(d<bestD){bestD=d;best=i;}}
+    maHoverLayer=(dist<baseR*1.05&&best>=0)?best:-1;
     const tip=document.getElementById('ma-branch-tip');
-    if(hb>=0&&tip){const b=maGeo.branches[hb];tip.innerHTML=b.repr?('<b style="color:'+b.repr.color+'">'+b.repr.label+'</b> — '+b.repr.count+' offering'+(b.repr.count>1?'s':'')+'. Whole universes kindled by what you have sensed; they brighten with every Aurasense you give.'):'A branch not yet grown. Offer more senses and a universe of your own will bloom here.';tip.style.left=Math.min(mx+16,maGeo.W-232)+'px';tip.style.top=Math.max(8,my-10)+'px';tip.style.opacity='1';}else if(tip){tip.style.opacity='0';}
-    const topHint=document.getElementById('ma-top-hint');if(topHint)topHint.style.opacity=(my<maGeo.H*0.22)?'1':'0';
-    maCanvas.style.cursor=maOverAura?'pointer':'default';
+    if(maHoverLayer>=0&&tip){const L=layers[maHoverLayer];tip.innerHTML='<b style="color:'+L.color+'">'+L.label+'</b> — '+L.count+' offering'+(L.count>1?'s':'')+(L.realm?' · '+(L.realm==='internal'?'how the world makes you feel':'the world around you'):'');tip.style.left=Math.min(mx+16,maCanvas.width-220)+'px';tip.style.top=Math.max(8,my-10)+'px';tip.style.opacity='1';}
+    else if(tip)tip.style.opacity='0';
   });
-  maCanvas.addEventListener('mouseleave',()=>{maHoverBranch=-1;const t=document.getElementById('ma-branch-tip');if(t)t.style.opacity='0';const th=document.getElementById('ma-top-hint');if(th)th.style.opacity='0';});
-  maCanvas.addEventListener('click',e=>{if(!maGeo)return;const rect=maCanvas.getBoundingClientRect();const mx=(e.clientX-rect.left)*(maGeo.W/rect.width),my=(e.clientY-rect.top)*(maGeo.H/rect.height);const dxa=(mx-maGeo.trunkX)/(maGeo.auraR),dya=(my-maGeo.auraY)/(maGeo.auraR*0.85);if((dxa*dxa+dya*dya)<1.15)maFeedTree();});
+  maCanvas.addEventListener('mouseleave',()=>{maHoverLayer=-1;const t=document.getElementById('ma-branch-tip');if(t)t.style.opacity='0';});
 }
-const maFeedLabel=document.getElementById('ma-feed-label');if(maFeedLabel)maFeedLabel.addEventListener('click',maFeedTree);
+const maSelfieBtn=document.getElementById('ma-selfie-btn'),maVideo=document.getElementById('ma-video'),maSelfieActions=document.getElementById('ma-selfie-actions');
+if(maSelfieBtn)maSelfieBtn.addEventListener('click',async()=>{
+  try{
+    maStream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'user'}});
+    if(maVideo){maVideo.srcObject=maStream;maVideo.style.display='block';try{await maVideo.play();}catch(e){}}
+    if(maSelfieActions)maSelfieActions.style.display='flex';
+    maSelfieBtn.style.display='none';
+  }catch(e){maSelfieBtn.textContent='Camera unavailable';}
+});
+const maCapture=document.getElementById('ma-capture');
+if(maCapture)maCapture.addEventListener('click',()=>{
+  if(!maVideo)return;
+  const vw=maVideo.videoWidth||480,vh=maVideo.videoHeight||480,sz=Math.min(vw,vh);
+  const tmp=document.createElement('canvas');tmp.width=sz;tmp.height=sz;const tc=tmp.getContext('2d');
+  tc.translate(sz,0);tc.scale(-1,1);
+  tc.drawImage(maVideo,(vw-sz)/2,(vh-sz)/2,sz,sz,0,0,sz,sz);
+  const img=new Image();img.onload=()=>{maSelfieImg=img;};img.src=tmp.toDataURL('image/png');
+  maStopStream();if(maVideo)maVideo.style.display='none';if(maSelfieActions)maSelfieActions.style.display='none';
+  if(maSelfieBtn){maSelfieBtn.style.display='';maSelfieBtn.textContent='📷 Retake selfie';}
+});
+const maCancelSelfie=document.getElementById('ma-cancel-selfie');
+if(maCancelSelfie)maCancelSelfie.addEventListener('click',()=>{maStopStream();if(maVideo)maVideo.style.display='none';if(maSelfieActions)maSelfieActions.style.display='none';if(maSelfieBtn)maSelfieBtn.style.display='';});
 const maBackBtn=document.getElementById('ma-back');if(maBackBtn)maBackBtn.onclick=closeMyAuraPage;
-window.addEventListener('resize',()=>{const p=document.getElementById('myaura-page');if(p&&p.classList.contains('show'))maBuild();});
+window.addEventListener('resize',()=>{const p=document.getElementById('myaura-page');if(p&&p.classList.contains('show'))maSizeCanvas();});
 const maPolicy=document.getElementById('ma-policy');
 if(maPolicy)maPolicy.textContent="When you offer an aura, others can see it — but never who placed it, unless you allow it. First, someone must offer you an aura of good intention (peace, understanding). If you accept, they see only your Aurasenser name, never your real name. To message you, they make a monetary offering to learn who you are; if you accept it, the moment they ask, they give up their own identity to you in return — so any name or detail you share is always your choice, never supplied by Aurasense. Half of every offering goes to you, half to Aurasense: one of the ways we run with no ads, and without ever selling an ounce of anyone's data. Until then, Aurasensers speak through the alphasense symbols.";
 const pacEl=document.getElementById('pac');
@@ -1756,7 +1584,7 @@ function openQuestPage(){const p=document.getElementById('quest-page');if(!p)ret
 function closeQuest(){const p=document.getElementById('quest-page');if(p)p.classList.remove('show');const t=document.getElementById('qz-thanks');if(t)t.classList.remove('show');}
 function qzShowMenu(){
   const menu=document.getElementById('qz-menu'),act=document.getElementById('qz-active'),sub=document.getElementById('qz-submit'),intro=document.getElementById('qz-intro');
-  if(intro)intro.textContent='Gentle, private prompts. There are no wrong answers — only a truer reading of your aura. Each one you share adds colour and depth to your aura and your Cosmic Tree.';
+  if(intro)intro.textContent='Gentle, private prompts. There are no wrong answers — only a truer reading of your aura. Each one you share adds colour and depth to your aura.';
   if(menu){menu.style.display='';menu.innerHTML=QUESTS.map((q,i)=>'<div class="qz-card" data-i="'+i+'"><div class="qn">'+q.name+'</div><div class="qd">'+q.desc+'</div></div>').join('');menu.querySelectorAll('.qz-card').forEach(card=>card.addEventListener('click',()=>qzOpen(parseInt(card.getAttribute('data-i'),10))));}
   if(act)act.style.display='none';if(sub)sub.style.display='none';
 }
@@ -1787,14 +1615,14 @@ function qzSubmit(){
 const qzSubmitBtn=document.getElementById('qz-submit');if(qzSubmitBtn)qzSubmitBtn.addEventListener('click',qzSubmit);
 const qzBackBtn=document.getElementById('qz-back');if(qzBackBtn)qzBackBtn.addEventListener('click',()=>{const act=document.getElementById('qz-active');if(act&&act.style.display!=='none')qzShowMenu();else closeQuest();});
 // ---- Live aura feed ----
-const LF_PLACES=[['Tokyo, Japan',139.69,35.68],['Reykjav\u00edk, Iceland',-21.94,64.15],['Cape Town, South Africa',18.42,-33.92],['Lima, Peru',-77.04,-12.05],['Cardiff, Wales',-3.18,51.48],['Kyoto, Japan',135.77,35.01],['Lisbon, Portugal',-9.14,38.72],['Vancouver, Canada',-123.12,49.28],['Marrakesh, Morocco',-7.98,31.63],['Queenstown, New Zealand',168.66,-45.03],['Banff, Canada',-115.57,51.18],['Varanasi, India',83.01,25.32],['Oslo, Norway',10.75,59.91],['Hanoi, Vietnam',105.83,21.03],['Edinburgh, Scotland',-3.19,55.95],['Santorini, Greece',25.46,36.39]];
+const LF_PLACES=[['Omotesando','Tokyo, Japan',139.69,35.68],['Laugavegur','Reykjav\u00edk, Iceland',-21.94,64.15],['Kloof Street','Cape Town, South Africa',18.42,-33.92],['Avenida Larco','Lima, Peru',-77.04,-12.05],['Queen Street','Cardiff, Wales',-3.18,51.48],['Pontocho Alley','Kyoto, Japan',135.77,35.01],['Rua Augusta','Lisbon, Portugal',-9.14,38.72],['Robson Street','Vancouver, Canada',-123.12,49.28],['Rue de la Kasbah','Marrakesh, Morocco',-7.98,31.63],['Beach Street','Queenstown, New Zealand',168.66,-45.03],['Banff Avenue','Banff, Canada',-115.57,51.18],['Dashashwamedh Road','Varanasi, India',83.01,25.32],['Karl Johans gate','Oslo, Norway',10.75,59.91],['Hang Bac','Hanoi, Vietnam',105.83,21.03],['Royal Mile','Edinburgh, Scotland',-3.19,55.95],['Oia Main Street','Santorini, Greece',25.46,36.39]];
 const LF_HANDLES=['QuietTide','EmberWren','LucidGlade','SilverMoth','DriftingLark','VelvetVale','AuroraFern','StillHaze','CosmicBloom','GentlePulse','TwilightNova','RadiantDrift'];
 const LF_INTENTS=['offering calm to a busy street','sending warmth across the water','a moment of awe at dusk','grief, gently held','wonder at the morning light','peace for a tired town','a spark of joy, shared','quiet gratitude','hope placed here for others','stillness after the storm'];
 let lfTimer=null,lfRows=[];
-function lfRandomRow(){const s=SENSES[Math.floor(Math.random()*SENSES.length)],p=LF_PLACES[Math.floor(Math.random()*LF_PLACES.length)],h=LF_HANDLES[Math.floor(Math.random()*LF_HANDLES.length)],intent=LF_INTENTS[Math.floor(Math.random()*LF_INTENTS.length)];return {sid:s.id,label:s.label,color:s.color,place:p[0],lng:p[1],lat:p[2],handle:h,intent:intent,t:Date.now()-Math.floor(Math.random()*60000)};}
+function lfRandomRow(){const s=SENSES[Math.floor(Math.random()*SENSES.length)],p=LF_PLACES[Math.floor(Math.random()*LF_PLACES.length)],h=LF_HANDLES[Math.floor(Math.random()*LF_HANDLES.length)],intent=LF_INTENTS[Math.floor(Math.random()*LF_INTENTS.length)];return {sid:s.id,label:s.label,color:s.color,street:p[0],city:p[1],lng:p[2],lat:p[3],handle:h,intent:intent,t:Date.now()-Math.floor(Math.random()*60000)};}
 function lfRender(){
   const list=document.getElementById('lf-list');if(!list)return;
-  list.innerHTML=lfRows.map((r,i)=>{const sym=SENSE_SYMBOLS[r.sid]||'',ago=Math.max(1,Math.round((Date.now()-r.t)/1000)),agoTxt=ago<60?ago+'s ago':Math.round(ago/60)+'m ago';return '<div class="lf-row"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+r.label+'</b> — '+r.intent+'</div><div class="lf-meta">\ud83d\udccd '+r.place+' · <span class="h">'+r.handle+'</span> · '+agoTxt+'</div><div class="lf-act"><button class="lf-btn" data-act="see" data-i="'+i+'">See aura activity</button><button class="lf-btn" data-act="ask" data-i="'+i+'">Ask a question about this aura</button><button class="lf-btn bond" data-act="bond" data-i="'+i+'" title="I connect with this aura intention">Aurabond</button></div></div></div>';}).join('');
+  list.innerHTML=lfRows.map((r,i)=>{const sym=SENSE_SYMBOLS[r.sid]||'',ago=Math.max(1,Math.round((Date.now()-r.t)/1000)),agoTxt=ago<60?ago+'s ago':Math.round(ago/60)+'m ago';return '<div class="lf-row"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+r.label+'</b> — '+r.intent+'</div><div class="lf-meta">\ud83d\udccd '+r.street+', '+r.city+' · <span class="h">'+r.handle+'</span> · '+agoTxt+'</div><div class="lf-act"><button class="lf-btn" data-act="see" data-i="'+i+'">See aura activity</button><button class="lf-btn" data-act="ask" data-i="'+i+'">Ask a question about this aura</button><button class="lf-btn bond" data-act="bond" data-i="'+i+'" title="I connect with this aura intention">Aurabond</button></div></div></div>';}).join('');
   list.querySelectorAll('.lf-btn').forEach(b=>b.addEventListener('click',()=>lfAction(b.getAttribute('data-act'),parseInt(b.getAttribute('data-i'),10),b)));
 }
 function lfAction(act,i,btn){
@@ -1814,7 +1642,7 @@ function obShow(){
   const ob=document.getElementById('onboard');if(!ob)return;
   const steps=[
     {sel:'#search-box',t:'Find your place',s:'Search a street, town or country — or just click anywhere on the map — to begin.'},
-    {sel:'#my-aura',t:'This is your aura',s:'It grows and changes colour with every sense you offer. Click it any time to see your Cosmic Tree.'},
+    {sel:'#my-aura',t:'This is your aura',s:'It grows and changes colour with every sense you offer. Click it any time to see your aura up close.'},
     {sel:'#register-btn',t:'Become an Aurasenser',s:'Create your aura so the senses you share become your own.'}
   ];
   let idx=0;
