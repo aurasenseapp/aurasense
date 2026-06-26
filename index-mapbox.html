@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Aurasense — The Living Aura of Humanity</title>
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.js"></script>
@@ -365,11 +365,31 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   #locality-btn{bottom:86px;right:14px;width:42px;height:42px;font-size:16px}
   #place-prompt{top:30%;width:92%;padding:18px 16px 14px}
   #pp-title{font-size:14px}
-  #ma-title{font-size:20px;padding-top:6px}
-  #ma-back{font-size:11px}
+  #ma-title{top:54px;font-size:16px;padding-top:0}
+  #ma-back{top:12px;left:12px;font-size:11px;padding:7px 12px}
   #rg-inner,#qz-inner,#lf-inner,#pp2-inner{padding-left:14px;padding-right:14px;padding-bottom:80px}
   #rg-title,#qz-title,#lf-title{font-size:21px}
   #lf-tools{flex-wrap:wrap}
+}
+/* FIX: these map buttons live inside #ui (pointer-events:none) and must opt back in */
+#register-btn,#livefeed-btn,#locality-btn,#place-mini,#mobile-offer{pointer-events:auto}
+/* Popups must sit above the left-hand cards, and lean clear of them */
+.aura-popup{z-index:1250!important}
+.aura-popup .mapboxgl-popup-content{box-shadow:0 0 28px rgba(0,0,0,.6)}
+/* My locality moves up to the top bar */
+#locality-btn{top:52px;right:16px;bottom:auto;width:auto;height:auto;border-radius:20px;padding:8px 14px;font-size:12px;gap:6px}
+#locality-btn::before{content:"⌂ ";font-size:14px}
+#locality-tip{top:92px;right:16px;bottom:auto}
+/* Live feed opens as a centred box over the still-visible map */
+#livefeed-page{background:rgba(6,5,16,.55);display:flex;align-items:center;justify-content:center}
+#livefeed-page #lf-inner{max-width:560px;width:92%;max-height:82vh;overflow-y:auto;-webkit-overflow-scrolling:touch;margin:0;padding:26px 22px 24px;background:radial-gradient(ellipse at 50% 0%,#16122e 0%,#0c0a1e 70%,#0a0818 100%);border:1px solid rgba(167,139,250,.32);border-radius:22px;box-shadow:0 0 70px rgba(0,0,0,.65)}
+#lf-back{position:sticky;top:0}
+/* Steady on touch — no rubber-band / pinch drift */
+html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
+@media (max-width:600px){
+  #locality-btn{top:48px;right:12px;padding:7px 9px;font-size:0}
+  #locality-btn::before{font-size:17px}
+  #locality-tip{top:86px;right:12px}
 }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -414,7 +434,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   </div>
   <button id="register-btn">✦ Become an Aurasenser</button>
   <button id="livefeed-btn">◉ Live aura feed</button>
-  <button id="locality-btn" title="My locality">⌂</button>
+  <button id="locality-btn" title="My locality">My locality</button>
   <div id="locality-tip">Return to my locality</div>
   <button id="mobile-offer">✦ Offer an aurasense</button>
   <div id="place-prompt">
@@ -1054,7 +1074,7 @@ function addFeed(text,sense,time,glow,lat,lng,place){
   d.className='fi'+(glow?' glow':'');
   const loc=place?`<div class="fi-loc">📍 ${place}</div>`:'';
   d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${SENSE_SYMBOLS[s.id]} ${s.label}</div><div class="fi-text">"${text}"</div>${loc}<div class="fi-meta">${time}</div>`;
-  if(lat!=null&&lng!=null)d.onclick=()=>flyProgrammatic({center:[lng,lat],zoom:16,duration:1200});
+  d.onclick=()=>{if(typeof openLiveFeed==='function')openLiveFeed();};
   feed.insertBefore(d,feed.firstChild);
   if(glow)setTimeout(()=>d.classList.remove('glow'),5000);
   if(feed.children.length>12)feed.removeChild(feed.lastChild);
@@ -1219,7 +1239,9 @@ document.getElementById('ep4').onclick=()=>{showMsg('Conscious Trajectory — co
 let currentPopup=null;
 function openPopup(lng,lat,html){
   if(currentPopup){currentPopup.remove();currentPopup=null;}
-  currentPopup=new mapboxgl.Popup({className:'aura-popup',closeButton:true,maxWidth:'250px'}).setLngLat([lng,lat]).setHTML(html).addTo(map);
+  const opts={className:'aura-popup',closeButton:true,maxWidth:'250px'};
+  try{const pt=map.project([lng,lat]),W=map.getContainer().clientWidth;if(pt.x<250)opts.anchor='left';else if(pt.x>W-250)opts.anchor='right';}catch(e){}
+  currentPopup=new mapboxgl.Popup(opts).setLngLat([lng,lat]).setHTML(html).addTo(map);
   return currentPopup;
 }
 // Reverse-geocode to a house-number + street line (falls back to the nearest named place).
@@ -1314,6 +1336,7 @@ async function lookupPlace(lat,lng){
 function submit(lat,lng,text){
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);if(!s)return;
+  if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
   auraPoints.push({lat,lng,sense:sid,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2});
   ripples.push({lat,lng,color:s.color,age:0});
   if(!planetColors.includes(s.color))planetColors.push(s.color);
@@ -1460,7 +1483,8 @@ document.getElementById('sg').onclick=async()=>{
         flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]],mz);
       }else{
         const z=(t==='address')?17.5:(t==='poi')?16.5:15;
-        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:[-60,-80]});
+        const mob=window.innerWidth<=600;
+        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:mob?[0,Math.round(window.innerHeight*0.17)]:[-60,-80]});
       }
       if(t==='address'||t==='poi') dropSearchMarker(f.center,name);
       showMsg('Sensing the aura of '+name+'...');
@@ -1859,6 +1883,13 @@ function closePubProfile(){const p=document.getElementById('pubprofile-page');if
 })();
 // ---- Keep the map sized to the screen ----
 (function(){function doResize(){if(typeof map!=='undefined'&&map.resize)map.resize();}window.addEventListener('resize',doResize);window.addEventListener('orientationchange',()=>setTimeout(doResize,300));setTimeout(doResize,300);setTimeout(doResize,1200);})();
+// ---- Right-side feed expands into the centred modal; click outside closes it ----
+(function(){
+  const feedEl=document.getElementById('feed');
+  if(feedEl){feedEl.style.cursor='pointer';feedEl.addEventListener('click',()=>{if(typeof openLiveFeed==='function')openLiveFeed();});}
+  const lfPage=document.getElementById('livefeed-page');
+  if(lfPage)lfPage.addEventListener('click',e=>{if(e.target===lfPage&&typeof closeLiveFeed==='function')closeLiveFeed();});
+})();
 });
 </script>
 </body>
