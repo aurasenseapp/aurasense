@@ -391,6 +391,47 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   #locality-btn::before{font-size:17px}
   #locality-tip{top:86px;right:12px}
 }
+/* Place-aura page: the layered aura of a single address */
+#placeaura-page{position:fixed;inset:0;z-index:1820;background:rgba(6,5,16,.55);opacity:0;pointer-events:none;transition:opacity .35s;display:flex;align-items:center;justify-content:center}
+#placeaura-page.show{opacity:1;pointer-events:auto}
+#pa2-box{position:relative;width:min(460px,92%);max-height:84vh;overflow-y:auto;-webkit-overflow-scrolling:touch;background:radial-gradient(ellipse at 50% 0%,#16122e,#0c0a1e 70%,#0a0818);border:1px solid rgba(167,139,250,.32);border-radius:22px;padding:22px 22px 20px;box-shadow:0 0 70px rgba(0,0,0,.65)}
+#pa2-close{position:absolute;top:12px;right:14px;background:transparent;border:none;color:#9a8fc2;font-size:18px;cursor:pointer;z-index:2}
+#pa2-title{font-size:16px;color:#efe8ff;font-weight:400;text-align:center;letter-spacing:.02em;line-height:1.4;padding:0 26px}
+#pa2-canvas{display:block;width:100%;height:230px;margin:8px 0 4px}
+#pa2-senses{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:16px}
+.pa2-chip{font-size:11px;padding:4px 10px;border-radius:14px;border:0.5px solid var(--c);color:var(--c);background:rgba(255,255,255,.04)}
+#pa2-comments-h{font-size:11px;color:#9a8fc2;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+#pa2-comments{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.pa2-comment{background:rgba(255,255,255,.03);border-left:2px solid var(--c);border-radius:8px;padding:8px 11px;font-size:12.5px;color:#d8d0f0;line-height:1.5}
+.pa2-comment .who{color:#a99fd0;font-size:10.5px;margin-top:3px}
+#pa2-add{display:block;width:100%;background:linear-gradient(135deg,#7c5cff,#a78bfa);border:none;color:#fff;font-size:13px;font-weight:500;padding:12px;border-radius:14px;cursor:pointer;box-shadow:0 0 26px rgba(124,92,255,.45)}
+/* My Aura offering action symbols */
+.ma-oact{display:flex;gap:9px;margin-top:9px}
+.ma-ic{position:relative;background:rgba(255,255,255,.04);border:0.5px solid rgba(167,139,250,.3);border-radius:12px;width:42px;height:34px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;color:#b6acdc;transition:color .2s,background .2s;padding:0}
+.ma-ic:hover{color:#fff;background:rgba(167,139,250,.18)}
+.ma-ic .mai{width:24px;height:18px;overflow:visible}
+.ma-ic .mai circle,.ma-ic .mai path{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round}
+.ma-ic .mai .fill{fill:currentColor;stroke:none;opacity:.7}
+.ma-ic .mai-bond circle{transition:transform .25s;transform-box:fill-box;transform-origin:center}
+.ma-ic.ma-bond:hover .ab-l{transform:translateX(3px)}
+.ma-ic.ma-bond:hover .ab-r{transform:translateX(-3px)}
+.ma-ic.bonded{color:#86e0c0;border-color:rgba(134,224,192,.5)}
+.ma-tip{position:absolute;bottom:122%;left:50%;transform:translateX(-50%);background:rgba(8,7,20,.97);border:0.5px solid rgba(167,139,250,.4);color:#e6dfff;font-size:10px;padding:4px 8px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .18s}
+.ma-ic:hover .ma-tip{opacity:1}
+/* Explore panel: lift it clear of the left-hand cards */
+#explore-panel{left:50%;top:96px;transform:translateX(-50%);width:300px;z-index:1300;max-height:72vh;overflow-y:auto}
+/* Handle on the feed and the My Aura page */
+#lf-handle{text-align:center;font-size:15px;color:#efe8ff;font-weight:300;letter-spacing:.03em;margin-bottom:4px;text-shadow:0 0 16px rgba(167,139,250,.5)}
+#ma-handle{position:absolute;top:34px;left:50%;transform:translateX(-50%);font-size:12px;color:#b6a9e0;letter-spacing:.04em;z-index:8}
+@media (max-width:600px){#ma-handle{top:74px}}
+/* Lower-left mini becomes a real compact search bar */
+#place-mini{display:none;align-items:center;gap:0;background:rgba(20,16,40,.86);border:0.5px solid rgba(167,139,250,.45);border-radius:18px;padding:3px 3px 3px 4px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 0 22px rgba(124,92,255,.3)}
+#place-mini.show{display:flex}
+#pm-input{background:transparent;border:none;outline:none;color:#efe8ff;font-size:12px;padding:6px 8px;width:150px}
+#pm-input::placeholder{color:#7a719c}
+#pm-go{background:rgba(167,139,250,.25);border:none;border-radius:14px;color:#fff;font-size:13px;padding:6px 10px;cursor:pointer}
+#pm-go:hover{background:rgba(167,139,250,.45)}
+@media (max-width:600px){#pm-input{width:120px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -442,7 +483,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="pp-row"><input id="pp-input" placeholder="Street, town, postcode, country..."/><button id="pp-go">Go</button></div>
     <button id="pp-select">…or select a spot on the map</button>
   </div>
-  <button id="place-mini">🔍 Place an aurasense</button>
+  <div id="place-mini"><input id="pm-input" placeholder="Search a location..."/><button id="pm-go">🔍</button></div>
   <div id="explore-btn"><button id="ebtn">✦ Read the aura of this place</button></div>
   <div id="explore-panel">
     <div class="ep-title">How would you like to read this aura?</div>
@@ -495,6 +536,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 <div id="myaura-page">
   <button id="ma-back">← Return to the map</button>
   <div id="ma-title">My Aura</div>
+  <div id="ma-handle"></div>
   <div id="ma-layout">
     <div class="ma-col" id="ma-left">
       <div class="ma-h">What you have offered</div>
@@ -610,14 +652,15 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="qz-intro"></div>
     <div id="qz-menu"></div>
     <div id="qz-active" style="display:none"></div>
-    <button id="qz-submit" style="display:none">Share with my aura</button>
+    <button id="qz-submit" style="display:none">Offer to my aura</button>
   </div>
-  <div id="qz-thanks"><div class="big">Thank you for sharing</div><div class="sm">Your aura has drawn this in — see how its colours and layers have shifted.</div></div>
+  <div id="qz-thanks"><div class="big">Thank you for offering</div><div class="sm">Your aura has drawn this in — see how its colours and layers have shifted.</div></div>
 </div>
 <div id="livefeed-page">
   <button class="qz-back" id="lf-back">← Return to the map</button>
   <div id="lf-inner">
     <div id="lf-title">Live aura feed</div>
+    <div id="lf-handle"></div>
     <div id="lf-live"><span class="lf-pulse"></span> Auras offered around the world</div>
     <div id="lf-tools">
       <button class="lf-tool" id="lf-locality">⌂ My locality</button>
@@ -636,8 +679,17 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="pp2-sub">This Aurasenser shares only what they choose. There are no personal details here — only their aura. Offer an aura of good intention to begin a connection.</div>
     <div id="pp2-actions">
       <button class="pp2-btn" id="pp2-offer">✦ Offer something to this aura</button>
-      <button class="pp2-btn" id="pp2-comment">💬 Comment on the aura</button>
-    </div>
+  </div>
+</div>
+<div id="placeaura-page">
+  <div id="pa2-box">
+    <button id="pa2-close">✕</button>
+    <div id="pa2-title">The Aura of this place</div>
+    <canvas id="pa2-canvas"></canvas>
+    <div id="pa2-senses"></div>
+    <div id="pa2-comments-h">What people feel here</div>
+    <div id="pa2-comments"></div>
+    <button id="pa2-add">✦ Can you add to the aura of this place?</button>
   </div>
 </div>
 <script>
@@ -1112,13 +1164,22 @@ document.querySelectorAll('.tab').forEach(tab=>{
   tab.onclick=()=>{
     const i=+tab.dataset.i;
     if(i===4){setActiveTab(4);showPlanet();return;}
-    // Anchor every level on the same stable point (where the senser actually is),
-    // so Street->Town->Street, or Region and back, always return to the same spot.
-    if(planetActive)restorePlanetVisual();
+    const wasPlanet=planetActive;
+    if(wasPlanet)restorePlanetVisual();
     const aLng=anchorPoint.lng,aLat=anchorPoint.lat;
     setActiveTab(i);
+    // Town view and up: clear the boxes so they don't cover the auras
+    if(i>=1){
+      if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
+      if(currentPopup){currentPopup.remove();currentPopup=null;}
+      if(typeof closeExplore==='function')closeExplore();
+    }
     if(i===0){
       flyProgrammatic({center:[aLng,aLat],zoom:anchorPoint.zoom||15,duration:1800});
+    }else if(wasPlanet){
+      // Coming down from Planet, land squarely on the anchor at a fixed zoom (avoids mis-geocoded sea landings)
+      const lz={1:12,2:8.5,3:5.7}[i]||10;
+      flyProgrammatic({center:[aLng,aLat],zoom:lz,duration:2200});
     }else{
       contextualZoom(i,aLng,aLat);
     }
@@ -1265,24 +1326,28 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
   const loc=placeLabel||'this spot';
   const sym=SENSE_SYMBOLS[senseId]||'';
   const safeText=(text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const hereCount=auraPoints.filter(p=>haversine(p.lat,p.lng,lat,lng)<80).length;
-  const sharedTitle=hereCount>1?('✨ '+hereCount+' auras shared here'):'✨ Aurasense just shared';
+  const hereCount=auraPoints.filter(p=>haversine(p.lat,p.lng,lat,lng)<30).length;
+  const sharedTitle=hereCount>1?('✨ '+hereCount+' auras offered here'):'✨ Aurasense just offered';
+  const shortLoc=(loc||'this place').split(',')[0];
   const html=`<div class="mapboxgl-popup-content-inner">
     <div class="pop-title">${sharedTitle}</div>
     <div class="pop-street">📍 ${loc}</div>
     <div class="pop-aura" style="color:${s.color}">${sym} ${s.label}</div>
     <div class="pop-sense-list"><div class="pop-sense-item" style="border-left-color:${s.color}">"${safeText}"</div></div>
-    <div class="pop-action pop-link pop-again" style="margin-top:7px;color:#c4b5fd">↻ Share another Aurasense here</div>
-    <div class="pop-action pop-link pop-social" style="margin-top:3px">⤴ Share this Aurasense on social media</div>
+    <div class="pop-action pop-link pop-seeaura" style="margin-top:7px;color:#c4b5fd">✨ See the Aura of ${shortLoc}</div>
+    <div class="pop-action pop-link pop-again" style="margin-top:3px;color:#c4b5fd">↻ Offer another aura here</div>
+    <div class="pop-action pop-link pop-social" style="margin-top:3px">⤴ Share this aura on social media</div>
   </div>`;
   const p=openPopup(lng,lat,html);
   const elp=p.getElement();
   if(elp){
+    const seeA=elp.querySelector('.pop-seeaura');
+    if(seeA)seeA.addEventListener('click',()=>openPlaceAura(lat,lng,loc));
     const again=elp.querySelector('.pop-again');
     if(again)again.addEventListener('click',()=>{
       lastClickPoint=[lng,lat];
       const inp=document.getElementById('inp');if(inp)inp.focus();
-      showMsg('Add another sense here — type below and offer it');
+      showMsg('Offer another aura here — type below and offer it');
       if(currentPopup){currentPopup.remove();currentPopup=null;}
     });
     const social=elp.querySelector('.pop-social');
@@ -1297,22 +1362,33 @@ map.on('click',async function(e){
   anchorPoint={lat:clat,lng:clng,zoom:Math.min(17,Math.max(14,map.getZoom()))};
   const input=document.getElementById('inp');
   if(input.value.trim()){materializeAndSubmit(clat,clng,input.value);input.value='';return;}
-  const existing=auraPoints.filter(p=>haversine(p.lat,p.lng,clat,clng)<100);
+  const atHere=auraPoints.filter(p=>haversine(p.lat,p.lng,clat,clng)<30);
+  const nearBy=auraPoints.filter(p=>haversine(p.lat,p.lng,clat,clng)<150);
   const s=SENSES.find(s=>s.id===selSense);
   const streetName=(await reverseAddress(clat,clng))||`${clat.toFixed(4)}°N, ${Math.abs(clng).toFixed(4)}°${clng<0?'W':'E'}`;
-  const senseListHTML=existing.length?'<div class="pop-sense-list">'+existing.slice(0,3).map(p=>{
+  const shortAddr=streetName.split(',')[0];
+  const list=(atHere.length?atHere:nearBy).slice(0,3);
+  const senseListHTML=list.length?'<div class="pop-sense-list">'+list.map(p=>{
     const ps=SENSES.find(x=>x.id===p.sense);
     return `<div class="pop-sense-item" style="border-left-color:${ps.color}">${SENSE_SYMBOLS[ps.id]} "${p.text.substring(0,52)}${p.text.length>52?'…':''}"</div>`;
   }).join('')+'</div>':'';
+  let auraLine;
+  if(atHere.length)auraLine=`${atHere.length} aura${atHere.length>1?'s':''} offered here`;
+  else if(nearBy.length)auraLine=`0 offered at this address · ${nearBy.length} offered nearby`;
+  else auraLine='No auras offered yet — be the first';
+  const seeLink=(atHere.length||nearBy.length)?`<div class="pop-action pop-link pop-seeaura" style="margin-top:7px;color:#c4b5fd">✨ See the Aura of ${shortAddr}</div>`:'';
   openPopup(clng,clat,`
     <div class="mapboxgl-popup-content-inner">
-    <div class="pop-title">${existing.length?'Aura detected':'Aura forming'}</div>
+    <div class="pop-title">${atHere.length?'Aura here':(nearBy.length?'Aura nearby':'Aura forming')}</div>
     <div class="pop-street">📍 ${streetName}</div>
-    <div class="pop-aura" style="color:${s.color}">${existing.length?`${existing.length} sense${existing.length>1?'s':''} shared here`:'No senses shared yet — be the first'}</div>
+    <div class="pop-aura" style="color:${s.color}">${auraLine}</div>
     ${senseListHTML}
-    <div class="pop-action" style="margin-top:5px">${existing.length?'Type below and click here to add your sense':'Type below and click here to energize this spot'}</div>
+    ${seeLink}
+    <div class="pop-action" style="margin-top:5px">${(atHere.length||nearBy.length)?('Can you add to the aura of '+shortAddr+'? Type below and click here')+'':'Type below and click here to offer your sense'}</div>
     </div>
   `);
+  const epc=currentPopup&&currentPopup.getElement&&currentPopup.getElement();
+  if(epc){const see=epc.querySelector('.pop-seeaura');if(see)see.addEventListener('click',()=>openPlaceAura(clat,clng,streetName));}
 });
 async function lookupPlace(lat,lng){
   try{
@@ -1577,12 +1653,17 @@ function maDraw(){
 }
 function openMyAuraPage(){
   const page=document.getElementById('myaura-page');if(!page)return;
+  const mh=document.getElementById('ma-handle');if(mh)mh.textContent=(myProfile&&myProfile.handle)?('@'+myProfile.handle):'';
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const off=document.getElementById('ma-offerings');
   if(myOfferings.length){
     off.innerHTML=myOfferings.map((o,idx)=>{
       const sym=SENSE_SYMBOLS[o.sense]||'',place=o.place?'<div class="m">📍 '+esc(o.place)+'</div>':'';
-      return '<div class="ma-offering" style="border-left-color:'+o.color+'"><div class="s" style="color:'+o.color+'">'+sym+' '+o.label+'</div><div class="t">"'+esc(o.text)+'"</div>'+place+'<div class="ma-oact"><button class="ma-act" data-act="see" data-i="'+idx+'">See aura activity</button><button class="ma-act" data-act="ask" data-i="'+idx+'">Ask a question</button><button class="ma-act ma-bond" data-act="bond" data-i="'+idx+'" title="I connect with this aura intention">Aurabond</button></div></div>';
+      return '<div class="ma-offering" style="border-left-color:'+o.color+'"><div class="s" style="color:'+o.color+'">'+sym+' '+o.label+'</div><div class="t">"'+esc(o.text)+'"</div>'+place+'<div class="ma-oact">'
+        +'<button class="ma-act ma-ic" data-act="see" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" class="fill"/></svg><span class="ma-tip">See aura activity</span></button>'
+        +'<button class="ma-act ma-ic" data-act="ask" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><path d="M8.5 9.2a3.5 3.5 0 1 1 4.6 3.3V14"/><circle cx="13.1" cy="17.6" r="1" class="fill"/><path d="M15.6 8.4l3-2.1"/><circle cx="19.1" cy="5.9" r="1.1" class="fill"/></svg><span class="ma-tip">Ask a question</span></button>'
+        +'<button class="ma-act ma-ic ma-bond" data-act="bond" data-i="'+idx+'"><svg viewBox="0 0 40 24" class="mai mai-bond"><circle class="ab-l" cx="11" cy="12" r="7"/><circle class="ab-r" cx="29" cy="12" r="7"/></svg><span class="ma-tip">Aurabond</span></button>'
+        +'</div></div>';
     }).join('');
     off.querySelectorAll('.ma-act').forEach(btn=>btn.addEventListener('click',()=>maOfferingAction(btn.getAttribute('data-act'),parseInt(btn.getAttribute('data-i'),10),btn)));
   } else off.innerHTML='<div class="ma-empty">You have not offered any senses yet. Each sense you place on the map becomes a layer of light in your aura — its colour, hover to see which energy it carries.</div>';
@@ -1614,9 +1695,10 @@ function openMyAuraPage(){
 function closeMyAuraPage(){const page=document.getElementById('myaura-page');if(page)page.classList.remove('show');if(maRaf){cancelAnimationFrame(maRaf);maRaf=null;}maStopStream();const v=document.getElementById('ma-video');if(v)v.style.display='none';}
 function maOfferingAction(act,i,btn){
   const o=myOfferings[i];if(!o)return;
+  const tip=btn&&btn.querySelector?btn.querySelector('.ma-tip'):null;
   if(act==='see'){closeMyAuraPage();if(o.lng!=null&&o.lat!=null&&typeof map!=='undefined'&&map.flyTo){map.flyTo({center:[o.lng,o.lat],zoom:15,duration:2600});}}
-  else if(act==='ask'){if(btn){btn.textContent='Channel opens as Aurasense grows';btn.disabled=true;}}
-  else if(act==='bond'){myProfile.auraBoost=(myProfile.auraBoost||0)+1;myAuraColors.push(o.color);paFeedAt=performance.now();paFeedColor=o.color;if(btn){btn.textContent='✓ Bonded';btn.classList.add('bonded');}}
+  else if(act==='ask'){if(tip)tip.textContent='Channel opens as Aurasense grows';}
+  else if(act==='bond'){myProfile.auraBoost=(myProfile.auraBoost||0)+1;myAuraColors.push(o.color);paFeedAt=performance.now();paFeedColor=o.color;if(btn)btn.classList.add('bonded');if(tip)tip.textContent='✓ Bonded';}
 }
 function maStopStream(){if(maStream){maStream.getTracks().forEach(t=>t.stop());maStream=null;}}
 const maCanvas=document.getElementById('ma-canvas');
@@ -1764,7 +1846,7 @@ const qzBackBtn=document.getElementById('qz-back');if(qzBackBtn)qzBackBtn.addEve
 // ---- Live aura feed ----
 const LF_PLACES=[['Omotesando','Tokyo, Japan',139.69,35.68],['Laugavegur','Reykjav\u00edk, Iceland',-21.94,64.15],['Kloof Street','Cape Town, South Africa',18.42,-33.92],['Avenida Larco','Lima, Peru',-77.04,-12.05],['Queen Street','Cardiff, Wales',-3.18,51.48],['Pontocho Alley','Kyoto, Japan',135.77,35.01],['Rua Augusta','Lisbon, Portugal',-9.14,38.72],['Robson Street','Vancouver, Canada',-123.12,49.28],['Rue de la Kasbah','Marrakesh, Morocco',-7.98,31.63],['Beach Street','Queenstown, New Zealand',168.66,-45.03],['Banff Avenue','Banff, Canada',-115.57,51.18],['Dashashwamedh Road','Varanasi, India',83.01,25.32],['Karl Johans gate','Oslo, Norway',10.75,59.91],['Hang Bac','Hanoi, Vietnam',105.83,21.03],['Royal Mile','Edinburgh, Scotland',-3.19,55.95],['Oia Main Street','Santorini, Greece',25.46,36.39]];
 const LF_HANDLES=['QuietTide','EmberWren','LucidGlade','SilverMoth','DriftingLark','VelvetVale','AuroraFern','StillHaze','CosmicBloom','GentlePulse','TwilightNova','RadiantDrift'];
-const LF_INTENTS=['offering calm to a busy street','sending warmth across the water','a moment of awe at dusk','grief, gently held','wonder at the morning light','peace for a tired town','a spark of joy, shared','quiet gratitude','hope placed here for others','stillness after the storm'];
+const LF_INTENTS=['offering calm to a busy street','sending warmth across the water','a moment of awe at dusk','grief, gently held','wonder at the morning light','peace for a tired town','a spark of joy, offered','quiet gratitude','hope placed here for others','stillness after the storm'];
 let lfTimer=null,lfRows=[];
 function lfRandomRow(){const s=SENSES[Math.floor(Math.random()*SENSES.length)],p=LF_PLACES[Math.floor(Math.random()*LF_PLACES.length)],h=LF_HANDLES[Math.floor(Math.random()*LF_HANDLES.length)],intent=LF_INTENTS[Math.floor(Math.random()*LF_INTENTS.length)];return {sid:s.id,label:s.label,color:s.color,street:p[0],city:p[1],lng:p[2],lat:p[3],handle:h,intent:intent,t:Date.now()-Math.floor(Math.random()*60000)};}
 let lfFilter='',lfLocalityOn=false,localityCity='';
@@ -1798,7 +1880,7 @@ function lfAction(act,i,ic){
   else if(act==='comment'){showMsg('Comments through alphasense symbols — coming soon');}
   else if(act==='share'){showMsg('Social sharing — coming in v1');}
 }
-function openLiveFeed(){const p=document.getElementById('livefeed-page');if(!p)return;if(lfRows.length===0){for(let i=0;i<8;i++)lfRows.push(lfRandomRow());lfRows.sort((a,b)=>b.t-a.t);}lfRender();p.classList.add('show');if(lfTimer)clearInterval(lfTimer);lfTimer=setInterval(()=>{lfRows.unshift(lfRandomRow());if(lfRows.length>14)lfRows.pop();lfRender();},4500);}
+function openLiveFeed(){const p=document.getElementById('livefeed-page');if(!p)return;const lh=document.getElementById('lf-handle');if(lh)lh.textContent=(myProfile&&myProfile.handle)?('✦ '+myProfile.handle):'';if(lfRows.length===0){for(let i=0;i<8;i++)lfRows.push(lfRandomRow());lfRows.sort((a,b)=>b.t-a.t);}lfRender();p.classList.add('show');if(lfTimer)clearInterval(lfTimer);lfTimer=setInterval(()=>{lfRows.unshift(lfRandomRow());if(lfRows.length>14)lfRows.pop();lfRender();},4500);}
 function closeLiveFeed(){const p=document.getElementById('livefeed-page');if(p)p.classList.remove('show');if(lfTimer){clearInterval(lfTimer);lfTimer=null;}}
 const lfBtn=document.getElementById('livefeed-btn');if(lfBtn)lfBtn.addEventListener('click',openLiveFeed);
 const lfBackBtn=document.getElementById('lf-back');if(lfBackBtn)lfBackBtn.addEventListener('click',closeLiveFeed);
@@ -1837,7 +1919,7 @@ function obShow(){
 }
 setTimeout(()=>{try{obShow();}catch(e){}},1600);
 // ---- Place-an-aurasense prompt ----
-function openPlacePrompt(heading){const p=document.getElementById('place-prompt');if(!p)return;const t=document.getElementById('pp-title');if(t&&heading)t.textContent=heading;p.classList.add('show');const m=document.getElementById('place-mini');if(m)m.classList.remove('show');const inp=document.getElementById('pp-input');if(inp)setTimeout(()=>{try{inp.focus();}catch(e){}},60);}
+function openPlacePrompt(heading){const p=document.getElementById('place-prompt');if(!p)return;if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}const t=document.getElementById('pp-title');if(t&&heading)t.textContent=heading;p.classList.add('show');const m=document.getElementById('place-mini');if(m)m.classList.remove('show');const inp=document.getElementById('pp-input');if(inp)setTimeout(()=>{try{inp.focus();}catch(e){}},60);}
 function collapsePlacePrompt(){const p=document.getElementById('place-prompt');if(p)p.classList.remove('show');const m=document.getElementById('place-mini');if(m)m.classList.add('show');}
 (function(){
   const ppGo=document.getElementById('pp-go'),ppInput=document.getElementById('pp-input'),ppSelect=document.getElementById('pp-select'),placeMini=document.getElementById('place-mini');
@@ -1845,7 +1927,10 @@ function collapsePlacePrompt(){const p=document.getElementById('place-prompt');i
   if(ppGo)ppGo.addEventListener('click',ppRun);
   if(ppInput)ppInput.addEventListener('keydown',e=>{if(e.key==='Enter')ppRun();});
   if(ppSelect)ppSelect.addEventListener('click',collapsePlacePrompt);
-  if(placeMini)placeMini.addEventListener('click',()=>openPlacePrompt('Search for a location to place an aurasense'));
+  const pmInput=document.getElementById('pm-input'),pmGo=document.getElementById('pm-go');
+  function pmRun(){const q=(pmInput&&pmInput.value.trim())||'';if(!q)return;const si=document.getElementById('si'),sg=document.getElementById('sg');if(si)si.value=q;if(sg)sg.click();}
+  if(pmGo)pmGo.addEventListener('click',pmRun);
+  if(pmInput)pmInput.addEventListener('keydown',e=>{if(e.key==='Enter')pmRun();});
   if(typeof map!=='undefined'&&map.on)map.on('mousedown',()=>{const p=document.getElementById('place-prompt');if(p&&p.classList.contains('show'))collapsePlacePrompt();});
 })();
 // ---- My locality (Home) ----
@@ -1889,6 +1974,55 @@ function closePubProfile(){const p=document.getElementById('pubprofile-page');if
   if(feedEl){feedEl.style.cursor='pointer';feedEl.addEventListener('click',()=>{if(typeof openLiveFeed==='function')openLiveFeed();});}
   const lfPage=document.getElementById('livefeed-page');
   if(lfPage)lfPage.addEventListener('click',e=>{if(e.target===lfPage&&typeof closeLiveFeed==='function')closeLiveFeed();});
+})();
+// ---- The Aura of a place (layered shells + comments) ----
+let pa2Raf=null,pa2Layers=[],pa2T=0,pa2OpenAt=0,pa2Point=null;
+function pa2Size(){const cv=document.getElementById('pa2-canvas');if(!cv)return;cv.width=cv.clientWidth||320;cv.height=230;}
+function pa2Draw(){
+  const cv=document.getElementById('pa2-canvas');if(!cv){pa2Raf=null;return;}
+  const c=cv.getContext('2d'),W=cv.width,H=cv.height,cx=W/2,cy=H/2;
+  pa2T+=0.016;const fade=Math.min(1,(performance.now()-pa2OpenAt)/1000);
+  c.clearRect(0,0,W,H);c.globalAlpha=fade;
+  const baseR=Math.min(W,H)*0.42,breath=1+Math.sin(pa2T*0.8)*0.03;
+  const layers=pa2Layers.length?pa2Layers:[{color:'#a78bfa',label:'',count:0}];
+  for(let i=0;i<layers.length;i++){const L=layers[i],rgb=hexRGB(L.color),rr=baseR*(1-i*0.14)*breath;const a=0.34;const g=c.createRadialGradient(cx,cy,rr*0.42,cx,cy,rr);g.addColorStop(0,rgbaArr(rgb,a*0.22));g.addColorStop(0.72,rgbaArr(rgb,a));g.addColorStop(1,rgbaArr(rgb,0));c.fillStyle=g;c.beginPath();c.arc(cx,cy,rr,0,TWO);c.fill();}
+  for(let k=0;k<22;k++){const ang=pa2T*0.3+k*0.8,radm=baseR*(0.2+0.75*((k*0.15)%1)),mx=cx+Math.cos(ang)*radm*0.8,my=cy+Math.sin(ang)*radm*0.8,tw=0.5+0.5*Math.sin(pa2T*1.3+k);c.beginPath();c.arc(mx,my,0.8+tw*1.1,0,TWO);c.fillStyle='rgba(255,251,255,'+(0.10+0.16*tw).toFixed(3)+')';c.fill();}
+  const c0=c.createRadialGradient(cx,cy,0,cx,cy,baseR*0.36);c0.addColorStop(0,'rgba(245,242,255,0.45)');c0.addColorStop(1,'rgba(220,210,255,0)');c.fillStyle=c0;c.beginPath();c.arc(cx,cy,baseR*0.36,0,TWO);c.fill();
+  c.globalAlpha=1;pa2Raf=requestAnimationFrame(pa2Draw);
+}
+function openPlaceAura(lat,lng,addr){
+  const page=document.getElementById('placeaura-page');if(!page)return;
+  if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}
+  pa2Point={lat,lng};
+  let here=auraPoints.filter(p=>haversine(p.lat,p.lng,lat,lng)<30);
+  if(!here.length)here=auraPoints.filter(p=>haversine(p.lat,p.lng,lat,lng)<150);
+  const counts={},order=[];
+  here.forEach(p=>{if(counts[p.sense]==null){counts[p.sense]=0;order.push(p.sense);}counts[p.sense]++;});
+  const ranked=order.sort((a,b)=>counts[b]-counts[a]);
+  pa2Layers=ranked.map(sid=>{const s=SENSES.find(x=>x.id===sid);return {color:s?s.color:'#a78bfa',label:s?s.label:sid,count:counts[sid]};});
+  const shortAddr=addr?addr.split(',')[0]:'this place';
+  const title=document.getElementById('pa2-title');if(title)title.innerHTML='The Aura of <b>'+(addr||'this place')+'</b>';
+  const add=document.getElementById('pa2-add');if(add)add.textContent='✦ Can you add to the aura of '+shortAddr+'?';
+  const sd=document.getElementById('pa2-senses');
+  if(sd)sd.innerHTML=pa2Layers.length?pa2Layers.map(L=>'<span class="pa2-chip" style="--c:'+L.color+'">'+L.label+' · '+L.count+'</span>').join(''):'<span class="pa2-chip" style="--c:#a78bfa">No auras here yet — be the first</span>';
+  const cd=document.getElementById('pa2-comments');
+  if(cd){
+    const wt=here.filter(p=>p.text&&p.text.trim());
+    cd.innerHTML=wt.length?wt.slice(0,8).map(p=>{const s=SENSES.find(x=>x.id===p.sense),col=s?s.color:'#a78bfa';return '<div class="pa2-comment" style="--c:'+col+'">"'+p.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'"<div class="who">'+(s?(SENSE_SYMBOLS[s.id]+' '+s.label):'')+'</div></div>';}).join(''):'<div class="pa2-comment" style="--c:#a78bfa">No words yet — the first aura here is waiting to be offered.</div>';
+  }
+  page.classList.add('show');
+  pa2OpenAt=performance.now();
+  pa2Size();
+  if(!pa2Raf)pa2Raf=requestAnimationFrame(pa2Draw);
+}
+function closePlaceAura(){const p=document.getElementById('placeaura-page');if(p)p.classList.remove('show');if(pa2Raf){cancelAnimationFrame(pa2Raf);pa2Raf=null;}}
+(function(){
+  const pg=document.getElementById('placeaura-page');
+  if(pg)pg.addEventListener('click',e=>{if(e.target===pg)closePlaceAura();});
+  const x=document.getElementById('pa2-close');if(x)x.addEventListener('click',closePlaceAura);
+  const add=document.getElementById('pa2-add');
+  if(add)add.addEventListener('click',()=>{closePlaceAura();if(pa2Point){lastClickPoint=[pa2Point.lng,pa2Point.lat];anchorPoint={lat:pa2Point.lat,lng:pa2Point.lng,zoom:16};}const inp=document.getElementById('inp'),mob=window.innerWidth<=600;if(mob){const panel=document.getElementById('panel');if(panel)panel.classList.add('show-mobile');const mo=document.getElementById('mobile-offer');if(mo)mo.textContent='✕ Close';}if(inp){inp.focus();inp.classList.add('inp-glow');}showMsg('Offer your sense to this place — choose a symbol and type');});
+  window.addEventListener('resize',()=>{const p=document.getElementById('placeaura-page');if(p&&p.classList.contains('show'))pa2Size();});
 })();
 });
 </script>
