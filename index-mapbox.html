@@ -482,6 +482,13 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   #tj-title,#ls-title{font-size:22px}
   #ls-question{font-size:16px}
 }
+/* Let map clicks pass through the empty areas of the top bars */
+#hdr1,#hdr2{pointer-events:none}
+#hdr1>*,#hdr2>*{pointer-events:auto}
+/* Lift full-screen pages above everything, incl. popups and the materialisation bloom backdrop */
+#trajectory-page,#lifestory-page{z-index:1860}
+/* Materialisation bloom must sit above any locating popup */
+#materialize{z-index:1880!important}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -572,8 +579,8 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     </div>
   </div>
   <div id="pmsg"></div>
-  <div id="materialize"><div id="mat-backdrop"></div><div id="mat-name"></div><div id="mat-symbol"></div></div>
 </div>
+<div id="materialize"><div id="mat-backdrop"></div><div id="mat-name"></div><div id="mat-symbol"></div></div>
 <!--
   MY AURA — identity & support model (recorded here; some parts arrive after launch):
   • An offered aura is visible to all, but never tied to who placed it unless that person allows it.
@@ -1409,7 +1416,7 @@ let currentPopup=null;
 function openPopup(lng,lat,html){
   if(currentPopup){currentPopup.remove();currentPopup=null;}
   const opts={className:'aura-popup',closeButton:true,maxWidth:'250px'};
-  try{const pt=map.project([lng,lat]),W=map.getContainer().clientWidth;if(pt.x<250)opts.anchor='left';else if(pt.x>W-250)opts.anchor='right';}catch(e){}
+  try{const pt=map.project([lng,lat]),W=map.getContainer().clientWidth,top=pt.y<170;let h='';if(pt.x<250)h='left';else if(pt.x>W-250)h='right';opts.anchor=top?(h?'top-'+h:'top'):(h||'bottom');}catch(e){}
   currentPopup=new mapboxgl.Popup(opts).setLngLat([lng,lat]).setHTML(html).addTo(map);
   return currentPopup;
 }
@@ -1575,6 +1582,7 @@ function materializeAndSubmit(lat,lng,text){
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);
   if(!s){submit(lat,lng,text);return;}
+  if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}
   const overlay=document.getElementById('materialize');
   const backdrop=document.getElementById('mat-backdrop');
   const nameEl=document.getElementById('mat-name');
@@ -1769,7 +1777,7 @@ function openMyAuraPage(){
       const sym=SENSE_SYMBOLS[o.sense]||'',place=o.place?'<div class="m">📍 '+esc(o.place)+'</div>':'';
       return '<div class="ma-offering" style="border-left-color:'+o.color+'"><div class="s" style="color:'+o.color+'">'+sym+' '+o.label+'</div><div class="t">"'+esc(o.text)+'"</div>'+place+'<div class="ma-oact">'
         +'<button class="ma-act ma-ic" data-act="see" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" class="fill"/></svg><span class="ma-tip">See aura activity</span></button>'
-        +'<button class="ma-act ma-ic" data-act="ask" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><path d="M8.5 9.2a3.5 3.5 0 1 1 4.6 3.3V14"/><circle cx="13.1" cy="17.6" r="1" class="fill"/><path d="M15.6 8.4l3-2.1"/><circle cx="19.1" cy="5.9" r="1.1" class="fill"/></svg><span class="ma-tip">Ask a question</span></button>'
+        +'<button class="ma-act ma-ic" data-act="ask" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><path d="M6.2 11.4 a3.4 3.4 0 1 1 3.4 3.4"/><path d="M9.4 14.6 L16.4 7.6"/><circle cx="17.5" cy="6.6" r="1.7" class="fill"/></svg><span class="ma-tip">Ask a question</span></button>'
         +'<button class="ma-act ma-ic ma-bond" data-act="bond" data-i="'+idx+'"><svg viewBox="0 0 40 24" class="mai mai-bond"><circle class="ab-l" cx="11" cy="12" r="7"/><circle class="ab-r" cx="29" cy="12" r="7"/></svg><span class="ma-tip">Aurabond</span></button>'
         +'</div></div>';
     }).join('');
@@ -2159,8 +2167,8 @@ function tjRender(){
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   list.innerHTML=tjReports.map(r=>'<div class="tj-card"><div class="tjp">\ud83d\udccd '+esc(r.place)+'</div><div class="tjc">'+esc(r.choice)+'</div>'+(r.unfolded?'<div class="tju">'+esc(r.unfolded)+'</div>':'')+(r.reflection?'<div class="tjr">"'+esc(r.reflection)+'"</div>':'')+'</div>').join('');
 }
-function openTrajectory(){const p=document.getElementById('trajectory-page');if(!p)return;tjRender();p.classList.add('show');}
-function closeTrajectory(){const p=document.getElementById('trajectory-page');if(p)p.classList.remove('show');}
+function openTrajectory(){const p=document.getElementById('trajectory-page');if(!p)return;if(typeof closeMyAuraPage==='function')closeMyAuraPage();tjRender();p.classList.add('show');}
+function closeTrajectory(){const p=document.getElementById('trajectory-page');if(p)p.classList.remove('show');if(typeof openMyAuraPage==='function')openMyAuraPage();}
 (function(){
   const open=document.getElementById('ma-open-trajectory');if(open)open.addEventListener('click',openTrajectory);
   const back=document.getElementById('tj-back');if(back)back.addEventListener('click',closeTrajectory);
@@ -2215,8 +2223,8 @@ function lsWeave(){
   out+='\u2014\n\nThat is the shape of it, for now: '+(focus?focus.toLowerCase():'a life')+', held in your own words. The bones are here \u2014 the rest can be shaped by hand.';
   return out;
 }
-function openLifeStory(){const p=document.getElementById('lifestory-page');if(!p)return;p.classList.add('show');lsShowSetup();}
-function closeLifeStory(){const p=document.getElementById('lifestory-page');if(p)p.classList.remove('show');}
+function openLifeStory(){const p=document.getElementById('lifestory-page');if(!p)return;if(typeof closeMyAuraPage==='function')closeMyAuraPage();p.classList.add('show');lsShowSetup();}
+function closeLifeStory(){const p=document.getElementById('lifestory-page');if(p)p.classList.remove('show');if(typeof openMyAuraPage==='function')openMyAuraPage();}
 function lsShowSetup(){const s=document.getElementById('ls-setup');if(s)s.classList.remove('hide');const q=document.getElementById('ls-quiz');if(q)q.classList.remove('show');const st=document.getElementById('ls-story');if(st)st.classList.remove('show');}
 function lsRenderFocus(){const f=document.getElementById('ls-focus');if(!f)return;const opts=['Childhood','Love & relationships','Work & purpose','Adventure','Struggle & growth','Family','A turning point','The whole journey'];f.innerHTML=opts.map(o=>'<button class="ls-chip" data-f="'+o+'">'+o+'</button>').join('');f.querySelectorAll('.ls-chip').forEach(c=>c.addEventListener('click',()=>{f.querySelectorAll('.ls-chip').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');lsState.focus=c.getAttribute('data-f');}));}
 function lsSaveCurrent(){const ta=document.getElementById('ls-answer');if(ta)lsState.answers[lsState.idx]=ta.value;}
