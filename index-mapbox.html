@@ -432,6 +432,56 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #pm-go{background:rgba(167,139,250,.25);border:none;border-radius:14px;color:#fff;font-size:13px;padding:6px 10px;cursor:pointer}
 #pm-go:hover{background:rgba(167,139,250,.45)}
 @media (max-width:600px){#pm-input{width:120px}}
+/* Memory offering */
+#memory-label{margin-top:6px}
+#memory-row{margin:2px 0 4px}
+#memory-btn{display:inline-flex;align-items:center;gap:7px;background:rgba(232,183,107,.1);border:0.5px solid rgba(232,183,107,.4);color:#f0d3a0;font-size:12px;padding:8px 14px;border-radius:16px;cursor:pointer;transition:background .2s,box-shadow .25s}
+#memory-btn:hover,#memory-btn.sel-mem{background:rgba(232,183,107,.22);box-shadow:0 0 18px rgba(232,183,107,.4)}
+#memory-btn svg{width:18px;height:18px}
+/* Conscious Trajectory + Life Story pages */
+#trajectory-page,#lifestory-page{position:fixed;inset:0;z-index:1770;background:radial-gradient(circle at 50% 14%,#16122e 0%,#0b0a1c 55%,#070612 100%);opacity:0;pointer-events:none;transition:opacity .45s;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#trajectory-page.show,#lifestory-page.show{opacity:1;pointer-events:auto}
+#tj-inner,#ls-inner{max-width:620px;margin:0 auto;padding:70px 22px 70px}
+#tj-title,#ls-title{font-size:26px;font-weight:200;letter-spacing:.04em;color:#e8dfff;text-align:center;text-shadow:0 0 26px rgba(167,139,250,.5)}
+#tj-intro,#ls-intro{font-size:13.5px;color:#b8acdc;line-height:1.7;margin:16px auto 24px;max-width:520px;text-align:center}
+#tj-form,#ls-setup{background:rgba(255,255,255,.03);border:0.5px solid rgba(167,139,250,.2);border-radius:16px;padding:18px;margin-bottom:26px}
+.tj-fh,.ls-fh{font-size:12px;color:#9a8fc2;letter-spacing:.05em;text-transform:uppercase;margin-bottom:11px}
+#tj-form input,#tj-form textarea,#ls-setup input{width:100%;background:rgba(8,7,18,.7);border:0.5px solid rgba(167,139,250,.3);border-radius:11px;padding:11px 13px;color:#efe8ff;font-size:13px;outline:none;margin-bottom:10px;font-family:inherit}
+#tj-form textarea{min-height:74px;resize:vertical;line-height:1.55}
+#tj-form input:focus,#tj-form textarea:focus,#ls-setup input:focus{border-color:rgba(167,139,250,.65)}
+#tj-form input::placeholder,#tj-form textarea::placeholder,#ls-setup input::placeholder{color:#6b6390}
+#tj-offer,#ls-begin{width:100%;background:linear-gradient(135deg,#7c5cff,#a78bfa);border:none;color:#fff;font-size:13px;font-weight:500;padding:12px;border-radius:13px;cursor:pointer;box-shadow:0 0 24px rgba(124,92,255,.4);margin-top:4px}
+#tj-list-h,#ls-story-h{font-size:12px;color:#9a8fc2;letter-spacing:.05em;text-transform:uppercase;margin-bottom:12px}
+#tj-list{display:flex;flex-direction:column;gap:12px}
+.tj-card{background:rgba(255,255,255,.03);border-left:2px solid rgba(167,139,250,.5);border-radius:10px;padding:13px 15px}
+.tj-card .tjp{font-size:11px;color:#a99fd0;letter-spacing:.04em;margin-bottom:5px}
+.tj-card .tjc{font-size:13.5px;color:#e6dfff;font-weight:500;margin-bottom:6px}
+.tj-card .tju{font-size:12.5px;color:#c8c0e4;line-height:1.6;margin-bottom:7px}
+.tj-card .tjr{font-size:12.5px;color:#b0e0c8;line-height:1.6;font-style:italic;border-top:0.5px solid rgba(167,139,250,.15);padding-top:7px}
+/* Life Story quiz + story */
+#ls-focus{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.ls-chip{font-size:12px;padding:7px 13px;border-radius:15px;border:0.5px solid rgba(167,139,250,.35);background:rgba(255,255,255,.03);color:#cbbff0;cursor:pointer;transition:all .2s}
+.ls-chip:hover{background:rgba(167,139,250,.15)}
+.ls-chip.sel{background:rgba(167,139,250,.32);border-color:rgba(167,139,250,.7);color:#fff}
+#ls-quiz,#ls-story{display:none}
+#ls-quiz.show,#ls-story.show{display:block}
+#ls-setup.hide{display:none}
+#ls-progress{font-size:11px;color:#9a8fc2;letter-spacing:.05em;margin-bottom:12px;text-align:center}
+#ls-question{font-size:18px;color:#e8dfff;line-height:1.5;font-weight:300;text-align:center;margin-bottom:18px;min-height:54px;display:flex;align-items:center;justify-content:center}
+#ls-answer,#ls-story-text{width:100%;background:rgba(8,7,18,.7);border:0.5px solid rgba(167,139,250,.3);border-radius:13px;padding:14px;color:#efe8ff;font-size:14px;line-height:1.65;outline:none;font-family:inherit;resize:vertical}
+#ls-answer{min-height:160px}
+#ls-story-text{min-height:360px}
+#ls-answer:focus,#ls-story-text:focus{border-color:rgba(167,139,250,.6)}
+#ls-nav,#ls-story-actions{display:flex;gap:10px;justify-content:space-between;margin-top:16px}
+.ls-navbtn{flex:1;background:rgba(167,139,250,.14);border:0.5px solid rgba(167,139,250,.4);color:#e6dfff;font-size:13px;padding:12px;border-radius:13px;cursor:pointer}
+.ls-navbtn:hover{background:rgba(167,139,250,.26)}
+.ls-primary{background:linear-gradient(135deg,#7c5cff,#a78bfa);border:none;color:#fff;font-weight:500;box-shadow:0 0 22px rgba(124,92,255,.4)}
+#ls-story-note{font-size:11.5px;color:#9a8fc2;line-height:1.6;margin-top:14px;background:rgba(167,139,250,.06);border:0.5px solid rgba(167,139,250,.18);border-radius:11px;padding:12px 14px}
+@media (max-width:600px){
+  #tj-inner,#ls-inner{padding:62px 14px 70px}
+  #tj-title,#ls-title{font-size:22px}
+  #ls-question{font-size:16px}
+}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -513,6 +563,8 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div class="scats" id="scats-ext"></div>
       <div class="srealm-label">How it makes you feel</div>
       <div class="scats" id="scats-int"></div>
+      <div class="srealm-label" id="memory-label">A memory you hold here</div>
+      <div id="memory-row"><button id="memory-btn">❖ Offer a memory to this place</button></div>
       <div id="srow">
         <input id="inp" placeholder="What does this place feel like right now?"/>
         <button id="sbtn">Offer your sense to the aura</button>
@@ -571,6 +623,16 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
         <div class="pk">Your aura is listening ✦</div>
         <div class="sub">A questionnaire has shaped your aura's colours and depth. Take another to reveal even more — each one grows your aura.</div>
         <button id="ma-more-quest" class="ma-btn-soft">Add / take more questionnaires</button>
+      </div>
+      <div id="ma-trajectory">
+        <div class="pk">Conscious Trajectory<span class="opt">new</span></div>
+        <div class="sub">Reflections on the ordinary choices we face — and how past decisions rippled outward through a life and a place. Read them to navigate your own crossroads, and offer your own to shape the aura of where you are.</div>
+        <button id="ma-open-trajectory" class="ma-btn-soft">Open Conscious Trajectory</button>
+      </div>
+      <div id="ma-lifestory">
+        <div class="pk">Your life story<span class="opt">a deep offering</span></div>
+        <div class="sub">Answer as much or as little as you like. Each question grows from your last, and your words are woven into a readable story. Offering it to your aura is a powerful gift of energy — and one day, if you wish, it may be offered to others.</div>
+        <button id="ma-open-lifestory" class="ma-btn-soft">Begin your life story</button>
       </div>
       <button id="ma-edit-profile" class="ma-btn-soft">✦ Set up your Aurasenser profile</button>
       <div class="ma-soon">Coming as Aurasense grows: speak through alphasense symbols, offer an aura of good intention to request a name, and — only by mutual choice — open a private channel.</div>
@@ -692,6 +754,49 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <button id="pa2-add">✦ Can you add to the aura of this place?</button>
   </div>
 </div>
+<div id="trajectory-page">
+  <button class="qz-back" id="tj-back">← Back to My Aura</button>
+  <div id="tj-inner">
+    <div id="tj-title">Conscious Trajectory</div>
+    <div id="tj-intro">Every place holds the choices people made there — to stay or to go, to forgive or to hold firm, to begin again. These are honest reflections on ordinary decisions and the trajectories they set in motion, offered so that someone standing at the same crossroads might feel less alone. They become part of how a place's aura is felt.</div>
+    <div id="tj-form">
+      <div class="tj-fh">Offer a trajectory</div>
+      <input id="tj-place" placeholder="The place (a street, a town, a home...)"/>
+      <input id="tj-choice" placeholder="The choice you faced"/>
+      <textarea id="tj-unfolded" placeholder="What unfolded — the decision, and where it led..."></textarea>
+      <textarea id="tj-reflection" placeholder="What you'd tell someone standing at the same crossroads..."></textarea>
+      <button id="tj-offer">✦ Offer this trajectory</button>
+    </div>
+    <div id="tj-list-h">Trajectories offered</div>
+    <div id="tj-list"></div>
+  </div>
+</div>
+<div id="lifestory-page">
+  <button class="qz-back" id="ls-back">← Back to My Aura</button>
+  <div id="ls-inner">
+    <div id="ls-title">Your life story</div>
+    <div id="ls-setup">
+      <div id="ls-intro">A life story, drawn out gently — one question at a time, each shaped by your last answer. Write as much or as little as you like. At the end, your words are woven into a readable story you can keep, edit, and one day offer to your aura.</div>
+      <input id="ls-name" placeholder="Your name or a pseudonym (optional)"/>
+      <input id="ls-age" type="number" placeholder="Your age (helps shape the questions)"/>
+      <div class="ls-fh">What would you like your story to hold most?</div>
+      <div id="ls-focus"></div>
+      <button id="ls-begin">Begin →</button>
+    </div>
+    <div id="ls-quiz">
+      <div id="ls-progress"></div>
+      <div id="ls-question"></div>
+      <textarea id="ls-answer" placeholder="Take your time. There are no wrong answers."></textarea>
+      <div id="ls-nav"><button id="ls-prev" class="ls-navbtn">← Back</button><button id="ls-next" class="ls-navbtn ls-primary">Next →</button></div>
+    </div>
+    <div id="ls-story">
+      <div id="ls-story-h">Your story, woven</div>
+      <textarea id="ls-story-text"></textarea>
+      <div id="ls-story-note">Offering your story to your aura is a powerful gift of energy. One day you may also offer it to other Sensers — anonymously, under a pseudonym, or (by arrangement) in your own name. Where a story is taken, it is $2 — half of which is always yours.</div>
+      <div id="ls-story-actions"><button id="ls-reweave" class="ls-navbtn">↻ Re-weave</button><button id="ls-offer" class="ls-navbtn ls-primary">✦ Offer this to my aura</button></div>
+    </div>
+  </div>
+</div>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
 const SENSES=[
@@ -714,8 +819,10 @@ const SENSES=[
   {id:"internal_temp",realm:"internal",label:"Internal Temp",icon:"❂",color:"#e08a5a",freqs:[[330,.0,.16,.1,2.4]],examples:["A deep inner warmth settles in here","This place warms me from within","A cosy, glowing heat held close"]},
   {id:"pain",realm:"internal",label:"Pain",icon:"✸",color:"#d44a4a",freqs:[[220,.0,.2,.02,1.2],[440,.1,.1,.02,1.0]],examples:["A sharp, aching quality to this place","Something here registers as hurt","A raw, tender feeling I can't shake"]},
   {id:"proprioception",realm:"internal",label:"Proprioception",icon:"⟀",color:"#7fb3a0",freqs:[[450,.0,.15,.08,2.2]],examples:["I feel grounded and balanced here","An easy sense of where my body sits","This space holds me steady and centred"]},
+  {id:"memory",realm:"memory",label:"Memory",icon:"\u2756",color:"#e8b76b",hidden:true,freqs:[[432,.0,.16,.08,2.6],[540,.3,.08,.08,1.4]],examples:["The summer we spent here as kids","Where we said goodbye, and meant it","The night everything changed for us"]},
 ];
 const SENSE_SYMBOLS={
+memory:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,183,107,0.55))"><defs><radialGradient id="as-memHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe6b0" stop-opacity="0.34"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient><radialGradient id="as-memCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fffaf0" stop-opacity="1"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-memHalo)"/><path d="M48 54 a6 6 0 1 1 6 -6 a12 12 0 1 0 -12 12 a18 18 0 1 1 18 -18 a24 24 0 1 0 -24 24" fill="none" stroke="#f0cd8a" stroke-width="2.4" stroke-linecap="round" opacity="0.9" class="as-slowShimmer"/><circle cx="48" cy="48" r="7" fill="url(#as-memCore)" class="as-breathe"/></svg>',
 sound:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(180,200,255,0.5))"><defs><radialGradient id="as-sndCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient><radialGradient id="as-sndHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8c8ff" stop-opacity="0.35"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-sndHalo)"/><g class="as-wave"><path d="M6 48 Q 20 28, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="3" stroke-linecap="round" opacity="1" class="as-shimmer"/><path d="M6 48 Q 20 36, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.6"/><path d="M24 64 Q 32 56, 40 64 T 56 64 T 72 64" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/></g><circle cx="48" cy="48" r="14" fill="url(#as-sndCore)" class="as-breathe"/></svg>',
 smell:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(190,235,170,0.5))"><defs><radialGradient id="as-smlCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient><radialGradient id="as-smlHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#beeba9" stop-opacity="0.32"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-smlHalo)"/><g class="as-drift"><path d="M40 78 C 36 60, 50 52, 42 36 C 36 24, 48 18, 44 8" fill="none" stroke="#beeba9" stroke-width="3" stroke-linecap="round" opacity="0.95" class="as-shimmer"/><path d="M55 78 C 59 58, 47 50, 57 34 C 63 22, 51 16, 57 6" fill="none" stroke="#beeba9" stroke-width="2.4" stroke-linecap="round" opacity="0.7"/><g class="as-wiggle"><path d="M47 74 C 52 60, 43 52, 50 38 C 54 30, 45 26, 49 20" fill="none" stroke="#beeba9" stroke-width="2" stroke-linecap="round" opacity="0.6"/></g></g><ellipse cx="48" cy="80" rx="16" ry="7" fill="url(#as-smlCore)" class="as-breathe"/></svg>',
 light:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(220,200,255,0.55))"><defs><linearGradient id="as-ligFlame" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#e6d8ff" stop-opacity="0.95"/><stop offset="100%" stop-color="#b39ddb" stop-opacity="0.7"/></linearGradient><radialGradient id="as-ligHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#dcc8ff" stop-opacity="0.32"/><stop offset="100%" stop-color="#b39ddb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-ligHalo)"/><ellipse cx="48" cy="49" rx="24" ry="35" fill="none" stroke="#dcc8ff" stroke-width="1.5" opacity="0.6"/><path d="M48 18 C 40 30, 32 42, 34 56 C 36 68, 44 74, 48 74 C 52 74, 60 68, 62 56 C 64 42, 56 30, 48 18" fill="url(#as-ligFlame)" class="as-slowShimmer"/></svg>',
@@ -1101,11 +1208,12 @@ function triggerWave(color){
 const stip=document.getElementById('stip');
 const extEl=document.getElementById('scats-ext'),intEl=document.getElementById('scats-int');
 SENSES.forEach(s=>{
+  if(s.hidden)return;
   const b=document.createElement('button');
   b.className='sc'+(s.id===selSense?' sel':'');
   b.style.setProperty('--c',s.color);
   b.innerHTML=`<span>${SENSE_SYMBOLS[s.id]}</span>${s.label}`;
-  b.onclick=()=>{selSense=s.id;document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const inp=document.getElementById('inp');if(inp){inp.focus();inp.classList.add('inp-glow');}};
+  b.onclick=()=>{selSense=s.id;document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const inp=document.getElementById('inp');if(inp){inp.placeholder='What does this place feel like right now?';inp.focus();inp.classList.add('inp-glow');}};
   b.onmouseenter=e=>{
     const ex=s.examples[Math.floor(Math.random()*s.examples.length)];
     stip.innerHTML=`<span style="color:${s.color}">${s.icon} ${s.label}</span><br><br>"${ex}"`;
@@ -1712,7 +1820,7 @@ if(maCanvas){
     for(let i=0;i<layers.length;i++){const rr=maLayerRadius(i,baseR,1)*0.78;const d=Math.abs(dist-rr);if(d<bestD){bestD=d;best=i;}}
     maHoverLayer=(dist<baseR*1.05&&best>=0)?best:-1;
     const tip=document.getElementById('ma-branch-tip');
-    if(maHoverLayer>=0&&tip){const L=layers[maHoverLayer];tip.innerHTML='<b style="color:'+L.color+'">'+L.label+'</b> — '+L.count+' offering'+(L.count>1?'s':'')+(L.realm?' · '+(L.realm==='internal'?'how the world makes you feel':'the world around you'):'');tip.style.left=Math.min(mx+16,maCanvas.width-220)+'px';tip.style.top=Math.max(8,my-10)+'px';tip.style.opacity='1';}
+    if(maHoverLayer>=0&&tip){const L=layers[maHoverLayer];tip.innerHTML='<b style="color:'+L.color+'">'+L.label+'</b> — '+L.count+' offering'+(L.count>1?'s':'')+(L.realm?' · '+(L.realm==='memory'?'a memory held here':(L.realm==='internal'?'how the world makes you feel':'the world around you')):'');tip.style.left=Math.min(mx+16,maCanvas.width-220)+'px';tip.style.top=Math.max(8,my-10)+'px';tip.style.opacity='1';}
     else if(tip)tip.style.opacity='0';
   });
   maCanvas.addEventListener('mouseleave',()=>{maHoverLayer=-1;const t=document.getElementById('ma-branch-tip');if(t)t.style.opacity='0';});
@@ -2023,6 +2131,133 @@ function closePlaceAura(){const p=document.getElementById('placeaura-page');if(p
   const add=document.getElementById('pa2-add');
   if(add)add.addEventListener('click',()=>{closePlaceAura();if(pa2Point){lastClickPoint=[pa2Point.lng,pa2Point.lat];anchorPoint={lat:pa2Point.lat,lng:pa2Point.lng,zoom:16};}const inp=document.getElementById('inp'),mob=window.innerWidth<=600;if(mob){const panel=document.getElementById('panel');if(panel)panel.classList.add('show-mobile');const mo=document.getElementById('mobile-offer');if(mo)mo.textContent='✕ Close';}if(inp){inp.focus();inp.classList.add('inp-glow');}showMsg('Offer your sense to this place — choose a symbol and type');});
   window.addEventListener('resize',()=>{const p=document.getElementById('placeaura-page');if(p&&p.classList.contains('show'))pa2Size();});
+})();
+// ---- Memory offering button ----
+(function(){
+  const memBtn=document.getElementById('memory-btn');
+  if(memBtn){
+    memBtn.innerHTML=SENSE_SYMBOLS.memory+' <span>Offer a memory to this place</span>';
+    memBtn.addEventListener('click',()=>{
+      selSense='memory';
+      document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));
+      memBtn.classList.add('sel-mem');
+      const inp=document.getElementById('inp');
+      if(inp){inp.placeholder='Share a memory of this place\u2026';inp.focus();inp.classList.add('inp-glow');}
+      showMsg('Offer a memory \u2014 it becomes a golden layer in this place\u2019s aura');
+    });
+  }
+})();
+// ---- Conscious Trajectory ----
+const TJ_SEED=[
+  {place:'A terraced house, Cardiff',choice:'Whether to stay after the floods, or leave for good',unfolded:'We stayed. Rebuilt the kitchen twice. The street pulled together \u2014 we knew every neighbour by name after that.',reflection:'Staying cost us money and nerves, but it gave us a place that finally felt like ours. If the people are right, the ground beneath the trouble is worth holding.'},
+  {place:'Omotesando, Tokyo',choice:'Taking the safe job, or the one that frightened me',unfolded:'I took the frightening one. Two hard years, then it became the work I was made for.',reflection:'Fear and excitement feel almost the same in the body. When a choice scares you because it matters, that is usually the way through.'},
+  {place:'A farmhouse, County Clare',choice:'Caring for my father here, or moving him to a home',unfolded:'I brought him home. The last spring was gentle. Hard, but gentle.',reflection:'There is no clean answer. I chose the one I could live beside afterward \u2014 that was my only real compass.'}
+];
+let tjReports=TJ_SEED.slice();
+function tjRender(){
+  const list=document.getElementById('tj-list');if(!list)return;
+  const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  list.innerHTML=tjReports.map(r=>'<div class="tj-card"><div class="tjp">\ud83d\udccd '+esc(r.place)+'</div><div class="tjc">'+esc(r.choice)+'</div>'+(r.unfolded?'<div class="tju">'+esc(r.unfolded)+'</div>':'')+(r.reflection?'<div class="tjr">"'+esc(r.reflection)+'"</div>':'')+'</div>').join('');
+}
+function openTrajectory(){const p=document.getElementById('trajectory-page');if(!p)return;tjRender();p.classList.add('show');}
+function closeTrajectory(){const p=document.getElementById('trajectory-page');if(p)p.classList.remove('show');}
+(function(){
+  const open=document.getElementById('ma-open-trajectory');if(open)open.addEventListener('click',openTrajectory);
+  const back=document.getElementById('tj-back');if(back)back.addEventListener('click',closeTrajectory);
+  const offer=document.getElementById('tj-offer');
+  if(offer)offer.addEventListener('click',()=>{
+    const g=id=>document.getElementById(id),val=id=>(g(id)&&g(id).value.trim())||'';
+    const place=val('tj-place'),choice=val('tj-choice'),unfolded=val('tj-unfolded'),reflection=val('tj-reflection');
+    if(!choice&&!unfolded){showMsg('Add at least the choice and what unfolded');return;}
+    tjReports.unshift({place:place||'A place held in confidence',choice:choice||'A quiet, personal choice',unfolded:unfolded,reflection:reflection});
+    if(myProfile)myProfile.auraBoost=(myProfile.auraBoost||0)+2;
+    ['tj-place','tj-choice','tj-unfolded','tj-reflection'].forEach(id=>{if(g(id))g(id).value='';});
+    tjRender();showMsg('Your trajectory joins this place \u2014 and your aura deepens');
+  });
+})();
+// ---- Life Story ----
+let lsState={name:'',age:'',focus:'',qs:[],idx:0,answers:[]};
+function lsSnippet(t){t=(t||'').trim();if(!t)return 'that';const w=t.split(/\s+/);return w.slice(0,7).join(' ')+(w.length>7?'\u2026':'');}
+function lsAgeBracket(a){a=parseInt(a,10);if(!a||a<0)return 'unknown';if(a<20)return 'young';if(a<35)return 'early';if(a<55)return 'mid';if(a<70)return 'later';return 'elder';}
+function lsBuildQuestions(name,age,focus){
+  const N=name||'you',br=lsAgeBracket(age),Q=[];
+  Q.push({t:'Where does your story begin, '+N+'? Take me to the place and time you first remember \u2014 what did it look, sound and feel like?'});
+  Q.push({t:'Who shaped you most in those early years \u2014 and what did they give you, for better or worse?'});
+  const F={
+    'Childhood':[{t:'What did you love most as a child \u2014 the thing you could lose hours to?'},{t:'Was there a moment childhood ended for you? What happened?',prev:true},{t:'What do you wish the adults around you had understood?'}],
+    'Love & relationships':[{t:'Tell me about the first time you truly loved someone.'},{t:'What has love taught you that nothing else could?',prev:true},{t:'Who do you carry with you now, near or far?'}],
+    'Work & purpose':[{t:'When did you first feel useful \u2014 that what you did mattered?'},{t:'What work has felt most like yours, and why?',prev:true},{t:'What are you still trying to build or become?'}],
+    'Adventure':[{t:'Tell me about a journey that changed you \u2014 where did it take you, inside and out?'},{t:'What did you find out there that you could not have found at home?',prev:true},{t:'Where does the restlessness still point you?'}],
+    'Struggle & growth':[{t:'Tell me about the hardest season you have come through.'},{t:'What did surviving it teach you about yourself?',prev:true},{t:'What would you say now to the person you were in the thick of it?'}],
+    'Family':[{t:'Who is your family \u2014 by blood or by choice \u2014 and what holds you together?'},{t:'What was passed down to you, and what did you choose to pass on or to break?',prev:true},{t:'When did you feel most held by them, or most apart?'}],
+    'A turning point':[{t:'Tell me about the day everything changed.'},{t:'What did that day ask of you \u2014 and what did you become because of it?',prev:true},{t:'Looking back, would you walk that road again?'}],
+    'The whole journey':[{t:'Tell me about a turning point: a day after which things were never quite the same.'},{t:'What have you loved most across the whole of it?',prev:true},{t:'What surprised you about how your life has gone?'}]
+  };
+  (F[focus]||F['The whole journey']).forEach(q=>Q.push(q));
+  if(br==='young'||br==='early')Q.push({t:'Who do you hope to become, '+N+'? What life are you reaching for?'});
+  else if(br==='mid')Q.push({t:'You are somewhere in the middle of the story. What matters now that did not used to?'});
+  else if(br==='later'||br==='elder')Q.push({t:'With the long view you have now, what do you most want remembered?'});
+  else Q.push({t:'What matters to you now, more than it once did?'});
+  Q.push({t:'What are you quietly proud of?'});
+  Q.push({t:'And finally \u2014 what would you tell your younger self, if they could hear you?'});
+  return Q;
+}
+function lsWeave(){
+  const name=lsState.name||'',focus=lsState.focus||'';
+  const ans=lsState.answers.map(a=>(a||'').trim()).filter(Boolean);
+  if(!ans.length)return 'Your story is waiting \u2014 answer a question or two, then weave it again.';
+  const title=(name?name+' \u2014 ':'')+(focus||'A Life');
+  const openers=['It begins, as these things do, in a particular place.','Some stories start quietly. This one does too.','Before everything else, there was a place and a time.'];
+  const links=['','In time, ','What came next stays close. ','Looking back, ','Then there was this. ','Somewhere along the way, ','And so, ','What followed shaped the rest. ','Still, ','Through it all, '];
+  let out='# '+title+'\n\n';
+  out+=openers[Math.floor(Math.random()*openers.length)]+' '+ans[0]+'\n\n';
+  for(let i=1;i<ans.length;i++){out+=links[i%links.length]+ans[i]+'\n\n';}
+  out+='\u2014\n\nThat is the shape of it, for now: '+(focus?focus.toLowerCase():'a life')+', held in your own words. The bones are here \u2014 the rest can be shaped by hand.';
+  return out;
+}
+function openLifeStory(){const p=document.getElementById('lifestory-page');if(!p)return;p.classList.add('show');lsShowSetup();}
+function closeLifeStory(){const p=document.getElementById('lifestory-page');if(p)p.classList.remove('show');}
+function lsShowSetup(){const s=document.getElementById('ls-setup');if(s)s.classList.remove('hide');const q=document.getElementById('ls-quiz');if(q)q.classList.remove('show');const st=document.getElementById('ls-story');if(st)st.classList.remove('show');}
+function lsRenderFocus(){const f=document.getElementById('ls-focus');if(!f)return;const opts=['Childhood','Love & relationships','Work & purpose','Adventure','Struggle & growth','Family','A turning point','The whole journey'];f.innerHTML=opts.map(o=>'<button class="ls-chip" data-f="'+o+'">'+o+'</button>').join('');f.querySelectorAll('.ls-chip').forEach(c=>c.addEventListener('click',()=>{f.querySelectorAll('.ls-chip').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');lsState.focus=c.getAttribute('data-f');}));}
+function lsSaveCurrent(){const ta=document.getElementById('ls-answer');if(ta)lsState.answers[lsState.idx]=ta.value;}
+function lsShowQuestion(){
+  const q=lsState.qs[lsState.idx];if(!q)return;
+  let text=q.t;
+  if(q.prev){text='You wrote about \u201c'+lsSnippet(lsState.answers[lsState.idx-1])+'\u201d. '+text;}
+  const qe=document.getElementById('ls-question');if(qe)qe.textContent=text;
+  const pe=document.getElementById('ls-progress');if(pe)pe.textContent='Question '+(lsState.idx+1)+' of '+lsState.qs.length;
+  const ta=document.getElementById('ls-answer');if(ta){ta.value=lsState.answers[lsState.idx]||'';ta.focus();}
+  const pv=document.getElementById('ls-prev');if(pv)pv.style.visibility=lsState.idx===0?'hidden':'visible';
+  const nx=document.getElementById('ls-next');if(nx)nx.textContent=(lsState.idx===lsState.qs.length-1)?'Weave my story \u2726':'Next \u2192';
+}
+function lsBegin(){
+  lsState.name=(document.getElementById('ls-name')||{}).value?document.getElementById('ls-name').value.trim():'';
+  lsState.age=(document.getElementById('ls-age')||{}).value?document.getElementById('ls-age').value.trim():'';
+  if(!lsState.focus)lsState.focus='The whole journey';
+  lsState.qs=lsBuildQuestions(lsState.name,lsState.age,lsState.focus);
+  lsState.idx=0;lsState.answers=new Array(lsState.qs.length).fill('');
+  const s=document.getElementById('ls-setup');if(s)s.classList.add('hide');
+  const q=document.getElementById('ls-quiz');if(q)q.classList.add('show');
+  const st=document.getElementById('ls-story');if(st)st.classList.remove('show');
+  lsShowQuestion();
+}
+function lsShowStory(){const q=document.getElementById('ls-quiz');if(q)q.classList.remove('show');const st=document.getElementById('ls-story');if(st)st.classList.add('show');const t=document.getElementById('ls-story-text');if(t)t.value=lsWeave();}
+function lsNext(){lsSaveCurrent();if(lsState.idx<lsState.qs.length-1){lsState.idx++;lsShowQuestion();}else{lsShowStory();}}
+function lsPrev(){lsSaveCurrent();if(lsState.idx>0){lsState.idx--;lsShowQuestion();}}
+(function(){
+  lsRenderFocus();
+  const open=document.getElementById('ma-open-lifestory');if(open)open.addEventListener('click',openLifeStory);
+  const back=document.getElementById('ls-back');if(back)back.addEventListener('click',closeLifeStory);
+  const begin=document.getElementById('ls-begin');if(begin)begin.addEventListener('click',lsBegin);
+  const next=document.getElementById('ls-next');if(next)next.addEventListener('click',lsNext);
+  const prev=document.getElementById('ls-prev');if(prev)prev.addEventListener('click',lsPrev);
+  const rw=document.getElementById('ls-reweave');if(rw)rw.addEventListener('click',()=>{const t=document.getElementById('ls-story-text');if(t)t.value=lsWeave();});
+  const offer=document.getElementById('ls-offer');
+  if(offer)offer.addEventListener('click',()=>{
+    if(myProfile){myProfile.auraBoost=(myProfile.auraBoost||0)+5;myProfile.lifeStory=(document.getElementById('ls-story-text')||{}).value||'';}
+    showMsg('Your life story joins your aura \u2014 a deep and lasting gift of energy \u2726');
+    setTimeout(()=>{closeLifeStory();if(typeof openMyAuraPage==='function')openMyAuraPage();},1500);
+  });
 })();
 });
 </script>
