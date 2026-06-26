@@ -489,6 +489,29 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #trajectory-page,#lifestory-page{z-index:1860}
 /* Materialisation bloom must sit above any locating popup */
 #materialize{z-index:1880!important}
+/* BULLETPROOF show/hide for these pages: hidden = display:none (cannot trap clicks) */
+#trajectory-page,#lifestory-page{display:none}
+#trajectory-page.show,#lifestory-page.show{display:block;opacity:1;pointer-events:auto}
+/* Memory button: quieter by default (no longer looks pre-selected) */
+#memory-btn{background:rgba(232,183,107,.06);box-shadow:none}
+#memory-btn:hover{background:rgba(232,183,107,.13);box-shadow:none}
+#memory-btn.sel-mem{background:rgba(232,183,107,.2);box-shadow:0 0 15px rgba(232,183,107,.4)}
+#mem-priv-wrap{display:none;margin-top:7px}
+#mem-priv-wrap.show{display:block}
+.mem-priv{background:rgba(232,183,107,.08);border:0.5px solid rgba(232,183,107,.35);color:#e8c794;font-size:11px;padding:6px 12px;border-radius:14px;cursor:pointer}
+.mem-priv.priv{background:rgba(120,110,150,.18);border-color:rgba(167,139,250,.4);color:#cbbff0}
+/* World auras (events from around the world) */
+#world-btn{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:40;pointer-events:auto;background:rgba(20,16,40,.72);border:0.5px solid rgba(255,200,140,.4);color:#ffd9a8;font-size:12px;padding:8px 15px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);white-space:nowrap}
+#world-btn.on{background:rgba(60,40,30,.85);box-shadow:0 0 18px rgba(255,170,90,.45)}
+.world-aura{width:34px;height:34px;border-radius:50%;cursor:pointer;will-change:transform;animation:worldPulse 3.4s ease-in-out infinite}
+.world-aura .wa-core{position:absolute;inset:0;border-radius:50%}
+@keyframes worldPulse{0%,100%{transform:scale(1);opacity:.92}50%{transform:scale(1.18);opacity:1}}
+.wa-suffering{box-shadow:0 0 22px 6px rgba(229,90,90,.6)}
+.wa-need{box-shadow:0 0 22px 6px rgba(108,158,235,.6)}
+.wa-disaster{box-shadow:0 0 24px 7px rgba(240,150,70,.62)}
+.wa-joy{box-shadow:0 0 22px 6px rgba(247,206,107,.62)}
+.wa-sport{box-shadow:0 0 22px 6px rgba(134,224,192,.6)}
+@media (max-width:600px){#world-btn{top:48px;font-size:11px;padding:7px 11px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -533,6 +556,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <button id="register-btn">✦ Become an Aurasenser</button>
   <button id="livefeed-btn">◉ Live aura feed</button>
   <button id="locality-btn" title="My locality">My locality</button>
+  <button id="world-btn" title="Auras from around the world">🌍 World auras</button>
   <div id="locality-tip">Return to my locality</div>
   <button id="mobile-offer">✦ Offer an aurasense</button>
   <div id="place-prompt">
@@ -571,7 +595,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div class="srealm-label">How it makes you feel</div>
       <div class="scats" id="scats-int"></div>
       <div class="srealm-label" id="memory-label">A memory you hold here</div>
-      <div id="memory-row"><button id="memory-btn">❖ Offer a memory to this place</button></div>
+      <div id="memory-row"><button id="memory-btn">A Memory</button><div id="mem-priv-wrap"><button id="mem-private" class="mem-priv">Memory words: Public</button></div></div>
       <div id="srow">
         <input id="inp" placeholder="What does this place feel like right now?"/>
         <button id="sbtn">Offer your sense to the aura</button>
@@ -1485,7 +1509,7 @@ map.on('click',async function(e){
   const list=(atHere.length?atHere:nearBy).slice(0,3);
   const senseListHTML=list.length?'<div class="pop-sense-list">'+list.map(p=>{
     const ps=SENSES.find(x=>x.id===p.sense);
-    return `<div class="pop-sense-item" style="border-left-color:${ps.color}">${SENSE_SYMBOLS[ps.id]} "${p.text.substring(0,52)}${p.text.length>52?'…':''}"</div>`;
+    return `<div class="pop-sense-item" style="border-left-color:${ps.color}">${SENSE_SYMBOLS[ps.id]} "${p.priv?'a memory, kept private':(p.text.substring(0,52)+(p.text.length>52?'…':''))}"</div>`;
   }).join('')+'</div>':'';
   let auraLine;
   if(atHere.length)auraLine=`${atHere.length} aura${atHere.length>1?'s':''} offered here`;
@@ -1528,10 +1552,12 @@ function submit(lat,lng,text){
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);if(!s)return;
   if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
-  auraPoints.push({lat,lng,sense:sid,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2});
+  const isPriv=(sid==='memory'&&typeof memoryPrivate!=='undefined'&&memoryPrivate);
+  const pubText=isPriv?'(a memory, kept private)':text;
+  auraPoints.push({lat,lng,sense:sid,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2,priv:isPriv});
   ripples.push({lat,lng,color:s.color,age:0});
   if(!planetColors.includes(s.color))planetColors.push(s.color);
-  addFeed(text,sid,'just now',true,lat,lng);
+  addFeed(pubText,sid,'just now',true,lat,lng);
   // This offering becomes a thread in the senser's own aura.
   myAuraColors.push(s.color);
   myOfferings.unshift({sense:sid,label:s.label,color:s.color,text:text,time:'just now',place:null,lat:lat,lng:lng});
@@ -1777,7 +1803,7 @@ function openMyAuraPage(){
       const sym=SENSE_SYMBOLS[o.sense]||'',place=o.place?'<div class="m">📍 '+esc(o.place)+'</div>':'';
       return '<div class="ma-offering" style="border-left-color:'+o.color+'"><div class="s" style="color:'+o.color+'">'+sym+' '+o.label+'</div><div class="t">"'+esc(o.text)+'"</div>'+place+'<div class="ma-oact">'
         +'<button class="ma-act ma-ic" data-act="see" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" class="fill"/></svg><span class="ma-tip">See aura activity</span></button>'
-        +'<button class="ma-act ma-ic" data-act="ask" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><path d="M6.2 11.4 a3.4 3.4 0 1 1 3.4 3.4"/><path d="M9.4 14.6 L16.4 7.6"/><circle cx="17.5" cy="6.6" r="1.7" class="fill"/></svg><span class="ma-tip">Ask a question</span></button>'
+        +'<button class="ma-act ma-ic" data-act="ask" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><path d="M5.6 12 a3 3 0 1 1 3.1 3"/><path d="M8.7 15 C 12.6 14.6, 15.4 12, 16.9 7.6 C 17.2 6.5, 18.1 6.1, 19.1 6.7"/></svg><span class="ma-tip">Ask a question</span></button>'
         +'<button class="ma-act ma-ic ma-bond" data-act="bond" data-i="'+idx+'"><svg viewBox="0 0 40 24" class="mai mai-bond"><circle class="ab-l" cx="11" cy="12" r="7"/><circle class="ab-r" cx="29" cy="12" r="7"/></svg><span class="ma-tip">Aurabond</span></button>'
         +'</div></div>';
     }).join('');
@@ -2124,7 +2150,7 @@ function openPlaceAura(lat,lng,addr){
   const cd=document.getElementById('pa2-comments');
   if(cd){
     const wt=here.filter(p=>p.text&&p.text.trim());
-    cd.innerHTML=wt.length?wt.slice(0,8).map(p=>{const s=SENSES.find(x=>x.id===p.sense),col=s?s.color:'#a78bfa';return '<div class="pa2-comment" style="--c:'+col+'">"'+p.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'"<div class="who">'+(s?(SENSE_SYMBOLS[s.id]+' '+s.label):'')+'</div></div>';}).join(''):'<div class="pa2-comment" style="--c:#a78bfa">No words yet — the first aura here is waiting to be offered.</div>';
+    cd.innerHTML=wt.length?wt.slice(0,8).map(p=>{const s=SENSES.find(x=>x.id===p.sense),col=s?s.color:'#a78bfa';const body=p.priv?'a memory, kept private':p.text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');return '<div class="pa2-comment" style="--c:'+col+'">"'+body+'"<div class="who">'+(s?(SENSE_SYMBOLS[s.id]+' '+s.label):'')+'</div></div>';}).join(''):'<div class="pa2-comment" style="--c:#a78bfa">No words yet — the first aura here is waiting to be offered.</div>';
   }
   page.classList.add('show');
   pa2OpenAt=performance.now();
@@ -2141,19 +2167,27 @@ function closePlaceAura(){const p=document.getElementById('placeaura-page');if(p
   window.addEventListener('resize',()=>{const p=document.getElementById('placeaura-page');if(p&&p.classList.contains('show'))pa2Size();});
 })();
 // ---- Memory offering button ----
+let memoryPrivate=false;
 (function(){
   const memBtn=document.getElementById('memory-btn');
   if(memBtn){
-    memBtn.innerHTML=SENSE_SYMBOLS.memory+' <span>Offer a memory to this place</span>';
+    memBtn.innerHTML=SENSE_SYMBOLS.memory+' <span>A Memory</span>';
     memBtn.addEventListener('click',()=>{
       selSense='memory';
       document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));
       memBtn.classList.add('sel-mem');
+      const pw=document.getElementById('mem-priv-wrap');if(pw)pw.classList.add('show');
       const inp=document.getElementById('inp');
       if(inp){inp.placeholder='Share a memory of this place\u2026';inp.focus();inp.classList.add('inp-glow');}
       showMsg('Offer a memory \u2014 it becomes a golden layer in this place\u2019s aura');
     });
   }
+  const mp=document.getElementById('mem-private');
+  if(mp)mp.addEventListener('click',()=>{
+    memoryPrivate=!memoryPrivate;
+    mp.textContent=memoryPrivate?'Memory words: Private':'Memory words: Public';
+    mp.classList.toggle('priv',memoryPrivate);
+  });
 })();
 // ---- Conscious Trajectory ----
 const TJ_SEED=[
@@ -2267,6 +2301,58 @@ function lsPrev(){lsSaveCurrent();if(lsState.idx>0){lsState.idx--;lsShowQuestion
     setTimeout(()=>{closeLifeStory();if(typeof openMyAuraPage==='function')openMyAuraPage();},1500);
   });
 })();
+// ---- World auras: glows of what the world is feeling (illustrative seed for now) ----
+const WORLD_EVENTS=[
+  {lat:34.5,lng:69.2,type:'need',title:'Communities facing hunger',note:'Families in this region need food and clean water. Held in thought \u2014 and awareness is a beginning.',compassion:0},
+  {lat:31.5,lng:34.47,type:'suffering',title:'People living through conflict',note:'Civilians here are enduring loss and fear. They are being thought of, with compassion.',compassion:0},
+  {lat:37.0,lng:37.4,type:'disaster',title:'Recovering from an earthquake',note:'Towns rebuilding after the ground shook. Awareness and aid still matter here.',compassion:0},
+  {lat:-1.95,lng:30.06,type:'need',title:'A region facing drought',note:'A long dry season is straining whole communities. They are not forgotten.',compassion:0},
+  {lat:48.85,lng:2.35,type:'joy',title:'A city in celebration',note:'A day of collective joy and togetherness.',compassion:0},
+  {lat:51.55,lng:-0.27,type:'sport',title:'A sporting final',note:'Thousands gathered, hearts racing as one.',compassion:0},
+  {lat:14.6,lng:121.0,type:'disaster',title:'After the storm',note:'Coastal communities recovering from a powerful storm.',compassion:0},
+  {lat:-23.55,lng:-46.63,type:'joy',title:'A festival of life',note:'Streets full of music, colour and gladness.',compassion:0}
+];
+let worldOn=false,worldMarkers=[];
+const WA_RGB={suffering:'229,90,90',need:'108,158,235',disaster:'240,150,70',joy:'247,206,107',sport:'134,224,192'};
+const WA_LABEL={suffering:'People in suffering',need:'People in need',disaster:'A natural disaster',joy:'Collective joy',sport:'A gathering of many'};
+function worldApplyBrightness(ev){if(!ev._el)return;const rgb=WA_RGB[ev.type]||'200,180,255';const spread=6+Math.min(12,ev.compassion);const blur=22+Math.min(26,ev.compassion*2);ev._el.style.boxShadow='0 0 '+blur+'px '+spread+'px rgba('+rgb+',.62)';}
+function openWorldPopup(ev){
+  const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const html='<div class="mapboxgl-popup-content-inner">'
+    +'<div class="pop-title">\u2728 '+esc(ev.title)+'</div>'
+    +'<div class="pop-aura" style="color:#ffd9a8">'+(WA_LABEL[ev.type]||ev.type)+'</div>'
+    +'<div class="pop-sense-list"><div class="pop-sense-item" style="border-left-color:#ffd9a8">'+esc(ev.note)+'</div></div>'
+    +'<div class="pop-aura" style="color:#c4b5fd;margin-top:6px"><span class="wc-count">'+ev.compassion+'</span> auras of compassion sent</div>'
+    +'<div class="pop-action pop-link wa-send" style="margin-top:6px;color:#c4b5fd">\u2726 Send an aura of compassion</div>'
+    +'<div class="pop-action pop-link wa-aware" style="margin-top:3px">\ud83d\udc41 Send awareness to others</div>'
+    +'</div>';
+  const p=openPopup(ev.lng,ev.lat,html);
+  const el=p&&p.getElement&&p.getElement();
+  if(el){
+    const send=el.querySelector('.wa-send');
+    if(send)send.addEventListener('click',()=>{ev.compassion++;worldApplyBrightness(ev);const c=el.querySelector('.wc-count');if(c)c.textContent=ev.compassion;send.textContent='\u2726 Compassion sent \u2014 thank you';});
+    const aware=el.querySelector('.wa-aware');
+    if(aware)aware.addEventListener('click',()=>showMsg('Awareness shared \u2014 social spread arrives in v1'));
+  }
+}
+function buildWorldMarkers(){
+  WORLD_EVENTS.forEach(ev=>{
+    const el=document.createElement('div');
+    el.className='world-aura wa-'+ev.type;
+    el.addEventListener('click',e=>{e.stopPropagation();openWorldPopup(ev);});
+    const m=new mapboxgl.Marker({element:el}).setLngLat([ev.lng,ev.lat]).addTo(map);
+    ev._marker=m;ev._el=el;worldMarkers.push(m);worldApplyBrightness(ev);
+  });
+}
+function toggleWorld(){
+  worldOn=!worldOn;
+  const btn=document.getElementById('world-btn');if(btn)btn.classList.toggle('on',worldOn);
+  if(worldOn){
+    if(!worldMarkers.length)buildWorldMarkers();else worldMarkers.forEach(m=>m.addTo(map));
+    showMsg('World auras \u2014 glows of what the world is feeling. Tap one to send compassion. (Illustrative until a live news source is connected.)');
+  } else { worldMarkers.forEach(m=>m.remove()); }
+}
+(function(){const b=document.getElementById('world-btn');if(b)b.addEventListener('click',toggleWorld);})();
 });
 </script>
 </body>
