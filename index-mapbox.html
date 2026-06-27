@@ -105,6 +105,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #inp:focus{border-color:rgba(167,139,250,.35)}
 #sbtn{padding:8px 13px;border-radius:10px;border:0.5px solid rgba(167,139,250,.35);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap}
 #sbtn:hover{background:rgba(167,139,250,.25);box-shadow:0 0 14px rgba(167,139,250,.2)}
+#sheet-close{display:none}
 #pmsg{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);font-size:13px;color:#c4b5fd;font-style:italic;opacity:0;pointer-events:none;text-align:center;text-shadow:0 0 22px rgba(167,139,250,.9);transition:opacity .5s;letter-spacing:.03em;white-space:nowrap}
 #pmsg.show{opacity:1}
 .aura-popup .mapboxgl-popup-content{background:rgba(10,10,20,.96)!important;border:0.5px solid rgba(167,139,250,.3)!important;border-radius:12px!important;box-shadow:0 0 20px rgba(167,139,250,.15)!important;color:#e0d8ff!important}
@@ -316,7 +317,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 /* Condensed mobile offer button */
 #mobile-offer{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:45;display:none;background:linear-gradient(135deg,#7c5cff,#a78bfa);border:none;color:#fff;font-size:14px;font-weight:500;padding:13px 26px;border-radius:24px;cursor:pointer;box-shadow:0 0 30px rgba(124,92,255,.55);letter-spacing:.02em}
 /* Live feed: locality + search header */
-#lf-tools{display:flex;gap:8px;align-items:center;justify-content:center;margin:0 auto 16px;max-width:520px}
+#lf-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:0 auto 16px;max-width:720px}
 .lf-tool{background:rgba(20,16,40,.7);border:0.5px solid rgba(167,139,250,.35);color:#cbbff0;font-size:12px;padding:8px 13px;border-radius:16px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
 .lf-tool:hover{background:rgba(44,34,78,.85)}
 #lf-search-in{flex:1;background:rgba(8,7,18,.7);border:0.5px solid rgba(167,139,250,.3);border-radius:16px;padding:8px 13px;color:#efe8ff;font-size:12px;outline:none;display:none}
@@ -351,16 +352,16 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 /* ---------- Responsive: phone ---------- */
 @media (max-width:600px){
   #logo h1{font-size:15px}#logo p{display:none}
-  #hdr2{top:48px}
+  #hdr2{top:48px;justify-content:center}
   #tabs{font-size:11px}
   #panel{display:none}
   #panel.show-mobile{display:block;bottom:0;left:0;right:0;background:rgba(8,7,16,.97);padding:14px 14px 18px;border-top:0.5px solid rgba(167,139,250,.3);border-radius:18px 18px 0 0;max-height:64vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.6)}
   #mobile-offer{display:block}
   #feed{display:none}
-  #my-aura{top:70px;left:10px;transform:scale(.9);transform-origin:top left}
-  #explore-btn{left:118px;top:84px;transform:scale(.92);transform-origin:top left}
-  #register-btn{top:196px;left:10px;font-size:11px;padding:8px 12px}
-  #livefeed-btn{top:234px;left:10px;font-size:11px;padding:8px 12px}
+  #my-aura{top:88px;left:10px;transform:scale(.9);transform-origin:top left}
+  #explore-btn{left:118px;top:128px;transform:scale(.92);transform-origin:top left}
+  #register-btn{top:220px;left:10px;font-size:11px;padding:8px 12px}
+  #livefeed-btn{top:258px;left:10px;font-size:11px;padding:8px 12px}
   #place-mini{top:auto;bottom:84px;left:10px}
   #locality-btn{bottom:86px;right:14px;width:42px;height:42px;font-size:16px}
   #place-prompt{top:30%;width:92%;padding:18px 16px 14px}
@@ -370,6 +371,10 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   #rg-inner,#qz-inner,#lf-inner,#pp2-inner{padding-left:14px;padding-right:14px;padding-bottom:80px}
   #rg-title,#qz-title,#lf-title{font-size:21px}
   #lf-tools{flex-wrap:wrap}
+  #srow{flex-direction:column;gap:8px}
+  #srow #sbtn{width:100%}
+  #panel.show-mobile #sheet-close{display:block;position:sticky;top:0;width:-moz-fit-content;width:fit-content;margin:0 0 8px auto;background:rgba(44,34,78,.94);border:0.5px solid rgba(167,139,250,.45);color:#cbbff0;font-size:12px;padding:7px 13px;border-radius:14px;cursor:pointer;font-family:inherit;z-index:6;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  #ui.offer-open #my-aura,#ui.offer-open #world-btn,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #livefeed-btn,#ui.offer-open #place-mini{display:none}
 }
 /* FIX: these map buttons live inside #ui (pointer-events:none) and must opt back in */
 #register-btn,#livefeed-btn,#locality-btn,#place-mini,#mobile-offer{pointer-events:auto}
@@ -382,14 +387,14 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #locality-tip{top:92px;right:16px;bottom:auto}
 /* Live feed opens as a centred box over the still-visible map */
 #livefeed-page{background:rgba(6,5,16,.55);display:flex;align-items:center;justify-content:center}
-#livefeed-page #lf-inner{max-width:560px;width:92%;max-height:82vh;overflow-y:auto;-webkit-overflow-scrolling:touch;margin:0;padding:26px 22px 24px;background:radial-gradient(ellipse at 50% 0%,#16122e 0%,#0c0a1e 70%,#0a0818 100%);border:1px solid rgba(167,139,250,.32);border-radius:22px;box-shadow:0 0 70px rgba(0,0,0,.65)}
+#livefeed-page #lf-inner{max-width:780px;width:94%;max-height:86vh;overflow-y:auto;-webkit-overflow-scrolling:touch;margin:0;padding:26px 22px 24px;background:radial-gradient(ellipse at 50% 0%,#16122e 0%,#0c0a1e 70%,#0a0818 100%);border:1px solid rgba(167,139,250,.32);border-radius:22px;box-shadow:0 0 70px rgba(0,0,0,.65)}
 #lf-back{position:sticky;top:0}
 /* Steady on touch — no rubber-band / pinch drift */
 html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 @media (max-width:600px){
-  #locality-btn{top:48px;right:12px;padding:7px 9px;font-size:0}
+  #locality-btn{top:90px;right:12px;padding:7px 9px;font-size:0}
   #locality-btn::before{font-size:17px}
-  #locality-tip{top:86px;right:12px}
+  #locality-tip{top:128px;right:12px}
 }
 /* Place-aura page: the layered aura of a single address */
 #placeaura-page{position:fixed;inset:0;z-index:1820;background:rgba(6,5,16,.55);opacity:0;pointer-events:none;transition:opacity .35s;display:flex;align-items:center;justify-content:center}
@@ -511,7 +516,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 .wa-disaster{box-shadow:0 0 24px 7px rgba(240,150,70,.62)}
 .wa-joy{box-shadow:0 0 22px 6px rgba(247,206,107,.62)}
 .wa-sport{box-shadow:0 0 22px 6px rgba(134,224,192,.6)}
-@media (max-width:600px){#world-btn{top:48px;font-size:11px;padding:7px 11px}}
+@media (max-width:600px){#world-btn{top:90px;font-size:11px;padding:7px 11px}}
 /* Search-a-location mini moved to top-centre (clear of the bottom symbol panel) */
 #place-mini{top:90px;left:50%;transform:translateX(-50%);bottom:auto;right:auto}
 @media (max-width:600px){#place-mini{top:auto;bottom:88px;left:50%;transform:translateX(-50%)}}
@@ -527,7 +532,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #logo-text h1{font-size:17px;font-weight:400;letter-spacing:.1em;color:#f4efff;text-transform:uppercase;text-shadow:0 0 14px rgba(167,139,250,.85),0 0 4px rgba(0,0,0,.7)}
 #logo-text p{font-size:10px;color:#c2b6ea;letter-spacing:.05em;margin-top:1px;text-shadow:0 0 10px rgba(124,92,255,.7),0 1px 3px rgba(0,0,0,.85)}
 #logo:hover #logo-mark{filter:drop-shadow(0 0 13px rgba(167,139,250,.85))}
-@media (max-width:600px){#logo-text h1{font-size:14px}#logo-text p{display:none}#logo-mark svg{width:38px;height:24px}}
+@media (max-width:600px){#logo-text h1{font-size:14px;line-height:1.05}#logo-text p{display:block;font-size:8px;line-height:1.1;margin-top:0;letter-spacing:.03em;max-width:165px}#logo-mark svg{width:36px;height:23px}}
 /* Planet view: see the world auras in detail */
 #planet-world{margin-top:10px;padding:8px 18px;border-radius:10px;border:0.5px solid rgba(255,200,140,.35);background:rgba(255,190,120,.1);color:#ffd9a8;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
 #planet-world:hover{background:rgba(255,190,120,.22)}
@@ -629,6 +634,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="feed"></div>
   <div id="stip"></div>
   <div id="panel">
+    <button id="sheet-close">✕ Close</button>
     <div id="pi">
       <div id="ptitle">Energize the aura with your senses</div>
       <div class="srealm-label">The world around you</div>
@@ -833,6 +839,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="pp2-sub">This Aurasenser shares only what they choose. There are no personal details here — only their aura. Offer an aura of good intention to begin a connection.</div>
     <div id="pp2-actions">
       <button class="pp2-btn" id="pp2-offer">✦ Offer something to this aura</button>
+    </div>
   </div>
 </div>
 <div id="placeaura-page">
@@ -1726,6 +1733,7 @@ document.getElementById('sbtn').onclick=()=>{
   if(!v && !emptyPrompted){ showMsg('Would you like to add a description of the aurasense you are submitting? (optional — but preferred)'); inp.focus(); inp.classList.add('inp-glow'); emptyPrompted=true; return; }
   if(spot.fromClick)lastClickPoint=null;
   materializeAndSubmit(spot.lat,spot.lng,v);
+  if(window.innerWidth<=600&&typeof closeOfferSheet==='function')closeOfferSheet();
   if(spot.fromSearch && lastSearchLabel){
     lastSearchLabel.textContent='✨ Aura just offered at '+lastSearchName;
     const lblRef=lastSearchLabel, nameRef=lastSearchName;
@@ -2151,9 +2159,21 @@ async function localityGo(){
   if(lb){lb.addEventListener('click',localityGo);lb.addEventListener('mouseenter',()=>{if(tip)tip.style.display='block';});lb.addEventListener('mouseleave',()=>{if(tip)tip.style.display='none';});}
 })();
 // ---- Condensed mobile offer ----
+function openOfferSheet(){
+  const panel=document.getElementById('panel');if(panel)panel.classList.add('show-mobile');
+  const ui=document.getElementById('ui');if(ui)ui.classList.add('offer-open');
+  const mo=document.getElementById('mobile-offer');if(mo)mo.style.display='none';
+}
+function closeOfferSheet(){
+  const panel=document.getElementById('panel');if(panel)panel.classList.remove('show-mobile');
+  const ui=document.getElementById('ui');if(ui)ui.classList.remove('offer-open');
+  const mo=document.getElementById('mobile-offer');if(mo){mo.style.display='';mo.textContent='\u2726 Offer an aurasense';}
+}
 (function(){
   const mo=document.getElementById('mobile-offer');
-  if(mo)mo.addEventListener('click',()=>{const panel=document.getElementById('panel');if(!panel)return;const on=panel.classList.toggle('show-mobile');mo.textContent=on?'✕ Close':'✦ Offer an aurasense';});
+  if(mo)mo.addEventListener('click',openOfferSheet);
+  const sc=document.getElementById('sheet-close');
+  if(sc)sc.addEventListener('click',closeOfferSheet);
 })();
 // ---- Public Aurasenser profile ----
 function openPubProfile(handle){const p=document.getElementById('pubprofile-page');if(!p)return;const h=document.getElementById('pp2-handle');if(h)h.textContent=handle||'Aurasenser';p.classList.add('show');}
@@ -2231,7 +2251,7 @@ function closePlaceAura(){const p=document.getElementById('placeaura-page');if(p
   if(pg)pg.addEventListener('click',e=>{if(e.target===pg)closePlaceAura();});
   const x=document.getElementById('pa2-close');if(x)x.addEventListener('click',closePlaceAura);
   const add=document.getElementById('pa2-add');
-  if(add)add.addEventListener('click',()=>{closePlaceAura();if(pa2Point){lastClickPoint=[pa2Point.lng,pa2Point.lat];anchorPoint={lat:pa2Point.lat,lng:pa2Point.lng,zoom:16};}const inp=document.getElementById('inp'),mob=window.innerWidth<=600;if(mob){const panel=document.getElementById('panel');if(panel)panel.classList.add('show-mobile');const mo=document.getElementById('mobile-offer');if(mo)mo.textContent='✕ Close';}if(inp){inp.focus();inp.classList.add('inp-glow');}showMsg('Offer your sense to this place — choose a symbol and type');});
+  if(add)add.addEventListener('click',()=>{closePlaceAura();if(pa2Point){lastClickPoint=[pa2Point.lng,pa2Point.lat];anchorPoint={lat:pa2Point.lat,lng:pa2Point.lng,zoom:16};}const inp=document.getElementById('inp'),mob=window.innerWidth<=600;if(mob){openOfferSheet();}if(inp){inp.focus();inp.classList.add('inp-glow');}showMsg('Offer your sense to this place — choose a symbol and type');});
   window.addEventListener('resize',()=>{const p=document.getElementById('placeaura-page');if(p&&p.classList.contains('show'))pa2Size();});
 })();
 // ---- Memory offering button ----
