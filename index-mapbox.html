@@ -51,7 +51,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .soc-btn{width:28px;height:28px;border-radius:50%;border:0.5px solid rgba(255,255,255,.1);background:rgba(10,10,20,.88);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:11px;transition:all .2s;color:#9d8fcc;font-weight:600}
 .soc-btn:hover{border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.12);transform:scale(1.1)}
 .soc-tip{position:fixed;background:rgba(15,12,25,.98);border:0.5px solid rgba(167,139,250,.3);border-radius:8px;padding:5px 9px;font-size:10px;color:#9d8fcc;white-space:nowrap;z-index:9999;pointer-events:none;display:none}
-#hdr2{position:absolute;top:52px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;pointer-events:all;gap:10px}
+#hdr2{position:absolute;top:62px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;pointer-events:all;gap:10px}
 #tabs{display:flex;gap:1px;background:rgba(10,10,20,.88);border:0.5px solid rgba(255,255,255,.08);border-radius:20px;padding:4px 5px;backdrop-filter:blur(8px);flex-shrink:0}
 .tab{font-size:11px;padding:5px 9px;border-radius:14px;border:none;background:transparent;color:#7870a0;cursor:pointer;transition:color .3s;letter-spacing:.03em;display:flex;align-items:center;gap:4px;font-family:inherit;white-space:nowrap;pointer-events:all}
 .tab:hover{color:#c4b5fd}
@@ -92,7 +92,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .fi-text{font-size:11px;color:#c0b8d8;line-height:1.5;font-style:italic}
 .fi-meta{font-size:10px;color:#4a4260;margin-top:3px}
 #stip{position:fixed;background:rgba(10,8,20,.97);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 13px;font-size:11px;color:#c0b8d8;max-width:185px;line-height:1.6;pointer-events:none;opacity:0;transition:opacity .2s;z-index:9999;font-style:italic}
-#panel{position:absolute;bottom:16px;left:16px;right:16px;pointer-events:all}
+#panel{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);width:min(680px,calc(100% - 32px));pointer-events:all}
 #pi{background:rgba(10,10,20,.93);border:0.5px solid rgba(167,139,250,.18);border-radius:16px;padding:12px 14px;backdrop-filter:blur(12px)}
 #ptitle{font-size:12px;color:#9d8fcc;margin-bottom:9px}
 .srealm-label{font-size:9px;color:#7e76a8;letter-spacing:.07em;text-transform:uppercase;margin:1px 0 5px 2px}
@@ -285,6 +285,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #onboard.show{pointer-events:auto;background:rgba(6,5,16,.55)}
 /* Input glow to draw the eye after choosing a sense */
 #inp.inp-glow{border-color:rgba(167,139,250,.9)!important;box-shadow:0 0 0 2px rgba(167,139,250,.25),0 0 20px rgba(167,139,250,.5);animation:inpGlow 1.3s ease-in-out infinite}
+#sense-confirm{display:block;margin:2px 2px 8px;font-size:12px;color:#d7ccf2;letter-spacing:.01em;line-height:1.35;text-shadow:0 0 10px rgba(167,139,250,.4)}
+#sense-confirm:empty{display:none}
 @keyframes inpGlow{0%,100%{box-shadow:0 0 0 2px rgba(167,139,250,.2),0 0 16px rgba(167,139,250,.4)}50%{box-shadow:0 0 0 2px rgba(167,139,250,.35),0 0 26px rgba(167,139,250,.7)}}
 /* My Aura widget — dark card so it stands out */
 #my-aura{background:rgba(8,7,18,.66);border:0.5px solid rgba(167,139,250,.28);border-radius:16px;padding:10px 9px 11px;width:98px;backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);box-shadow:0 0 26px rgba(0,0,0,.55)}
@@ -295,6 +297,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #livefeed-btn{top:278px;left:16px;bottom:auto;right:auto}
 /* Top search box folds into the centre prompt */
 #search-box{display:none}
+@media(min-width:601px){#search-box{display:flex}}
 /* Central "place an aurasense" prompt */
 #place-prompt{position:absolute;top:34%;left:50%;transform:translate(-50%,-50%);z-index:60;width:min(420px,90%);background:rgba(12,10,26,.95);border:1px solid rgba(167,139,250,.5);border-radius:20px;padding:22px 22px 18px;box-shadow:0 0 0 4px rgba(124,92,255,.18),0 0 50px rgba(124,92,255,.5);pointer-events:all;display:none}
 #place-prompt.show{display:block}
@@ -352,10 +355,11 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 /* ---------- Responsive: phone ---------- */
 @media (max-width:600px){
   #logo h1{font-size:15px}#logo p{display:none}
-  #hdr2{top:48px;justify-content:center}
-  #tabs{font-size:11px}
+  #hdr2{top:58px;justify-content:center}
+  #tabs{font-size:11px;padding:4px 4px}
+  .tab{padding:5px 7px}
   #panel{display:none}
-  #panel.show-mobile{display:block;bottom:0;left:0;right:0;background:rgba(8,7,16,.97);padding:14px 14px 18px;border-top:0.5px solid rgba(167,139,250,.3);border-radius:18px 18px 0 0;max-height:64vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.6)}
+  #panel.show-mobile{display:block;bottom:0;left:0;right:0;transform:none;background:rgba(8,7,16,.97);padding:14px 14px 18px;border-top:0.5px solid rgba(167,139,250,.3);border-radius:18px 18px 0 0;max-height:64vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.6)}
   #mobile-offer{display:block}
   #feed{display:none}
   #my-aura{top:88px;left:10px;transform:scale(.9);transform-origin:top left}
@@ -527,7 +531,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 .lf-scope-label{font-size:12px;color:#9a8fc2;align-self:center;margin-right:2px}
 .lf-tool.sel{background:rgba(124,92,255,.4);border-color:rgba(167,139,250,.6);color:#fff}
 /* Impressionistic logo: Union mark + glowing, readable text against the map */
-#logo{display:flex;align-items:center;gap:9px;cursor:pointer;background:rgba(6,5,14,.62);padding:5px 12px 5px 8px;border-radius:16px;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);box-shadow:0 0 22px rgba(0,0,0,.5)}
+#logo{display:flex;align-items:center;gap:9px;cursor:pointer;background:rgba(6,5,14,.42);padding:5px 10px 5px 8px;border-radius:16px;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);box-shadow:0 0 18px rgba(0,0,0,.4)}
 #logo-mark{display:flex;align-items:center;filter:drop-shadow(0 0 8px rgba(167,139,250,.55))}
 #logo-text h1{font-size:17px;font-weight:400;letter-spacing:.1em;color:#f4efff;text-transform:uppercase;text-shadow:0 0 14px rgba(167,139,250,.85),0 0 4px rgba(0,0,0,.7)}
 #logo-text p{font-size:10px;color:#c2b6ea;letter-spacing:.05em;margin-top:1px;text-shadow:0 0 10px rgba(124,92,255,.7),0 1px 3px rgba(0,0,0,.85)}
@@ -558,7 +562,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #wa-foot{font-size:11px;color:#7e76a8;line-height:1.65;margin-top:20px;text-align:center;font-style:italic}
 @media (max-width:600px){#wa-title{font-size:21px}#wa-sub{font-size:12px}#wa-inner{padding:58px 14px 60px}}
 /* ===== Left-column stack: My Aura + More Aura Views + Live feed ===== */
-#left-stack{position:absolute;left:16px;top:96px;z-index:40;display:flex;flex-direction:column;gap:10px;align-items:flex-start;pointer-events:none}
+#left-stack{position:absolute;left:16px;top:100px;z-index:40;display:flex;flex-direction:column;gap:10px;align-items:flex-start;pointer-events:none}
 #left-stack>*{pointer-events:auto}
 #register-btn,#locality-btn,#world-btn,#explore-btn{display:none!important}
 #my-aura{position:relative;left:auto;top:auto;width:106px;padding:9px 8px}
@@ -583,7 +587,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #livefeed-btn{position:relative;left:auto;top:auto;right:auto;bottom:auto}
 #ui.offer-open #left-stack{display:none}
 @media (max-width:600px){
-  #left-stack{left:10px;top:86px;gap:8px}
+  #left-stack{left:10px;top:96px;gap:8px}
   #my-aura{transform:none;width:102px}
   #aura-views-btn{font-size:10.5px;padding:7px 11px}
   #aura-views-menu{min-width:200px}
@@ -685,6 +689,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div class="scats" id="scats-int"></div>
       <div class="srealm-label" id="memory-label">A memory you hold here</div>
       <div id="memory-row"><button id="memory-btn">A Memory</button><div id="mem-priv-wrap"><button id="mem-private" class="mem-priv">Memory words: Public</button></div></div>
+      <div id="sense-confirm"></div>
       <div id="srow">
         <input id="inp" placeholder="What does this place feel like right now?"/>
         <button id="sbtn">Offer your sense to the aura</button>
@@ -1355,7 +1360,7 @@ SENSES.forEach(s=>{
   b.className='sc'+(s.id===selSense?' sel':'');
   b.style.setProperty('--c',s.color);
   b.innerHTML=`<span>${SENSE_SYMBOLS[s.id]}</span>${s.label}`;
-  b.onclick=()=>{selSense=s.id;document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const inp=document.getElementById('inp');if(inp){inp.placeholder='What does this place feel like right now?';inp.focus();inp.classList.add('inp-glow');}};
+  b.onclick=()=>{selSense=s.id;document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');}};
   b.onmouseenter=e=>{
     const ex=s.examples[Math.floor(Math.random()*s.examples.length)];
     stip.innerHTML=`<span style="color:${s.color}">${s.icon} ${s.label}</span><br><br>"${ex}"`;
@@ -1783,6 +1788,7 @@ document.getElementById('sbtn').onclick=()=>{
     setTimeout(()=>{ if(lblRef)lblRef.textContent='✨ Aura offered at '+nameRef; },3600000);
   }
   inp.value='';emptyPrompted=false;inp.classList.remove('inp-glow');
+  const scd=document.getElementById('sense-confirm');if(scd)scd.textContent='';
 };
 document.getElementById('inp').addEventListener('input',()=>{emptyPrompted=false;const i=document.getElementById('inp');if(i&&i.value.trim())i.classList.remove('inp-glow');});
 document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sbtn').click()});
@@ -2208,10 +2214,24 @@ function openOfferSheet(){
   const mo=document.getElementById('mobile-offer');if(mo)mo.style.display='none';
 }
 function closeOfferSheet(){
-  const panel=document.getElementById('panel');if(panel)panel.classList.remove('show-mobile');
+  const panel=document.getElementById('panel');if(panel){panel.classList.remove('show-mobile');panel.style.bottom='';panel.style.maxHeight='';}
   const ui=document.getElementById('ui');if(ui)ui.classList.remove('offer-open');
   const mo=document.getElementById('mobile-offer');if(mo){mo.style.display='';mo.textContent='\u2726 Offer an aurasense';}
 }
+// Keep the offer sheet (and its Offer button) above the on-screen keyboard
+(function(){
+  if(!window.visualViewport)return;
+  function adjust(){
+    const panel=document.getElementById('panel');
+    if(!panel||!panel.classList.contains('show-mobile')){return;}
+    const vv=window.visualViewport;
+    const kb=Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+    panel.style.bottom=kb+'px';
+    panel.style.maxHeight=Math.round(vv.height-10)+'px';
+  }
+  window.visualViewport.addEventListener('resize',adjust);
+  window.visualViewport.addEventListener('scroll',adjust);
+})();
 (function(){
   const mo=document.getElementById('mobile-offer');
   if(mo)mo.addEventListener('click',openOfferSheet);
@@ -2328,6 +2348,7 @@ let memoryPrivate=false;
       document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));
       memBtn.classList.add('sel-mem');
       const pw=document.getElementById('mem-priv-wrap');if(pw)pw.classList.add('show');
+      const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='A memory of this place — add details (optional):';
       const inp=document.getElementById('inp');
       if(inp){inp.placeholder='Share a memory of this place\u2026';inp.focus();inp.classList.add('inp-glow');}
       showMsg('Offer a memory \u2014 it becomes a golden layer in this place\u2019s aura');
