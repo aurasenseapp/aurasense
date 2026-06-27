@@ -512,6 +512,46 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 .wa-joy{box-shadow:0 0 22px 6px rgba(247,206,107,.62)}
 .wa-sport{box-shadow:0 0 22px 6px rgba(134,224,192,.6)}
 @media (max-width:600px){#world-btn{top:48px;font-size:11px;padding:7px 11px}}
+/* Search-a-location mini moved to top-centre (clear of the bottom symbol panel) */
+#place-mini{top:90px;left:50%;transform:translateX(-50%);bottom:auto;right:auto}
+@media (max-width:600px){#place-mini{top:auto;bottom:88px;left:50%;transform:translateX(-50%)}}
+/* Memory button: quieter again — sits like the other controls until chosen */
+#memory-btn{background:transparent;border-color:rgba(232,183,107,.22);color:#c6ad84;box-shadow:none}
+#memory-btn:hover{background:rgba(232,183,107,.07);box-shadow:none;color:#d9bf90}
+#memory-btn.sel-mem{background:rgba(232,183,107,.16);box-shadow:0 0 12px rgba(232,183,107,.3);color:#f0d3a0}
+.lf-scope-label{font-size:12px;color:#9a8fc2;align-self:center;margin-right:2px}
+.lf-tool.sel{background:rgba(124,92,255,.4);border-color:rgba(167,139,250,.6);color:#fff}
+/* Impressionistic logo: Union mark + glowing, readable text against the map */
+#logo{display:flex;align-items:center;gap:9px;cursor:pointer}
+#logo-mark{display:flex;align-items:center;filter:drop-shadow(0 0 8px rgba(167,139,250,.55))}
+#logo-text h1{font-size:17px;font-weight:400;letter-spacing:.1em;color:#f4efff;text-transform:uppercase;text-shadow:0 0 14px rgba(167,139,250,.85),0 0 4px rgba(0,0,0,.7)}
+#logo-text p{font-size:10px;color:#c2b6ea;letter-spacing:.05em;margin-top:1px;text-shadow:0 0 10px rgba(124,92,255,.7),0 1px 3px rgba(0,0,0,.85)}
+#logo:hover #logo-mark{filter:drop-shadow(0 0 13px rgba(167,139,250,.85))}
+@media (max-width:600px){#logo-text h1{font-size:14px}#logo-text p{display:none}#logo-mark svg{width:38px;height:24px}}
+/* Planet view: see the world auras in detail */
+#planet-world{margin-top:10px;padding:8px 18px;border-radius:10px;border:0.5px solid rgba(255,200,140,.35);background:rgba(255,190,120,.1);color:#ffd9a8;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
+#planet-world:hover{background:rgba(255,190,120,.22)}
+/* World Auras — dedicated 2D world map page */
+#worldauras-page{position:fixed;inset:0;z-index:1840;background:radial-gradient(ellipse at 50% 0%,#0c1430 0%,#0a0a1c 60%,#070612 100%);display:none;flex-direction:column;color:#e8e2ff;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#worldauras-page.show{display:flex}
+#wa-inner{max-width:900px;width:100%;margin:0 auto;padding:62px 20px 50px}
+#wa-title{font-size:26px;font-weight:200;letter-spacing:.06em;color:#ffe6c8;text-align:center;text-shadow:0 0 26px rgba(255,190,120,.4)}
+#wa-sub{font-size:13px;color:#b8acd8;line-height:1.65;text-align:center;margin:14px auto 20px;max-width:620px}
+#wa-mapwrap{position:relative;width:100%;border:0.5px solid rgba(167,139,250,.2);border-radius:16px;overflow:hidden;background:#070a16;box-shadow:0 0 40px rgba(0,0,0,.4)}
+#wa-canvas{display:block;width:100%;height:auto}
+#wa-tip{position:absolute;max-width:230px;background:rgba(8,7,20,.97);border:0.5px solid rgba(167,139,250,.4);border-radius:11px;padding:11px 13px;font-size:11.5px;line-height:1.55;color:#e6dfff;pointer-events:none;opacity:0;transition:opacity .2s;z-index:5;box-shadow:0 0 18px rgba(0,0,0,.6)}
+#wa-tip .wt-title{font-size:12.5px;color:#fff;font-weight:500;margin-bottom:3px}
+#wa-tip .wt-type{font-size:10.5px;letter-spacing:.04em;margin-bottom:5px}
+#wa-tip .wt-send{margin-top:8px;color:#c4b5fd;font-size:11px}
+#wa-balance{margin-top:22px;background:rgba(255,255,255,.03);border:0.5px solid rgba(167,139,250,.2);border-radius:14px;padding:16px 18px}
+#wa-balance-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9a8fc2;text-align:center;margin-bottom:12px}
+#wa-balance-bar{position:relative;height:14px;border-radius:8px;background:linear-gradient(90deg,#5b3a6e,#6a4a4a 38%,#3a4a6a 62%,#2f6f6a);overflow:visible}
+#wa-bar-light{position:absolute;top:0;bottom:0;left:0;background:linear-gradient(90deg,rgba(255,220,150,0),rgba(255,220,150,.55));width:50%;border-radius:8px;transition:width 1.2s ease}
+#wa-needle{position:absolute;top:-4px;width:3px;height:22px;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.9);border-radius:2px;left:50%;transition:left 1.2s ease}
+#wa-balance-ends{display:flex;justify-content:space-between;font-size:10.5px;color:#8a82b4;margin-top:7px}
+#wa-balance-note{font-size:12px;color:#c4bce0;line-height:1.6;margin-top:12px;text-align:center}
+#wa-foot{font-size:11px;color:#7e76a8;line-height:1.65;margin-top:20px;text-align:center;font-style:italic}
+@media (max-width:600px){#wa-title{font-size:21px}#wa-sub{font-size:12px}#wa-inner{padding:58px 14px 60px}}
 </style>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -522,10 +562,11 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <canvas id="planet-canvas" width="340" height="340"></canvas>
   <div id="planet-label">The living aura of humanity<br><span style="font-size:11px;opacity:.6">sensing the world together</span></div>
   <button id="planet-back">← Return to street view</button>
+  <button id="planet-world">✦ See the world auras in detail</button>
 </div>
 <div id="ui">
   <div id="hdr1">
-    <div id="logo"><h1>Aurasense</h1><p>The living aura of humanity, sensed together</p></div>
+    <div id="logo"><span id="logo-mark"><svg viewBox="0 0 64 40" width="46" height="29" style="overflow:visible"><defs><radialGradient id="lg-a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#c4b5fd" stop-opacity=".9"/><stop offset="60%" stop-color="#7c5cff" stop-opacity=".35"/><stop offset="100%" stop-color="#7c5cff" stop-opacity="0"/></radialGradient><radialGradient id="lg-b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9ad9c0" stop-opacity=".82"/><stop offset="60%" stop-color="#3a9d7e" stop-opacity=".3"/><stop offset="100%" stop-color="#3a9d7e" stop-opacity="0"/></radialGradient><radialGradient id="lg-core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff7e6" stop-opacity="1"/><stop offset="55%" stop-color="#e8c074" stop-opacity=".82"/><stop offset="100%" stop-color="#e8c074" stop-opacity="0"/></radialGradient></defs><circle cx="24" cy="20" r="17" fill="url(#lg-a)" class="as-breathe"/><circle cx="40" cy="20" r="17" fill="url(#lg-b)" class="as-breathe"/><circle cx="32" cy="20" r="8.5" fill="url(#lg-core)" class="as-breathe"/></svg></span><span id="logo-text"><h1>Aurasense</h1><p>The living aura of humanity, sensed together</p></span></div>
     <div id="social">
       <div class="soc-btn" data-tip="Share to X">𝕏</div>
       <div class="soc-btn" data-tip="Share to Instagram">◎</div>
@@ -557,7 +598,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <button id="livefeed-btn">◉ Live aura feed</button>
   <button id="locality-btn" title="My locality">My locality</button>
   <button id="world-btn" title="Auras from around the world">🌍 World auras</button>
-  <div id="locality-tip">Return to my locality</div>
+  <div id="locality-tip">Set your home (only you see this)</div>
   <button id="mobile-offer">✦ Offer an aurasense</button>
   <div id="place-prompt">
     <div id="pp-title">Search for a location to place an aurasense</div>
@@ -756,11 +797,31 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="lf-handle"></div>
     <div id="lf-live"><span class="lf-pulse"></span> Auras offered around the world</div>
     <div id="lf-tools">
-      <button class="lf-tool" id="lf-locality">⌂ My locality</button>
+      <span class="lf-scope-label">Show Auras in:</span>
+      <button class="lf-tool lf-scope" data-scope="near">Near me</button>
+      <button class="lf-tool lf-scope" data-scope="home">My Home Locality</button>
+      <button class="lf-tool lf-scope" data-scope="region">Region</button>
+      <button class="lf-tool lf-scope" data-scope="nation">Nation</button>
+      <button class="lf-tool lf-scope sel" data-scope="planet">Planet</button>
       <button class="lf-tool" id="lf-search-btn">🔍 Search the feed</button>
-      <input id="lf-search-in" placeholder="Search a place in the feed..."/>
+      <input id="lf-search-in" placeholder="Search by aura type or place..."/>
     </div>
     <div id="lf-list"></div>
+  </div>
+</div>
+<div id="worldauras-page">
+  <button class="qz-back" id="wa-back">← Return to the map</button>
+  <div id="wa-inner">
+    <div id="wa-title">World Auras</div>
+    <div id="wa-sub">The auras of what the world is living through — placed where they are felt, heavy and light alike. The same field your own aura belongs to, seen whole. Tap a glow to feel it, and to answer with an aura of compassion.</div>
+    <div id="wa-mapwrap"><canvas id="wa-canvas"></canvas><div id="wa-tip"></div></div>
+    <div id="wa-balance">
+      <div id="wa-balance-label">The balance of the world's field</div>
+      <div id="wa-balance-bar"><div id="wa-bar-light"></div><div id="wa-needle"></div></div>
+      <div id="wa-balance-ends"><span>The heavier auras</span><span>Aurasensers answering with light</span></div>
+      <div id="wa-balance-note"></div>
+    </div>
+    <div id="wa-foot">An honest note: these are illustrative auras for now — real kinds of situation placed to build and feel the mechanism. I have not invented specific live tragedies, since getting a real person's suffering wrong would be the worst kind of error. When a respectful, live source is connected through the backend, these glows will track what is genuinely happening — so compassion can follow real need, and responsibility can be gently traced, from a moment of bullying to a natural disaster.</div>
   </div>
 </div>
 <div id="onboard"></div>
@@ -863,11 +924,11 @@ safety:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:mi
 belonging:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(250,195,140,0.5))"><defs><radialGradient id="as-belCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#f6b26b" stop-opacity="0"/></radialGradient><radialGradient id="as-belHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#facb96" stop-opacity="0.3"/><stop offset="100%" stop-color="#f6b26b" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="53" r="45" fill="url(#as-belHalo)"/><g class="as-breathe"><path d="M24 30 C 8 46, 8 60, 24 76" fill="none" stroke="#facb96" stroke-width="4" stroke-linecap="round" opacity="1"/><path d="M72 30 C 88 46, 88 60, 72 76" fill="none" stroke="#facb96" stroke-width="4" stroke-linecap="round" opacity="1"/></g><circle cx="48" cy="53" r="15" fill="url(#as-belCore)" class="as-shimmer"/></svg>',
 anomaly:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(255,140,140,0.5))"><defs><radialGradient id="as-anoRed" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd8d4" stop-opacity="1"/><stop offset="40%" stop-color="#ff5454" stop-opacity="0.85"/><stop offset="100%" stop-color="#7a1818" stop-opacity="0"/></radialGradient><radialGradient id="as-anoHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#88b8ff" stop-opacity="0.3"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-anoHalo)"/><path d="M48 14 C 26 30, 26 66, 48 82 C 70 66, 70 30, 48 14 Z" fill="none" stroke="#88b8ff" stroke-width="5" opacity="0.6" class="as-flicker"/><path d="M48 14 C 26 30, 26 66, 48 82 C 70 66, 70 30, 48 14 Z" fill="none" stroke="#c8dcff" stroke-width="1.2" opacity="0.85" class="as-slowShimmer"/><ellipse cx="48" cy="48" rx="10" ry="16" fill="url(#as-anoRed)" class="as-flicker"/></svg>',
 chronosception:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(150,165,225,0.5))"><defs><radialGradient id="as-chrCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#8b9dde" stop-opacity="0"/></radialGradient><radialGradient id="as-chrHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#aeb8e8" stop-opacity="0.3"/><stop offset="100%" stop-color="#8b9dde" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-chrHalo)"/><path d="M30 18 L66 18 L48 48 L66 78 L30 78 L48 48 Z" fill="none" stroke="#b6c0ec" stroke-width="2.6" stroke-linejoin="round" opacity="0.9" class="as-slowShimmer"/><path d="M48 40 L48 56" stroke="#dfe5f8" stroke-width="2" stroke-linecap="round" opacity="0.8" class="as-shimmer"/><circle cx="48" cy="48" r="5" fill="url(#as-chrCore)" class="as-breathe"/></svg>',
-intuition:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(190,140,225,0.55))"><defs><radialGradient id="as-intCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#cfa6e8" stop-opacity="0.6"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient><radialGradient id="as-intHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#cfa6e8" stop-opacity="0.3"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="52" r="45" fill="url(#as-intHalo)"/><path d="M30 56 Q 48 38 66 56" fill="none" stroke="#d7b6ee" stroke-width="2.4" stroke-linecap="round" opacity="0.8" class="as-slowShimmer"/><path d="M36 62 Q 48 50 60 62" fill="none" stroke="#d7b6ee" stroke-width="1.6" stroke-linecap="round" opacity="0.55"/><circle cx="48" cy="56" r="9" fill="url(#as-intCore)" class="as-breathe"/><circle cx="48" cy="28" r="3" fill="#f0e2fb" class="as-shimmer"/></svg>',
+intuition:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 6px rgba(190,140,225,0.6))"><defs><radialGradient id="as-intCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#cfa6e8" stop-opacity="0.7"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient><radialGradient id="as-intHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#cfa6e8" stop-opacity="0.32"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-intHalo)"/><path d="M20 48 Q 48 26 76 48 Q 48 70 20 48 Z" fill="none" stroke="#d9b8f0" stroke-width="3.2" stroke-linejoin="round" opacity="0.9" class="as-slowShimmer"/><circle cx="48" cy="48" r="13" fill="url(#as-intCore)" class="as-breathe"/><circle cx="48" cy="48" r="4.5" fill="#ffffff" opacity="0.92"/></svg>',
 stress:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,130,130,0.5))"><defs><radialGradient id="as-strCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient><radialGradient id="as-strHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e89a9a" stop-opacity="0.28"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-strHalo)"/><path d="M48 28 L55 40 L66 42 L57 50 L61 63 L48 56 L35 63 L39 50 L30 42 L41 40 Z" fill="none" stroke="#ec9e9e" stroke-width="2" stroke-linejoin="miter" opacity="0.9" class="as-shiver"/><circle cx="48" cy="48" r="6" fill="url(#as-strCore)" class="as-flicker"/></svg>',
 hunger:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,165,90,0.5))"><defs><radialGradient id="as-hunCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe8c8" stop-opacity="0.9"/><stop offset="100%" stop-color="#e0a050" stop-opacity="0"/></radialGradient><radialGradient id="as-hunHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ecc488" stop-opacity="0.28"/><stop offset="100%" stop-color="#e0a050" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="52" r="45" fill="url(#as-hunHalo)"/><path d="M26 48 A 22 22 0 0 0 70 48" fill="none" stroke="#eec690" stroke-width="3" stroke-linecap="round" opacity="0.9" class="as-breathe"/><circle cx="48" cy="54" r="5" fill="url(#as-hunCore)" class="as-flicker"/></svg>',
 hydration:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(110,197,212,0.5))"><defs><radialGradient id="as-hydCore" cx="50%" cy="42%" r="60%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#9ad8e4" stop-opacity="0.7"/><stop offset="100%" stop-color="#6ec5d4" stop-opacity="0.15"/></radialGradient><radialGradient id="as-hydHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9ad8e4" stop-opacity="0.3"/><stop offset="100%" stop-color="#6ec5d4" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="50" r="45" fill="url(#as-hydHalo)"/><path d="M48 20 C 38 40 32 50 32 58 A 16 16 0 0 0 64 58 C 64 50 58 40 48 20 Z" fill="url(#as-hydCore)" stroke="#a8e0ec" stroke-width="1.4" class="as-breathe"/></svg>',
-internal_temp:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,138,90,0.5))"><defs><radialGradient id="as-itCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe6cc" stop-opacity="1"/><stop offset="55%" stop-color="#f0a878" stop-opacity="0.8"/><stop offset="100%" stop-color="#e08a5a" stop-opacity="0"/></radialGradient><radialGradient id="as-itHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#eab088" stop-opacity="0.26"/><stop offset="100%" stop-color="#e08a5a" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-itHalo)"/><circle cx="48" cy="48" r="27" fill="none" stroke="#eab088" stroke-width="1.6" opacity="0.5"/><circle cx="48" cy="48" r="13" fill="url(#as-itCore)" class="as-breathe"/></svg>',
+internal_temp:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(225,138,90,0.55))"><defs><radialGradient id="as-itCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe6cc" stop-opacity="1"/><stop offset="55%" stop-color="#f0a878" stop-opacity="0.85"/><stop offset="100%" stop-color="#e08a5a" stop-opacity="0"/></radialGradient><radialGradient id="as-itHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#eab088" stop-opacity="0.26"/><stop offset="100%" stop-color="#e08a5a" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-itHalo)"/><path d="M37 62 Q 32 52 37 44 Q 42 36 37 28" fill="none" stroke="#eab088" stroke-width="2.6" stroke-linecap="round" opacity="0.85" class="as-slowShimmer"/><path d="M48 64 Q 43 53 48 45 Q 53 37 48 26" fill="none" stroke="#f3b083" stroke-width="2.8" stroke-linecap="round"/><path d="M59 62 Q 54 52 59 44 Q 64 36 59 28" fill="none" stroke="#eab088" stroke-width="2.6" stroke-linecap="round" opacity="0.85" class="as-slowShimmer"/><circle cx="48" cy="70" r="8" fill="url(#as-itCore)" class="as-breathe"/></svg>',
 external_heat:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,100,60,0.5))"><defs><radialGradient id="as-ehHalo" cx="50%" cy="55%" r="55%"><stop offset="0%" stop-color="#f08a64" stop-opacity="0.26"/><stop offset="100%" stop-color="#e8643c" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="52" r="45" fill="url(#as-ehHalo)"/><g class="as-wiggle"><path d="M34 74 C 30 62 38 56 34 44 C 31 34 37 30 34 20" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.9" class="as-shimmer"/><path d="M48 76 C 44 62 52 56 48 42 C 45 32 51 28 48 16" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/><path d="M62 74 C 58 62 66 56 62 44 C 59 34 65 30 62 20" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.9" class="as-shimmer"/></g></svg>',
 external_cold:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(126,200,232,0.55))"><defs><radialGradient id="as-ecCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#7ec8e8" stop-opacity="0"/></radialGradient><radialGradient id="as-ecHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8def0" stop-opacity="0.3"/><stop offset="100%" stop-color="#7ec8e8" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-ecHalo)"/><g class="as-shiver" stroke="#b0e2f4" stroke-width="2" stroke-linecap="round"><path d="M48 24 L48 72"/><path d="M27 36 L69 60"/><path d="M69 36 L27 60"/><path d="M48 30 L43 36 M48 30 L53 36"/><path d="M48 66 L43 60 M48 66 L53 60"/></g><circle cx="48" cy="48" r="6" fill="url(#as-ecCore)" class="as-shimmer"/></svg>',
 pain:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(212,74,74,0.6))"><defs><radialGradient id="as-painCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="45%" stop-color="#e85858" stop-opacity="0.85"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient><radialGradient id="as-painHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e87878" stop-opacity="0.3"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-painHalo)"/><path d="M48 18 L54 42 L78 48 L54 54 L48 78 L42 54 L18 48 L42 42 Z" fill="url(#as-painCore)" stroke="#f09696" stroke-width="1" class="as-flicker"/></svg>',
@@ -1991,18 +2052,20 @@ const LF_HANDLES=['QuietTide','EmberWren','LucidGlade','SilverMoth','DriftingLar
 const LF_INTENTS=['offering calm to a busy street','sending warmth across the water','a moment of awe at dusk','grief, gently held','wonder at the morning light','peace for a tired town','a spark of joy, offered','quiet gratitude','hope placed here for others','stillness after the storm'];
 let lfTimer=null,lfRows=[];
 function lfRandomRow(){const s=SENSES[Math.floor(Math.random()*SENSES.length)],p=LF_PLACES[Math.floor(Math.random()*LF_PLACES.length)],h=LF_HANDLES[Math.floor(Math.random()*LF_HANDLES.length)],intent=LF_INTENTS[Math.floor(Math.random()*LF_INTENTS.length)];return {sid:s.id,label:s.label,color:s.color,street:p[0],city:p[1],lng:p[2],lat:p[3],handle:h,intent:intent,t:Date.now()-Math.floor(Math.random()*60000)};}
-let lfFilter='',lfLocalityOn=false,localityCity='';
-function lfLocalityCity(){if(myProfile&&myProfile.address){const parts=myProfile.address.split(',');return parts[parts.length-1].trim();}return '';}
+let lfFilter='',lfScope='planet';
+function lfUserCity(){if(myProfile&&myProfile.address){const parts=myProfile.address.split(',');return parts[parts.length-1].trim();}return '';}
 function lfVisible(){
   let rows=lfRows;
-  if(lfLocalityOn&&localityCity)rows=rows.filter(r=>r.city.toLowerCase().indexOf(localityCity.toLowerCase())>=0);
-  if(lfFilter){const q=lfFilter.toLowerCase();rows=rows.filter(r=>(r.street+' '+r.city).toLowerCase().indexOf(q)>=0);}
+  const uc=lfUserCity().toLowerCase();
+  if(lfScope==='near'||lfScope==='home'){rows=uc?rows.filter(r=>(r.city+' '+r.street).toLowerCase().indexOf(uc)>=0):[];}
+  else if(lfScope==='region'||lfScope==='nation'){rows=uc?rows.filter(r=>r.city.toLowerCase().indexOf(uc)>=0):rows;}
+  if(lfFilter){const q=lfFilter.toLowerCase();rows=rows.filter(r=>(r.street+' '+r.city+' '+r.label).toLowerCase().indexOf(q)>=0);}
   return rows;
 }
 function lfRender(){
   const list=document.getElementById('lf-list');if(!list)return;
   const rows=lfVisible();
-  if(!rows.length){list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras here yet'+(lfLocalityOn?' near your locality':'')+'. As Aurasense grows, this fills with offerings from around you.</div>';return;}
+  if(!rows.length){const sc={near:' near you',home:' in your home locality',region:' in your region',nation:' in your nation',planet:''}[lfScope]||'';list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras'+sc+' yet. As Aurasense grows, this fills with offerings'+(lfScope==='planet'?' from around the world':' from around you')+'.</div>';return;}
   list.innerHTML=rows.map(r=>{const i=lfRows.indexOf(r),sym=SENSE_SYMBOLS[r.sid]||'',ago=Math.max(1,Math.round((Date.now()-r.t)/1000)),agoTxt=ago<60?ago+'s ago':Math.round(ago/60)+'m ago';
     return '<div class="lf-row" data-i="'+i+'"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+r.label+'</b> — '+r.intent+'</div><div class="lf-meta">\ud83d\udccd '+r.street+', '+r.city+' · <span class="h" data-h="'+i+'">'+r.handle+'</span> · '+agoTxt+'</div><div class="lf-icons">'
     +'<span class="lf-ic" data-act="absorb" data-i="'+i+'">\u25ce<span class="lic-tip">Absorb / add to your aura</span></span>'
@@ -2022,7 +2085,7 @@ function lfAction(act,i,ic){
   else if(act==='comment'){showMsg('Comments through alphasense symbols — coming soon');}
   else if(act==='share'){showMsg('Social sharing — coming in v1');}
 }
-function openLiveFeed(){const p=document.getElementById('livefeed-page');if(!p)return;const lh=document.getElementById('lf-handle');if(lh)lh.textContent=(myProfile&&myProfile.handle)?('✦ '+myProfile.handle):'';if(lfRows.length===0){for(let i=0;i<8;i++)lfRows.push(lfRandomRow());lfRows.sort((a,b)=>b.t-a.t);}lfRender();p.classList.add('show');if(lfTimer)clearInterval(lfTimer);lfTimer=setInterval(()=>{lfRows.unshift(lfRandomRow());if(lfRows.length>14)lfRows.pop();lfRender();},4500);}
+function openLiveFeed(){const p=document.getElementById('livefeed-page');if(!p)return;const lh=document.getElementById('lf-handle');if(lh)lh.textContent=(myProfile&&myProfile.handle)?('✦ '+myProfile.handle):'';if(lfRows.length===0){for(let i=0;i<8;i++)lfRows.push(lfRandomRow());lfRows.sort((a,b)=>b.t-a.t);}lfRender();p.classList.add('show');if(lfTimer)clearInterval(lfTimer);lfTimer=setInterval(()=>{lfRows.unshift(lfRandomRow());if(lfRows.length>16)lfRows.pop();lfRender();},11000);}
 function closeLiveFeed(){const p=document.getElementById('livefeed-page');if(p)p.classList.remove('show');if(lfTimer){clearInterval(lfTimer);lfTimer=null;}}
 const lfBtn=document.getElementById('livefeed-btn');if(lfBtn)lfBtn.addEventListener('click',openLiveFeed);
 const lfBackBtn=document.getElementById('lf-back');if(lfBackBtn)lfBackBtn.addEventListener('click',closeLiveFeed);
@@ -2102,8 +2165,13 @@ function closePubProfile(){const p=document.getElementById('pubprofile-page');if
 })();
 // ---- Live feed tools (locality + search) ----
 (function(){
-  const lfLoc=document.getElementById('lf-locality');
-  if(lfLoc)lfLoc.addEventListener('click',()=>{lfLocalityOn=!lfLocalityOn;localityCity=lfLocalityCity();lfLoc.style.background=lfLocalityOn?'rgba(124,92,255,.4)':'';if(typeof lfRender==='function')lfRender();if(lfLocalityOn&&!localityCity)showMsg('Add your locality in your profile to see auras near you');});
+  document.querySelectorAll('.lf-scope').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('.lf-scope').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel');
+    lfScope=b.getAttribute('data-scope');
+    if((lfScope==='near'||lfScope==='home')&&!lfUserCity())showMsg('Set your home (My locality) to see auras near you');
+    if(typeof lfRender==='function')lfRender();
+  }));
   const lfSb=document.getElementById('lf-search-btn'),lfSin=document.getElementById('lf-search-in');
   if(lfSb&&lfSin)lfSb.addEventListener('click',()=>{const on=lfSin.classList.toggle('show');if(on)lfSin.focus();else{lfSin.value='';lfFilter='';lfRender();}});
   if(lfSin)lfSin.addEventListener('input',()=>{lfFilter=lfSin.value.trim();if(typeof lfRender==='function')lfRender();});
@@ -2201,8 +2269,8 @@ function tjRender(){
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   list.innerHTML=tjReports.map(r=>'<div class="tj-card"><div class="tjp">\ud83d\udccd '+esc(r.place)+'</div><div class="tjc">'+esc(r.choice)+'</div>'+(r.unfolded?'<div class="tju">'+esc(r.unfolded)+'</div>':'')+(r.reflection?'<div class="tjr">"'+esc(r.reflection)+'"</div>':'')+'</div>').join('');
 }
-function openTrajectory(){const p=document.getElementById('trajectory-page');if(!p)return;if(typeof closeMyAuraPage==='function')closeMyAuraPage();tjRender();p.classList.add('show');}
-function closeTrajectory(){const p=document.getElementById('trajectory-page');if(p)p.classList.remove('show');if(typeof openMyAuraPage==='function')openMyAuraPage();}
+function openTrajectory(){const p=document.getElementById('trajectory-page');if(!p)return;try{tjRender();}catch(e){}p.classList.add('show');p.style.display='block';p.style.opacity='1';p.style.pointerEvents='auto';p.style.zIndex='1900';try{if(typeof closeMyAuraPage==='function')closeMyAuraPage();}catch(e){}}
+function closeTrajectory(){const p=document.getElementById('trajectory-page');if(p){p.classList.remove('show');p.style.display='none';p.style.opacity='0';p.style.pointerEvents='none';}if(typeof openMyAuraPage==='function')openMyAuraPage();}
 (function(){
   const open=document.getElementById('ma-open-trajectory');if(open)open.addEventListener('click',openTrajectory);
   const back=document.getElementById('tj-back');if(back)back.addEventListener('click',closeTrajectory);
@@ -2257,8 +2325,8 @@ function lsWeave(){
   out+='\u2014\n\nThat is the shape of it, for now: '+(focus?focus.toLowerCase():'a life')+', held in your own words. The bones are here \u2014 the rest can be shaped by hand.';
   return out;
 }
-function openLifeStory(){const p=document.getElementById('lifestory-page');if(!p)return;if(typeof closeMyAuraPage==='function')closeMyAuraPage();p.classList.add('show');lsShowSetup();}
-function closeLifeStory(){const p=document.getElementById('lifestory-page');if(p)p.classList.remove('show');if(typeof openMyAuraPage==='function')openMyAuraPage();}
+function openLifeStory(){const p=document.getElementById('lifestory-page');if(!p)return;try{lsShowSetup();}catch(e){}p.classList.add('show');p.style.display='block';p.style.opacity='1';p.style.pointerEvents='auto';p.style.zIndex='1900';try{if(typeof closeMyAuraPage==='function')closeMyAuraPage();}catch(e){}}
+function closeLifeStory(){const p=document.getElementById('lifestory-page');if(p){p.classList.remove('show');p.style.display='none';p.style.opacity='0';p.style.pointerEvents='none';}if(typeof openMyAuraPage==='function')openMyAuraPage();}
 function lsShowSetup(){const s=document.getElementById('ls-setup');if(s)s.classList.remove('hide');const q=document.getElementById('ls-quiz');if(q)q.classList.remove('show');const st=document.getElementById('ls-story');if(st)st.classList.remove('show');}
 function lsRenderFocus(){const f=document.getElementById('ls-focus');if(!f)return;const opts=['Childhood','Love & relationships','Work & purpose','Adventure','Struggle & growth','Family','A turning point','The whole journey'];f.innerHTML=opts.map(o=>'<button class="ls-chip" data-f="'+o+'">'+o+'</button>').join('');f.querySelectorAll('.ls-chip').forEach(c=>c.addEventListener('click',()=>{f.querySelectorAll('.ls-chip').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');lsState.focus=c.getAttribute('data-f');}));}
 function lsSaveCurrent(){const ta=document.getElementById('ls-answer');if(ta)lsState.answers[lsState.idx]=ta.value;}
@@ -2301,7 +2369,7 @@ function lsPrev(){lsSaveCurrent();if(lsState.idx>0){lsState.idx--;lsShowQuestion
     setTimeout(()=>{closeLifeStory();if(typeof openMyAuraPage==='function')openMyAuraPage();},1500);
   });
 })();
-// ---- World auras: glows of what the world is feeling (illustrative seed for now) ----
+// ---- World Auras: a 2D map of what the world is living through (illustrative seed) ----
 const WORLD_EVENTS=[
   {lat:34.5,lng:69.2,type:'need',title:'Communities facing hunger',note:'Families in this region need food and clean water. Held in thought \u2014 and awareness is a beginning.',compassion:0},
   {lat:31.5,lng:34.47,type:'suffering',title:'People living through conflict',note:'Civilians here are enduring loss and fear. They are being thought of, with compassion.',compassion:0},
@@ -2312,47 +2380,98 @@ const WORLD_EVENTS=[
   {lat:14.6,lng:121.0,type:'disaster',title:'After the storm',note:'Coastal communities recovering from a powerful storm.',compassion:0},
   {lat:-23.55,lng:-46.63,type:'joy',title:'A festival of life',note:'Streets full of music, colour and gladness.',compassion:0}
 ];
-let worldOn=false,worldMarkers=[];
 const WA_RGB={suffering:'229,90,90',need:'108,158,235',disaster:'240,150,70',joy:'247,206,107',sport:'134,224,192'};
+const WA_HEX={suffering:'#e55a5a',need:'#6c9eeb',disaster:'#f0964a',joy:'#f7ce6b',sport:'#86e0c0'};
 const WA_LABEL={suffering:'People in suffering',need:'People in need',disaster:'A natural disaster',joy:'Collective joy',sport:'A gathering of many'};
-function worldApplyBrightness(ev){if(!ev._el)return;const rgb=WA_RGB[ev.type]||'200,180,255';const spread=6+Math.min(12,ev.compassion);const blur=22+Math.min(26,ev.compassion*2);ev._el.style.boxShadow='0 0 '+blur+'px '+spread+'px rgba('+rgb+',.62)';}
-function openWorldPopup(ev){
-  const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  const html='<div class="mapboxgl-popup-content-inner">'
-    +'<div class="pop-title">\u2728 '+esc(ev.title)+'</div>'
-    +'<div class="pop-aura" style="color:#ffd9a8">'+(WA_LABEL[ev.type]||ev.type)+'</div>'
-    +'<div class="pop-sense-list"><div class="pop-sense-item" style="border-left-color:#ffd9a8">'+esc(ev.note)+'</div></div>'
-    +'<div class="pop-aura" style="color:#c4b5fd;margin-top:6px"><span class="wc-count">'+ev.compassion+'</span> auras of compassion sent</div>'
-    +'<div class="pop-action pop-link wa-send" style="margin-top:6px;color:#c4b5fd">\u2726 Send an aura of compassion</div>'
-    +'<div class="pop-action pop-link wa-aware" style="margin-top:3px">\ud83d\udc41 Send awareness to others</div>'
-    +'</div>';
-  const p=openPopup(ev.lng,ev.lat,html);
-  const el=p&&p.getElement&&p.getElement();
-  if(el){
-    const send=el.querySelector('.wa-send');
-    if(send)send.addEventListener('click',()=>{ev.compassion++;worldApplyBrightness(ev);const c=el.querySelector('.wc-count');if(c)c.textContent=ev.compassion;send.textContent='\u2726 Compassion sent \u2014 thank you';});
-    const aware=el.querySelector('.wa-aware');
-    if(aware)aware.addEventListener('click',()=>showMsg('Awareness shared \u2014 social spread arrives in v1'));
+const WA_WEIGHT={suffering:3,need:2,disaster:2,joy:0,sport:0};
+const WA_LIGHTBASE={suffering:0,need:0,disaster:0,joy:1.5,sport:1};
+const WA_LAND=[
+  [[-168,66],[-160,71],[-125,70],[-95,72],[-82,73],[-60,68],[-55,60],[-52,52],[-66,47],[-70,44],[-74,40],[-76,35],[-81,31],[-80,25],[-90,29],[-97,26],[-105,22],[-110,23],[-114,28],[-118,33],[-123,38],[-124,48],[-130,55],[-140,60],[-150,59],[-160,62],[-168,66]],
+  [[-45,60],[-30,60],[-20,70],[-22,76],[-35,82],[-50,82],[-58,76],[-55,68],[-45,60]],
+  [[-80,9],[-70,11],[-60,8],[-50,0],[-44,-3],[-35,-7],[-38,-13],[-48,-25],[-58,-35],[-68,-42],[-73,-50],[-69,-54],[-66,-45],[-70,-33],[-71,-20],[-76,-12],[-81,-5],[-80,9]],
+  [[-10,36],[-9,44],[0,49],[5,52],[10,54],[12,58],[20,55],[28,58],[30,64],[26,70],[30,71],[55,71],[75,73],[100,77],[115,74],[130,72],[160,70],[170,67],[178,66],[160,61],[150,59],[143,53],[135,46],[130,42],[125,40],[122,32],[118,24],[110,21],[108,15],[105,10],[100,6],[95,16],[90,22],[88,21],[80,15],[77,8],[73,18],[68,24],[60,25],[57,25],[48,30],[44,38],[36,42],[28,41],[26,38],[35,36],[36,31],[30,31],[24,35],[18,40],[14,38],[14,44],[8,44],[3,43],[-5,36],[-10,36]],
+  [[-16,15],[-16,21],[-10,30],[0,33],[10,34],[20,32],[25,32],[33,31],[33,28],[35,24],[37,18],[43,12],[51,12],[44,2],[41,-5],[40,-12],[35,-20],[32,-26],[26,-33],[20,-35],[16,-29],[13,-23],[9,-5],[8,4],[2,5],[-8,4],[-12,8],[-16,15]],
+  [[114,-22],[122,-18],[130,-12],[137,-12],[142,-11],[145,-15],[150,-22],[153,-28],[150,-38],[143,-39],[135,-35],[129,-32],[122,-34],[115,-34],[114,-28],[114,-22]]
+];
+let waRaf2=null,waT2=0,waHover=-1,waCanvas=null,waCtx=null;
+function waProject(lng,lat,W,H){return [(lng+180)/360*W,(90-lat)/180*H];}
+function waDrawWorld(){
+  const cv=waCanvas;if(!cv){waRaf2=null;return;}
+  const c=waCtx,W=cv.width,H=cv.height;waT2+=0.016;
+  const og=c.createLinearGradient(0,0,0,H);og.addColorStop(0,'#0a1024');og.addColorStop(1,'#070a16');
+  c.fillStyle=og;c.fillRect(0,0,W,H);
+  c.strokeStyle='rgba(120,130,200,0.07)';c.lineWidth=1;
+  for(let la=-60;la<=60;la+=30){const y=(90-la)/180*H;c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();}
+  for(let lo=-150;lo<=150;lo+=30){const x=(lo+180)/360*W;c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();}
+  c.fillStyle='rgba(70,84,130,0.30)';c.strokeStyle='rgba(120,140,200,0.22)';c.lineWidth=1;
+  WA_LAND.forEach(poly=>{c.beginPath();poly.forEach((p,i)=>{const xy=waProject(p[0],p[1],W,H);if(i===0)c.moveTo(xy[0],xy[1]);else c.lineTo(xy[0],xy[1]);});c.closePath();c.fill();c.stroke();});
+  WORLD_EVENTS.forEach((ev,i)=>{
+    const xy=waProject(ev.lng,ev.lat,W,H),x=xy[0],y=xy[1],rgb=WA_RGB[ev.type]||'200,180,255';
+    const pulse=0.7+0.3*Math.sin(waT2*1.6+i*0.8),base=11+Math.min(16,ev.compassion*1.4);
+    const r=base*(0.92+0.12*pulse)*(waHover===i?1.25:1);
+    const g=c.createRadialGradient(x,y,0,x,y,r*2.4);
+    g.addColorStop(0,'rgba('+rgb+','+(0.85*pulse).toFixed(2)+')');
+    g.addColorStop(0.4,'rgba('+rgb+','+(0.35*pulse).toFixed(2)+')');
+    g.addColorStop(1,'rgba('+rgb+',0)');
+    c.fillStyle=g;c.beginPath();c.arc(x,y,r*2.4,0,Math.PI*2);c.fill();
+    c.fillStyle='rgba(255,255,255,'+(0.5*pulse).toFixed(2)+')';c.beginPath();c.arc(x,y,2.2,0,Math.PI*2);c.fill();
+    if(ev.compassion>0){c.strokeStyle='rgba(255,235,180,'+Math.min(0.5,0.12+ev.compassion*0.03).toFixed(2)+')';c.lineWidth=1.4;c.beginPath();c.arc(x,y,r*2.4+3,0,Math.PI*2);c.stroke();}
+  });
+  waRaf2=requestAnimationFrame(waDrawWorld);
+}
+function waEventAt(cx,cy){
+  let best=-1,bestD=1e9;const cv=waCanvas,W=cv.width,H=cv.height;
+  WORLD_EVENTS.forEach((ev,i)=>{const xy=waProject(ev.lng,ev.lat,W,H);const d=Math.hypot(xy[0]-cx,xy[1]-cy);if(d<bestD){bestD=d;best=i;}});
+  return bestD<34?best:-1;
+}
+function waUpdateBalance(){
+  let heavy=0,light=0;
+  WORLD_EVENTS.forEach(ev=>{heavy+=WA_WEIGHT[ev.type]||0;light+=(WA_LIGHTBASE[ev.type]||0)+ev.compassion;});
+  light+=(typeof myOfferings!=='undefined'&&myOfferings?myOfferings.length*0.3:0);
+  const ratio=light/(light+heavy||1);
+  const barL=document.getElementById('wa-bar-light'),needle=document.getElementById('wa-needle'),note=document.getElementById('wa-balance-note');
+  if(barL)barL.style.width=(ratio*100).toFixed(1)+'%';
+  if(needle)needle.style.left=(ratio*100).toFixed(1)+'%';
+  if(note){
+    const sent=WORLD_EVENTS.reduce((a,e)=>a+e.compassion,0);
+    let msg;
+    if(ratio<0.4)msg='The field leans heavy. The world is carrying more weight than the light yet answering it. Every aura of compassion you send shifts this \u2014 the Aura-conscious gently balancing the Aura-unaware.';
+    else if(ratio<0.6)msg='The field is near balance. The light of those who notice and care is meeting the weight, glow for glow.';
+    else msg='The light is answering. Enough attention and good intent is flowing to begin lifting the heavier auras of the world.';
+    note.innerHTML=msg+'<br><span style="color:#9a8fc2;font-size:11px">'+sent+' aura'+(sent===1?'':'s')+' of compassion sent \u00b7 your own offerings add their light too</span>';
   }
 }
-function buildWorldMarkers(){
-  WORLD_EVENTS.forEach(ev=>{
-    const el=document.createElement('div');
-    el.className='world-aura wa-'+ev.type;
-    el.addEventListener('click',e=>{e.stopPropagation();openWorldPopup(ev);});
-    const m=new mapboxgl.Marker({element:el}).setLngLat([ev.lng,ev.lat]).addTo(map);
-    ev._marker=m;ev._el=el;worldMarkers.push(m);worldApplyBrightness(ev);
-  });
+function openWorldAuras(){
+  const p=document.getElementById('worldauras-page');if(!p)return;
+  waCanvas=document.getElementById('wa-canvas');
+  if(waCanvas){waCanvas.width=880;waCanvas.height=440;waCtx=waCanvas.getContext('2d');}
+  p.classList.add('show');p.style.display='flex';
+  waUpdateBalance();
+  if(!waRaf2)waRaf2=requestAnimationFrame(waDrawWorld);
 }
-function toggleWorld(){
-  worldOn=!worldOn;
-  const btn=document.getElementById('world-btn');if(btn)btn.classList.toggle('on',worldOn);
-  if(worldOn){
-    if(!worldMarkers.length)buildWorldMarkers();else worldMarkers.forEach(m=>m.addTo(map));
-    showMsg('World auras \u2014 glows of what the world is feeling. Tap one to send compassion. (Illustrative until a live news source is connected.)');
-  } else { worldMarkers.forEach(m=>m.remove()); }
-}
-(function(){const b=document.getElementById('world-btn');if(b)b.addEventListener('click',toggleWorld);})();
+function closeWorldAuras(){const p=document.getElementById('worldauras-page');if(p){p.classList.remove('show');p.style.display='none';}if(waRaf2){cancelAnimationFrame(waRaf2);waRaf2=null;}const t=document.getElementById('wa-tip');if(t)t.style.opacity='0';}
+(function(){
+  const b=document.getElementById('world-btn');if(b)b.addEventListener('click',openWorldAuras);
+  const back=document.getElementById('wa-back');if(back)back.addEventListener('click',closeWorldAuras);
+  const pw=document.getElementById('planet-world');if(pw)pw.addEventListener('click',openWorldAuras);
+  const cv=document.getElementById('wa-canvas'),tip=document.getElementById('wa-tip'),wrap=document.getElementById('wa-mapwrap');
+  function toCanvas(e){const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*(cv.width/r.width),(e.clientY-r.top)*(cv.height/r.height)];}
+  if(cv){
+    cv.addEventListener('mousemove',e=>{
+      const xy=toCanvas(e);waHover=waEventAt(xy[0],xy[1]);
+      if(waHover>=0&&tip&&wrap){const ev=WORLD_EVENTS[waHover],rr=wrap.getBoundingClientRect();
+        tip.innerHTML='<div class="wt-title">'+ev.title+'</div><div class="wt-type" style="color:rgb('+(WA_RGB[ev.type]||'200,180,255')+')">'+(WA_LABEL[ev.type]||ev.type)+'</div><div>'+ev.note+'</div><div class="wt-send">'+ev.compassion+' compassion sent \u00b7 tap to send yours</div>';
+        let lx=e.clientX-rr.left+14,ty=e.clientY-rr.top+14;if(lx>rr.width-240)lx=rr.width-240;if(ty>rr.height-130)ty=rr.height-130;
+        tip.style.left=lx+'px';tip.style.top=ty+'px';tip.style.opacity='1';cv.style.cursor='pointer';
+      } else if(tip){tip.style.opacity='0';cv.style.cursor='default';}
+    });
+    cv.addEventListener('mouseleave',()=>{waHover=-1;if(tip)tip.style.opacity='0';});
+    cv.addEventListener('click',e=>{const xy=toCanvas(e),i=waEventAt(xy[0],xy[1]);if(i>=0){const ev=WORLD_EVENTS[i];ev.compassion++;waUpdateBalance();if(typeof myAuraColors!=='undefined')myAuraColors.push(WA_HEX[ev.type]||'#f7ce6b');if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=WA_HEX[ev.type]||'#f7ce6b';}showMsg('An aura of compassion reaches: '+ev.title);}});
+  }
+  const p=document.getElementById('worldauras-page');if(p)p.addEventListener('click',e=>{if(e.target===p)closeWorldAuras();});
+  const logoEl=document.getElementById('logo');
+  if(logoEl)logoEl.addEventListener('click',()=>{if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor='#c4b5fd';}showMsg('The living aura of humanity, sensed together');});
+})();
 });
 </script>
 </body>
