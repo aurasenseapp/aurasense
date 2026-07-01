@@ -47,7 +47,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #hdr1{position:absolute;top:11px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;pointer-events:all}
 #logo h1{font-size:17px;font-weight:400;letter-spacing:.1em;color:#e0d8ff;text-transform:uppercase}
 #logo p{font-size:10px;color:#6860a0;letter-spacing:.05em;margin-top:1px}
-#social{display:flex;gap:7px;align-items:center;margin-right:20px}
+#social{display:flex;gap:7px;align-items:center;margin-right:10px}
 .soc-btn{width:27px;height:27px;border-radius:50%;border:0.5px solid rgba(255,255,255,.14);background:rgba(10,10,20,.85);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .2s;color:#ece6ff;font-weight:600}
 .soc-btn:hover{border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.12);transform:scale(1.1)}
 .soc-tip{position:fixed;background:rgba(15,12,25,.98);border:0.5px solid rgba(167,139,250,.3);border-radius:8px;padding:5px 9px;font-size:10px;color:#9d8fcc;white-space:nowrap;z-index:9999;pointer-events:none;display:none}
@@ -110,13 +110,16 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #panel.locating #offer-locate{display:block}
 #panel.locating #ptitle,#panel.locating .srealm-label,#panel.locating .scats,#panel.locating #memory-label,#panel.locating #memory-row,#panel.locating #sense-confirm,#panel.locating #photo-row,#panel.locating #srow,#panel.locating #offer-confirm,#panel.locating #offer-lastlink{display:none}
 #offer-confirm{display:none}
-#panel.just-offered #offer-confirm{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:10px;padding:10px 12px;background:rgba(167,139,250,.13);border:0.5px solid rgba(167,139,250,.42);border-radius:12px}
-#offer-confirm .oc-sym{width:20px;height:20px;flex-shrink:0}
+#panel.just-offered #offer-confirm{display:block;margin-bottom:10px;padding:11px 12px;background:rgba(167,139,250,.13);border:0.5px solid rgba(167,139,250,.42);border-radius:12px}
+#offer-confirm .oc-head{font-size:12.5px;color:#efe8ff;margin-bottom:7px;padding-right:78px}
+#offer-confirm .oc-head b{color:#e6dcff}
+#offer-confirm .oc-body{font-size:12px;color:#efe8ff;display:flex;align-items:center;gap:7px;margin-bottom:10px}
+#offer-confirm .oc-sym{width:18px;height:18px;flex-shrink:0}
 #offer-confirm .oc-sym svg{width:100%;height:100%}
-#offer-confirm .oc-main{font-size:12.5px;color:#efe8ff;flex:1;min-width:130px}
-#offer-confirm .oc-main .oc-t{color:#c4bce0;font-style:italic}
-#offer-confirm .oc-meta{font-size:10.5px;color:#9a8fc2;width:100%}
-#offer-confirm .oc-again{font-size:12px;color:#e6dfff;cursor:pointer;white-space:nowrap;border:0.5px solid rgba(167,139,250,.5);border-radius:10px;padding:7px 12px;background:rgba(167,139,250,.16)}
+#offer-confirm .oc-t{color:#c4bce0;font-style:italic}
+#offer-confirm .oc-actions{display:flex;flex-wrap:wrap;gap:7px}
+#offer-confirm .oc-again,#offer-confirm .oc-elsewhere,#offer-confirm .oc-social{font-size:11.5px;color:#e6dfff;cursor:pointer;border:0.5px solid rgba(167,139,250,.5);border-radius:10px;padding:7px 11px;background:rgba(167,139,250,.16);white-space:nowrap}
+#offer-confirm .oc-elsewhere,#offer-confirm .oc-social{background:rgba(167,139,250,.08)}
 #panel.just-offered #ptitle{display:none}
 #panel.just-offered.offer-quiet .scats{opacity:.4;transition:opacity .3s}
 #offer-lastlink{display:none;font-size:11.5px;color:#b3a6dd;cursor:pointer;margin-bottom:9px;text-align:center;text-decoration:underline;text-decoration-color:rgba(167,139,250,.5)}
@@ -319,7 +322,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 /* Input glow to draw the eye after choosing a sense */
 #inp.inp-glow{border-color:rgba(167,139,250,.9)!important;box-shadow:0 0 0 2px rgba(167,139,250,.25),0 0 20px rgba(167,139,250,.5);animation:inpGlow 1.3s ease-in-out infinite}
 #sbtn.sbtn-glow{border-color:rgba(167,139,250,.95)!important;background:rgba(167,139,250,.22);color:#efe8ff;animation:inpGlow 1.4s ease-in-out infinite}
-#sense-confirm{display:block;margin:2px 2px 8px;font-size:12px;color:#d7ccf2;letter-spacing:.01em;line-height:1.35;text-shadow:0 0 10px rgba(167,139,250,.4)}
+#sense-confirm{display:block;margin:9px 2px 8px;padding:8px 10px;background:rgba(167,139,250,.08);border:0.5px solid rgba(167,139,250,.25);border-radius:10px;font-size:12px;color:#d7ccf2;letter-spacing:.01em;line-height:1.35}
 #sense-confirm:empty{display:none}
 #photo-row{display:flex;align-items:center;gap:10px;margin:0 2px 9px;flex-wrap:wrap}
 #photo-btn{background:rgba(20,16,40,.7);border:0.5px solid rgba(167,139,250,.4);color:#cbbff0;font-size:11.5px;padding:7px 12px;border-radius:14px;cursor:pointer;font-family:inherit;transition:background .2s}
@@ -389,7 +392,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 @media (max-width:900px){
   #ma-layout{flex-direction:column;overflow-y:auto}
   #ma-left,#ma-right{width:auto!important;max-width:none!important;padding:0 18px}
-  #ma-left{padding-bottom:30px;margin-bottom:8px;border-bottom:1px dotted rgba(167,139,250,.28)}
+  #ma-left{padding-bottom:48px;margin-bottom:10px;border-bottom:1px dotted rgba(167,139,250,.28)}
+  #ma-offerings{min-height:150px}
   #ma-right{padding-top:10px}
   #ma-center{min-height:40vh;order:-1}
   #feed{width:170px;max-height:38vh}
@@ -401,7 +405,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   #tabs{font-size:11px;padding:4px 4px}
   .tab{padding:5px 7px}
   #panel{display:none}
-  #panel.show-mobile{display:block;bottom:0;left:0;right:0;transform:none;background:rgba(8,7,16,.97);padding:14px 10px 18px;border-top:0.5px solid rgba(167,139,250,.3);border-radius:18px 18px 0 0;max-height:64vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.6)}
+  #panel.show-mobile{display:block;bottom:0;left:0;right:0;width:auto;box-sizing:border-box;transform:none;background:rgba(8,7,16,.97);padding:12px 8px 18px;border-top:0.5px solid rgba(167,139,250,.3);border-radius:18px 18px 0 0;max-height:64vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.6)}
   #panel.show-mobile #pi{background:none;border:none;border-radius:0;padding:0}
   #livefeed-page #lf-inner{width:100%;max-width:100%;border-radius:0;max-height:100vh;padding:20px 12px}
   #panel.show-mobile #srow{position:sticky;bottom:0;background:linear-gradient(rgba(8,7,16,0),rgba(8,7,16,.98) 24%);padding-top:10px;margin-top:2px;z-index:5}
@@ -633,7 +637,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 .av-opt:hover{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.35)}
 .av-opt .av-ico{display:flex;color:#b9a9ec;flex-shrink:0}
 #livefeed-btn{position:relative;left:auto;top:auto;right:auto;bottom:auto}
-#ui.offer-open #aura-views-btn{display:none}
+#ui.offer-open #left-stack{display:none}
 @media (max-width:600px){
   #left-stack{left:10px;top:96px;gap:8px}
   #my-aura{transform:none;width:124px;transition:transform .5s ease}
@@ -1292,7 +1296,7 @@ let T=0;
     [1,.65,.35].forEach((scale,i)=>{
       const delay=i*.18;
       if(r.age>delay){
-        const a=r.age-delay,rad=a*260*scale,al=(1-a)*.5*(1-i*.2);
+        const a=r.age-delay,rad=a*(r.strong?300:260)*scale,al=(1-a)*(r.strong?1:.5)*(1-i*.2);
         ctx.beginPath();ctx.arc(x,y,rad,0,Math.PI*2);
         ctx.strokeStyle=r.color+Math.floor(Math.max(0,al)*255).toString(16).padStart(2,'0');
         ctx.lineWidth=1.5-i*.4;ctx.stroke();
@@ -1748,7 +1752,9 @@ function submit(lat,lng,text){
   const isPriv=(sid==='memory'&&typeof memoryPrivate!=='undefined'&&memoryPrivate);
   const pubText=isPriv?'(a memory, kept private)':text;
   auraPoints.push({lat,lng,sense:sid,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2,priv:isPriv,photo:(typeof pendingPhoto!=='undefined'?pendingPhoto:null)});
-  ripples.push({lat,lng,color:s.color,age:0});
+  ripples.push({lat,lng,color:s.color,age:0,strong:true});
+  setTimeout(()=>{ripples.push({lat,lng,color:s.color,age:0,strong:true});},600);
+  setTimeout(()=>{ripples.push({lat,lng,color:s.color,age:0,strong:true});},1200);
   if(!planetColors.includes(s.color))planetColors.push(s.color);
   addFeed(pubText,sid,'just now',true,lat,lng);
   // This offering becomes a thread in the senser's own aura.
@@ -1975,8 +1981,10 @@ function maDraw(){
   if(maSelfieImg&&maSelfieImg.complete){
     c.save();c.beginPath();c.arc(cx,cy,headR,0,TWO);c.clip();
     const iw=maSelfieImg.width,ih=maSelfieImg.height,scale=Math.max(headR*2/iw,headR*2/ih);
-    c.globalAlpha=fadeIn;c.drawImage(maSelfieImg,cx-iw*scale/2,cy-ih*scale/2,iw*scale,ih*scale);c.restore();
-    c.strokeStyle='rgba(236,241,255,0.6)';c.lineWidth=2;c.shadowColor='rgba(205,222,255,0.7)';c.shadowBlur=headR*0.3;c.beginPath();c.arc(cx,cy,headR,0,TWO);c.stroke();c.shadowBlur=0;
+    c.globalAlpha=fadeIn;c.drawImage(maSelfieImg,cx-iw*scale/2,cy-ih*scale/2,iw*scale,ih*scale);
+    const fe=c.createRadialGradient(cx,cy,headR*0.64,cx,cy,headR);fe.addColorStop(0,'rgba(216,208,250,0)');fe.addColorStop(1,'rgba(214,206,248,0.6)');c.fillStyle=fe;c.beginPath();c.arc(cx,cy,headR,0,TWO);c.fill();
+    c.restore();
+    c.strokeStyle='rgba(236,241,255,0.26)';c.lineWidth=1.5;c.shadowColor='rgba(205,222,255,0.6)';c.shadowBlur=headR*0.55;c.beginPath();c.arc(cx,cy,headR,0,TWO);c.stroke();c.shadowBlur=0;
   }
   c.globalAlpha=1;
   maRaf=requestAnimationFrame(maDraw);
@@ -2305,12 +2313,11 @@ function showOfferConfirm(senseId,text,place,lat,lng){
   const box=document.getElementById('offer-confirm');if(!box)return;
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const body=(senseId==='memory'&&(text||'').indexOf('kept private')<0&&typeof memoryPrivate!=='undefined'&&memoryPrivate)?'a memory, kept private':esc(text);
-  box.innerHTML='<span class="oc-sym">'+(SENSE_SYMBOLS[senseId]||'')+'</span>'
-    +'<span class="oc-main"><b style="color:'+s.color+'">'+s.label+'</b>'+(body?' — <span class="oc-t">"'+body+'"</span>':'')+'</span>'
-    +'<span class="oc-again">↻ Offer another aura here</span>'
-    +'<span class="oc-meta">📍 '+esc(place||'this spot')+' · just now</span>';
+  box.innerHTML='<div class="oc-head">✨ Aura just offered here <b>'+esc(place||'this spot')+'</b></div>'
+    +'<div class="oc-body"><span class="oc-sym">'+(SENSE_SYMBOLS[senseId]||'')+'</span><b style="color:'+s.color+'">'+s.label+'</b>'+(body?' — <span class="oc-t">"'+body+'"</span>':'')+'</div>'
+    +'<div class="oc-actions"><span class="oc-again">↻ Offer another aura here</span><span class="oc-elsewhere">Or, offer another elsewhere</span><span class="oc-social">⤴ Share on social media</span></div>';
   const panel=document.getElementById('panel');
-  if(panel){panel.classList.add('show-mobile','just-offered','offer-quiet','has-last');panel.classList.remove('locating');}
+  if(panel){panel.classList.add('show-mobile','just-offered','offer-quiet','has-last');panel.classList.remove('locating');panel.style.maxHeight='';panel.style.bottom='';}
   const again=box.querySelector('.oc-again');
   if(again)again.addEventListener('click',()=>{
     if(panel){panel.classList.remove('just-offered','offer-quiet');}
@@ -2320,6 +2327,14 @@ function showOfferConfirm(senseId,text,place,lat,lng){
     if(lat!=null){lastClickPoint=[lng,lat];}
     if(inp)setTimeout(()=>{try{inp.focus();}catch(e){}},60);
   });
+  const elsew=box.querySelector('.oc-elsewhere');
+  if(elsew)elsew.addEventListener('click',()=>{
+    if(panel){panel.classList.remove('just-offered','offer-quiet');panel.classList.add('locating');}
+    lastClickPoint=null;
+    const oi=document.getElementById('ol-input');if(oi){oi.value='';setTimeout(()=>{try{oi.focus();}catch(e){}},60);}
+  });
+  const soc=box.querySelector('.oc-social');
+  if(soc)soc.addEventListener('click',()=>{if(typeof showMsg==='function')showMsg('Social sharing — coming in v1');});
 }
 function reopenLastAura(){const li=lastOfferInfo;if(!li)return;showOfferConfirm(li.senseId,li.text,li.place,li.lat,li.lng);}
 function closeOfferSheet(){
@@ -2336,6 +2351,7 @@ function closeOfferSheet(){
   function adjust(){
     const panel=document.getElementById('panel');
     if(!panel||!panel.classList.contains('show-mobile')){return;}
+    if(panel.classList.contains('just-offered')){panel.style.bottom='';panel.style.maxHeight='';return;}
     const vv=window.visualViewport;
     const kb=Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
     panel.style.bottom=kb+'px';
