@@ -100,6 +100,27 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #panel.show-mobile{display:block}
 #panel.show-mobile #sheet-close{display:block;position:absolute;top:12px;right:14px;z-index:6;background:rgba(44,34,78,.94);border:0.5px solid rgba(167,139,250,.45);color:#cbbff0;font-size:12px;padding:6px 12px;border-radius:14px;cursor:pointer;font-family:inherit}
 #pi{background:rgba(10,10,20,.93);border:0.5px solid rgba(167,139,250,.18);border-radius:16px;padding:12px 14px;backdrop-filter:blur(12px)}
+#offer-locate{display:none;margin-bottom:6px}
+#offer-locate .ol-label{font-size:13px;color:#e3d9ff;margin-bottom:9px;font-family:Georgia,serif;text-align:center}
+#offer-locate .ol-row{display:flex;gap:6px}
+#ol-input{flex:1;background:rgba(10,10,20,.9);border:0.5px solid rgba(167,139,250,.45);border-radius:11px;padding:9px 12px;font-size:12.5px;color:#e0d8ff;outline:none;font-family:inherit;box-shadow:0 0 16px rgba(124,92,255,.28)}
+#ol-input:focus{border-color:rgba(167,139,250,.85);box-shadow:0 0 0 2px rgba(167,139,250,.22),0 0 22px rgba(124,92,255,.5)}
+#ol-go{padding:9px 15px;border-radius:11px;border:0.5px solid rgba(167,139,250,.4);background:rgba(167,139,250,.18);color:#e6dfff;font-size:12.5px;cursor:pointer;font-family:inherit;white-space:nowrap}
+#offer-locate .ol-hint{font-size:11px;color:#9a8fc2;margin-top:9px;text-align:center}
+#panel.locating #offer-locate{display:block}
+#panel.locating #ptitle,#panel.locating .srealm-label,#panel.locating .scats,#panel.locating #memory-label,#panel.locating #memory-row,#panel.locating #sense-confirm,#panel.locating #photo-row,#panel.locating #srow,#panel.locating #offer-confirm,#panel.locating #offer-lastlink{display:none}
+#offer-confirm{display:none}
+#panel.just-offered #offer-confirm{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:10px;padding:10px 12px;background:rgba(167,139,250,.13);border:0.5px solid rgba(167,139,250,.42);border-radius:12px}
+#offer-confirm .oc-sym{width:20px;height:20px;flex-shrink:0}
+#offer-confirm .oc-sym svg{width:100%;height:100%}
+#offer-confirm .oc-main{font-size:12.5px;color:#efe8ff;flex:1;min-width:130px}
+#offer-confirm .oc-main .oc-t{color:#c4bce0;font-style:italic}
+#offer-confirm .oc-meta{font-size:10.5px;color:#9a8fc2;width:100%}
+#offer-confirm .oc-again{font-size:12px;color:#e6dfff;cursor:pointer;white-space:nowrap;border:0.5px solid rgba(167,139,250,.5);border-radius:10px;padding:7px 12px;background:rgba(167,139,250,.16)}
+#panel.just-offered #ptitle{display:none}
+#panel.just-offered.offer-quiet .scats{opacity:.4;transition:opacity .3s}
+#offer-lastlink{display:none;font-size:11.5px;color:#b3a6dd;cursor:pointer;margin-bottom:9px;text-align:center;text-decoration:underline;text-decoration-color:rgba(167,139,250,.5)}
+#panel.has-last:not(.just-offered):not(.locating) #offer-lastlink{display:block}
 #ptitle{font-size:12px;color:#9d8fcc;margin-bottom:9px}
 .srealm-label{font-size:9px;color:#7e76a8;letter-spacing:.07em;text-transform:uppercase;margin:1px 0 5px 2px}
 .scats{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
@@ -285,7 +306,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 @keyframes obFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 /* My Aura: person / selfie */
 #ma-video{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scaleX(-1);width:34%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:none;z-index:5;box-shadow:0 0 40px rgba(167,139,250,.6);border:2px solid rgba(236,241,255,.6)}
-#ma-selfie-wrap{position:absolute;bottom:auto;top:38%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:6}
+#ma-selfie-wrap{position:absolute;bottom:auto;top:58%;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;z-index:6}
 #ma-selfie-note{font-size:10.5px;color:#a99bd6;text-align:center;max-width:210px;line-height:1.35;text-shadow:0 1px 4px rgba(0,0,0,.7)}
 #ma-selfie-btn{background:rgba(20,16,40,.8);border:0.5px solid rgba(167,139,250,.45);color:#d8ccff;font-size:12px;padding:9px 16px;border-radius:18px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s}
 #ma-selfie-btn:hover{background:rgba(44,34,78,.9)}
@@ -368,6 +389,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 @media (max-width:900px){
   #ma-layout{flex-direction:column;overflow-y:auto}
   #ma-left,#ma-right{width:auto!important;max-width:none!important;padding:0 18px}
+  #ma-left{padding-bottom:30px;margin-bottom:8px;border-bottom:1px dotted rgba(167,139,250,.28)}
+  #ma-right{padding-top:10px}
   #ma-center{min-height:40vh;order:-1}
   #feed{width:170px;max-height:38vh}
 }
@@ -378,7 +401,12 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   #tabs{font-size:11px;padding:4px 4px}
   .tab{padding:5px 7px}
   #panel{display:none}
-  #panel.show-mobile{display:block;bottom:0;left:0;right:0;transform:none;background:rgba(8,7,16,.97);padding:14px 14px 18px;border-top:0.5px solid rgba(167,139,250,.3);border-radius:18px 18px 0 0;max-height:64vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.6)}
+  #panel.show-mobile{display:block;bottom:0;left:0;right:0;transform:none;background:rgba(8,7,16,.97);padding:14px 10px 18px;border-top:0.5px solid rgba(167,139,250,.3);border-radius:18px 18px 0 0;max-height:64vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.6)}
+  #panel.show-mobile #pi{background:none;border:none;border-radius:0;padding:0}
+  #livefeed-page #lf-inner{width:100%;max-width:100%;border-radius:0;max-height:100vh;padding:20px 12px}
+  #panel.show-mobile #srow{position:sticky;bottom:0;background:linear-gradient(rgba(8,7,16,0),rgba(8,7,16,.98) 24%);padding-top:10px;margin-top:2px;z-index:5}
+  #panel.show-mobile.just-offered{max-height:38vh}
+  #panel.show-mobile.just-offered #srow{position:static;background:none}
   #mobile-offer{display:block}
   #feed{display:none}
   #my-aura{top:88px;left:10px;transform:scale(.9);transform-origin:top left}
@@ -397,7 +425,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   #srow{flex-direction:column;gap:8px}
   #srow #sbtn{width:100%}
   #panel.show-mobile #sheet-close{display:block;position:sticky;top:0;width:-moz-fit-content;width:fit-content;margin:0 0 8px auto;background:rgba(44,34,78,.94);border:0.5px solid rgba(167,139,250,.45);color:#cbbff0;font-size:12px;padding:7px 13px;border-radius:14px;cursor:pointer;font-family:inherit;z-index:6;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
-  #ui.offer-open #my-aura,#ui.offer-open #world-btn,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #livefeed-btn,#ui.offer-open #place-mini{display:none}
+  #ui.offer-open #world-btn,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #livefeed-btn,#ui.offer-open #aura-views,#ui.offer-open #place-mini{display:none}
 }
 /* FIX: these map buttons live inside #ui (pointer-events:none) and must opt back in */
 #register-btn,#livefeed-btn,#locality-btn,#place-mini,#mobile-offer{pointer-events:auto}
@@ -605,7 +633,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 .av-opt:hover{background:rgba(167,139,250,.1);border-color:rgba(167,139,250,.35)}
 .av-opt .av-ico{display:flex;color:#b9a9ec;flex-shrink:0}
 #livefeed-btn{position:relative;left:auto;top:auto;right:auto;bottom:auto}
-#ui.offer-open #left-stack{display:none}
+#ui.offer-open #aura-views-btn{display:none}
 @media (max-width:600px){
   #left-stack{left:10px;top:96px;gap:8px}
   #my-aura{transform:none;width:124px;transition:transform .5s ease}
@@ -703,6 +731,13 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="panel">
     <button id="sheet-close">✕ Close</button>
     <div id="pi">
+      <div id="offer-locate">
+        <div class="ol-label">Where would you like to offer your aurasense?</div>
+        <div class="ol-row"><input id="ol-input" type="text" placeholder="Search a place…" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
+        <div class="ol-hint">…or tap a spot on the map</div>
+      </div>
+      <div id="offer-confirm"></div>
+      <div id="offer-lastlink">▾ see last aura I offered</div>
       <div id="ptitle">Energize the aura with your senses</div>
       <div class="srealm-label">The world around you</div>
       <div class="scats" id="scats-ext"></div>
@@ -1388,7 +1423,7 @@ SENSES.forEach(s=>{
   b.className='sc'+(s.id===selSense?' sel':'');
   b.style.setProperty('--c',s.color);
   b.innerHTML=`<span>${SENSE_SYMBOLS[s.id]}</span>${s.label}`;
-  b.onclick=()=>{selSense=s.id;document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');};
+  b.onclick=()=>{selSense=s.id;const _p=document.getElementById('panel');if(_p)_p.classList.remove('just-offered','offer-quiet');document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');};
   b.onmouseenter=e=>{
     const ex=s.examples[Math.floor(Math.random()*s.examples.length)];
     stip.innerHTML=`<span style="color:${s.color}">${s.icon} ${s.label}</span><br><br>"${ex}"`;
@@ -1739,7 +1774,7 @@ function submit(lat,lng,text){
     }
   });
   // Leave the shared sense showing in the arrowed box, with the full house-number address.
-  reverseAddress(lat,lng).then(addr=>showSharedPopup(lat,lng,sid,text,addr));
+  reverseAddress(lat,lng).then(addr=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,addr,lat,lng);});
   playSound(sid);
   shareCount++;myShareCount++;
   triggerWave(s.color);
@@ -1819,11 +1854,10 @@ document.getElementById('sbtn').onclick=()=>{
   const inp=document.getElementById('inp');
   const v=inp.value.trim();
   const spot=resolveSpot();
-  if(!spot){ openPlacePrompt('Where would you like to place this Aurasense?'); showMsg('Choose a place for your aurasense — search a location, or tap the map'); return; }
+  if(!spot){ const panel=document.getElementById('panel'); if(panel&&panel.classList.contains('show-mobile')){panel.classList.add('locating');const oi=document.getElementById('ol-input');if(oi)setTimeout(()=>{try{oi.focus();}catch(e){}},40);} else {openPlacePrompt('Where would you like to place this Aurasense?');} showMsg('Choose where to offer — search a place, or tap the map'); return; }
   if(!v && !emptyPrompted){ showMsg('Would you like to add a description of the aurasense you are submitting? (optional — but preferred)'); inp.focus(); inp.classList.add('inp-glow'); emptyPrompted=true; return; }
   if(spot.fromClick)lastClickPoint=null;
   materializeAndSubmit(spot.lat,spot.lng,v);
-  if(typeof closeOfferSheet==='function')closeOfferSheet();
   if(spot.fromSearch && lastSearchLabel){
     lastSearchLabel.textContent='✨ Aura just offered at '+lastSearchName;
     const lblRef=lastSearchLabel, nameRef=lastSearchName;
@@ -1901,21 +1935,14 @@ function maSizeCanvas(){const cv=document.getElementById('ma-canvas');if(!cv)ret
 function maLayerRadius(i,baseR,breath){return baseR*(1-i*0.14)*breath;}
 function maDrawPerson(c,cx,cy,baseR,alpha){
   c.save();
-  const headR=baseR*0.2,headY=cy,botY=cy+baseR*0.95;
-  const grd=c.createLinearGradient(0,headY-headR,0,botY);
-  grd.addColorStop(0,'rgba(228,234,255,'+(0.26*alpha).toFixed(3)+')');
-  grd.addColorStop(0.55,'rgba(206,218,255,'+(0.13*alpha).toFixed(3)+')');
+  const headR=baseR*0.24,headY=cy;
+  const grd=c.createRadialGradient(cx,headY,0,cx,headY,headR);
+  grd.addColorStop(0,'rgba(228,234,255,'+(0.24*alpha).toFixed(3)+')');
+  grd.addColorStop(0.7,'rgba(206,218,255,'+(0.14*alpha).toFixed(3)+')');
   grd.addColorStop(1,'rgba(196,210,255,0)');
   c.fillStyle=grd;
-  const shY=headY+headR*0.9;
-  c.beginPath();
-  c.moveTo(cx-headR*0.85,headY+headR*0.35);
-  c.quadraticCurveTo(cx-headR*2.1,shY,cx-baseR*0.52,botY);
-  c.lineTo(cx+baseR*0.52,botY);
-  c.quadraticCurveTo(cx+headR*2.1,shY,cx+headR*0.85,headY+headR*0.35);
-  c.closePath();c.fill();
   c.beginPath();c.arc(cx,headY,headR,0,TWO);c.fill();
-  c.strokeStyle='rgba(236,241,255,'+(0.18*alpha).toFixed(3)+')';c.lineWidth=1.1;
+  c.strokeStyle='rgba(236,241,255,'+(0.2*alpha).toFixed(3)+')';c.lineWidth=1.1;
   c.beginPath();c.arc(cx,headY,headR,0,TWO);c.stroke();
   c.restore();
 }
@@ -1940,7 +1967,7 @@ function maDraw(){
     if(hover){c.strokeStyle=rgbaArr(rgb,0.85);c.lineWidth=1.5;c.beginPath();c.arc(cx,cy,rr*0.85,0,TWO);c.stroke();}
   }
   for(let k=0;k<28;k++){const ang=maT*0.3+k*0.7,radm=baseR*(0.2+0.75*((k*0.13)%1)),mx=cx+Math.cos(ang)*radm*0.8,my=cy+Math.sin(ang)*radm*0.8,tw=0.5+0.5*Math.sin(maT*1.3+k);c.beginPath();c.arc(mx,my,0.8+tw*1.2,0,TWO);c.fillStyle='rgba(255,251,255,'+(0.10+0.18*tw).toFixed(3)+')';c.fill();}
-  const coreR=baseR*0.34,headR=baseR*0.2;
+  const coreR=baseR*0.34,headR=baseR*0.24;
   const cg=c.createRadialGradient(cx,cy,0,cx,cy,coreR*1.15);
   cg.addColorStop(0,'rgba(245,242,255,0.5)');cg.addColorStop(1,'rgba(220,210,255,0)');
   c.fillStyle=cg;c.beginPath();c.arc(cx,cy,coreR*1.15,0,TWO);c.fill();
@@ -2257,10 +2284,14 @@ async function localityGo(){
   if(lb){lb.addEventListener('click',localityGo);lb.addEventListener('mouseenter',()=>{if(tip)tip.style.display='block';});lb.addEventListener('mouseleave',()=>{if(tip)tip.style.display='none';});}
 })();
 // ---- Condensed mobile offer ----
+let lastOfferInfo=null;
+function offerHasSpot(){try{return !!lastClickPoint||!!lastSearchPoint;}catch(e){return false;}}
 function openOfferSheet(){
-  const panel=document.getElementById('panel');if(panel)panel.classList.add('show-mobile');
+  const panel=document.getElementById('panel');
+  if(panel){panel.classList.add('show-mobile');panel.classList.remove('just-offered','offer-quiet');panel.classList.toggle('locating',!offerHasSpot());}
   const ui=document.getElementById('ui');if(ui)ui.classList.add('offer-open');
   const mo=document.getElementById('mobile-offer');if(mo)mo.style.display='none';
+  if(panel&&panel.classList.contains('locating')){const oi=document.getElementById('ol-input');if(oi)setTimeout(()=>{try{oi.focus();}catch(e){}},80);}
 }
 function raiseOfferPanel(address){
   const pt=document.getElementById('ptitle');
@@ -2268,8 +2299,31 @@ function raiseOfferPanel(address){
   openOfferSheet();
   const sb=document.getElementById('sbtn');if(sb)sb.classList.add('sbtn-glow');
 }
+function showOfferConfirm(senseId,text,place,lat,lng){
+  const s=SENSES.find(x=>x.id===senseId);if(!s)return;
+  lastOfferInfo={senseId,text,place,lat,lng,born:Date.now()};
+  const box=document.getElementById('offer-confirm');if(!box)return;
+  const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const body=(senseId==='memory'&&(text||'').indexOf('kept private')<0&&typeof memoryPrivate!=='undefined'&&memoryPrivate)?'a memory, kept private':esc(text);
+  box.innerHTML='<span class="oc-sym">'+(SENSE_SYMBOLS[senseId]||'')+'</span>'
+    +'<span class="oc-main"><b style="color:'+s.color+'">'+s.label+'</b>'+(body?' — <span class="oc-t">"'+body+'"</span>':'')+'</span>'
+    +'<span class="oc-again">↻ Offer another aura here</span>'
+    +'<span class="oc-meta">📍 '+esc(place||'this spot')+' · just now</span>';
+  const panel=document.getElementById('panel');
+  if(panel){panel.classList.add('show-mobile','just-offered','offer-quiet','has-last');panel.classList.remove('locating');}
+  const again=box.querySelector('.oc-again');
+  if(again)again.addEventListener('click',()=>{
+    if(panel){panel.classList.remove('just-offered','offer-quiet');}
+    const inp=document.getElementById('inp');if(inp){inp.value='';inp.classList.remove('inp-glow');}
+    selSense=null;document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));
+    const scf=document.getElementById('sense-confirm');if(scf)scf.textContent='';
+    if(lat!=null){lastClickPoint=[lng,lat];}
+    if(inp)setTimeout(()=>{try{inp.focus();}catch(e){}},60);
+  });
+}
+function reopenLastAura(){const li=lastOfferInfo;if(!li)return;showOfferConfirm(li.senseId,li.text,li.place,li.lat,li.lng);}
 function closeOfferSheet(){
-  const panel=document.getElementById('panel');if(panel){panel.classList.remove('show-mobile');panel.style.bottom='';panel.style.maxHeight='';}
+  const panel=document.getElementById('panel');if(panel){panel.classList.remove('show-mobile','just-offered','offer-quiet','locating','has-last');panel.style.bottom='';panel.style.maxHeight='';}
   const ui=document.getElementById('ui');if(ui)ui.classList.remove('offer-open');
   const mo=document.getElementById('mobile-offer');if(mo){mo.style.display='';mo.textContent='\u2726 Offer an aurasense';}
   const pt=document.getElementById('ptitle');if(pt)pt.textContent='Energize the aura with your senses';
@@ -2295,6 +2349,12 @@ function closeOfferSheet(){
   if(mo)mo.addEventListener('click',openOfferSheet);
   const sc=document.getElementById('sheet-close');
   if(sc)sc.addEventListener('click',closeOfferSheet);
+  const olGo=document.getElementById('ol-go'),olInput=document.getElementById('ol-input');
+  function olRun(){const q=(olInput&&olInput.value.trim())||'';if(!q)return;const si=document.getElementById('si'),sg=document.getElementById('sg');if(si)si.value=q;if(sg)sg.click();const panel=document.getElementById('panel');if(panel)panel.classList.remove('locating');if(olInput)olInput.value='';showMsg('Bringing you there — then choose a symbol and offer your aurasense');}
+  if(olGo)olGo.addEventListener('click',olRun);
+  if(olInput)olInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();olRun();}});
+  const ll=document.getElementById('offer-lastlink');
+  if(ll)ll.addEventListener('click',()=>{if(typeof reopenLastAura==='function')reopenLastAura();});
 })();
 // ---- Photo attach for an offering (front-end preview) ----
 let pendingPhoto=null;
