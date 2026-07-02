@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>Aurasense — The Living Aura of Humanity</title>
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.css" rel="stylesheet">
@@ -58,10 +59,20 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .tab.active{color:#c4b5fd}
 .tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0;transition:background .3s,box-shadow .3s}
 .tab.active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
-.tab-orb-my{--myglow:11px;width:15px;height:15px;background:radial-gradient(circle,#e8e2ff 0%,#a78bfa 60%,rgba(167,139,250,.15) 100%);box-shadow:0 0 var(--myglow) rgba(167,139,250,.75);animation:orbMyBreath 5.5s ease-in-out infinite;transition:width .6s ease,height .6s ease}
-@keyframes orbMyBreath{0%,100%{box-shadow:0 0 var(--myglow) rgba(167,139,250,.55);filter:brightness(1)}50%{box-shadow:0 0 calc(var(--myglow) * 1.7) rgba(167,139,250,.95);filter:brightness(1.18)}}
+.tab-orb-my{--myglow:11px;position:relative;width:17px;height:17px;flex-shrink:0;overflow:visible;transition:width .6s ease,height .6s ease}
+.tab-orb-my canvas{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:300%;height:300%;pointer-events:none}
 .tab-orb-my.orb-fed{animation:orbFed .9s ease-out}
-@keyframes orbFed{0%{transform:scale(1)}32%{transform:scale(1.55);box-shadow:0 0 28px rgba(224,216,255,1)}100%{transform:scale(1)}}
+@keyframes orbFed{0%{transform:scale(1)}32%{transform:scale(1.5)}100%{transform:scale(1)}}
+@media(min-width:601px){.tab-caret[data-menu="street"],#street-menu{display:none!important}}
+@media(max-width:600px){.tab.top-region{display:none!important}}
+#panel-tip{display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 14px;cursor:pointer;font-size:15px;font-weight:700;color:#e6dcff;letter-spacing:.02em;text-shadow:0 0 14px rgba(167,139,250,.55)}
+#panel-tip .tip-arrow{font-size:13px;color:#c4b5fd;animation:tipRise 2.6s ease-in-out infinite}
+@keyframes tipRise{0%,100%{transform:translateY(2px);opacity:.65}50%{transform:translateY(-2px);opacity:1}}
+#panel.show-mobile #panel-tip,#panel.just-offered #panel-tip{display:none}
+#panel #pi{display:none}
+#panel.show-mobile #pi,#panel.just-offered #pi{display:block}
+#panel.just-offered #pi>*:not(#offer-confirm){display:none!important}
+#panel.just-offered{max-height:none!important;overflow:visible}
 .tab-myaura{color:#c4b5fd;font-weight:600}
 .tab-myaura.mypage-open{color:#efe8ff}
 .tab-group{position:relative;display:flex;align-items:center}
@@ -113,8 +124,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .fi-text{font-size:11px;color:#c0b8d8;line-height:1.5;font-style:italic}
 .fi-meta{font-size:10px;color:#4a4260;margin-top:3px}
 #stip{position:fixed;background:rgba(10,8,20,.97);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 13px;font-size:11px;color:#c0b8d8;max-width:185px;line-height:1.6;pointer-events:none;opacity:0;transition:opacity .2s;z-index:9999;font-style:italic}
-#panel{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);width:min(680px,calc(100% - 32px));pointer-events:all;display:none}
-#panel.show-mobile{display:block}
+#panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(680px,calc(100% - 32px));pointer-events:all;display:block;background:rgba(8,7,16,.96);border:0.5px solid rgba(167,139,250,.3);border-bottom:none;border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.55)}
+#panel.show-mobile{display:block;padding:12px 12px 16px;max-height:64vh;overflow-y:auto}
 #panel.show-mobile #sheet-close{display:block;position:absolute;top:12px;right:14px;z-index:6;background:rgba(44,34,78,.94);border:0.5px solid rgba(167,139,250,.45);color:#cbbff0;font-size:12px;padding:6px 12px;border-radius:14px;cursor:pointer;font-family:inherit}
 #pi{background:rgba(10,10,20,.93);border:0.5px solid rgba(167,139,250,.18);border-radius:16px;padding:12px 14px;backdrop-filter:blur(12px)}
 #offer-locate{display:none;margin-bottom:6px}
@@ -127,16 +138,30 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #panel.locating #offer-locate{display:block}
 #panel.locating #ptitle,#panel.locating .srealm-label,#panel.locating .scats,#panel.locating #memory-label,#panel.locating #memory-row,#panel.locating #sense-confirm,#panel.locating #photo-row,#panel.locating #srow,#panel.locating #offer-confirm,#panel.locating #offer-lastlink{display:none}
 #offer-confirm{display:none}
-#panel.just-offered #offer-confirm{display:block;margin-bottom:10px;padding:11px 12px;background:rgba(167,139,250,.13);border:0.5px solid rgba(167,139,250,.42);border-radius:12px}
-#offer-confirm .oc-head{font-size:12.5px;color:#efe8ff;margin-bottom:7px;padding-right:78px}
+#panel.just-offered #offer-confirm{display:block;margin:0;padding:12px 14px 14px;background:transparent;border:none}
+#offer-confirm .oc-head{font-size:13px;color:#efe8ff;margin-bottom:9px;padding-right:70px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #offer-confirm .oc-head b{color:#e6dcff}
-#offer-confirm .oc-body{font-size:12px;color:#efe8ff;display:flex;align-items:center;gap:7px;margin-bottom:10px}
-#offer-confirm .oc-sym{width:18px;height:18px;flex-shrink:0}
-#offer-confirm .oc-sym svg{width:100%;height:100%}
-#offer-confirm .oc-t{color:#c4bce0;font-style:italic}
-#offer-confirm .oc-actions{display:flex;flex-wrap:wrap;gap:7px}
-#offer-confirm .oc-again,#offer-confirm .oc-elsewhere,#offer-confirm .oc-social{font-size:11.5px;color:#e6dfff;cursor:pointer;border:0.5px solid rgba(167,139,250,.5);border-radius:10px;padding:7px 11px;background:rgba(167,139,250,.16);white-space:nowrap}
-#offer-confirm .oc-elsewhere,#offer-confirm .oc-social{background:rgba(167,139,250,.08)}
+#offer-confirm .oc-actions{display:flex;align-items:center;gap:7px;flex-wrap:nowrap}
+#offer-confirm .oc-lbl{font-size:12px;color:#b9addc;white-space:nowrap;margin-right:2px}
+#offer-confirm .oc-btn{font-size:12px;color:#efe8ff;cursor:pointer;border:0.5px solid rgba(167,139,250,.55);border-radius:11px;padding:7px 13px;background:rgba(167,139,250,.18);white-space:nowrap;font-family:inherit}
+#offer-confirm .oc-btn.oc-social{background:rgba(167,139,250,.08)}
+#alpha-page{position:fixed;inset:0;z-index:1600;background:radial-gradient(ellipse at 50% 0%,#191430 0%,#0a0818 60%,#060512 100%);display:none;overflow-y:auto;padding:64px 18px 60px;pointer-events:all}
+#alpha-page.show{display:block}
+#alpha-back{position:fixed;top:14px;left:14px;z-index:5;background:rgba(20,16,40,.85);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:12px;padding:8px 14px;border-radius:16px;cursor:pointer;font-family:inherit}
+#alpha-title{text-align:center;font-size:22px;color:#efe8ff;letter-spacing:.06em;margin-bottom:8px;text-shadow:0 0 22px rgba(167,139,250,.5)}
+#alpha-sub{text-align:center;font-size:12.5px;color:#a99bd6;max-width:620px;margin:0 auto 26px;line-height:1.55}
+.alpha-h{font-size:14px;color:#c4b5fd;letter-spacing:.08em;text-transform:uppercase;margin:26px auto 12px;max-width:860px}
+.alpha-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;max-width:860px;margin:0 auto}
+.alpha-cell{background:rgba(18,14,36,.7);border:0.5px solid rgba(167,139,250,.22);border-radius:14px;padding:12px 10px;text-align:center}
+.alpha-cell svg{display:block;margin:0 auto 7px}
+.alpha-w{font-size:12.5px;color:#e6dcff;margin-bottom:3px}
+.alpha-d{font-size:10.5px;color:#9a8fc2;line-height:1.4}
+#alpha-junc-note{font-size:12px;color:#a99bd6;max-width:860px;margin:0 auto 14px;line-height:1.55}
+#alpha-junctions{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;max-width:860px;margin:0 auto}
+.alpha-j{display:flex;align-items:center;gap:9px;background:rgba(18,14,36,.7);border:0.5px solid rgba(167,139,250,.22);border-radius:14px;padding:11px 12px}
+.alpha-j .aj-dot{color:#c4b5fd;font-size:15px}
+.alpha-j .aj-m{font-size:11.5px;color:#cfc4ee;line-height:1.4}
+#ma-alpha{position:fixed;top:14px;right:14px;z-index:5;background:rgba(167,139,250,.14);border:0.5px solid rgba(167,139,250,.5);color:#e0d6ff;font-size:12px;padding:8px 14px;border-radius:16px;cursor:pointer;font-family:inherit}
 #panel.just-offered #ptitle{display:none}
 #panel.just-offered.offer-quiet .scats{opacity:.4;transition:opacity .3s}
 #offer-lastlink{display:none;font-size:11.5px;color:#b3a6dd;cursor:pointer;margin-bottom:9px;text-align:center;text-decoration:underline;text-decoration-color:rgba(167,139,250,.5)}
@@ -343,7 +368,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 @media (max-width:600px){#sense-confirm{display:none!important}}
 #sense-confirm:empty{display:none}
 #photo-row{display:flex;align-items:center;gap:10px;margin:0 2px 9px;flex-wrap:wrap}
-#photo-btn{background:rgba(20,16,40,.7);border:0.5px solid rgba(167,139,250,.4);color:#cbbff0;font-size:11.5px;padding:7px 12px;border-radius:14px;cursor:pointer;font-family:inherit;transition:background .2s}
+#photo-btn{background:rgba(167,139,250,.12);border:1px dashed rgba(167,139,250,.6);color:#e0d6ff;font-size:12px;padding:8px 14px;border-radius:14px;cursor:pointer;font-family:inherit;transition:background .2s}
 #photo-btn:hover{background:rgba(30,22,56,.85)}
 #photo-preview{display:flex;align-items:center;gap:7px}
 #photo-preview img{height:46px;width:46px;object-fit:cover;border-radius:8px;border:0.5px solid rgba(167,139,250,.45)}
@@ -359,6 +384,11 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 /* Top search box folds into the centre prompt */
 #search-box{display:none}
 @media(min-width:601px){#search-box{display:flex}}
+@media(max-width:600px){
+  #search-box{display:flex;position:fixed;top:100px;left:12px;right:12px;pointer-events:all;z-index:41}
+  #si{flex:1;width:auto;font-size:12.5px;padding:9px 13px}
+  #left-stack{top:148px!important}
+}
 /* Central "place an aurasense" prompt */
 #place-prompt{position:absolute;top:34%;left:50%;transform:translate(-50%,-50%);z-index:60;width:min(420px,90%);background:rgba(12,10,26,.95);border:1px solid rgba(167,139,250,.5);border-radius:20px;padding:22px 22px 18px;box-shadow:0 0 0 4px rgba(124,92,255,.18),0 0 50px rgba(124,92,255,.5);pointer-events:all;display:none}
 #place-prompt.show{display:block}
@@ -379,7 +409,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #locality-btn:hover{background:rgba(44,34,78,.85);box-shadow:0 0 34px rgba(124,92,255,.6)}
 #locality-tip{position:absolute;bottom:74px;right:14px;z-index:41;background:rgba(8,7,20,.95);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:10.5px;padding:6px 10px;border-radius:9px;display:none;white-space:nowrap}
 /* Condensed mobile offer button */
-#mobile-offer{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:45;display:block;background:linear-gradient(135deg,#7c5cff,#a78bfa);border:none;color:#fff;font-size:14px;font-weight:500;padding:13px 26px;border-radius:24px;cursor:pointer;box-shadow:0 0 30px rgba(124,92,255,.55);letter-spacing:.02em}
+#mobile-offer{display:none!important}
 /* Live feed: locality + search header */
 #lf-tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;margin:0 auto 16px;max-width:720px}
 .lf-tool{background:rgba(20,16,40,.7);border:0.5px solid rgba(167,139,250,.35);color:#cbbff0;font-size:12px;padding:8px 13px;border-radius:16px;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap}
@@ -411,7 +441,10 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   #ma-layout{flex-direction:column;overflow-y:auto}
   #ma-left,#ma-right{width:auto!important;max-width:none!important;padding:0 18px}
   #ma-left{padding-bottom:48px;margin-bottom:10px;border-bottom:1px dotted rgba(167,139,250,.28)}
-  #ma-offerings{min-height:150px}
+  #ma-offerings{min-height:220px;max-height:300px;overflow-y:auto;padding-right:6px}
+  #ma-offerings::-webkit-scrollbar{width:9px}
+  #ma-offerings::-webkit-scrollbar-track{background:rgba(167,139,250,.08);border-radius:8px}
+  #ma-offerings::-webkit-scrollbar-thumb{background:rgba(167,139,250,.55);border-radius:8px}
   #ma-right{padding-top:10px}
   #ma-center{min-height:40vh;order:-1}
   #feed{width:170px;max-height:38vh}
@@ -422,12 +455,12 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   #hdr2{top:58px;left:16px;right:16px;justify-content:center}
   #tabs{font-size:11px;padding:4px 4px}
   .tab{padding:5px 7px}
-  #panel{display:none}
+  #panel{left:0;right:0;width:auto;transform:none;box-sizing:border-box}
   #panel.show-mobile{display:block;bottom:0;left:0;right:0;width:auto;box-sizing:border-box;transform:none;background:rgba(8,7,16,.97);padding:12px 8px 18px;border-top:0.5px solid rgba(167,139,250,.3);border-radius:18px 18px 0 0;max-height:64vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.6)}
   #panel.show-mobile #pi{background:none;border:none;border-radius:0;padding:0}
   #livefeed-page #lf-inner{width:100%;max-width:100%;border-radius:0;max-height:100vh;padding:20px 12px}
   #panel.show-mobile #srow{position:sticky;bottom:0;background:linear-gradient(rgba(8,7,16,0),rgba(8,7,16,.98) 24%);padding-top:10px;margin-top:2px;z-index:5}
-  #panel.show-mobile.just-offered{max-height:38vh}
+  #panel.show-mobile.just-offered{max-height:none;overflow:visible;padding:0}
   #panel.show-mobile.just-offered #srow{position:static;background:none}
   #mobile-offer{display:block}
   #feed{display:none}
@@ -644,6 +677,8 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #my-aura.is-registered #ma-register-inline{display:none}
 #my-aura:not(.is-registered) #my-aura-label{display:none}
 #aura-views{position:relative;left:auto;top:auto}
+#aura-views{display:none!important}
+@media(min-width:601px){#livefeed-btn{display:none!important}}
 #aura-views-btn{display:flex;align-items:center;gap:6px;background:rgba(20,16,40,.72);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:11px;padding:8px 12px;border-radius:18px;cursor:pointer;font-family:inherit;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 0 16px rgba(124,92,255,.22);white-space:nowrap}
 #aura-views-btn:hover{background:rgba(30,22,56,.85)}
 #aura-views-btn .av-eye{display:flex;color:#c4b5fd}
@@ -690,13 +725,14 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button class="tab tab-myaura" data-myaura><span class="tab-orb tab-orb-my" id="orbMy"></span>My Aura</button>
       <div class="tab-group">
         <button class="tab active" data-i="0"><span class="tab-orb" id="orb0"></span>Street</button>
-        <button class="tab-caret" data-menu="street" title="Town, Region, Nation">▾</button>
+        <button class="tab-caret" data-menu="street" title="Region">▾</button>
         <div class="tab-menu" id="street-menu">
-          <button class="tab-mi" data-i="1"><span class="tab-orb" id="orb1"></span>Town</button>
-          <button class="tab-mi" data-i="2"><span class="tab-orb" id="orb2"></span>Region</button>
-          <button class="tab-mi" data-i="3"><span class="tab-orb" id="orb3"></span>Nation</button>
+          <button class="tab-mi" data-i="2"><span class="tab-orb"></span>Region</button>
         </div>
       </div>
+      <button class="tab" data-i="1"><span class="tab-orb" id="orb1"></span>Town</button>
+      <button class="tab top-region" data-i="2"><span class="tab-orb" id="orb2"></span>Region</button>
+      <button class="tab" data-i="3"><span class="tab-orb" id="orb3"></span>Nation</button>
       <div class="tab-group">
         <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>Planet</button>
         <button class="tab-caret" data-menu="planet" title="World Auras">▾</button>
@@ -706,7 +742,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       </div>
     </div>
     <div id="search-box">
-      <input id="si" placeholder="Street, town, postcode..."/>
+      <input id="si" maxlength="120" placeholder="Street, town, postcode..."/>
       <button id="sg">Go</button>
     </div>
   </div>
@@ -735,7 +771,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <button id="mobile-offer">✦ Offer an aurasense</button>
   <div id="place-prompt">
     <div id="pp-title">Search for a location to place an aurasense</div>
-    <div id="pp-row"><input id="pp-input" placeholder="Street, town, postcode, country..."/><button id="pp-go">Go</button></div>
+    <div id="pp-row"><input id="pp-input" maxlength="120" placeholder="Street, town, postcode, country..."/><button id="pp-go">Go</button></div>
     <button id="pp-select">…or select a spot on the map</button>
   </div>
   <div id="place-mini"><input id="pm-input" placeholder="Search a location..."/><button id="pm-go">🔍</button></div>
@@ -763,11 +799,12 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="feed"></div>
   <div id="stip"></div>
   <div id="panel">
+    <div id="panel-tip"><span class="tip-arrow">▲</span>Energize the aura with your senses</div>
     <button id="sheet-close">✕ Close</button>
     <div id="pi">
       <div id="offer-locate">
         <div class="ol-label">Where would you like to offer your aurasense?</div>
-        <div class="ol-row"><input id="ol-input" type="text" placeholder="Search a place…" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
+        <div class="ol-row"><input id="ol-input" type="text" maxlength="120" placeholder="Search a place…" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
         <div class="ol-hint">…or tap a spot on the map</div>
       </div>
       <div id="offer-confirm"></div>
@@ -786,7 +823,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
         <div id="photo-preview"></div>
       </div>
       <div id="srow">
-        <input id="inp" placeholder="What does this place feel like right now?"/>
+        <input id="inp" maxlength="280" placeholder="What does this place feel like right now?"/>
         <button id="sbtn">Offer your sense to the aura</button>
       </div>
     </div>
@@ -805,8 +842,21 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     no ads and without ever selling an ounce of anyone's data.
   • Before this stage, Aurasensers communicate through the alphasense symbols — refined as the language grows.
 -->
+<div id="alpha-page">
+  <button id="alpha-back">← Back to My Aura</button>
+  <div id="alpha-title">The Alphasense Language</div>
+  <div id="alpha-sub">A living alphabet of felt meaning — light behaving as the feeling behaves. Symbols can stand alone, or join at a junction point (·) to form new meanings across aura, time, place and energy.</div>
+  <div class="alpha-h">The Senses</div>
+  <div id="alpha-senses" class="alpha-grid"></div>
+  <div class="alpha-h">Words of Connection</div>
+  <div id="alpha-words" class="alpha-grid"></div>
+  <div class="alpha-h">Junctions — joining symbols into new meaning</div>
+  <div id="alpha-junc-note">When two symbols meet at a junction point, the first gives its energy to the second: the pair reads as one feeling directed into one context. Time read as a spiral, place read as a living point, energy read as motion — so the same pair can speak of a moment, a location, or a current.</div>
+  <div id="alpha-junctions"></div>
+</div>
 <div id="myaura-page">
   <button id="ma-back">← Return to the map</button>
+  <button id="ma-alpha">✧ Alphasense symbols</button>
   <div id="ma-title">My Aura</div>
   <div id="ma-handle"></div>
   <div id="ma-layout">
@@ -1057,7 +1107,7 @@ const SENSES=[
   {id:"intuition",realm:"internal",label:"Intuition",icon:"✶",color:"#b57edc",freqs:[[639,.0,.15,.06,2.6],[852,.2,.09,.06,1.8]],examples:["A strong feeling I should not linger here","Something tells me this place is kind","An inexplicable pull toward this corner"]},
   {id:"chronosception",realm:"internal",label:"Chronosception",icon:"⧗",color:"#8b9dde",freqs:[[400,.0,.14,.08,2.4],[300,.3,.08,.06,1.6]],examples:["Time moves slowly here — unhurried, gentle","The hours seem to vanish in this place","A timeless quality, like the past is still present"]},
   {id:"stress",realm:"internal",label:"Stress",icon:"҂",color:"#d97777",freqs:[[210,.0,.18,.04,1.6],[180,.15,.12,.04,1.2]],examples:["The air feels tense and on edge","A pressure here I can't quite name","Everyone seems rushed and wound tight"]},
-  {id:"hunger",realm:"internal",label:"Hunger",icon:"◡",color:"#e0a050",freqs:[[280,.0,.16,.1,2.0]],examples:["A hollow, wanting feeling in this place","Something here leaves me craving more","An emptiness that asks to be filled"]},
+  {id:"hunger",realm:"internal",label:"Hunger",icon:"✛",color:"#e0a050",freqs:[[280,.0,.16,.1,2.0]],examples:["A hollow, wanting feeling in this place","Something here leaves me craving more","An emptiness that asks to be filled"]},
   {id:"hydration",realm:"internal",label:"Hydration",icon:"◍",color:"#6ec5d4",freqs:[[480,.0,.14,.1,2.2]],examples:["The air is fresh and quenching here","A dry, thirsting quality to this place","Cool and replenishing, like spring water"]},
   {id:"internal_temp",realm:"internal",label:"Internal Temp",icon:"❂",color:"#e08a5a",freqs:[[330,.0,.16,.1,2.4]],examples:["A deep inner warmth settles in here","This place warms me from within","A cosy, glowing heat held close"]},
   {id:"pain",realm:"internal",label:"Pain",icon:"✸",color:"#d44a4a",freqs:[[220,.0,.2,.02,1.2],[440,.1,.1,.02,1.0]],examples:["A sharp, aching quality to this place","Something here registers as hurt","A raw, tender feeling I can't shake"]},
@@ -1077,7 +1127,7 @@ anomaly:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:m
 chronosception:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(150,165,225,0.5))"><defs><radialGradient id="as-chrCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#8b9dde" stop-opacity="0"/></radialGradient><radialGradient id="as-chrHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#aeb8e8" stop-opacity="0.3"/><stop offset="100%" stop-color="#8b9dde" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-chrHalo)"/><path d="M30 18 L66 18 L48 48 L66 78 L30 78 L48 48 Z" fill="none" stroke="#b6c0ec" stroke-width="2.6" stroke-linejoin="round" opacity="0.9" class="as-slowShimmer"/><path d="M48 40 L48 56" stroke="#dfe5f8" stroke-width="2" stroke-linecap="round" opacity="0.8" class="as-shimmer"/><circle cx="48" cy="48" r="5" fill="url(#as-chrCore)" class="as-breathe"/></svg>',
 intuition:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 6px rgba(190,140,225,0.6))"><defs><radialGradient id="as-intCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#cfa6e8" stop-opacity="0.7"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient><radialGradient id="as-intHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#cfa6e8" stop-opacity="0.32"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-intHalo)"/><path d="M20 48 Q 48 26 76 48 Q 48 70 20 48 Z" fill="none" stroke="#d9b8f0" stroke-width="3.2" stroke-linejoin="round" opacity="0.9" class="as-slowShimmer"/><circle cx="48" cy="48" r="13" fill="url(#as-intCore)" class="as-breathe"/><circle cx="48" cy="48" r="4.5" fill="#ffffff" opacity="0.92"/></svg>',
 stress:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,130,130,0.5))"><defs><radialGradient id="as-strCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient><radialGradient id="as-strHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e89a9a" stop-opacity="0.28"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-strHalo)"/><path d="M48 28 L55 40 L66 42 L57 50 L61 63 L48 56 L35 63 L39 50 L30 42 L41 40 Z" fill="none" stroke="#ec9e9e" stroke-width="2" stroke-linejoin="miter" opacity="0.9" class="as-shiver"/><circle cx="48" cy="48" r="6" fill="url(#as-strCore)" class="as-flicker"/></svg>',
-hunger:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,165,90,0.5))"><defs><radialGradient id="as-hunCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe8c8" stop-opacity="0.9"/><stop offset="100%" stop-color="#e0a050" stop-opacity="0"/></radialGradient><radialGradient id="as-hunHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ecc488" stop-opacity="0.28"/><stop offset="100%" stop-color="#e0a050" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="52" r="45" fill="url(#as-hunHalo)"/><path d="M26 48 A 22 22 0 0 0 70 48" fill="none" stroke="#eec690" stroke-width="3" stroke-linecap="round" opacity="0.9" class="as-breathe"/><circle cx="48" cy="54" r="5" fill="url(#as-hunCore)" class="as-flicker"/></svg>',
+hunger:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,165,90,0.5))"><defs><radialGradient id="as-hunCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe8c8" stop-opacity="0.9"/><stop offset="100%" stop-color="#e0a050" stop-opacity="0"/></radialGradient><radialGradient id="as-hunHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ecc488" stop-opacity="0.28"/><stop offset="100%" stop-color="#e0a050" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-hunHalo)"/><circle cx="48" cy="48" r="26" fill="none" stroke="#eec690" stroke-width="2.4" opacity="0.55" class="as-breathe"/><path d="M48 28v9M48 59v9M28 48h9M59 48h9" stroke="#eec690" stroke-width="2.6" stroke-linecap="round" opacity="0.85"/><circle cx="48" cy="48" r="4.5" fill="url(#as-hunCore)" class="as-flicker"/></svg>',
 hydration:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(110,197,212,0.5))"><defs><radialGradient id="as-hydCore" cx="50%" cy="42%" r="60%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#9ad8e4" stop-opacity="0.7"/><stop offset="100%" stop-color="#6ec5d4" stop-opacity="0.15"/></radialGradient><radialGradient id="as-hydHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9ad8e4" stop-opacity="0.3"/><stop offset="100%" stop-color="#6ec5d4" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="50" r="45" fill="url(#as-hydHalo)"/><path d="M48 20 C 38 40 32 50 32 58 A 16 16 0 0 0 64 58 C 64 50 58 40 48 20 Z" fill="url(#as-hydCore)" stroke="#a8e0ec" stroke-width="1.4" class="as-breathe"/></svg>',
 internal_temp:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(225,138,90,0.55))"><defs><radialGradient id="as-itCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe6cc" stop-opacity="1"/><stop offset="55%" stop-color="#f0a878" stop-opacity="0.85"/><stop offset="100%" stop-color="#e08a5a" stop-opacity="0"/></radialGradient><radialGradient id="as-itHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#eab088" stop-opacity="0.26"/><stop offset="100%" stop-color="#e08a5a" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-itHalo)"/><path d="M37 62 Q 32 52 37 44 Q 42 36 37 28" fill="none" stroke="#eab088" stroke-width="2.6" stroke-linecap="round" opacity="0.85" class="as-slowShimmer"/><path d="M48 64 Q 43 53 48 45 Q 53 37 48 26" fill="none" stroke="#f3b083" stroke-width="2.8" stroke-linecap="round"/><path d="M59 62 Q 54 52 59 44 Q 64 36 59 28" fill="none" stroke="#eab088" stroke-width="2.6" stroke-linecap="round" opacity="0.85" class="as-slowShimmer"/><circle cx="48" cy="70" r="8" fill="url(#as-itCore)" class="as-breathe"/></svg>',
 external_heat:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,100,60,0.5))"><defs><radialGradient id="as-ehHalo" cx="50%" cy="55%" r="55%"><stop offset="0%" stop-color="#f08a64" stop-opacity="0.26"/><stop offset="100%" stop-color="#e8643c" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="52" r="45" fill="url(#as-ehHalo)"/><g class="as-wiggle"><path d="M34 74 C 30 62 38 56 34 44 C 31 34 37 30 34 20" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.9" class="as-shimmer"/><path d="M48 76 C 44 62 52 56 48 42 C 45 32 51 28 48 16" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.8"/><path d="M62 74 C 58 62 66 56 62 44 C 59 34 65 30 62 20" fill="none" stroke="#f29070" stroke-width="2.6" stroke-linecap="round" opacity="0.9" class="as-shimmer"/></g></svg>',
@@ -1408,9 +1458,8 @@ function feedMyAura(lat,lng,color){
 function updateMyOrb(){
   const mo=document.getElementById('orbMy');if(!mo)return;
   const n=(typeof myShareCount!=='undefined')?myShareCount:0;
-  const sz=Math.min(15+n*1.4,32);
+  const sz=Math.min(17+n*1.3,34);
   mo.style.width=sz+'px';mo.style.height=sz+'px';
-  mo.style.setProperty('--myglow',Math.min(11+n*1.6,34)+'px');
 }
 function animateWave(ts){
   try{
@@ -1483,11 +1532,12 @@ SENSES.forEach(s=>{
 // Feed
 function addFeed(text,sense,time,glow,lat,lng,place){
   const s=SENSES.find(x=>x.id===sense);if(!s)return;
+  const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   const feed=document.getElementById('feed');
   const d=document.createElement('div');
   d.className='fi'+(glow?' glow':'');
-  const loc=place?`<div class="fi-loc">📍 ${place}</div>`:'';
-  d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${SENSE_SYMBOLS[s.id]} ${s.label}</div><div class="fi-text">"${text}"</div>${loc}<div class="fi-meta">${time}</div>`;
+  const loc=place?`<div class="fi-loc">📍 ${esc(place)}</div>`:'';
+  d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${SENSE_SYMBOLS[s.id]} ${s.label}</div><div class="fi-text">"${esc(text)}"</div>${loc}<div class="fi-meta">${esc(time)}</div>`;
   d.onclick=()=>{if(typeof openLiveFeed==='function')openLiveFeed();};
   feed.insertBefore(d,feed.firstChild);
   if(glow)setTimeout(()=>d.classList.remove('glow'),5000);
@@ -1551,6 +1601,11 @@ document.querySelectorAll('.tab-mi[data-i]').forEach(mi=>{ mi.onclick=()=>goToLe
 (function(){
   const myTab=document.querySelector('.tab-myaura');
   if(myTab)myTab.onclick=()=>{closeTabMenus();if(typeof openMyAuraPage==='function')openMyAuraPage();};
+  // The personal aura itself lives in the menu button — same living canvas, colours shifting with every offering
+  const orbHost=document.getElementById('orbMy'),pacEl=document.getElementById('pac');
+  if(orbHost&&pacEl){orbHost.appendChild(pacEl);pacEl.style.cssText='position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:300%;height:300%;pointer-events:none;';}
+  const tip=document.getElementById('panel-tip');
+  if(tip)tip.addEventListener('click',()=>{if(typeof openOfferSheet==='function')openOfferSheet();});
   const worldMi=document.querySelector('.tab-mi[data-world]');
   if(worldMi)worldMi.onclick=()=>{closeTabMenus();if(typeof openWorldAuras==='function')openWorldAuras();};
   document.querySelectorAll('.tab-caret').forEach(car=>{
@@ -1628,9 +1683,10 @@ function dropSearchMarker(center,placeName){
 function setActiveTab(i){
   if(planetActive && i!==4) hidePlanet();
   auraLevel=i;
-  const topActive=(i===4)?4:0;
+  const cellW=window.matchMedia&&window.matchMedia('(max-width:600px)').matches;
   document.querySelectorAll('.tab[data-i]').forEach(t=>{
-    t.classList.toggle('active', +t.dataset.i===topActive);
+    const ti=+t.dataset.i;
+    t.classList.toggle('active', ti===i || (cellW&&i===2&&ti===0));
     t.style.color='';
   });
   document.querySelectorAll('.tab-mi[data-i]').forEach(m=>{ m.classList.toggle('mi-active', +m.dataset.i===i); });
@@ -1771,7 +1827,8 @@ map.on('click',async function(e){
   const list=(atHere.length?atHere:nearBy).slice(0,3);
   const senseListHTML=list.length?'<div class="pop-sense-list">'+list.map(p=>{
     const ps=SENSES.find(x=>x.id===p.sense);
-    return `<div class="pop-sense-item" style="border-left-color:${ps.color}">${SENSE_SYMBOLS[ps.id]} "${p.priv?'a memory, kept private':(p.text.substring(0,52)+(p.text.length>52?'…':''))}"</div>`;
+    const safeT=(p.text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return `<div class="pop-sense-item" style="border-left-color:${ps.color}">${SENSE_SYMBOLS[ps.id]} "${p.priv?'a memory, kept private':(safeT.substring(0,52)+(safeT.length>52?'…':''))}"</div>`;
   }).join('')+'</div>':'';
   let auraLine;
   if(atHere.length)auraLine=`${atHere.length} aura${atHere.length>1?'s':''} offered here`;
@@ -2043,6 +2100,72 @@ function maDraw(){
   c.globalAlpha=1;
   maRaf=requestAnimationFrame(maDraw);
 }
+// ——— The Alphasense language: words of connection, and the junction grammar ———
+const ALPHA_WORDS=[
+ {w:'Compassion',c:'#f0a8c0',d:'light bending toward another\u2019s centre',g:'<path d="M15 30a10 10 0 0 1 0-12"/><path d="M33 18a10 10 0 0 1 0 12"/><circle cx="24" cy="24" r="3" class="f"/>'},
+ {w:'Love',c:'#ff9db4',d:'two fields sharing one core',g:'<circle cx="19" cy="24" r="8"/><circle cx="29" cy="24" r="8"/><circle cx="24" cy="24" r="2.6" class="f"/>'},
+ {w:'Balance',c:'#9fd8c8',d:'weights held in equal light',g:'<path d="M12 24h24"/><circle cx="16" cy="24" r="3" class="f"/><circle cx="32" cy="24" r="3" class="f"/><circle cx="24" cy="29" r="1.8" class="f"/>'},
+ {w:'Bond',c:'#c9a8f0',d:'two centres, one thread',g:'<circle cx="14" cy="24" r="3.4" class="f"/><circle cx="34" cy="24" r="3.4" class="f"/><path d="M17.5 24h13"/>'},
+ {w:'Connect',c:'#8fc8f0',d:'a path finding its points',g:'<circle cx="10" cy="32" r="2.6" class="f"/><circle cx="24" cy="15" r="2.6" class="f"/><circle cx="38" cy="32" r="2.6" class="f"/><path d="M12 30 22 17M26 17l10 13"/>'},
+ {w:'Gratitude',c:'#f2ce8e',d:'an open vessel, receiving upward',g:'<path d="M14 26a10 10 0 0 0 20 0"/><circle cx="24" cy="16" r="3" class="f"/>'},
+ {w:'Peace',c:'#aee0d8',d:'stillness inside the whole',g:'<circle cx="24" cy="24" r="11"/><path d="M17 24h14"/>'},
+ {w:'Presence',c:'#e6dcff',d:'here, now \u2014 the point inside the field',g:'<circle cx="24" cy="24" r="11"/><circle cx="24" cy="24" r="3" class="f"/>'},
+ {w:'Flow',c:'#8fd8e8',d:'energy moving without resistance',g:'<path d="M8 24c5-9 11-9 16 0s11 9 16 0"/>'},
+ {w:'Release',c:'#cdb8f5',d:'held light let go, rising',g:'<circle cx="24" cy="31" r="3" class="f"/><path d="M24 25V13M15 22l-5-7M33 22l5-7"/>'},
+ {w:'Renewal',c:'#a8e0a8',d:'the circle turning into itself, new',g:'<path d="M33 15a12 12 0 1 0 4 9"/><path d="M37 10v6h-6"/>'},
+ {w:'Courage',c:'#f0b088',d:'the centre moving forward anyway',g:'<circle cx="14" cy="24" r="3.4" class="f"/><path d="M19 24h15M29 19l5 5-5 5"/>'},
+ {w:'Stillness',c:'#b8c8e8',d:'one point, nothing asked of it',g:'<circle cx="24" cy="24" r="3.6" class="f"/><circle cx="24" cy="24" r="12" opacity="0.35"/>'},
+ {w:'Wonder',c:'#d8b8ff',d:'a centre leaning toward the unknown',g:'<circle cx="22" cy="26" r="3" class="f"/><ellipse cx="26" cy="22" rx="12" ry="7" transform="rotate(-24 26 22)"/>'},
+ {w:'Grief',c:'#98a8d0',d:'light descending, still light',g:'<circle cx="24" cy="18" r="3.2" class="f"/><path d="M24 24v6" opacity="0.8"/><path d="M24 33v4" opacity="0.45"/>'},
+ {w:'Hope',c:'#ffe0a0',d:'a small sun above the horizon',g:'<path d="M10 32h28"/><circle cx="24" cy="24" r="3.4" class="f"/><path d="M24 17v-4M17 19l-3-3M31 19l3-3" opacity="0.8"/>'},
+ {w:'Together',c:'#f0c8a8',d:'many centres, one field',g:'<circle cx="24" cy="24" r="12"/><circle cx="19.5" cy="24" r="2.7" class="f"/><circle cx="28.5" cy="24" r="2.7" class="f"/>'},
+ {w:'Offering',c:'#c4b5fd',d:'light lifted from open hands',g:'<path d="M13 29a11 11 0 0 0 22 0"/><circle cx="24" cy="18" r="3" class="f"/><path d="M24 12v-2" opacity="0.7"/>'},
+ {w:'Time',c:'#b0d0f0',d:'not a line \u2014 a spiral, returning deeper',g:'<path d="M24 24a4 4 0 0 1 4 4 7 7 0 0 1-11 5 10 10 0 0 1 2-16 13 13 0 0 1 17 5"/>'},
+ {w:'Place',c:'#a8d8b8',d:'a living point of the earth',g:'<circle cx="24" cy="19" r="5"/><path d="M24 24v11"/><path d="M18 35h12" opacity="0.6"/>'},
+ {w:'Energy',c:'#ffd88a',d:'the current beneath all of it',g:'<circle cx="24" cy="24" r="13" opacity="0.35"/><path d="M26 12l-8 13h8l-4 11"/>'}
+];
+const ALPHA_JUNCTIONS=[
+ ['Compassion','Place','care directed into a location \u2014 this ground needs holding'],
+ ['Love','Bond','devotion \u2014 a shared core made lasting'],
+ ['Balance','Time','patience \u2014 trusting the season to turn'],
+ ['Connect','Wonder','curiosity reaching toward what is not yet known'],
+ ['Hope','Grief','mourning with light in it \u2014 loss that still looks up'],
+ ['Energy','Flow','vitality \u2014 the current moving as it should'],
+ ['Presence','Place','here, now \u2014 fully arrived where you stand'],
+ ['Together','Offering','community \u2014 many hands giving into one aura'],
+ ['Compassion','Energy','healing \u2014 care become a current'],
+ ['Release','Time','forgiveness \u2014 letting the past be past'],
+ ['Love','Place','home \u2014 the ground your heart knows'],
+ ['Balance','Energy','wellbeing \u2014 the field at its natural level']
+];
+function alphaGlyph(word,size){
+  const s=size||44;
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 48 48" fill="none" stroke="'+word.c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 5px '+word.c+'66)">'+word.g.replace(/class="f"/g,'fill="'+word.c+'" stroke="none"')+'</svg>';
+}
+function renderAlphaPage(){
+  const sen=document.getElementById('alpha-senses');
+  if(sen&&!sen.childElementCount){
+    sen.innerHTML=SENSES.map(s=>'<div class="alpha-cell"><div style="transform:scale(1.8);transform-origin:center;margin:8px 0 12px">'+(SENSE_SYMBOLS[s.id]||'')+'</div><div class="alpha-w" style="color:'+s.color+'">'+s.label+'</div><div class="alpha-d">'+(s.realm==='internal'?'felt within':'sensed in the world')+'</div></div>').join('');
+  }
+  const wo=document.getElementById('alpha-words');
+  if(wo&&!wo.childElementCount){
+    wo.innerHTML=ALPHA_WORDS.map(w=>'<div class="alpha-cell">'+alphaGlyph(w)+'<div class="alpha-w" style="color:'+w.c+'">'+w.w+'</div><div class="alpha-d">'+w.d+'</div></div>').join('');
+  }
+  const ju=document.getElementById('alpha-junctions');
+  if(ju&&!ju.childElementCount){
+    ju.innerHTML=ALPHA_JUNCTIONS.map(j=>{
+      const a=ALPHA_WORDS.find(x=>x.w===j[0]),b=ALPHA_WORDS.find(x=>x.w===j[1]);
+      if(!a||!b)return '';
+      return '<div class="alpha-j">'+alphaGlyph(a,26)+'<span class="aj-dot">\u00b7</span>'+alphaGlyph(b,26)+'<span class="aj-m"><b style="color:#e0d6ff">'+j[0]+'\u00b7'+j[1]+'</b> \u2014 '+j[2]+'</span></div>';
+    }).join('');
+  }
+}
+function openAlphaPage(){renderAlphaPage();const p=document.getElementById('alpha-page');if(p)p.classList.add('show');}
+function closeAlphaPage(){const p=document.getElementById('alpha-page');if(p)p.classList.remove('show');}
+(function(){
+  const ab=document.getElementById('ma-alpha');if(ab)ab.addEventListener('click',openAlphaPage);
+  const bk=document.getElementById('alpha-back');if(bk)bk.addEventListener('click',closeAlphaPage);
+})();
 function openMyAuraPage(){
   const page=document.getElementById('myaura-page');if(!page)return;
   const mt=document.querySelector('.tab-myaura');if(mt)mt.classList.add('mypage-open');
@@ -2368,19 +2491,17 @@ function showOfferConfirm(senseId,text,place,lat,lng){
   const box=document.getElementById('offer-confirm');if(!box)return;
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const body=(senseId==='memory'&&(text||'').indexOf('kept private')<0&&typeof memoryPrivate!=='undefined'&&memoryPrivate)?'a memory, kept private':esc(text);
-  box.innerHTML='<div class="oc-head">'+(place?('✨ Aura just offered here (<b>'+esc(place)+'</b>)'):'✨ Aura just offered here')+'</div>'
-    +'<div class="oc-body"><span class="oc-sym">'+(SENSE_SYMBOLS[senseId]||'')+'</span><b style="color:'+s.color+'">'+s.label+'</b>'+(body?' — <span class="oc-t">"'+body+'"</span>':'')+'</div>'
-    +'<div class="oc-actions"><span class="oc-again">↻ Offer another aura here</span><span class="oc-elsewhere">Or, offer another elsewhere</span><span class="oc-social">⤴ Share on social media</span></div>';
+  box.innerHTML='<div class="oc-head">'+(place?('✨ Aura just offered at <b>'+esc(place)+'</b>'):'✨ Aura just offered here')+'</div>'
+    +'<div class="oc-actions"><span class="oc-lbl">Offer another aura</span><button type="button" class="oc-btn oc-here">Here</button><button type="button" class="oc-btn oc-elsewhere">Elsewhere</button><button type="button" class="oc-btn oc-social">Share</button></div>';
   const panel=document.getElementById('panel');
   if(panel){panel.classList.add('show-mobile','just-offered','offer-quiet','has-last');panel.classList.remove('locating');panel.style.maxHeight='';panel.style.bottom='';}
-  const again=box.querySelector('.oc-again');
+  const again=box.querySelector('.oc-here');
   if(again)again.addEventListener('click',()=>{
     if(panel){panel.classList.remove('just-offered','offer-quiet');}
     const inp=document.getElementById('inp');if(inp){inp.value='';inp.classList.remove('inp-glow');}
     selSense=null;document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));
     const scf=document.getElementById('sense-confirm');if(scf)scf.textContent='';
     if(lat!=null){lastClickPoint=[lng,lat];}
-    if(inp)setTimeout(()=>{try{inp.focus();}catch(e){}},60);
   });
   const elsew=box.querySelector('.oc-elsewhere');
   if(elsew)elsew.addEventListener('click',()=>{
@@ -2414,6 +2535,14 @@ function closeOfferSheet(){
   }
   window.visualViewport.addEventListener('resize',adjust);
   window.visualViewport.addEventListener('scroll',adjust);
+})();
+// On phones the on-screen keyboard can scroll the whole page, leaving the header off-screen.
+// After any text field closes, gently bring the view back to the top.
+(function(){
+  ['si','ol-input','inp','pp-input','rg-handle'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(el)el.addEventListener('blur',()=>{setTimeout(()=>{try{window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;}catch(e){}},80);});
+  });
 })();
 (function(){
   const mo=document.getElementById('mobile-offer');
@@ -2544,7 +2673,7 @@ function closePlaceAura(){const p=document.getElementById('placeaura-page');if(p
   if(pg)pg.addEventListener('click',e=>{if(e.target===pg)closePlaceAura();});
   const x=document.getElementById('pa2-close');if(x)x.addEventListener('click',closePlaceAura);
   const add=document.getElementById('pa2-add');
-  if(add)add.addEventListener('click',()=>{closePlaceAura();if(pa2Point){lastClickPoint=[pa2Point.lng,pa2Point.lat];anchorPoint={lat:pa2Point.lat,lng:pa2Point.lng,zoom:16};}const inp=document.getElementById('inp'),mob=window.innerWidth<=600;if(mob){openOfferSheet();}if(inp){inp.focus();inp.classList.add('inp-glow');}showMsg('Offer your sense to this place — choose a symbol and type');});
+  if(add)add.addEventListener('click',()=>{closePlaceAura();if(pa2Point){lastClickPoint=[pa2Point.lng,pa2Point.lat];anchorPoint={lat:pa2Point.lat,lng:pa2Point.lng,zoom:16};}openOfferSheet();showMsg('Offer your sense to this place — choose a symbol and type');});
   window.addEventListener('resize',()=>{const p=document.getElementById('placeaura-page');if(p&&p.classList.contains('show'))pa2Size();});
 })();
 // ---- Edge swipes (cell): left edge → My Aura, right edge → Live Feed ----
@@ -2709,10 +2838,15 @@ const WORLD_EVENTS=[
   {lat:31.5,lng:34.47,type:'suffering',title:'People living through conflict',note:'Civilians here are enduring loss and fear. They are being thought of, with compassion.',compassion:0},
   {lat:37.0,lng:37.4,type:'disaster',title:'Recovering from an earthquake',note:'Towns rebuilding after the ground shook. Awareness and aid still matter here.',compassion:0},
   {lat:-1.95,lng:30.06,type:'need',title:'A region facing drought',note:'A long dry season is straining whole communities. They are not forgotten.',compassion:0},
-  {lat:48.85,lng:2.35,type:'joy',title:'A city in celebration',note:'A day of collective joy and togetherness.',compassion:0},
-  {lat:51.55,lng:-0.27,type:'sport',title:'A sporting final',note:'Thousands gathered, hearts racing as one.',compassion:0},
+  {lat:40.81,lng:-74.07,type:'sport',title:'FIFA World Cup 2026 \u2014 New York / New Jersey',note:'The world\u2019s game, gathering millions of hearts. The final comes here on July 19.',compassion:0},
+  {lat:19.30,lng:-99.15,type:'sport',title:'World Cup 2026 \u2014 Mexico City',note:'Estadio Azteca opened this World Cup \u2014 a city alive with song.',compassion:0},
+  {lat:49.28,lng:-123.12,type:'sport',title:'World Cup 2026 \u2014 Vancouver',note:'A coastal city buzzing with matches and shared joy.',compassion:0},
+  {lat:32.75,lng:-97.08,type:'sport',title:'World Cup 2026 \u2014 Dallas',note:'Crowds from every nation, one game in common.',compassion:0},
+  {lat:51.43,lng:-0.21,type:'sport',title:'Wimbledon, London',note:'The championships in full flow \u2014 quiet courts, held breath, sudden joy.',compassion:0},
+  {lat:41.39,lng:2.17,type:'sport',title:'Tour de France \u2014 Grand D\u00e9part, Barcelona',note:'The great race rolls out from Barcelona this July.',compassion:0},
   {lat:14.6,lng:121.0,type:'disaster',title:'After the storm',note:'Coastal communities recovering from a powerful storm.',compassion:0},
-  {lat:-23.55,lng:-46.63,type:'joy',title:'A festival of life',note:'Streets full of music, colour and gladness.',compassion:0}
+  {lat:-23.55,lng:-46.63,type:'joy',title:'A festival of life',note:'Streets full of music, colour and gladness.',compassion:0},
+  {lat:48.85,lng:2.35,type:'joy',title:'A city in celebration',note:'A day of collective joy and togetherness.',compassion:0}
 ];
 const WA_RGB={suffering:'229,90,90',need:'108,158,235',disaster:'240,150,70',joy:'247,206,107',sport:'134,224,192'};
 const WA_HEX={suffering:'#e55a5a',need:'#6c9eeb',disaster:'#f0964a',joy:'#f7ce6b',sport:'#86e0c0'};
@@ -2800,7 +2934,7 @@ function closeWorldAuras(){const p=document.getElementById('worldauras-page');if
       } else if(tip){tip.style.opacity='0';cv.style.cursor='default';}
     });
     cv.addEventListener('mouseleave',()=>{waHover=-1;if(tip)tip.style.opacity='0';});
-    cv.addEventListener('click',e=>{const xy=toCanvas(e),i=waEventAt(xy[0],xy[1]);if(i>=0){const ev=WORLD_EVENTS[i];ev.compassion++;waUpdateBalance();if(typeof myAuraColors!=='undefined')myAuraColors.push(WA_HEX[ev.type]||'#f7ce6b');if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=WA_HEX[ev.type]||'#f7ce6b';}showMsg('An aura of compassion reaches: '+ev.title);}});
+    cv.addEventListener('click',e=>{const xy=toCanvas(e),i=waEventAt(xy[0],xy[1]);if(i>=0){const ev=WORLD_EVENTS[i];ev.compassion++;waUpdateBalance();if(typeof myAuraColors!=='undefined')myAuraColors.push(WA_HEX[ev.type]||'#f7ce6b');if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=WA_HEX[ev.type]||'#f7ce6b';}showMsg('An aura of compassion reaches: '+ev.title+' \u2014 share this light with others (social sharing arrives in v1)');}});
   }
   const p=document.getElementById('worldauras-page');if(p)p.addEventListener('click',e=>{if(e.target===p)closeWorldAuras();});
   const logoEl=document.getElementById('logo');
