@@ -58,6 +58,22 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .tab.active{color:#c4b5fd}
 .tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0;transition:background .3s,box-shadow .3s}
 .tab.active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
+.tab-orb-my{--myglow:11px;width:15px;height:15px;background:radial-gradient(circle,#e8e2ff 0%,#a78bfa 60%,rgba(167,139,250,.15) 100%);box-shadow:0 0 var(--myglow) rgba(167,139,250,.75);animation:orbMyBreath 5.5s ease-in-out infinite;transition:width .6s ease,height .6s ease}
+@keyframes orbMyBreath{0%,100%{box-shadow:0 0 var(--myglow) rgba(167,139,250,.55);filter:brightness(1)}50%{box-shadow:0 0 calc(var(--myglow) * 1.7) rgba(167,139,250,.95);filter:brightness(1.18)}}
+.tab-orb-my.orb-fed{animation:orbFed .9s ease-out}
+@keyframes orbFed{0%{transform:scale(1)}32%{transform:scale(1.55);box-shadow:0 0 28px rgba(224,216,255,1)}100%{transform:scale(1)}}
+.tab-myaura{color:#c4b5fd;font-weight:600}
+.tab-myaura.mypage-open{color:#efe8ff}
+.tab-group{position:relative;display:flex;align-items:center}
+.tab-caret{border:none;background:transparent;color:#8a80b4;cursor:pointer;font-size:9px;padding:5px 3px 5px 0;line-height:1;transition:color .25s,transform .25s;font-family:inherit;pointer-events:all}
+.tab-caret:hover,.tab-caret.open{color:#c4b5fd}
+.tab-caret.open{transform:rotate(180deg)}
+.tab-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;background:rgba(14,12,28,.98);border:0.5px solid rgba(167,139,250,.3);border-radius:12px;padding:4px;flex-direction:column;gap:1px;z-index:60;box-shadow:0 8px 26px rgba(0,0,0,.6);min-width:120px}
+.tab-menu.open{display:flex}
+.tab-mi{font-size:11px;padding:7px 11px;border-radius:9px;border:none;background:transparent;color:#a99bd6;cursor:pointer;text-align:left;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:background .2s,color .2s;pointer-events:all}
+.tab-mi:hover{background:rgba(167,139,250,.14);color:#e0d8ff}
+.tab-mi.mi-active{color:#c4b5fd}
+.tab-mi.mi-active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
 .fi-loc{font-size:9.5px;color:#9d8fcc;margin-top:2px;font-style:italic}
 @keyframes searchPulse{0%{transform:scale(1);box-shadow:0 0 10px 3px rgba(167,139,250,.6)}50%{transform:scale(1.35);box-shadow:0 0 18px 7px rgba(167,139,250,.9)}100%{transform:scale(1);box-shadow:0 0 10px 3px rgba(167,139,250,.6)}}
 #search-box{display:flex;gap:5px;flex-shrink:0}
@@ -68,6 +84,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #sg{padding:6px 10px;border-radius:10px;border:0.5px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s}
 #sg:hover{background:rgba(167,139,250,.2)}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
+#my-aura{display:none!important}
 #my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
 #pac{display:block;margin:0 auto;cursor:pointer;border-radius:50%;transition:filter .3s}
 #my-aura:hover #pac{filter:drop-shadow(0 0 10px rgba(196,181,253,.6))}
@@ -323,6 +340,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #inp.inp-glow{border-color:rgba(167,139,250,.9)!important;box-shadow:0 0 0 2px rgba(167,139,250,.25),0 0 20px rgba(167,139,250,.5);animation:inpGlow 1.3s ease-in-out infinite}
 #sbtn.sbtn-glow{border-color:rgba(167,139,250,.95)!important;background:rgba(167,139,250,.22);color:#efe8ff;animation:inpGlow 1.4s ease-in-out infinite}
 #sense-confirm{display:block;margin:9px 2px 8px;padding:8px 10px;background:rgba(167,139,250,.08);border:0.5px solid rgba(167,139,250,.25);border-radius:10px;font-size:12px;color:#d7ccf2;letter-spacing:.01em;line-height:1.35}
+@media (max-width:600px){#sense-confirm{display:none!important}}
 #sense-confirm:empty{display:none}
 #photo-row{display:flex;align-items:center;gap:10px;margin:0 2px 9px;flex-wrap:wrap}
 #photo-btn{background:rgba(20,16,40,.7);border:0.5px solid rgba(167,139,250,.4);color:#cbbff0;font-size:11.5px;padding:7px 12px;border-radius:14px;cursor:pointer;font-family:inherit;transition:background .2s}
@@ -669,11 +687,23 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   </div>
   <div id="hdr2">
     <div id="tabs">
-      <button class="tab active" data-i="0"><span class="tab-orb" id="orb0"></span>Street</button>
-      <button class="tab" data-i="1"><span class="tab-orb" id="orb1"></span>Town</button>
-      <button class="tab" data-i="2"><span class="tab-orb" id="orb2"></span>Region</button>
-      <button class="tab" data-i="3"><span class="tab-orb" id="orb3"></span>Nation</button>
-      <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>Planet</button>
+      <button class="tab tab-myaura" data-myaura><span class="tab-orb tab-orb-my" id="orbMy"></span>My Aura</button>
+      <div class="tab-group">
+        <button class="tab active" data-i="0"><span class="tab-orb" id="orb0"></span>Street</button>
+        <button class="tab-caret" data-menu="street" title="Town, Region, Nation">▾</button>
+        <div class="tab-menu" id="street-menu">
+          <button class="tab-mi" data-i="1"><span class="tab-orb" id="orb1"></span>Town</button>
+          <button class="tab-mi" data-i="2"><span class="tab-orb" id="orb2"></span>Region</button>
+          <button class="tab-mi" data-i="3"><span class="tab-orb" id="orb3"></span>Nation</button>
+        </div>
+      </div>
+      <div class="tab-group">
+        <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>Planet</button>
+        <button class="tab-caret" data-menu="planet" title="World Auras">▾</button>
+        <div class="tab-menu" id="planet-menu">
+          <button class="tab-mi" data-world>🌍 World Auras</button>
+        </div>
+      </div>
     </div>
     <div id="search-box">
       <input id="si" placeholder="Street, town, postcode..."/>
@@ -1335,7 +1365,7 @@ function haversine(la1,lo1,la2,lo2){const R=6371000,toR=Math.PI/180;const dLa=(l
 // A sense, once offered, also flows into the user's own aura. A spark rises from where it
 // landed to the My Aura orb, and the personal aura swells. Both external and internal senses do this.
 function feedMyAura(lat,lng,color){
-  const orb=document.getElementById('pac');
+  const orb=document.getElementById('orbMy')||document.getElementById('pac');
   if(!orb)return;
   const oRect=orb.getBoundingClientRect();
   const ox=oRect.left+oRect.width/2, oy=oRect.top+oRect.height/2;
@@ -1362,6 +1392,9 @@ function feedMyAura(lat,lng,color){
   setTimeout(()=>{
     paFeedAt=performance.now();
     paFeedColor=color;
+    const mo=document.getElementById('orbMy');
+    if(mo){mo.classList.add('orb-fed');setTimeout(()=>{mo.classList.remove('orb-fed');},900);}
+    if(typeof updateMyOrb==='function')updateMyOrb();
     const ring=document.createElement('div');
     ring.style.cssText='position:fixed;left:'+ox+'px;top:'+oy+'px;width:22px;height:22px;border-radius:50%;'+
       'border:2px solid '+hexA(color,0.85)+';box-shadow:0 0 14px '+hexA(color,0.7)+';'+
@@ -1371,6 +1404,13 @@ function feedMyAura(lat,lng,color){
     requestAnimationFrame(()=>{ring.style.transform='translate(-50%,-50%) scale(3.4)';ring.style.opacity='0';});
     setTimeout(()=>{ if(ring.parentNode)ring.parentNode.removeChild(ring); },1300);
   },DUR);
+}
+function updateMyOrb(){
+  const mo=document.getElementById('orbMy');if(!mo)return;
+  const n=(typeof myShareCount!=='undefined')?myShareCount:0;
+  const sz=Math.min(15+n*1.4,32);
+  mo.style.width=sz+'px';mo.style.height=sz+'px';
+  mo.style.setProperty('--myglow',Math.min(11+n*1.6,34)+'px');
 }
 function animateWave(ts){
   try{
@@ -1482,31 +1522,42 @@ let lastStreetView={lat:51.508,lng:-0.128,zoom:15};
 let lastOfferedPoint=null;
 let anchorPoint={lat:51.508,lng:-0.128,zoom:15};
 let isMovingProgrammatically=false;
-document.querySelectorAll('.tab').forEach(tab=>{
-  tab.onclick=()=>{
-    const i=+tab.dataset.i;
-    if(i===4){setActiveTab(4);showPlanet();return;}
-    const wasPlanet=planetActive;
-    if(wasPlanet)restorePlanetVisual();
-    const aLng=anchorPoint.lng,aLat=anchorPoint.lat;
-    setActiveTab(i);
-    // Town view and up: clear the boxes so they don't cover the auras
-    if(i>=1){
-      if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
-      if(currentPopup){currentPopup.remove();currentPopup=null;}
-      if(typeof closeExplore==='function')closeExplore();
-    }
-    if(i===0){
-      flyProgrammatic({center:[aLng,aLat],zoom:anchorPoint.zoom||15,duration:1800});
-    }else if(wasPlanet){
-      // Coming down from Planet, land squarely on the anchor at a fixed zoom (avoids mis-geocoded sea landings)
-      const lz={1:12,2:8.5,3:5.7}[i]||10;
-      flyProgrammatic({center:[aLng,aLat],zoom:lz,duration:2200});
-    }else{
-      contextualZoom(i,aLng,aLat);
-    }
-  };
-});
+function goToLevel(i){
+  if(i===4){setActiveTab(4);showPlanet();closeTabMenus();return;}
+  const wasPlanet=planetActive;
+  if(wasPlanet)restorePlanetVisual();
+  const aLng=anchorPoint.lng,aLat=anchorPoint.lat;
+  setActiveTab(i);
+  // Town view and up: clear the boxes so they don't cover the auras
+  if(i>=1){
+    if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
+    if(currentPopup){currentPopup.remove();currentPopup=null;}
+    if(typeof closeExplore==='function')closeExplore();
+  }
+  if(i===0){
+    flyProgrammatic({center:[aLng,aLat],zoom:anchorPoint.zoom||15,duration:1800});
+  }else if(wasPlanet){
+    // Coming down from Planet, land squarely on the anchor at a fixed zoom (avoids mis-geocoded sea landings)
+    const lz={1:12,2:8.5,3:5.7}[i]||10;
+    flyProgrammatic({center:[aLng,aLat],zoom:lz,duration:2200});
+  }else{
+    contextualZoom(i,aLng,aLat);
+  }
+  closeTabMenus();
+}
+function closeTabMenus(){document.querySelectorAll('.tab-menu.open').forEach(m=>m.classList.remove('open'));document.querySelectorAll('.tab-caret.open').forEach(c=>c.classList.remove('open'));}
+document.querySelectorAll('.tab[data-i]').forEach(tab=>{ tab.onclick=()=>goToLevel(+tab.dataset.i); });
+document.querySelectorAll('.tab-mi[data-i]').forEach(mi=>{ mi.onclick=()=>goToLevel(+mi.dataset.i); });
+(function(){
+  const myTab=document.querySelector('.tab-myaura');
+  if(myTab)myTab.onclick=()=>{closeTabMenus();if(typeof openMyAuraPage==='function')openMyAuraPage();};
+  const worldMi=document.querySelector('.tab-mi[data-world]');
+  if(worldMi)worldMi.onclick=()=>{closeTabMenus();if(typeof openWorldAuras==='function')openWorldAuras();};
+  document.querySelectorAll('.tab-caret').forEach(car=>{
+    car.onclick=(e)=>{e.stopPropagation();const name=car.dataset.menu;const menu=document.getElementById(name+'-menu');const willOpen=menu&&!menu.classList.contains('open');closeTabMenus();if(willOpen&&menu){menu.classList.add('open');car.classList.add('open');}};
+  });
+  document.addEventListener('click',(e)=>{ if(!e.target.closest('.tab-group'))closeTabMenus(); });
+})();
 
 async function contextualZoom(level,aLng,aLat){
   if(aLng==null||aLat==null){const c=map.getCenter();aLng=c.lng;aLat=c.lat;}
@@ -1577,10 +1628,12 @@ function dropSearchMarker(center,placeName){
 function setActiveTab(i){
   if(planetActive && i!==4) hidePlanet();
   auraLevel=i;
-  document.querySelectorAll('.tab').forEach(t=>{
-    t.classList.toggle('active', +t.dataset.i===i);
+  const topActive=(i===4)?4:0;
+  document.querySelectorAll('.tab[data-i]').forEach(t=>{
+    t.classList.toggle('active', +t.dataset.i===topActive);
     t.style.color='';
   });
+  document.querySelectorAll('.tab-mi[data-i]').forEach(m=>{ m.classList.toggle('mi-active', +m.dataset.i===i); });
   ORB_IDS.forEach((id,k)=>{
     const orb=document.getElementById(id);if(!orb)return;
     if(k===i){
@@ -1860,10 +1913,11 @@ document.getElementById('sbtn').onclick=()=>{
   const inp=document.getElementById('inp');
   const v=inp.value.trim();
   const spot=resolveSpot();
-  if(!spot){ const panel=document.getElementById('panel'); if(panel&&panel.classList.contains('show-mobile')){panel.classList.add('locating');const oi=document.getElementById('ol-input');if(oi)setTimeout(()=>{try{oi.focus();}catch(e){}},40);} else {openPlacePrompt('Where would you like to place this Aurasense?');} showMsg('Choose where to offer — search a place, or tap the map'); return; }
+  if(!spot){ const panel=document.getElementById('panel'); if(panel&&panel.classList.contains('show-mobile')){panel.classList.add('locating');} else {openPlacePrompt('Where would you like to place this Aurasense?');} showMsg('Choose where to offer — search a place, or tap the map'); return; }
   if(!v && !emptyPrompted){ showMsg('Would you like to add a description of the aurasense you are submitting? (optional — but preferred)'); inp.focus(); inp.classList.add('inp-glow'); emptyPrompted=true; return; }
   if(spot.fromClick)lastClickPoint=null;
   materializeAndSubmit(spot.lat,spot.lng,v);
+  if(typeof selSense!=='undefined'&&selSense&&typeof showOfferConfirm==='function')showOfferConfirm(selSense,v,null,spot.lat,spot.lng);
   if(spot.fromSearch && lastSearchLabel){
     lastSearchLabel.textContent='✨ Aura just offered at '+lastSearchName;
     const lblRef=lastSearchLabel, nameRef=lastSearchName;
@@ -1991,6 +2045,8 @@ function maDraw(){
 }
 function openMyAuraPage(){
   const page=document.getElementById('myaura-page');if(!page)return;
+  const mt=document.querySelector('.tab-myaura');if(mt)mt.classList.add('mypage-open');
+  if(typeof updateMyOrb==='function')updateMyOrb();
   const mh=document.getElementById('ma-handle');if(mh)mh.textContent=(myProfile&&myProfile.handle)?('@'+myProfile.handle):'';
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const off=document.getElementById('ma-offerings');
@@ -2031,7 +2087,7 @@ function openMyAuraPage(){
   maSizeCanvas();
   if(!maRaf)maRaf=requestAnimationFrame(maDraw);
 }
-function closeMyAuraPage(){const page=document.getElementById('myaura-page');if(page)page.classList.remove('show');if(maRaf){cancelAnimationFrame(maRaf);maRaf=null;}maStopStream();const v=document.getElementById('ma-video');if(v)v.style.display='none';}
+function closeMyAuraPage(){const page=document.getElementById('myaura-page');if(page)page.classList.remove('show');const mt=document.querySelector('.tab-myaura');if(mt)mt.classList.remove('mypage-open');if(maRaf){cancelAnimationFrame(maRaf);maRaf=null;}maStopStream();const v=document.getElementById('ma-video');if(v)v.style.display='none';}
 function maOfferingAction(act,i,btn){
   const o=myOfferings[i];if(!o)return;
   const tip=btn&&btn.querySelector?btn.querySelector('.ma-tip'):null;
@@ -2299,7 +2355,6 @@ function openOfferSheet(){
   if(panel){panel.classList.add('show-mobile');panel.classList.remove('just-offered','offer-quiet');panel.classList.toggle('locating',!offerHasSpot());}
   const ui=document.getElementById('ui');if(ui)ui.classList.add('offer-open');
   const mo=document.getElementById('mobile-offer');if(mo)mo.style.display='none';
-  if(panel&&panel.classList.contains('locating')){const oi=document.getElementById('ol-input');if(oi)setTimeout(()=>{try{oi.focus();}catch(e){}},80);}
 }
 function raiseOfferPanel(address){
   const pt=document.getElementById('ptitle');
@@ -2313,7 +2368,7 @@ function showOfferConfirm(senseId,text,place,lat,lng){
   const box=document.getElementById('offer-confirm');if(!box)return;
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const body=(senseId==='memory'&&(text||'').indexOf('kept private')<0&&typeof memoryPrivate!=='undefined'&&memoryPrivate)?'a memory, kept private':esc(text);
-  box.innerHTML='<div class="oc-head">✨ Aura just offered here <b>'+esc(place||'this spot')+'</b></div>'
+  box.innerHTML='<div class="oc-head">'+(place?('✨ Aura just offered here (<b>'+esc(place)+'</b>)'):'✨ Aura just offered here')+'</div>'
     +'<div class="oc-body"><span class="oc-sym">'+(SENSE_SYMBOLS[senseId]||'')+'</span><b style="color:'+s.color+'">'+s.label+'</b>'+(body?' — <span class="oc-t">"'+body+'"</span>':'')+'</div>'
     +'<div class="oc-actions"><span class="oc-again">↻ Offer another aura here</span><span class="oc-elsewhere">Or, offer another elsewhere</span><span class="oc-social">⤴ Share on social media</span></div>';
   const panel=document.getElementById('panel');
@@ -2331,7 +2386,7 @@ function showOfferConfirm(senseId,text,place,lat,lng){
   if(elsew)elsew.addEventListener('click',()=>{
     if(panel){panel.classList.remove('just-offered','offer-quiet');panel.classList.add('locating');}
     lastClickPoint=null;
-    const oi=document.getElementById('ol-input');if(oi){oi.value='';setTimeout(()=>{try{oi.focus();}catch(e){}},60);}
+    const oi=document.getElementById('ol-input');if(oi){oi.value='';}
   });
   const soc=box.querySelector('.oc-social');
   if(soc)soc.addEventListener('click',()=>{if(typeof showMsg==='function')showMsg('Social sharing — coming in v1');});
