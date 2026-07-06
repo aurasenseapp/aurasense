@@ -76,8 +76,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .tab-myaura{color:#c4b5fd;font-weight:600}
 .tab-myaura.mypage-open{color:#efe8ff}
 .tab-group{position:relative;display:flex;align-items:center}
-.tab-caret{border:none;background:transparent;color:#a89ed4;cursor:pointer;font-size:11px;padding:6px 5px 6px 1px;line-height:1;transition:color .25s,transform .25s;font-family:inherit;pointer-events:all}
-@media(max-width:600px){.tab-caret{font-size:15px;padding:8px 7px 8px 2px;color:#c4b5fd}}
+.tab-caret{border:none;background:transparent;color:#a89ed4;cursor:pointer;font-size:16px;padding:6px 6px 6px 2px;line-height:1;transition:color .25s,transform .25s;font-family:inherit;pointer-events:all}
+@media(max-width:600px){.tab-caret{font-size:20px;padding:8px 8px 8px 3px;color:#c4b5fd}}
 .tab-caret:hover,.tab-caret.open{color:#c4b5fd}
 .tab-caret.open{transform:rotate(180deg)}
 .tab-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;background:rgba(14,12,28,.98);border:0.5px solid rgba(167,139,250,.3);border-radius:12px;padding:4px;flex-direction:column;gap:1px;z-index:120;box-shadow:0 8px 26px rgba(0,0,0,.6);min-width:120px}
@@ -192,13 +192,21 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .gv-nm{font-size:17px;color:#efe8ff;margin-top:12px;letter-spacing:.05em}
 .gv-d{font-size:12.5px;color:#b4a9d8;line-height:1.6;margin-top:6px}
 .gv-stage{position:relative;height:150px;display:flex;align-items:center;justify-content:center}
-.gv-l{position:absolute;left:8%;animation:gvL 3.6s ease-in-out infinite}
-.gv-r{position:absolute;right:8%;animation:gvR 3.6s ease-in-out infinite}
+.gv-stage{width:min(320px,100%);margin:0 auto}
+.gv-l{position:absolute;left:50%;margin-left:-140px;animation:gvL 2s cubic-bezier(.22,.9,.3,1) forwards}
+.gv-r{position:absolute;right:50%;margin-right:-140px;animation:gvR 2s cubic-bezier(.22,.9,.3,1) forwards}
+#gv-link{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:0;animation:gvLinkIn .8s 1.6s ease forwards}
+@keyframes gvLinkIn{to{opacity:1}}
+.gvl-line{stroke-dasharray:84;stroke-dashoffset:84;animation:gvDraw 1.1s 1.8s ease forwards}
+@keyframes gvDraw{to{stroke-dashoffset:0}}
+.gvl-core{opacity:0;transform-box:fill-box;transform-origin:center;animation:gvBloom .8s 2.6s ease forwards,as-br 6s 3.4s ease-in-out infinite}
+.gvl-ring{opacity:0;transform-box:fill-box;transform-origin:center;animation:gvBloom .9s 2.7s ease forwards,as-br 6s 3.6s ease-in-out infinite}
+@keyframes gvBloom{0%{opacity:0;transform:scale(.2)}100%{opacity:1;transform:scale(1)}}
+.gv-compound{text-align:center;margin-top:16px;padding-top:12px;border-top:1px dotted rgba(167,139,250,.28)}
+.gvc-cap{font-size:10px;color:#8f83c0;margin-top:5px;letter-spacing:.04em}
 .gv-dot{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);color:#fff;font-size:26px;animation:ajDot 3.6s ease-in-out infinite}
-.gv-merged{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);animation:gvM 3.6s ease-in-out infinite}
-@keyframes gvL{0%,100%{transform:translateX(0);opacity:.95}45%,60%{transform:translateX(58px);opacity:0}}
-@keyframes gvR{0%,100%{transform:translateX(0);opacity:.95}45%,60%{transform:translateX(-58px);opacity:0}}
-@keyframes gvM{0%,30%,100%{opacity:0;transform:translate(-50%,-50%) scale(.7)}48%,58%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes gvL{0%{transform:translateX(0)}100%{transform:translateX(46px)}}
+@keyframes gvR{0%{transform:translateX(0)}100%{transform:translateX(-46px)}}
 .gv-caps{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;font-size:11px;margin-top:8px;align-items:baseline}
 .gv-cd{color:#9a8fc2;font-size:10px}
 .gv-plus{color:#efe8ff;font-size:11px;padding:0 5px}
@@ -213,6 +221,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .wk-lbl{font-size:8px}
 #work-chain{min-height:70px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;background:rgba(12,9,26,.7);border:1px dashed rgba(167,139,250,.4);border-radius:16px;padding:14px;margin-bottom:12px}
 .wk-dot{color:#fff;font-size:20px;text-shadow:0 0 10px rgba(230,220,255,.9)}
+.wk-link{display:inline-flex;align-items:center;vertical-align:middle;margin:0 1px}
 .wk-empty{color:#7e76a8;font-size:12px}
 #work-meaning{font-size:12.5px;color:#cfc4ee;line-height:1.7;min-height:40px;margin-bottom:12px}
 #work-btns{display:flex;gap:9px;justify-content:center}
@@ -223,6 +232,20 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .co-title{font-size:21px;color:#efe8ff;text-align:center;letter-spacing:.05em;margin-bottom:10px;text-shadow:0 0 20px rgba(167,139,250,.5)}
 .co-sub{font-size:12px;color:#a99bd6;line-height:1.65;margin-bottom:20px;text-align:center}
 .co-step{font-size:12.5px;color:#d4c9f2;line-height:1.7;padding:13px 4px;border-bottom:1px dotted rgba(167,139,250,.25)}
+#co-deck{min-height:220px}
+.co-card{display:none}
+.co-card.on{display:block;animation:gvRise .55s ease}
+.co-illus{display:flex;justify-content:center;margin:2px 0 4px}
+.co-illus svg{width:min(300px,90%);height:auto;filter:drop-shadow(0 0 14px rgba(124,92,255,.22))}
+.co-card .co-step{border-bottom:none;padding-top:6px}
+#co-nav{display:flex;align-items:center;gap:12px;margin-top:14px;padding-top:12px;border-top:1px dotted rgba(167,139,250,.25)}
+#co-prev,#co-next{background:rgba(124,92,255,.22);border:0.5px solid rgba(196,181,253,.5);color:#e6dfff;border-radius:50%;width:42px;height:42px;font-size:22px;line-height:1;cursor:pointer;font-family:inherit;transition:background .2s,opacity .2s;flex-shrink:0}
+#co-prev:hover,#co-next:hover{background:rgba(124,92,255,.42)}
+#co-prev.dim,#co-next.dim{opacity:.28;pointer-events:none}
+#co-mid{flex:1;text-align:center}
+#co-count{display:block;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8f83c0;margin-bottom:4px}
+#co-dots{letter-spacing:4px;font-size:8px;color:#6c639a}
+#co-dots .on{color:#c4b5fd;text-shadow:0 0 8px rgba(167,139,250,.8)}
 #soul-page{position:fixed;inset:0;z-index:1700;background:radial-gradient(ellipse at 50% 0%,#1a1332 0%,#0a0818 58%,#060512 100%);display:none;overflow-y:auto;padding:64px 18px 60px;pointer-events:all}
 #soul-page.show{display:block}
 #quest-back{position:fixed;top:14px;left:14px;z-index:5;background:rgba(20,16,40,.85);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:12px;padding:8px 14px;border-radius:16px;cursor:pointer;font-family:inherit}
@@ -299,6 +322,19 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .ma-col{width:27%;padding:62px 22px 26px;overflow-y:auto}
 .ma-col::-webkit-scrollbar{width:3px}.ma-col::-webkit-scrollbar-thumb{background:rgba(167,139,250,.3);border-radius:2px}
 #ma-left{border-right:0.5px solid rgba(167,139,250,.1)}
+#ma-layer-panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:12;width:min(400px,92%);max-height:62vh;overflow-y:auto;background:rgba(16,12,34,.97);border:0.5px solid rgba(196,181,253,.5);border-radius:16px;padding:15px 17px;box-shadow:0 10px 44px rgba(0,0,0,.6),0 0 30px rgba(124,92,255,.25)}
+.mlp-head{display:flex;align-items:center;gap:9px;font-size:13px}
+.mlp-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
+#mlp-close{margin-left:auto;color:#9a8fc2;cursor:pointer;font-size:14px;padding:2px 6px}
+#mlp-close:hover{color:#fff}
+.mlp-sub{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#8f83c0;margin:7px 0 9px}
+.mlp-row{display:flex;flex-direction:column;gap:2px;padding:8px 2px;border-bottom:1px dotted rgba(167,139,250,.22);font-size:11.5px}
+.mlp-row:last-child{border-bottom:none}
+.mlp-w{color:#e2d9fb}
+.mlp-m{color:#9a8fc2;font-size:10.5px}
+.mlp-t{color:#c3b8e8;font-style:italic;font-size:11px;margin-top:2px}
+#ma-explain{text-align:center;font-size:11px;color:#a99bd6;line-height:1.6;max-width:340px;margin:6px auto 2px;padding:0 10px}
+#ma-explain .mae-hint{color:#c4b5fd;display:block;margin-top:3px;font-size:10.5px}
 #ma-right{border-left:0.5px solid rgba(167,139,250,.1)}
 #ma-center{flex:1;position:relative;overflow:hidden}
 #ma-canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
@@ -518,6 +554,13 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .lfi-w{width:24px}
 #lf-tip,#ma-tip-first{background:rgba(124,92,255,.13);border:0.5px solid rgba(196,181,253,.5);border-radius:14px;padding:13px 15px;font-size:11.5px;line-height:1.65;color:#d8ccff;margin:10px 0}
 #ma-tip-first{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);width:min(480px,92%);z-index:8;box-shadow:0 8px 30px rgba(0,0,0,.55);background:rgba(20,15,42,.97)}
+.st-num{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#8f83c0;margin-bottom:5px}
+.st-body{min-height:34px}
+.st-nav{display:flex;align-items:center;gap:10px;margin-top:9px}
+.st-dots{flex:1;letter-spacing:4px;font-size:9px;color:#6c639a}
+.st-dots .on{color:#c4b5fd;text-shadow:0 0 8px rgba(167,139,250,.8)}
+.st-next{background:rgba(124,92,255,.25);border:0.5px solid rgba(196,181,253,.55);color:#e6dfff;border-radius:14px;padding:5px 16px;font-size:12px;cursor:pointer;font-family:inherit;transition:background .2s}
+.st-next:hover{background:rgba(124,92,255,.45)}
 .tip-ok{display:inline-block;margin-top:8px;padding:6px 14px;border:0.5px solid rgba(196,181,253,.6);border-radius:12px;color:#efe8ff;cursor:pointer;background:rgba(167,139,250,.18)}
 /* Per-offering small symbols */
 .lf-icons{display:flex;gap:14px;margin-top:9px}
@@ -735,6 +778,34 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #memory-btn.sel-mem{background:rgba(232,183,107,.16);box-shadow:0 0 12px rgba(232,183,107,.3);color:#f0d3a0}
 .lf-scope-label{font-size:12px;color:#9a8fc2;align-self:center;margin-right:2px}
 .lf-tool.sel{background:rgba(124,92,255,.4);border-color:rgba(167,139,250,.6);color:#fff}
+.lf-setloc{text-align:center;padding:20px 14px;color:#c3b8e8}
+.lfs-t{font-size:12px;line-height:1.65;max-width:420px;margin:0 auto 12px}
+.lfs-row{display:flex;gap:8px;justify-content:center;max-width:360px;margin:0 auto}
+#lf-loc-in{flex:1;background:rgba(255,255,255,.06);border:0.5px solid rgba(167,139,250,.35);border-radius:12px;padding:9px 12px;font-size:12px;color:#e0d8ff;outline:none;font-family:inherit}
+#lf-loc-in::placeholder{color:#5a5270}
+#lf-loc-btn{background:rgba(124,92,255,.3);border:0.5px solid rgba(196,181,253,.6);color:#e6dfff;border-radius:12px;padding:9px 16px;font-size:12px;cursor:pointer;font-family:inherit}
+#lf-loc-btn:hover{background:rgba(124,92,255,.5)}
+.lfs-n{font-size:10px;color:#8f83c0;margin-top:8px}
+#lf-offer{position:fixed;inset:0;z-index:6;display:none;align-items:center;justify-content:center;background:rgba(5,4,14,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);padding:18px}
+#lf-offer.show{display:flex}
+#lfo-card{width:min(440px,96%);background:rgba(16,12,34,.98);border:0.5px solid rgba(196,181,253,.5);border-radius:18px;padding:16px 18px;box-shadow:0 12px 50px rgba(0,0,0,.65),0 0 34px rgba(124,92,255,.28)}
+#lfo-head{display:flex;align-items:center}
+#lfo-title{font-size:13.5px;color:#efe8ff}
+#lfo-close{margin-left:auto;color:#9a8fc2;cursor:pointer;font-size:14px;padding:2px 6px}
+#lfo-close:hover{color:#fff}
+#lfo-sub{font-size:11px;color:#a99bd6;line-height:1.65;margin:8px 0 6px}
+#lfo-to{font-size:10.5px;color:#8f83c0;margin-bottom:9px}
+#lfo-kinds{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.lfo-k{display:flex;flex-direction:column;align-items:center;gap:2px;background:transparent;border:0.5px solid rgba(255,255,255,.12);border-radius:14px;padding:7px 10px 5px;cursor:pointer;font-family:inherit;font-size:9.5px;color:#b6acdc;transition:all .2s;min-width:58px}
+.lfo-k:hover{border-color:var(--kc);color:var(--kc)}
+.lfo-k.sel{border-color:var(--kc);color:var(--kc);background:rgba(255,255,255,.06);box-shadow:0 0 14px color-mix(in srgb,var(--kc) 40%,transparent)}
+#lfo-note{width:100%;box-sizing:border-box;background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.12);border-radius:12px;padding:9px 11px;font-size:11.5px;color:#e0d8ff;outline:none;font-family:inherit;resize:none;height:58px;line-height:1.55}
+#lfo-note::placeholder{color:#5a5270}
+#lfo-note:focus{border-color:rgba(167,139,250,.4)}
+#lfo-row{display:flex;gap:9px;margin-top:11px}
+#lfo-send{flex:1;background:rgba(124,92,255,.32);border:0.5px solid rgba(196,181,253,.65);color:#efe8ff;border-radius:13px;padding:9px 0;font-size:12.5px;cursor:pointer;font-family:inherit}
+#lfo-send:hover{background:rgba(124,92,255,.5)}
+#lfo-cancel{background:transparent;border:0.5px solid rgba(167,139,250,.3);color:#9a8fc2;border-radius:13px;padding:9px 16px;font-size:11.5px;cursor:pointer;font-family:inherit}
 /* Impressionistic logo: Union mark + glowing, readable text against the map */
 #logo{display:flex;align-items:center;gap:9px;cursor:pointer;background:rgba(6,5,14,.30);padding:5px 10px 5px 8px;border-radius:16px;-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);box-shadow:0 0 18px rgba(0,0,0,.4)}
 #logo-mark{display:flex;align-items:center;filter:drop-shadow(0 0 8px rgba(167,139,250,.55))}
@@ -784,7 +855,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #aura-views-btn{display:flex;align-items:center;gap:6px;background:rgba(20,16,40,.72);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:11px;padding:8px 12px;border-radius:18px;cursor:pointer;font-family:inherit;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);box-shadow:0 0 16px rgba(124,92,255,.22);white-space:nowrap}
 #aura-views-btn:hover{background:rgba(30,22,56,.85)}
 #aura-views-btn .av-eye{display:flex;color:#c4b5fd}
-#aura-views-btn .av-caret{font-size:14px;color:#cdbff5;transition:transform .25s;line-height:1}
+#aura-views-btn .av-caret{font-size:17px;color:#cdbff5;transition:transform .25s;line-height:1}
 #aura-views.open #aura-views-btn .av-caret{transform:rotate(180deg)}
 #aura-views-menu{display:none;margin-top:6px;background:rgba(12,10,24,.97);border:0.5px solid rgba(167,139,250,.28);border-radius:14px;padding:6px;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:0 10px 34px rgba(0,0,0,.6);min-width:212px}
 #aura-views.open #aura-views-menu{display:block}
@@ -960,14 +1031,17 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="course-inner">
     <div class="co-title">Learning to see the aura</div>
     <div class="co-sub">A short practice course, drawn from methods taught openly for over a century — including those popularised by writers like Ted Andrews — retold here in Aurasense's own words. Everyone senses energy; seeing it is mostly a matter of un-learning how hard we normally look.</div>
-    <div class="co-step"><b>1 · Soften the eyes.</b> Vision for auras is peripheral, not direct. Practise letting your gaze rest <i>near</i> a thing rather than on it — the way you look at stars at night, where the faint ones appear only off-centre.</div>
-    <div class="co-step"><b>2 · Begin with your own hand.</b> Hold it against a plain, softly lit background — white or pale grey works best. Spread the fingers slightly. Rest your soft gaze just past the fingertips and wait, without straining. Blinking is fine.</div>
-    <div class="co-step"><b>3 · The first band.</b> Most people first see a thin, almost transparent outline hugging the skin, a few millimetres wide — sometimes like heat-shimmer. This is usually called the etheric layer. Seeing it may take seconds or several sittings. Both are normal.</div>
-    <div class="co-step"><b>4 · Let colour arrive; never chase it.</b> With practice the band widens and colour impressions come — sometimes seen, sometimes simply <i>known</i>, like sensing a person's mood from across a room. Both count. Many strong aura-readers feel colour rather than see it.</div>
-    <div class="co-step"><b>5 · What the colours tend to mean.</b> Traditions vary, but there is broad agreement: <span style="color:#f0a8c0">rose</span> for love and compassion · <span style="color:#f09860">orange-red</span> for vitality and drive · <span style="color:#ffd88a">gold-yellow</span> for clarity and joy · <span style="color:#7fc8a0">green</span> for healing and growth · <span style="color:#8fc8f0">blue</span> for calm and truth-speaking · <span style="color:#9f7fe0">violet</span> for intuition and the spiritual · dimmed or greyed regions for tiredness or held tension. Your own Aurasense colours use this same language.</div>
-    <div class="co-step"><b>6 · People, plants, places.</b> Trees against dawn or dusk sky are wonderful practice — their fields are steady and generous. Then a friend against a plain wall. Then, gently, places themselves: thresholds, old rooms, street corners. Notice before naming.</div>
-    <div class="co-step"><b>7 · The ethic.</b> An aura is as private as a diary. Look at others' fields the way you would hope to be looked at — with warmth, without judgement, and never to catalogue their weather. What you practise here is compassion with its eyes open.</div>
-    <div class="co-step" style="border:none"><b>Now use it here.</b> Every colour that enters your My Aura — from offerings, questionnaires, and the Soul Search — follows this same colour language. You are learning to read yourself first. Others' auras will follow naturally.</div>
+    <div id="co-deck">
+    <div class="co-card on" data-s="0"><div class="co-illus"><svg viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="co1s" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#efe8ff" stop-opacity="0"/></radialGradient></defs><path d="M50 62 Q 95 30, 140 62 Q 95 92, 50 62 Z" stroke="#b39ddb" stroke-width="1.8" opacity="0.8"/><circle cx="95" cy="62" r="9" stroke="#b39ddb" stroke-width="1.4" opacity="0.5"/><circle cx="95" cy="62" r="2.6" fill="#cdbcf0" opacity="0.4"/><circle cx="182" cy="34" r="10" fill="url(#co1s)" class="as-breathe"/><circle cx="182" cy="34" r="1.8" fill="#ffffff"><animate attributeName="opacity" values="0.3;1;0.3" dur="5s" repeatCount="indefinite"/></circle><path d="M150 50 Q 166 40, 176 37" stroke="#efe8ff" stroke-width="1" stroke-dasharray="2 5" opacity="0.5"/><circle cx="216" cy="72" r="1.2" fill="#efe8ff" opacity="0.35"/><circle cx="30" cy="28" r="1" fill="#efe8ff" opacity="0.3"/></svg></div><div class="co-step"><b>1 · Soften the eyes.</b> Vision for auras is peripheral, not direct. Practise letting your gaze rest <i>near</i> a thing rather than on it — the way you look at stars at night, where the faint ones appear only off-centre.</div></div>
+    <div class="co-card" data-s="1"><div class="co-illus"><svg viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="co2f" cx="50%" cy="50%" r="60%"><stop offset="0%" stop-color="#2a2350" stop-opacity="0.85"/><stop offset="100%" stop-color="#141028" stop-opacity="0"/></radialGradient><radialGradient id="co2h" cx="50%" cy="60%" r="55%"><stop offset="0%" stop-color="#e9e2ff" stop-opacity="0.28"/><stop offset="100%" stop-color="#b39ddb" stop-opacity="0"/></radialGradient></defs><rect x="42" y="8" width="156" height="104" rx="14" fill="url(#co2f)"/><ellipse cx="120" cy="72" rx="52" ry="42" fill="url(#co2h)" class="as-breathe"/><path d="M96 96 V64 Q96 58 101 58 Q106 58 106 64 V52 Q106 46 111 46 Q116 46 116 52 V48 Q116 42 121 42 Q126 42 126 48 V54 Q126 48 131 48 Q136 48 136 54 V72 Q141 62 147 66 Q152 70 146 80 L136 96 Z" stroke="#e6ddff" stroke-width="1.7" opacity="0.9" stroke-linejoin="round"/></svg></div><div class="co-step"><b>2 · Begin with your own hand.</b> Hold it against a plain, softly lit background — white or pale grey works best. Spread the fingers slightly. Rest your soft gaze just past the fingertips and wait, without straining. Blinking is fine.</div></div>
+    <div class="co-card" data-s="2"><div class="co-illus"><svg viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M104 100 V66 Q104 60 109 60 Q114 60 114 66 V54 Q114 48 119 48 Q124 48 124 54 V50 Q124 44 129 44 Q134 44 134 50 V56 Q134 50 139 50 Q144 50 144 56 V74 Q149 64 155 68 Q160 72 154 82 L144 100 Z" stroke="#d8ceff" stroke-width="1.6" opacity="0.85" stroke-linejoin="round"/><path d="M99 103 V65 Q99 55 109 55 Q110 50 114 48 Q113 42 119 39 Q125 37 129 39 Q135 38 139 44 Q147 44 149 54 V68 Q158 60 163 68 Q167 76 158 86 L148 103" stroke="#aef0ff" stroke-width="1.1" opacity="0.7" class="as-shimmer" stroke-linejoin="round"/></svg></div><div class="co-step"><b>3 · The first band.</b> Most people first see a thin, almost transparent outline hugging the skin, a few millimetres wide — sometimes like heat-shimmer. This is usually called the etheric layer. Seeing it may take seconds or several sittings. Both are normal.</div></div>
+    <div class="co-card" data-s="3"><div class="co-illus"><svg viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="co4c" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="0.95"/><stop offset="100%" stop-color="#cdbcf0" stop-opacity="0"/></radialGradient><radialGradient id="co4r" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f0a8c0" stop-opacity="0.55"/><stop offset="100%" stop-color="#f0a8c0" stop-opacity="0"/></radialGradient><radialGradient id="co4g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd88a" stop-opacity="0.55"/><stop offset="100%" stop-color="#ffd88a" stop-opacity="0"/></radialGradient><radialGradient id="co4b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#8fc8f0" stop-opacity="0.55"/><stop offset="100%" stop-color="#8fc8f0" stop-opacity="0"/></radialGradient></defs><circle cx="120" cy="60" r="16" fill="url(#co4c)" class="as-breathe"/><circle cx="120" cy="60" r="26" stroke="#cdbcf0" stroke-width="1" opacity="0.4"/><circle cx="58" cy="38" r="15" fill="url(#co4r)"><animate attributeName="cx" values="46;74;46" dur="12s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;0.9;0.4" dur="12s" repeatCount="indefinite"/></circle><circle cx="186" cy="42" r="14" fill="url(#co4g)"><animate attributeName="cx" values="196;170;196" dur="14s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.35;0.85;0.35" dur="14s" repeatCount="indefinite"/></circle><circle cx="160" cy="94" r="13" fill="url(#co4b)"><animate attributeName="cy" values="100;84;100" dur="13s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.35;0.8;0.35" dur="13s" repeatCount="indefinite"/></circle></svg></div><div class="co-step"><b>4 · Let colour arrive; never chase it.</b> With practice the band widens and colour impressions come — sometimes seen, sometimes simply <i>known</i>, like sensing a person’s mood from across a room. Both count. Many strong aura-readers feel colour rather than see it.</div></div>
+    <div class="co-card" data-s="4"><div class="co-illus"><svg viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="co5a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f0a8c0" stop-opacity="0"/></radialGradient><radialGradient id="co5b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#f09860" stop-opacity="0"/></radialGradient><radialGradient id="co5c" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#ffd88a" stop-opacity="0"/></radialGradient><radialGradient id="co5d" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#7fc8a0" stop-opacity="0"/></radialGradient><radialGradient id="co5e" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#8fc8f0" stop-opacity="0"/></radialGradient><radialGradient id="co5f" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#9f7fe0" stop-opacity="0"/></radialGradient></defs><circle cx="38" cy="76" r="13" fill="url(#co5a)" class="as-breathe"/><circle cx="71" cy="50" r="13" fill="url(#co5b)" class="as-breathe" style="animation-delay:.7s"/><circle cx="104" cy="38" r="13" fill="url(#co5c)" class="as-breathe" style="animation-delay:1.4s"/><circle cx="137" cy="38" r="13" fill="url(#co5d)" class="as-breathe" style="animation-delay:2.1s"/><circle cx="170" cy="50" r="13" fill="url(#co5e)" class="as-breathe" style="animation-delay:2.8s"/><circle cx="203" cy="76" r="13" fill="url(#co5f)" class="as-breathe" style="animation-delay:3.5s"/><circle cx="120" cy="94" r="7" fill="#6a677e" opacity="0.35"/></svg></div><div class="co-step"><b>5 · What the colours tend to mean.</b> Traditions vary, but there is broad agreement: <span style="color:#f0a8c0">rose</span> for love and compassion · <span style="color:#f09860">orange-red</span> for vitality and drive · <span style="color:#ffd88a">gold-yellow</span> for clarity and joy · <span style="color:#7fc8a0">green</span> for healing and growth · <span style="color:#8fc8f0">blue</span> for calm and truth-speaking · <span style="color:#9f7fe0">violet</span> for intuition and the spiritual · dimmed or greyed regions for tiredness or held tension. Your own Aurasense colours use this same language.</div></div>
+    <div class="co-card" data-s="5"><div class="co-illus"><svg viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="co6t" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9be182" stop-opacity="0.4"/><stop offset="100%" stop-color="#6aa84f" stop-opacity="0"/></radialGradient><radialGradient id="co6d" cx="50%" cy="30%" r="70%"><stop offset="0%" stop-color="#ffd9a0" stop-opacity="0.5"/><stop offset="100%" stop-color="#ffd9a0" stop-opacity="0"/></radialGradient></defs><ellipse cx="88" cy="52" rx="46" ry="38" fill="url(#co6t)" class="as-breathe"/><circle cx="88" cy="48" r="24" stroke="#9be182" stroke-width="1.3" opacity="0.55"/><path d="M88 100 V58 M88 72 Q78 64 72 54 M88 66 Q98 60 104 50" stroke="#b8e6a4" stroke-width="1.7" opacity="0.85" stroke-linecap="round"/><path d="M20 100 H220" stroke="#4a4470" stroke-width="1" opacity="0.5"/><path d="M176 100 V62 Q176 56 182 56 H192 Q198 56 198 62 V100" stroke="#d8ceff" stroke-width="1.5" opacity="0.8"/><ellipse cx="187" cy="76" rx="17" ry="26" fill="url(#co6d)" class="as-breathe" style="animation-delay:1.6s"/></svg></div><div class="co-step"><b>6 · People, plants, places.</b> Trees against dawn or dusk sky are wonderful practice — their fields are steady and generous. Then a friend against a plain wall. Then, gently, places themselves: thresholds, old rooms, street corners. Notice before naming.</div></div>
+    <div class="co-card" data-s="6"><div class="co-illus"><svg viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="co7a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd8e4" stop-opacity="0.35"/><stop offset="100%" stop-color="#f0a8c0" stop-opacity="0"/></radialGradient><radialGradient id="co7b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ddd0ff" stop-opacity="0.35"/><stop offset="100%" stop-color="#b39ddb" stop-opacity="0"/></radialGradient></defs><circle cx="82" cy="60" r="38" fill="url(#co7a)" class="as-breathe"/><circle cx="158" cy="60" r="38" fill="url(#co7b)" class="as-breathe" style="animation-delay:3s"/><circle cx="82" cy="60" r="21" stroke="#f0a8c0" stroke-width="1.4" opacity="0.7"/><circle cx="158" cy="60" r="21" stroke="#b39ddb" stroke-width="1.4" opacity="0.7"/><circle cx="82" cy="60" r="3" fill="#ffe4ee" opacity="0.95"/><circle cx="158" cy="60" r="3" fill="#e8ddff" opacity="0.95"/><path d="M103 54 Q 118 46, 133 52" stroke="#f7d4e2" stroke-width="1.3" opacity="0.8" stroke-linecap="round" class="as-shimmer"/></svg></div><div class="co-step"><b>7 · The ethic.</b> An aura is as private as a diary. Look at others’ fields the way you would hope to be looked at — with warmth, without judgement, and never to catalogue their weather. What you practise here is compassion with its eyes open.</div></div>
+    <div class="co-card" data-s="7"><div class="co-illus"><svg viewBox="0 0 240 120" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="co8h" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f4f0ff" stop-opacity="0.35"/><stop offset="100%" stop-color="#cdbcf0" stop-opacity="0"/></radialGradient></defs><circle cx="120" cy="60" r="44" stroke="#8fc8f0" stroke-width="1.2" opacity="0.5" class="as-breathe" style="animation-delay:2s"/><circle cx="120" cy="60" r="33" stroke="#ffd88a" stroke-width="1.2" opacity="0.55" class="as-breathe" style="animation-delay:1s"/><circle cx="120" cy="60" r="23" stroke="#f0a8c0" stroke-width="1.2" opacity="0.6" class="as-breathe"/><circle cx="120" cy="60" r="13" fill="url(#co8h)"/><circle cx="120" cy="60" r="12" stroke="#eef" stroke-width="1.2" opacity="0.75"/></svg></div><div class="co-step" style="border:none"><b>Now use it here.</b> Every colour that enters your My Aura — from offerings, questionnaires, and the Soul Search — follows this same colour language. You are learning to read yourself first. Others’ auras will follow naturally.</div></div>
+  </div>
+  <div id="co-nav"><button type="button" id="co-prev">‹</button><div id="co-mid"><span id="co-count">1 of 8</span><span id="co-dots"></span></div><button type="button" id="co-next">›</button></div>
   </div>
 </div>
 <div id="soul-page">
@@ -1015,6 +1089,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <canvas id="ma-canvas"></canvas>
       <video id="ma-video" playsinline autoplay muted></video>
       <div id="ma-branch-tip"></div>
+      <div id="ma-explain">This is to help you visualise what your personal aura is like — how your emotional and psychological state influences the energy from your physical body. Everyday decisions. <span class="mae-hint">Tap any layer of light to see where that energy came from.</span></div>
       <div id="ma-selfie-wrap">
         <button id="ma-selfie-btn">📷 Take a selfie</button>
         <div id="ma-selfie-actions"><button id="ma-capture">Capture</button><button id="ma-cancel-selfie">Cancel</button></div>
@@ -1156,6 +1231,14 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     </div>
     <div id="lf-list"></div>
   </div>
+  <div id="lf-offer"><div id="lfo-card">
+    <div id="lfo-head"><span id="lfo-title">Offer something to this aura ✧</span><span id="lfo-close">✕</span></div>
+    <div id="lfo-sub">Something from your life’s learned trajectory — offered here, it becomes part of a Conscious Trajectory for someone else. What you give enriches your own aura in kind — richness, never points.</div>
+    <div id="lfo-to"></div>
+    <div id="lfo-kinds"></div>
+    <textarea id="lfo-note" maxlength="240" placeholder="What helped you through something like this? (optional)"></textarea>
+    <div id="lfo-row"><button type="button" id="lfo-send">Offer ✦</button><button type="button" id="lfo-cancel">Not now</button></div>
+  </div></div>
 </div>
 <div id="worldauras-page">
   <button class="qz-back" id="wa-back">← Return to the map</button>
@@ -1264,7 +1347,7 @@ const SENSES=[
 ];
 const SENSE_SYMBOLS={
 memory:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,183,107,0.55))"><defs><radialGradient id="as-memHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe6b0" stop-opacity="0.34"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient><radialGradient id="as-memCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fffaf0" stop-opacity="1"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-memHalo)"/><path d="M48 54 a6 6 0 1 1 6 -6 a12 12 0 1 0 -12 12 a18 18 0 1 1 18 -18 a24 24 0 1 0 -24 24" fill="none" stroke="#f0cd8a" stroke-width="2.4" stroke-linecap="round" opacity="0.9" class="as-slowShimmer"/><circle cx="48" cy="48" r="7" fill="url(#as-memCore)" class="as-breathe"/></svg>',
-sound:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(180,200,255,0.5))"><defs><radialGradient id="as-sndCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient><radialGradient id="as-sndHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8c8ff" stop-opacity="0.35"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-sndHalo)"/><g class="as-wave"><path d="M6 48 Q 20 28, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="3" stroke-linecap="round" opacity="1" class="as-shimmer"/><path d="M6 48 Q 20 36, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.6"/><path d="M24 64 Q 32 56, 40 64 T 56 64 T 72 64" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/></g><circle cx="48" cy="48" r="14" fill="url(#as-sndCore)" class="as-breathe"/></svg>',
+sound:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(180,200,255,0.42))"><defs><radialGradient id="as-sndCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient><radialGradient id="as-sndHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8c8ff" stop-opacity="0.30"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-sndHalo)"/><g class="as-wave"><path d="M6 48 Q 20 28, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="2.3" stroke-linecap="round" opacity="0.82" class="as-shimmer"/><path d="M6 48 Q 20 36, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.6"/><path d="M24 64 Q 32 56, 40 64 T 56 64 T 72 64" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/></g><circle cx="48" cy="48" r="14" fill="url(#as-sndCore)" class="as-breathe"/></svg>',
 smell:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(190,235,170,0.5))"><defs><radialGradient id="as-smlCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient><radialGradient id="as-smlHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#beeba9" stop-opacity="0.32"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-smlHalo)"/><g class="as-drift"><path d="M40 78 C 36 60, 50 52, 42 36 C 36 24, 48 18, 44 8" fill="none" stroke="#beeba9" stroke-width="3" stroke-linecap="round" opacity="0.95" class="as-shimmer"/><path d="M55 78 C 59 58, 47 50, 57 34 C 63 22, 51 16, 57 6" fill="none" stroke="#beeba9" stroke-width="2.4" stroke-linecap="round" opacity="0.7"/><g class="as-wiggle"><path d="M47 74 C 52 60, 43 52, 50 38 C 54 30, 45 26, 49 20" fill="none" stroke="#beeba9" stroke-width="2" stroke-linecap="round" opacity="0.6"/></g></g><ellipse cx="48" cy="80" rx="16" ry="7" fill="url(#as-smlCore)" class="as-breathe"/></svg>',
 light:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(220,200,255,0.55))"><defs><linearGradient id="as-ligFlame" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#e6d8ff" stop-opacity="0.95"/><stop offset="100%" stop-color="#b39ddb" stop-opacity="0.7"/></linearGradient><radialGradient id="as-ligHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#dcc8ff" stop-opacity="0.32"/><stop offset="100%" stop-color="#b39ddb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-ligHalo)"/><ellipse cx="48" cy="49" rx="24" ry="35" fill="none" stroke="#dcc8ff" stroke-width="1.5" opacity="0.6"/><path d="M48 18 C 40 30, 32 42, 34 56 C 36 68, 44 74, 48 74 C 52 74, 60 68, 62 56 C 64 42, 56 30, 48 18" fill="url(#as-ligFlame)" class="as-slowShimmer"/></svg>',
 atmosphere:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(170,220,225,0.5))"><defs><radialGradient id="as-atmGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#76a5af" stop-opacity="0"/></radialGradient><radialGradient id="as-atmHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#aaddee" stop-opacity="0.3"/><stop offset="100%" stop-color="#76a5af" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="50" r="45" fill="url(#as-atmHalo)"/><path d="M28 60 Q 48 76, 68 60" fill="none" stroke="#aaddee" stroke-width="1.6" stroke-linecap="round" opacity="0.7" class="as-slowShimmer"/><path d="M28 60 Q 36 50, 42 42" fill="none" stroke="#aaddee" stroke-width="1.6" stroke-linecap="round" opacity="0.7" class="as-slowShimmer"/><path d="M68 60 Q 60 50, 54 42" fill="none" stroke="#aaddee" stroke-width="1.6" stroke-linecap="round" opacity="0.7" class="as-slowShimmer"/><circle cx="28" cy="60" r="9" fill="url(#as-atmGlow)" class="as-shimmer"/><circle cx="68" cy="60" r="9" fill="url(#as-atmGlow)" class="as-shimmer"/><circle cx="48" cy="36" r="10" fill="url(#as-atmGlow)" class="as-shimmer"/></svg>',
@@ -1378,6 +1461,9 @@ document.getElementById('planet-back').onclick=hidePlanet;
 const pac=document.getElementById('pac'),pctx=pac.getContext('2d');
 let paT=0,paFeedAt=0,paFeedColor='#a78bfa';
 let myAuraColors=[],myOfferings=[];
+let myGiven=[]; // emotional offerings given to others' auras — richness in kinds, never points
+function escT(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function relTime(ts){if(!ts)return '';const s=Math.max(1,Math.round((Date.now()-ts)/1000));if(s<60)return 'just now';const m=Math.round(s/60);if(m<60)return m+'m ago';const h=Math.round(m/60);if(h<24)return h+'h ago';return Math.round(h/24)+'d ago';}
 let myProfile={handle:'',realname:'',address:'',personality:[],mood:[],sensory:[],spiritual:[],interests:[]};
 function paPalette(){return myAuraColors.length?myAuraColors.slice(-8):['#a78bfa'];}
 function paDistinct(n){
@@ -2018,7 +2104,7 @@ function submit(lat,lng,text){
   addFeed(pubText,sid,'just now',true,lat,lng);
   // This offering becomes a thread in the senser's own aura.
   myAuraColors.push(s.color);
-  myOfferings.unshift({sense:sid,label:s.label,color:s.color,text:text,time:'just now',place:null,lat:lat,lng:lng});
+  myOfferings.unshift({sense:sid,label:s.label,color:s.color,text:text,time:'just now',born:Date.now(),place:null,lat:lat,lng:lng});
   if(myOfferings.length>50)myOfferings.pop();
   // Remember the offered spot so the tabs and the return from Planet come back here, not a random place.
   const sz=Math.min(17,Math.max(14,map.getZoom()));
@@ -2191,15 +2277,31 @@ let maLayers=[],maHoverLayer=-1;
 let maSelfieImg=null,maStream=null;
 const TWO=Math.PI*2;
 function maLine(text,color){return '<div class="ma-line" style="--lc:'+(color||'#a78bfa')+'">'+text+'</div>';}
+let coStep=0;
+function coSet(i){
+  const cards=document.querySelectorAll('#co-deck .co-card');if(!cards.length)return;
+  coStep=Math.max(0,Math.min(cards.length-1,i));
+  cards.forEach((c,k)=>c.classList.toggle('on',k===coStep));
+  const ct=document.getElementById('co-count');if(ct)ct.textContent=(coStep+1)+' of '+cards.length;
+  const dt=document.getElementById('co-dots');if(dt)dt.innerHTML=Array.from(cards).map((_,k)=>'<span class="'+(k===coStep?'on':'')+'">\u25cf</span>').join('');
+  const pv=document.getElementById('co-prev'),nx=document.getElementById('co-next');
+  if(pv)pv.classList.toggle('dim',coStep===0);
+  if(nx)nx.classList.toggle('dim',coStep===cards.length-1);
+}
 function maBuildLayers(){
   const counts={},order=[];
   myOfferings.forEach(o=>{if(counts[o.sense]==null){counts[o.sense]=0;order.push(o.sense);}counts[o.sense]++;});
   const ranked=order.slice().sort((a,b)=>counts[b]-counts[a]);
   maLayers=ranked.map(sid=>{const s=SENSES.find(x=>x.id===sid);return {sid:sid,color:s?s.color:'#a78bfa',label:s?s.label:sid,count:counts[sid],realm:s?s.realm:''};});
-  if(myProfile&&myProfile.qzColors&&myProfile.qzColors.length){myProfile.qzColors.forEach((cc,k)=>{maLayers.push({sid:'qz-'+k,color:cc,label:'Inner reading — questionnaire',count:1,realm:'soul'});});}
+  if(myProfile&&myProfile.qzColors&&myProfile.qzColors.length){myProfile.qzColors.forEach((cc,k)=>{const mt=(myProfile.qzMeta||[])[k];maLayers.push({sid:'qz-'+k,color:cc,label:'Inner reading — '+((mt&&mt.n)||'questionnaire'),count:1,realm:'soul'});});}
   if(typeof questState!=='undefined'&&questState.done){
     const gname={first:'First Light',arch:'The Archetypes',shadow:'The Shadow Gate',open:'The Open Sky',whole:'The Whole Picture'};
     Object.keys(questState.done).forEach(gid=>{const cols=questState.done[gid]||[];cols.forEach((cc,k)=>{maLayers.push({sid:'soul-'+gid+'-'+k,color:cc,label:(gname[gid]||'Soul Search')+' — noticed',count:1,realm:'soul'});});});
+  }
+  if(myGiven.length){
+    const kinds={},korder=[];
+    myGiven.forEach(g=>{if(kinds[g.kind]==null){kinds[g.kind]=0;korder.push(g.kind);}kinds[g.kind]++;});
+    korder.forEach(kn=>{const w=ALPHA_WORDS.find(x=>x.w===kn);maLayers.push({sid:'given-'+kn,color:(w?w.c:'#f0a8c0'),label:kn+' — offered to others',count:kinds[kn],realm:'given'});});
   }
 }
 function maSizeCanvas(){const cv=document.getElementById('ma-canvas');if(!cv)return;const W=cv.clientWidth||Math.round(window.innerWidth*0.42),H=cv.clientHeight||Math.round(window.innerHeight*0.7);cv.width=W;cv.height=H;}
@@ -2257,11 +2359,13 @@ function maDraw(){
 // ——— The Alphasense language: words of connection, and the junction grammar ———
 const ALPHA_WORDS=[
  {w:'Compassion',c:'#f0a8c0',d:'light bending toward another\u2019s centre',g:'<path d="M15 30a10 10 0 0 1 0-12"/><path d="M33 18a10 10 0 0 1 0 12"/><circle cx="24" cy="24" r="3" class="f"/>'},
+ {w:'Empathy',c:'#c9a8f0',d:'one field taking the shape of another\u2019s wave',g:'<path d="M10 18 Q 17 12, 24 18 T 38 18"/><path d="M10 32 Q 17 26, 24 32 T 38 32"/><circle cx="24" cy="25" r="2.6" class="f"/>'},
  {w:'Love',c:'#ff9db4',d:'two fields sharing one core',g:'<circle cx="19" cy="24" r="8"/><circle cx="29" cy="24" r="8"/><circle cx="24" cy="24" r="2.6" class="f"/>'},
  {w:'Balance',c:'#9fd8c8',d:'weights held in equal light',g:'<path d="M12 24h24"/><circle cx="16" cy="24" r="3" class="f"/><circle cx="32" cy="24" r="3" class="f"/><circle cx="24" cy="29" r="1.8" class="f"/>'},
  {w:'Bond',c:'#c9a8f0',d:'two centres, one thread',g:'<circle cx="14" cy="24" r="3.4" class="f"/><circle cx="34" cy="24" r="3.4" class="f"/><path d="M17.5 24h13"/>'},
  {w:'Connect',c:'#8fc8f0',d:'a path finding its points',g:'<circle cx="10" cy="32" r="2.6" class="f"/><circle cx="24" cy="15" r="2.6" class="f"/><circle cx="38" cy="32" r="2.6" class="f"/><path d="M12 30 22 17M26 17l10 13"/>'},
  {w:'Gratitude',c:'#f2ce8e',d:'an open vessel, receiving upward',g:'<path d="M14 26a10 10 0 0 0 20 0"/><circle cx="24" cy="16" r="3" class="f"/>'},
+ {w:'Joy',c:'#ffcf6e',d:'light leaping upward from the core',g:'<circle cx="24" cy="30" r="3" class="f"/><path d="M24 26 C 23 20, 20 16, 15 11"/><path d="M24 26 C 24 19, 24 14, 24 8"/><path d="M24 26 C 25 20, 28 16, 33 11"/>'},
  {w:'Peace',c:'#aee0d8',d:'stillness inside the whole',g:'<circle cx="24" cy="24" r="11"/><path d="M17 24h14"/>'},
  {w:'Presence',c:'#e6dcff',d:'here, now \u2014 the point inside the field',g:'<circle cx="24" cy="24" r="11"/><circle cx="24" cy="24" r="3" class="f"/>'},
  {w:'Flow',c:'#8fd8e8',d:'energy moving without resistance',g:'<path d="M8 24c5-9 11-9 16 0s11 9 16 0"/>'},
@@ -2428,7 +2532,7 @@ function questComplete(L){
   const cols=(L.type==='open')?['#f5eeda','#efe8d0','#fff6e0']:questState.picked.slice();
   cols.forEach(c=>{if(typeof myAuraColors!=='undefined')myAuraColors.push(c);});
   if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=L.sig;}
-  questState.done[L.id]=cols;
+  questState.done[L.id]=cols;questState.doneAt=questState.doneAt||{};questState.doneAt[L.id]=Date.now();
   if(typeof myProfile!=='undefined')myProfile.quest=questState.done;
   const sw=cols.map(c=>'<span class="q-sw" style="background:radial-gradient(circle,#fff,'+c+');color:'+c+'"></span>').join('');
   const note=(L.type==='open')?'A quiet white-gold shimmer has entered your aura — the colour of attention itself.':'These colours have just entered your aura. They are yours — drawn from what you noticed, the way aura-seers describe seeing it.';
@@ -2440,15 +2544,23 @@ function openSoulPage(){questRenderPath();const p=document.getElementById('soul-
 function closeSoulPage(){const p=document.getElementById('soul-page');if(p)p.classList.remove('show');if(typeof updateMyOrb==='function')updateMyOrb();}
 (function(){
   const qk=document.getElementById('quest-back');if(qk)qk.addEventListener('click',closeSoulPage);
-  const cl=document.getElementById('qz-course-link');if(cl)cl.addEventListener('click',()=>{const p=document.getElementById('course-page');if(p)p.classList.add('show');});
+  const cl=document.getElementById('qz-course-link');if(cl)cl.addEventListener('click',()=>{const p=document.getElementById('course-page');if(p){p.classList.add('show');p.scrollTop=0;}coSet(0);});
   const cb=document.getElementById('course-back');if(cb)cb.addEventListener('click',()=>{const p=document.getElementById('course-page');if(p)p.classList.remove('show');});
+  const cpv=document.getElementById('co-prev'),cnx=document.getElementById('co-next');
+  if(cpv)cpv.addEventListener('click',()=>coSet(coStep-1));
+  if(cnx)cnx.addEventListener('click',()=>coSet(coStep+1));
+  coSet(0);
 })();
 // ——— Glyph viewer: any symbol rises up close; junctions visibly merge into a third ———
 function mergedGlyph(a,b,size){
-  const s=size||120;
-  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 48 48" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 10px '+a.c+'88) drop-shadow(0 0 18px '+b.c+'66)">'
-    +'<g stroke="'+a.c+'" opacity="0.9">'+a.g.replace(/class="f"/g,'fill="'+a.c+'" stroke="none"')+'</g>'
-    +'<g stroke="'+b.c+'" opacity="0.9">'+b.g.replace(/class="f"/g,'fill="'+b.c+'" stroke="none"')+'</g></svg>';
+  const s=size||150,uid='lg'+Math.floor(Math.random()*1e6);
+  return '<svg width="'+s+'" height="'+Math.round(s*0.5)+'" viewBox="0 0 96 48" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 8px '+a.c+'66) drop-shadow(0 0 8px '+b.c+'66)">'
+    +'<defs><linearGradient id="'+uid+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="'+a.c+'"/><stop offset="100%" stop-color="'+b.c+'"/></linearGradient></defs>'
+    +'<path d="M24 24 H72" stroke="url(#'+uid+')" stroke-width="1.6" opacity="0.75"/>'
+    +'<circle cx="48" cy="24" r="5.5" fill="none" stroke="url(#'+uid+')" stroke-width="1" opacity="0.5" class="as-breathe"/>'
+    +'<circle cx="48" cy="24" r="2.4" fill="#ffffff" stroke="none" opacity="0.95" class="as-breathe"/>'
+    +'<g stroke="'+a.c+'" opacity="0.95">'+a.g.replace(/class="f"/g,'fill="'+a.c+'" stroke="none"')+'</g>'
+    +'<g transform="translate(48 0)" stroke="'+b.c+'" opacity="0.95">'+b.g.replace(/class="f"/g,'fill="'+b.c+'" stroke="none"')+'</g></svg>';
 }
 function openGlyphViewer(html){
   const gv=document.getElementById('gv');if(!gv)return;
@@ -2460,9 +2572,10 @@ function gvWord(w){
 }
 function gvJunction(j){
   const a=ALPHA_WORDS.find(x=>x.w===j[0]),b=ALPHA_WORDS.find(x=>x.w===j[1]);if(!a||!b)return;
-  openGlyphViewer('<div class="gv-junc"><div class="gv-stage"><div class="gv-l">'+alphaGlyph(a,96)+'</div><div class="gv-dot">·</div><div class="gv-r">'+alphaGlyph(b,96)+'</div><div class="gv-merged">'+mergedGlyph(a,b,132)+'</div></div>'
-    +'<div class="gv-caps"><span style="color:'+a.c+'">'+a.w+'</span><span class="gv-cd">'+a.d+'</span><span class="gv-plus">joins</span><span style="color:'+b.c+'">'+b.w+'</span><span class="gv-cd">'+b.d+'</span></div>'
-    +'<div class="gv-nm">'+j[0]+'·'+j[1]+'</div><div class="gv-d">'+j[2]+'</div></div>');
+  openGlyphViewer('<div class="gv-junc"><div class="gv-stage"><div class="gv-l">'+alphaGlyph(a,96)+'</div><div id="gv-link"><svg width="92" height="30" viewBox="0 0 92 30" fill="none"><defs><linearGradient id="gvlg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="'+a.c+'"/><stop offset="100%" stop-color="'+b.c+'"/></linearGradient></defs><path d="M4 15 H88" stroke="url(#gvlg)" stroke-width="2" stroke-linecap="round" class="gvl-line"/><circle cx="46" cy="15" r="7" fill="none" stroke="url(#gvlg)" stroke-width="1.1" class="gvl-ring"/><circle cx="46" cy="15" r="3" fill="#ffffff" class="gvl-core"/></svg></div><div class="gv-r">'+alphaGlyph(b,96)+'</div></div>'
+    +'<div class="gv-caps"><span style="color:'+a.c+'">'+a.w+'</span><span class="gv-cd">'+a.d+'</span><span class="gv-plus">links with</span><span style="color:'+b.c+'">'+b.w+'</span><span class="gv-cd">'+b.d+'</span></div>'
+    +'<div class="gv-nm">'+j[0]+'·'+j[1]+'</div><div class="gv-d">'+j[2]+'</div>'
+    +'<div class="gv-compound">'+mergedGlyph(a,b,170)+'<div class="gvc-cap">the joined form — each symbol remains itself, linked core to core</div></div></div>');
 }
 (function(){
   const gv=document.getElementById('gv');if(!gv)return;
@@ -2485,9 +2598,14 @@ function workMeaning(){
   }
   out.innerHTML=parts.join('<span style="color:#7e76a8"> · then · </span>');
 }
+function wkLink(p,w){
+  const j=ALPHA_JUNCTIONS.find(x=>(x[0]===p.w&&x[1]===w.w)||(x[0]===w.w&&x[1]===p.w));
+  const uid='wl'+Math.floor(Math.random()*1e6);
+  return '<span class="wk-link"><svg width="26" height="18" viewBox="0 0 26 18" fill="none"><defs><linearGradient id="'+uid+'" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="'+p.c+'"/><stop offset="100%" stop-color="'+w.c+'"/></linearGradient></defs><path d="M1 9 H25" stroke="url(#'+uid+')" stroke-width="1.5" stroke-linecap="round" opacity="0.8"/><circle cx="13" cy="9" r="'+(j?3:1.8)+'" fill="'+(j?'#ffffff':'#8f83c0')+'" opacity="'+(j?'0.95':'0.55')+'"'+(j?' class="as-breathe"':'')+'/></svg></span>';
+}
 function workRender(){
   const ch=document.getElementById('work-chain');if(!ch)return;
-  ch.innerHTML=workChain.length?workChain.map((w,i)=>alphaGlyph(w,46)+(i<workChain.length-1?'<span class="wk-dot">·</span>':'')).join(''):'<span class="wk-empty">your message forms here</span>';
+  ch.innerHTML=workChain.length?workChain.map((w,i)=>alphaGlyph(w,46)+(i<workChain.length-1?wkLink(w,workChain[i+1]):'')).join(''):'<span class="wk-empty">your message forms here</span>';
   workMeaning();
 }
 function openWorkshop(){
@@ -2528,13 +2646,25 @@ function closeAlphaPage(){const p=document.getElementById('alpha-page');if(p)p.c
   }
 })();
 let maTipShown=false;
+function buildStepTip(id,steps){
+  const t=document.createElement('div');t.id=id;let si=0;
+  function drawStep(){
+    const dots=steps.map((_,k)=>'<span class="'+(k===si?'on':'')+'">\u25cf</span>').join('');
+    const last=si===steps.length-1;
+    t.innerHTML='<div class="st-num">Tip '+(si+1)+' of '+steps.length+'</div><div class="st-body">'+steps[si]+'</div><div class="st-nav"><span class="st-dots">'+dots+'</span><button type="button" class="st-next">'+(last?'Got it \u2713':'\u2192')+'</button></div>';
+    t.querySelector('.st-next').addEventListener('click',()=>{if(si<steps.length-1){si++;drawStep();}else t.remove();});
+  }
+  drawStep();return t;
+}
 function maShowTip(){
   if(maTipShown)return;maTipShown=true;
   const page=document.getElementById('myaura-page');if(!page)return;
-  const t=document.createElement('div');t.id='ma-tip-first';
-  t.innerHTML='<b>Welcome to your aura ✧</b><br>Everything here is yours alone. <b>✦ Your journey</b> (top right) holds the questionnaires, the Soul Search, your life story and the alphasense language — each one adds real colour to your aura. Beneath every offering: <b>Visit · Question · Aurabond · Share</b>.<br><span class="tip-ok">Got it</span>';
+  const t=buildStepTip('ma-tip-first',[
+    '<b>Welcome to your aura \u2727</b> Everything here is yours alone \u2014 a living picture of the energy you carry and offer.',
+    '<b>\u2726 Your journey</b> (top right) holds the questionnaires, the Soul Search, your life story and the alphasense language \u2014 each one adds real colour to your aura.',
+    'Beneath every offering: <b>Visit \u00b7 Question \u00b7 Aurabond \u00b7 Share</b>. And tap any layer of the aura itself to see where its energy came from.'
+  ]);
   page.appendChild(t);
-  t.querySelector('.tip-ok').addEventListener('click',()=>t.remove());
 }
 function openMyAuraPage(){
   const page=document.getElementById('myaura-page');if(!page)return;maShowTip();
@@ -2560,7 +2690,8 @@ function openMyAuraPage(){
     const last=myOfferings[0],senses=new Set(myOfferings.map(o=>o.sense)).size;
     ac.innerHTML=maLine('Your aura just drew in a layer of <b style="color:'+last.color+'">'+last.label+'</b>.',last.color)
       +maLine('It now holds '+myOfferings.length+' offering'+(myOfferings.length>1?'s':'')+' across '+senses+' sense'+(senses>1?'s':'')+' — hover any layer to feel which energy it is.','#a78bfa')
-      +maLine('Your resonance has grown to <b>'+LEVEL_NAMES[Math.min(5,Math.floor(myShareCount/3))]+'</b>.','#c4b5fd');
+      +maLine('Your resonance has grown to <b>'+LEVEL_NAMES[Math.min(5,Math.floor(myShareCount/3))]+'</b>.','#c4b5fd')
+      +(myGiven.length?maLine('And it has grown richer in <b>'+(new Set(myGiven.map(g=>g.kind)).size)+' kind'+(new Set(myGiven.map(g=>g.kind)).size>1?'s':'')+'</b> of compassion turned outward — '+escT(Array.from(new Set(myGiven.map(g=>g.kind))).join(', '))+'.','#f0a8c0'):'');
   } else ac.innerHTML='<div class="ma-empty">Offer a sense and watch your aura take on its colour.</div>';
   const wc=document.getElementById('ma-world-changes');
   if(myOfferings.length){
@@ -2591,17 +2722,47 @@ function maOfferingAction(act,i,btn){
 }
 function maStopStream(){if(maStream){maStream.getTracks().forEach(t=>t.stop());maStream=null;}}
 const maCanvas=document.getElementById('ma-canvas');
+function maLayerAt(e){
+  const rect=maCanvas.getBoundingClientRect();
+  const mx=(e.clientX-rect.left)*(maCanvas.width/rect.width),my=(e.clientY-rect.top)*(maCanvas.height/rect.height);
+  const cx=maCanvas.width/2,cy=maCanvas.height/2,baseR=Math.min(maCanvas.width,maCanvas.height)*0.40;
+  const dist=Math.hypot(mx-cx,my-cy);
+  let best=-1,bestD=1e9;
+  for(let i=0;i<maLayers.length;i++){const rr=maLayerRadius(i,baseR,1)*0.78;const d=Math.abs(dist-rr);if(d<bestD){bestD=d;best=i;}}
+  return {hit:(dist<baseR*1.05&&best>=0)?best:-1,mx:mx,my:my};
+}
+function maShowLayerPanel(i){
+  const L=maLayers[i];if(!L)return;
+  const page=document.getElementById('myaura-page');if(!page)return;
+  let rows=[];
+  if(String(L.sid).indexOf('qz-')===0){
+    const k=+L.sid.slice(3),mt=(myProfile.qzMeta||[])[k];
+    rows.push('<div class="mlp-row"><span class="mlp-w">'+escT((mt&&mt.n)||'An inner reading')+'</span><span class="mlp-m">answered '+(mt?relTime(mt.t):'a while ago')+' · from within</span></div>');
+  }else if(String(L.sid).indexOf('soul-')===0){
+    const gid=L.sid.split('-')[1],at=(questState.doneAt||{})[gid];
+    rows.push('<div class="mlp-row"><span class="mlp-w">'+escT(L.label)+'</span><span class="mlp-m">passed '+(at?relTime(at):'a while ago')+' · a gate of the Soul Search</span></div>');
+  }else if(String(L.sid).indexOf('given-')===0){
+    const kn=L.sid.slice(6);
+    myGiven.filter(g=>g.kind===kn).forEach(g=>{rows.push('<div class="mlp-row"><span class="mlp-w">'+escT(kn)+' → '+escT(g.to)+'</span><span class="mlp-m">📍 '+escT(g.place)+' · '+relTime(g.t)+(g.note?'</span><span class="mlp-t">“'+escT(g.note.slice(0,90))+'”':'')+'</span></div>');});
+  }else{
+    myOfferings.filter(o=>o.sense===L.sid).forEach(o=>{rows.push('<div class="mlp-row"><span class="mlp-w">📍 '+escT(o.place||'finding its place on the map…')+'</span><span class="mlp-m">'+(o.born?relTime(o.born):escT(o.time||''))+(o.text?'</span><span class="mlp-t">“'+escT(o.text.slice(0,90))+'”':'')+'</span></div>');});
+  }
+  if(!rows.length)rows.push('<div class="mlp-row"><span class="mlp-m">This layer of light arrived quietly — its story will show here.</span></div>');
+  let p=document.getElementById('ma-layer-panel');if(p)p.remove();
+  p=document.createElement('div');p.id='ma-layer-panel';
+  p.innerHTML='<div class="mlp-head"><span class="mlp-dot" style="background:radial-gradient(circle,#fff,'+L.color+');box-shadow:0 0 12px '+L.color+'"></span><b style="color:'+L.color+'">'+escT(L.label)+'</b><span id="mlp-close">✕</span></div><div class="mlp-sub">Where this energy came from</div><div class="mlp-list">'+rows.join('')+'</div>';
+  page.appendChild(p);
+  p.querySelector('#mlp-close').addEventListener('click',()=>p.remove());
+  setTimeout(()=>{const away=ev=>{if(!p.contains(ev.target)){p.remove();document.removeEventListener('click',away,true);}};document.addEventListener('click',away,true);},50);
+}
 if(maCanvas){
+  maCanvas.addEventListener('click',e=>{const h=maLayerAt(e);if(h.hit>=0)maShowLayerPanel(h.hit);});
   maCanvas.addEventListener('mousemove',e=>{
-    const rect=maCanvas.getBoundingClientRect();
-    const mx=(e.clientX-rect.left)*(maCanvas.width/rect.width),my=(e.clientY-rect.top)*(maCanvas.height/rect.height);
-    const cx=maCanvas.width/2,cy=maCanvas.height/2,baseR=Math.min(maCanvas.width,maCanvas.height)*0.40;
-    const dist=Math.hypot(mx-cx,my-cy);
-    const layers=maLayers;let best=-1,bestD=1e9;
-    for(let i=0;i<layers.length;i++){const rr=maLayerRadius(i,baseR,1)*0.78;const d=Math.abs(dist-rr);if(d<bestD){bestD=d;best=i;}}
-    maHoverLayer=(dist<baseR*1.05&&best>=0)?best:-1;
+    const h=maLayerAt(e);const mx=h.mx,my=h.my;
+    const layers=maLayers;
+    maHoverLayer=h.hit;
     const tip=document.getElementById('ma-branch-tip');
-    if(maHoverLayer>=0&&tip){const L=layers[maHoverLayer];tip.innerHTML='<b style="color:'+L.color+'">'+L.label+'</b> — '+L.count+' offering'+(L.count>1?'s':'')+(L.realm?' · '+(L.realm==='memory'?'a memory held here':(L.realm==='internal'?'how the world makes you feel':'the world around you')):'');tip.style.left=Math.min(mx+16,maCanvas.width-220)+'px';tip.style.top=Math.max(8,my-10)+'px';tip.style.opacity='1';}
+    if(maHoverLayer>=0&&tip){const L=layers[maHoverLayer];tip.innerHTML='<b style="color:'+L.color+'">'+L.label+'</b> — '+L.count+' offering'+(L.count>1?'s':'')+(L.realm?' · '+(L.realm==='memory'?'a memory held here':(L.realm==='internal'?'how the world makes you feel':(L.realm==='soul'?'compassion turned toward yourself':(L.realm==='given'?'compassion turned outward':'the world around you')))):'')+' · <i>tap to see where &amp; when</i>';tip.style.left=Math.min(mx+16,maCanvas.width-220)+'px';tip.style.top=Math.max(8,my-10)+'px';tip.style.opacity='1';}
     else if(tip)tip.style.opacity='0';
   });
   maCanvas.addEventListener('mouseleave',()=>{maHoverLayer=-1;const t=document.getElementById('ma-branch-tip');if(t)t.style.opacity='0';});
@@ -2734,6 +2895,7 @@ function qzSubmit(){
   for(let i=0;i<Math.max(1,Math.round(negA));i++)add.push(cool[i%cool.length]);
   add.forEach(c=>myAuraColors.push(c));
   myProfile.qzColors=(myProfile.qzColors||[]).concat(add);
+  myProfile.qzMeta=(myProfile.qzMeta||[]).concat(add.map(()=>({n:q.name||'Inner reading',t:Date.now()})));
   paFeedAt=performance.now();paFeedColor=add[0]||'#a78bfa';
   const t=document.getElementById('qz-thanks');if(t)t.classList.add('show');
   setTimeout(()=>{closeQuest();openMyAuraPage();},1700);
@@ -2747,7 +2909,15 @@ const LF_INTENTS=['offering calm to a busy street','sending warmth across the wa
 let lfTimer=null,lfRows=[];
 function lfRandomRow(){const s=SENSES[Math.floor(Math.random()*SENSES.length)],p=LF_PLACES[Math.floor(Math.random()*LF_PLACES.length)],h=LF_HANDLES[Math.floor(Math.random()*LF_HANDLES.length)],intent=LF_INTENTS[Math.floor(Math.random()*LF_INTENTS.length)];return {sid:s.id,label:s.label,color:s.color,street:p[0],city:p[1],lng:p[2],lat:p[3],handle:h,intent:intent,t:Date.now()-Math.floor(Math.random()*60000)};}
 let lfFilter='',lfScope='planet';
-function lfUserCity(){if(myProfile&&myProfile.address){const parts=myProfile.address.split(',');return parts[parts.length-1].trim();}return '';}
+async function lfSetHome(val){
+  val=(val||'').trim().slice(0,60);if(!val)return;
+  myProfile.homeCity=val;
+  try{const r=await fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/'+encodeURIComponent(val)+'.json?access_token='+MAPBOX_TOKEN+'&limit=1');const d=await r.json();
+    if(d&&d.features&&d.features.length){const ft=d.features[0];localityPoint={lng:ft.center[0],lat:ft.center[1]};anchorPoint={lat:ft.center[1],lng:ft.center[0],zoom:15};}}catch(e){}
+  showMsg('Home locality set \u2014 \u2302 on the map now brings you home. Only you see this.');
+  lfRender();
+}
+function lfUserCity(){if(myProfile&&myProfile.homeCity)return myProfile.homeCity.trim();if(myProfile&&myProfile.address){const parts=myProfile.address.split(',');return parts[parts.length-1].trim();}return '';}
 function lfVisible(){
   let rows=lfRows;
   const uc=lfUserCity().toLowerCase();
@@ -2759,11 +2929,21 @@ function lfVisible(){
 function lfRender(){
   const list=document.getElementById('lf-list');if(!list)return;
   const rows=lfVisible();
-  if(!rows.length){const hasAddr=!!(typeof myProfile!=='undefined'&&myProfile&&myProfile.address);if(lfScope==='home'&&!hasAddr){list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">Set your locality to gather the auras near home — add your street or town when you become an Aurasenser. As Aurasense grows, this fills with offerings from around you.</div>';return;}if(lfScope==='home'){list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras in your home locality yet. Be the first. As Aurasense grows, this fills with offerings from around you.</div>';return;}const sc={near:' near you',home:' in your home locality',region:' in your region',nation:' in your nation',planet:''}[lfScope]||'';list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras'+sc+' yet. As Aurasense grows, this fills with offerings'+(lfScope==='planet'?' from around the world':' from around you')+'.</div>';return;}
+  if(!rows.length){
+    const uc=lfUserCity();
+    if((lfScope==='home'||lfScope==='near')&&!uc){
+      list.innerHTML='<div class="lf-setloc"><div class="lfs-t">'+(lfScope==='home'?'Your home locality is not set yet.':'To gather the auras near you, set your home locality.')+' It gathers the auras around where you live \u2014 and \u2302 on the map will bring you home.</div><div class="lfs-row"><input id="lf-loc-in" maxlength="60" placeholder="Your street or town\u2026"><button type="button" id="lf-loc-btn">\u2302 Set</button></div><div class="lfs-n">Only you see this.</div></div>';
+      const bi=document.getElementById('lf-loc-in'),bb=document.getElementById('lf-loc-btn');
+      if(bb&&bi){bb.addEventListener('click',()=>lfSetHome(bi.value));bi.addEventListener('keydown',e=>{if(e.key==='Enter')lfSetHome(bi.value);});}
+      return;
+    }
+    if(lfScope==='home'){list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras in '+escT(uc)+' yet. Be the first. As Aurasense grows, this fills with offerings from around you.</div>';return;}
+    const sc={near:' near you',home:' in your home locality',region:' in your region',nation:' in your nation',planet:''}[lfScope]||'';
+    list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras'+sc+' yet. As Aurasense grows, this fills with offerings'+(lfScope==='planet'?' from around the world':' from around you')+'.</div>';return;}
   list.innerHTML=rows.map(r=>{const i=lfRows.indexOf(r),sym=SENSE_SYMBOLS[r.sid]||'',ago=Math.max(1,Math.round((Date.now()-r.t)/1000)),agoTxt=ago<60?ago+'s ago':Math.round(ago/60)+'m ago';
     return '<div class="lf-row" data-i="'+i+'"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+r.label+'</b> — '+r.intent+'</div><div class="lf-meta">\ud83d\udccd '+r.street+', '+r.city+' · <span class="h" data-h="'+i+'">'+r.handle+'</span> · '+agoTxt+'</div><div class="lf-icons">'
     +'<span class="lf-ic" data-act="absorb" data-i="'+i+'">\u25ce<span class="lic-lbl">Absorb</span><span class="lic-tip">Draw this aura\u2019s light into yours</span></span>'
-    +'<span class="lf-ic" data-act="offer" data-i="'+i+'">\u2726<span class="lic-lbl">Offer</span><span class="lic-tip">Offer something to this aura</span></span>'
+    +'<span class="lf-ic" data-act="offer" data-i="'+i+'"'+(r.given?' data-on="1"':'')+'>\u2726<span class="lic-lbl">'+(r.given?'Offered':'Offer')+'</span><span class="lic-tip">'+(r.given?('You offered '+r.given):'Offer something to this aura')+'</span></span>'
     +'<span class="lf-ic" data-act="visit" data-i="'+i+'"><svg viewBox="0 0 24 24" class="lfi"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg><span class="lic-lbl">Visit</span><span class="lic-tip">Visit this aura on the map</span></span>'
     +'<span class="lf-ic" data-act="comment" data-i="'+i+'"><svg viewBox="0 0 24 24" class="lfi"><path d="M8 16a6 6 0 1 1 8-5.6c0 2.4-1.7 3.4-3.2 4.3"/><circle cx="12" cy="19.4" r="1.2"/></svg><span class="lic-lbl">Question</span><span class="lic-tip">Ask a question of this aura</span></span>'
     +'<span class="lf-ic" data-act="bond" data-i="'+i+'"><svg viewBox="0 0 40 24" class="lfi lfi-w"><circle cx="11" cy="12" r="7"/><circle cx="29" cy="12" r="7"/></svg><span class="lic-lbl">Aurabond</span><span class="lic-tip">Begin an aurabond</span></span>'
@@ -2777,20 +2957,57 @@ function lfRender(){
 function lfAction(act,i,ic){
   const r=lfRows[i];if(!r)return;
   if(act==='absorb'){myProfile.auraBoost=(myProfile.auraBoost||0)+1;myAuraColors.push(r.color);paFeedAt=performance.now();paFeedColor=r.color;if(ic){ic.dataset.on='1';const t=ic.querySelector('.lic-tip');if(t)t.textContent='Absorbed into your aura';}}
-  else if(act==='offer'){showMsg('Offering channel opens as Aurasense grows');}
+  else if(act==='offer'){lfOpenOffer(i);}
   else if(act==='visit'){closeLiveFeed();if(typeof map!=='undefined'&&map.flyTo)map.flyTo({center:[r.lng,r.lat],zoom:14,duration:2600});showMsg('Travelling to this aura…');}
   else if(act==='comment'){showMsg('Questions travel through alphasense symbols — arriving with Aurasenser profiles');}
   else if(act==='bond'){myAuraColors.push(r.color);paFeedAt=performance.now();paFeedColor=r.color;const mo=document.getElementById('orbMy');if(mo){mo.classList.add('orb-fed');setTimeout(()=>mo.classList.remove('orb-fed'),3000);}showMsg('An aurabond thread reaches toward '+r.handle+' \u2014 it completes when they feel it too');}
   else if(act==='share'){showMsg('Social sharing — coming in v1');}
 }
+const LFO_KINDS=['Empathy','Compassion','Love','Joy','Hope'];
+let lfoRow=-1,lfoKind='';
+function lfOpenOffer(i){
+  const r=lfRows[i];if(!r)return;lfoRow=i;lfoKind='';
+  const ov=document.getElementById('lf-offer'),kk=document.getElementById('lfo-kinds'),to=document.getElementById('lfo-to'),nt=document.getElementById('lfo-note');
+  if(!ov||!kk)return;
+  to.innerHTML='To <b style="color:'+r.color+'">'+escT(r.handle)+'</b> — for their <b style="color:'+r.color+'">'+escT(r.label)+'</b> at '+escT(r.street)+', '+escT(r.city);
+  kk.innerHTML=LFO_KINDS.map(kn=>{const w=ALPHA_WORDS.find(x=>x.w===kn);if(!w)return '';return '<button type="button" class="lfo-k" data-k="'+kn+'" style="--kc:'+w.c+'">'+alphaGlyph(w,30)+'<span>'+kn+'</span></button>';}).join('');
+  kk.querySelectorAll('.lfo-k').forEach(b=>b.addEventListener('click',()=>{kk.querySelectorAll('.lfo-k').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');lfoKind=b.getAttribute('data-k');}));
+  if(nt)nt.value='';
+  ov.classList.add('show');
+}
+function lfCloseOffer(){const ov=document.getElementById('lf-offer');if(ov)ov.classList.remove('show');}
+function lfSendOffer(){
+  const r=lfRows[lfoRow];if(!r){lfCloseOffer();return;}
+  if(!lfoKind){showMsg('Choose the kind of light to offer');return;}
+  const w=ALPHA_WORDS.find(x=>x.w===lfoKind),nt=document.getElementById('lfo-note');
+  const note=nt?nt.value.trim().slice(0,240):'';
+  myGiven.push({kind:lfoKind,to:r.handle,place:r.street+', '+r.city,t:Date.now(),note:note});
+  if(w)myAuraColors.push(w.c);
+  myProfile.auraBoost=(myProfile.auraBoost||0)+1;
+  paFeedAt=performance.now();paFeedColor=(w?w.c:'#f0a8c0');
+  const mo=document.getElementById('orbMy');if(mo){mo.classList.add('orb-fed');setTimeout(()=>mo.classList.remove('orb-fed'),3000);}
+  r.given=lfoKind;
+  lfCloseOffer();lfRender();
+  showMsg('Your '+lfoKind+' reaches '+r.handle+' — a thread from your learned trajectory, joining their Conscious Trajectory. Your aura grows richer in kind.');
+}
+(function(){
+  const cl=document.getElementById('lfo-close'),cc=document.getElementById('lfo-cancel'),sd=document.getElementById('lfo-send'),ov=document.getElementById('lf-offer');
+  if(cl)cl.addEventListener('click',lfCloseOffer);
+  if(cc)cc.addEventListener('click',lfCloseOffer);
+  if(sd)sd.addEventListener('click',lfSendOffer);
+  if(ov)ov.addEventListener('click',e=>{if(e.target===ov)lfCloseOffer();});
+})();
 let lfTipShown=false;
 function lfShowTip(){
   if(lfTipShown)return;lfTipShown=true;
   const inner=document.getElementById('lf-inner');if(!inner)return;
-  const t=document.createElement('div');t.id='lf-tip';
-  t.innerHTML='<b>Reading the feed ✧</b><br>Each aura carries its sense symbol from the alphasense language. Beneath it: <b>◎ Absorb</b> draws its light into your own aura · <b>✦ Offer</b> sends yours back · <b>Visit</b> travels to its place on the map · <b>Question</b> asks through symbols · <b>Aurabond</b> begins a thread of connection · <b>Share</b> carries it beyond Aurasense.<br><span class="tip-ok">Got it</span>';
+  const t=buildStepTip('lf-tip',[
+    '<b>Reading the feed \u2727</b> Each aura carries its sense symbol from the alphasense language \u2014 the feeling of a real place, offered by a real person.',
+    '<b>\u25ce Absorb</b> draws an aura\u2019s light into your own \u00b7 <b>\u2726 Offer</b> gives something back \u2014 empathy, love, compassion, joy or hope from your own learned trajectory.',
+    '<b>Visit</b> travels to its place on the map \u00b7 <b>Question</b> asks through symbols.',
+    '<b>Aurabond</b> begins a thread of connection \u00b7 <b>Share</b> carries it beyond Aurasense.'
+  ]);
   inner.insertBefore(t,inner.children[2]||null);
-  t.querySelector('.tip-ok').addEventListener('click',()=>t.remove());
 }
 function openLiveFeed(){const p=document.getElementById('livefeed-page');if(!p)return;lfShowTip();const lh=document.getElementById('lf-handle');if(lh)lh.textContent=(myProfile&&myProfile.handle)?('✦ '+myProfile.handle):'';if(lfRows.length===0){for(let i=0;i<8;i++)lfRows.push(lfRandomRow());lfRows.sort((a,b)=>b.t-a.t);}lfRender();p.classList.add('show');if(lfTimer)clearInterval(lfTimer);lfTimer=setInterval(()=>{lfRows.unshift(lfRandomRow());if(lfRows.length>16)lfRows.pop();lfRender();},11000);}
 function closeLiveFeed(){const p=document.getElementById('livefeed-page');if(p)p.classList.remove('show');if(lfTimer){clearInterval(lfTimer);lfTimer=null;}}
@@ -2852,9 +3069,9 @@ function collapsePlacePrompt(){const p=document.getElementById('place-prompt');i
 let localityPoint=null;
 async function localityGo(){
   if(localityPoint){setActiveTab(0);flyProgrammatic({center:[localityPoint.lng,localityPoint.lat],zoom:15,duration:2000});return;}
-  const addr=(myProfile&&myProfile.address)?myProfile.address.trim():'';
+  const addr=(myProfile&&(myProfile.address||myProfile.homeCity))?(myProfile.address||myProfile.homeCity).trim():'';
   if(addr){try{const r=await fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/'+encodeURIComponent(addr)+'.json?access_token='+MAPBOX_TOKEN+'&limit=1');const d=await r.json();if(d&&d.features&&d.features.length){const f=d.features[0];localityPoint={lng:f.center[0],lat:f.center[1]};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};setActiveTab(0);flyProgrammatic({center:f.center,zoom:15,duration:2200});return;}}catch(e){}}
-  const a=lastOfferedPoint||anchorPoint;if(a){setActiveTab(0);flyProgrammatic({center:[a.lng,a.lat],zoom:a.zoom||15,duration:1800});}else{showMsg('Set the street you live on in your profile, and this will bring you home');}
+  const a=lastOfferedPoint||anchorPoint;if(a){setActiveTab(0);flyProgrammatic({center:[a.lng,a.lat],zoom:a.zoom||15,duration:1800});}else{showMsg('Set your home locality \u2014 in your profile, or right inside the live aura feed \u2014 and this will bring you home');}
 }
 (function(){
   const lb=document.getElementById('locality-btn'),tip=document.getElementById('locality-tip');
