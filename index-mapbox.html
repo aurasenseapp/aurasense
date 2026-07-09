@@ -156,10 +156,16 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #alpha-page.show{display:block}
 #junc-page{z-index:1720}
 #junc-page.show{display:block}
-#sync-page{z-index:1730}
+#sync-page{z-index:1730;pointer-events:auto}
 #sync-page.show{display:block}
 #sw-back{position:fixed;top:14px;left:14px;z-index:5;background:rgba(20,16,40,.85);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:12px;padding:8px 14px;border-radius:16px;cursor:pointer;font-family:inherit}
 #sw-title{font-family:Georgia,serif;font-size:26px;font-weight:300;letter-spacing:.14em;color:#efe8ff;text-align:center;margin-top:8px;text-shadow:0 0 24px rgba(201,184,240,.6)}
+#sw-how{font-size:11px;color:#9a8fc2;line-height:1.7;max-width:560px;margin:-6px auto 18px;text-align:center;border:0.5px dotted rgba(167,139,250,.3);border-radius:12px;padding:9px 13px}
+#sw-how b{color:#cbbff0;font-weight:400}
+#sw-how i{color:#a99bd6}
+.swp-row{display:flex;gap:8px;justify-content:flex-end;margin-top:11px}
+#swp-share{background:rgba(124,92,255,.16);border:0.5px solid rgba(196,181,253,.55);color:#e6dcff;border-radius:12px;padding:8px 13px;font-size:11.5px;cursor:pointer;font-family:inherit}
+#swp-share:hover{background:rgba(124,92,255,.3)}
 #sw-sub{font-size:12px;color:#b8acd8;line-height:1.7;max-width:640px;margin:10px auto 18px;text-align:center}
 #sw-practice{max-width:560px;margin:0 auto 18px;border:1px solid rgba(201,184,240,.45);border-radius:16px;padding:13px 15px;background:rgba(201,184,240,.07);box-shadow:0 0 22px rgba(201,184,240,.18)}
 .swp-t{font-size:10.5px;letter-spacing:.1em;color:#cbbff0;text-transform:uppercase;margin-bottom:9px}
@@ -168,7 +174,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .swp-x b{font-size:15px;color:#f2ecff;font-weight:400;letter-spacing:.04em}
 #swp-d{font-size:11px;color:#a99bd6}
 .swp-i{font-size:11px;color:#8f83c0;line-height:1.55;margin-top:3px}
-#swp-go{display:block;margin:11px 0 0 auto;background:rgba(201,184,240,.16);border:0.5px dashed rgba(201,184,240,.6);color:#e6dcff;border-radius:12px;padding:8px 14px;font-size:11.5px;cursor:pointer;font-family:inherit}
+#swp-go{display:block;background:rgba(201,184,240,.16);border:0.5px dashed rgba(201,184,240,.6);color:#e6dcff;border-radius:12px;padding:8px 14px;font-size:11.5px;cursor:pointer;font-family:inherit}
 #swp-go:hover{background:rgba(201,184,240,.28)}
 #sw-canvas{display:block;width:min(680px,94%);height:auto;margin:0 auto;border:0.5px solid rgba(167,139,250,.25);border-radius:18px;background:rgba(10,8,24,.45);box-shadow:inset 0 0 40px rgba(124,92,255,.12)}
 #sw-legend{font-size:10px;color:#8f83c0;text-align:center;margin:8px auto 22px;max-width:560px;line-height:1.6}
@@ -178,8 +184,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #sw-a::placeholder,#sw-b::placeholder{color:#5a5270}
 .sw-row{display:flex;align-items:center;gap:10px;margin:9px 0;flex-wrap:wrap}
 .sw-l{font-size:10.5px;color:#9a8fc2;min-width:110px}
-#sw-scope button,#sw-gap button{background:rgba(255,255,255,.04);border:0.5px solid rgba(167,139,250,.3);color:#b8acd8;border-radius:12px;padding:6px 11px;font-size:10.5px;cursor:pointer;font-family:inherit}
-#sw-scope button.on,#sw-gap button.on{border-color:rgba(201,184,240,.85);color:#f2ecff;background:rgba(201,184,240,.16);box-shadow:0 0 12px rgba(201,184,240,.35)}
+#sw-scope button,#sw-gap button,#sw-kind button{background:rgba(255,255,255,.04);border:0.5px solid rgba(167,139,250,.3);color:#b8acd8;border-radius:12px;padding:6px 11px;font-size:10.5px;cursor:pointer;font-family:inherit}
+#sw-scope button.on,#sw-gap button.on,#sw-kind button.on{border-color:rgba(201,184,240,.85);color:#f2ecff;background:rgba(201,184,240,.16);box-shadow:0 0 12px rgba(201,184,240,.35)}
 #sw-strip{display:flex;gap:6px;flex-wrap:wrap}
 #sw-strip button{background:transparent;border:0.5px solid rgba(167,139,250,.22);border-radius:10px;padding:4px 6px;cursor:pointer}
 #sw-strip button.on{border-color:rgba(201,184,240,.9);box-shadow:0 0 12px rgba(201,184,240,.45);background:rgba(201,184,240,.1)}
@@ -1124,10 +1130,11 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <button id="sw-back">← Back</button>
   <div id="sw-title">The Synchronicity Weave</div>
   <div id="sw-sub">When two moments rhyme — a symbol arriving twice from strangers, a place answering a thought you hadn’t spoken — mark it here. Nothing in this room bends the world; it trains the eye. We observe what is real, never force it, and never for one alone: the noticing is offered for the benefit of the whole field — yours, others’, the world’s.</div>
+  <div id="sw-how"><b>What “rhyming” means:</b> how what you experienced was repeated back to you — the loop of coincidence. <i>Example — today’s symbol is <b>Stillness</b>, a circle holding one point. Its first appearance is right here, on Aurasense. Later, you pause at a crossing; or the news stirs you and you catch yourself choosing calm. That is the echo. Name it, bond the symbols it carried, and the loop is held.</i></div>
   <div id="sw-practice">
     <div class="swp-t">Today’s noticing practice</div>
     <div class="swp-b"><span id="swp-glyph"></span><div class="swp-x"><b id="swp-word"></b><span id="swp-d"></span><span class="swp-i">Hold this symbol lightly today. Don’t hunt it — leave the door open, and see where the world answers.</span></div></div>
-    <button type="button" id="swp-go">I noticed it ✧</button>
+    <div class="swp-row"><button type="button" id="swp-share">↗ Share today’s symbol</button><button type="button" id="swp-go">I noticed it ✧</button></div>
   </div>
   <canvas id="sw-canvas" width="900" height="560"></canvas>
   <div id="sw-legend">Personal · inner ring &nbsp;—&nbsp; Local · middle &nbsp;—&nbsp; World · outer. Each dotted arc is one rhyme; the small star at its crown is the noticing itself. Felt time sets how far the two moments stand apart.</div>
@@ -1137,7 +1144,8 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <input id="sw-b" maxlength="120" placeholder="The echo — what rhymed with it…">
     <div class="sw-row"><span class="sw-l">Reach</span><div id="sw-scope"><button type="button" data-s="0" class="on">Personal</button><button type="button" data-s="1">Local</button><button type="button" data-s="2">World</button></div></div>
     <div class="sw-row"><span class="sw-l">Felt time between</span><div id="sw-gap"><button type="button" data-g="0" class="on">Moments</button><button type="button" data-g="1">Hours</button><button type="button" data-g="2">Days</button><button type="button" data-g="3">Beyond</button></div></div>
-    <div class="sw-row sw-symrow"><span class="sw-l">Symbol it carried <i>(optional)</i></span><div id="sw-strip"></div></div>
+    <div class="sw-row"><span class="sw-l">Thread kind</span><div id="sw-kind"><button type="button" data-k="0" class="on">Waking</button><button type="button" data-k="1">Dream</button><button type="button" data-k="2">Vision</button></div></div>
+    <div class="sw-row sw-symrow"><span class="sw-l">Symbols it carried <i>(up to four — meanings can bond)</i></span><div id="sw-strip"></div></div>
     <button type="button" id="sw-weave">✧ Weave it in</button>
   </div>
   <div id="sw-list"></div>
@@ -2616,6 +2624,8 @@ const ALPHA_WORDS=[
  {w:'Grief',c:'#98a8d0',d:'light descending, still light',g:'<circle cx="24" cy="18" r="3.2" class="f"/><path d="M24 24v6" opacity="0.8"/><path d="M24 33v4" opacity="0.45"/>'},
  {w:'Hope',c:'#ffe0a0',d:'a small sun above the horizon',g:'<path d="M10 32h28"/><circle cx="24" cy="24" r="3.4" class="f"/><path d="M24 17v-4M17 19l-3-3M31 19l3-3" opacity="0.8"/>'},
  {w:'Unspoken',c:'#b8b0e8',d:'care beyond words',g:'<path d="M12 31 Q12 17 24 15"/><path d="M36 31 Q36 17 24 15" opacity="0.3"/><path d="M17 25 h3 M22 25 h3 M27 25 h2" opacity="0.55"/><circle cx="24" cy="31" r="3.2" class="f"/>'},
+ {w:'Pull',c:'#e0b0f0',d:'drawn without knowing why',g:'<path d="M12 34 Q22 30 30 20" opacity="0.9"/><path d="M16 36 Q24 33 31 25" opacity="0.4"/><circle cx="13" cy="34" r="3.2" class="f"/><circle cx="33" cy="17" r="5" opacity="0.35"/>'},
+ {w:'Passing',c:'#cfd8f0',d:'a life crossing beyond — honoured, not explained',g:'<path d="M8 34 H40" opacity="0.55"/><circle cx="24" cy="28" r="3.2" class="f"/><circle cx="24" cy="19" r="1.6" opacity="0.55"/><circle cx="24" cy="12" r="1.1" opacity="0.3"/>'},
  {w:'Together',c:'#f0c8a8',d:'many centres, one field',g:'<circle cx="24" cy="24" r="12"/><circle cx="19.5" cy="24" r="2.7" class="f"/><circle cx="28.5" cy="24" r="2.7" class="f"/>'},
  {w:'Offering',c:'#c4b5fd',d:'light lifted from open hands',g:'<path d="M13 29a11 11 0 0 0 22 0"/><circle cx="24" cy="18" r="3" class="f"/><path d="M24 12v-2" opacity="0.7"/>'},
  {w:'Time',c:'#b0d0f0',d:'not a line \u2014 a spiral, returning deeper',g:'<path d="M24 24a4 4 0 0 1 4 4 7 7 0 0 1-11 5 10 10 0 0 1 2-16 13 13 0 0 1 17 5"/>'},
@@ -2640,7 +2650,8 @@ const ALPHA_JUNCTIONS=[
  ['Balance','Energy','wellbeing \u2014 the field at its natural level'],
  ['Inquiry','Bond','a question asked with care \u2014 the beginning of an aurabond'],
  ['Visit','Compassion','arriving somewhere with your whole heart'],
- ['Share','Together','one offering, felt by many']
+ ['Share','Together','one offering, felt by many'],
+ ['Pull','Passing','the unexplained arrival — drawn to meet a crossing, without knowing why']
 ];
 function alphaGlyph(word,size){
   const s=size||44;
@@ -3476,8 +3487,10 @@ function collapsePlacePrompt(){const p=document.getElementById('place-prompt');i
   });
 })();
 (function(){if(typeof refreshRegisteredState==='function')refreshRegisteredState();})();
-let mySyncs=[],swScope=0,swGap=0,swSym=null,swRAF=null;
-const SW_GAPS=['Moments','Hours','Days','Beyond'],SW_SCOPES=['Personal','Local','World'];
+let mySyncs=[],swScope=0,swGap=0,swKind=0,swSyms=[],swRAF=null;
+const SW_GAPS=['Moments','Hours','Days','Beyond'],SW_SCOPES=['Personal','Local','World'],SW_KINDS=['Waking','Dream','Vision'];
+function swSymsOf(s){return s.syms||(s.sym?[s.sym]:[]);}
+function swWordOf(n){return ALPHA_WORDS.find(x=>x.w===n)||null;}
 function openJunc(){try{if(typeof renderAlphaPage==='function')renderAlphaPage();}catch(e){}const jp=document.getElementById('junc-page');if(jp)jp.classList.add('show');}
 function swPractice(){
   const day=Math.floor(Date.now()/86400000);const w=ALPHA_WORDS[day%ALPHA_WORDS.length];
@@ -3488,11 +3501,10 @@ function swPractice(){
 function swBuildStrip(){
   const st=document.getElementById('sw-strip');if(!st||st.dataset.b)return;st.dataset.b='1';
   st.innerHTML=ALPHA_WORDS.map((w,i)=>'<button type="button" data-i="'+i+'" title="'+w.w+'">'+alphaGlyph(w,30)+'</button>').join('');
-  st.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
-    const i=+b.dataset.i;
-    if(swSym===ALPHA_WORDS[i]){swSym=null;b.classList.remove('on');}
-    else{swSym=ALPHA_WORDS[i];st.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');}
-  }));
+}
+function swStripSync(){
+  const st=document.getElementById('sw-strip');if(!st)return;
+  st.querySelectorAll('button').forEach(x=>x.classList.toggle('on',swSyms.indexOf(ALPHA_WORDS[+x.dataset.i].w)>=0));
 }
 function swPos(s,i){
   const cv=document.getElementById('sw-canvas');const cx=cv.width/2,cy=cv.height/2+6;
@@ -3529,7 +3541,9 @@ function swDraw(){
     c.save();c.strokeStyle='rgba(242,236,255,'+(0.8*sa)+')';c.lineWidth=1.1;
     c.beginPath();c.moveTo(sx-4,sy);c.lineTo(sx+4,sy);c.moveTo(sx,sy-4);c.lineTo(sx,sy+4);c.stroke();
     const gg=c.createRadialGradient(sx,sy,0.4,sx,sy,5);gg.addColorStop(0,'rgba(255,255,255,'+sa+')');gg.addColorStop(1,'rgba(201,184,240,0)');
-    c.fillStyle=gg;c.beginPath();c.arc(sx,sy,5,0,Math.PI*2);c.fill();c.restore();
+    c.fillStyle=gg;c.beginPath();c.arc(sx,sy,5,0,Math.PI*2);c.fill();
+    const ns=swSymsOf(s).length;for(let k=1;k<ns;k++){const oa=P.crown+(k%2?1:-1)*0.11*Math.ceil(k/2);const ox=P.cx+Math.cos(oa)*(P.R+18),oy=P.cy+Math.sin(oa)*(P.R+18);c.fillStyle='rgba(242,236,255,'+(0.55*sa)+')';c.beginPath();c.arc(ox,oy,1.9,0,Math.PI*2);c.fill();}
+    c.restore();
   });
   const pg=document.getElementById('sync-page');
   if(pg&&pg.classList.contains('show'))swRAF=requestAnimationFrame(swDraw);else swRAF=null;
@@ -3537,13 +3551,10 @@ function swDraw(){
 function swRender(){
   const el=document.getElementById('sw-list');if(!el)return;
   if(!mySyncs.length){el.innerHTML='<div class="ma-empty">Your noticed rhymes will gather here — each one a thread across time, observed, never invented.</div>';return;}
-  el.innerHTML=mySyncs.slice().reverse().map((s,ri)=>{const i=mySyncs.length-1-ri;
-    return '<div class="sw-item" style="border-left-color:'+(s.c||'#c9b8f0')+'"><div class="swi-t">“'+escT(s.a)+'” <i>⇢</i> “'+escT(s.b)+'”</div><div class="swi-m">'+(s.sym?'<b style="color:'+s.c+'">'+escT(s.sym)+'</b> · ':'')+SW_SCOPES[s.scope]+' · '+SW_GAPS[s.gap]+' apart · '+relTime(s.t)+'</div><div class="swi-act"><button type="button" class="swi-st'+(s.st?' landed':'')+'" data-i="'+i+'">'+(s.st?'✦ it landed':'◌ still unfolding')+'</button><button type="button" class="swi-sh" data-i="'+i+'">↗ Share</button></div></div>';
+  el.innerHTML=mySyncs.slice().reverse().map((s,ri)=>{const i=mySyncs.length-1-ri;const syms=swSymsOf(s);
+    const chain=syms.map(n=>{const w=swWordOf(n);return '<b style="color:'+((w&&w.c)||s.c||'#c9b8f0')+'">'+escT(n)+'</b>';}).join(' · ');
+    return '<div class="sw-item" style="border-left-color:'+(s.c||'#c9b8f0')+'"><div class="swi-t">“'+escT(s.a)+'” <i>⇢</i> “'+escT(s.b)+'”</div><div class="swi-m">'+(chain?chain+' · ':'')+SW_SCOPES[s.scope]+' · '+SW_GAPS[s.gap]+' apart'+(s.kind?' · '+(s.kind===1?'☾ Dream':'✧ Vision'):'')+' · '+relTime(s.t)+'</div><div class="swi-act"><button type="button" class="swi-st'+(s.st?' landed':'')+'" data-i="'+i+'">'+(s.st?'✦ it landed':'◌ still unfolding')+'</button><button type="button" class="swi-sh" data-i="'+i+'">↗ Share</button></div></div>';
   }).join('');
-  el.querySelectorAll('.swi-st').forEach(b=>b.addEventListener('click',()=>{const s=mySyncs[+b.dataset.i];if(s){s.st=s.st?0:1;swRender();}}));
-  el.querySelectorAll('.swi-sh').forEach(b=>b.addEventListener('click',()=>{const s=mySyncs[+b.dataset.i];if(!s)return;
-    openPostcard({title:(s.sym?s.sym+' · rhyme':'Synchronicity'),color:s.c||'#c9b8f0',words:s.a+'  ⇢  '+s.b,place:SW_SCOPES[s.scope]+' · '+SW_GAPS[s.gap]+' apart',symbolSVG:(SENSE_SYMBOLS['synchronicity']||'').replace('width="22" height="22"','width="460" height="460"')});
-  }));
 }
 function openSyncPage(){
   const p=document.getElementById('sync-page');if(!p)return;
@@ -3551,30 +3562,56 @@ function openSyncPage(){
   p.classList.add('show');
   if(!swRAF)swRAF=requestAnimationFrame(swDraw);
 }
-(function(){
-  const bb=document.getElementById('sw-back');if(bb)bb.addEventListener('click',()=>{const p=document.getElementById('sync-page');if(p)p.classList.remove('show');});
-  const sc=document.getElementById('sw-scope');if(sc)sc.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{swScope=+b.dataset.s;sc.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');}));
-  const gp=document.getElementById('sw-gap');if(gp)gp.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{swGap=+b.dataset.g;gp.querySelectorAll('button').forEach(x=>x.classList.remove('on'));b.classList.add('on');}));
-  const wv=document.getElementById('sw-weave');if(wv)wv.addEventListener('click',()=>{
+document.addEventListener('click',function(e){
+  const T=(sel)=>e.target.closest(sel);
+  let t;
+  if(T('#sw-back')){const p=document.getElementById('sync-page');if(p)p.classList.remove('show');return;}
+  if(t=T('#sw-scope button')){swScope=+t.dataset.s;document.querySelectorAll('#sw-scope button').forEach(x=>x.classList.remove('on'));t.classList.add('on');return;}
+  if(t=T('#sw-gap button')){swGap=+t.dataset.g;document.querySelectorAll('#sw-gap button').forEach(x=>x.classList.remove('on'));t.classList.add('on');return;}
+  if(t=T('#sw-kind button')){swKind=+t.dataset.k;document.querySelectorAll('#sw-kind button').forEach(x=>x.classList.remove('on'));t.classList.add('on');return;}
+  if(t=T('#sw-strip button')){
+    const n=ALPHA_WORDS[+t.dataset.i].w,ix=swSyms.indexOf(n);
+    if(ix>=0)swSyms.splice(ix,1);
+    else if(swSyms.length>=4){showMsg('Up to four symbols can bond in one rhyme ✧');return;}
+    else swSyms.push(n);
+    swStripSync();return;
+  }
+  if(T('#sw-weave')){
     const a=(document.getElementById('sw-a').value||'').trim(),b=(document.getElementById('sw-b').value||'').trim();
     if(!a||!b){showMsg('A rhyme needs both moments — the thread, and its echo ✧');return;}
-    const col=swSym?swSym.c:'#c9b8f0';
-    mySyncs.push({a:a.slice(0,120),b:b.slice(0,120),scope:swScope,gap:swGap,sym:swSym?swSym.w:null,c:col,t:Date.now(),bornAt:performance.now(),st:0});
-    try{const pf=x=>320+((x.charCodeAt(0)*7+x.length*13)%300);playBond(pf(a),pf(b));}catch(e){}
+    const w0=swSyms.length?swWordOf(swSyms[0]):null,col=(w0&&w0.c)||'#c9b8f0';
+    mySyncs.push({a:a.slice(0,120),b:b.slice(0,120),scope:swScope,gap:swGap,kind:swKind,syms:swSyms.slice(),c:col,t:Date.now(),bornAt:performance.now(),st:0});
+    try{const pf=x=>320+((x.charCodeAt(0)*7+x.length*13)%300);playBond(pf(a),pf(b));}catch(err){}
     document.getElementById('sw-a').value='';document.getElementById('sw-b').value='';
     swRender();
     showMsg('Woven in — observed, never forced. Watch where it leads ✧',4200);
-  });
-  const pgo=document.getElementById('swp-go');if(pgo)pgo.addEventListener('click',()=>{
-    const w=swPractice();swSym=w;
-    const st=document.getElementById('sw-strip');
-    if(st){st.querySelectorAll('button').forEach(x=>{x.classList.toggle('on',ALPHA_WORDS[+x.dataset.i]===w);});}
-    const a=document.getElementById('sw-a');if(a){a.placeholder='Where '+w.w+' first appeared today…';a.focus();}
-    try{document.getElementById('sw-compose').scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
-  });
-  const js=document.getElementById('junc-open-sync');if(js)js.addEventListener('click',()=>openSyncPage());
-  const wj=document.getElementById('work-junc-link');if(wj)wj.addEventListener('click',()=>openJunc());
-})();
+    return;
+  }
+  if(t=T('.swi-st')){const s=mySyncs[+t.dataset.i];if(s){s.st=s.st?0:1;swRender();}return;}
+  if(t=T('.swi-sh')){const s=mySyncs[+t.dataset.i];if(!s)return;
+    const syms=swSymsOf(s).map(swWordOf).filter(Boolean);
+    const opts={title:(syms.length?syms.map(w=>w.w).join('\u00b7')+' \u00b7 rhyme':'Synchronicity'),color:s.c||'#c9b8f0',words:s.a+'  \u21e2  '+s.b,place:SW_SCOPES[s.scope]+' \u00b7 '+SW_GAPS[s.gap]+' apart'};
+    if(syms.length>=2)opts.glyphSVG=fuseGlyphs(syms,140);
+    else if(syms.length===1)opts.glyphSVG=alphaGlyph(syms[0],300);
+    else opts.symbolSVG=(SENSE_SYMBOLS['synchronicity']||'').replace('width="22" height="22"','width="460" height="460"');
+    openPostcard(opts);return;
+  }
+  if(T('#swp-go')){
+    const w=swPractice();swSyms=[w.w];swStripSync();
+    const a=document.getElementById('sw-a'),b2=document.getElementById('sw-b');
+    if(a)a.value='Today\u2019s symbol \u2014 '+w.w+' \u2014 arrived here on Aurasense';
+    if(b2){b2.placeholder='The echo \u2014 where the day repeated '+w.w+' back to you\u2026';b2.focus();}
+    try{document.getElementById('sw-compose').scrollIntoView({block:'center',behavior:'smooth'});}catch(err){}
+    return;
+  }
+  if(T('#swp-share')){
+    const w=swPractice();
+    openPostcard({title:w.w,color:w.c,words:'Hold '+w.w+' lightly today \u2014 don\u2019t hunt it; leave the door open, and see where the world answers.',place:'Today\u2019s noticing practice \u00b7 aurasense.app',glyphSVG:alphaGlyph(w,300)});
+    return;
+  }
+  if(T('#junc-open-sync')){openSyncPage();return;}
+  if(T('#work-junc-link')){openJunc();return;}
+});
 (function(){
   const oj=document.getElementById('alpha-open-junc'),jp=document.getElementById('junc-page'),jb=document.getElementById('junc-back'),jw=document.getElementById('junc-open-work');
   if(oj)oj.addEventListener('click',()=>openJunc());
