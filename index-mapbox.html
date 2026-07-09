@@ -39,12 +39,6 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #mat-backdrop{position:absolute;inset:0;opacity:0;transition:opacity .85s ease;background:radial-gradient(circle at 50% 46%,rgba(14,11,30,.9) 0%,rgba(9,7,22,.78) 42%,rgba(6,5,16,.5) 75%,rgba(6,5,16,.18) 100%);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
 #mat-name{position:relative;font-size:clamp(20px,4.5vw,40px);letter-spacing:.14em;color:#f5efff;text-transform:uppercase;font-weight:300;margin-bottom:20px;opacity:0;transition:opacity .8s ease;text-shadow:0 0 34px rgba(167,139,250,.95),0 0 12px rgba(255,255,255,.5)}
 #mat-symbol{position:relative;width:min(50vw,330px);height:min(50vw,330px);opacity:0;will-change:transform,opacity;filter:drop-shadow(0 0 48px rgba(167,139,250,.55)) drop-shadow(0 0 14px rgba(255,255,255,.35))}
-#planet-view{position:absolute;inset:0;background:#000008;display:none;align-items:center;justify-content:center;z-index:600;flex-direction:column}
-#planet-view.show{display:flex}
-#planet-canvas{border-radius:50%}
-#planet-label{margin-top:20px;font-size:13px;color:#9d8fcc;letter-spacing:.08em;text-align:center;font-style:italic}
-#planet-back{margin-top:14px;padding:7px 18px;border-radius:10px;border:0.5px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:12px;cursor:pointer;font-family:inherit;pointer-events:all;transition:all .2s}
-#planet-back:hover{background:rgba(167,139,250,.22)}
 #hdr1{position:absolute;top:11px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;pointer-events:all}
 #logo h1{font-size:17px;font-weight:400;letter-spacing:.1em;color:#e0d8ff;text-transform:uppercase}
 #logo p{font-size:10px;color:#6860a0;letter-spacing:.05em;margin-top:1px}
@@ -716,10 +710,10 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
   #srow{flex-direction:column;gap:8px}
   #srow #sbtn{width:100%}
 
-  #ui.offer-open #world-btn,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #livefeed-btn,#ui.offer-open #aura-views,#ui.offer-open #place-mini{display:none}
+  #ui.offer-open #wev-chips,#ui.offer-open #wbal,#ui.offer-open #wbal-panel,#ui.offer-open #wev-panel,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #livefeed-btn,#ui.offer-open #aura-views,#ui.offer-open #place-mini{display:none}
 }
 /* FIX: these map buttons live inside #ui (pointer-events:none) and must opt back in */
-#register-btn,#livefeed-btn,#locality-btn,#place-mini,#mobile-offer{pointer-events:auto}
+#register-btn,#livefeed-btn,#locality-btn,#place-mini,#mobile-offer,#wev-chips,#wbal,#wbal-panel,#wev-panel{pointer-events:auto}
 /* Popups must sit above the left-hand cards, and lean clear of them */
 .aura-popup{z-index:1250!important}
 .aura-popup .mapboxgl-popup-content{box-shadow:0 0 28px rgba(0,0,0,.6)}
@@ -848,18 +842,17 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #mem-priv-wrap.show{display:block}
 .mem-priv{background:rgba(232,183,107,.08);border:0.5px solid rgba(232,183,107,.35);color:#e8c794;font-size:11px;padding:6px 12px;border-radius:14px;cursor:pointer}
 .mem-priv.priv{background:rgba(120,110,150,.18);border-color:rgba(167,139,250,.4);color:#cbbff0}
-/* World auras (events from around the world) */
-#world-btn{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:40;pointer-events:auto;background:rgba(20,16,40,.72);border:0.5px solid rgba(255,200,140,.4);color:#ffd9a8;font-size:12px;padding:8px 15px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);white-space:nowrap}
-#world-btn.on{background:rgba(60,40,30,.85);box-shadow:0 0 18px rgba(255,170,90,.45)}
-.world-aura{width:34px;height:34px;border-radius:50%;cursor:pointer;will-change:transform;animation:worldPulse 3.4s ease-in-out infinite}
-.world-aura .wa-core{position:absolute;inset:0;border-radius:50%}
-@keyframes worldPulse{0%,100%{transform:scale(1);opacity:.92}50%{transform:scale(1.18);opacity:1}}
-.wa-suffering{box-shadow:0 0 22px 6px rgba(229,90,90,.6)}
-.wa-need{box-shadow:0 0 22px 6px rgba(108,158,235,.6)}
-.wa-disaster{box-shadow:0 0 24px 7px rgba(240,150,70,.62)}
-.wa-joy{box-shadow:0 0 22px 6px rgba(247,206,107,.62)}
-.wa-sport{box-shadow:0 0 22px 6px rgba(134,224,192,.6)}
-@media (max-width:600px){#world-btn{top:90px;font-size:11px;padding:7px 11px}}
+/* World Auras — living event glows on the map itself */
+#wev-chips{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:40;display:none;flex-wrap:wrap;gap:6px;justify-content:center;max-width:min(92vw,560px)}
+#wev-chips.show{display:flex}
+.wev-chip{background:rgba(16,13,34,.66);border:0.5px solid rgba(167,139,250,.22);color:#8a82b4;font-size:11px;padding:6px 12px;border-radius:16px;cursor:pointer;font-family:inherit;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);white-space:nowrap;transition:all .25s ease;letter-spacing:.02em}
+.wev-chip.on{color:#efe9ff;border-color:rgba(167,139,250,.45)}
+.wev-chip.on[data-fam=conflict]{box-shadow:0 0 14px rgba(229,90,90,.35);border-color:rgba(229,90,90,.5)}
+.wev-chip.on[data-fam=env]{box-shadow:0 0 14px rgba(108,158,235,.35);border-color:rgba(108,158,235,.5)}
+.wev-chip.on[data-fam=events]{box-shadow:0 0 14px rgba(134,224,192,.35);border-color:rgba(134,224,192,.5)}
+.wev-chip.on[data-fam=decisions]{box-shadow:0 0 14px rgba(216,180,106,.35);border-color:rgba(216,180,106,.5)}
+.wev-chip.on[data-fam=weave]{box-shadow:0 0 14px rgba(207,214,255,.4);border-color:rgba(207,214,255,.55)}
+@media (max-width:600px){#wev-chips{top:90px}.wev-chip{font-size:10px;padding:5px 9px}}
 /* Search-a-location mini moved to top-centre (clear of the bottom symbol panel) */
 #place-mini{top:90px;left:50%;transform:translateX(-50%);bottom:auto;right:auto}
 @media(min-width:601px){#place-prompt{display:none!important}#place-mini{display:none!important}}
@@ -927,34 +920,42 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #logo-text p{font-size:10px;color:#c2b6ea;letter-spacing:.05em;margin-top:1px;text-shadow:0 0 10px rgba(124,92,255,.7),0 1px 3px rgba(0,0,0,.85)}
 #logo:hover #logo-mark{filter:drop-shadow(0 0 13px rgba(167,139,250,.85))}
 @media (max-width:600px){#hdr1{left:8px}#logo{padding:4px 9px 4px 7px}#logo-text h1{font-size:14px;line-height:1.05}#logo-text p{display:block;font-size:9px;line-height:1.1;margin-top:0;letter-spacing:.02em;white-space:nowrap}#logo-text p .tag-extra{display:none}#logo-mark svg{width:34px;height:22px}}
-/* Planet view: see the world auras in detail */
-#planet-world{margin-top:10px;padding:8px 18px;border-radius:10px;border:0.5px solid rgba(255,200,140,.35);background:rgba(255,190,120,.1);color:#ffd9a8;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
-#planet-world:hover{background:rgba(255,190,120,.22)}
-/* World Auras — dedicated 2D world map page */
-#worldauras-page{position:fixed;inset:0;z-index:1840;background:radial-gradient(ellipse at 50% 0%,#0c1430 0%,#0a0a1c 60%,#070612 100%);display:none;flex-direction:column;color:#e8e2ff;overflow-y:auto;-webkit-overflow-scrolling:touch}
-#worldauras-page.show{display:flex}
-#wa-inner{max-width:900px;width:100%;margin:0 auto;padding:62px 20px 50px}
-#wa-title{font-size:26px;font-weight:200;letter-spacing:.06em;color:#ffe6c8;text-align:center;text-shadow:0 0 26px rgba(255,190,120,.4)}
-#wa-sub{font-size:13px;color:#b8acd8;line-height:1.65;text-align:center;margin:14px auto 20px;max-width:620px}
-#wa-mapwrap{position:relative;width:100%;border:0.5px solid rgba(167,139,250,.2);border-radius:16px;overflow:hidden;background:#070a16;box-shadow:0 0 40px rgba(0,0,0,.4)}
-#wa-canvas{display:block;width:100%;height:auto}
-#wa-tip{position:absolute;max-width:230px;background:rgba(8,7,20,.97);border:0.5px solid rgba(167,139,250,.4);border-radius:11px;padding:11px 13px;font-size:11.5px;line-height:1.55;color:#e6dfff;pointer-events:none;opacity:0;transition:opacity .2s;z-index:5;box-shadow:0 0 18px rgba(0,0,0,.6)}
-#wa-tip .wt-title{font-size:12.5px;color:#fff;font-weight:500;margin-bottom:3px}
-#wa-tip .wt-type{font-size:10.5px;letter-spacing:.04em;margin-bottom:5px}
-#wa-tip .wt-send{margin-top:8px;color:#c4b5fd;font-size:11px}
-#wa-balance{margin-top:22px;background:rgba(255,255,255,.03);border:0.5px solid rgba(167,139,250,.2);border-radius:14px;padding:16px 18px}
-#wa-balance-label{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9a8fc2;text-align:center;margin-bottom:12px}
-#wa-balance-bar{position:relative;height:14px;border-radius:8px;background:linear-gradient(90deg,#5b3a6e,#6a4a4a 38%,#3a4a6a 62%,#2f6f6a);overflow:visible}
-#wa-bar-light{position:absolute;top:0;bottom:0;left:0;background:linear-gradient(90deg,rgba(255,220,150,0),rgba(255,220,150,.55));width:50%;border-radius:8px;transition:width 1.2s ease}
-#wa-needle{position:absolute;top:-4px;width:3px;height:22px;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.9);border-radius:2px;left:50%;transition:left 1.2s ease}
-#wa-balance-ends{display:flex;justify-content:space-between;font-size:10.5px;color:#8a82b4;margin-top:7px}
-#wa-balance-note{font-size:12px;color:#c4bce0;line-height:1.6;margin-top:12px;text-align:center}
-#wa-foot{font-size:11px;color:#7e76a8;line-height:1.65;margin-top:20px;text-align:center;font-style:italic}
-@media (max-width:600px){#wa-title{font-size:20px;padding:0 44px;word-break:normal;overflow-wrap:break-word}#wa-sub{font-size:12px;padding:0 8px}#wa-inner{padding:58px 12px 60px;max-width:100vw;box-sizing:border-box;overflow-x:hidden}}
+/* World event panel — what a glow holds, and the doorway through it */
+#wev-panel{position:absolute;right:16px;top:50%;transform:translateY(-50%) translateX(12px);width:272px;background:rgba(9,7,22,.96);border:0.5px solid rgba(167,139,250,.35);border-radius:15px;padding:16px 16px 14px;z-index:60;opacity:0;pointer-events:none!important;transition:opacity .35s ease,transform .35s ease;box-shadow:0 0 30px rgba(0,0,0,.55)}
+#wev-panel.show{opacity:1;pointer-events:auto!important;transform:translateY(-50%) translateX(0)}
+#wev-x{position:absolute;top:8px;right:10px;background:none;border:none;color:#8a82b4;font-size:14px;cursor:pointer;font-family:inherit;padding:4px}
+#wev-t{font-size:14.5px;color:#fff;font-weight:500;line-height:1.4;padding-right:18px}
+#wev-k{font-size:10.5px;letter-spacing:.05em;margin-top:4px}
+#wev-n{font-size:12px;color:#cfc7ea;line-height:1.6;margin-top:9px}
+#wev-d{font-size:11.5px;color:#e8d9b0;line-height:1.6;margin-top:9px;font-style:italic;border-left:2px solid rgba(232,192,116,.4);padding-left:9px}
+#wev-d:empty{display:none}
+#wev-c{font-size:10.5px;color:#9a8fc2;margin-top:11px}
+#wev-send{width:100%;margin-top:9px;padding:9px 10px;border-radius:11px;border:0.5px solid rgba(232,192,116,.4);background:rgba(232,192,116,.09);color:#f2dfae;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
+#wev-send:hover{background:rgba(232,192,116,.2)}
+@media (max-width:600px){#wev-panel{right:12px;left:12px;width:auto;top:auto;bottom:150px;transform:translateY(10px)}#wev-panel.show{transform:translateY(0)}}
+/* The balance of the world's field — visible from planet and nation heights */
+#wbal{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:40;display:none;align-items:center;gap:9px;background:rgba(14,11,30,.72);border:0.5px solid rgba(167,139,250,.25);border-radius:16px;padding:7px 13px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+#wbal.show{display:flex}
+#wbal-mini{position:relative;width:92px;height:8px;border-radius:5px;background:linear-gradient(90deg,#5b3a6e,#6a4a4a 38%,#3a4a6a 62%,#2f6f6a);overflow:visible}
+#wbal-fill{position:absolute;top:0;bottom:0;left:0;width:50%;border-radius:5px;background:linear-gradient(90deg,rgba(255,220,150,0),rgba(255,220,150,.55));transition:width 1.2s ease}
+#wbal-needle{position:absolute;top:-3px;width:2px;height:14px;background:#fff;box-shadow:0 0 8px rgba(255,255,255,.9);border-radius:2px;left:50%;transition:left 1.2s ease}
+#wbal-lab{font-size:10.5px;color:#b8acd8;letter-spacing:.05em;white-space:nowrap}
+@media (max-width:600px){#wbal{bottom:96px}}
+#wbal-panel{position:absolute;left:50%;bottom:64px;transform:translateX(-50%);z-index:41;width:min(92vw,470px);background:rgba(9,7,22,.96);border:0.5px solid rgba(167,139,250,.3);border-radius:15px;padding:16px 18px;display:none;box-shadow:0 0 30px rgba(0,0,0,.55)}
+#wbal-panel.show{display:block}
+#wbal-x{position:absolute;top:8px;right:10px;background:none;border:none;color:#8a82b4;font-size:14px;cursor:pointer;font-family:inherit;padding:4px}
+#wbal-h{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#9a8fc2;text-align:center;margin-bottom:12px}
+#wbal-bar{position:relative;height:14px;border-radius:8px;background:linear-gradient(90deg,#5b3a6e,#6a4a4a 38%,#3a4a6a 62%,#2f6f6a);overflow:visible}
+#wbal-fill2{position:absolute;top:0;bottom:0;left:0;width:50%;border-radius:8px;background:linear-gradient(90deg,rgba(255,220,150,0),rgba(255,220,150,.55));transition:width 1.2s ease}
+#wbal-needle2{position:absolute;top:-4px;width:3px;height:22px;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.9);border-radius:2px;left:50%;transition:left 1.2s ease}
+#wbal-ends{display:flex;justify-content:space-between;font-size:10.5px;color:#8a82b4;margin-top:7px}
+#wbal-note{font-size:12px;color:#c4bce0;line-height:1.6;margin-top:12px;text-align:center}
+#wbal-foot{font-size:10.5px;color:#7e76a8;line-height:1.6;margin-top:12px;text-align:center;font-style:italic}
+@media (max-width:600px){#wbal-panel{bottom:142px}}
 /* ===== Left-column stack: My Aura + More Aura Views + Live feed ===== */
 #left-stack{position:absolute;left:16px;top:64px;z-index:40;display:flex;flex-direction:column;gap:10px;align-items:flex-start;pointer-events:none}
 #left-stack>*{pointer-events:auto}
-#register-btn,#locality-btn,#world-btn,#explore-btn{display:none!important}
+#register-btn,#locality-btn,#explore-btn{display:none!important}
 #my-aura{position:relative;left:auto;top:auto;width:106px;padding:9px 8px}
 #my-aura-title{font-size:10px;margin-bottom:3px}
 #pac{width:48px;height:48px}
@@ -990,12 +991,6 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 <body>
 <div id="map"></div>
 <canvas id="ac"></canvas>
-<div id="planet-view">
-  <canvas id="planet-canvas" width="340" height="340"></canvas>
-  <div id="planet-label">The living aura of humanity<br><span style="font-size:11px;opacity:.6">sensing the world together</span></div>
-  <button id="planet-back">← Return to street view</button>
-  <button id="planet-world">✦ See the world auras in detail</button>
-</div>
 <div id="ui">
   <div id="hdr1">
     <div id="logo"><span id="logo-mark"><svg viewBox="0 0 64 40" width="46" height="29" style="overflow:visible"><defs><radialGradient id="lg-a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#c4b5fd" stop-opacity=".9"/><stop offset="60%" stop-color="#7c5cff" stop-opacity=".35"/><stop offset="100%" stop-color="#7c5cff" stop-opacity="0"/></radialGradient><radialGradient id="lg-b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9ad9c0" stop-opacity=".82"/><stop offset="60%" stop-color="#3a9d7e" stop-opacity=".3"/><stop offset="100%" stop-color="#3a9d7e" stop-opacity="0"/></radialGradient><radialGradient id="lg-core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff7e6" stop-opacity="1"/><stop offset="55%" stop-color="#e8c074" stop-opacity=".82"/><stop offset="100%" stop-color="#e8c074" stop-opacity="0"/></radialGradient></defs><circle cx="24" cy="20" r="17" fill="url(#lg-a)" class="as-breathe"/><circle cx="40" cy="20" r="17" fill="url(#lg-b)" class="as-breathe"/><circle cx="32" cy="20" r="8.5" fill="url(#lg-core)" class="as-breathe"/></svg></span><span id="logo-text"><h1>Aurasense</h1><p>The living aura of humanity<span class="tag-extra">, sensed together</span></p></span></div>
@@ -1020,13 +1015,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button class="tab" data-i="1"><span class="tab-orb" id="orb1"></span>Town</button>
       <button class="tab top-region" data-i="2"><span class="tab-orb" id="orb2"></span>Region</button>
       <button class="tab" data-i="3"><span class="tab-orb" id="orb3"></span>Nation</button>
-      <div class="tab-group">
-        <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>Planet</button>
-        <button class="tab-caret" data-menu="planet" title="World Auras">▾</button>
-        <div class="tab-menu" id="planet-menu">
-          <button class="tab-mi" data-world>🌍 World Auras</button>
-        </div>
-      </div>
+      <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>World</button>
     </div>
     <div id="search-box">
       <input id="si" maxlength="120" placeholder="Search by address"/>
@@ -1053,7 +1042,31 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   </div>
   <button id="register-btn">✦ Become an Aurasenser</button>
   <button id="locality-btn" title="My locality">My locality</button>
-  <button id="world-btn" title="Auras from around the world">🌍 World auras</button>
+  <div id="wev-chips">
+    <button class="wev-chip on" data-fam="conflict">Conflicts &amp; Peace</button>
+    <button class="wev-chip on" data-fam="env">Environment</button>
+    <button class="wev-chip on" data-fam="events">Events &amp; Sport</button>
+    <button class="wev-chip on" data-fam="decisions">Decisions &amp; Trajectories</button>
+    <button class="wev-chip" data-fam="weave">∞ Weave</button>
+  </div>
+  <div id="wbal" title="The balance of the world's field"><div id="wbal-mini"><div id="wbal-fill"></div><div id="wbal-needle"></div></div><span id="wbal-lab">The world's field</span></div>
+  <div id="wbal-panel">
+    <button id="wbal-x">✕</button>
+    <div id="wbal-h">The balance of the world's field</div>
+    <div id="wbal-bar"><div id="wbal-fill2"></div><div id="wbal-needle2"></div></div>
+    <div id="wbal-ends"><span>The heavier auras</span><span>Aurasensers answering with light</span></div>
+    <div id="wbal-note"></div>
+    <div id="wbal-foot">An honest note: these are illustrative auras for now — real kinds of situation placed to build and feel the mechanism. I have not invented specific live tragedies, since getting a real person's suffering wrong would be the worst kind of error. When a respectful, live source is connected through the backend, these glows will track what is genuinely happening — so compassion can follow real need, and responsibility can be gently traced, from a moment of bullying to a natural disaster.</div>
+  </div>
+  <div id="wev-panel">
+    <button id="wev-x">✕</button>
+    <div id="wev-t"></div>
+    <div id="wev-k"></div>
+    <div id="wev-n"></div>
+    <div id="wev-d"></div>
+    <div id="wev-c"></div>
+    <button id="wev-send">✦ Answer with an aura of compassion</button>
+  </div>
   <div id="locality-tip">Set your home (only you see this)</div>
   <button id="mobile-offer">✦ Offer an aurasense</button>
   <div id="place-prompt">
@@ -1373,7 +1386,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button class="lf-tool lf-scope" data-scope="home">My Home Locality</button>
       <button class="lf-tool lf-scope" data-scope="region">Region</button>
       <button class="lf-tool lf-scope" data-scope="nation">Nation</button>
-      <button class="lf-tool lf-scope sel" data-scope="planet">Planet</button>
+      <button class="lf-tool lf-scope sel" data-scope="planet">World</button>
       <button class="lf-tool" id="lf-search-btn">🔍 Search the feed</button>
       <input id="lf-search-in" placeholder="Search by aura type or place..."/>
     </div>
@@ -1399,21 +1412,6 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="pc-hint">Tap the card to save it, then post it anywhere ✧</div>
   <div id="pc-row"><button type="button" id="pc-save">⇩ Save image</button><button type="button" id="pc-sharebtn">↗ Share</button></div>
 </div></div>
-<div id="worldauras-page">
-  <button class="qz-back" id="wa-back">← Return to the map</button>
-  <div id="wa-inner">
-    <div id="wa-title">World Auras</div>
-    <div id="wa-sub">The auras of what the world is living through — placed where they are felt, heavy and light alike. The same field your own aura belongs to, seen whole. Tap a glow to feel it, and to answer with an aura of compassion.</div>
-    <div id="wa-mapwrap"><canvas id="wa-canvas"></canvas><div id="wa-tip"></div></div>
-    <div id="wa-balance">
-      <div id="wa-balance-label">The balance of the world's field</div>
-      <div id="wa-balance-bar"><div id="wa-bar-light"></div><div id="wa-needle"></div></div>
-      <div id="wa-balance-ends"><span>The heavier auras</span><span>Aurasensers answering with light</span></div>
-      <div id="wa-balance-note"></div>
-    </div>
-    <div id="wa-foot">An honest note: these are illustrative auras for now — real kinds of situation placed to build and feel the mechanism. I have not invented specific live tragedies, since getting a real person's suffering wrong would be the worst kind of error. When a respectful, live source is connected through the backend, these glows will track what is genuinely happening — so compassion can follow real need, and responsibility can be gently traced, from a moment of bullying to a natural disaster.</div>
-  </div>
-</div>
 <div id="onboard"></div>
 <div id="pubprofile-page">
   <button class="qz-back" id="pp2-back">← Return</button>
@@ -1568,89 +1566,23 @@ const LEVEL_MSGS=["Your sense ripples through the street.","The town aura begins
 const LEVEL_NAMES=['Aurasenser','Sensing','Awakening','Resonant','Radiant','Luminous'];
 const ORB_IDS=['orb0','orb1','orb2','orb3','orb4'];
 let selSense=null,auraLevel=0,shareCount=0,myShareCount=0;
-let auraPoints=[],ripples=[],planetColors=['#a78bfa'];
+let auraPoints=[],ripples=[];
 
 mapboxgl.accessToken='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
-const map=new mapboxgl.Map({container:'map',style:'mapbox://styles/aurasense/cmqjxke2e00h401soguspgmck',center:[-0.128,51.508],zoom:15});
+const map=new mapboxgl.Map({container:'map',style:'mapbox://styles/aurasense/cmqjxke2e00h401soguspgmck',center:[-0.128,51.508],zoom:15,projection:'globe'});
 map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
+// The planet is the map itself now: globe projection, a breath of atmosphere, and quiet stars.
+map.on('style.load',()=>{
+  try{if(map.setProjection)map.setProjection('globe');}catch(e){}
+  try{map.setFog({'color':'#0b0a1e','high-color':'#241a52','horizon-blend':0.03,'space-color':'#04030e','star-intensity':0.25});}catch(e){}
+  if(typeof wevAddLayers==='function')wevAddLayers();
+  if(typeof wevWeaveRefresh==='function')wevWeaveRefresh();
+});
 
 const canvas=document.getElementById('ac'),ctx=canvas.getContext('2d');
 function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
 resize();window.addEventListener('resize',resize);
 
-// Planet
-const pc=document.getElementById('planet-canvas'),pctx2=pc.getContext('2d');
-let planetT=0,planetActive=false;
-function drawPlanet(){
-  if(!planetActive)return;
-  planetT+=0.008;
-  const W=340,H=340,cx=170,cy=170,R=110;
-  pctx2.clearRect(0,0,W,H);
-  pctx2.fillStyle='#000008';pctx2.fillRect(0,0,W,H);
-  if(!drawPlanet.stars)drawPlanet.stars=Array.from({length:180},()=>({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2,o:Math.random()}));
-  drawPlanet.stars.forEach(s=>{
-    const tw=s.o*(0.5+0.5*Math.sin(planetT*2+s.x));
-    pctx2.beginPath();pctx2.arc(s.x,s.y,s.r,0,Math.PI*2);
-    pctx2.fillStyle=`rgba(255,255,255,${tw.toFixed(2)})`;pctx2.fill();
-  });
-  planetColors.forEach((col,ci)=>{
-    const[r,g,b]=[parseInt(col.slice(1,3),16),parseInt(col.slice(3,5),16),parseInt(col.slice(5,7),16)];
-    for(let h=4;h>=1;h--){
-      const hr=R+h*18+Math.sin(planetT+ci*0.4+h)*6;
-      const alpha=(0.04/h)*(0.7+0.3*Math.sin(planetT*0.7+ci));
-      const grad=pctx2.createRadialGradient(cx,cy,R*0.9,cx,cy,hr);
-      grad.addColorStop(0,`rgba(${r},${g},${b},${(alpha*3).toFixed(3)})`);
-      grad.addColorStop(0.5,`rgba(${r},${g},${b},${alpha.toFixed(3)})`);
-      grad.addColorStop(1,`rgba(${r},${g},${b},0)`);
-      pctx2.beginPath();pctx2.arc(cx,cy,hr,0,Math.PI*2);pctx2.fillStyle=grad;pctx2.fill();
-    }
-  });
-  const sphere=pctx2.createRadialGradient(cx-30,cy-30,10,cx,cy,R);
-  sphere.addColorStop(0,'#1a1440');sphere.addColorStop(0.4,'#0d0d28');sphere.addColorStop(1,'#050510');
-  pctx2.beginPath();pctx2.arc(cx,cy,R,0,Math.PI*2);pctx2.fillStyle=sphere;pctx2.fill();
-  pctx2.save();pctx2.beginPath();pctx2.arc(cx,cy,R,0,Math.PI*2);pctx2.clip();
-  [{x:cx-20,y:cy-30,w:55,h:40,rot:.3},{x:cx+30,y:cy+10,w:35,h:50,rot:-.2},{x:cx-55,y:cy+20,w:40,h:30,rot:.5},{x:cx-10,y:cy+40,w:60,h:25,rot:.1}].forEach(l=>{
-    pctx2.save();pctx2.translate(l.x,l.y);pctx2.rotate(l.rot+planetT*0.01);
-    pctx2.beginPath();pctx2.ellipse(0,0,l.w,l.h,0,0,Math.PI*2);
-    pctx2.fillStyle='rgba(20,35,20,0.6)';pctx2.fill();pctx2.restore();
-  });
-  pctx2.restore();
-  const rim=pctx2.createRadialGradient(cx,cy,R-8,cx,cy,R+20);
-  rim.addColorStop(0,'rgba(100,80,200,0)');rim.addColorStop(0.5,'rgba(100,80,200,0.12)');rim.addColorStop(1,'rgba(60,40,160,0)');
-  pctx2.beginPath();pctx2.arc(cx,cy,R+20,0,Math.PI*2);pctx2.fillStyle=rim;pctx2.fill();
-  [0,0.33,0.66].forEach((off,i)=>{
-    const a=((planetT*0.3+off)%1),rr=R+a*80,al=(1-a)*0.3;
-    const col=planetColors[i%planetColors.length];
-    const[r2,g2,b2]=[parseInt(col.slice(1,3),16),parseInt(col.slice(3,5),16),parseInt(col.slice(5,7),16)];
-    pctx2.beginPath();pctx2.arc(cx,cy,rr,0,Math.PI*2);
-    pctx2.strokeStyle=`rgba(${r2},${g2},${b2},${al.toFixed(3)})`;pctx2.lineWidth=1.5;pctx2.stroke();
-  });
-  requestAnimationFrame(drawPlanet);
-}
-function showPlanet(){
-  planetActive=true;
-  const pv=document.getElementById('planet-view');
-  pv.style.opacity='0';pv.style.display='flex';
-  document.getElementById('map').style.opacity='0';
-  setTimeout(()=>{pv.style.transition='opacity 1.2s ease';pv.style.opacity='1';},50);
-  drawPlanet();
-}
-// Restore the map view from planet without moving the camera (flag flips immediately
-// so other handlers don't double-trigger a fly).
-function restorePlanetVisual(){
-  planetActive=false;
-  const pv=document.getElementById('planet-view');
-  pv.style.transition='opacity 0.8s ease';pv.style.opacity='0';
-  const mp=document.getElementById('map');
-  mp.style.transition='opacity 0.8s ease';mp.style.opacity='1';
-  setTimeout(()=>{pv.style.display='none';},800);
-}
-function hidePlanet(){
-  restorePlanetVisual();
-  const a=lastOfferedPoint||lastStreetView||{lng:-0.128,lat:51.508,zoom:15};
-  flyProgrammatic({center:[a.lng,a.lat],zoom:(a.zoom||15),duration:1800});
-}
-document.getElementById('planet-back').onclick=hidePlanet;
 
 // Personal aura
 const pac=document.getElementById('pac'),pctx=pac.getContext('2d');
@@ -2049,9 +1981,8 @@ let lastOfferedPoint=null;
 let anchorPoint={lat:51.508,lng:-0.128,zoom:15};
 let isMovingProgrammatically=false;
 function goToLevel(i){
-  if(i===4){setActiveTab(4);showPlanet();closeTabMenus();return;}
-  const wasPlanet=planetActive;
-  if(wasPlanet)restorePlanetVisual();
+  if(i===4){setActiveTab(4);closeTabMenus();wevFlyWorld();return;}
+  const fromSpace=(function(){try{return map.getZoom()<3.2;}catch(e){return false;}})();
   const aLng=anchorPoint.lng,aLat=anchorPoint.lat;
   setActiveTab(i);
   // Town view and up: clear the boxes so they don't cover the auras
@@ -2062,8 +1993,8 @@ function goToLevel(i){
   }
   if(i===0){
     flyProgrammatic({center:[aLng,aLat],zoom:anchorPoint.zoom||15,duration:1800});
-  }else if(wasPlanet){
-    // Coming down from Planet, land squarely on the anchor at a fixed zoom (avoids mis-geocoded sea landings)
+  }else if(fromSpace){
+    // Coming down from the World view, land squarely on the anchor at a fixed zoom (avoids mis-geocoded sea landings)
     const lz={1:12,2:8.5,3:5.7}[i]||10;
     flyProgrammatic({center:[aLng,aLat],zoom:lz,duration:2200});
   }else{
@@ -2083,8 +2014,6 @@ document.querySelectorAll('.tab-mi[data-i]').forEach(mi=>{ mi.onclick=()=>goToLe
   if(orbHost&&pacEl){orbHost.appendChild(pacEl);pacEl.style.cssText='position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:300%;height:300%;pointer-events:none;';}
   const tip=document.getElementById('panel-tip');
   if(tip)tip.addEventListener('click',()=>{if(typeof openOfferSheet==='function')openOfferSheet();});
-  const worldMi=document.querySelector('.tab-mi[data-world]');
-  if(worldMi)worldMi.onclick=()=>{closeTabMenus();if(typeof openWorldAuras==='function')openWorldAuras();};
   document.querySelectorAll('.tab-caret').forEach(car=>{
     car.onclick=(e)=>{e.stopPropagation();const name=car.dataset.menu;const menu=document.getElementById(name+'-menu');const willOpen=menu&&!menu.classList.contains('open');closeTabMenus();if(willOpen&&menu){menu.classList.add('open');car.classList.add('open');}};
   });
@@ -2161,7 +2090,6 @@ function dropSearchMarker(center,placeName){
   if(typeof raiseOfferPanel==='function')raiseOfferPanel((placeName||'this place').split(',')[0]);
 }
 function setActiveTab(i){
-  if(planetActive && i!==4) hidePlanet();
   auraLevel=i;
   const cellW=window.matchMedia&&window.matchMedia('(max-width:600px)').matches;
   document.querySelectorAll('.tab[data-i]').forEach(t=>{
@@ -2293,6 +2221,8 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
 }
 
 map.on('click',async function(e){
+  // World-event glows own their taps — the offering flow steps aside when a glow is under the finger.
+  try{if(typeof wevReady!=='undefined'&&wevReady&&map.queryRenderedFeatures){const _wh=map.queryRenderedFeatures(e.point,{layers:['wev-mid','wev-core','wev-dot']});if(_wh&&_wh.length)return;}}catch(_){}
   closeExplore();
   const clat=e.lngLat.lat,clng=e.lngLat.lng;
   lastClickPoint=[clng,clat];openSenseGate();
@@ -2347,13 +2277,12 @@ function submit(lat,lng,text){
   ripples.push({lat,lng,color:s.color,age:0,strong:true});
   setTimeout(()=>{ripples.push({lat,lng,color:s.color,age:0,strong:true});},600);
   setTimeout(()=>{ripples.push({lat,lng,color:s.color,age:0,strong:true});},1200);
-  if(!planetColors.includes(s.color))planetColors.push(s.color);
   addFeed(pubText,sid,'just now',true,lat,lng);
   // This offering becomes a thread in the senser's own aura.
   myAuraColors.push(s.color);
   myOfferings.unshift({photo:pp,sense:sid,label:s.label,color:s.color,text:text,time:'just now',born:Date.now(),place:null,lat:lat,lng:lng});if(typeof clearPhoto==='function')clearPhoto();
   if(myOfferings.length>50)myOfferings.pop();
-  // Remember the offered spot so the tabs and the return from Planet come back here, not a random place.
+  // Remember the offered spot so the tabs and the return from the World view come back here, not a random place.
   const sz=Math.min(17,Math.max(14,map.getZoom()));
   lastOfferedPoint={lat,lng,zoom:sz};
   anchorPoint={lat,lng,zoom:sz};
@@ -2384,7 +2313,7 @@ function submit(lat,lng,text){
     setTimeout(()=>{
       if(currentPopup){currentPopup.remove();currentPopup=null;}
       showMsg(LEVEL_MSGS[auraLevel]);
-      if(auraLevel===4){showPlanet();return;}
+      if(auraLevel===4){wevFlyWorld();return;}
       flyProgrammatic({center:[here.lng,here.lat],zoom:tourZooms[auraLevel],duration:2500});
       setTimeout(()=>flyProgrammatic({center:[here.lng,here.lat],zoom:hereZoom,duration:2500}),4000);
     },6000);
@@ -2486,7 +2415,7 @@ document.getElementById('sg').onclick=async()=>{
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
       searching=true;
-      // Searching a place makes it the spot the tabs and Planet return to.
+      // Searching a place makes it the spot the tabs and the World view return to.
       if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
@@ -3746,7 +3675,7 @@ function clearPhoto(){pendingPhoto=null;const pv=document.getElementById('photo-
   const avLoc=document.getElementById('av-locality');
   if(avLoc)avLoc.addEventListener('click',()=>{closeAV();const hasLoc=(typeof myProfile!=='undefined'&&myProfile&&myProfile.address);if(hasLoc){if(typeof localityGo==='function')localityGo();}else{if(typeof openRegister==='function')openRegister();if(typeof showMsg==='function')showMsg('Set your locality below — add your street or town, then choose “My Locality”.');}});
   const avWorld=document.getElementById('av-world');
-  if(avWorld)avWorld.addEventListener('click',()=>{closeAV();if(typeof openWorldAuras==='function')openWorldAuras();});
+  if(avWorld)avWorld.addEventListener('click',()=>{closeAV();if(typeof goToLevel==='function')goToLevel(4);});
   const ri=document.getElementById('ma-register-inline');
   if(ri)ri.addEventListener('click',()=>{if(typeof openRegister==='function')openRegister();});
 })();
@@ -3998,114 +3927,193 @@ function lsPrev(){lsSaveCurrent();if(lsState.idx>0){lsState.idx--;lsShowQuestion
     setTimeout(()=>{closeLifeStory();if(typeof openMyAuraPage==='function')openMyAuraPage();},1500);
   });
 })();
-// ---- World Auras: a 2D map of what the world is living through (illustrative seed) ----
+// ---- World Auras: real events as living glows on the living map itself ----
+// Data honesty, standing law: illustrative kinds only until the Gate's live source is wired.
+// Never simulated specifics, never invented tragedies. Every constriction paired with a doorway.
 const WORLD_EVENTS=[
-  {lat:34.5,lng:69.2,type:'need',title:'Communities facing hunger',note:'Families in this region need food and clean water. Held in thought \u2014 and awareness is a beginning.',compassion:0},
-  {lat:31.5,lng:34.47,type:'suffering',title:'People living through conflict',note:'Civilians here are enduring loss and fear. They are being thought of, with compassion.',compassion:0},
-  {lat:37.0,lng:37.4,type:'disaster',title:'Recovering from an earthquake',note:'Towns rebuilding after the ground shook. Awareness and aid still matter here.',compassion:0},
-  {lat:-1.95,lng:30.06,type:'need',title:'A region facing drought',note:'A long dry season is straining whole communities. They are not forgotten.',compassion:0},
-  {lat:40.81,lng:-74.07,type:'sport',title:'FIFA World Cup 2026 \u2014 New York / New Jersey',note:'The world\u2019s game, gathering millions of hearts. The final comes here on July 19.',compassion:0},
-  {lat:19.30,lng:-99.15,type:'sport',title:'World Cup 2026 \u2014 Mexico City',note:'Estadio Azteca opened this World Cup \u2014 a city alive with song.',compassion:0},
-  {lat:49.28,lng:-123.12,type:'sport',title:'World Cup 2026 \u2014 Vancouver',note:'A coastal city buzzing with matches and shared joy.',compassion:0},
-  {lat:32.75,lng:-97.08,type:'sport',title:'World Cup 2026 \u2014 Dallas',note:'Crowds from every nation, one game in common.',compassion:0},
-  {lat:51.43,lng:-0.21,type:'sport',title:'Wimbledon, London',note:'The championships in full flow \u2014 quiet courts, held breath, sudden joy.',compassion:0},
-  {lat:41.39,lng:2.17,type:'sport',title:'Tour de France \u2014 Grand D\u00e9part, Barcelona',note:'The great race rolls out from Barcelona this July.',compassion:0},
-  {lat:14.6,lng:121.0,type:'disaster',title:'After the storm',note:'Coastal communities recovering from a powerful storm.',compassion:0},
-  {lat:-23.55,lng:-46.63,type:'joy',title:'A festival of life',note:'Streets full of music, colour and gladness.',compassion:0},
-  {lat:48.85,lng:2.35,type:'joy',title:'A city in celebration',note:'A day of collective joy and togetherness.',compassion:0}
+  {lat:34.5,lng:69.2,type:'need',fam:'conflict',title:'Communities facing hunger',note:'Families in this region need food and clean water. Held in thought \u2014 and awareness is a beginning.',doorway:'Aid reaches further when the world keeps looking \u2014 steady attention keeps hands, food and water moving here.',compassion:0},
+  {lat:31.5,lng:34.47,type:'suffering',fam:'conflict',title:'People living through conflict',note:'Civilians here are enduring loss and fear. They are being thought of, with compassion.',doorway:'Peace has begun in smaller rooms than this. Every mind that refuses hatred \u2014 including toward those making the decisions \u2014 widens the door.',compassion:0},
+  {lat:37.0,lng:37.4,type:'disaster',fam:'env',title:'Recovering from an earthquake',note:'Towns rebuilding after the ground shook. Awareness and aid still matter here.',doorway:'Rebuilding is already underway \u2014 steady attention after the news moves on is what finishes homes.',compassion:0},
+  {lat:-1.95,lng:30.06,type:'need',fam:'env',title:'A region facing drought',note:'A long dry season is straining whole communities. They are not forgotten.',doorway:'Water projects and patient farming are answering \u2014 care that arrives early softens the hardest months.',compassion:0},
+  {lat:40.81,lng:-74.07,type:'sport',fam:'events',title:'FIFA World Cup 2026 \u2014 New York / New Jersey',note:'The world\u2019s game, gathering millions of hearts. The final comes here on July 19.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
+  {lat:19.30,lng:-99.15,type:'sport',fam:'events',title:'World Cup 2026 \u2014 Mexico City',note:'Estadio Azteca opened this World Cup \u2014 a city alive with song.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
+  {lat:49.28,lng:-123.12,type:'sport',fam:'events',title:'World Cup 2026 \u2014 Vancouver',note:'A coastal city buzzing with matches and shared joy.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
+  {lat:32.75,lng:-97.08,type:'sport',fam:'events',title:'World Cup 2026 \u2014 Dallas',note:'Crowds from every nation, one game in common.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
+  {lat:51.43,lng:-0.21,type:'sport',fam:'events',title:'Wimbledon, London',note:'The championships in full flow \u2014 quiet courts, held breath, sudden joy.',doorway:'Quiet courts and held breath \u2014 joy shared in stillness travels too.',compassion:0},
+  {lat:41.39,lng:2.17,type:'sport',fam:'events',title:'Tour de France \u2014 Grand D\u00e9part, Barcelona',note:'The great race rolls out from Barcelona this July.',doorway:'A moving celebration \u2014 joy that travels roads gathers everyone it passes.',compassion:0},
+  {lat:14.6,lng:121.0,type:'disaster',fam:'env',title:'After the storm',note:'Coastal communities recovering from a powerful storm.',doorway:'Coastal communities know how to rebuild \u2014 what they need is the world\u2019s memory to outlast the weather.',compassion:0},
+  {lat:-23.55,lng:-46.63,type:'joy',fam:'events',title:'A festival of life',note:'Streets full of music, colour and gladness.',doorway:'Let some of this travel \u2014 light is contagious too.',compassion:0},
+  {lat:48.85,lng:2.35,type:'joy',fam:'events',title:'A city in celebration',note:'A day of collective joy and togetherness.',doorway:'Let some of this travel \u2014 light is contagious too.',compassion:0}
 ];
 const WA_RGB={suffering:'229,90,90',need:'108,158,235',disaster:'240,150,70',joy:'247,206,107',sport:'134,224,192'};
 const WA_HEX={suffering:'#e55a5a',need:'#6c9eeb',disaster:'#f0964a',joy:'#f7ce6b',sport:'#86e0c0'};
 const WA_LABEL={suffering:'People in suffering',need:'People in need',disaster:'A natural disaster',joy:'Collective joy',sport:'A gathering of many'};
 const WA_WEIGHT={suffering:3,need:2,disaster:2,joy:0,sport:0};
 const WA_LIGHTBASE={suffering:0,need:0,disaster:0,joy:1.5,sport:1};
-const WA_LAND=[
-  [[-168,66],[-160,71],[-125,70],[-95,72],[-82,73],[-60,68],[-55,60],[-52,52],[-66,47],[-70,44],[-74,40],[-76,35],[-81,31],[-80,25],[-90,29],[-97,26],[-105,22],[-110,23],[-114,28],[-118,33],[-123,38],[-124,48],[-130,55],[-140,60],[-150,59],[-160,62],[-168,66]],
-  [[-45,60],[-30,60],[-20,70],[-22,76],[-35,82],[-50,82],[-58,76],[-55,68],[-45,60]],
-  [[-80,9],[-70,11],[-60,8],[-50,0],[-44,-3],[-35,-7],[-38,-13],[-48,-25],[-58,-35],[-68,-42],[-73,-50],[-69,-54],[-66,-45],[-70,-33],[-71,-20],[-76,-12],[-81,-5],[-80,9]],
-  [[-10,36],[-9,44],[0,49],[5,52],[10,54],[12,58],[20,55],[28,58],[30,64],[26,70],[30,71],[55,71],[75,73],[100,77],[115,74],[130,72],[160,70],[170,67],[178,66],[160,61],[150,59],[143,53],[135,46],[130,42],[125,40],[122,32],[118,24],[110,21],[108,15],[105,10],[100,6],[95,16],[90,22],[88,21],[80,15],[77,8],[73,18],[68,24],[60,25],[57,25],[48,30],[44,38],[36,42],[28,41],[26,38],[35,36],[36,31],[30,31],[24,35],[18,40],[14,38],[14,44],[8,44],[3,43],[-5,36],[-10,36]],
-  [[-16,15],[-16,21],[-10,30],[0,33],[10,34],[20,32],[25,32],[33,31],[33,28],[35,24],[37,18],[43,12],[51,12],[44,2],[41,-5],[40,-12],[35,-20],[32,-26],[26,-33],[20,-35],[16,-29],[13,-23],[9,-5],[8,4],[2,5],[-8,4],[-12,8],[-16,15]],
-  [[114,-22],[122,-18],[130,-12],[137,-12],[142,-11],[145,-15],[150,-22],[153,-28],[150,-38],[143,-39],[135,-35],[129,-32],[122,-34],[115,-34],[114,-28],[114,-22]]
-];
-let waRaf2=null,waT2=0,waHover=-1,waCanvas=null,waCtx=null;
-function waProject(lng,lat,W,H){return [(lng+180)/360*W,(90-lat)/180*H];}
-function waDrawWorld(){
-  const cv=waCanvas;if(!cv){waRaf2=null;return;}
-  const c=waCtx,W=cv.width,H=cv.height;waT2+=0.016;
-  const og=c.createLinearGradient(0,0,0,H);og.addColorStop(0,'#0a1024');og.addColorStop(1,'#070a16');
-  c.fillStyle=og;c.fillRect(0,0,W,H);
-  c.strokeStyle='rgba(120,130,200,0.07)';c.lineWidth=1;
-  for(let la=-60;la<=60;la+=30){const y=(90-la)/180*H;c.beginPath();c.moveTo(0,y);c.lineTo(W,y);c.stroke();}
-  for(let lo=-150;lo<=150;lo+=30){const x=(lo+180)/360*W;c.beginPath();c.moveTo(x,0);c.lineTo(x,H);c.stroke();}
-  c.fillStyle='rgba(70,84,130,0.30)';c.strokeStyle='rgba(120,140,200,0.22)';c.lineWidth=1;
-  WA_LAND.forEach(poly=>{c.beginPath();poly.forEach((p,i)=>{const xy=waProject(p[0],p[1],W,H);if(i===0)c.moveTo(xy[0],xy[1]);else c.lineTo(xy[0],xy[1]);});c.closePath();c.fill();c.stroke();});
-  WORLD_EVENTS.forEach((ev,i)=>{
-    const xy=waProject(ev.lng,ev.lat,W,H),x=xy[0],y=xy[1],rgb=WA_RGB[ev.type]||'200,180,255';
-    const pulse=0.7+0.3*Math.sin(waT2*1.6+i*0.8),base=11+Math.min(16,ev.compassion*1.4);
-    const r=base*(0.92+0.12*pulse)*(waHover===i?1.25:1);
-    const g=c.createRadialGradient(x,y,0,x,y,r*2.4);
-    g.addColorStop(0,'rgba('+rgb+','+(0.85*pulse).toFixed(2)+')');
-    g.addColorStop(0.4,'rgba('+rgb+','+(0.35*pulse).toFixed(2)+')');
-    g.addColorStop(1,'rgba('+rgb+',0)');
-    c.fillStyle=g;c.beginPath();c.arc(x,y,r*2.4,0,Math.PI*2);c.fill();
-    c.fillStyle='rgba(255,255,255,'+(0.5*pulse).toFixed(2)+')';c.beginPath();c.arc(x,y,2.2,0,Math.PI*2);c.fill();
-    if(ev.compassion>0){c.strokeStyle='rgba(255,235,180,'+Math.min(0.5,0.12+ev.compassion*0.03).toFixed(2)+')';c.lineWidth=1.4;c.beginPath();c.arc(x,y,r*2.4+3,0,Math.PI*2);c.stroke();}
-  });
-  waRaf2=requestAnimationFrame(waDrawWorld);
+const WEV_FAMS={conflict:'Conflicts & Peace',env:'Environment \u2014 harm and repair',events:'World events & sport',decisions:'Decisions & Trajectories'};
+const WEV_COLOR=['match',['get','type'],'suffering','#e55a5a','need','#6c9eeb','disaster','#f0964a','joy','#f7ce6b','sport','#86e0c0','#c4b5fd'];
+let wevOn={conflict:true,env:true,events:true,decisions:true,weave:false};
+let wevReady=false,wevWorldTipShown=false,wevOpenId=-1,wevDecNoted=false,wevRaf=null,wevLastT=0;
+function wevGeo(){return {type:'FeatureCollection',features:WORLD_EVENTS.map((ev,i)=>({type:'Feature',id:i,geometry:{type:'Point',coordinates:[ev.lng,ev.lat]},properties:{i:i,type:ev.type,fam:ev.fam}}))};}
+function wevFilter(){
+  const fams=Object.keys(WEV_FAMS).filter(k=>wevOn[k]);
+  const f=['match',['get','fam'],fams.length?fams:['__none__'],true,false];
+  ['wev-outer','wev-mid','wev-core','wev-dot'].forEach(id=>{try{map.setFilter(id,f);}catch(e){}});
 }
-function waEventAt(cx,cy){
-  let best=-1,bestD=1e9;const cv=waCanvas,W=cv.width,H=cv.height;
-  WORLD_EVENTS.forEach((ev,i)=>{const xy=waProject(ev.lng,ev.lat,W,H);const d=Math.hypot(xy[0]-cx,xy[1]-cy);if(d<bestD){bestD=d;best=i;}});
-  return bestD<34?best:-1;
+function wevAddLayers(){
+  if(wevReady)return;
+  try{
+    if(map.getSource&&map.getSource('wevents')){wevReady=true;return;}
+    map.addSource('wevents',{type:'geojson',data:wevGeo()});
+    const R=(a,b,c,d,e2,f2)=>['interpolate',['linear'],['zoom'],0,a,3,b,6,c,9,d,12,e2,16,f2];
+    const sent=['coalesce',['feature-state','sent'],0];
+    // Outer bloom keeps growing toward street level \u2014 the world's events remain present at every scale.
+    map.addLayer({id:'wev-outer',type:'circle',source:'wevents',paint:{'circle-color':WEV_COLOR,'circle-blur':1,'circle-radius':R(26,42,66,96,134,178),'circle-opacity':['min',0.34,['+',0.15,['*',0.012,sent]]],'circle-pitch-alignment':'map'}});
+    // Mid ring is the touch target \u2014 it gently shrinks back at close zooms so street taps stay free for offerings.
+    map.addLayer({id:'wev-mid',type:'circle',source:'wevents',paint:{'circle-color':WEV_COLOR,'circle-blur':0.65,'circle-radius':R(14,22,30,30,26,20),'circle-opacity':['min',0.5,['+',0.24,['*',0.014,sent]]]}});
+    map.addLayer({id:'wev-core',type:'circle',source:'wevents',paint:{'circle-color':WEV_COLOR,'circle-blur':0.2,'circle-radius':R(5,7,9,10,10,9),'circle-opacity':0.85}});
+    map.addLayer({id:'wev-dot',type:'circle',source:'wevents',paint:{'circle-color':'#ffffff','circle-radius':R(1.6,2,2.4,2.6,2.6,2.4),'circle-opacity':0.85}});
+    ['wev-mid','wev-core','wev-dot'].forEach(id=>{
+      map.on('click',id,e=>{try{if(e&&e.features&&e.features.length)wevOpenPanel(+e.features[0].properties.i);}catch(_){}});
+      map.on('mouseenter',id,()=>{try{map.getCanvas().style.cursor='pointer';}catch(_){}});
+      map.on('mouseleave',id,()=>{try{map.getCanvas().style.cursor='';}catch(_){}});
+    });
+    wevReady=true;
+    wevFilter();
+    wevBreath();
+  }catch(e){}
 }
-function waUpdateBalance(){
-  let heavy=0,light=0;
-  WORLD_EVENTS.forEach(ev=>{heavy+=WA_WEIGHT[ev.type]||0;light+=(WA_LIGHTBASE[ev.type]||0)+ev.compassion;});
+// The resting breath of the world's glows \u2014 the same ~6s resonant swell, brightness-on-swell, no rotation.
+function wevBreath(){
+  if(wevRaf)return;
+  function tick(ts){
+    wevRaf=requestAnimationFrame(tick);
+    if(ts-wevLastT<66)return;
+    wevLastT=ts;
+    const s=0.5+0.5*Math.sin(ts/6000*Math.PI*2);
+    const sent=['coalesce',['feature-state','sent'],0];
+    try{
+      map.setPaintProperty('wev-outer','circle-opacity',['min',0.4,['+',0.11+0.10*s,['*',0.012,sent]]]);
+      map.setPaintProperty('wev-mid','circle-opacity',['min',0.55,['+',0.19+0.11*s,['*',0.014,sent]]]);
+      map.setPaintProperty('wev-dot','circle-opacity',0.6+0.35*s);
+    }catch(e){}
+  }
+  wevRaf=requestAnimationFrame(tick);
+}
+// The cinematic pull-back: one continuous flight from wherever you stand to the whole Earth. Reverse happens by flying home.
+function wevFlyWorld(){
+  if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
+  if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}
+  if(typeof closeExplore==='function')closeExplore();
+  let c={lng:-0.128,lat:51.508};try{c=map.getCenter();}catch(e){}
+  const reduce=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+  flyProgrammatic({center:[c.lng,Math.max(-50,Math.min(50,c.lat))],zoom:1.05,pitch:0,bearing:0,duration:reduce?0:6500,essential:true});
+  if(!wevWorldTipShown){
+    wevWorldTipShown=true;
+    setTimeout(()=>{if(typeof showMsg==='function')showMsg('The living aura of humanity \u2014 every glow holds something real to its kind. Tap one to feel it, and to answer with light. \u2727');},reduce?500:5200);
+  }
+}
+function wevOpenPanel(i){
+  const ev=WORLD_EVENTS[i];if(!ev)return;
+  wevOpenId=i;
+  const p=document.getElementById('wev-panel');if(!p)return;
+  const t=document.getElementById('wev-t');if(t)t.textContent=ev.title;
+  const k=document.getElementById('wev-k');if(k){k.textContent=(WEV_FAMS[ev.fam]||'')+' \u00b7 '+(WA_LABEL[ev.type]||ev.type);k.style.color=WA_HEX[ev.type]||'#c4b5fd';}
+  const n=document.getElementById('wev-n');if(n)n.textContent=ev.note;
+  const d=document.getElementById('wev-d');if(d)d.textContent=ev.doorway||'';
+  wevPanelCount();
+  p.classList.add('show');
+}
+function wevPanelCount(){
+  const ev=WORLD_EVENTS[wevOpenId];
+  const c=document.getElementById('wev-c');
+  if(c&&ev)c.textContent=ev.compassion+' aura'+(ev.compassion===1?'':'s')+' of compassion answering';
+}
+function wevClosePanel(){const p=document.getElementById('wev-panel');if(p)p.classList.remove('show');wevOpenId=-1;}
+function wevSend(){
+  const ev=WORLD_EVENTS[wevOpenId];if(!ev)return;
+  ev.compassion++;
+  try{map.setFeatureState({source:'wevents',id:wevOpenId},{sent:ev.compassion});}catch(e){}
+  if(typeof myAuraColors!=='undefined')myAuraColors.push(WA_HEX[ev.type]||'#f7ce6b');
+  if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=WA_HEX[ev.type]||'#f7ce6b';}
+  wevPanelCount();wevBalance();
+  if(typeof playChime==='function'){try{playChime([392,523.25]);}catch(e){}}
+  if(typeof showMsg==='function')showMsg('An aura of compassion reaches: '+ev.title+' \u2727');
+}
+function wevBalance(){
+  let heavy=0,light=0,sentN=0;
+  WORLD_EVENTS.forEach(ev=>{heavy+=WA_WEIGHT[ev.type]||0;light+=(WA_LIGHTBASE[ev.type]||0)+ev.compassion;sentN+=ev.compassion;});
   light+=(typeof myOfferings!=='undefined'&&myOfferings?myOfferings.length*0.3:0);
-  const ratio=light/(light+heavy||1);
-  const barL=document.getElementById('wa-bar-light'),needle=document.getElementById('wa-needle'),note=document.getElementById('wa-balance-note');
-  if(barL)barL.style.width=(ratio*100).toFixed(1)+'%';
-  if(needle)needle.style.left=(ratio*100).toFixed(1)+'%';
+  const ratio=light/((light+heavy)||1),pct=(ratio*100).toFixed(1)+'%';
+  ['wbal-fill','wbal-fill2'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.width=pct;});
+  ['wbal-needle','wbal-needle2'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.left=pct;});
+  const note=document.getElementById('wbal-note');
   if(note){
-    const sent=WORLD_EVENTS.reduce((a,e)=>a+e.compassion,0);
     let msg;
     if(ratio<0.4)msg='The field leans heavy. The world is carrying more weight than the light yet answering it. Every aura of compassion you send shifts this \u2014 the Aura-conscious gently balancing the Aura-unaware.';
     else if(ratio<0.6)msg='The field is near balance. The light of those who notice and care is meeting the weight, glow for glow.';
     else msg='The light is answering. Enough attention and good intent is flowing to begin lifting the heavier auras of the world.';
-    note.innerHTML=msg+'<br><span style="color:#9a8fc2;font-size:11px">'+sent+' aura'+(sent===1?'':'s')+' of compassion sent \u00b7 your own offerings add their light too</span>';
+    note.innerHTML=msg+'<br><span style="color:#9a8fc2;font-size:11px">'+sentN+' aura'+(sentN===1?'':'s')+' of compassion sent \u00b7 your own offerings add their light too</span>';
   }
 }
-function openWorldAuras(){
-  const p=document.getElementById('worldauras-page');if(!p)return;
-  waCanvas=document.getElementById('wa-canvas');
-  if(waCanvas){waCanvas.width=880;waCanvas.height=440;waCtx=waCanvas.getContext('2d');}
-  p.classList.add('show');p.style.display='flex';
-  waUpdateBalance();
-  if(!waRaf2)waRaf2=requestAnimationFrame(waDrawWorld);
+// The Weave on the world: your own Local and World threads glow from your locality.
+// The collective weave \u2014 strangers' rhymes overlaid \u2014 opens at the Gate, opt-in only, never exposed.
+function wevWeaveRefresh(){
+  try{
+    if(!wevReady)return;
+    const pts=[];
+    if(wevOn.weave&&typeof mySyncs!=='undefined'&&mySyncs&&mySyncs.length&&typeof localityPoint!=='undefined'&&localityPoint){
+      const n=mySyncs.filter(s=>{const sc=String((s&&(s.scope||s.reach))||'').toLowerCase();return sc.indexOf('local')>=0||sc.indexOf('world')>=0;}).length;
+      if(n>0)pts.push({type:'Feature',geometry:{type:'Point',coordinates:[localityPoint.lng,localityPoint.lat]},properties:{n:n}});
+    }
+    const data={type:'FeatureCollection',features:pts};
+    if(map.getSource&&map.getSource('wev-weave-src')){map.getSource('wev-weave-src').setData(data);}
+    else{
+      map.addSource('wev-weave-src',{type:'geojson',data:data});
+      map.addLayer({id:'wev-weave',type:'circle',source:'wev-weave-src',paint:{'circle-color':'#cfd6ff','circle-blur':0.9,'circle-radius':['interpolate',['linear'],['zoom'],0,18,6,34,12,60],'circle-opacity':0.28}});
+      map.addLayer({id:'wev-weave-dot',type:'circle',source:'wev-weave-src',paint:{'circle-color':'#eef0ff','circle-radius':2.2,'circle-opacity':0.9}});
+    }
+  }catch(e){}
 }
-function closeWorldAuras(){const p=document.getElementById('worldauras-page');if(p){p.classList.remove('show');p.style.display='none';}if(waRaf2){cancelAnimationFrame(waRaf2);waRaf2=null;}const t=document.getElementById('wa-tip');if(t)t.style.opacity='0';}
+function wevZoomUI(){
+  let z=15;try{const g=map.getZoom();if(typeof g==='number')z=g;}catch(e){}
+  const chips=document.getElementById('wev-chips');if(chips)chips.classList.toggle('show',z<6.8);
+  const wb=document.getElementById('wbal');if(wb)wb.classList.toggle('show',z<3.6);
+  if(z>=3.6){const wp=document.getElementById('wbal-panel');if(wp)wp.classList.remove('show');}
+}
 (function(){
-  const b=document.getElementById('world-btn');if(b)b.addEventListener('click',openWorldAuras);
-  const back=document.getElementById('wa-back');if(back)back.addEventListener('click',closeWorldAuras);
-  const pw=document.getElementById('planet-world');if(pw)pw.addEventListener('click',openWorldAuras);
-  const cv=document.getElementById('wa-canvas'),tip=document.getElementById('wa-tip'),wrap=document.getElementById('wa-mapwrap');
-  function toCanvas(e){const r=cv.getBoundingClientRect();return [(e.clientX-r.left)*(cv.width/r.width),(e.clientY-r.top)*(cv.height/r.height)];}
-  if(cv){
-    cv.addEventListener('mousemove',e=>{
-      const xy=toCanvas(e);waHover=waEventAt(xy[0],xy[1]);
-      if(waHover>=0&&tip&&wrap){const ev=WORLD_EVENTS[waHover],rr=wrap.getBoundingClientRect();
-        tip.innerHTML='<div class="wt-title">'+ev.title+'</div><div class="wt-type" style="color:rgb('+(WA_RGB[ev.type]||'200,180,255')+')">'+(WA_LABEL[ev.type]||ev.type)+'</div><div>'+ev.note+'</div><div class="wt-send">'+ev.compassion+' compassion sent \u00b7 tap to send yours</div>';
-        let lx=e.clientX-rr.left+14,ty=e.clientY-rr.top+14;if(lx>rr.width-240)lx=rr.width-240;if(ty>rr.height-130)ty=rr.height-130;
-        tip.style.left=lx+'px';tip.style.top=ty+'px';tip.style.opacity='1';cv.style.cursor='pointer';
-      } else if(tip){tip.style.opacity='0';cv.style.cursor='default';}
+  document.querySelectorAll('.wev-chip').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const k=btn.dataset.fam;
+      wevOn[k]=!wevOn[k];
+      btn.classList.toggle('on',wevOn[k]);
+      if(k==='weave'){
+        wevWeaveRefresh();
+        if(wevOn.weave){
+          const has=(typeof mySyncs!=='undefined'&&mySyncs&&mySyncs.length&&typeof localityPoint!=='undefined'&&localityPoint);
+          if(typeof showMsg==='function')showMsg(has?'Your Weave joins the world \u2014 your Local and World threads glow from your locality. The collective weave, strangers\u2019 rhymes overlaid, opens at the Gate. \u2727':'The collective Weave opens at the Gate. For now, offer a thread with Local or World reach and set your locality \u2014 your own weave will glow from home. \u2727');
+        }
+        return;
+      }
+      wevFilter();
+      if(k==='decisions'&&wevOn.decisions&&!wevDecNoted){
+        wevDecNoted=true;
+        if(typeof showMsg==='function')showMsg('Decisions & Trajectories arrive with the live source \u2014 nothing here is ever simulated. \u2727');
+      }
     });
-    cv.addEventListener('mouseleave',()=>{waHover=-1;if(tip)tip.style.opacity='0';});
-    cv.addEventListener('click',e=>{const xy=toCanvas(e),i=waEventAt(xy[0],xy[1]);if(i>=0){const ev=WORLD_EVENTS[i];ev.compassion++;waUpdateBalance();if(typeof myAuraColors!=='undefined')myAuraColors.push(WA_HEX[ev.type]||'#f7ce6b');if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=WA_HEX[ev.type]||'#f7ce6b';}showMsg('An aura of compassion reaches: '+ev.title+' \u2014 share this light with others (social sharing arrives in v1)');}});
-  }
-  const p=document.getElementById('worldauras-page');if(p)p.addEventListener('click',e=>{if(e.target===p)closeWorldAuras();});
+  });
+  const px=document.getElementById('wev-x');if(px)px.addEventListener('click',wevClosePanel);
+  const ps=document.getElementById('wev-send');if(ps)ps.addEventListener('click',wevSend);
+  const wb=document.getElementById('wbal');if(wb)wb.addEventListener('click',()=>{const p=document.getElementById('wbal-panel');if(p){p.classList.toggle('show');if(p.classList.contains('show'))wevBalance();}});
+  const wx=document.getElementById('wbal-x');if(wx)wx.addEventListener('click',()=>{const p=document.getElementById('wbal-panel');if(p)p.classList.remove('show');});
+  try{map.on('zoom',wevZoomUI);map.on('moveend',wevZoomUI);}catch(e){}
+  try{if(map.isStyleLoaded&&map.isStyleLoaded()){wevAddLayers();wevWeaveRefresh();}}catch(e){}
+  wevZoomUI();
+  wevBalance();
   const logoEl=document.getElementById('logo');
   if(logoEl)logoEl.addEventListener('click',()=>{if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor='#c4b5fd';}showMsg('The living aura of humanity, sensed together');});
 })();
+
 });
 </script>
 </body>
