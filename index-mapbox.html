@@ -365,7 +365,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #inp{flex:1;background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 11px;font-size:12px;color:#e0d8ff;outline:none;font-family:inherit}
 #inp::placeholder{color:#5a5270}
 #inp:focus{border-color:rgba(167,139,250,.35)}
-#sbtn{padding:8px 13px;border-radius:10px;border:0.5px solid rgba(167,139,250,.35);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap}
+#sbtn{padding:8px 13px;border-radius:10px;border:0.5px solid rgba(196,181,253,.7);background:rgba(167,139,250,.32);color:#f1ecff;box-shadow:0 0 12px rgba(167,139,250,.35);font-size:11px;cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap}
 #sbtn:hover{background:rgba(167,139,250,.25);box-shadow:0 0 14px rgba(167,139,250,.2)}
 #sheet-close{display:none}
 #pmsg{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);max-width:min(400px,88vw);font-size:14px;color:#efe8ff;font-style:italic;opacity:0;pointer-events:none;text-align:center;line-height:1.6;padding:12px 18px;background:rgba(12,10,26,.92);border:1px solid rgba(196,181,253,.55);border-radius:16px;box-shadow:0 0 26px rgba(124,92,255,.5),0 8px 30px rgba(0,0,0,.5);text-shadow:0 0 14px rgba(196,181,253,.7);transition:opacity .5s;letter-spacing:.03em;z-index:60}
@@ -764,8 +764,10 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #explore-panel{left:50%;top:96px;transform:translateX(-50%);width:300px;z-index:1300;max-height:72vh;overflow-y:auto}
 /* Handle on the feed and the My Aura page */
 #lf-handle{text-align:center;font-size:15px;color:#efe8ff;font-weight:300;letter-spacing:.03em;margin-bottom:4px;text-shadow:0 0 16px rgba(167,139,250,.5)}
-#ma-handle{position:absolute;top:34px;left:50%;transform:translateX(-50%);font-size:12px;color:#b6a9e0;letter-spacing:.04em;z-index:8}
-@media (max-width:600px){#ma-handle{top:74px}}
+#ma-handle{position:absolute;top:48px;left:50%;transform:translateX(-50%);font-size:12px;color:#b6a9e0;letter-spacing:.04em;z-index:8}
+@media (max-width:600px){#ma-handle{top:90px}}
+@media (min-width:601px){#ma-offerings{max-height:238px;overflow-y:auto;padding-right:5px;scrollbar-width:thin;scrollbar-color:rgba(167,139,250,.35) transparent}}
+.mj-dot{height:0;border-top:1px dotted rgba(167,139,250,.45);margin:5px 8px}
 /* Lower-left mini becomes a real compact search bar */
 #place-mini{display:none;align-items:center;gap:0;background:rgba(20,16,40,.86);border:0.5px solid rgba(167,139,250,.45);border-radius:18px;padding:3px 3px 3px 4px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 0 22px rgba(124,92,255,.3)}
 #place-mini.show{display:flex}
@@ -843,16 +845,17 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 .mem-priv{background:rgba(232,183,107,.08);border:0.5px solid rgba(232,183,107,.35);color:#e8c794;font-size:11px;padding:6px 12px;border-radius:14px;cursor:pointer}
 .mem-priv.priv{background:rgba(120,110,150,.18);border-color:rgba(167,139,250,.4);color:#cbbff0}
 /* World Auras — living event glows on the map itself */
-#wev-chips{position:absolute;top:52px;left:50%;transform:translateX(-50%);z-index:40;display:none;flex-wrap:wrap;gap:6px;justify-content:center;max-width:min(92vw,560px)}
+#wev-chips{position:absolute;top:104px;left:50%;transform:translateX(-50%);z-index:40;display:none;flex-wrap:wrap;gap:6px;justify-content:center;max-width:min(92vw,560px)}
 #wev-chips.show{display:flex}
 .wev-chip{background:rgba(16,13,34,.66);border:0.5px solid rgba(167,139,250,.22);color:#8a82b4;font-size:11px;padding:6px 12px;border-radius:16px;cursor:pointer;font-family:inherit;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);white-space:nowrap;transition:all .25s ease;letter-spacing:.02em}
 .wev-chip.on{color:#efe9ff;border-color:rgba(167,139,250,.45)}
 .wev-chip.on[data-fam=conflict]{box-shadow:0 0 14px rgba(229,90,90,.35);border-color:rgba(229,90,90,.5)}
 .wev-chip.on[data-fam=env]{box-shadow:0 0 14px rgba(108,158,235,.35);border-color:rgba(108,158,235,.5)}
 .wev-chip.on[data-fam=events]{box-shadow:0 0 14px rgba(134,224,192,.35);border-color:rgba(134,224,192,.5)}
+.wev-chip.on[data-fam=news]{box-shadow:0 0 14px rgba(160,190,255,.35);border-color:rgba(160,190,255,.5)}
 .wev-chip.on[data-fam=decisions]{box-shadow:0 0 14px rgba(216,180,106,.35);border-color:rgba(216,180,106,.5)}
 .wev-chip.on[data-fam=weave]{box-shadow:0 0 14px rgba(207,214,255,.4);border-color:rgba(207,214,255,.55)}
-@media (max-width:600px){#wev-chips{top:90px}.wev-chip{font-size:10px;padding:5px 9px}}
+@media (max-width:600px){#wev-chips{top:184px}.wev-chip{font-size:10px;padding:5px 9px}}
 /* Search-a-location mini moved to top-centre (clear of the bottom symbol panel) */
 #place-mini{top:90px;left:50%;transform:translateX(-50%);bottom:auto;right:auto}
 @media(min-width:601px){#place-prompt{display:none!important}#place-mini{display:none!important}}
@@ -921,8 +924,8 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #logo:hover #logo-mark{filter:drop-shadow(0 0 13px rgba(167,139,250,.85))}
 @media (max-width:600px){#hdr1{left:8px}#logo{padding:4px 9px 4px 7px}#logo-text h1{font-size:14px;line-height:1.05}#logo-text p{display:block;font-size:9px;line-height:1.1;margin-top:0;letter-spacing:.02em;white-space:nowrap}#logo-text p .tag-extra{display:none}#logo-mark svg{width:34px;height:22px}}
 /* World event panel — what a glow holds, and the doorway through it */
-#wev-panel{position:absolute;right:16px;top:50%;transform:translateY(-50%) translateX(12px);width:272px;background:rgba(9,7,22,.96);border:0.5px solid rgba(167,139,250,.35);border-radius:15px;padding:16px 16px 14px;z-index:60;opacity:0;pointer-events:none!important;transition:opacity .35s ease,transform .35s ease;box-shadow:0 0 30px rgba(0,0,0,.55)}
-#wev-panel.show{opacity:1;pointer-events:auto!important;transform:translateY(-50%) translateX(0)}
+#wev-panel{position:absolute;right:16px;top:178px;transform:translateX(12px);width:272px;max-height:min(58vh,470px);overflow-y:auto;background:rgba(9,7,22,.96);border:0.5px solid rgba(167,139,250,.35);border-radius:15px;padding:16px 16px 14px;z-index:60;opacity:0;pointer-events:none!important;transition:opacity .35s ease,transform .35s ease;box-shadow:0 0 30px rgba(0,0,0,.55)}
+#wev-panel.show{opacity:1;pointer-events:auto!important;transform:translateX(0)}
 #wev-x{position:absolute;top:8px;right:10px;background:none;border:none;color:#8a82b4;font-size:14px;cursor:pointer;font-family:inherit;padding:4px}
 #wev-t{font-size:14.5px;color:#fff;font-weight:500;line-height:1.4;padding-right:18px}
 #wev-k{font-size:10.5px;letter-spacing:.05em;margin-top:4px}
@@ -932,7 +935,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #wev-c{font-size:10.5px;color:#9a8fc2;margin-top:11px}
 #wev-send{width:100%;margin-top:9px;padding:9px 10px;border-radius:11px;border:0.5px solid rgba(232,192,116,.4);background:rgba(232,192,116,.09);color:#f2dfae;font-size:12px;cursor:pointer;font-family:inherit;transition:all .2s}
 #wev-send:hover{background:rgba(232,192,116,.2)}
-@media (max-width:600px){#wev-panel{right:12px;left:12px;width:auto;top:auto;bottom:150px;transform:translateY(10px)}#wev-panel.show{transform:translateY(0)}}
+@media (max-width:600px){#wev-panel{right:12px;left:12px;width:auto;top:224px;bottom:auto;max-height:44vh;transform:translateY(8px)}#wev-panel.show{transform:translateY(0)}}
 /* The balance of the world's field — visible from planet and nation heights */
 #wbal{position:absolute;left:50%;bottom:18px;transform:translateX(-50%);z-index:40;display:none;align-items:center;gap:9px;background:rgba(14,11,30,.72);border:0.5px solid rgba(167,139,250,.25);border-radius:16px;padding:7px 13px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
 #wbal.show{display:flex}
@@ -1045,8 +1048,9 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="wev-chips">
     <button class="wev-chip on" data-fam="conflict">Conflicts &amp; Peace</button>
     <button class="wev-chip on" data-fam="env">Environment</button>
-    <button class="wev-chip on" data-fam="events">Events &amp; Sport</button>
-    <button class="wev-chip on" data-fam="decisions">Decisions &amp; Trajectories</button>
+    <button class="wev-chip on" data-fam="news">World Events</button>
+    <button class="wev-chip on" data-fam="events">Sport &amp; Festivals</button>
+    <button class="wev-chip on" data-fam="decisions">Decisions</button>
     <button class="wev-chip" data-fam="weave">∞ Weave</button>
   </div>
   <div id="wbal" title="The balance of the world's field"><div id="wbal-mini"><div id="wbal-fill"></div><div id="wbal-needle"></div></div><span id="wbal-lab">The world's field</span></div>
@@ -1225,16 +1229,17 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="ma-journey">
     <button id="mj-btn">✦ Your journey <span class="mj-caret">▾</span></button>
     <div id="mj-menu">
-      <button class="mj-i" data-mj="profile">Set up your Aurasenser profile</button>
-      <button class="mj-i" data-mj="quest">Shape your aura</button>
-      <button class="mj-i" data-mj="soul">Soul Search</button>
-      <button class="mj-i" data-mj="life">Begin your life story</button>
-      <button class="mj-i" data-mj="traj">Conscious Trajectory</button>
+      <button class="mj-i" data-mj="profile" title="Your name here, your locality, your privacy — the ground everything rests on">Set up your Aurasenser profile</button>
+      <button class="mj-i" data-mj="quest" title="Gentle questions that add true colour to your aura">Shape your aura</button>
+      <button class="mj-i" data-mj="soul" title="Five gates, deeper questions — the strongest colours come from here">Soul Search</button>
+      <button class="mj-i" data-mj="life" title="Tell your story in your own words; it becomes lasting light">Begin your life story</button>
+      <button class="mj-i" data-mj="traj" title="Where your current path leads — and what shifts it. Readings, never predictions">Conscious Trajectory</button>
       <div class="mj-sep"></div>
-      <button class="mj-i" data-mj="alpha">✧ Alphasense symbols</button>
-      <button class="mj-i" data-mj="bonds">✧ Alphabonds</button>
-      <button class="mj-i" data-mj="work">✧ Alphasense workshop</button>
-      <button class="mj-i" data-mj="sync">∞ Synchronicity Weave</button>
+      <button class="mj-i" data-mj="alpha" title="The living symbols — words made of light">✧ Alphasense symbols</button>
+      <button class="mj-i" data-mj="bonds" title="Two symbols meet; a third meaning is born at the junction">✧ Alphabonds</button>
+      <button class="mj-i" data-mj="work" title="Practise speaking in symbols">✧ Alphasense workshop</button>
+      <div class="mj-dot"></div>
+      <button class="mj-i" data-mj="sync" title="Notice what rhymes in your days — your noticing practice, and one day the world's">∞ Synchronicity Weave</button>
     </div>
   </div>
   <div id="ma-title">My Aura</div>
@@ -2015,7 +2020,13 @@ document.querySelectorAll('.tab-mi[data-i]').forEach(mi=>{ mi.onclick=()=>goToLe
   const tip=document.getElementById('panel-tip');
   if(tip)tip.addEventListener('click',()=>{if(typeof openOfferSheet==='function')openOfferSheet();});
   document.querySelectorAll('.tab-caret').forEach(car=>{
-    car.onclick=(e)=>{e.stopPropagation();const name=car.dataset.menu;const menu=document.getElementById(name+'-menu');const willOpen=menu&&!menu.classList.contains('open');closeTabMenus();if(willOpen&&menu){menu.classList.add('open');car.classList.add('open');}};
+    car.onclick=(e)=>{e.stopPropagation();const name=car.dataset.menu;const menu=document.getElementById(name+'-menu');const willOpen=menu&&!menu.classList.contains('open');closeTabMenus();if(willOpen&&menu){
+      // Portal to <body>: header overflow/stacking can no longer clip the drop-down (the cell Region fix).
+      if(menu.parentElement!==document.body)document.body.appendChild(menu);
+      const r=car.getBoundingClientRect();
+      menu.style.position='fixed';menu.style.left=Math.max(8,Math.min(r.left-40,window.innerWidth-150))+'px';menu.style.top=(r.bottom+6)+'px';menu.style.zIndex='1300';
+      menu.classList.add('open');car.classList.add('open');
+    }};
   });
   document.addEventListener('click',(e)=>{ if(!e.target.closest('.tab-group'))closeTabMenus(); });
 })();
@@ -2126,6 +2137,9 @@ map.on('moveend',()=>{
   if(searching){ searching=false; return; }
   if(isMovingProgrammatically)return;
   const c=map.getCenter(),z=map.getZoom();
+  // Pinching is a journey through the levels — the tabs walk with it.
+  let nl;if(z>=13.5)nl=0;else if(z>=10.5)nl=1;else if(z>=7)nl=2;else if(z>=3.6)nl=3;else nl=4;
+  if(nl!==auraLevel)setActiveTab(nl);
   lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
   if(auraLevel===0){lastStreetView={lat:c.lat,lng:c.lng,zoom:z};lastOfferedPoint={lat:c.lat,lng:c.lng,zoom:z};anchorPoint={lat:c.lat,lng:c.lng,zoom:z};}
   else{anchorPoint.lat=c.lat;anchorPoint.lng=c.lng;}
@@ -2270,6 +2284,13 @@ function submit(lat,lng,text){
   const pp=(typeof pendingPhoto!=='undefined')?pendingPhoto:null;
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);if(!s)return;
+  // Offering from a height: the aura lands where you are looking, and the map descends to meet it.
+  let _oz=15;try{_oz=map.getZoom();}catch(e){}
+  if(_oz<13){
+    try{const _c=map.getCenter();lat=_c.lat;lng=_c.lng;}catch(e){}
+    setActiveTab(0);
+    flyProgrammatic({center:[lng,lat],zoom:15,duration:2800});
+  }
   if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
   const isPriv=(sid==='memory'&&typeof memoryPrivate!=='undefined'&&memoryPrivate);
   const pubText=isPriv?'(a memory, kept private)':text;
@@ -3297,6 +3318,7 @@ let lfoRow=-1,lfoKind='';
 const LFO_STRUGGLE=['stress','pain','hunger','hydration','innertemp','cold','anomaly','anxiety','socialanxiety','overwhelm','loneliness'];
 const LFO_MIND=['intuition','premonition','dejavu','clairvoyance','clairaudience','clairsentience','claircognizance','dream','preddream','synchronicity','chronosception','proprioception','memory'];
 function lfExpPrompt(r){
+  if(r.sid==='safety')return 'Where did safety hold you here — or where was it missing, and what did you learn to do?';
   if(LFO_STRUGGLE.indexOf(r.sid)>=0)return 'In a situation like this, what did you do — and what helped, or didn’t, and why?';
   if(LFO_MIND.indexOf(r.sid)>=0)return 'Has your life met a moment like this? What did it teach you to trust — or to question?';
   return 'What has a moment like this given you — where did noticing it lead in your own life?';
@@ -3950,57 +3972,70 @@ const WA_HEX={suffering:'#e55a5a',need:'#6c9eeb',disaster:'#f0964a',joy:'#f7ce6b
 const WA_LABEL={suffering:'People in suffering',need:'People in need',disaster:'A natural disaster',joy:'Collective joy',sport:'A gathering of many'};
 const WA_WEIGHT={suffering:3,need:2,disaster:2,joy:0,sport:0};
 const WA_LIGHTBASE={suffering:0,need:0,disaster:0,joy:1.5,sport:1};
-const WEV_FAMS={conflict:'Conflicts & Peace',env:'Environment \u2014 harm and repair',events:'World events & sport',decisions:'Decisions & Trajectories'};
-const WEV_COLOR=['match',['get','type'],'suffering','#e55a5a','need','#6c9eeb','disaster','#f0964a','joy','#f7ce6b','sport','#86e0c0','#c4b5fd'];
-let wevOn={conflict:true,env:true,events:true,decisions:true,weave:false};
-let wevReady=false,wevWorldTipShown=false,wevOpenId=-1,wevDecNoted=false,wevRaf=null,wevLastT=0;
-function wevGeo(){return {type:'FeatureCollection',features:WORLD_EVENTS.map((ev,i)=>({type:'Feature',id:i,geometry:{type:'Point',coordinates:[ev.lng,ev.lat]},properties:{i:i,type:ev.type,fam:ev.fam}}))};}
+const WEV_FAMS={conflict:'Conflicts & Peace',env:'Environment \u2014 harm and repair',news:'World events',events:'Sport & festivals',decisions:'Decisions & Trajectories'};
+// Per-type response \u2014 compassion for the heavy, joining for the joyful. Never one verb forced on every human moment.
+const WEV_ACT={
+  suffering:{btn:'\u2726 Answer with an aura of compassion',msg:'An aura of compassion reaches: '},
+  need:{btn:'\u2726 Answer with an aura of compassion',msg:'An aura of compassion reaches: '},
+  disaster:{btn:'\u2726 Answer with an aura of compassion',msg:'An aura of compassion reaches: '},
+  joy:{btn:'\u2726 Join with an aura of celebration',msg:'Your light joins the celebration: '},
+  sport:{btn:'\u2726 Send an aura of good spirit',msg:'Your good spirit reaches: '}
+};
+let wevOn={conflict:true,env:true,news:true,events:true,decisions:true,weave:false};
+let wevReady=false,wevWorldTipShown=false,wevOpenId=-1,wevDecNoted=false,wevNewsNoted=false,wevRaf=null,wevLastT=0;
+function wevGeo(){return {type:'FeatureCollection',features:WORLD_EVENTS.map((ev,i)=>({type:'Feature',id:i,geometry:{type:'Point',coordinates:[ev.lng,ev.lat]},properties:{i:i,type:ev.type,fam:ev.fam,sent:ev.compassion,col:WA_HEX[ev.type]||'#c4b5fd'}}))};}
 function wevFilter(){
   const fams=Object.keys(WEV_FAMS).filter(k=>wevOn[k]);
   const f=['match',['get','fam'],fams.length?fams:['__none__'],true,false];
-  ['wev-outer','wev-mid','wev-core','wev-dot'].forEach(id=>{try{map.setFilter(id,f);}catch(e){}});
+  ['wev-outer','wev-mid','wev-core','wev-dot','wev-sent'].forEach(id=>{try{if(map.getLayer(id))map.setFilter(id,f);}catch(e){}});
 }
 function wevAddLayers(){
   if(wevReady)return;
+  let srcOk=false;
   try{
-    if(map.getSource&&map.getSource('wevents')){wevReady=true;return;}
-    map.addSource('wevents',{type:'geojson',data:wevGeo()});
-    const R=(a,b,c,d,e2,f2)=>['interpolate',['linear'],['zoom'],0,a,3,b,6,c,9,d,12,e2,16,f2];
-    const sent=['coalesce',['feature-state','sent'],0];
-    // Outer bloom keeps growing toward street level \u2014 the world's events remain present at every scale.
-    map.addLayer({id:'wev-outer',type:'circle',source:'wevents',paint:{'circle-color':WEV_COLOR,'circle-blur':1,'circle-radius':R(26,42,66,96,134,178),'circle-opacity':['min',0.34,['+',0.15,['*',0.012,sent]]],'circle-pitch-alignment':'map'}});
-    // Mid ring is the touch target \u2014 it gently shrinks back at close zooms so street taps stay free for offerings.
-    map.addLayer({id:'wev-mid',type:'circle',source:'wevents',paint:{'circle-color':WEV_COLOR,'circle-blur':0.65,'circle-radius':R(14,22,30,30,26,20),'circle-opacity':['min',0.5,['+',0.24,['*',0.014,sent]]]}});
-    map.addLayer({id:'wev-core',type:'circle',source:'wevents',paint:{'circle-color':WEV_COLOR,'circle-blur':0.2,'circle-radius':R(5,7,9,10,10,9),'circle-opacity':0.85}});
-    map.addLayer({id:'wev-dot',type:'circle',source:'wevents',paint:{'circle-color':'#ffffff','circle-radius':R(1.6,2,2.4,2.6,2.6,2.4),'circle-opacity':0.85}});
-    ['wev-mid','wev-core','wev-dot'].forEach(id=>{
+    if(map.getSource&&map.getSource('wevents')){srcOk=true;}
+    else{map.addSource('wevents',{type:'geojson',data:wevGeo()});srcOk=true;}
+  }catch(e){console.warn('[wev] source',e);}
+  if(!srcOk)return;
+  const R=(a,b,c,d,e2,f2)=>['interpolate',['linear'],['zoom'],0,a,3,b,6,c,9,d,12,e2,16,f2];
+  // Each layer stands alone: one failing can never take the others with it.
+  const adds=[
+    ['wev-outer',{'circle-color':['get','col'],'circle-blur':0.9,'circle-radius':R(30,46,70,100,138,180),'circle-opacity':0.2}],
+    ['wev-mid',{'circle-color':['get','col'],'circle-blur':0.5,'circle-radius':R(16,24,32,32,28,22),'circle-opacity':0.34}],
+    ['wev-core',{'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':R(7.5,9,10.5,11,11,10),'circle-opacity':0.9}],
+    ['wev-dot',{'circle-color':'#ffffff','circle-radius':R(2.6,3,3.2,3.2,3,2.8),'circle-opacity':0.85}],
+    ['wev-sent',{'circle-color':'rgba(0,0,0,0)','circle-radius':R(12,17,21,23,22,19),'circle-opacity':0,'circle-stroke-color':'#ffe6b0','circle-stroke-width':1.4,'circle-stroke-opacity':['min',0.6,['*',0.09,['get','sent']]]}]
+  ];
+  adds.forEach(a=>{try{if(!map.getLayer(a[0]))map.addLayer({id:a[0],type:'circle',source:'wevents',paint:a[1]});}catch(e){console.warn('[wev] layer '+a[0],e);}});
+  try{console.log('[wev] layers live:',['wev-outer','wev-mid','wev-core','wev-dot','wev-sent'].filter(id=>{try{return !!map.getLayer(id);}catch(e){return false;}}).join(' '));}catch(e){}
+  ['wev-mid','wev-core','wev-dot','wev-sent'].forEach(id=>{
+    try{
       map.on('click',id,e=>{try{if(e&&e.features&&e.features.length)wevOpenPanel(+e.features[0].properties.i);}catch(_){}});
       map.on('mouseenter',id,()=>{try{map.getCanvas().style.cursor='pointer';}catch(_){}});
       map.on('mouseleave',id,()=>{try{map.getCanvas().style.cursor='';}catch(_){}});
-    });
-    wevReady=true;
-    wevFilter();
-    wevBreath();
-  }catch(e){}
+    }catch(e){}
+  });
+  wevReady=true;
+  wevFilter();
+  wevBreath();
 }
-// The resting breath of the world's glows \u2014 the same ~6s resonant swell, brightness-on-swell, no rotation.
+// The resting breath \u2014 the ~6s resonant swell, brightness-on-swell, no rotation. Plain numbers only: unbreakable.
 function wevBreath(){
   if(wevRaf)return;
+  const CR=[7.5,9,10.5,11,11,10];
   function tick(ts){
     wevRaf=requestAnimationFrame(tick);
     if(ts-wevLastT<66)return;
     wevLastT=ts;
-    const s=0.5+0.5*Math.sin(ts/6000*Math.PI*2);
-    const sent=['coalesce',['feature-state','sent'],0];
-    try{
-      map.setPaintProperty('wev-outer','circle-opacity',['min',0.4,['+',0.11+0.10*s,['*',0.012,sent]]]);
-      map.setPaintProperty('wev-mid','circle-opacity',['min',0.55,['+',0.19+0.11*s,['*',0.014,sent]]]);
-      map.setPaintProperty('wev-dot','circle-opacity',0.6+0.35*s);
-    }catch(e){}
+    const s=0.5+0.5*Math.sin(ts/6000*Math.PI*2),f=0.9+0.2*s;
+    try{map.setPaintProperty('wev-outer','circle-opacity',0.15+0.16*s);}catch(e){}
+    try{map.setPaintProperty('wev-mid','circle-opacity',0.26+0.2*s);}catch(e){}
+    try{map.setPaintProperty('wev-dot','circle-opacity',0.5+0.45*s);}catch(e){}
+    try{map.setPaintProperty('wev-core','circle-radius',['interpolate',['linear'],['zoom'],0,CR[0]*f,3,CR[1]*f,6,CR[2]*f,9,CR[3]*f,12,CR[4]*f,16,CR[5]*f]);}catch(e){}
   }
   wevRaf=requestAnimationFrame(tick);
 }
-// The cinematic pull-back: one continuous flight from wherever you stand to the whole Earth. Reverse happens by flying home.
+// The cinematic pull-back: one continuous flight from wherever you stand to the whole Earth. Return by flying home.
 function wevFlyWorld(){
   if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
   if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}
@@ -4010,7 +4045,7 @@ function wevFlyWorld(){
   flyProgrammatic({center:[c.lng,Math.max(-50,Math.min(50,c.lat))],zoom:1.05,pitch:0,bearing:0,duration:reduce?0:6500,essential:true});
   if(!wevWorldTipShown){
     wevWorldTipShown=true;
-    setTimeout(()=>{if(typeof showMsg==='function')showMsg('The living aura of humanity \u2014 every glow holds something real to its kind. Tap one to feel it, and to answer with light. \u2727');},reduce?500:5200);
+    setTimeout(()=>{if(typeof showMsg==='function')showMsg('The living aura of humanity \u2014 every glow holds something real to its kind. Tap one to feel it, and to answer in kind. \u2727');},reduce?500:5200);
   }
 }
 function wevOpenPanel(i){
@@ -4021,24 +4056,25 @@ function wevOpenPanel(i){
   const k=document.getElementById('wev-k');if(k){k.textContent=(WEV_FAMS[ev.fam]||'')+' \u00b7 '+(WA_LABEL[ev.type]||ev.type);k.style.color=WA_HEX[ev.type]||'#c4b5fd';}
   const n=document.getElementById('wev-n');if(n)n.textContent=ev.note;
   const d=document.getElementById('wev-d');if(d)d.textContent=ev.doorway||'';
+  const b=document.getElementById('wev-send');if(b)b.textContent=(WEV_ACT[ev.type]||WEV_ACT.suffering).btn;
   wevPanelCount();
   p.classList.add('show');
 }
 function wevPanelCount(){
   const ev=WORLD_EVENTS[wevOpenId];
   const c=document.getElementById('wev-c');
-  if(c&&ev)c.textContent=ev.compassion+' aura'+(ev.compassion===1?'':'s')+' of compassion answering';
+  if(c&&ev)c.textContent=ev.compassion+' aura'+(ev.compassion===1?'':'s')+' answering';
 }
 function wevClosePanel(){const p=document.getElementById('wev-panel');if(p)p.classList.remove('show');wevOpenId=-1;}
 function wevSend(){
   const ev=WORLD_EVENTS[wevOpenId];if(!ev)return;
   ev.compassion++;
-  try{map.setFeatureState({source:'wevents',id:wevOpenId},{sent:ev.compassion});}catch(e){}
+  try{const s2=map.getSource('wevents');if(s2)s2.setData(wevGeo());}catch(e){}
   if(typeof myAuraColors!=='undefined')myAuraColors.push(WA_HEX[ev.type]||'#f7ce6b');
   if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=WA_HEX[ev.type]||'#f7ce6b';}
   wevPanelCount();wevBalance();
   if(typeof playChime==='function'){try{playChime([392,523.25]);}catch(e){}}
-  if(typeof showMsg==='function')showMsg('An aura of compassion reaches: '+ev.title+' \u2727');
+  if(typeof showMsg==='function')showMsg((WEV_ACT[ev.type]||WEV_ACT.suffering).msg+ev.title+' \u2727');
 }
 function wevBalance(){
   let heavy=0,light=0,sentN=0;
@@ -4053,7 +4089,7 @@ function wevBalance(){
     if(ratio<0.4)msg='The field leans heavy. The world is carrying more weight than the light yet answering it. Every aura of compassion you send shifts this \u2014 the Aura-conscious gently balancing the Aura-unaware.';
     else if(ratio<0.6)msg='The field is near balance. The light of those who notice and care is meeting the weight, glow for glow.';
     else msg='The light is answering. Enough attention and good intent is flowing to begin lifting the heavier auras of the world.';
-    note.innerHTML=msg+'<br><span style="color:#9a8fc2;font-size:11px">'+sentN+' aura'+(sentN===1?'':'s')+' of compassion sent \u00b7 your own offerings add their light too</span>';
+    note.innerHTML=msg+'<br><span style="color:#9a8fc2;font-size:11px">'+sentN+' aura'+(sentN===1?'':'s')+' sent \u00b7 your own offerings add their light too</span>';
   }
 }
 // The Weave on the world: your own Local and World threads glow from your locality.
@@ -4071,14 +4107,15 @@ function wevWeaveRefresh(){
     else{
       map.addSource('wev-weave-src',{type:'geojson',data:data});
       map.addLayer({id:'wev-weave',type:'circle',source:'wev-weave-src',paint:{'circle-color':'#cfd6ff','circle-blur':0.9,'circle-radius':['interpolate',['linear'],['zoom'],0,18,6,34,12,60],'circle-opacity':0.28}});
-      map.addLayer({id:'wev-weave-dot',type:'circle',source:'wev-weave-src',paint:{'circle-color':'#eef0ff','circle-radius':2.2,'circle-opacity':0.9}});
+      map.addLayer({id:'wev-weave-dot',type:'circle',source:'wev-weave-src',paint:{'circle-color':'#eef0ff','circle-radius':2.4,'circle-opacity':0.9}});
     }
-  }catch(e){}
+  }catch(e){console.warn('[wev] weave',e);}
 }
 function wevZoomUI(){
-  let z=15;try{const g=map.getZoom();if(typeof g==='number')z=g;}catch(e){}
+  let z=15;try{const g=map.getZoom();if(typeof g==='number'&&isFinite(g))z=g;}catch(e){}
   const chips=document.getElementById('wev-chips');if(chips)chips.classList.toggle('show',z<6.8);
   const wb=document.getElementById('wbal');if(wb)wb.classList.toggle('show',z<3.6);
+  const tip=document.getElementById('panel-tip');if(tip)tip.style.display=(z<3.6?'none':'');
   if(z>=3.6){const wp=document.getElementById('wbal-panel');if(wp)wp.classList.remove('show');}
 }
 (function(){
@@ -4096,6 +4133,10 @@ function wevZoomUI(){
         return;
       }
       wevFilter();
+      if(k==='news'&&wevOn.news&&!wevNewsNoted){
+        wevNewsNoted=true;
+        if(typeof showMsg==='function')showMsg('World Events \u2014 the news that shapes the world \u2014 arrive with the live source. Nothing here is ever simulated. \u2727');
+      }
       if(k==='decisions'&&wevOn.decisions&&!wevDecNoted){
         wevDecNoted=true;
         if(typeof showMsg==='function')showMsg('Decisions & Trajectories arrive with the live source \u2014 nothing here is ever simulated. \u2727');
@@ -4106,7 +4147,7 @@ function wevZoomUI(){
   const ps=document.getElementById('wev-send');if(ps)ps.addEventListener('click',wevSend);
   const wb=document.getElementById('wbal');if(wb)wb.addEventListener('click',()=>{const p=document.getElementById('wbal-panel');if(p){p.classList.toggle('show');if(p.classList.contains('show'))wevBalance();}});
   const wx=document.getElementById('wbal-x');if(wx)wx.addEventListener('click',()=>{const p=document.getElementById('wbal-panel');if(p)p.classList.remove('show');});
-  try{map.on('zoom',wevZoomUI);map.on('moveend',wevZoomUI);}catch(e){}
+  try{map.on('zoom',wevZoomUI);map.on('zoomend',wevZoomUI);map.on('moveend',wevZoomUI);map.on('load',()=>{wevAddLayers();wevWeaveRefresh();wevZoomUI();});}catch(e){}
   try{if(map.isStyleLoaded&&map.isStyleLoaded()){wevAddLayers();wevWeaveRefresh();}}catch(e){}
   wevZoomUI();
   wevBalance();
