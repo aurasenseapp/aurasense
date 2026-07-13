@@ -1600,6 +1600,10 @@ let paT=0,paFeedAt=0,paFeedColor='#a78bfa';
 let myAuraColors=[],myOfferings=[];
 let myGiven=[]; // emotional offerings given to others' auras — richness in kinds, never points
 function escT(t){return (t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+// LAW: any text that came from another senser (feed rows, offering cards, live-feed rows,
+// popups) must pass through escT() before it touches innerHTML. Colours and labels must be
+// looked up from SENSES by id, never taken from the row. This wall stands whether or not
+// the Content-Security-Policy holds.
 function relTime(ts){if(!ts)return '';const s=Math.max(1,Math.round((Date.now()-ts)/1000));if(s<60)return 'just now';const m=Math.round(s/60);if(m<60)return m+'m ago';const h=Math.round(m/60);if(h<24)return h+'h ago';return Math.round(h/24)+'d ago';}
 let myProfile={handle:'',realname:'',address:'',personality:[],mood:[],sensory:[],spiritual:[],interests:[]};
 function paPalette(){return myAuraColors.length?myAuraColors.slice(-8):['#a78bfa'];}
@@ -3272,9 +3276,9 @@ function lfRender(){
     const sc={near:' near you',home:' in your home locality',region:' in your region',nation:' in your nation',planet:''}[lfScope]||'';
     list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras'+sc+' yet. As Aurasense grows, this fills with offerings'+(lfScope==='planet'?' from around the world':' from around you')+'.</div>';return;}
   list.innerHTML=rows.map(r=>{const i=lfRows.indexOf(r),sym=SENSE_SYMBOLS[r.sid]||'',ago=Math.max(1,Math.round((Date.now()-r.t)/1000)),agoTxt=ago<60?ago+'s ago':Math.round(ago/60)+'m ago';
-    return '<div class="lf-row" data-i="'+i+'"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+r.label+'</b> — '+r.intent+'</div>'+(r.exp?'<div class="lf-exp">✧ carries lived experience — offered humbly</div>':'')+'<div class="lf-meta">\ud83d\udccd '+r.street+', '+r.city+' · <span class="h" data-h="'+i+'">'+r.handle+'</span> · '+agoTxt+'</div><div class="lf-icons">'
+    return '<div class="lf-row" data-i="'+i+'"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+escT(r.label)+'</b> — '+escT(r.intent)+'</div>'+(r.exp?'<div class="lf-exp">✧ carries lived experience — offered humbly</div>':'')+'<div class="lf-meta">\ud83d\udccd '+escT(r.street)+', '+escT(r.city)+' · <span class="h" data-h="'+i+'">'+escT(r.handle)+'</span> · '+agoTxt+'</div><div class="lf-icons">'
     +'<span class="lf-ic" data-act="absorb" data-i="'+i+'">\u25ce<span class="lic-lbl">Absorb</span><span class="lic-tip">Draw this aura\u2019s light into yours</span></span>'
-    +'<span class="lf-ic" data-act="offer" data-i="'+i+'"'+(r.given?' data-on="1"':'')+'>'+LF_HAND+'<span class="lic-lbl">'+(r.given?'Offered':'Offer')+'</span><span class="lic-tip">'+(r.given?('You offered '+r.given):'Offer something to this aura')+'</span></span>'
+    +'<span class="lf-ic" data-act="offer" data-i="'+i+'"'+(r.given?' data-on="1"':'')+'>'+LF_HAND+'<span class="lic-lbl">'+(r.given?'Offered':'Offer')+'</span><span class="lic-tip">'+(r.given?('You offered '+escT(r.given)):'Offer something to this aura')+'</span></span>'
     +'<span class="lf-ic" data-act="visit" data-i="'+i+'"><svg viewBox="0 0 24 24" class="lfi"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg><span class="lic-lbl">Visit</span><span class="lic-tip">Visit this aura on the map</span></span>'
     +'<span class="lf-ic" data-act="comment" data-i="'+i+'"><svg viewBox="0 0 24 24" class="lfi"><path d="M8 16a6 6 0 1 1 8-5.6c0 2.4-1.7 3.4-3.2 4.3"/><circle cx="12" cy="19.4" r="1.2"/></svg><span class="lic-lbl">Question</span><span class="lic-tip">Ask a question of this aura</span></span>'
     +'<span class="lf-ic" data-act="bond" data-i="'+i+'"><svg viewBox="0 0 40 24" class="lfi lfi-w"><circle cx="11" cy="12" r="7"/><circle cx="29" cy="12" r="7"/></svg><span class="lic-lbl">Aurabond</span><span class="lic-tip">Begin an aurabond</span></span>'
@@ -4218,11 +4222,17 @@ function wevZoomUI(){
 const gate={on:false,db:null,sid:null};
 function gateSid(){try{let s=localStorage.getItem('aurasense_sid');if(!s){s=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():('s-'+Date.now()+'-'+Math.random().toString(36).slice(2,10));localStorage.setItem('aurasense_sid',s);}return s;}catch(e){return 's-'+Date.now();}}
 function gateRow(o){return {sense:o.sense,text:(o.priv?null:(o.text||'').slice(0,500)),priv:!!o.priv,lat:o.lat,lng:o.lng,place:o.place?String(o.place).slice(0,200):null,scale:o.scale||'street',session_id:gate.sid||gateSid()};}
-function gateQueue(o){if(!GATE_CONFIGURED)return;try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');q.push(gateRow(o));while(q.length>40)q.shift();localStorage.setItem('aurasense_gate_q',JSON.stringify(q));}catch(e){}}
+function gateQueue(o){if(!GATE_CONFIGURED)return;try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');q.push(gateRow(o));while(q.length>20)q.shift();localStorage.setItem('aurasense_gate_q',JSON.stringify(q));}catch(e){}}
+function gateTooFast(e){const m=String((e&&(e.message||e.msg||e))||'');return m.indexOf('Too many')>=0;}
+function gateRest(){try{if(typeof showMsg==='function')showMsg('That is a great many offerings very quickly \u2014 rest a moment, and offer again.');}catch(e){}}
 async function gateSaveOffering(o){
   if(!gate.on){gateQueue(o);return;}
-  try{const r=await gate.db.from('offerings').insert(gateRow(o));if(r&&r.error){console.warn('[gate] save',r.error.message||r.error);gateQueue(o);}}
-  catch(e){console.warn('[gate] save',e);gateQueue(o);}
+  try{const r=await gate.db.from('offerings').insert(gateRow(o));
+    if(r&&r.error){
+      if(gateTooFast(r.error)){console.warn('[gate] flood guard');gateRest();return;}   // refused, not lost at sea \u2014 never queue a retry storm
+      console.warn('[gate] save',r.error.message||r.error);gateQueue(o);
+    }}
+  catch(e){if(gateTooFast(e)){console.warn('[gate] flood guard');gateRest();return;}console.warn('[gate] save',e);gateQueue(o);}
 }
 async function gateFlushPending(){
   try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');if(!q.length)return;
@@ -4232,25 +4242,41 @@ async function gateFlushPending(){
 }
 async function gateLoadOfferings(){
   try{
-    const r=await gate.db.from('offerings').select('sense,text,priv,lat,lng,place,scale,session_id,created_at').order('created_at',{ascending:false}).limit(200);
-    if(!r||r.error||!r.data){if(r&&r.error)console.warn('[gate] load',r.error.message||r.error);return;}
-    const rows=r.data.slice().reverse();
+    // MINE \u2014 through a door only this device can open: it takes the random id my phone
+    // holds and gives back only rows carrying it. That id is published nowhere, so nobody
+    // can knock on another senser's door.
+    let mineRows=[];
+    try{const m=await gate.db.rpc('my_offerings',{p_session:gate.sid});if(m&&!m.error&&Array.isArray(m.data))mineRows=m.data;}catch(e){console.warn('[gate] mine',e);}
+    const mineIds={};mineRows.forEach(r=>{if(r&&r.id)mineIds[r.id]=1;});
+
+    // EVERYONE'S \u2014 through a window with no session id behind it at all. Every aura may be
+    // beheld; whose it is cannot be. The columns are named on purpose: select('*') is denied
+    // by the database now, and that denial IS the protection working.
+    const r=await gate.db.from('offerings').select('id,created_at,sense,text,priv,lat,lng,place,scale').order('created_at',{ascending:false}).limit(200);
+    if(r&&r.error)console.warn('[gate] load',r.error.message||r.error);
+    const pub=(r&&Array.isArray(r.data))?r.data.slice().reverse():[];
+
     let own=0,other=0;
-    rows.forEach(row=>{
+    mineRows.slice().reverse().forEach(row=>{
       const s=SENSES.find(x=>x.id===row.sense);if(!s)return;
       if(typeof row.lat!=='number'||typeof row.lng!=='number')return;
       const born=Date.parse(row.created_at)||Date.now();
-      const mine=(row.session_id&&row.session_id===gate.sid);
-      if(auraPoints.length<60||mine)auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:born,intensity:1,phase:Math.random()*Math.PI*2,priv:!!row.priv,photo:null});
-      if(mine){
-        myAuraColors.push(s.color);
-        myOfferings.push({photo:null,sense:row.sense,label:s.label,color:s.color,text:row.text||'',time:relTime(born),born:born,place:row.place||null,lat:row.lat,lng:row.lng});
-        own++;
-      } else other++;
+      auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:born,intensity:1,phase:Math.random()*Math.PI*2,priv:!!row.priv,photo:null});
+      myAuraColors.push(s.color);
+      myOfferings.push({photo:null,sense:row.sense,label:s.label,color:s.color,text:row.text||'',time:relTime(born),born:born,place:row.place||null,lat:row.lat,lng:row.lng});
+      own++;
+    });
+    pub.forEach(row=>{
+      if(row.id&&mineIds[row.id])return;                       // already mine \u2014 never counted twice
+      const s=SENSES.find(x=>x.id===row.sense);if(!s)return;
+      if(typeof row.lat!=='number'||typeof row.lng!=='number')return;
+      const born=Date.parse(row.created_at)||Date.now();
+      if(auraPoints.length<60)auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:born,intensity:1,phase:Math.random()*Math.PI*2,priv:!!row.priv,photo:null});
+      other++;
     });
     myOfferings.sort((a,b)=>(b.born||0)-(a.born||0));while(myOfferings.length>50)myOfferings.pop();
-    rows.slice(-12).forEach(row=>{
-      if(row.session_id&&row.session_id===gate.sid)return;
+    pub.slice(-12).forEach(row=>{
+      if(row.id&&mineIds[row.id])return;
       const s=SENSES.find(x=>x.id===row.sense);if(!s)return;
       const born=Date.parse(row.created_at)||Date.now();
       try{addFeed(row.priv?'(a memory, kept private)':(row.text||''),row.sense,relTime(born),false,row.lat,row.lng,row.place||null);}catch(e){}
@@ -4258,7 +4284,7 @@ async function gateLoadOfferings(){
     if(own){myShareCount=Math.max(myShareCount,own);shareCount=Math.max(shareCount,own);}
     try{if(typeof updateMyOrb==='function')updateMyOrb();}catch(e){}
     try{if(typeof wevBalance==='function')wevBalance();}catch(e){}
-    console.log('[gate] offerings returned — yours: '+own+' · others: '+other);
+    console.log('[gate] offerings returned \u2014 yours: '+own+' \u00b7 others: '+other);
   }catch(e){console.warn('[gate] load',e);}
 }
 (function gateInit(){
