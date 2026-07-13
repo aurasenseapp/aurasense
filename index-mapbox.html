@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- © 2026 Karl · Aurasense™ · All rights reserved. (Add full legal name before launch — see Handoff v4 §8.) -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1572,6 +1573,10 @@ const LEVEL_NAMES=['Aurasenser','Sensing','Awakening','Resonant','Radiant','Lumi
 const ORB_IDS=['orb0','orb1','orb2','orb3','orb4'];
 let selSense=null,auraLevel=0,shareCount=0,myShareCount=0;
 let auraPoints=[],ripples=[];
+// ---- The Gate (Supabase) — keys. Resting until pasted: empty = app behaves exactly as before. See GATE-SETUP.md. ----
+const GATE_URL='';
+const GATE_ANON_KEY='';
+const GATE_CONFIGURED=!!(GATE_URL&&GATE_ANON_KEY);
 
 mapboxgl.accessToken='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
 const map=new mapboxgl.Map({container:'map',style:'mapbox://styles/aurasense/cmqjxke2e00h401soguspgmck',center:[-0.128,51.508],zoom:15,projection:'globe'});
@@ -1694,6 +1699,8 @@ let T=0;
     const r=(45+p.intensity*35)*breath*life*Math.pow(2,(map.getZoom()-14)*0.7);
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
     const swell=(breath-0.52)/0.60;
+    // From the street the field is intimate; seen from the town it turns to mist — mid and inner bands thin toward the outer fog.
+    const townness=Math.max(0,Math.min(1,(13-map.getZoom())/3));
     // a wide misty halo just beyond the edge, glowing broadly in the sense colour — misty and mysterious
     const halo=ctx.createRadialGradient(x,y,r*0.6,x,y,r*1.95);
     halo.addColorStop(0,hexA(col,0));
@@ -1701,15 +1708,18 @@ let T=0;
     halo.addColorStop(0.7,hexA(col,(0.06+0.03*swell)*life));
     halo.addColorStop(1,hexA(col,0));
     ctx.fillStyle=halo;ctx.beginPath();ctx.arc(x,y,r*1.95,0,Math.PI*2);ctx.fill();
-    glow.addColorStop(0,    hexA(col,(0.95+0.05*swell)*life));
-    glow.addColorStop(0.35, hexA(col,(0.55+0.10*swell)*life));
+    glow.addColorStop(0,    hexA(col,(0.95+0.05*swell)*life*(1-0.55*townness)));
+    glow.addColorStop(0.35, hexA(col,(0.55+0.10*swell)*life*(1-0.62*townness)));
     glow.addColorStop(1,    hexA(col,0));
     ctx.fillStyle=glow;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
     const cr=11*breath*life;
+    // The central core carries a fine, magical shimmer — two incommensurate sines, gentle, never eclipsing the breath.
+    const shimHF=0.82+0.18*Math.sin(T*8.1+i*1.7)*Math.sin(T*12.9+i*0.6);
     const core=ctx.createRadialGradient(x,y,0,x,y,cr);
-    core.addColorStop(0,hexA('#ffffff',0.9*life));
+    core.addColorStop(0,hexA('#ffffff',0.9*life*shimHF));
     core.addColorStop(1,hexA(col,0));
     ctx.fillStyle=core;ctx.beginPath();ctx.arc(x,y,cr,0,Math.PI*2);ctx.fill();
+    if(townness>0.25){const glint=ctx.createRadialGradient(x,y,0,x,y,cr*1.7);glint.addColorStop(0,'rgba(255,255,255,'+(0.22*life*townness*shimHF)+')');glint.addColorStop(1,hexA(col,0));ctx.fillStyle=glint;ctx.beginPath();ctx.arc(x,y,cr*1.7,0,Math.PI*2);ctx.fill();}
     // living motion — etheric throb, emotional swirl, mental ripple, spiritual edge — colour-matched, no rotation
     if(!p._motion)p._motion=buildMotion();
     const m=p._motion;
@@ -1961,6 +1971,7 @@ function addFeed(text,sense,time,glow,lat,lng,place){
  {lat:51.504,lng:-0.133,sense:'atmosphere',text:'A calm I have never felt anywhere before.',time:'1h ago'},
  {lat:51.512,lng:-0.127,sense:'anomaly',text:'Three lights in formation. Not aircraft. Others saw it.',time:'2h ago'},
 ].forEach(s=>{
+  if(GATE_CONFIGURED)return; // With the Gate open, only true offerings glow — the illustrative seeds step aside.
   auraPoints.push({...s,born:Date.now()-Math.random()*8000,intensity:.5+Math.random()*.4,phase:Math.random()*Math.PI*2});
   addFeed(s.text,s.sense,s.time,false,s.lat,s.lng);
 });
@@ -2031,6 +2042,21 @@ document.querySelectorAll('.tab-mi[data-i]').forEach(mi=>{ mi.onclick=()=>goToLe
   document.addEventListener('click',(e)=>{ if(!e.target.closest('.tab-group'))closeTabMenus(); });
 })();
 
+// ---- Framing law: never fitBounds a returned bbox (it oscillates and ignores maxZoom on big areas). ----
+// Fly to the feature's own centre at a zoom derived from its bbox span (log2), clamped per kind. Every number below is tunable.
+const ZOOM_CLAMP={place:[10.6,13.6,0.6],locality:[11.4,14.2,0.7],district:[8.6,11.5,0.5],postcode:[13.5,16,0.8],neighborhood:[13,16,0.8],region:[6.6,9.6,0.45],country:[2.55,6.2,0.45]};
+function zoomForFeature(f,kind){
+  const c=ZOOM_CLAMP[kind]||[8,14,0.5];
+  if(!f||!f.bbox)return (c[0]+c[1])/2;
+  let sw=Math.abs(f.bbox[2]-f.bbox[0]);if(sw>180)sw=360-sw;
+  const span=Math.max(0.0001,Math.max(sw,Math.abs(f.bbox[3]-f.bbox[1])*1.4));
+  return Math.max(c[0],Math.min(c[1],Math.log2(360/span)+c[2]));
+}
+function flyToPlaceFeature(f,kind,dur){
+  const z=zoomForFeature(f,kind);
+  const mob=window.innerWidth<=600;
+  flyProgrammatic({center:f.center,zoom:z,duration:dur||2000,offset:mob?[0,-24]:[0,-30]});
+}
 async function contextualZoom(level,aLng,aLat){
   if(aLng==null||aLat==null){const c=map.getCenter();aLng=c.lng;aLat=c.lat;}
   if(level===0){
@@ -2038,29 +2064,22 @@ async function contextualZoom(level,aLng,aLat){
     return;
   }
   const typeFor={1:'place',2:'region',3:'country'}[level];
-  const z={1:12,2:8.5,3:5.7}[level];
+  const zFall={1:12,2:8.5,3:5.7}[level];
   const inUK=(aLng>-8.7&&aLng<2&&aLat>49.8&&aLat<61);
-  if(inUK&&level===2){
-    flyProgrammatic({center:[aLng,aLat],zoom:9.3,duration:2000,offset:[0,-20]});return;
-  }
   if(inUK&&level===3){
-    flyToBounds([[-8.2,49.9],[1.8,59.5]],6);return;
+    // The UK nation view: a fixed, deliberate frame — deterministic, so it can be judged once and tuned once.
+    flyProgrammatic({center:[-3.1,54.6],zoom:5.15,duration:2200,offset:[0,-20]});return;
   }
   try{
     const url=`https://api.mapbox.com/geocoding/v5/mapbox.places/${aLng},${aLat}.json`+
               `?access_token=${MAPBOX_TOKEN}&types=${typeFor}&limit=1`;
     const r=await fetch(url);const d=await r.json();
     if(d&&d.features&&d.features.length&&d.features[0].center){
-      if(level===1&&d.features[0].bbox){
-        flyToBounds([[d.features[0].bbox[0],d.features[0].bbox[1]],
-                     [d.features[0].bbox[2],d.features[0].bbox[3]]],14.5);
-      }else{
-        flyProgrammatic({center:d.features[0].center,zoom:z,duration:2000,offset:[0,-30]});
-      }
+      flyToPlaceFeature(d.features[0],typeFor,2000);
       return;
     }
   }catch(e){}
-  flyProgrammatic({center:[aLng,aLat],zoom:z,duration:2000,offset:[0,-30]});
+  flyProgrammatic({center:[aLng,aLat],zoom:zFall,duration:2000,offset:[0,-30]});
 }
 let searchMarker=null;
 let lastSearchPoint=null;
@@ -2279,14 +2298,31 @@ async function lookupPlace(lat,lng){
   }catch(e){}
   return null;
 }
+// A place-name at the scale the offering was given from — town, region, nation, or the whole living Earth.
+async function scalePlaceLabel(lat,lng,scale){
+  if(scale==='world')return 'the whole living Earth';
+  const tp={town:'place',region:'region,district',nation:'country'}[scale]||'place';
+  try{
+    const r=await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}&types=${tp}&limit=1`);
+    const d=await r.json();
+    if(d&&d.features&&d.features.length){
+      const n=d.features[0].text||d.features[0].place_name.split(',')[0];
+      return n+(scale==='town'?' — offered to the town’s aura':scale==='region'?' — offered across the region':' — offered to the nation’s aura');
+    }
+  }catch(e){}
+  return scale==='town'?'this town — offered to its aura':scale==='region'?'this region — offered across it':'this nation — offered to its aura';
+}
 function submit(lat,lng,text){
   if(!selSense){showMsg('Choose a sense to offer first ✧');return;}
   const pp=(typeof pendingPhoto!=='undefined')?pendingPhoto:null;
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);if(!s)return;
   // Offering from a height: the aura lands where you are looking, and the map descends to meet it.
+  // The scale it was given from travels with it — a town offering belongs to the town, honestly labelled.
   let _oz=15;try{_oz=map.getZoom();}catch(e){}
+  let _gScale='street';
   if(_oz<13){
+    _gScale=(_oz>=10.5)?'town':(_oz>=7)?'region':(_oz>=3.6)?'nation':'world';
     try{const _c=map.getCenter();lat=_c.lat;lng=_c.lng;}catch(e){}
     setActiveTab(0);
     flyProgrammatic({center:[lng,lat],zoom:15,duration:2800});
@@ -2298,6 +2334,8 @@ function submit(lat,lng,text){
   ripples.push({lat,lng,color:s.color,age:0,strong:true});
   setTimeout(()=>{ripples.push({lat,lng,color:s.color,age:0,strong:true});},600);
   setTimeout(()=>{ripples.push({lat,lng,color:s.color,age:0,strong:true});},1200);
+  // The search-marker label walks its states for any offering landed beside it: awaiting → just offered → (an hour on) offered.
+  try{if(lastSearchPoint&&lastSearchLabel&&haversine(lastSearchPoint[1],lastSearchPoint[0],lat,lng)<120){lastSearchLabel.textContent='✨ Aura just offered at '+lastSearchName;const _lr=lastSearchLabel,_nr=lastSearchName;setTimeout(()=>{try{_lr.textContent='✨ Aura offered at '+_nr;}catch(e){}},3600000);}}catch(e){}
   addFeed(pubText,sid,'just now',true,lat,lng);
   // This offering becomes a thread in the senser's own aura.
   myAuraColors.push(s.color);
@@ -2311,7 +2349,8 @@ function submit(lat,lng,text){
   lastViews[0]={lat,lng,zoom:sz};
   // The offering also flows into the personal aura — a spark rises to the My Aura orb.
   feedMyAura(lat,lng,s.color);
-  lookupPlace(lat,lng).then(place=>{
+  const _finishPlace=(place)=>{
+    if(typeof gateSaveOffering==='function')gateSaveOffering({sense:sid,text:text,priv:isPriv,lat:lat,lng:lng,place:place||null,scale:_gScale,born:Date.now()});
     if(!place)return;
     if(myOfferings[0])myOfferings[0].place=place;
     const first=document.getElementById('feed').firstChild;
@@ -2320,9 +2359,18 @@ function submit(lat,lng,text){
       const meta=first.querySelector('.fi-meta');
       first.insertBefore(el,meta);
     }
-  });
-  // Leave the shared sense showing in the arrowed box, with the full house-number address.
-  reverseAddress(lat,lng).then(addr=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,addr,lat,lng);});
+  };
+  if(_gScale==='street'){
+    lookupPlace(lat,lng).then(_finishPlace);
+    // Leave the shared sense showing in the arrowed box, with the full house-number address.
+    reverseAddress(lat,lng).then(addr=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,addr,lat,lng);});
+  } else {
+    // Given from a height, the offering belongs to the whole place being beheld — its label says so, honestly.
+    scalePlaceLabel(lat,lng,_gScale).then(lbl=>{
+      _finishPlace(lbl);
+      if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,lbl,lat,lng);
+    });
+  }
   playSound(sid);
   shareCount++;myShareCount++;
   triggerWave(s.color);
@@ -2440,9 +2488,8 @@ document.getElementById('sg').onclick=async()=>{
       if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
-        const mz={place:16,locality:16,district:14,postcode:16,
-                  neighborhood:16.5,region:11,country:9}[t]||15.5;
-        flyToBounds([[f.bbox[0],f.bbox[1]],[f.bbox[2],f.bbox[3]]],mz);
+        // Framing law: fly to the feature's centre at a span-derived, clamped zoom — never fitBounds a returned bbox.
+        flyToPlaceFeature(f,t,2000);
       }else{
         const z=(t==='address')?17.5:(t==='poi')?16.5:15;
         const mob=window.innerWidth<=600;
@@ -2924,6 +2971,7 @@ function openMyAuraPage(){
       return '<div class="ma-offering" style="border-left-color:'+o.color+'"><div class="s" style="color:'+o.color+'">'+sym+' '+o.label+'</div><div class="t">"'+esc(o.text)+'"</div>'+place+'<div class="ma-oact">'
         +'<button class="ma-act ma-ic" data-act="see" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3" class="fill"/></svg><span class="ma-lbl">Visit</span><span class="ma-tip">Visit this aura on the map</span></button>'
         +'<button class="ma-act ma-ic" data-act="share" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><circle cx="18" cy="5.5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="18.5" r="2.3"/><path d="M8.1 10.9 15.9 6.6 M8.1 13.1 15.9 17.4"/></svg><span class="ma-lbl">Share</span><span class="ma-tip">Share this aura</span></button>'
+        +'<button class="ma-act ma-ic" data-act="weave" data-i="'+idx+'"><svg viewBox="0 0 24 24" class="mai"><circle cx="8" cy="12" r="3.4"/><circle cx="16" cy="12" r="3.4"/></svg><span class="ma-lbl">∞ Weave</span><span class="ma-tip">Begin a rhyme from this offering in your Synchronicity Weave</span></button>'
         +'</div></div>';
     }).join('');
   } else off.innerHTML='<div class="ma-empty">Your offered aurasenses gather here — newest first. Each one becomes a layer of light in your aura.</div>';
@@ -2968,6 +3016,16 @@ function maOfferingAction(act,i,btn){
   else if(act==='ask'){if(tip)tip.textContent='Channel opens as Aurasense grows';}
   else if(act==='bond'){myProfile.auraBoost=(myProfile.auraBoost||0)+1;myAuraColors.push(o.color);paFeedAt=performance.now();paFeedColor=o.color;if(btn)btn.classList.add('bonded');if(tip)tip.textContent='✓ Bonded';}
   else if(act==='share'){openPostcard({title:o.label,color:o.color,words:o.text,place:'📍 '+(o.place||'somewhere on the living map'),symbolSVG:(SENSE_SYMBOLS[o.sense]||'').replace('width="22" height="22"','width="460" height="460"'),photo:o.photo||null});}
+  else if(act==='weave'){
+    // §6.2 — own-thread Weave from an offering. Cross-user like-aura bonding opens at the Gate.
+    closeMyAuraPage();openSyncPage();
+    const _w=ALPHA_WORDS.find(x=>x.w==='Offering');swSyms=_w?[_w.w]:[];swStripSync();
+    const _a=document.getElementById('sw-a');
+    if(_a)_a.value=('My '+o.label+' offering'+(o.place?(' at '+String(o.place).split(' — ')[0].split(',')[0]):'')+(o.text?(' — “'+String(o.text).slice(0,60)+'”'):'')).slice(0,120);
+    const _b=document.getElementById('sw-b');if(_b){_b.value='';_b.placeholder='The echo — where life answered this offering back…';try{_b.focus();}catch(e){}}
+    try{document.getElementById('sw-compose').scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}
+    showMsg('Your offering waits as the first moment — add its echo when life answers ✧',4600);
+  }
 }
 function maStopStream(){if(maStream){maStream.getTracks().forEach(t=>t.stop());maStream=null;}}
 const maCanvas=document.getElementById('ma-canvas');
@@ -4053,7 +4111,7 @@ function wevOpenPanel(i){
   wevOpenId=i;
   const p=document.getElementById('wev-panel');if(!p)return;
   const t=document.getElementById('wev-t');if(t)t.textContent=ev.title;
-  const k=document.getElementById('wev-k');if(k){k.textContent=(WEV_FAMS[ev.fam]||'')+' \u00b7 '+(WA_LABEL[ev.type]||ev.type);k.style.color=WA_HEX[ev.type]||'#c4b5fd';}
+  const k=document.getElementById('wev-k');if(k){const _aw=ALPHA_WORDS.find(x=>x.w===({suffering:'Compassion',need:'Hope',disaster:'Renewal',joy:'Joy',sport:'Together'}[ev.type]||'Presence'));k.innerHTML=(_aw?alphaGlyph(_aw,18)+' ':'')+escT((WEV_FAMS[ev.fam]||'')+' \u00b7 '+(WA_LABEL[ev.type]||ev.type));k.style.color=WA_HEX[ev.type]||'#c4b5fd';k.style.display='inline-flex';k.style.alignItems='center';k.style.gap='6px';}
   const n=document.getElementById('wev-n');if(n)n.textContent=ev.note;
   const d=document.getElementById('wev-d');if(d)d.textContent=ev.doorway||'';
   const b=document.getElementById('wev-send');if(b)b.textContent=(WEV_ACT[ev.type]||WEV_ACT.suffering).btn;
@@ -4153,6 +4211,66 @@ function wevZoomUI(){
   wevBalance();
   const logoEl=document.getElementById('logo');
   if(logoEl)logoEl.addEventListener('click',()=>{if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor='#c4b5fd';}showMsg('The living aura of humanity, sensed together');});
+})();
+
+// ---- The Gate (Supabase) — phase 1: every true offering persisted, and returned to the living map ----
+// One true offering is worth more than a thousand simulated ones — nothing here fakes success, nothing is lost silently.
+const gate={on:false,db:null,sid:null};
+function gateSid(){try{let s=localStorage.getItem('aurasense_sid');if(!s){s=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():('s-'+Date.now()+'-'+Math.random().toString(36).slice(2,10));localStorage.setItem('aurasense_sid',s);}return s;}catch(e){return 's-'+Date.now();}}
+function gateRow(o){return {sense:o.sense,text:(o.priv?null:(o.text||'').slice(0,500)),priv:!!o.priv,lat:o.lat,lng:o.lng,place:o.place?String(o.place).slice(0,200):null,scale:o.scale||'street',session_id:gate.sid||gateSid()};}
+function gateQueue(o){if(!GATE_CONFIGURED)return;try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');q.push(gateRow(o));while(q.length>40)q.shift();localStorage.setItem('aurasense_gate_q',JSON.stringify(q));}catch(e){}}
+async function gateSaveOffering(o){
+  if(!gate.on){gateQueue(o);return;}
+  try{const r=await gate.db.from('offerings').insert(gateRow(o));if(r&&r.error){console.warn('[gate] save',r.error.message||r.error);gateQueue(o);}}
+  catch(e){console.warn('[gate] save',e);gateQueue(o);}
+}
+async function gateFlushPending(){
+  try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');if(!q.length)return;
+    const r=await gate.db.from('offerings').insert(q);
+    if(!r||!r.error){localStorage.removeItem('aurasense_gate_q');console.log('[gate] '+q.length+' held offering(s) delivered');}
+  }catch(e){}
+}
+async function gateLoadOfferings(){
+  try{
+    const r=await gate.db.from('offerings').select('sense,text,priv,lat,lng,place,scale,session_id,created_at').order('created_at',{ascending:false}).limit(200);
+    if(!r||r.error||!r.data){if(r&&r.error)console.warn('[gate] load',r.error.message||r.error);return;}
+    const rows=r.data.slice().reverse();
+    let own=0,other=0;
+    rows.forEach(row=>{
+      const s=SENSES.find(x=>x.id===row.sense);if(!s)return;
+      if(typeof row.lat!=='number'||typeof row.lng!=='number')return;
+      const born=Date.parse(row.created_at)||Date.now();
+      const mine=(row.session_id&&row.session_id===gate.sid);
+      if(auraPoints.length<60||mine)auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:born,intensity:1,phase:Math.random()*Math.PI*2,priv:!!row.priv,photo:null});
+      if(mine){
+        myAuraColors.push(s.color);
+        myOfferings.push({photo:null,sense:row.sense,label:s.label,color:s.color,text:row.text||'',time:relTime(born),born:born,place:row.place||null,lat:row.lat,lng:row.lng});
+        own++;
+      } else other++;
+    });
+    myOfferings.sort((a,b)=>(b.born||0)-(a.born||0));while(myOfferings.length>50)myOfferings.pop();
+    rows.slice(-12).forEach(row=>{
+      if(row.session_id&&row.session_id===gate.sid)return;
+      const s=SENSES.find(x=>x.id===row.sense);if(!s)return;
+      const born=Date.parse(row.created_at)||Date.now();
+      try{addFeed(row.priv?'(a memory, kept private)':(row.text||''),row.sense,relTime(born),false,row.lat,row.lng,row.place||null);}catch(e){}
+    });
+    if(own){myShareCount=Math.max(myShareCount,own);shareCount=Math.max(shareCount,own);}
+    try{if(typeof updateMyOrb==='function')updateMyOrb();}catch(e){}
+    try{if(typeof wevBalance==='function')wevBalance();}catch(e){}
+    console.log('[gate] offerings returned — yours: '+own+' · others: '+other);
+  }catch(e){console.warn('[gate] load',e);}
+}
+(function gateInit(){
+  if(!GATE_CONFIGURED){console.log('[gate] resting — paste GATE_URL and GATE_ANON_KEY (see GATE-SETUP.md) and the Gate opens');return;}
+  if(typeof window.supabase==='undefined'||!window.supabase.createClient){console.warn('[gate] supabase-js not loaded');return;}
+  try{
+    gate.db=window.supabase.createClient(GATE_URL,GATE_ANON_KEY);
+    gate.sid=gateSid();gate.on=true;
+    console.log('[gate] open');
+    gateFlushPending();
+    gateLoadOfferings();
+  }catch(e){console.warn('[gate] init',e);}
 })();
 
 });
