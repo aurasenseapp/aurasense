@@ -88,8 +88,8 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #si:focus{border-color:rgba(167,139,250,.85);box-shadow:0 0 0 2px rgba(167,139,250,.25),0 0 24px rgba(124,92,255,.5)}
 #si::placeholder{color:#5a5270}
 #si:focus{border-color:rgba(167,139,250,.4)}
-#sg{flex-shrink:0;min-width:44px;padding:10px 14px;border-radius:10px;border:0.5px solid rgba(167,139,250,.3);background:rgba(167,139,250,.1);color:#c4b5fd;font-size:11px;cursor:pointer;font-family:inherit;transition:all .2s}
-#sg:hover{background:rgba(167,139,250,.2)}
+#sg{flex-shrink:0;min-width:54px;padding:10px 17px;border-radius:10px;border:1px solid rgba(196,181,253,.75);background:linear-gradient(135deg,rgba(167,139,250,.42),rgba(255,159,192,.30));color:#f5f1ff;font-size:12.5px;letter-spacing:.05em;cursor:pointer;font-family:inherit;box-shadow:0 0 14px rgba(167,139,250,.30);transition:all .2s}
+#sg:hover{background:linear-gradient(135deg,rgba(167,139,250,.62),rgba(255,159,192,.46));box-shadow:0 0 22px rgba(196,181,253,.5);transform:translateY(-1px)}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
 #my-aura{display:none!important}
 #my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
@@ -1022,7 +1022,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>World</button>
     </div>
     <div id="search-box">
-      <input id="si" maxlength="120" placeholder="Search by address"/>
+      <input id="si" maxlength="120" placeholder="Find a place to sense…"/>
       <button id="sg">Go</button>
     </div>
   </div>
@@ -1574,8 +1574,8 @@ const ORB_IDS=['orb0','orb1','orb2','orb3','orb4'];
 let selSense=null,auraLevel=0,shareCount=0,myShareCount=0;
 let auraPoints=[],ripples=[];
 // ---- The Gate (Supabase) — keys. Resting until pasted: empty = app behaves exactly as before. See GATE-SETUP.md. ----
-const GATE_URL='https://iwuqcmhlbjyjhqexbeyy.supabase.co';
-const GATE_ANON_KEY='sb_publishable_trDTjqSBIqdwSyd2EVtJHw_JD2exVmr';
+const GATE_URL='';
+const GATE_ANON_KEY='';
 const GATE_CONFIGURED=!!(GATE_URL&&GATE_ANON_KEY);
 
 mapboxgl.accessToken='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
@@ -3275,8 +3275,8 @@ function lfRender(){
     if(lfScope==='home'){list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras in '+escT(uc)+' yet. Be the first. As Aurasense grows, this fills with offerings from around you.</div>';return;}
     const sc={near:' near you',home:' in your home locality',region:' in your region',nation:' in your nation',planet:''}[lfScope]||'';
     list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras'+sc+' yet. As Aurasense grows, this fills with offerings'+(lfScope==='planet'?' from around the world':' from around you')+'.</div>';return;}
-  list.innerHTML=rows.map(r=>{const i=lfRows.indexOf(r),sym=SENSE_SYMBOLS[r.sid]||'',ago=Math.max(1,Math.round((Date.now()-r.t)/1000)),agoTxt=ago<60?ago+'s ago':Math.round(ago/60)+'m ago';
-    return '<div class="lf-row" data-i="'+i+'"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+escT(r.label)+'</b> — '+escT(r.intent)+'</div>'+(r.exp?'<div class="lf-exp">✧ carries lived experience — offered humbly</div>':'')+'<div class="lf-meta">\ud83d\udccd '+escT(r.street)+', '+escT(r.city)+' · <span class="h" data-h="'+i+'">'+escT(r.handle)+'</span> · '+agoTxt+'</div><div class="lf-icons">'
+  list.innerHTML=rows.map(r=>{const i=lfRows.indexOf(r),sym=SENSE_SYMBOLS[r.sid]||'',ago=Math.max(1,Math.round((Date.now()-r.t)/1000)),agoTxt=ago<60?ago+'s ago':Math.round(ago/60)+'m ago',loc=escT(r.street)+(r.city?(', '+escT(r.city)):''),who=r.handle?(' \u00b7 <span class="h" data-h="'+i+'">'+escT(r.handle)+'</span>'):'';
+    return '<div class="lf-row" data-i="'+i+'"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+escT(r.label)+'</b> — '+escT(r.intent)+'</div>'+(r.exp?'<div class="lf-exp">✧ carries lived experience — offered humbly</div>':'')+'<div class="lf-meta">\ud83d\udccd '+loc+who+' · '+agoTxt+'</div><div class="lf-icons">'
     +'<span class="lf-ic" data-act="absorb" data-i="'+i+'">\u25ce<span class="lic-lbl">Absorb</span><span class="lic-tip">Draw this aura\u2019s light into yours</span></span>'
     +'<span class="lf-ic" data-act="offer" data-i="'+i+'"'+(r.given?' data-on="1"':'')+'>'+LF_HAND+'<span class="lic-lbl">'+(r.given?'Offered':'Offer')+'</span><span class="lic-tip">'+(r.given?('You offered '+escT(r.given)):'Offer something to this aura')+'</span></span>'
     +'<span class="lf-ic" data-act="visit" data-i="'+i+'"><svg viewBox="0 0 24 24" class="lfi"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg><span class="lic-lbl">Visit</span><span class="lic-tip">Visit this aura on the map</span></span>'
@@ -3286,7 +3286,7 @@ function lfRender(){
     +'</div></div></div>';
   }).join('');
   list.querySelectorAll('.lf-ic').forEach(ic=>ic.addEventListener('click',e=>{e.stopPropagation();lfAction(ic.getAttribute('data-act'),parseInt(ic.getAttribute('data-i'),10),ic);}));
-  list.querySelectorAll('.lf-meta .h').forEach(h=>h.addEventListener('click',e=>{e.stopPropagation();const r=lfRows[parseInt(h.getAttribute('data-h'),10)];if(r)openPubProfile(r.handle);}));
+  list.querySelectorAll('.lf-meta .h').forEach(h=>h.addEventListener('click',e=>{e.stopPropagation();const r=lfRows[parseInt(h.getAttribute('data-h'),10)];if(r&&r.handle)openPubProfile(r.handle);}));
   list.querySelectorAll('.lf-row').forEach(row=>row.addEventListener('click',()=>{const r=lfRows[parseInt(row.getAttribute('data-i'),10)];if(r){closeLiveFeed();if(typeof map!=='undefined'&&map.flyTo)map.flyTo({center:[r.lng,r.lat],zoom:13,duration:2800});}}));
 }
 function lfAction(act,i,ic){
@@ -3435,7 +3435,44 @@ function lfShowTip(){
     {sel:'.lf-ic[data-act="share"]',t:'Share',s:'Carry it beyond Aurasense as an Aura Postcard.'}
   ]);
 }
-function openLiveFeed(){const p=document.getElementById('livefeed-page');if(!p)return;const lh=document.getElementById('lf-handle');if(lh)lh.textContent=(myProfile&&myProfile.handle)?('✦ '+myProfile.handle):'';if(lfRows.length===0){for(let i=0;i<8;i++)lfRows.push(lfRandomRow());lfRows.sort((a,b)=>b.t-a.t);}lfRender();p.classList.add('show');setTimeout(lfShowTip,350);if(lfTimer)clearInterval(lfTimer);lfTimer=setInterval(()=>{lfRows.unshift(lfRandomRow());if(lfRows.length>16)lfRows.pop();lfRender();},11000);}
+// THE TRUTH-SWITCH. With the Gate open, the live feed carries only what was truly offered.
+// No invented handles, no invented streets, no arrival every eleven seconds from nobody.
+// An empty feed is an honest feed, and it is the truest thing on the page until it fills.
+async function lfLoadTrue(){
+  if(!GATE_CONFIGURED||!gate.on)return;
+  try{
+    const r=await gate.db.from('offerings').select('id,created_at,sense,text,priv,lat,lng,place,scale').order('created_at',{ascending:false}).limit(20);
+    if(!r||r.error||!Array.isArray(r.data)){if(r&&r.error)console.warn('[gate] feed',r.error.message||r.error);return;}
+    lfRows=r.data.map(row=>{
+      const s=SENSES.find(x=>x.id===row.sense);if(!s)return null;
+      if(typeof row.lat!=='number'||typeof row.lng!=='number')return null;
+      const pl=String(row.place||'').split(',');
+      return {sid:row.sense,label:s.label,color:s.color,
+        street:(pl[0]||'').trim()||'a place on the living map',
+        city:pl.slice(1).join(',').trim(),
+        lng:row.lng,lat:row.lat,
+        handle:'',                                             // no accounts yet \u2014 so no name is invented
+        intent:row.priv?'(a memory, kept private)':(row.text||''),
+        t:Date.parse(row.created_at)||Date.now()};
+    }).filter(Boolean);
+    lfRender();
+  }catch(e){console.warn('[gate] feed',e);}
+}
+function openLiveFeed(){
+  const p=document.getElementById('livefeed-page');if(!p)return;
+  const lh=document.getElementById('lf-handle');if(lh)lh.textContent=(myProfile&&myProfile.handle)?('\u2726 '+myProfile.handle):'';
+  if(lfTimer){clearInterval(lfTimer);lfTimer=null;}
+  if(GATE_CONFIGURED){
+    lfRows=[];lfRender();lfLoadTrue();
+    p.classList.add('show');setTimeout(lfShowTip,350);
+    lfTimer=setInterval(lfLoadTrue,45000);
+    return;
+  }
+  // Gate resting (local demo only): the illustrative feed still shows what the page becomes.
+  if(lfRows.length===0){for(let i=0;i<8;i++)lfRows.push(lfRandomRow());lfRows.sort((a,b)=>b.t-a.t);}
+  lfRender();p.classList.add('show');setTimeout(lfShowTip,350);
+  lfTimer=setInterval(()=>{lfRows.unshift(lfRandomRow());if(lfRows.length>16)lfRows.pop();lfRender();},11000);
+}
 function closeLiveFeed(){const _o=document.getElementById('pt-ov');if(_o)_o.remove();const p=document.getElementById('livefeed-page');if(p)p.classList.remove('show');if(lfTimer){clearInterval(lfTimer);lfTimer=null;}}
 const lfBtn=document.getElementById('livefeed-btn');if(lfBtn)lfBtn.addEventListener('click',openLiveFeed);
 const lfFull=document.getElementById('feed-full');if(lfFull)lfFull.addEventListener('click',openLiveFeed);
