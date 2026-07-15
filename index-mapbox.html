@@ -96,6 +96,21 @@ button,.tab{touch-action:manipulation}
 #th-glow{width:min(46vw,240px);height:min(46vw,240px);border-radius:50%;background:radial-gradient(closest-side at 46% 44%,rgba(196,181,253,.5),transparent 70%),radial-gradient(closest-side at 56% 56%,rgba(255,159,192,.34),transparent 72%),radial-gradient(closest-side at 50% 48%,rgba(255,255,255,.55),transparent 26%);filter:blur(5px);animation:thBreathe 6s ease-in-out infinite}
 @keyframes thBreathe{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.07);opacity:1}}
 @media (prefers-reduced-motion:reduce){#threshold{transition-duration:.8s}#th-glow{animation:none;opacity:.9}}
+/* THE TWO DOORS \u2014 the first choice a stranger makes: where I stand, or a place I love */
+#twodoors{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:1200;width:min(400px,92vw);background:rgba(12,10,26,.96);border:1px solid rgba(196,181,253,.5);border-radius:20px;padding:22px 20px 18px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(124,92,255,.35);text-align:center;opacity:0;transition:opacity 1.1s ease}
+#twodoors.show{opacity:1}
+#td-t{font-size:16.5px;color:#f0eaff;letter-spacing:.02em;line-height:1.5;text-shadow:0 0 18px rgba(167,139,250,.55)}
+#td-s{font-size:12px;color:#9a8fc2;margin-top:7px;line-height:1.55}
+.td-btn{display:block;width:100%;margin-top:12px;padding:13px 14px;border-radius:14px;font-size:14.5px;letter-spacing:.03em;cursor:pointer;font-family:inherit;color:#f5f1ff;border:1px solid rgba(196,181,253,.65);background:linear-gradient(135deg,rgba(167,139,250,.34),rgba(255,159,192,.22));box-shadow:0 0 16px rgba(167,139,250,.3);transition:all .25s}
+.td-btn:hover{box-shadow:0 0 26px rgba(196,181,253,.5);transform:translateY(-1px)}
+.td-btn.td-soft{background:rgba(20,16,40,.7);border-color:rgba(167,139,250,.4);box-shadow:none;font-size:13px}
+#td-skip{margin-top:12px;background:none;border:none;color:#7d74a6;font-size:11.5px;cursor:pointer;letter-spacing:.04em;font-family:inherit}
+#td-skip:hover{color:#c4b5fd}
+/* THE RIPENING \u2014 the one sacred friction: the button never blocks, its glow gathers like an inhale */
+@keyframes ripen{0%{box-shadow:0 0 0 rgba(167,139,250,0);filter:brightness(1)}100%{box-shadow:0 0 26px rgba(196,181,253,.65),0 0 9px rgba(255,255,255,.25);filter:brightness(1.16)}}
+#sbtn.ripen{animation:ripen 3s ease forwards}
+/* THE QUIET FIRST SCREEN \u2014 secondary doors rest dim (never disabled) until the first offering */
+body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #locality-btn,body.first-quiet #place-mini,body.first-quiet #wev-chips,body.first-quiet #wbal{opacity:.35;transition:opacity 1.2s ease}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
 #my-aura{display:none!important}
 #my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
@@ -599,12 +614,12 @@ button,.tab{touch-action:manipulation}
 #search-box{display:none}
 @media(min-width:601px){#search-box{display:flex}}
 @media(max-width:600px){
-  #search-box{display:flex !important;position:fixed !important;top:88px !important;left:50% !important;right:auto !important;transform:translateX(-50%) !important;width:min(350px,92vw);margin:0 !important;pointer-events:all;z-index:41;justify-content:center}
+  #search-box{display:flex !important;position:fixed !important;top:104px !important;left:50% !important;right:auto !important;transform:translateX(-50%) !important;width:min(350px,92vw);margin:0 !important;pointer-events:all;z-index:41;justify-content:center}
   #si{flex:1;width:auto;box-shadow:0 0 26px rgba(124,92,255,.55),0 0 8px rgba(196,181,253,.4);border-color:rgba(196,181,253,.7)}
   #si{flex:1;width:auto;font-size:16px;padding:13px 13px}
   #sg{font-size:12.5px}
   #place-prompt,#place-mini{display:none!important}
-  #left-stack{top:148px!important}
+  #left-stack{top:162px!important}
 }
 /* Central "place an aurasense" prompt */
 #place-prompt{position:absolute;top:34%;left:50%;transform:translate(-50%,-50%);z-index:60;width:min(420px,90%);background:rgba(12,10,26,.95);border:1px solid rgba(167,139,250,.5);border-radius:20px;padding:22px 22px 18px;box-shadow:0 0 0 4px rgba(124,92,255,.18),0 0 50px rgba(124,92,255,.5);pointer-events:all;display:none}
@@ -2331,6 +2346,8 @@ async function scalePlaceLabel(lat,lng,scale){
 }
 function submit(lat,lng,text){
   if(!selSense){showMsg('Choose a sense to offer first ✧');return;}
+  try{document.body.classList.remove('first-quiet');}catch(e){}
+  try{const _rb=document.getElementById('sbtn');if(_rb)_rb.classList.remove('ripen');}catch(e){}
   const pp=(typeof pendingPhoto!=='undefined')?pendingPhoto:null;
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);if(!s)return;
@@ -2389,6 +2406,7 @@ function submit(lat,lng,text){
     });
   }
   playSound(sid);
+  try{if(navigator.vibrate)navigator.vibrate([12,90,18]);}catch(e){}   // a heartbeat where the device allows one; silence where it doesn't
   shareCount++;myShareCount++;
   triggerWave(s.color);
   if(shareCount%4===0&&auraLevel<4){
@@ -2404,7 +2422,7 @@ function submit(lat,lng,text){
       setTimeout(()=>flyProgrammatic({center:[here.lng,here.lat],zoom:hereZoom,duration:2500}),4000);
     },6000);
   } else {
-    setTimeout(()=>showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]),500);
+    setTimeout(()=>{const _wl=witnessLine(sid,lat,lng,s.label);showMsg(_wl||MSGS[Math.floor(Math.random()*MSGS.length)]);},500);
   }
 }
 
@@ -3285,9 +3303,9 @@ function lfRender(){
       if(bb&&bi){bb.addEventListener('click',()=>lfSetHome(bi.value));bi.addEventListener('keydown',e=>{if(e.key==='Enter')lfSetHome(bi.value);});}
       return;
     }
-    if(lfScope==='home'){list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras in '+escT(uc)+' yet. Be the first. As Aurasense grows, this fills with offerings from around you.</div>';return;}
+    if(lfScope==='home'){list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">The world is still waking in '+escT(uc)+'. Yours could be its first light \u2014 offer a sense, and this page begins. As Aurasense grows, this fills with offerings from around you.</div>';return;}
     const sc={near:' near you',home:' in your home locality',region:' in your region',nation:' in your nation',planet:''}[lfScope]||'';
-    list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">No auras'+sc+' yet. As Aurasense grows, this fills with offerings'+(lfScope==='planet'?' from around the world':' from around you')+'.</div>';return;}
+    list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">The world is still waking'+sc+'. As Aurasense grows, this fills with offerings'+(lfScope==='planet'?' from around the world':' from around you')+'.</div>';return;}
   list.innerHTML=rows.map(r=>{const i=lfRows.indexOf(r),sym=SENSE_SYMBOLS[r.sid]||'',ago=Math.max(1,Math.round((Date.now()-r.t)/1000)),agoTxt=ago<60?ago+'s ago':Math.round(ago/60)+'m ago',loc=escT(r.street)+(r.city?(', '+escT(r.city)):''),who=r.handle?(' \u00b7 <span class="h" data-h="'+i+'">'+escT(r.handle)+'</span>'):'';
     return '<div class="lf-row" data-i="'+i+'"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+escT(r.label)+'</b> — '+escT(r.intent)+'</div>'+(r.exp?'<div class="lf-exp">✧ carries lived experience — offered humbly</div>':'')+'<div class="lf-meta">\ud83d\udccd '+loc+who+' · '+agoTxt+'</div><div class="lf-icons">'
     +'<span class="lf-ic" data-act="absorb" data-i="'+i+'">\u25ce<span class="lic-lbl">Absorb</span><span class="lic-tip">Draw this aura\u2019s light into yours</span></span>'
@@ -3501,7 +3519,7 @@ function obShow(){
     {sel:'.tab-myaura',t:'This is your aura — in the menu',s:'The glowing orb beside My Aura is your living aura. It grows and shifts colour with every sense you offer. Tap it any time to see your aura up close.'},
     {sel:'#register-btn',t:'Become an Aurasenser',s:'Create your aura so the senses you share become your own.'}
   ];
-  function finish(){ob.classList.remove('show');ob.innerHTML='';if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}if(typeof showMsg==='function')showMsg('The world is breathing \u2014 and it senses you here. Touch the map where you stand, or find a place you love, and offer what you feel.');}else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}}
+  function finish(){ob.classList.remove('show');ob.innerHTML='';if(typeof twoDoors==='function'&&(!myOfferings||myOfferings.length===0)){twoDoors();}else if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}if(typeof showMsg==='function')showMsg('The world is breathing \u2014 and it senses you here. Touch the map where you stand, or find a place you love, and offer what you feel.');}else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}}
   let idx=0;
   function visible(el){if(!el)return false;const r=el.getBoundingClientRect();return r.width>2&&r.height>2;}
   function draw(){
@@ -4273,6 +4291,56 @@ const gate={on:false,db:null,sid:null};
 function gateSid(){try{let s=localStorage.getItem('aurasense_sid');if(!s){s=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():('s-'+Date.now()+'-'+Math.random().toString(36).slice(2,10));localStorage.setItem('aurasense_sid',s);}return s;}catch(e){return 's-'+Date.now();}}
 function gateRow(o){return {sense:o.sense,text:(o.priv?null:(o.text||'').slice(0,500)),priv:!!o.priv,lat:o.lat,lng:o.lng,place:o.place?String(o.place).slice(0,200):null,scale:o.scale||'street',session_id:gate.sid||gateSid()};}
 function gateQueue(o){if(!GATE_CONFIGURED)return;try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');q.push(gateRow(o));while(q.length>20)q.shift();localStorage.setItem('aurasense_gate_q',JSON.stringify(q));}catch(e){}}
+// PHASE 1 WIRING \u2014 the Two Doors, the Witness Line, the ripening, the quiet first screen.
+function twoDoors(){
+  try{
+    if(document.getElementById('twodoors'))return;
+    const d=document.createElement('div');d.id='twodoors';
+    d.innerHTML='<div id="td-t">The world is breathing \u2014 and it senses you here.</div>'
+      +'<div id="td-s">Offer what a place makes you feel, and watch it join the living map.</div>'
+      +'<button class="td-btn" id="td-here">\u2727 Where I stand</button>'
+      +'<button class="td-btn td-soft" id="td-love">\u2661 A place I love</button>'
+      +'<button id="td-skip">just let me look around</button>';
+    document.body.appendChild(d);requestAnimationFrame(()=>d.classList.add('show'));
+    const close=()=>{d.classList.remove('show');setTimeout(()=>{try{d.remove();}catch(e){}},1100);};
+    document.getElementById('td-skip').addEventListener('click',close);
+    document.getElementById('td-love').addEventListener('click',()=>{close();
+      if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.focus();si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}}
+      else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}});
+    document.getElementById('td-here').addEventListener('click',()=>{
+      close();
+      if(!navigator.geolocation){if(typeof showMsg==='function')showMsg('Your device keeps its place to itself \u2014 find a place you love above instead.');return;}
+      if(typeof showMsg==='function')showMsg('Listening for where you are\u2026');
+      navigator.geolocation.getCurrentPosition(pos=>{
+        try{flyProgrammatic({center:[pos.coords.longitude,pos.coords.latitude],zoom:15.8,duration:2600});}catch(e){try{map.flyTo({center:[pos.coords.longitude,pos.coords.latitude],zoom:15.8,duration:2600});}catch(_){}}
+        setTimeout(()=>{if(typeof showMsg==='function')showMsg('You are here. Touch the map where you stand, and offer what you feel.');},2700);
+      },()=>{if(typeof showMsg==='function')showMsg('No matter \u2014 find a place you love in the search above, and offer what you feel there.');},{enableHighAccuracy:false,timeout:9000,maximumAge:120000});
+    });
+  }catch(e){}
+}
+// THE WITNESS LINE \u2014 one true sentence after every offering, computed only from what this map holds. Never flattery; always fact.
+function witnessLine(sid,lat,lng,label){
+  try{
+    let near=0,senseNear=0;
+    for(const q of auraPoints){
+      if(typeof q.lat!=='number')continue;
+      if(Math.abs(q.lat-lat)<1e-9&&Math.abs(q.lng-lng)<1e-9)continue;
+      if(haversine(q.lat,q.lng,lat,lng)<2500){near++;if(q.sense===sid)senseNear++;}
+    }
+    const mineOfSense=myOfferings.filter(o=>o.sense===sid).length;
+    if(near===0)return 'Yours is the first light this map holds for this place \u2014 it is learning what here feels like, through you.';
+    if(senseNear===0)return 'The first '+label+' this map holds here \u2014 your light joins '+near+' other'+(near>1?'s':'')+' sensing this place.';
+    if(mineOfSense===1)return 'A sense you have never offered before \u2014 your aura widens.';
+    return 'Your light joins '+near+' other'+(near>1?'s':'')+' sensing this place \u2014 the map learns through you.';
+  }catch(e){return '';}
+}
+(function phase1(){
+  try{
+    if(!myOfferings||myOfferings.length===0)document.body.classList.add('first-quiet');
+    const _inp=document.getElementById('inp');
+    if(_inp)_inp.addEventListener('input',()=>{const b=document.getElementById('sbtn');if(b&&!b.classList.contains('ripen'))b.classList.add('ripen');},{passive:true});
+  }catch(e){}
+})();
 // THE THRESHOLD \u2014 arrival as ritual, not splash screen: from darkness, the world's breath
 // resolves. No spinner, no logo slam, no words yet. The loading state IS the first breath.
 // pointer-events:none and a hard 7s fallback: nobody is ever trapped behind a curtain.
