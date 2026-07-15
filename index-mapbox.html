@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Aurasense — The Living Aura of Humanity</title>
 <link href="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.css" rel="stylesheet">
 <script src="https://api.mapbox.com/mapbox-gl-js/v3.9.0/mapbox-gl.js"></script>
@@ -90,6 +90,12 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #si:focus{border-color:rgba(167,139,250,.4)}
 #sg{flex-shrink:0;min-width:54px;padding:10px 17px;border-radius:10px;border:1px solid rgba(196,181,253,.75);background:linear-gradient(135deg,rgba(167,139,250,.42),rgba(255,159,192,.30));color:#f5f1ff;font-size:12.5px;letter-spacing:.05em;cursor:pointer;font-family:inherit;box-shadow:0 0 14px rgba(167,139,250,.30);transition:all .2s}
 #sg:hover{background:linear-gradient(135deg,rgba(167,139,250,.62),rgba(255,159,192,.46));box-shadow:0 0 22px rgba(196,181,253,.5);transform:translateY(-1px)}
+button,.tab{touch-action:manipulation}
+#threshold{position:fixed;inset:0;z-index:99999;background:radial-gradient(70% 60% at 50% 42%,#141126 0%,#0a0918 55%,#07060e 100%);display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:1;transition:opacity 2.2s ease}
+#threshold.lift{opacity:0}
+#th-glow{width:min(46vw,240px);height:min(46vw,240px);border-radius:50%;background:radial-gradient(closest-side at 46% 44%,rgba(196,181,253,.5),transparent 70%),radial-gradient(closest-side at 56% 56%,rgba(255,159,192,.34),transparent 72%),radial-gradient(closest-side at 50% 48%,rgba(255,255,255,.55),transparent 26%);filter:blur(5px);animation:thBreathe 6s ease-in-out infinite}
+@keyframes thBreathe{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.07);opacity:1}}
+@media (prefers-reduced-motion:reduce){#threshold{transition-duration:.8s}#th-glow{animation:none;opacity:.9}}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
 #my-aura{display:none!important}
 #my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
@@ -496,7 +502,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 /* Questionnaire page */
 #quest-page,#livefeed-page{position:fixed;inset:0;z-index:1750;background:radial-gradient(circle at 50% 16%,#16122e 0%,#0b0a1c 55%,#070612 100%);opacity:0;pointer-events:none;transition:opacity .5s;overflow-y:auto}
 #quest-page.show,#livefeed-page.show{opacity:1;pointer-events:auto}
-.qz-back{position:fixed;top:18px;left:18px;background:rgba(20,16,40,.7);border:0.5px solid rgba(167,139,250,.3);color:#c4b5fd;font-size:12px;padding:8px 14px;border-radius:18px;cursor:pointer;z-index:2}
+.qz-back{position:fixed;top:18px;left:18px;background:linear-gradient(135deg,rgba(167,139,250,.30),rgba(255,159,192,.18));border:1px solid rgba(196,181,253,.6);color:#f5f1ff;font-size:14px;padding:11px 18px;border-radius:16px;cursor:pointer;z-index:2;letter-spacing:.03em;box-shadow:0 0 16px rgba(167,139,250,.32);font-family:inherit}
 .qz-back:hover{background:rgba(40,32,72,.85)}
 #qz-inner{max-width:600px;margin:0 auto;padding:64px 22px 60px}
 #qz-title{font-size:24px;font-weight:300;letter-spacing:.04em;color:#efe8ff;text-align:center;text-shadow:0 0 22px rgba(167,139,250,.6)}
@@ -595,7 +601,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 @media(max-width:600px){
   #search-box{display:flex !important;position:fixed !important;top:88px !important;left:50% !important;right:auto !important;transform:translateX(-50%) !important;width:min(350px,92vw);margin:0 !important;pointer-events:all;z-index:41;justify-content:center}
   #si{flex:1;width:auto;box-shadow:0 0 26px rgba(124,92,255,.55),0 0 8px rgba(196,181,253,.4);border-color:rgba(196,181,253,.7)}
-  #si{flex:1;width:auto;font-size:13px;padding:13px 13px}
+  #si{flex:1;width:auto;font-size:16px;padding:13px 13px}
   #sg{font-size:12.5px}
   #place-prompt,#place-mini{display:none!important}
   #left-stack{top:148px!important}
@@ -680,11 +686,18 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 }
 /* ---------- Responsive: phone ---------- */
 @media (max-width:600px){
+  /* FOUNDATION · the root of the phone-layout bug: iOS zooms the page whenever a focused
+     input is smaller than 16px (and ignores user-scalable=no while doing it). 16px stops it. */
+  input,textarea{font-size:16px!important}
+  /* lock the app to the visible viewport — no page behind the page, no rubber-band drift */
+  body{position:fixed;inset:0;width:100%;height:100vh;height:100dvh}
+  /* the way home from the feed must be unmissable */
+  #lf-back{font-size:15px;padding:13px 18px;display:block;width:100%;text-align:center;border-radius:14px}
   #logo h1{font-size:15px}#logo p{display:none}
   #hdr2{top:58px;left:16px;right:16px;justify-content:center}
-  #tabs{font-size:11px;padding:4px 4px;max-width:calc(100vw - 24px);overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  #tabs{font-size:13px;padding:5px 5px;max-width:calc(100vw - 24px);overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   #tabs::-webkit-scrollbar{display:none}
-  .tab{padding:5px 6px;white-space:nowrap}
+  .tab{padding:6px 8px;white-space:nowrap}
   #panel{left:0;right:0;width:auto;transform:none;box-sizing:border-box}
   #panel.show-mobile{display:block;bottom:0;left:0;right:0;width:auto;box-sizing:border-box;transform:none;background:rgba(8,7,16,.97);padding:12px 8px 18px;border-top:0.5px solid rgba(167,139,250,.3);border-radius:18px 18px 0 0;max-height:64vh;overflow-y:auto;box-shadow:0 -8px 30px rgba(0,0,0,.6)}
   #panel.show-mobile #pi{background:none;border:none;border-radius:0;padding:0}
@@ -3488,7 +3501,7 @@ function obShow(){
     {sel:'.tab-myaura',t:'This is your aura — in the menu',s:'The glowing orb beside My Aura is your living aura. It grows and shifts colour with every sense you offer. Tap it any time to see your aura up close.'},
     {sel:'#register-btn',t:'Become an Aurasenser',s:'Create your aura so the senses you share become your own.'}
   ];
-  function finish(){ob.classList.remove('show');ob.innerHTML='';if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}if(typeof showMsg==='function')showMsg('Search a place above, or tap anywhere on the map, to offer an aurasense');}else if(typeof openPlacePrompt==='function'){openPlacePrompt('Search for a location to place an aurasense');}}
+  function finish(){ob.classList.remove('show');ob.innerHTML='';if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}if(typeof showMsg==='function')showMsg('The world is breathing \u2014 and it senses you here. Touch the map where you stand, or find a place you love, and offer what you feel.');}else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}}
   let idx=0;
   function visible(el){if(!el)return false;const r=el.getBoundingClientRect();return r.width>2&&r.height>2;}
   function draw(){
@@ -4260,6 +4273,21 @@ const gate={on:false,db:null,sid:null};
 function gateSid(){try{let s=localStorage.getItem('aurasense_sid');if(!s){s=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():('s-'+Date.now()+'-'+Math.random().toString(36).slice(2,10));localStorage.setItem('aurasense_sid',s);}return s;}catch(e){return 's-'+Date.now();}}
 function gateRow(o){return {sense:o.sense,text:(o.priv?null:(o.text||'').slice(0,500)),priv:!!o.priv,lat:o.lat,lng:o.lng,place:o.place?String(o.place).slice(0,200):null,scale:o.scale||'street',session_id:gate.sid||gateSid()};}
 function gateQueue(o){if(!GATE_CONFIGURED)return;try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');q.push(gateRow(o));while(q.length>20)q.shift();localStorage.setItem('aurasense_gate_q',JSON.stringify(q));}catch(e){}}
+// THE THRESHOLD \u2014 arrival as ritual, not splash screen: from darkness, the world's breath
+// resolves. No spinner, no logo slam, no words yet. The loading state IS the first breath.
+// pointer-events:none and a hard 7s fallback: nobody is ever trapped behind a curtain.
+(function threshold(){
+  try{
+    var REDUCED=false;try{REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+    var th=document.createElement('div');th.id='threshold';
+    th.innerHTML='<div id="th-glow"></div>';
+    document.body.appendChild(th);
+    var lifted=false;
+    function lift(){if(lifted)return;lifted=true;th.classList.add('lift');setTimeout(function(){try{th.remove();}catch(e){}},REDUCED?900:2400);}
+    try{map.once('idle',function(){setTimeout(lift,REDUCED?100:600);});}catch(e){lift();}
+    setTimeout(lift,7000);
+  }catch(e){}
+})();
 function gateTooFast(e){const m=String((e&&(e.message||e.msg||e))||'');return m.indexOf('Too many')>=0;}
 function gateRest(){try{if(typeof showMsg==='function')showMsg('That is a great many offerings very quickly \u2014 rest a moment, and offer again.');}catch(e){}}
 async function gateSaveOffering(o){
