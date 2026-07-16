@@ -97,7 +97,7 @@ button,.tab{touch-action:manipulation}
 @keyframes thBreathe{0%,100%{transform:scale(.94);opacity:.55}50%{transform:scale(1.16);opacity:1}}
 @media (prefers-reduced-motion:reduce){#threshold{transition-duration:.8s}#th-glow{animation:none;opacity:.9}}
 /* THE TWO DOORS \u2014 the first choice a stranger makes: where I stand, or a place I love */
-#twodoors{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:1200;width:min(400px,92vw);background:rgba(12,10,26,.96);border:1px solid rgba(196,181,253,.5);border-radius:20px;padding:22px 20px 18px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(124,92,255,.35);text-align:center;opacity:0;transition:opacity 1.1s ease}
+#twodoors{position:fixed;left:50%;top:40%;transform:translate(-50%,-50%);z-index:100001;width:min(400px,92vw);background:rgba(12,10,26,.96);border:1px solid rgba(196,181,253,.5);border-radius:20px;padding:22px 20px 18px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(124,92,255,.35);text-align:center;opacity:0;transition:opacity 1.1s ease}
 #twodoors.show{opacity:1}
 #td-t{font-size:16.5px;color:#f0eaff;letter-spacing:.02em;line-height:1.5;text-shadow:0 0 18px rgba(167,139,250,.55)}
 #td-s{font-size:12px;color:#9a8fc2;margin-top:7px;line-height:1.55}
@@ -116,7 +116,7 @@ body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #
 @keyframes witnessBloom{0%{transform:translateX(-50%) scale(.92);filter:brightness(.7)}60%{transform:translateX(-50%) scale(1.03);filter:brightness(1.25)}100%{transform:translateX(-50%) scale(1);filter:brightness(1)}}
 /* THE NEW SENSE DOOR — the belly of the table, as a chip in the picker */
 .sc-new{border-style:dashed!important;border-color:rgba(233,221,255,.6)!important;color:#f2ecff!important;background:rgba(233,221,255,.07)!important}
-#ns-modal{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:1300;width:min(400px,92vw);background:rgba(12,10,26,.97);border:1px solid rgba(233,221,255,.55);border-radius:20px;padding:22px 20px 18px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(233,221,255,.28);text-align:center;opacity:0;transition:opacity .6s ease}
+#ns-modal{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:100001;width:min(400px,92vw);background:rgba(12,10,26,.97);border:1px solid rgba(233,221,255,.55);border-radius:20px;padding:22px 20px 18px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(233,221,255,.28);text-align:center;opacity:0;transition:opacity .6s ease}
 #ns-modal.show{opacity:1}
 #ns-t{font-size:16px;color:#f4eeff;letter-spacing:.03em;text-shadow:0 0 16px rgba(233,221,255,.6)}
 #ns-s{font-size:12px;color:#a99cd4;margin-top:8px;line-height:1.6}
@@ -132,9 +132,9 @@ body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #
 #ma-widen .mw-dot{width:9px;height:9px;border-radius:50%;box-shadow:0 0 7px currentColor}
 /* SENSESHARE \u2014 compassion, spoken in alphasense */
 #ss-open{display:block;width:calc(100% - 4px);margin:0 2px 14px;padding:12px 14px;border-radius:14px;font-size:13px;letter-spacing:.03em;font-family:inherit;color:#f5f1ff;border:1px solid rgba(196,181,253,.6);background:linear-gradient(135deg,rgba(167,139,250,.26),rgba(255,159,192,.18));cursor:pointer;animation:moBreathe 6s ease-in-out infinite}
-#ss-back{position:fixed;inset:0;z-index:1290;background:rgba(5,4,12,.6);opacity:0;transition:opacity .5s ease}
+#ss-back{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.6);opacity:0;transition:opacity .5s ease}
 #ss-back.show{opacity:1}
-#ss-modal{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%);z-index:1300;width:min(430px,94vw);max-height:82vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(255,183,206,.5);border-radius:20px;padding:20px 18px 16px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(255,159,192,.25);opacity:0;transition:opacity .6s ease}
+#ss-modal{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%);z-index:100001;width:min(430px,94vw);max-height:82vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(255,183,206,.5);border-radius:20px;padding:20px 18px 16px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(255,159,192,.25);opacity:0;transition:opacity .6s ease}
 #ss-modal.show{opacity:1}
 #ss-t{font-size:16px;color:#ffeef4;letter-spacing:.03em;text-align:center;text-shadow:0 0 16px rgba(255,159,192,.55)}
 #ss-s{font-size:11.5px;color:#b3a6d6;margin-top:7px;line-height:1.6;text-align:center}
@@ -160,6 +160,28 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 .mj-i.ma-locked{opacity:.4;filter:saturate(.55)}
 @keyframes mjGlow{0%,100%{box-shadow:0 0 0 rgba(196,181,253,0)}50%{box-shadow:0 0 20px rgba(196,181,253,.75),0 0 6px rgba(255,255,255,.3)}}
 .mj-i.ma-glowhint{animation:mjGlow 1.5s ease-in-out 2;opacity:1!important;filter:none!important}
+/* THE UNCOVERING \u2014 a received light, opened at aurasense.app/#light=... */
+#uv-back{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.72);opacity:0;transition:opacity .7s ease}
+#uv-back.show{opacity:1}
+#uv-modal{position:fixed;left:50%;top:46%;transform:translate(-50%,-50%);z-index:100001;width:min(440px,94vw);max-height:84vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(233,221,255,.55);border-radius:20px;padding:22px 20px 18px;box-shadow:0 12px 48px rgba(0,0,0,.65),0 0 40px rgba(196,181,253,.3);text-align:center;opacity:0;transition:opacity .8s ease}
+#uv-modal.show{opacity:1}
+#uv-t{font-size:17px;color:#f4eeff;letter-spacing:.03em;text-shadow:0 0 18px rgba(196,181,253,.6)}
+#uv-s,.uv-s2{font-size:12px;color:#a99cd4;margin-top:8px;line-height:1.65}
+.uv-row{display:flex;align-items:center;gap:13px;margin-top:15px;text-align:left;background:rgba(167,139,250,.06);border:0.5px solid rgba(167,139,250,.22);border-radius:14px;padding:11px 13px}
+.uv-w{font-size:14.5px;color:#f0eaff}
+.uv-d{font-size:11.5px;color:#a99cd4;line-height:1.5;margin-top:2px;font-style:italic}
+#uv-row-b{display:flex;gap:8px;margin-top:16px}
+#uv-offer{flex:1;padding:13px 10px;border-radius:12px;font-size:13px;font-family:inherit;color:#f5f1ff;border:1px solid rgba(196,181,253,.7);background:linear-gradient(135deg,rgba(167,139,250,.34),rgba(255,159,192,.24));cursor:pointer}
+#uv-reply{padding:13px 12px;border-radius:12px;font-size:12px;font-family:inherit;color:#d9cef6;background:rgba(167,139,250,.1);border:1px solid rgba(167,139,250,.45);cursor:pointer}
+/* AURAWELLNESS \u2014 the third heartbeat: a breath together, every so often */
+#aw-card{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);z-index:100001;width:min(400px,92vw);background:rgba(12,10,26,.97);border:1px solid rgba(178,225,210,.5);border-radius:18px;padding:16px 16px 13px;box-shadow:0 10px 40px rgba(0,0,0,.55),0 0 30px rgba(140,220,190,.22);text-align:center;opacity:0;transition:opacity .9s ease}
+#aw-card.show{opacity:1}
+#aw-t{font-size:14px;color:#eafff6;line-height:1.6;text-shadow:0 0 14px rgba(140,220,190,.5)}
+#aw-n{font-size:11px;color:#9fbcb0;margin-top:7px;line-height:1.55}
+#aw-in{width:100%;margin-top:11px;background:rgba(8,12,11,.7);border:1px solid rgba(178,225,210,.4);border-radius:11px;padding:10px 12px;color:#eafff6;font-size:16px;outline:none;font-family:inherit;display:none}
+#aw-row{display:flex;gap:8px;margin-top:11px}
+#aw-feel{flex:1;padding:11px 10px;border-radius:11px;font-size:12.5px;font-family:inherit;color:#eafff6;border:1px solid rgba(178,225,210,.6);background:rgba(140,220,190,.14);cursor:pointer}
+#aw-later{padding:11px 13px;border-radius:11px;font-size:11.5px;font-family:inherit;color:#8fa89f;background:transparent;border:1px solid rgba(178,225,210,.25);cursor:pointer}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
 #my-aura{display:none!important}
 #my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
@@ -1325,9 +1347,9 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="ma-handle"></div>
   <div id="ma-layout">
     <div class="ma-col" id="ma-left">
-      <button id="calm-toggle" type="button" title="Calm mode stills the fine motion and keeps the silence \u2014 only the slow breath remains. For anyone who senses better in stillness.">\u263e Calm mode \u2014 off</button>
+      <button id="calm-toggle" type="button" title="Calm mode stills the fine motion and keeps the silence — only the slow breath remains. For anyone who senses better in stillness.">☾ Calm mode — off</button>
       <div id="ma-widen"></div>
-      <button id="ss-open" type="button">\u2709 SenseShare \u2014 send someone a light</button>
+      <button id="ss-open" type="button">✉ SenseShare — send someone a light</button>
       <div class="ma-h">What you have offered</div>
       <div id="ma-offerings"></div>
       <div class="ma-h" id="mab-h" style="margin-top:18px">Aurabonds — taking root</div>
@@ -2998,7 +3020,10 @@ function closeAlphaPage(){const p=document.getElementById('alpha-page');if(p)p.c
     mjm.querySelectorAll('.mj-i').forEach(it=>it.addEventListener('click',()=>{
       mjm.classList.remove('open');
       const k=it.dataset.mj;
-      if(it.classList.contains('ma-locked')){menuLockedTap(it);return;}
+      try{menuRefresh();}catch(e){}
+      const _reg=!!(myProfile&&myProfile.handle);
+      const _lk=(k!=='profile'&&!_reg)||((k==='bonds'||k==='work'||k==='sync')&&!window.AS_SEEN_ALPHA);
+      if(_lk){menuLockedTap(it);return;}
       if(k==='alpha'&&!window.AS_SEEN_ALPHA){window.AS_SEEN_ALPHA=true;try{localStorage.setItem('aurasense_seen_alpha','1');}catch(e){}setTimeout(menuRefresh,400);}
       if(k==='profile'&&typeof openRegister==='function')openRegister();
       else if(k==='quest'&&typeof openQuestPage==='function')openQuestPage();
@@ -4425,7 +4450,10 @@ function menuRefresh(){
     const reg=!!(myProfile&&myProfile.handle);
     document.querySelectorAll('.mj-i').forEach(it=>{
       const k=it.dataset.mj;
-      if(it.classList.contains('ma-locked')){menuLockedTap(it);return;}
+      try{menuRefresh();}catch(e){}
+      const _reg=!!(myProfile&&myProfile.handle);
+      const _lk=(k!=='profile'&&!_reg)||((k==='bonds'||k==='work'||k==='sync')&&!window.AS_SEEN_ALPHA);
+      if(_lk){menuLockedTap(it);return;}
       if(k==='alpha'&&!window.AS_SEEN_ALPHA){window.AS_SEEN_ALPHA=true;try{localStorage.setItem('aurasense_seen_alpha','1');}catch(e){}setTimeout(menuRefresh,400);}let locked=false;
       if(k!=='profile'&&!reg)locked=true;
       if((k==='bonds'||k==='work'||k==='sync')&&!window.AS_SEEN_ALPHA)locked=true;
@@ -4437,9 +4465,9 @@ function menuLockedTap(it){
   try{
     const reg=!!(myProfile&&myProfile.handle);
     let target,msg;
-    if(!reg){target=document.querySelector('.mj-i[data-mj="profile"]');msg='First, set up your Aurasenser profile \u2014 everything else grows from that ground \u2727';}
-    else{target=document.querySelector('.mj-i[data-mj="alpha"]');msg='See \u2727 Alphasense symbols first \u2014 the bonds and the Weave are born from them';}
-    showMsg(msg,4200);
+    if(!reg){target=document.querySelector('.mj-i[data-mj="profile"]');msg='This door is still resting. First, set up your Aurasenser profile \u2014 your name-of-light and your ground \u2014 and everything here begins to wake. It takes a gentle minute, and it is yours alone \u2727';}
+    else{target=document.querySelector('.mj-i[data-mj="alpha"]');msg='This door wakes through the symbols. Spend a moment with \u2727 Alphasense symbols first \u2014 feel two or three of them \u2014 and the bonds, the workshop and the Weave will open from there \u2727';}
+    showMsg(msg,7200);
     if(target){target.classList.remove('ma-glowhint');void target.offsetWidth;target.classList.add('ma-glowhint');setTimeout(()=>target.classList.remove('ma-glowhint'),3200);}
   }catch(e){}
 }
@@ -4471,11 +4499,11 @@ function openSenseShare(){
     const d=document.createElement('div');d.id='ss-modal';
     let chips='';pal.forEach((a,i)=>{chips+='<button type="button" class="ss-chip" data-i="'+i+'"><svg viewBox="0 0 48 48" width="20" height="20" fill="none" stroke="'+a.c+'" stroke-width="2.2" stroke-linecap="round">'+a.g+'</svg>'+a.w+'</button>';});
     d.innerHTML='<div id="ss-t">SenseShare \u2014 send someone a light</div>'
-      +'<div id="ss-s">Where a greeting card does the feeling for you, this asks you to find it. Choose up to three lights; they fuse into one alphasense mark, carrying what words alone cannot. Whoever receives it will have to look closely to uncover it \u2014 and that looking is the love arriving.</div>'
+      +'<div id="ss-s">Where a greeting card does the feeling for you, this asks you to find it. Choose up to three lights and let them carry the weight \u2014 feel each one before you choose it. If you add words, speak from the heart and around the feeling, not at it: never name what the lights already say. Whoever receives this will have to look closely to uncover it \u2014 and that looking is the love arriving.</div>'
       +'<input id="ss-to" maxlength="40" placeholder="For\u2026 (their name \u2014 lives only on the card)" autocomplete="off">'
       +'<div id="ss-pal">'+chips+'</div>'
       +'<div id="ss-hint">tap up to three, in the order they should flow</div>'
-      +'<textarea id="ss-msg" maxlength="140" placeholder="And in your own words, what you wish them\u2026 (optional)"></textarea>'
+      +'<textarea id="ss-msg" maxlength="140" placeholder="From your heart \u2014 around the feeling, not naming it\u2026 (optional)"></textarea>'
       +'<div id="ss-row"><button id="ss-go" type="button">\u2727 Make the postcard</button><button id="ss-x" type="button">not now</button></div>';
     document.body.appendChild(d);
     requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});
@@ -4496,17 +4524,19 @@ function openSenseShare(){
       const msg=(d.querySelector('#ss-msg').value||'').trim().slice(0,140);
       if(typeof fuseGlyphs!=='function'||typeof openPostcard!=='function'){showMsg('The postcard press is still waking \u2014 one moment.');return;}
       const glyph=fuseGlyphs(chain,140);
+      const code=chain.map(w=>w.w.toLowerCase()).join('+');
       close();
       openPostcard({kind:'glyph',glyphSVG:glyph,
         title:(to?('For '+to):chain.map(w=>w.w).join(' \u00b7 ')),
         color:chain[0].c,
         words:msg||chain.map(w=>w.d).join(' \u00b7 '),
-        place:'a senseshare, spoken in alphasense'});
+        place:'uncover this light \u2192 aurasense.app/#light='+code});
+      try{chain.forEach(w=>myAuraColors.push(w.c));paFeedAt=performance.now();paFeedColor=chain[0].c;const mo=document.getElementById('orbMy');if(mo){mo.classList.add('orb-fed');setTimeout(()=>mo.classList.remove('orb-fed'),3000);}}catch(e){}
       setTimeout(()=>showMsg('A light, folded for the road. However it travels, the uncovering is the love arriving.',6200,'witness',chain[0].c),900);
     });
   }catch(e){}
 }
-(function ssWire(){try{const b=document.getElementById('ss-open');if(b)b.addEventListener('click',openSenseShare);}catch(e){}})();
+document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#ss-open')){e.preventDefault();openSenseShare();}}catch(_){}});
 // A small svg of the sense's symbol, for postcards.
 function _offSym(sid,color){const sym=(typeof SENSE_SYMBOLS==='object'&&SENSE_SYMBOLS[sid])||'\u2727';return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><text x="40" y="54" text-anchor="middle" font-size="42" fill="'+color+'">'+sym+'</text></svg>';}
 // THE NEW SENSE DOOR \u2014 the belly of the table, as a feature. The vocabulary grows only
@@ -4547,6 +4577,66 @@ function _offSym(sid,color){const sym=(typeof SENSE_SYMBOLS==='object'&&SENSE_SY
       d.querySelector('#ns-in').addEventListener('keydown',e=>{if(e.key==='Enter')go();});
       setTimeout(()=>{try{d.querySelector('#ns-in').focus();}catch(e){}},400);
     });
+  }catch(e){}
+})();
+// THE UNCOVERING \u2014 someone followed a SenseShare home. No registration to read;
+// the meaning opens freely. Replying is what asks for a profile.
+(function uncover(){
+  try{
+    const m=(location.hash||'').match(/#light=([a-z+\-]+)/i);if(!m)return;
+    const names=m[1].toLowerCase().split('+');
+    const found=[];names.forEach(n=>{const w=ALPHA_WORDS.find(a=>a.w.toLowerCase()===n);if(w)found.push(w);});
+    if(!found.length)return;
+    setTimeout(()=>{
+      if(document.getElementById('uv-modal'))return;
+      const back=document.createElement('div');back.id='uv-back';document.body.appendChild(back);
+      const d=document.createElement('div');d.id='uv-modal';
+      let rows='';found.forEach(w=>{rows+='<div class="uv-row">'+alphaGlyph(w,56)+'<div><div class="uv-w" style="color:'+w.c+'">'+w.w+'</div><div class="uv-d">'+w.d+'</div></div></div>';});
+      d.innerHTML='<div id="uv-t">A light was sent to you.</div>'
+        +'<div id="uv-s">Someone composed this for you in alphasense \u2014 a language of light, where meaning is carried, not spelled. Before uncovering it: close your eyes a moment. Two slow breaths. Can you feel what it holds, before the words?</div>'
+        +rows
+        +'<div class="uv-s2">The looking you just did \u2014 that was the love arriving.</div>'
+        +'<div id="uv-row-b"><button id="uv-offer" type="button">\u2727 Offer a sense of your own</button><button id="uv-reply" type="button">Create a profile to reply</button></div>';
+      document.body.appendChild(d);
+      requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});
+      const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},800);try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}};
+      back.addEventListener('click',close);
+      d.querySelector('#uv-offer').addEventListener('click',()=>{close();if(typeof twoDoors==='function')twoDoors();});
+      d.querySelector('#uv-reply').addEventListener('click',()=>{close();if(typeof openRegister==='function')openRegister();});
+    },2600);
+  }catch(e){}
+})();
+// AURAWELLNESS \u2014 the third heartbeat. Every so often, a breath together. Never a demand:
+// it waits out of the way, dismisses itself, and only ever invites.
+(function aurawellness(){
+  try{
+    window.wellNotes=window.wellNotes||[];
+    let last=Date.now();
+    function show(){
+      if(document.getElementById('aw-card'))return;
+      if(document.hidden)return;
+      const d=document.createElement('div');d.id='aw-card';
+      d.innerHTML='<div id="aw-t">A breath, together \u2014 two quick breaths in, one long slow breath out through pursed lips. Three times.</div>'
+        +'<div id="aw-n">Then \u2014 how do you feel, just here? If you can: stand, stretch, touch the outside air. You are connected.</div>'
+        +'<input id="aw-in" maxlength="90" placeholder="I feel\u2026" autocomplete="off">'
+        +'<div id="aw-row"><button id="aw-feel" type="button">\u2727 I feel\u2026</button><button id="aw-later" type="button">later</button></div>';
+      document.body.appendChild(d);
+      requestAnimationFrame(()=>d.classList.add('show'));
+      const close=()=>{d.classList.remove('show');setTimeout(()=>{try{d.remove();}catch(e){}},900);};
+      const auto=setTimeout(close,40000);
+      d.querySelector('#aw-later').addEventListener('click',()=>{clearTimeout(auto);close();});
+      d.querySelector('#aw-feel').addEventListener('click',()=>{
+        clearTimeout(auto);
+        const inp=d.querySelector('#aw-in');
+        if(inp.style.display!=='block'){inp.style.display='block';inp.focus();d.querySelector('#aw-feel').textContent='\u2727 Keep this in my light';return;}
+        const note=(inp.value||'').trim();
+        window.wellNotes.push({t:Date.now(),note:note});
+        try{myAuraColors.push('#dff5ec');paFeedAt=performance.now();paFeedColor='#bfe9da';}catch(e){}
+        close();
+        setTimeout(()=>showMsg('Noted in your light \u2014 a check-in is a kind of sensing, too.',5200,'witness','#bfe9da'),600);
+      });
+    }
+    setInterval(()=>{if(document.hidden){last=Date.now();return;}if(Date.now()-last>=15*60*1000){last=Date.now();show();}},30000);
   }catch(e){}
 })();
 (function threshold(){
