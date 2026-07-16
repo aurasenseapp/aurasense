@@ -149,6 +149,17 @@ body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #
 #ss-row{display:flex;gap:8px;margin-top:13px}
 #ss-go{flex:1;padding:13px 10px;border-radius:12px;font-size:13.5px;font-family:inherit;color:#f5f1ff;border:1px solid rgba(255,183,206,.7);background:linear-gradient(135deg,rgba(255,159,192,.32),rgba(196,181,253,.26));cursor:pointer}
 #ss-x{padding:13px 14px;border-radius:12px;font-size:12px;font-family:inherit;color:#8d82b8;background:transparent;border:1px solid rgba(167,139,250,.3);cursor:pointer}
+/* CALM MODE \u2014 stillness as a first-class way of sensing */
+#calm-toggle{display:block;width:calc(100% - 4px);margin:0 2px 10px;padding:9px 12px;border-radius:12px;font-size:11.5px;letter-spacing:.04em;font-family:inherit;color:#b9addc;border:0.5px solid rgba(167,139,250,.3);background:rgba(167,139,250,.06);cursor:pointer;transition:all .3s}
+#calm-toggle.on{color:#f0eaff;border-color:rgba(196,181,253,.7);background:rgba(196,181,253,.14);box-shadow:0 0 12px rgba(167,139,250,.25)}
+body.calm #th-glow,body.calm #mobile-offer,body.calm #ss-open{animation:none}
+body.calm #sbtn.ripen{animation:none;box-shadow:0 0 18px rgba(196,181,253,.5)}
+body.calm #pmsg.witness{animation:none}
+body.calm .glow,body.calm .inp-glow{animation:none!important}
+/* THE AWAKENING MENU \u2014 dimmed until its ground exists; a tap says what awakens it, and the way glows */
+.mj-i.ma-locked{opacity:.4;filter:saturate(.55)}
+@keyframes mjGlow{0%,100%{box-shadow:0 0 0 rgba(196,181,253,0)}50%{box-shadow:0 0 20px rgba(196,181,253,.75),0 0 6px rgba(255,255,255,.3)}}
+.mj-i.ma-glowhint{animation:mjGlow 1.5s ease-in-out 2;opacity:1!important;filter:none!important}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
 #my-aura{display:none!important}
 #my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
@@ -1314,6 +1325,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="ma-handle"></div>
   <div id="ma-layout">
     <div class="ma-col" id="ma-left">
+      <button id="calm-toggle" type="button" title="Calm mode stills the fine motion and keeps the silence \u2014 only the slow breath remains. For anyone who senses better in stillness.">\u263e Calm mode \u2014 off</button>
       <div id="ma-widen"></div>
       <button id="ss-open" type="button">\u2709 SenseShare \u2014 send someone a light</button>
       <div class="ma-h">What you have offered</div>
@@ -1722,6 +1734,7 @@ function paDistinct(n){
 // Audio
 let actx=null;
 function playSound(id){
+  if(window.AS_CALM)return;   // calm keeps its silence
   try{
     if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
     const s=SENSES.find(x=>x.id===id);if(!s)return;
@@ -1877,6 +1890,8 @@ function makeFieldColor(baseRGB){
   };
 }
 function buildMotion(){
+  // SENSORY SOVEREIGNTY \u2014 in Calm mode the busy layers rest entirely; only the slow breath remains.
+  if(window.AS_CALM)return {grain:[],wisps:[],ripples:[],edge:[],motes:[],fieldColor:null};
   const grain=[];for(let i=0;i<70;i++)grain.push({a:Math.random()*Math.PI*2,r:Math.pow(Math.random(),0.55),ph:Math.random()*Math.PI*2,sp:0.4+Math.random()*1.1,size:0.4+Math.random()*0.5,base:0.05+Math.random()*0.09});
   const wisps=[];for(let i=0;i<3;i++){const bdx=0.75+Math.random()*0.45;wisps.push({a0:Math.random()*Math.PI*2,r0:0.12+Math.random()*0.40,dx:bdx,dy:bdx*(0.8+Math.random()*0.3),phx:Math.random()*Math.PI*2,phy:Math.random()*Math.PI*2,wander:0.16+Math.random()*0.12,life:Math.random()*Math.PI*2,lsp:0.35+Math.random()*0.25,size:0.34+Math.random()*0.18});}
   const ripples=[];for(let i=0;i<2;i++)ripples.push({period:4.5+Math.random()*2.5,phase:Math.random(),active:0.55+Math.random()*0.1});
@@ -2983,6 +2998,8 @@ function closeAlphaPage(){const p=document.getElementById('alpha-page');if(p)p.c
     mjm.querySelectorAll('.mj-i').forEach(it=>it.addEventListener('click',()=>{
       mjm.classList.remove('open');
       const k=it.dataset.mj;
+      if(it.classList.contains('ma-locked')){menuLockedTap(it);return;}
+      if(k==='alpha'&&!window.AS_SEEN_ALPHA){window.AS_SEEN_ALPHA=true;try{localStorage.setItem('aurasense_seen_alpha','1');}catch(e){}setTimeout(menuRefresh,400);}
       if(k==='profile'&&typeof openRegister==='function')openRegister();
       else if(k==='quest'&&typeof openQuestPage==='function')openQuestPage();
       else if(k==='soul'&&typeof openSoulPage==='function')openSoulPage();
@@ -3239,6 +3256,7 @@ if(rgCreate)rgCreate.addEventListener('click',()=>{
   if(!h){if(rgNote)rgNote.textContent='Please choose an Aurasenser name to continue — it is the one thing we ask.';if(rgHandle)rgHandle.focus();return;}
   const free=((document.getElementById('rg-interests-free')||{}).value||'');
   myProfile=Object.assign(myProfile||{},{handle:h,realname:((document.getElementById('rg-realname')||{}).value||''),address:((document.getElementById('rg-address')||{}).value||''),personality:rgCollect('personality'),mood:rgCollect('mood'),sensory:rgCollect('sensory'),spiritual:rgCollect('spiritual'),interests:rgCollect('interests').concat(free.split(',').map(s=>s.trim()).filter(Boolean))});
+  if(typeof menuRefresh==='function')menuRefresh();
   const lbl=document.getElementById('my-aura-label');if(lbl)lbl.textContent=h;
   if(typeof refreshRegisteredState==='function')refreshRegisteredState();
   const rb=document.getElementById('register-btn');if(rb)rb.classList.add('hidden');
@@ -3369,7 +3387,7 @@ function lfAction(act,i,ic){
   if(act==='absorb'){myProfile.auraBoost=(myProfile.auraBoost||0)+1;myAuraColors.push(r.color);paFeedAt=performance.now();paFeedColor=r.color;if(ic){ic.dataset.on='1';const t=ic.querySelector('.lic-tip');if(t)t.textContent='Absorbed into your aura';}showMsg('You reached \u2014 and a thread of this light now weaves through your own aura.',4200,'witness',r.color);}
   else if(act==='offer'){lfOpenOffer(i);}
   else if(act==='visit'){closeLiveFeed();if(typeof map!=='undefined'&&map.flyTo)map.flyTo({center:[r.lng,r.lat],zoom:14,duration:2600});showMsg('Travelling to this aura…');}
-  else if(act==='comment'){showMsg('Questions travel through alphasense symbols — arriving with Aurasenser profiles');}
+  else if(act==='comment'){myAuraColors.push(r.color);paFeedAt=performance.now();paFeedColor=r.color;showMsg('A question is a reaching \u2014 in the asking, a thread of this light joined your aura. Questions themselves will travel in alphasense, arriving with profiles.',5600,'witness',r.color);}
   else if(act==='bond'){if(!r.bonded){r.bonded=1;myBonds.push({to:r.handle,place:r.street+', '+r.city,label:r.label,color:r.color,t:Date.now()});}myAuraColors.push(r.color);paFeedAt=performance.now();paFeedColor=r.color;const mo=document.getElementById('orbMy');if(mo){mo.classList.add('orb-fed');setTimeout(()=>mo.classList.remove('orb-fed'),3000);}showMsg('An aurabond thread reaches toward '+r.handle+' \u2014 it completes when they feel it too');}
   else if(act==='share'){openPostcard({title:r.label,color:r.color,words:r.intent,place:'📍 '+r.street+', '+r.city,symbolSVG:(SENSE_SYMBOLS[r.sid]||'').replace('width="22" height="22"','width="460" height="460"')});}
 }
@@ -4391,6 +4409,41 @@ function witnessLine(sid,lat,lng,label){
 // THE THRESHOLD \u2014 arrival as ritual, not splash screen: from darkness, the world's breath
 // resolves. No spinner, no logo slam, no words yet. The loading state IS the first breath.
 // pointer-events:none and a hard 7s fallback: nobody is ever trapped behind a curtain.
+window.AS_CALM=false;
+try{window.AS_CALM=(localStorage.getItem('aurasense_calm')==='1')||((window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)&&localStorage.getItem('aurasense_calm')!=='0');}catch(e){}
+function applyCalm(){
+  try{
+    document.body.classList.toggle('calm',!!window.AS_CALM);
+    const b=document.getElementById('calm-toggle');
+    if(b){b.classList.toggle('on',!!window.AS_CALM);b.textContent='\u263e Calm mode \u2014 '+(window.AS_CALM?'on':'off');}
+  }catch(e){}
+}
+(function calmWire(){try{applyCalm();const b=document.getElementById('calm-toggle');if(b)b.addEventListener('click',()=>{window.AS_CALM=!window.AS_CALM;try{localStorage.setItem('aurasense_calm',window.AS_CALM?'1':'0');}catch(e){}applyCalm();showMsg(window.AS_CALM?'Calm \u2014 the fine motion rests; only the slow breath remains.':'The fine motion returns \u2014 welcome back to the weather.',3600);});}catch(e){}})();
+window.AS_SEEN_ALPHA=false;try{window.AS_SEEN_ALPHA=(localStorage.getItem('aurasense_seen_alpha')==='1');}catch(e){}
+function menuRefresh(){
+  try{
+    const reg=!!(myProfile&&myProfile.handle);
+    document.querySelectorAll('.mj-i').forEach(it=>{
+      const k=it.dataset.mj;
+      if(it.classList.contains('ma-locked')){menuLockedTap(it);return;}
+      if(k==='alpha'&&!window.AS_SEEN_ALPHA){window.AS_SEEN_ALPHA=true;try{localStorage.setItem('aurasense_seen_alpha','1');}catch(e){}setTimeout(menuRefresh,400);}let locked=false;
+      if(k!=='profile'&&!reg)locked=true;
+      if((k==='bonds'||k==='work'||k==='sync')&&!window.AS_SEEN_ALPHA)locked=true;
+      it.classList.toggle('ma-locked',locked);
+    });
+  }catch(e){}
+}
+function menuLockedTap(it){
+  try{
+    const reg=!!(myProfile&&myProfile.handle);
+    let target,msg;
+    if(!reg){target=document.querySelector('.mj-i[data-mj="profile"]');msg='First, set up your Aurasenser profile \u2014 everything else grows from that ground \u2727';}
+    else{target=document.querySelector('.mj-i[data-mj="alpha"]');msg='See \u2727 Alphasense symbols first \u2014 the bonds and the Weave are born from them';}
+    showMsg(msg,4200);
+    if(target){target.classList.remove('ma-glowhint');void target.offsetWidth;target.classList.add('ma-glowhint');setTimeout(()=>target.classList.remove('ma-glowhint'),3200);}
+  }catch(e){}
+}
+(function menuWire(){try{menuRefresh();}catch(e){}})();
 // THE WIDENING \u2014 which senses this senser has truly reached for. A mirror, never a score.
 function fillSenseStrip(){
   try{
@@ -4570,6 +4623,7 @@ async function gateLoadOfferings(){
     try{if(typeof updateMyOrb==='function')updateMyOrb();}catch(e){}
     try{if(typeof wevBalance==='function')wevBalance();}catch(e){}
     console.log('[gate] offerings returned \u2014 yours: '+own+' \u00b7 others: '+other);
+    if(own>0)setTimeout(()=>{try{showMsg('Welcome back \u2014 your aura found you. '+own+' offering'+(own>1?'s have':' has')+' returned to your light.',5600,'witness',(myAuraColors[0]||'#c4b5fd'));}catch(e){}},1800);
   }catch(e){console.warn('[gate] load',e);}
 }
 (function gateInit(){
