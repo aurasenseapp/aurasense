@@ -125,6 +125,30 @@ body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #
 #ns-row{display:flex;gap:8px;margin-top:13px}
 #ns-go{flex:1;padding:12px 10px;border-radius:12px;font-size:13.5px;font-family:inherit;color:#f5f1ff;border:1px solid rgba(233,221,255,.7);background:linear-gradient(135deg,rgba(196,181,253,.35),rgba(233,221,255,.22));cursor:pointer}
 #ns-x{padding:12px 14px;border-radius:12px;font-size:12px;font-family:inherit;color:#8d82b8;background:transparent;border:1px solid rgba(167,139,250,.3);cursor:pointer}
+/* THE WIDENING \u2014 a mirror of expanding perception, never a score */
+#ma-widen{margin:2px 2px 10px;padding:10px 12px;border:0.5px solid rgba(167,139,250,.25);border-radius:12px;background:rgba(167,139,250,.06);font-size:12px;color:#cfc4ee;line-height:1.55;display:none}
+#ma-widen b{color:#f0eaff}
+#ma-widen .mw-dots{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}
+#ma-widen .mw-dot{width:9px;height:9px;border-radius:50%;box-shadow:0 0 7px currentColor}
+/* SENSESHARE \u2014 compassion, spoken in alphasense */
+#ss-open{display:block;width:calc(100% - 4px);margin:0 2px 14px;padding:12px 14px;border-radius:14px;font-size:13px;letter-spacing:.03em;font-family:inherit;color:#f5f1ff;border:1px solid rgba(196,181,253,.6);background:linear-gradient(135deg,rgba(167,139,250,.26),rgba(255,159,192,.18));cursor:pointer;animation:moBreathe 6s ease-in-out infinite}
+#ss-back{position:fixed;inset:0;z-index:1290;background:rgba(5,4,12,.6);opacity:0;transition:opacity .5s ease}
+#ss-back.show{opacity:1}
+#ss-modal{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%);z-index:1300;width:min(430px,94vw);max-height:82vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(255,183,206,.5);border-radius:20px;padding:20px 18px 16px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(255,159,192,.25);opacity:0;transition:opacity .6s ease}
+#ss-modal.show{opacity:1}
+#ss-t{font-size:16px;color:#ffeef4;letter-spacing:.03em;text-align:center;text-shadow:0 0 16px rgba(255,159,192,.55)}
+#ss-s{font-size:11.5px;color:#b3a6d6;margin-top:7px;line-height:1.6;text-align:center}
+#ss-to,#ss-msg{width:100%;margin-top:12px;background:rgba(8,7,18,.75);border:1px solid rgba(196,181,253,.35);border-radius:12px;padding:11px 12px;color:#f4eeff;font-size:16px;outline:none;font-family:inherit}
+#ss-msg{min-height:64px;resize:vertical;font-size:15px;line-height:1.5}
+#ss-to:focus,#ss-msg:focus{border-color:rgba(255,183,206,.8);box-shadow:0 0 16px rgba(255,159,192,.25)}
+#ss-pal{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px;justify-content:center}
+.ss-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:12px;border:1px solid rgba(167,139,250,.4);background:rgba(167,139,250,.08);color:#ddd3f6;font-size:12px;font-family:inherit;cursor:pointer;transition:all .2s}
+.ss-chip svg{display:block}
+.ss-chip.on{border-color:rgba(255,255,255,.85);background:rgba(196,181,253,.22);color:#fff;box-shadow:0 0 14px rgba(196,181,253,.4)}
+#ss-hint{font-size:10.5px;color:#8d82b8;text-align:center;margin-top:8px}
+#ss-row{display:flex;gap:8px;margin-top:13px}
+#ss-go{flex:1;padding:13px 10px;border-radius:12px;font-size:13.5px;font-family:inherit;color:#f5f1ff;border:1px solid rgba(255,183,206,.7);background:linear-gradient(135deg,rgba(255,159,192,.32),rgba(196,181,253,.26));cursor:pointer}
+#ss-x{padding:13px 14px;border-radius:12px;font-size:12px;font-family:inherit;color:#8d82b8;background:transparent;border:1px solid rgba(167,139,250,.3);cursor:pointer}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
 #my-aura{display:none!important}
 #my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
@@ -1290,6 +1314,8 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="ma-handle"></div>
   <div id="ma-layout">
     <div class="ma-col" id="ma-left">
+      <div id="ma-widen"></div>
+      <button id="ss-open" type="button">\u2709 SenseShare \u2014 send someone a light</button>
       <div class="ma-h">What you have offered</div>
       <div id="ma-offerings"></div>
       <div class="ma-h" id="mab-h" style="margin-top:18px">Aurabonds — taking root</div>
@@ -3031,7 +3057,7 @@ function openMyAuraPage(){
   if(myPostcards.length){
     off.innerHTML+=myPostcards.slice().reverse().map((p,ri)=>{const pi=myPostcards.length-1-ri;return '<div class="ma-offering" style="border-left-color:'+(p.color||'#a78bfa')+'"><div class="s" style="color:'+(p.color||'#a78bfa')+'">↗ Aura Postcard — '+esc(p.title||'')+'</div>'+(p.words?'<div class="t">“'+esc(String(p.words).slice(0,90))+'”</div>':'')+(p.place?'<div class="m">'+esc(p.place)+'</div>':'')+'<div class="ma-oact"><button class="ma-act ma-ic" data-act="pshare" data-p="'+pi+'"><svg viewBox="0 0 24 24" class="mai"><circle cx="18" cy="5.5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="18.5" r="2.3"/><path d="M8.1 10.9 15.9 6.6 M8.1 13.1 15.9 17.4"/></svg><span class="ma-lbl">Share again</span><span class="ma-tip">Open this postcard</span></button></div></div>';}).join('');
   }
-  off.querySelectorAll('.ma-act').forEach(btn=>btn.addEventListener('click',()=>{const a=btn.getAttribute('data-act');if(a==='pshare'){const p=myPostcards[parseInt(btn.getAttribute('data-p'),10)];if(p)openPostcard(Object.assign({},p,{_logged:true}));}else if(a==='card'){const _i=parseInt(btn.getAttribute('data-i'),10);const o=myOfferings[_i];if(o&&typeof openPostcard==='function'){openPostcard({title:'Aurasense of '+o.label,color:o.color,words:(o.text||'').slice(0,140),place:o.place||'',symbolSVG:_offSym(o.sense,o.color)});}}else maOfferingAction(a,parseInt(btn.getAttribute('data-i'),10),btn);}));
+  off.querySelectorAll('.ma-act').forEach(btn=>btn.addEventListener('click',()=>{const a=btn.getAttribute('data-act');if(a==='pshare'){const p=myPostcards[parseInt(btn.getAttribute('data-p'),10)];if(p)openPostcard(Object.assign({},p,{_logged:true}));}else if(a==='card'){const _i=parseInt(btn.getAttribute('data-i'),10);const o=myOfferings[_i];if(o&&typeof openPostcard==='function'){openPostcard({title:'Aurasense of '+o.label,color:o.color,words:(o.text||'').slice(0,140),place:o.place||'',symbolSVG:_offSym(o.sense,o.color)});}}else maOfferingAction(a,parseInt(btn.getAttribute('data-i'),10),btn);}));if(typeof fillSenseStrip==='function')fillSenseStrip();
   maRenderBonds();
   const ac=document.getElementById('ma-aura-changes');
   if(myOfferings.length){
@@ -4365,6 +4391,69 @@ function witnessLine(sid,lat,lng,label){
 // THE THRESHOLD \u2014 arrival as ritual, not splash screen: from darkness, the world's breath
 // resolves. No spinner, no logo slam, no words yet. The loading state IS the first breath.
 // pointer-events:none and a hard 7s fallback: nobody is ever trapped behind a curtain.
+// THE WIDENING \u2014 which senses this senser has truly reached for. A mirror, never a score.
+function fillSenseStrip(){
+  try{
+    const el=document.getElementById('ma-widen');if(!el)return;
+    if(!myOfferings||!myOfferings.length){el.style.display='none';return;}
+    const used={};myOfferings.forEach(o=>{if(o&&o.sense)used[o.sense]=1;});
+    const ids=Object.keys(used);
+    const places=new Set(myOfferings.map(o=>o&&o.place).filter(Boolean)).size;
+    let dots='';ids.slice(0,14).forEach(id=>{const sn=SENSES.find(x=>x.id===id);if(sn)dots+='<span class="mw-dot" style="background:'+sn.color+';color:'+sn.color+'"></span>';});
+    el.innerHTML='Your sensing has widened \u2014 <b>'+ids.length+'</b> of the '+SENSES.length+' senses this map now holds'
+      +(places?(' \u00b7 <b>'+places+'</b> place'+(places>1?'s':'')+' felt'):'')
+      +'.<div class="mw-dots">'+dots+'</div>';
+    el.style.display='block';
+  }catch(e){}
+}
+// SENSESHARE \u2014 compassion composed in alphasense. The receiver must uncover it,
+// and the uncovering is the proof of care: the effort IS the sincerity. Two pauses, one card.
+function openSenseShare(){
+  try{
+    if(document.getElementById('ss-modal'))return;
+    const wants=['Compassion','Empathy','Love','Hope','Courage','Renewal','Together','Peace','Gratitude','Presence','Comfort','Healing'];
+    const pal=ALPHA_WORDS.filter(a=>wants.indexOf(a.w)>=0);
+    if(!pal.length){showMsg('The alphasense palette is still waking \u2014 one moment.');return;}
+    const back=document.createElement('div');back.id='ss-back';document.body.appendChild(back);
+    const d=document.createElement('div');d.id='ss-modal';
+    let chips='';pal.forEach((a,i)=>{chips+='<button type="button" class="ss-chip" data-i="'+i+'"><svg viewBox="0 0 48 48" width="20" height="20" fill="none" stroke="'+a.c+'" stroke-width="2.2" stroke-linecap="round">'+a.g+'</svg>'+a.w+'</button>';});
+    d.innerHTML='<div id="ss-t">SenseShare \u2014 send someone a light</div>'
+      +'<div id="ss-s">Where a greeting card does the feeling for you, this asks you to find it. Choose up to three lights; they fuse into one alphasense mark, carrying what words alone cannot. Whoever receives it will have to look closely to uncover it \u2014 and that looking is the love arriving.</div>'
+      +'<input id="ss-to" maxlength="40" placeholder="For\u2026 (their name \u2014 lives only on the card)" autocomplete="off">'
+      +'<div id="ss-pal">'+chips+'</div>'
+      +'<div id="ss-hint">tap up to three, in the order they should flow</div>'
+      +'<textarea id="ss-msg" maxlength="140" placeholder="And in your own words, what you wish them\u2026 (optional)"></textarea>'
+      +'<div id="ss-row"><button id="ss-go" type="button">\u2727 Make the postcard</button><button id="ss-x" type="button">not now</button></div>';
+    document.body.appendChild(d);
+    requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});
+    const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},650);};
+    back.addEventListener('click',close);
+    d.querySelector('#ss-x').addEventListener('click',close);
+    const sel=[];
+    d.querySelectorAll('.ss-chip').forEach(b=>b.addEventListener('click',()=>{
+      const i=+b.dataset.i,at=sel.indexOf(i);
+      if(at>=0){sel.splice(at,1);b.classList.remove('on');}
+      else if(sel.length<3){sel.push(i);b.classList.add('on');}
+      else{showMsg('Three lights is the whole chord \u2014 unchoose one first \u2727');}
+    }));
+    d.querySelector('#ss-go').addEventListener('click',()=>{
+      if(!sel.length){showMsg('Choose at least one light \u2014 the mark is made of them \u2727');return;}
+      const chain=sel.map(i=>pal[i]);
+      const to=(d.querySelector('#ss-to').value||'').trim();
+      const msg=(d.querySelector('#ss-msg').value||'').trim().slice(0,140);
+      if(typeof fuseGlyphs!=='function'||typeof openPostcard!=='function'){showMsg('The postcard press is still waking \u2014 one moment.');return;}
+      const glyph=fuseGlyphs(chain,140);
+      close();
+      openPostcard({kind:'glyph',glyphSVG:glyph,
+        title:(to?('For '+to):chain.map(w=>w.w).join(' \u00b7 ')),
+        color:chain[0].c,
+        words:msg||chain.map(w=>w.d).join(' \u00b7 '),
+        place:'a senseshare, spoken in alphasense'});
+      setTimeout(()=>showMsg('A light, folded for the road. However it travels, the uncovering is the love arriving.',6200,'witness',chain[0].c),900);
+    });
+  }catch(e){}
+}
+(function ssWire(){try{const b=document.getElementById('ss-open');if(b)b.addEventListener('click',openSenseShare);}catch(e){}})();
 // A small svg of the sense's symbol, for postcards.
 function _offSym(sid,color){const sym=(typeof SENSE_SYMBOLS==='object'&&SENSE_SYMBOLS[sid])||'\u2727';return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><text x="40" y="54" text-anchor="middle" font-size="42" fill="'+color+'">'+sym+'</text></svg>';}
 // THE NEW SENSE DOOR \u2014 the belly of the table, as a feature. The vocabulary grows only
