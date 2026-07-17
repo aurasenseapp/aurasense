@@ -200,6 +200,22 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #we-x{padding:13px 14px;border-radius:12px;font-size:12px;font-family:inherit;color:#8d82b8;background:transparent;border:1px solid rgba(167,139,250,.3);cursor:pointer}
 #we-open{border:1px dashed rgba(255,230,176,.55)!important;color:#ffe9c4!important;background:rgba(255,214,166,.08)!important}
 #wev-wit{display:none;width:100%;margin-top:8px;padding:11px 12px;border-radius:12px;font-size:12.5px;font-family:inherit;color:#fff2d9;border:1px solid rgba(255,230,176,.55);background:rgba(255,214,166,.1);cursor:pointer}
+#ptitle{position:sticky;top:-1px;z-index:6;background:rgba(10,9,20,.94);backdrop-filter:blur(6px)}
+/* THE MIRROR \u2014 a reflection, only ever when asked for */
+#mr-open{display:block;width:calc(100% - 4px);margin:0 2px 10px;padding:11px 13px;border-radius:13px;font-size:12.5px;letter-spacing:.04em;font-family:inherit;color:#e8e2ff;border:1px solid rgba(210,200,255,.45);background:linear-gradient(135deg,rgba(210,200,255,.12),rgba(167,139,250,.10));cursor:pointer}
+#mr-back{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.72);opacity:0;transition:opacity .6s ease}
+#mr-back.show{opacity:1}
+#mr-modal{position:fixed;left:50%;top:46%;transform:translate(-50%,-50%);z-index:100001;width:min(450px,94vw);max-height:86vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(210,200,255,.5);border-radius:20px;padding:22px 19px 16px;box-shadow:0 12px 48px rgba(0,0,0,.65),0 0 38px rgba(210,200,255,.22);opacity:0;transition:opacity .7s ease}
+#mr-modal.show{opacity:1}
+#mr-t{font-size:16.5px;color:#f2edff;letter-spacing:.03em;text-align:center;text-shadow:0 0 16px rgba(210,200,255,.6)}
+#mr-s,.mr-s2{font-size:11.5px;color:#a99cd4;margin-top:7px;line-height:1.6;text-align:center;font-style:italic}
+.mr-card{margin-top:13px;text-align:left;background:rgba(210,200,255,.05);border:0.5px solid rgba(210,200,255,.2);border-radius:14px;padding:12px 13px}
+.mr-h{font-size:12.5px;color:#efe9ff;letter-spacing:.02em}
+.mr-b{font-size:12px;color:#bfb4e2;line-height:1.6;margin-top:5px}
+.mr-q{font-size:12px;color:#d8ccf6;line-height:1.6;margin-top:7px;font-style:italic}
+#mr-in{width:100%;margin-top:9px;background:rgba(8,7,18,.75);border:1px solid rgba(210,200,255,.35);border-radius:11px;padding:10px 12px;color:#f0eaff;font-size:16px;outline:none;font-family:inherit;min-height:52px;resize:vertical}
+#mr-keep{width:100%;margin-top:9px;padding:11px 10px;border-radius:11px;font-size:12.5px;font-family:inherit;color:#f2edff;border:1px solid rgba(210,200,255,.6);background:rgba(210,200,255,.12);cursor:pointer}
+#mr-x{display:block;margin:13px auto 0;background:none;border:none;color:#8d82b8;font-size:11.5px;cursor:pointer;font-family:inherit;letter-spacing:.04em}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
 #my-aura{display:none!important}
 #my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
@@ -1367,6 +1383,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="ma-layout">
     <div class="ma-col" id="ma-left">
       <button id="calm-toggle" type="button" title="Calm mode stills the fine motion and keeps the silence — only the slow breath remains. For anyone who senses better in stillness.">☾ Calm mode — off</button>
+      <button id="mr-open" type="button">\ud83e\ude9e The Mirror \u2014 a reflection, when you want one</button>
       <div id="ma-widen"></div>
       <button id="ss-open" type="button">✉ SenseShare — send someone a light</button>
       <div class="ma-h">What you have offered</div>
@@ -2525,7 +2542,7 @@ function submit(lat,lng,text){
       setTimeout(()=>flyProgrammatic({center:[here.lng,here.lat],zoom:hereZoom,duration:2500}),4000);
     },6000);
   } else {
-    setTimeout(()=>{const _wl=witnessLine(sid,lat,lng,s.label);if(_wl)showMsg(_wl,8200,'witness',s.color,true);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]);},900);
+    setTimeout(()=>{const _wl=witnessLine(sid,lat,lng,s.label);if(_wl)witnessShow(_wl,8200,s.color);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]);},900);
   }
 }
 
@@ -4241,8 +4258,8 @@ function wevAddLayers(){
   const R=(a,b,c,d,e2,f2)=>['interpolate',['linear'],['zoom'],0,a,3,b,6,c,9,d,12,e2,16,f2];
   // Each layer stands alone: one failing can never take the others with it.
   const adds=[
-    ['wev-outer',{'circle-color':['get','col'],'circle-blur':0.9,'circle-radius':R(30,46,70,100,138,180),'circle-opacity':['*',0.12,['case',['==',['get','st'],'unverified'],0.45,1]]}],
-    ['wev-mid',{'circle-color':['get','col'],'circle-blur':0.5,'circle-radius':R(16,24,32,32,28,22),'circle-opacity':['*',0.52,['case',['==',['get','st'],'unverified'],0.45,1]]}],
+    ['wev-outer',{'circle-color':['get','col'],'circle-blur':0.9,'circle-radius':R(30,46,70,100,138,180),'circle-opacity':['*',0.16,['case',['==',['get','st'],'unverified'],0.45,1]]}],
+    ['wev-mid',{'circle-color':['get','col'],'circle-blur':0.5,'circle-radius':R(16,24,32,32,28,22),'circle-opacity':['*',0.66,['case',['==',['get','st'],'unverified'],0.45,1]]}],
     ['wev-core',{'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':R(7.5,9,10.5,11,11,10),'circle-opacity':['*',0.9,['case',['==',['get','st'],'unverified'],0.45,1]]}],
     ['wev-dot',{'circle-color':'#ffffff','circle-radius':R(2.6,3,3.2,3.2,3,2.8),'circle-opacity':['*',0.85,['case',['==',['get','st'],'unverified'],0.45,1]]}],
     ['wev-sent',{'circle-color':'rgba(0,0,0,0)','circle-radius':R(12,17,21,23,22,19),'circle-opacity':0,'circle-stroke-color':'#ffe6b0','circle-stroke-width':1.4,'circle-stroke-opacity':['min',0.6,['*',0.09,['get','sent']]]}]
@@ -4436,6 +4453,15 @@ function twoDoors(){
   }catch(e){}
 }
 // THE WITNESS LINE \u2014 one true sentence after every offering, computed only from what this map holds. Never flattery; always fact.
+function witnessShow(htmlTxt,dur,color){
+  try{
+    const el=document.getElementById('pmsg');if(!el)return;
+    el.classList.add('witness');if(color)el.style.setProperty('--wc',color);
+    el.innerHTML=htmlTxt;el.classList.add('show');
+    if(typeof _pmsgT!=='undefined'&&_pmsgT)clearTimeout(_pmsgT);
+    _pmsgT=setTimeout(()=>{el.classList.remove('show');setTimeout(()=>{el.classList.remove('witness');el.style.removeProperty('--wc');el.textContent='';},700);},dur||8000);
+  }catch(e){}
+}
 function witnessLine(sid,lat,lng,label){
   try{
     let near=0,senseNear=0;
@@ -4475,8 +4501,8 @@ function applyCalm(){
 }
 (function calmWire(){try{applyCalm();const b=document.getElementById('calm-toggle');if(b)b.addEventListener('click',()=>{window.AS_CALM=!window.AS_CALM;try{localStorage.setItem('aurasense_calm',window.AS_CALM?'1':'0');}catch(e){}applyCalm();showMsg(window.AS_CALM?'Calm \u2014 the fine motion rests; only the slow breath remains.':'The fine motion returns \u2014 welcome back to the weather.',3600);});}catch(e){}})();
 window.AS_SEEN_ALPHA=false;try{window.AS_SEEN_ALPHA=(localStorage.getItem('aurasense_seen_alpha')==='1');}catch(e){}
-window.AS_QUEST_DONE=false;try{window.AS_QUEST_DONE=(localStorage.getItem('aurasense_quest_done')==='1');}catch(e){}
-document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#qz-submit')){window.AS_QUEST_DONE=true;try{localStorage.setItem('aurasense_quest_done','1');}catch(_){}setTimeout(menuRefresh,600);}}catch(_){}});
+window.AS_QUEST_DONE=false; // in-memory only, like registration \u2014 persistence arrives with Gate profiles
+document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#qz-submit')){window.AS_QUEST_DONE=true;setTimeout(menuRefresh,600);}}catch(_){}});
 function questDone(){return !!window.AS_QUEST_DONE;}
 function soulDone(){try{const g=document.querySelectorAll('.qp-gate');if(!g.length)return false;return document.querySelectorAll('.qp-gate.done').length>=g.length;}catch(e){return false;}}
 function mjLocked(k){
@@ -4696,8 +4722,9 @@ function auraLayersAdd(){
   try{
     if(!map.getSource('auraglow'))map.addSource('auraglow',{type:'geojson',data:auraGeo()});
     const zi=(a,b,c,d2,e2)=>['interpolate',['linear'],['zoom'],0,a,4,b,8,c,11,d2,12.5,e2];
-    if(!map.getLayer('aura-glow'))map.addLayer({id:'aura-glow',type:'circle',source:'auraglow',paint:{'circle-color':['get','col'],'circle-blur':1,'circle-radius':zi(3.2,6,11,16,20),'circle-opacity':zi(0.12,0.2,0.22,0.16,0)}});
-    if(!map.getLayer('aura-pt'))map.addLayer({id:'aura-pt',type:'circle',source:'auraglow',paint:{'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':zi(1.1,1.7,2.5,3.1,3.4),'circle-opacity':zi(0.8,0.85,0.85,0.7,0)}});
+    const _bw=(map.getLayer&&map.getLayer('wev-outer'))?'wev-outer':undefined;
+    if(!map.getLayer('aura-glow'))map.addLayer({id:'aura-glow',type:'circle',source:'auraglow',paint:{'circle-color':['get','col'],'circle-blur':1,'circle-radius':zi(4.4,7,12,17,20),'circle-opacity':zi(0.2,0.26,0.24,0.16,0)}},_bw);
+    if(!map.getLayer('aura-pt'))map.addLayer({id:'aura-pt',type:'circle',source:'auraglow',paint:{'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':zi(1.4,1.9,2.6,3.1,3.4),'circle-opacity':zi(0.92,0.92,0.88,0.7,0)}},_bw);
   }catch(e){}
 }
 function auraGeo(){
@@ -4782,6 +4809,67 @@ function openRaiseEvent(){
     });
   }catch(e){}
 }
+// THE MIRROR \u2014 first light. It reflects only what is true and asks only open questions;
+// it never tells a senser who they are. The shadow is simply the unlit \u2014 Jung's word for the
+// rooms we haven't looked into \u2014 and looking without judging is the whole practice
+// (Krishnamurti: observation without condemnation). It grows with the Gate: trajectories,
+// and \u2014 only ever with a yes \u2014 learning shared onward through Accords.
+window.mirrorNotes=window.mirrorNotes||[];
+function mirrorOpen(){
+  try{
+    if(document.getElementById('mr-modal'))return;
+    const back=document.createElement('div');back.id='mr-back';document.body.appendChild(back);
+    const d=document.createElement('div');d.id='mr-modal';
+    const total=myOfferings.length;
+    const used={};myOfferings.forEach(o=>{if(o&&o.sense)used[o.sense]=(used[o.sense]||0)+1;});
+    let top=null;Object.keys(used).forEach(k=>{if(!top||used[k]>used[top])top=k;});
+    const topS=top?SENSES.find(x=>x.id===top):null;
+    const quiet=SENSES.filter(x=>!used[x.id]&&String(x.id).indexOf('ns-')!==0).slice(0,3);
+    const places=new Set(myOfferings.map(o=>o&&o.place).filter(Boolean)).size;
+    const wn=(window.wellNotes||[]).length;
+    let cards='';
+    if(total===0){
+      cards+='<div class="mr-card"><div class="mr-h">The Mirror is dark, honestly.</div><div class="mr-b">It can only reflect what you have offered \u2014 and nothing has been offered yet. That is not emptiness; it is a clean surface. One sense, anywhere true, and the first light appears here.</div></div>';
+    }else{
+      if(topS)cards+='<div class="mr-card"><div class="mr-h">The light you reach for most</div><div class="mr-b"><b style="color:'+topS.color+'">'+escT(topS.label)+'</b> \u2014 '+used[top]+' of your '+total+' offering'+(total>1?'s':'')+'.</div><div class="mr-q">What does it give you, that keeps you returning? Yours to answer, or not.</div></div>';
+      if(quiet.length)cards+='<div class="mr-card"><div class="mr-h">Quiet rooms</div><div class="mr-b">'+quiet.map(q=>'<b style="color:'+q.color+'">'+escT(q.label)+'</b>').join(' \u00b7 ')+' \u2014 senses you have not yet offered. Not tasks, not goals: simply doors you have not opened. If one of them quietly calls, offer it where you stand and watch what it lights.</div></div>';
+      cards+='<div class="mr-card"><div class="mr-h">Your ground so far</div><div class="mr-b">'+total+' offering'+(total>1?'s':'')+(places?(' \u00b7 '+places+' place'+(places>1?'s':'')+' felt'):'')+(wn?(' \u00b7 '+wn+' wellness check-in'+(wn>1?'s':'')):'')+'.</div></div>';
+    }
+    cards+='<div class="mr-card"><div class="mr-h">The unlit \u2014 for the Mirror alone</div><div class="mr-b">The shadow is only what has not been looked at yet \u2014 nothing more sinister than that. Look without the word; judge nothing; the looking itself is the change.</div><div class="mr-q">Is there a feeling you notice yourself steering around when you offer? You may write it here. It stays on this device, in this Mirror, and goes nowhere else.</div><textarea id="mr-in" maxlength="200" placeholder="only if you wish\u2026"></textarea><button id="mr-keep" type="button">\u2727 Hold it in the Mirror</button></div>';
+    d.innerHTML='<div id="mr-t">\ud83e\ude9e The Mirror</div>'
+      +'<div id="mr-s">A reflection, not a reading. Only what is true; only questions, never verdicts.</div>'
+      +cards
+      +'<div class="mr-s2">The Mirror grows with the Gate: soon, your trajectories \u2014 and, only ever with your yes, your learning meeting others through Accords.</div>'
+      +'<button id="mr-x" type="button">close the mirror</button>';
+    document.body.appendChild(d);
+    requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});
+    const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},750);};
+    back.addEventListener('click',close);
+    d.querySelector('#mr-x').addEventListener('click',close);
+    const kb=d.querySelector('#mr-keep');
+    if(kb)kb.addEventListener('click',()=>{
+      const v=(d.querySelector('#mr-in').value||'').trim();
+      if(!v){showMsg('Only if you wish \u2014 the Mirror asks nothing \u2727');return;}
+      window.mirrorNotes.push({t:Date.now(),note:v});
+      close();
+      setTimeout(()=>showMsg('Held in the Mirror. Seen is already half-lit.',5600,'witness','#d2c8ff'),500);
+    });
+  }catch(e){}
+}
+document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#mr-open')){e.preventDefault();mirrorOpen();}}catch(_){}});
+(function tabClean(){
+  try{
+    document.addEventListener('click',function(e){
+      try{
+        if(e.target&&e.target.closest&&e.target.closest('.tab')){
+          const pn=document.getElementById('panel');
+          if(pn)pn.classList.remove('just-offered','show-mobile','sense-picked','locating');
+          if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+        }
+      }catch(_){}
+    },true);
+  }catch(e){}
+})();
 (function worldClean(){
   try{
     map.on('zoomend',()=>{
