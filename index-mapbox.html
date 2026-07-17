@@ -182,6 +182,23 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #aw-row{display:flex;gap:8px;margin-top:11px}
 #aw-feel{flex:1;padding:11px 10px;border-radius:11px;font-size:12.5px;font-family:inherit;color:#eafff6;border:1px solid rgba(178,225,210,.6);background:rgba(140,220,190,.14);cursor:pointer}
 #aw-later{padding:11px 13px;border-radius:11px;font-size:11.5px;font-family:inherit;color:#8fa89f;background:transparent;border:1px solid rgba(178,225,210,.25);cursor:pointer}
+/* THE RAISE DOOR + THE WITNESS STAND */
+#we-back{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.72);opacity:0;transition:opacity .6s ease}
+#we-back.show{opacity:1}
+#we-modal{position:fixed;left:50%;top:46%;transform:translate(-50%,-50%);z-index:100001;width:min(440px,94vw);max-height:86vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(255,230,176,.5);border-radius:20px;padding:20px 18px 16px;box-shadow:0 12px 48px rgba(0,0,0,.65),0 0 34px rgba(255,214,166,.22);text-align:center;opacity:0;transition:opacity .6s ease}
+#we-modal.show{opacity:1}
+#we-t{font-size:16px;color:#fff4de;letter-spacing:.03em;text-shadow:0 0 16px rgba(255,214,166,.55)}
+#we-s{font-size:11.5px;color:#b3a6d6;margin-top:8px;line-height:1.6}
+#we-title,#we-note,#we-door{width:100%;margin-top:11px;background:rgba(8,7,18,.75);border:1px solid rgba(196,181,253,.35);border-radius:12px;padding:11px 12px;color:#f4eeff;font-size:16px;outline:none;font-family:inherit}
+#we-note,#we-door{min-height:56px;resize:vertical;font-size:14.5px;line-height:1.5}
+#we-row2{display:flex;gap:8px;margin-top:11px}
+#we-row2 select{flex:1;background:rgba(8,7,18,.85);border:1px solid rgba(196,181,253,.35);border-radius:11px;padding:10px;color:#e9e0ff;font-size:12.5px;font-family:inherit}
+#we-where{font-size:10.5px;color:#8d82b8;margin-top:9px}
+#we-row{display:flex;gap:8px;margin-top:12px}
+#we-go{flex:1;padding:13px 10px;border-radius:12px;font-size:13.5px;font-family:inherit;color:#fff6e6;border:1px solid rgba(255,230,176,.7);background:linear-gradient(135deg,rgba(255,214,166,.3),rgba(196,181,253,.24));cursor:pointer}
+#we-x{padding:13px 14px;border-radius:12px;font-size:12px;font-family:inherit;color:#8d82b8;background:transparent;border:1px solid rgba(167,139,250,.3);cursor:pointer}
+#we-open{border:1px dashed rgba(255,230,176,.55)!important;color:#ffe9c4!important;background:rgba(255,214,166,.08)!important}
+#wev-wit{display:none;width:100%;margin-top:8px;padding:11px 12px;border-radius:12px;font-size:12.5px;font-family:inherit;color:#fff2d9;border:1px solid rgba(255,230,176,.55);background:rgba(255,214,166,.1);cursor:pointer}
 #my-aura{position:absolute;left:16px;top:100px;pointer-events:all;width:84px}
 #my-aura{display:none!important}
 #my-aura-title{font-size:11px;color:#d8ccff;text-align:center;text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px;font-weight:500;text-shadow:0 0 12px rgba(167,139,250,.7)}
@@ -1689,6 +1706,7 @@ map.on('style.load',()=>{
   try{if(map.setProjection)map.setProjection('globe');}catch(e){}
   try{map.setFog({'color':'#0b0a1e','high-color':'#241a52','horizon-blend':0.03,'space-color':'#04030e','star-intensity':0.25});}catch(e){}
   if(typeof wevAddLayers==='function')wevAddLayers();
+  if(typeof auraLayersAdd==='function'){auraLayersAdd();auraSyncMap();}
   if(typeof wevWeaveRefresh==='function')wevWeaveRefresh();
 });
 
@@ -2487,6 +2505,7 @@ function submit(lat,lng,text){
   }
   playSound(sid);
   try{if(navigator.vibrate)navigator.vibrate([12,90,18]);}catch(e){}   // a heartbeat where the device allows one; silence where it doesn't
+  try{if(typeof auraSyncMap==='function')auraSyncMap();}catch(e){}
   shareCount++;myShareCount++;
   triggerWave(s.color);
   if(shareCount%4===0&&auraLevel<4){
@@ -4203,7 +4222,7 @@ const WEV_ACT={
 };
 let wevOn={conflict:true,env:true,news:true,events:true,decisions:true,weave:false};
 let wevReady=false,wevWorldTipShown=false,wevOpenId=-1,wevDecNoted=false,wevNewsNoted=false,wevRaf=null,wevLastT=0;
-function wevGeo(){return {type:'FeatureCollection',features:WORLD_EVENTS.map((ev,i)=>({type:'Feature',id:i,geometry:{type:'Point',coordinates:[ev.lng,ev.lat]},properties:{i:i,type:ev.type,fam:ev.fam,sent:ev.compassion,col:WA_HEX[ev.type]||'#c4b5fd'}}))};}
+function wevGeo(){return {type:'FeatureCollection',features:WORLD_EVENTS.map((ev,i)=>({type:'Feature',id:i,geometry:{type:'Point',coordinates:[ev.lng,ev.lat]},properties:{i:i,type:ev.type,fam:ev.fam,sent:ev.compassion,col:WA_HEX[ev.type]||'#c4b5fd',st:ev._status||'seed'}}))};}
 function wevFilter(){
   const fams=Object.keys(WEV_FAMS).filter(k=>wevOn[k]);
   const f=['match',['get','fam'],fams.length?fams:['__none__'],true,false];
@@ -4220,10 +4239,10 @@ function wevAddLayers(){
   const R=(a,b,c,d,e2,f2)=>['interpolate',['linear'],['zoom'],0,a,3,b,6,c,9,d,12,e2,16,f2];
   // Each layer stands alone: one failing can never take the others with it.
   const adds=[
-    ['wev-outer',{'circle-color':['get','col'],'circle-blur':0.9,'circle-radius':R(30,46,70,100,138,180),'circle-opacity':0.2}],
-    ['wev-mid',{'circle-color':['get','col'],'circle-blur':0.5,'circle-radius':R(16,24,32,32,28,22),'circle-opacity':0.34}],
-    ['wev-core',{'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':R(7.5,9,10.5,11,11,10),'circle-opacity':0.9}],
-    ['wev-dot',{'circle-color':'#ffffff','circle-radius':R(2.6,3,3.2,3.2,3,2.8),'circle-opacity':0.85}],
+    ['wev-outer',{'circle-color':['get','col'],'circle-blur':0.9,'circle-radius':R(30,46,70,100,138,180),'circle-opacity':['*',0.2,['case',['==',['get','st'],'unverified'],0.45,1]]}],
+    ['wev-mid',{'circle-color':['get','col'],'circle-blur':0.5,'circle-radius':R(16,24,32,32,28,22),'circle-opacity':['*',0.34,['case',['==',['get','st'],'unverified'],0.45,1]]}],
+    ['wev-core',{'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':R(7.5,9,10.5,11,11,10),'circle-opacity':['*',0.9,['case',['==',['get','st'],'unverified'],0.45,1]]}],
+    ['wev-dot',{'circle-color':'#ffffff','circle-radius':R(2.6,3,3.2,3.2,3,2.8),'circle-opacity':['*',0.85,['case',['==',['get','st'],'unverified'],0.45,1]]}],
     ['wev-sent',{'circle-color':'rgba(0,0,0,0)','circle-radius':R(12,17,21,23,22,19),'circle-opacity':0,'circle-stroke-color':'#ffe6b0','circle-stroke-width':1.4,'circle-stroke-opacity':['min',0.6,['*',0.09,['get','sent']]]}]
   ];
   adds.forEach(a=>{try{if(!map.getLayer(a[0]))map.addLayer({id:a[0],type:'circle',source:'wevents',paint:a[1]});}catch(e){console.warn('[wev] layer '+a[0],e);}});
@@ -4275,7 +4294,12 @@ function wevOpenPanel(i){
   const t=document.getElementById('wev-t');if(t)t.textContent=ev.title;
   const k=document.getElementById('wev-k');if(k){const _aw=ALPHA_WORDS.find(x=>x.w===({suffering:'Compassion',need:'Hope',disaster:'Renewal',joy:'Joy',sport:'Together'}[ev.type]||'Presence'));k.innerHTML=(_aw?alphaGlyph(_aw,18)+' ':'')+escT((WEV_FAMS[ev.fam]||'')+' \u00b7 '+(WA_LABEL[ev.type]||ev.type));k.style.color=WA_HEX[ev.type]||'#c4b5fd';k.style.display='inline-flex';k.style.alignItems='center';k.style.gap='6px';}
   const n=document.getElementById('wev-n');if(n)n.textContent=ev.note;
-  const d=document.getElementById('wev-d');if(d)d.textContent=ev.doorway||'';
+  const d=document.getElementById('wev-d');if(d)d.textContent=(ev._db&&ev._status==='unverified'?'\u2691 Raised by a senser \u2014 unverified. It stands here fully once three sensers witness it is real.\n':'')+(ev.doorway||'');
+  try{
+    let wb=document.getElementById('wev-wit');
+    if(!wb){const sb=document.getElementById('wev-send');if(sb&&sb.parentNode){wb=document.createElement('button');wb.id='wev-wit';wb.type='button';sb.parentNode.insertBefore(wb,sb.nextSibling);wb.addEventListener('click',wevWitness);}}
+    if(wb){if(ev._db&&ev._status!=='verified'){wb.style.display='block';wb.textContent='\ud83d\udc41 I witness this is real \u00b7 '+(ev._wit||0)+' of 3';}else wb.style.display='none';}
+  }catch(e){}
   const b=document.getElementById('wev-send');if(b)b.textContent=(WEV_ACT[ev.type]||WEV_ACT.suffering).btn;
   wevPanelCount();
   p.classList.add('show');
@@ -4289,6 +4313,7 @@ function wevClosePanel(){const p=document.getElementById('wev-panel');if(p)p.cla
 function wevSend(){
   const ev=WORLD_EVENTS[wevOpenId];if(!ev)return;
   ev.compassion++;
+  if(ev._db&&gate&&gate.on){gate.db.rpc('answer_event',{p_event:ev._db,p_session:gate.sid}).then(r=>{if(r&&!r.error&&typeof r.data==='number'){ev.compassion=r.data;wevPanelCount();try{const s3=map.getSource('wevents');if(s3)s3.setData(wevGeo());}catch(e){}}}).catch(()=>{});}
   try{const s2=map.getSource('wevents');if(s2)s2.setData(wevGeo());}catch(e){}
   if(typeof myAuraColors!=='undefined')myAuraColors.push(WA_HEX[ev.type]||'#f7ce6b');
   if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=WA_HEX[ev.type]||'#f7ce6b';}
@@ -4367,8 +4392,8 @@ function wevZoomUI(){
   const ps=document.getElementById('wev-send');if(ps)ps.addEventListener('click',wevSend);
   const wb=document.getElementById('wbal');if(wb)wb.addEventListener('click',()=>{const p=document.getElementById('wbal-panel');if(p){p.classList.toggle('show');if(p.classList.contains('show'))wevBalance();}});
   const wx=document.getElementById('wbal-x');if(wx)wx.addEventListener('click',()=>{const p=document.getElementById('wbal-panel');if(p)p.classList.remove('show');});
-  try{map.on('zoom',wevZoomUI);map.on('zoomend',wevZoomUI);map.on('moveend',wevZoomUI);map.on('load',()=>{wevAddLayers();wevWeaveRefresh();wevZoomUI();});}catch(e){}
-  try{if(map.isStyleLoaded&&map.isStyleLoaded()){wevAddLayers();wevWeaveRefresh();}}catch(e){}
+  try{map.on('zoom',wevZoomUI);map.on('zoomend',wevZoomUI);map.on('moveend',wevZoomUI);map.on('load',()=>{wevAddLayers();wevWeaveRefresh();wevZoomUI();try{auraLayersAdd();auraSyncMap();}catch(e){}});}catch(e){}
+  try{if(map.isStyleLoaded&&map.isStyleLoaded()){wevAddLayers();wevWeaveRefresh();auraLayersAdd();auraSyncMap();}}catch(e){}
   wevZoomUI();
   wevBalance();
   const logoEl=document.getElementById('logo');
@@ -4434,6 +4459,7 @@ function witnessLine(sid,lat,lng,label){
 // THE THRESHOLD \u2014 arrival as ritual, not splash screen: from darkness, the world's breath
 // resolves. No spinner, no logo slam, no words yet. The loading state IS the first breath.
 // pointer-events:none and a hard 7s fallback: nobody is ever trapped behind a curtain.
+window.addEventListener('error',function(e){try{console.error('[as-error]',(e&&e.message)||e);}catch(_){}});
 window.AS_CALM=false;
 try{window.AS_CALM=(localStorage.getItem('aurasense_calm')==='1')||((window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)&&localStorage.getItem('aurasense_calm')!=='0');}catch(e){}
 function applyCalm(){
@@ -4449,12 +4475,7 @@ function menuRefresh(){
   try{
     const reg=!!(myProfile&&myProfile.handle);
     document.querySelectorAll('.mj-i').forEach(it=>{
-      const k=it.dataset.mj;
-      try{menuRefresh();}catch(e){}
-      const _reg=!!(myProfile&&myProfile.handle);
-      const _lk=(k!=='profile'&&!_reg)||((k==='bonds'||k==='work'||k==='sync')&&!window.AS_SEEN_ALPHA);
-      if(_lk){menuLockedTap(it);return;}
-      if(k==='alpha'&&!window.AS_SEEN_ALPHA){window.AS_SEEN_ALPHA=true;try{localStorage.setItem('aurasense_seen_alpha','1');}catch(e){}setTimeout(menuRefresh,400);}let locked=false;
+      const k=it.dataset.mj;let locked=false;
       if(k!=='profile'&&!reg)locked=true;
       if((k==='bonds'||k==='work'||k==='sync')&&!window.AS_SEEN_ALPHA)locked=true;
       it.classList.toggle('ma-locked',locked);
@@ -4639,6 +4660,107 @@ function _offSym(sid,color){const sym=(typeof SENSE_SYMBOLS==='object'&&SENSE_SY
     setInterval(()=>{if(document.hidden){last=Date.now();return;}if(Date.now()-last>=15*60*1000){last=Date.now();show();}},30000);
   }catch(e){}
 })();
+// THE LIVING GLOBE \u2014 every true offering becomes a point of light the planet itself wears.
+// GPU circle layers ride the globe natively (the 2D canvas breath cannot wrap a sphere \u2014 which
+// is why the world looked asleep). Tiny at planet height, growing as you descend, handing over
+// to the full breathing auras below street level. Small lights, fluid always.
+function auraLayersAdd(){
+  try{
+    if(!map.getSource('auraglow'))map.addSource('auraglow',{type:'geojson',data:auraGeo()});
+    const zi=(a,b,c,d2,e2)=>['interpolate',['linear'],['zoom'],0,a,4,b,8,c,11,d2,12.5,e2];
+    if(!map.getLayer('aura-glow'))map.addLayer({id:'aura-glow',type:'circle',source:'auraglow',paint:{'circle-color':['get','col'],'circle-blur':1,'circle-radius':zi(6,10,16,22,26),'circle-opacity':zi(0.22,0.3,0.28,0.18,0)}});
+    if(!map.getLayer('aura-pt'))map.addLayer({id:'aura-pt',type:'circle',source:'auraglow',paint:{'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':zi(1.7,2.3,3,3.4,3.6),'circle-opacity':zi(0.95,0.95,0.9,0.7,0)}});
+  }catch(e){}
+}
+function auraGeo(){
+  const fs=[];
+  try{auraPoints.forEach(pt=>{if(typeof pt.lat!=='number'||typeof pt.lng!=='number')return;const sn=SENSES.find(x=>x.id===pt.sense);fs.push({type:'Feature',geometry:{type:'Point',coordinates:[pt.lng,pt.lat]},properties:{col:(sn?sn.color:'#c4b5fd')}});});}catch(e){}
+  return {type:'FeatureCollection',features:fs};
+}
+function auraSyncMap(){try{const src=map.getSource('auraglow');if(src)src.setData(auraGeo());}catch(e){}}
+// LIVE WORLD EVENTS \u2014 raised by sensers, standing in the Gate, carried into the same living
+// machinery as the seeds. True counts only; unverified glows dim until three witnesses stand.
+async function gateLoadEvents(){
+  if(!GATE_CONFIGURED||!gate.on)return;
+  try{
+    const r=await gate.db.from('world_events').select('id,created_at,title,note,doorway,type,fam,lat,lng,status,witness_count').order('created_at',{ascending:false}).limit(120);
+    if(!r||r.error||!Array.isArray(r.data)){if(r&&r.error)console.warn('[gate] events',r.error.message||r.error);return;}
+    let counts={};
+    try{const c=await gate.db.from('world_event_counts').select('id,answers,witnesses');if(c&&!c.error&&Array.isArray(c.data))c.data.forEach(x=>{counts[x.id]={a:x.answers||0,w:x.witnesses||0};});}catch(e){}
+    let added=0;
+    r.data.forEach(row=>{
+      if(!row||!row.id||typeof row.lat!=='number'||typeof row.lng!=='number')return;
+      if(WORLD_EVENTS.some(ev=>ev._db===row.id))return;
+      const cc=counts[row.id]||{a:0,w:row.witness_count||0};
+      WORLD_EVENTS.push({title:String(row.title||'').slice(0,90),note:String(row.note||'').slice(0,240),doorway:String(row.doorway||'').slice(0,200),type:row.type||'need',fam:row.fam||'news',lat:row.lat,lng:row.lng,compassion:cc.a,_db:row.id,_status:row.status||'unverified',_wit:cc.w});
+      added++;
+    });
+    if(added){try{const s3=map.getSource('wevents');if(s3)s3.setData(wevGeo());}catch(e){}try{if(typeof wevWeaveRefresh==='function')wevWeaveRefresh();}catch(e){}}
+    console.log('[gate] world events joined: '+added);
+  }catch(e){console.warn('[gate] events',e);}
+}
+async function wevWitness(){
+  try{
+    const ev=WORLD_EVENTS[wevOpenId];if(!ev||!ev._db)return;
+    if(!gate||!gate.on){showMsg('Witnessing opens with the Gate.');return;}
+    const r=await gate.db.rpc('witness_event',{p_event:ev._db,p_session:gate.sid});
+    if(r&&!r.error&&typeof r.data==='number'){
+      ev._wit=r.data;if(r.data>=3&&ev._status==='unverified')ev._status='witnessed';
+      const wb=document.getElementById('wev-wit');if(wb)wb.textContent='\ud83d\udc41 I witness this is real \u00b7 '+ev._wit+' of 3';
+      try{const s3=map.getSource('wevents');if(s3)s3.setData(wevGeo());}catch(e){}
+      showMsg(ev._wit>=3?'Three witnesses \u2014 this now stands in the world\u2019s light.':'Your witnessing stands with it \u2014 '+ev._wit+' of 3.',5200,'witness','#ffe6b0');
+    }else if(r&&r.error){showMsg('The Gate is resting a moment \u2014 try again soon.');}
+  }catch(e){}
+}
+// THE RAISE DOOR \u2014 a senser can raise a true world event where the map is looking.
+function openRaiseEvent(){
+  try{
+    if(document.getElementById('we-modal'))return;
+    if(!GATE_CONFIGURED||!gate||!gate.on){showMsg('Raising events opens with the Gate.');return;}
+    const c0=map.getCenter();
+    const back=document.createElement('div');back.id='we-back';document.body.appendChild(back);
+    const d=document.createElement('div');d.id='we-modal';
+    let topts='';[['suffering','Suffering \u2014 answered with compassion'],['need','Need \u2014 answered with hope'],['disaster','Disaster \u2014 answered with renewal'],['joy','Joy \u2014 joined'],['sport','Sport & festival \u2014 joined']].forEach(t=>{topts+='<option value="'+t[0]+'">'+t[1]+'</option>';});
+    let fopts='';Object.keys(WEV_FAMS).forEach(k=>{fopts+='<option value="'+k+'">'+WEV_FAMS[k]+'</option>';});
+    d.innerHTML='<div id="we-t">\u2691 Raise a world event</div>'
+      +'<div id="we-s">Only what is true. It will stand where the map is looking \u2014 dim at first, unverified \u2014 and rise into the world\u2019s light when three sensers witness it is real.</div>'
+      +'<input id="we-title" maxlength="80" placeholder="What is happening \u2014 in a few words" autocomplete="off">'
+      +'<textarea id="we-note" maxlength="220" placeholder="A little more \u2014 what a senser arriving here should know"></textarea>'
+      +'<textarea id="we-door" maxlength="180" placeholder="The doorway \u2014 how compassion, hope or joining helps here"></textarea>'
+      +'<div id="we-row2"><select id="we-type">'+topts+'</select><select id="we-fam">'+fopts+'</select></div>'
+      +'<div id="we-where">It will stand at '+c0.lat.toFixed(3)+', '+c0.lng.toFixed(3)+' \u2014 move the map first if that isn\u2019t the place.</div>'
+      +'<div id="we-row"><button id="we-go" type="button">\u2691 Raise it, truly</button><button id="we-x" type="button">not now</button></div>';
+    document.body.appendChild(d);
+    requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});
+    const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},650);};
+    back.addEventListener('click',close);
+    d.querySelector('#we-x').addEventListener('click',close);
+    d.querySelector('#we-go').addEventListener('click',async()=>{
+      const ti=(d.querySelector('#we-title').value||'').trim();
+      const no=(d.querySelector('#we-note').value||'').trim();
+      const dw=(d.querySelector('#we-door').value||'').trim();
+      const ty=d.querySelector('#we-type').value,fa=d.querySelector('#we-fam').value;
+      if(ti.length<6){showMsg('A few true words for the title first \u2727');return;}
+      const cc=map.getCenter();
+      try{
+        const r=await gate.db.from('world_events').insert({title:ti,note:no,doorway:dw,type:ty,fam:fa,lat:cc.lat,lng:cc.lng,submitter:gate.sid}).select('id');
+        if(r&&!r.error&&r.data&&r.data[0]){
+          WORLD_EVENTS.push({title:ti,note:no,doorway:dw,type:ty,fam:fa,lat:cc.lat,lng:cc.lng,compassion:0,_db:r.data[0].id,_status:'unverified',_wit:0});
+          try{const s3=map.getSource('wevents');if(s3)s3.setData(wevGeo());}catch(e){}
+          close();
+          showMsg('Raised \u2014 it stands dim and honest until three sensers witness it. Thank you for carrying something true.',7200,'witness','#ffe6b0');
+        }else{showMsg('The Gate could not hold that just now \u2014 rest a moment and try again.');}
+      }catch(e){showMsg('The Gate could not hold that just now \u2014 rest a moment and try again.');}
+    });
+  }catch(e){}
+}
+(function raiseWire(){
+  try{
+    const ch=document.getElementById('wev-chips');
+    if(ch){const b=document.createElement('button');b.id='we-open';b.type='button';b.textContent='\u2691 raise';b.title='Raise a true world event where the map is looking';ch.appendChild(b);}
+    document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#we-open')){e.preventDefault();openRaiseEvent();}}catch(_){}});
+  }catch(e){}
+})();
 (function threshold(){
   try{
     var REDUCED=false;try{REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
@@ -4713,6 +4835,8 @@ async function gateLoadOfferings(){
     try{if(typeof updateMyOrb==='function')updateMyOrb();}catch(e){}
     try{if(typeof wevBalance==='function')wevBalance();}catch(e){}
     console.log('[gate] offerings returned \u2014 yours: '+own+' \u00b7 others: '+other);
+    try{if(typeof auraSyncMap==='function')auraSyncMap();}catch(e){}
+    try{if(typeof gateLoadEvents==='function')gateLoadEvents();}catch(e){}
     if(own>0)setTimeout(()=>{try{showMsg('Welcome back \u2014 your aura found you. '+own+' offering'+(own>1?'s have':' has')+' returned to your light.',5600,'witness',(myAuraColors[0]||'#c4b5fd'));}catch(e){}},1800);
   }catch(e){console.warn('[gate] load',e);}
 }
