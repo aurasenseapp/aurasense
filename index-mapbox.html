@@ -204,11 +204,24 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #wev-wit{display:none;width:100%;margin-top:8px;padding:11px 12px;border-radius:12px;font-size:12.5px;font-family:inherit;color:#fff2d9;border:1px solid rgba(255,230,176,.55);background:rgba(255,214,166,.1);cursor:pointer}
 #ptitle{position:sticky;top:-1px;z-index:6;background:rgba(10,9,20,.94);backdrop-filter:blur(6px)}
 /* THE MIRROR \u2014 a reflection, only ever when asked for */
-#mr-open{display:block;width:calc(100% - 4px);margin:0 2px 10px;padding:11px 13px;border-radius:13px;font-size:12.5px;letter-spacing:.04em;font-family:inherit;color:#e8e2ff;border:1px solid rgba(210,200,255,.45);background:linear-gradient(135deg,rgba(210,200,255,.12),rgba(167,139,250,.10));cursor:pointer}
+#mr-open,#gp-open{display:block;width:calc(100% - 4px);margin:0 2px 10px;padding:11px 13px;border-radius:13px;font-size:12.5px;letter-spacing:.04em;font-family:inherit;color:#e8e2ff;border:1px solid rgba(210,200,255,.45);background:linear-gradient(135deg,rgba(210,200,255,.12),rgba(167,139,250,.10));cursor:pointer}
 #mr-back{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.72);opacity:0;transition:opacity .6s ease}
 #mr-back.show{opacity:1}
 #mr-modal{position:fixed;left:50%;top:46%;transform:translate(-50%,-50%);z-index:100001;width:min(450px,94vw);max-height:86vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(210,200,255,.5);border-radius:20px;padding:22px 19px 16px;box-shadow:0 12px 48px rgba(0,0,0,.65),0 0 38px rgba(210,200,255,.22);opacity:0;transition:opacity .7s ease}
 #mr-modal.show{opacity:1}
+.mr-bal{display:flex;justify-content:center;margin:6px 0 8px}
+@keyframes mrB{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+#gp-open{border-color:rgba(150,215,190,.5);background:linear-gradient(135deg,rgba(150,215,190,.10),rgba(167,139,250,.08))}
+#gp-back{position:fixed;inset:0;background:rgba(4,3,10,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:100000;opacity:0;transition:opacity .5s}
+#gp-back.show{opacity:1}
+#gp-modal{position:fixed;left:50%;top:46%;transform:translate(-50%,-50%);z-index:100001;width:min(430px,94vw);max-height:82vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(150,215,190,.55);border-radius:20px;padding:22px 19px 16px;box-shadow:0 12px 48px rgba(0,0,0,.65),0 0 38px rgba(150,215,190,.2);opacity:0;transition:opacity .6s}
+#gp-modal.show{opacity:1}
+#gp-modal .gp-t{font-size:16px;color:#e9fff6;letter-spacing:.06em;margin-bottom:6px}
+#gp-modal .gp-s{font-size:12px;line-height:1.65;color:#a8c8bc;margin-bottom:12px}
+#gp-modal input{width:100%;box-sizing:border-box;background:rgba(10,8,24,.8);border:0.5px solid rgba(150,215,190,.4);border-radius:10px;color:#efe8ff;font-size:13px;padding:10px 11px;font-family:inherit;margin-bottom:9px}
+#gp-modal button{font-family:inherit;cursor:pointer;border-radius:13px;font-size:12.5px;padding:10px 14px;border:0.5px solid rgba(150,215,190,.55);background:rgba(150,215,190,.16);color:#e9fff6;margin-right:8px;margin-bottom:8px}
+#gp-modal .gp-note{font-size:11.5px;color:#9bd8c0;min-height:16px;margin:2px 0 6px}
+#gp-modal .gp-x{display:block;width:100%;margin-top:8px;background:none;border:none;color:#8a80b4;font-size:11.5px}
 #mr-t{font-size:16.5px;color:#f2edff;letter-spacing:.03em;text-align:center;text-shadow:0 0 16px rgba(210,200,255,.6)}
 #mr-s,.mr-s2{font-size:11.5px;color:#a99cd4;margin-top:7px;line-height:1.6;text-align:center;font-style:italic}
 .mr-card{margin-top:13px;text-align:left;background:rgba(210,200,255,.05);border:0.5px solid rgba(210,200,255,.2);border-radius:14px;padding:12px 13px}
@@ -1443,6 +1456,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div class="ma-col" id="ma-left">
       <button id="calm-toggle" type="button" title="Calm mode stills the fine motion and keeps the silence — only the slow breath remains. For anyone who senses better in stillness.">☾ Calm mode — off</button>
       <button id="mr-open" type="button">🪞 The Mirror — a reflection, when you want one</button>
+      <button id="gp-open" type="button">◇ Keep my light — carry this aura beyond today</button>
       <div id="ma-widen"></div>
       <button id="ss-open" type="button">✉ SenseShare — send someone a light</button>
       <div class="ma-h">What you have offered</div>
@@ -1524,6 +1538,20 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div class="rg-sub">The more precisely you share, the more precisely your aura can rest on the map. Your street alone is plenty.</div>
       <input id="rg-address" class="rg-in" type="text" placeholder="e.g. Maple Street, your town" maxlength="120" autocomplete="off">
       <div class="rg-note" style="margin-top:6px;color:#a99bd6">The Aurasense map will reset to this position when you select “My Locality” under the input box.</div>
+    </div>
+
+    <div class="rg-card">
+      <div class="rg-h">Keep this light beyond today <span class="rg-opt">optional</span></div>
+      <div class="rg-sub">Everything above lives only in this visit unless you keep it. Give an email and we send a six-digit code — no password, ever. Your email is never shown anywhere and never joins your auras; it only lets this same light return to you on any device.</div>
+      <div class="rg-row">
+        <input id="rg-email" class="rg-in" type="email" placeholder="you@somewhere" maxlength="120" autocomplete="email">
+        <button id="rg-keep" class="rg-mini" type="button">Send my code ✧</button>
+      </div>
+      <div class="rg-row" id="rg-code-row" style="display:none;margin-top:8px">
+        <input id="rg-code" class="rg-in" type="text" inputmode="numeric" placeholder="the six digits" maxlength="8" autocomplete="one-time-code">
+        <button id="rg-verify" class="rg-mini" type="button">Keep my light</button>
+      </div>
+      <div id="rg-keep-note" class="rg-note"></div>
     </div>
 
     <div class="rg-card">
@@ -2565,7 +2593,7 @@ function submit(lat,lng,text){
   addFeed(pubText,sid,'just now',true,lat,lng);
   // This offering becomes a thread in the senser's own aura.
   myAuraColors.push(s.color);
-  myOfferings.unshift({photo:pp,sense:sid,label:s.label,color:s.color,text:text,time:'just now',born:Date.now(),place:null,lat:lat,lng:lng});if(typeof clearPhoto==='function')clearPhoto();
+  myOfferings.unshift({photo:pp,sense:sid,label:s.label,color:s.color,text:text,time:'just now',born:Date.now(),place:null,lat:lat,lng:lng});if(typeof clearPhoto==='function')clearPhoto();try{gpSave();}catch(e){}
   if(myOfferings.length>50)myOfferings.pop();
   // Remember the offered spot so the tabs and the return from the World view come back here, not a random place.
   const sz=Math.min(17,Math.max(14,map.getZoom()));
@@ -3135,10 +3163,10 @@ function closeAlphaPage(){const p=document.getElementById('alpha-page');if(p)p.c
     mjb.addEventListener('click',e=>{e.stopPropagation();mjm.classList.toggle('open');});
     document.addEventListener('click',e=>{if(!e.target.closest('#ma-journey'))mjm.classList.remove('open');});
     mjm.querySelectorAll('.mj-i').forEach(it=>it.addEventListener('click',()=>{
-      mjm.classList.remove('open');
       const k=it.dataset.mj;
       try{menuRefresh();}catch(e){}
       if(mjLocked(k)){menuLockedTap(it);return;}
+      mjm.classList.remove('open');
       if(k==='alpha'&&!window.AS_SEEN_ALPHA){window.AS_SEEN_ALPHA=true;try{localStorage.setItem('aurasense_seen_alpha','1');}catch(e){}setTimeout(menuRefresh,400);}
       if(k==='profile'&&typeof openRegister==='function')openRegister();
       else if(k==='quest'&&typeof openQuestPage==='function')openQuestPage();
@@ -3384,6 +3412,7 @@ function openRegister(){const p=document.getElementById('register-page');if(p)p.
       const fr=document.getElementById('rg-interests-free');if(fr&&myProfile.interests&&myProfile.interests.length)fr.value=myProfile.interests.join(', ');}
   }catch(e){}}
 function regInfusion(){
+  try{gpSave();}catch(e){}
   if(myProfile&&myProfile._regGlow)return;if(myProfile)myProfile._regGlow=1;
   const cols=['#c4b5fd','#f0a8c0','#ffd9a0'];
   cols.forEach((c,i)=>setTimeout(()=>{
@@ -3465,7 +3494,7 @@ function qzSubmit(){
   for(let i=0;i<Math.max(2,Math.round(posA));i++)add.push(warm[i%warm.length]);
   for(let i=0;i<Math.max(1,Math.round(negA));i++)add.push(cool[i%cool.length]);
   myProfile.qzColors=(myProfile.qzColors||[]);myProfile.qzMeta=(myProfile.qzMeta||[]);
-  myProfile.qzDone=(myProfile.qzDone||{});myProfile.qzDone[q.name]=1;
+  myProfile.qzDone=(myProfile.qzDone||{});myProfile.qzDone[q.name]=1;try{gpSave();}catch(e){}
   add.forEach((c,i)=>setTimeout(()=>{
     myAuraColors.push(c);myProfile.qzColors.push(c);myProfile.qzMeta.push({n:q.name||'Inner reading',t:Date.now()});
     paFeedAt=performance.now();paFeedColor=c;
@@ -3476,6 +3505,20 @@ function qzSubmit(){
   },1900+i*800));
   const t=document.getElementById('qz-thanks');if(t)t.classList.add('show');
   setTimeout(()=>{closeQuest();openMyAuraPage();},1100);
+  setTimeout(()=>{try{
+    const mp=document.getElementById('myaura-page');
+    if(!mp||!mp.classList.contains('show'))return; // they wandered — never yank
+    openQuestPage();qzShowMenu();
+    const doneN=Object.keys((myProfile&&myProfile.qzDone)||{}).length;
+    if(doneN<QUESTS.length){
+      showMsg('Your aura holds it \u2014 and the next reading has opened \u2727',5200,'witness','#c4b5fd');
+      const menu=document.getElementById('qz-menu');
+      const nx=menu?menu.querySelector('.qz-card:not(.qz-done):not(.qz-locked)'):null;
+      if(nx){nx.classList.remove('qz-hint');void nx.offsetWidth;nx.classList.add('qz-hint');setTimeout(()=>nx.classList.remove('qz-hint'),3400);}
+    }else{
+      showMsg('Every reading is woven \u2014 Shape your aura is complete, and the Soul Search has opened \u2727',6800,'witness','#c4b5fd');
+    }
+  }catch(e){}},7800);
 }
 const qzSubmitBtn=document.getElementById('qz-submit');if(qzSubmitBtn)qzSubmitBtn.addEventListener('click',qzSubmit);
 const qzBackBtn=document.getElementById('qz-back');if(qzBackBtn)qzBackBtn.addEventListener('click',()=>{const act=document.getElementById('qz-active');if(act&&act.style.display!=='none')qzShowMenu();else closeQuest();});
@@ -3646,7 +3689,7 @@ function lfSendOffer(){
   const exp=en?en.value.trim().slice(0,500):'';
   myGiven.push({kind:lfoKind,to:r.handle,place:r.street+', '+r.city,t:Date.now(),exp:exp,status:'offered'});
   if(exp)r.exp=true;
-  if(w)myAuraColors.push(w.c);myAuraColors.push(r.color);
+  if(w)myAuraColors.push(w.c);myAuraColors.push(r.color);try{gpSave();}catch(e){}
   myProfile.auraBoost=(myProfile.auraBoost||0)+1;
   paFeedAt=performance.now();paFeedColor=(w?w.c:'#f0a8c0');
   const mo=document.getElementById('orbMy');if(mo){mo.classList.add('orb-fed');setTimeout(()=>mo.classList.remove('orb-fed'),3000);}
@@ -3875,7 +3918,7 @@ document.addEventListener('click',function(e){try{
     if(typeof myAuraColors!=='undefined')myAuraColors.push(w.c);
     if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=w.c;}
     try{playShift(348,1.8,.05);}catch(_){}
-    opRender();
+    opRender();try{gpSave();}catch(e){}
   }
 }catch(_){}});
 function openSyncPage(){
@@ -4906,7 +4949,7 @@ document.addEventListener('click',async function(e){
           if(typeof myAuraColors!=='undefined')myAuraColors.push(on.dataset.c);
           if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=on.dataset.c;}
           showMsg('Your light stands in the Accord \u2014 and a thread of it weaves through your own aura \u2727',5600,'witness',on.dataset.c);
-          const ev=WORLD_EVENTS[wevOpenId];if(ev)accRender(ev);
+          const ev=WORLD_EVENTS[wevOpenId];if(ev)accRender(ev);try{gpSave();}catch(e){}
         }else{
           send.disabled=false;send.textContent='Offer to the Accord \u2727';
           showMsg('The Gate is resting a moment \u2014 nothing of yours was lost; try again soon.');
@@ -4916,6 +4959,22 @@ document.addEventListener('click',async function(e){
     }
   }catch(_){}
 });
+// GATE PROFILES \u2014 the keystone (bones). Email \u2192 six-digit code, no password ever.
+// Until supabase-profiles.sql is run (auth email is on by default), every path here rests silently.
+gate.user=null;let _gpT=null,_gpQuiet=false;
+function gpBlob(){let prof={};try{prof=JSON.parse(JSON.stringify(myProfile||{}));}catch(e){}return {v:1,profile:prof,colors:(myAuraColors||[]).slice(-400),ops:(typeof opState!=='undefined'?opState:{}),seenAlpha:!!window.AS_SEEN_ALPHA};}
+function gpSave(now){if(!gate.on||!gate.user)return;if(_gpT)clearTimeout(_gpT);const go=async()=>{try{await gate.db.from('profiles').upsert({id:gate.user.id,handle:(myProfile&&myProfile.handle)||null,ground:(myProfile&&myProfile.address)||null,aura:gpBlob()});}catch(e){}};if(now)go();else _gpT=setTimeout(go,2500);}
+function gpRestore(row){try{if(!row)return;if(row.handle&&!(myProfile&&myProfile.handle))myProfile.handle=row.handle;if(row.ground&&!(myProfile&&myProfile.address))myProfile.address=row.ground;const a=row.aura||{};if(a.profile&&typeof a.profile==='object')Object.assign(myProfile,a.profile);if(Array.isArray(a.colors)&&a.colors.length>myAuraColors.length){myAuraColors.length=0;a.colors.forEach(c=>myAuraColors.push(c));}if(a.ops&&typeof opState!=='undefined')Object.assign(opState,a.ops);if(a.seenAlpha){window.AS_SEEN_ALPHA=true;try{localStorage.setItem('aurasense_seen_alpha','1');}catch(e){}}try{menuRefresh();}catch(e){}try{const mp=document.getElementById('myaura-page');if(mp&&mp.classList.contains('show'))maBuildLayers();}catch(e){}if(!_gpQuiet)showMsg('Your kept light has returned to you \u2014 aura, journey, and all \u2727',6200,'witness','#9bd8c0');}catch(e){}}
+async function gpLoadProfile(){if(!gate.on||!gate.user)return;try{const r=await gate.db.from('profiles').select('id,handle,ground,aura,updated_at').eq('id',gate.user.id).maybeSingle();if(r&&!r.error&&r.data)gpRestore(r.data);else gpSave(true);}catch(e){}}
+function gpDoor(){try{const b=document.getElementById('gp-open');if(!b)return;if(gate.user){const em=(gate.user.email||'').replace(/(.{2}).+(@.*)/,'$1\u2026$2');b.textContent='\u25c7 Your light is kept \u2014 '+em;}else b.textContent='\u25c7 Keep my light \u2014 carry this aura beyond today';}catch(e){}}
+function gpInit(){if(!gate.on||!gate.db||!gate.db.auth)return;try{gate.db.auth.onAuthStateChange((_e,s)=>{gate.user=(s&&s.user)||null;gpDoor();});gate.db.auth.getSession().then(r=>{const s=r&&r.data&&r.data.session;gate.user=(s&&s.user)||null;gpDoor();if(gate.user)gpLoadProfile();}).catch(()=>{});}catch(e){}}
+async function gpSendCode(email,note){if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){if(note)note.textContent='A whole email address first \u2014 the code needs somewhere to land \u2727';return false;}if(!gate.on||!gate.db.auth){if(note)note.textContent='The Gate is not keeping lights just yet \u2014 soon \u2727';return false;}try{const r=await gate.db.auth.signInWithOtp({email:email,options:{shouldCreateUser:true}});if(r&&r.error){if(note)note.textContent='The Gate is not keeping lights just yet \u2014 soon \u2727';return false;}if(note)note.textContent='\u2713 Sent. Six digits are on their way to '+email+' \u2014 they open below.';return true;}catch(e){if(note)note.textContent='The Gate is not keeping lights just yet \u2014 soon \u2727';return false;}}
+async function gpVerify(email,code,note,done){if(!code||code.replace(/\D/g,'').length<6){if(note)note.textContent='The six digits from the email \u2014 check once more \u2727';return;}try{const r=await gate.db.auth.verifyOtp({email:email,token:code.replace(/\D/g,''),type:'email'});if(r&&r.error){if(note)note.textContent='That code did not open \u2014 check it, or send a fresh one.';return;}gate.user=(r&&r.data&&r.data.user)||gate.user;_gpQuiet=true;await gpLoadProfile();_gpQuiet=false;gpSave(true);gpDoor();if(note)note.textContent='\u2713 Kept. This light now travels with you \u2014 any device, this same aura.';if(done)done();}catch(e){if(note)note.textContent='That code did not open \u2014 check it, or send a fresh one.';}}
+function gpModal(){if(document.getElementById('gp-modal'))return;const back=document.createElement('div');back.id='gp-back';document.body.appendChild(back);const d=document.createElement('div');d.id='gp-modal';
+if(gate.user){d.innerHTML='<div class="gp-t">\u25c7 Your light is kept</div>'+'<div class="gp-s">Signed as <b>'+escT(gate.user.email||'')+'</b>. Your aura, journey, colours and Openings ride with it \u2014 any device, the same light. Mirror and well notes stay on this device, as promised.</div>'+'<button id="gp-now" type="button">Save my light now \u2727</button>'+'<button id="gp-out" type="button">Set this light down (sign out)</button>'+'<div class="gp-note" id="gp-note"></div>'+'<button class="gp-x" id="gp-x" type="button">close</button>';}
+else{d.innerHTML='<div class="gp-t">\u25c7 Keep my light</div>'+'<div class="gp-s">An email and a six-digit code \u2014 no password, ever. Your email is never shown and never joins your auras; it only lets this same light return to you anywhere.</div>'+'<input id="gp-em" type="email" placeholder="you@somewhere" maxlength="120" autocomplete="email">'+'<button id="gp-send" type="button">Send my code \u2727</button>'+'<div id="gp-c-row" style="display:none"><input id="gp-code" type="text" inputmode="numeric" placeholder="the six digits" maxlength="8" autocomplete="one-time-code"><button id="gp-go" type="button">Keep my light</button></div>'+'<div class="gp-note" id="gp-note"></div>'+'<button class="gp-x" id="gp-x" type="button">not now</button>';}
+document.body.appendChild(d);requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},600);};back.addEventListener('click',close);d.querySelector('#gp-x').addEventListener('click',close);const note=d.querySelector('#gp-note');const sn=d.querySelector('#gp-send');if(sn)sn.addEventListener('click',async()=>{sn.disabled=true;const ok=await gpSendCode((d.querySelector('#gp-em').value||'').trim(),note);sn.disabled=false;if(ok)d.querySelector('#gp-c-row').style.display='';});const go=d.querySelector('#gp-go');if(go)go.addEventListener('click',()=>gpVerify((d.querySelector('#gp-em').value||'').trim(),(d.querySelector('#gp-code').value||''),note,()=>setTimeout(close,1600)));const nw=d.querySelector('#gp-now');if(nw)nw.addEventListener('click',()=>{gpSave(true);if(note)note.textContent='\u2713 Held.';});const out=d.querySelector('#gp-out');if(out)out.addEventListener('click',async()=>{try{await gate.db.auth.signOut();}catch(e){}gate.user=null;gpDoor();close();showMsg('Set down \u2014 this visit walks light again. Your kept aura waits where you left it \u2727',5600);});}
+document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#gp-open')){e.preventDefault();gpModal();return;}if(e.target&&e.target.closest&&e.target.closest('#rg-keep')){const n=document.getElementById('rg-keep-note');const em=(document.getElementById('rg-email')||{value:''}).value.trim();gpSendCode(em,n).then(ok=>{if(ok){const cr=document.getElementById('rg-code-row');if(cr)cr.style.display='';}});return;}if(e.target&&e.target.closest&&e.target.closest('#rg-verify')){const n=document.getElementById('rg-keep-note');const em=(document.getElementById('rg-email')||{value:''}).value.trim();const cd=(document.getElementById('rg-code')||{value:''}).value;gpVerify(em,cd,n);return;}if(e.target&&e.target.closest&&e.target.closest('#rg-create')){setTimeout(()=>{try{gpSave();}catch(_){}},1400);}}catch(_){}});
 async function gateLoadEvents(){
   if(!GATE_CONFIGURED||!gate.on)return;
   try{
@@ -5008,12 +5067,52 @@ function mirrorOpen(){
     const quiet=SENSES.filter(x=>!used[x.id]&&String(x.id).indexOf('ns-')!==0).slice(0,3);
     const places=new Set(myOfferings.map(o=>o&&o.place).filter(Boolean)).size;
     const wn=(window.wellNotes||[]).length;
+    // v2 — the Balance View: realms, the line between lights, Opening seeds. Only computed truth.
+    const _realm={};SENSES.forEach(s=>{_realm[s.id]=s.realm;});
+    let _in=0,_out=0,_un=0;
+    myOfferings.forEach(o=>{const r=o&&_realm[o.sense];if(r==='internal')_in++;else if(r==='external')_out++;else _un++;});
+    let mrBal='';
+    if(total>0){
+      const rIn=16+20*Math.sqrt(_in/Math.max(1,total)),rOut=16+20*Math.sqrt(_out/Math.max(1,total));
+      const svg='<svg viewBox="0 0 160 84" width="160" height="84">'
+        +'<g style="transform-box:fill-box;transform-origin:center;animation:mrB 6s ease-in-out infinite"><circle cx="62" cy="42" r="'+rIn.toFixed(1)+'" fill="#c9a8f0" fill-opacity="0.34" stroke="#c9a8f0" stroke-opacity="0.85"/></g>'
+        +'<g style="transform-box:fill-box;transform-origin:center;animation:mrB 6s ease-in-out -3s infinite"><circle cx="98" cy="42" r="'+rOut.toFixed(1)+'" fill="#8fc8f0" fill-opacity="0.34" stroke="#8fc8f0" stroke-opacity="0.85"/></g>'
+        +((_in>0&&_out>0)?'<circle cx="80" cy="42" r="3.2" fill="#ffffff" style="filter:drop-shadow(0 0 6px #fff)"/>':'')
+        +'</svg>';
+      let cap,door='';
+      const diff=Math.abs(_in-_out);
+      if(diff<=1)cap='Held in balance \u2014 '+_in+' felt within \u00b7 '+_out+' sensed in the world. Neither side asks for more; this is a picture, not a scale.';
+      else if(_out>_in){cap=_out+' of your '+total+' lights are sensed in the world; '+_in+' felt within.';
+        const dq=SENSES.filter(x=>x.realm==='internal'&&!used[x.id]).slice(0,3);
+        if(dq.length)door='If ever you wished, the inward rooms are quiet ground \u2014 '+dq.map(q=>'<b style="color:'+q.color+'">'+escT(q.label)+'</b>').join(' \u00b7 ')+' wait there. Doors, never directions.';}
+      else{cap=_in+' of your '+total+' lights are felt within; '+_out+' sensed in the world.';
+        const dq=SENSES.filter(x=>x.realm==='external'&&!used[x.id]).slice(0,3);
+        if(dq.length)door='If ever you wished, the world-side senses are open ground \u2014 '+dq.map(q=>'<b style="color:'+q.color+'">'+escT(q.label)+'</b>').join(' \u00b7 ')+' wait there. Doors, never directions.';}
+      if(_un>0)cap+=' '+_un+' new-sense light'+(_un>1?'s stand':' stands')+' uncharted \u2014 realms are theirs to declare.';
+      mrBal='<div class="mr-card"><div class="mr-h">The balance of your light</div><div class="mr-bal">'+svg+'</div><div class="mr-b">'+cap+(door?'<br>'+door:'')+'</div><div class="mr-q">Which side of you does the world meet first \u2014 and which waits to be met?</div></div>';
+    }
+    let mrLine='';
+    if(total>=2){
+      let first=Infinity,last=0;myOfferings.forEach(o=>{if(o&&o.born){if(o.born<first)first=o.born;if(o.born>last)last=o.born;}});
+      if(isFinite(first)&&last>first){
+        const days=Math.max(1,Math.round((last-first)/86400000));
+        mrLine+='<div class="mr-b">Between your first light and your latest lie '+(days===1?'a single day':days+' days')+'. A trajectory is only that line \u2014 seen with intent.</div>';
+      }
+      if(typeof opState!=='undefined'&&typeof OPENINGS!=='undefined'){
+        const seeds=Object.keys(opState).map(i=>{const o=OPENINGS[i],s=opState[i];return (o&&s)?('You stood <b style="color:'+s.c+'">'+escT(s.w)+'</b> into an Opening \u2014 \u201c'+escT(String(o.q).slice(0,46))+(String(o.q).length>46?'\u2026':'')+'\u201d'):'';}).filter(Boolean);
+        if(seeds.length)mrLine+='<div class="mr-b">'+seeds.join('<br>')+'</div>';
+      }
+      if(mrLine)mrLine='<div class="mr-card"><div class="mr-h">The line between your lights</div>'+mrLine+'<div class="mr-q">If the line kept its direction, where does it arrive? You may bend it any morning.</div></div>';
+    }
+    const mrWell=(wn>=2)?('<div class="mr-card"><div class="mr-h">The well</div><div class="mr-b">'+wn+' check-ins rest in the well, on this device alone.</div><div class="mr-q">Do any two rhyme? Rhyme is the Weave\u2019s word for a pattern asking to be seen.</div></div>'):'';
     let cards='';
     if(total===0){
       cards+='<div class="mr-card"><div class="mr-h">The Mirror is dark, honestly.</div><div class="mr-b">It can only reflect what you have offered \u2014 and nothing has been offered yet. That is not emptiness; it is a clean surface. One sense, anywhere true, and the first light appears here.</div></div>';
     }else{
       if(topS)cards+='<div class="mr-card"><div class="mr-h">The light you reach for most</div><div class="mr-b"><b style="color:'+topS.color+'">'+escT(topS.label)+'</b> \u2014 '+used[top]+' of your '+total+' offering'+(total>1?'s':'')+'.</div><div class="mr-q">What does it give you, that keeps you returning? Yours to answer, or not.</div></div>';
+      cards+=mrBal;
       if(quiet.length)cards+='<div class="mr-card"><div class="mr-h">Quiet rooms</div><div class="mr-b">'+quiet.map(q=>'<b style="color:'+q.color+'">'+escT(q.label)+'</b>').join(' \u00b7 ')+' \u2014 senses you have not yet offered. Not tasks, not goals: simply doors you have not opened. If one of them quietly calls, offer it where you stand and watch what it lights.</div></div>';
+      cards+=mrLine+mrWell;
       cards+='<div class="mr-card"><div class="mr-h">Your ground so far</div><div class="mr-b">'+total+' offering'+(total>1?'s':'')+(places?(' \u00b7 '+places+' place'+(places>1?'s':'')+' felt'):'')+(wn?(' \u00b7 '+wn+' wellness check-in'+(wn>1?'s':'')):'')+'.</div></div>';
     }
     cards+='<div class="mr-card"><div class="mr-h">The unlit \u2014 for the Mirror alone</div><div class="mr-b">The shadow is only what has not been looked at yet \u2014 nothing more sinister than that. Look without the word; judge nothing; the looking itself is the change.</div><div class="mr-q">Is there a feeling you notice yourself steering around when you offer? You may write it here. It stays on this device, in this Mirror, and goes nowhere else.</div><textarea id="mr-in" maxlength="200" placeholder="only if you wish\u2026"></textarea><button id="mr-keep" type="button">\u2727 Hold it in the Mirror</button></div>';
@@ -5107,6 +5206,7 @@ async function gateLoadOfferings(){
     // can knock on another senser's door.
     let mineRows=[];
     try{const m=await gate.db.rpc('my_offerings',{p_session:gate.sid});if(m&&!m.error&&Array.isArray(m.data))mineRows=m.data;}catch(e){console.warn('[gate] mine',e);}
+    try{const s2=await gate.db.auth.getSession();if(s2&&s2.data&&s2.data.session){const m2=await gate.db.rpc('my_lights');if(m2&&!m2.error&&Array.isArray(m2.data)){const seen={};mineRows.forEach(r=>{if(r&&r.id)seen[r.id]=1;});m2.data.forEach(r=>{if(r&&r.id&&!seen[r.id])mineRows.push(r);});}}}catch(e){}
     const mineIds={};mineRows.forEach(r=>{if(r&&r.id)mineIds[r.id]=1;});
 
     // EVERYONE'S \u2014 through a window with no session id behind it at all. Every aura may be
@@ -5159,6 +5259,7 @@ async function gateLoadOfferings(){
     console.log('[gate] open');
     gateFlushPending();
     gateLoadOfferings();
+    gpInit();
   }catch(e){console.warn('[gate] init',e);}
 })();
 
