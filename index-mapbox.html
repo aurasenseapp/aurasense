@@ -137,6 +137,7 @@ body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #
 #ss-back.show{opacity:1}
 #ss-modal{position:fixed;left:50%;top:44%;transform:translate(-50%,-50%);z-index:100001;width:min(430px,94vw);max-height:82vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(255,183,206,.5);border-radius:20px;padding:20px 18px 16px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(255,159,192,.25);opacity:0;transition:opacity .6s ease}
 #ss-modal.show{opacity:1}
+#ss-row{position:sticky;bottom:-1px;background:rgba(12,10,26,.97);padding:10px 0 2px;margin-top:8px;z-index:2}
 #ss-t{font-size:16px;color:#ffeef4;letter-spacing:.03em;text-align:center;text-shadow:0 0 16px rgba(255,159,192,.55)}
 #ss-s{font-size:11.5px;color:#b3a6d6;margin-top:7px;line-height:1.6;text-align:center}
 #ss-to,#ss-msg{width:100%;margin-top:12px;background:rgba(8,7,18,.75);border:1px solid rgba(196,181,253,.35);border-radius:12px;padding:11px 12px;color:#f4eeff;font-size:16px;outline:none;font-family:inherit}
@@ -248,7 +249,7 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #stip{position:fixed;background:rgba(10,8,20,.97);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 13px;font-size:11px;color:#c0b8d8;max-width:185px;line-height:1.6;pointer-events:none;opacity:0;transition:opacity .2s;z-index:9999;font-style:italic}
 #panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(680px,calc(100% - 32px));pointer-events:all;display:block;background:rgba(8,7,16,.96);border:0.5px solid rgba(167,139,250,.3);border-bottom:none;border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.55)}
 #panel.show-mobile{display:block;padding:12px 12px 16px;max-height:64vh;overflow-y:auto}
-#ptitle-row{display:flex;align-items:center;gap:8px}
+#ptitle-row{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:6;background:rgba(10,8,24,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px 0;margin:-6px 0 4px}
 #ptitle-row #ptitle{flex:1;margin:0}
 #panel.show-mobile #sheet-close{display:inline-block;background:rgba(44,34,78,.94);border:0.5px solid rgba(167,139,250,.45);color:#cbbff0;font-size:11.5px;padding:6px 11px;border-radius:14px;cursor:pointer;font-family:inherit;flex-shrink:0}
 #pi{background:rgba(10,10,20,.93);border:0.5px solid rgba(167,139,250,.18);border-radius:16px;padding:12px 14px;backdrop-filter:blur(12px)}
@@ -272,13 +273,29 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #offer-confirm .oc-lbl{font-size:12px;color:#b9addc;white-space:nowrap;margin-right:2px}
 #offer-confirm .oc-btn{font-size:12px;color:#efe8ff;cursor:pointer;border:0.5px solid rgba(167,139,250,.55);border-radius:11px;padding:7px 13px;background:rgba(167,139,250,.18);white-space:nowrap;font-family:inherit}
 #offer-confirm .oc-btn.oc-social{background:rgba(167,139,250,.08)}
-#alpha-page,#junc-page,#sync-page{overflow-x:hidden;touch-action:pan-y;overscroll-behavior:contain}
-#alpha-page,#junc-page,#sync-page{position:fixed;inset:0;z-index:1700;background:radial-gradient(ellipse at 50% 0%,#191430 0%,#0a0818 60%,#060512 100%);display:none;overflow-y:auto;padding:64px 18px 60px;pointer-events:all}
+#alpha-page,#junc-page,#sync-page,#open-page{overflow-x:hidden;touch-action:pan-y;overscroll-behavior:contain}
+#alpha-page,#junc-page,#sync-page,#open-page{position:fixed;inset:0;z-index:1700;background:radial-gradient(ellipse at 50% 0%,#191430 0%,#0a0818 60%,#060512 100%);display:none;overflow-y:auto;padding:64px 18px 60px;pointer-events:all}
 #alpha-page.show{display:block}
 #junc-page{z-index:1720}
 #junc-page.show{display:block}
 #sync-page{z-index:1730;pointer-events:auto}
 #sync-page.show{display:block}
+#open-page{z-index:1735}
+#open-page.show{display:block}
+#op-back{position:fixed;top:14px;left:14px;z-index:5;background:rgba(20,16,40,.85);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:12px;padding:8px 14px;border-radius:16px;cursor:pointer;font-family:inherit}
+#op-title{text-align:center;font-size:21px;font-weight:300;letter-spacing:.14em;color:#efe8ff;margin:4px 0 8px;text-shadow:0 0 18px rgba(196,181,253,.5)}
+#op-sub{max-width:560px;margin:0 auto 20px;text-align:center;font-size:12.5px;line-height:1.7;color:#a89cd0}
+.op-card{max-width:560px;margin:0 auto 18px;background:rgba(16,12,34,.72);border:0.5px solid rgba(167,139,250,.28);border-radius:18px;padding:18px 18px 14px;box-shadow:0 8px 30px rgba(0,0,0,.35)}
+.op-lock{display:flex;align-items:center;justify-content:center;position:relative;margin:2px 0 10px;min-height:64px}
+.op-lock svg:last-of-type{margin-left:-22px}
+.op-j{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:9px;height:9px;border-radius:50%;background:#fff;box-shadow:0 0 10px #fff,0 0 18px var(--ja,#c4b5fd),0 0 26px var(--jb,#c4b5fd)}
+.op-q{font-size:15.5px;color:#efe8ff;text-align:center;line-height:1.55;margin-bottom:8px;font-weight:300;letter-spacing:.02em}
+.op-a{font-size:12.5px;color:#b3a8dd;text-align:center;line-height:1.65;margin-bottom:12px}
+.op-res{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.op-res button{background:rgba(24,18,48,.8);border:0.5px solid var(--rc,#c4b5fd);color:var(--rc,#e9ddff);border-radius:15px;padding:7px 13px;font-size:12px;cursor:pointer;font-family:inherit;transition:box-shadow .25s}
+.op-res button:hover{box-shadow:0 0 14px var(--rc,#c4b5fd)}
+.op-done{text-align:center;font-size:12.5px;color:#d8ccff;line-height:1.6;font-style:italic}
+#op-foot{max-width:560px;margin:6px auto 30px;text-align:center;font-size:11.5px;line-height:1.6;color:#8a80b4;border-top:0.5px solid rgba(167,139,250,.2);padding-top:12px}
 #sw-back{position:fixed;top:14px;left:14px;z-index:5;background:rgba(20,16,40,.85);border:0.5px solid rgba(167,139,250,.4);color:#d8ccff;font-size:12px;padding:8px 14px;border-radius:16px;cursor:pointer;font-family:inherit}
 #sw-title{font-family:Georgia,serif;font-size:26px;font-weight:300;letter-spacing:.14em;color:#efe8ff;text-align:center;margin-top:8px;text-shadow:0 0 24px rgba(201,184,240,.6)}
 #sw-how{font-size:11px;color:#9a8fc2;line-height:1.7;max-width:560px;margin:-6px auto 18px;text-align:center;border:0.5px dotted rgba(167,139,250,.3);border-radius:12px;padding:9px 13px}
@@ -528,6 +545,13 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 .ma-col{width:27%;padding:62px 22px 26px;overflow-y:auto}
 .ma-col::-webkit-scrollbar{width:3px}.ma-col::-webkit-scrollbar-thumb{background:rgba(167,139,250,.3);border-radius:2px}
 #ma-left{border-right:0.5px solid rgba(167,139,250,.1)}
+#ma-explain{margin-top:16px}
+#ma-selfie-wrap{margin-top:14px}
+#ma-left::-webkit-scrollbar{width:6px}
+#ma-left::-webkit-scrollbar-thumb{background:rgba(167,139,250,.45);border-radius:4px}
+#ma-left::-webkit-scrollbar-track{background:rgba(167,139,250,.08)}
+#ma-scrollhint{position:sticky;bottom:0;text-align:center;font-size:11px;color:#a89cd0;padding:6px 0 2px;background:linear-gradient(to top,rgba(7,6,17,.95),transparent);animation:opHint 2.2s ease-in-out infinite;pointer-events:none}
+@keyframes opHint{0%,100%{transform:translateY(0);opacity:.75}50%{transform:translateY(4px);opacity:1}}
 #ma-layer-panel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:12;width:min(400px,92%);max-height:62vh;overflow-y:auto;background:rgba(16,12,34,.97);border:0.5px solid rgba(196,181,253,.5);border-radius:16px;padding:15px 17px;box-shadow:0 10px 44px rgba(0,0,0,.6),0 0 30px rgba(124,92,255,.25)}
 .mlp-head{display:flex;align-items:center;gap:9px;font-size:13px}
 .mlp-dot{width:13px;height:13px;border-radius:50%;flex-shrink:0}
@@ -727,7 +751,7 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
   #si{flex:1;width:auto;font-size:16px;padding:13px 13px}
   #sg{font-size:12.5px}
   #place-prompt,#place-mini{display:none!important}
-  #left-stack{top:162px!important}
+  #left-stack{top:184px!important}
 }
 /* Central "place an aurasense" prompt */
 #place-prompt{position:absolute;top:34%;left:50%;transform:translate(-50%,-50%);z-index:60;width:min(420px,90%);background:rgba(12,10,26,.95);border:1px solid rgba(167,139,250,.5);border-radius:20px;padding:22px 22px 18px;box-shadow:0 0 0 4px rgba(124,92,255,.18),0 0 50px rgba(124,92,255,.5);pointer-events:all;display:none}
@@ -820,6 +844,9 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
   #lf-inner{padding-top:64px}
   #logo h1{font-size:15px}#logo p{display:none}
   #hdr2{top:58px;left:16px;right:16px;justify-content:center}
+  #tabs{justify-content:flex-start;scroll-snap-type:x proximity;padding:0 8px 2px 2px}
+  #tabs .tab{scroll-snap-align:center}
+  #search-box{margin-top:8px}
   #tabs{font-size:13px;padding:5px 5px;max-width:calc(100vw - 24px);overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
   #tabs::-webkit-scrollbar{display:none}
   .tab{padding:6px 8px;white-space:nowrap}
@@ -836,7 +863,7 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
   #my-aura{top:88px;left:10px;transform:scale(.9);transform-origin:top left}
   #explore-btn{left:118px;top:128px;transform:scale(.92);transform-origin:top left}
   #register-btn{top:220px;left:10px;font-size:11px;padding:8px 12px}
-  #livefeed-btn{position:fixed;z-index:41;top:140px;left:50%;transform:translateX(-50%);right:auto;bottom:auto;font-size:14px;padding:11px 20px;border-color:rgba(150,215,255,.75);color:#dbefff;box-shadow:0 0 28px rgba(110,180,255,.6),0 0 10px rgba(180,225,255,.45);background:rgba(22,20,48,.85)}
+  #livefeed-btn{position:fixed;z-index:41;top:158px;left:50%;transform:translateX(-50%);right:auto;bottom:auto;font-size:14px;padding:11px 20px;border-color:rgba(150,215,255,.75);color:#dbefff;box-shadow:0 0 28px rgba(110,180,255,.6),0 0 10px rgba(180,225,255,.45);background:rgba(22,20,48,.85)}
   #place-mini{top:auto;bottom:84px;left:10px}
   #locality-btn{bottom:86px;right:14px;width:42px;height:42px;font-size:16px}
   #place-prompt{top:21%;width:92%;padding:18px 16px 16px}
@@ -848,6 +875,8 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
   #lf-tools{flex-wrap:wrap}
   #srow{flex-direction:column;gap:8px}
   #srow #sbtn{width:100%}
+  #offer-confirm .oc-actions{flex-wrap:wrap}
+  #offer-confirm .oc-card{flex:1 1 100%;text-align:center}
 
   #ui.offer-open #wev-chips,#ui.offer-open #wbal,#ui.offer-open #wbal-panel,#ui.offer-open #wev-panel,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #livefeed-btn,#ui.offer-open #aura-views,#ui.offer-open #place-mini{display:none}
 }
@@ -1338,6 +1367,13 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="co-nav"><button type="button" id="co-prev">‹</button><div id="co-mid"><span id="co-count">1 of 8</span><span id="co-dots"></span></div><button type="button" id="co-next">›</button></div>
   </div>
 </div>
+<div id="open-page">
+  <button id="op-back">← Back</button>
+  <div id="op-title">◠ The Openings</div>
+  <div id="op-sub">Questions of existence, held open — not to be settled, but to be stood in. Two symbols interlock where ideas and lived experience blend; the words beneath are only the addendum — the light of the inlaid meaning is yours to feel. If one stirs you, offer a light to it.</div>
+  <div id="op-list"></div>
+  <div id="op-foot">One shared field per Opening — gathered counts, voices, and open dialogue, with the AI invitable in — arrives with Gate profiles. Until then, what you offer here truly joins your own aura ✧</div>
+</div>
 <div id="soul-page">
   <button id="quest-back">← Back to My Aura</button>
   <div id="quest-title">The Soul Search</div>
@@ -1380,6 +1416,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button class="mj-i" data-mj="work" title="Practise speaking in symbols">✧ Alphasense workshop</button>
       <div class="mj-dot"></div>
       <button class="mj-i" data-mj="sync" title="Notice what rhymes in your days — your noticing practice, and one day the world's">∞ Synchronicity Weave</button>
+      <button class="mj-i" data-mj="openings" title="Questions of existence, held open — read, feel, and offer a light to them">◠ The Openings — questions held open</button>
     </div>
   </div>
   <div id="ma-title">My Aura</div>
@@ -2058,6 +2095,20 @@ function triggerWave(color){
   waveColor=color||'#a78bfa';
   requestAnimationFrame(ts=>{waveStartTs=ts;waveRaf=requestAnimationFrame(animateWave);});
 }
+function tabZoomSync(){
+  try{
+    if(typeof map==='undefined'||typeof auraLevel==='undefined')return;
+    const z=map.getZoom();
+    const lvl=z>=14.2?0:(z>=11?1:(z>=7.6?2:(z>=3.6?3:4)));
+    if(lvl===auraLevel)return;
+    auraLevel=lvl;
+    ORB_IDS.forEach((id,i)=>{const orb=document.getElementById(id);if(!orb)return;const tab=orb.parentElement;
+      if(i===lvl){orb.style.cssText='width:7px;height:7px;border-radius:50%;background:#a78bfa;box-shadow:0 0 9px 3px rgba(167,139,250,0.55);opacity:1;flex-shrink:0;transition:all .6s ease;';if(tab){tab.classList.add('active');try{tab.scrollIntoView({inline:'center',block:'nearest'});}catch(e){}}}
+      else{orb.style.cssText='width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,0.1);box-shadow:none;opacity:0.3;flex-shrink:0;transition:all .6s ease;';if(tab)tab.classList.remove('active');}
+    });
+  }catch(e){}
+}
+try{map.on('zoomend',tabZoomSync);}catch(e){}
 // Sense buttons — two rows: the world around you (external) and how it makes you feel (internal)
 const stip=document.getElementById('stip');
 const allEl=document.getElementById('scats-all');
@@ -2605,7 +2656,8 @@ function resolveSpot(){
   if(lastOfferedPoint){const j=()=>(Math.random()-.5)*.0006;return {lat:lastOfferedPoint.lat+j(),lng:lastOfferedPoint.lng+j()};}
   return null;
 }
-document.getElementById('sbtn').onclick=()=>{
+const sbtnGo=()=>{
+  const _n=Date.now();if(window.__sbT&&_n-window.__sbT<600)return;window.__sbT=_n;
   const inp=document.getElementById('inp');
   const v=inp.value.trim();
   const spot=resolveSpot();
@@ -2623,6 +2675,8 @@ document.getElementById('sbtn').onclick=()=>{
   const scd=document.getElementById('sense-confirm');if(scd)scd.textContent='';
   if(typeof clearPhoto==='function')clearPhoto();
 };
+document.getElementById('sbtn').onclick=sbtnGo;
+document.getElementById('sbtn').addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){e.preventDefault();sbtnGo();}});
 document.getElementById('inp').addEventListener('input',()=>{emptyPrompted=false;const i=document.getElementById('inp');if(i&&i.value.trim())i.classList.remove('inp-glow');});
 document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sbtn').click()});
 
@@ -3070,12 +3124,14 @@ function closeAlphaPage(){const p=document.getElementById('alpha-page');if(p)p.c
       if(k==='profile'&&typeof openRegister==='function')openRegister();
       else if(k==='quest'&&typeof openQuestPage==='function')openQuestPage();
       else if(k==='soul'&&typeof openSoulPage==='function')openSoulPage();
-      else if(k==='life'){const b=document.getElementById('ma-open-lifestory');if(b)b.click();}
-      else if(k==='traj'){const b=document.getElementById('ma-open-trajectory');if(b)b.click();}
+      else if(k==='life'){const b=document.getElementById('ma-open-lifestory');if(b)b.click();else showMsg('The life-story room is still being built \u2014 it opens in a coming light \u2727',4600);}
+      else if(k==='traj'){const b=document.getElementById('ma-open-trajectory');if(b)b.click();else showMsg('Conscious Trajectory is still being built \u2014 it opens in a coming light \u2727',4600);}
       else if(k==='alpha'&&typeof openAlphaPage==='function')openAlphaPage();
       else if(k==='bonds'&&typeof openJunc==='function')openJunc();
       else if(k==='work'&&typeof openWorkshop==='function')openWorkshop();
       else if(k==='sync'&&typeof openSyncPage==='function')openSyncPage();
+      else if(k==='openings'&&typeof openOpeningsPage==='function')openOpeningsPage();
+      else showMsg('This door is still being built \u2014 it opens in a coming light \u2727',4600);
     }));
   }
 })();
@@ -3116,12 +3172,17 @@ function maShowTip(){
   showPointTips([
     {sel:'#ma-canvas',t:'Welcome to your aura ✧',s:'Everything here is yours alone — a living picture of the energy you carry and offer.'},
     {sel:'#mj-btn',t:'✦ Your journey',s:'Shape your aura, the Soul Search, your life story… each adds real colour, richness and balance to your aura.'},
+    {sel:'#mr-open',t:'🪞 The Mirror',s:'A reflection, only when you ask for one — it speaks back only what your true offerings hold, and asks open questions, never verdicts.'},
+    {sel:'#ss-open',t:'✉ SenseShare',s:'Choose up to three lights and send someone a card that asks them to feel before they read — the looking is the love arriving.'},
     {sel:'#ma-canvas',t:'Tap any layer of light',s:'Each layer of the ring is influenced by the unique auras you offer, bond with and share in a location — and by the life-experience insights and questions you answer. Tap the layers to see how they change and interact over time, as your life takes shape.'},
-    {sel:'#ma-offerings',t:'Beneath every offering',s:'Visit its place on the map · Share it as an Aura Postcard.'}
+    {sel:'#ma-offerings .ma-offering',t:'Beneath every offering',s:'Visit its place on the map · begin a Weave rhyme · share it as an Aura Postcard.'}
   ]);
 }
 function openMyAuraPage(){
   const page=document.getElementById('myaura-page');if(!page)return;setTimeout(maShowTip,350);
+  setTimeout(()=>{try{const L=document.getElementById('ma-left');if(!L)return;const has=L.scrollHeight>L.clientHeight+8;let h=document.getElementById('ma-scrollhint');
+    if(has&&!h&&!L.dataset.hinted){h=document.createElement('div');h.id='ma-scrollhint';h.textContent='\u2304 scroll for more';L.appendChild(h);L.addEventListener('scroll',()=>{L.dataset.hinted='1';const hh=document.getElementById('ma-scrollhint');if(hh)hh.remove();},{once:true,passive:true});}
+    if(!has&&h)h.remove();}catch(e){}},600);
   const mt=document.querySelector('.tab-myaura');if(mt)mt.classList.add('mypage-open');
   if(typeof updateMyOrb==='function')updateMyOrb();
   const mh=document.getElementById('ma-handle');if(mh)mh.textContent=(myProfile&&myProfile.handle)?('@'+myProfile.handle):'';
@@ -3630,7 +3691,7 @@ function openLiveFeed(){
 function closeLiveFeed(){const _o=document.getElementById('pt-ov');if(_o)_o.remove();const p=document.getElementById('livefeed-page');if(p)p.classList.remove('show');if(lfTimer){clearInterval(lfTimer);lfTimer=null;}}
 const lfBtn=document.getElementById('livefeed-btn');if(lfBtn)lfBtn.addEventListener('click',openLiveFeed);
 const lfFull=document.getElementById('feed-full');if(lfFull)lfFull.addEventListener('click',openLiveFeed);
-(function(){let hoverT=null;const open=()=>{hoverT=setTimeout(()=>{if(typeof openLiveFeed==='function')openLiveFeed();},350);};const cancel=()=>{if(hoverT){clearTimeout(hoverT);hoverT=null;}};if(window.matchMedia&&window.matchMedia('(min-width:601px)').matches){[document.getElementById('feed-full'),document.getElementById('feed')].forEach(el=>{if(el){el.addEventListener('mouseenter',open);el.addEventListener('mouseleave',cancel);}});}})();
+(function(){let hoverT=null;const open=()=>{hoverT=setTimeout(()=>{if(typeof openLiveFeed==='function')openLiveFeed();},350);};const cancel=()=>{if(hoverT){clearTimeout(hoverT);hoverT=null;}};if(window.matchMedia&&window.matchMedia('(min-width:601px)').matches){[document.getElementById('feed-full')].forEach(el=>{if(el){el.addEventListener('mouseenter',open);el.addEventListener('mouseleave',cancel);}});}})();
 const lfBackBtn=document.getElementById('lf-back');if(lfBackBtn)lfBackBtn.addEventListener('click',closeLiveFeed);
 // ---- First-visit guidance ----
 let obShown=false;
@@ -3760,6 +3821,40 @@ function swRender(){
     return '<div class="sw-item" style="border-left-color:'+(s.c||'#c9b8f0')+'"><div class="swi-t">“'+escT(s.a)+'” <i>⇢</i> “'+escT(s.b)+'”</div><div class="swi-m">'+(chain?chain+' · ':'')+SW_SCOPES[s.scope]+' · '+SW_GAPS[s.gap]+' apart'+(s.kind?' · '+(s.kind===1?'☾ Dream':'✧ Vision'):'')+' · '+relTime(s.t)+'</div><div class="swi-act"><button type="button" class="swi-st'+(s.st?' landed':'')+'" data-i="'+i+'">'+(s.st?'✦ it landed':'◌ still unfolding')+'</button><button type="button" class="swi-sh" data-i="'+i+'">↗ Share</button></div></div>';
   }).join('');
 }
+// THE OPENINGS — questions held open. Kardec's form (a question, many lights) is already Aurasense's form.
+const OPENINGS=[
+ {a:'Passing',b:'Presence',q:'Does the one who feels this continue, when the body sets down?',t:'Kardec asked it a thousand numbered ways in 1857; every tradition since the first fire has asked it once. The Opening holds the question \u2014 not an answer.',r:['Wonder','Peace','Grief','Hope']},
+ {a:'Renewal',b:'Time',q:'Were you, before you were here?',t:'If consciousness is not made by the body, it need not begin with it. Memory may be the narrow door \u2014 not the house.',r:['Wonder','Stillness','Inquiry','Presence']},
+ {a:'Grief',b:'Hope',q:'What is hardship for \u2014 if it is for anything?',t:'Kardec\u2019s answer was growth; life answers each of us privately. Both can stand in one room without argument.',r:['Compassion','Courage','Grief','Hope']},
+ {a:'Release',b:'Wonder',q:'Is the light at the end really a beginning?',t:'Those who returned describe arrival, not ending \u2014 as if time folded, and the timeless looked back.',r:['Wonder','Peace','Release','Love']},
+ {a:'Energy',b:'Inquiry',q:'Is consciousness fundamental \u2014 as spacetime is for matter?',t:'Fuentes reaches it from physics inward; Hoffman from perception outward \u2014 the world as interface, awareness as ground. Auras would be its weather.',r:['Inquiry','Wonder','Presence','Energy']}
+];
+let opState={};
+function opWord(n){return (typeof ALPHA_WORDS!=='undefined')?ALPHA_WORDS.find(x=>x.w===n):null;}
+function opRender(){
+  const L=document.getElementById('op-list');if(!L)return;
+  L.innerHTML=OPENINGS.map((o,i)=>{
+    const wa=opWord(o.a),wb=opWord(o.b);
+    const lock='<div class="op-lock" style="--ja:'+((wa&&wa.c)||'#c4b5fd')+';--jb:'+((wb&&wb.c)||'#c4b5fd')+'">'+(wa?alphaGlyph(wa,58):'')+'<span class="op-j"></span>'+(wb?alphaGlyph(wb,58):'')+'</div>';
+    const done=opState[i];
+    const row=done?('<div class="op-done">Your <b style="color:'+done.c+'">'+done.w+'</b> light is offered to this Opening \u2014 held with it \u2727</div>')
+      :('<div class="op-res" data-i="'+i+'">'+o.r.map(n=>{const w=opWord(n);return w?('<button type="button" data-w="'+w.w+'" style="--rc:'+w.c+'">'+alphaGlyph(w,20)+' '+w.w+'</button>'):'';}).join('')+'</div>');
+    return '<div class="op-card">'+lock+'<div class="op-q">'+o.q+'</div><div class="op-a">'+o.t+'</div>'+row+'</div>';
+  }).join('');
+}
+function openOpeningsPage(){const p=document.getElementById('open-page');if(!p)return;opRender();p.classList.add('show');}
+document.addEventListener('click',function(e){try{
+  if(e.target&&e.target.id==='open-page'){e.target.classList.remove('show');const mp=document.getElementById('myaura-page');if(mp&&!mp.classList.contains('show')&&typeof openMyAuraPage==='function')openMyAuraPage();return;}
+  if(e.target&&e.target.closest&&e.target.closest('#op-back')){const p=document.getElementById('open-page');if(p)p.classList.remove('show');const mp=document.getElementById('myaura-page');if(mp&&!mp.classList.contains('show')&&typeof openMyAuraPage==='function')openMyAuraPage();return;}
+  const rb=e.target&&e.target.closest?e.target.closest('.op-res button'):null;
+  if(rb){const row=rb.closest('.op-res');const i=parseInt(row.getAttribute('data-i'),10);const w=opWord(rb.getAttribute('data-w'));if(!w)return;
+    opState[i]={w:w.w,c:w.c};
+    if(typeof myAuraColors!=='undefined')myAuraColors.push(w.c);
+    if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=w.c;}
+    try{playShift(348,1.8,.05);}catch(_){}
+    opRender();
+  }
+}catch(_){}});
 function openSyncPage(){
   const p=document.getElementById('sync-page');if(!p)return;
   swPractice();swBuildStrip();swRender();
@@ -3769,7 +3864,8 @@ function openSyncPage(){
 document.addEventListener('click',function(e){
   const T=(sel)=>e.target.closest(sel);
   let t;
-  if(T('#sw-back')){const p=document.getElementById('sync-page');if(p)p.classList.remove('show');return;}
+  if(e.target&&e.target.id==='sync-page'){e.target.classList.remove('show');const mp=document.getElementById('myaura-page');if(mp&&!mp.classList.contains('show')&&typeof openMyAuraPage==='function')openMyAuraPage();return;}
+  if(T('#sw-back')){const p=document.getElementById('sync-page');if(p)p.classList.remove('show');const mp=document.getElementById('myaura-page');if(mp&&!mp.classList.contains('show')&&typeof openMyAuraPage==='function')openMyAuraPage();return;}
   if(t=T('#sw-scope button')){swScope=+t.dataset.s;document.querySelectorAll('#sw-scope button').forEach(x=>x.classList.remove('on'));t.classList.add('on');return;}
   if(t=T('#sw-gap button')){swGap=+t.dataset.g;document.querySelectorAll('#sw-gap button').forEach(x=>x.classList.remove('on'));t.classList.add('on');return;}
   if(t=T('#sw-kind button')){swKind=+t.dataset.k;document.querySelectorAll('#sw-kind button').forEach(x=>x.classList.remove('on'));t.classList.add('on');return;}
@@ -4296,6 +4392,7 @@ function wevFlyWorld(){
   if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
   if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}
   if(typeof closeExplore==='function')closeExplore();
+  try{const h2=document.getElementById('hdr2');if(h2)h2.style.removeProperty('display');}catch(e){}
   let c={lng:-0.128,lat:51.508};try{c=map.getCenter();}catch(e){}
   const reduce=!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   flyProgrammatic({center:[c.lng,Math.max(-50,Math.min(50,c.lat))],zoom:1.05,pitch:0,bearing:0,duration:reduce?0:6500,essential:true});
@@ -4471,7 +4568,7 @@ function witnessLine(sid,lat,lng,label){
     const mineOfSense=myOfferings.filter(o=>o.sense===sid).length;
     const sn=SENSES.find(x=>x.id===sid);
     let symRaw=(typeof SENSE_SYMBOLS==='object'&&SENSE_SYMBOLS[sid])||'\u2727';
-    if(/^<svg/i.test(symRaw)){symRaw=symRaw.replace('width="22"','width="15"').replace('height="22"','height="15"');}else{symRaw=escT(symRaw);}
+    if(/^<svg/i.test(symRaw)){symRaw=symRaw.replace('width="22"','width="20"').replace('height="22"','height="20"');}else{symRaw=escT(symRaw);}
     const symHTML='<b style="color:'+((sn&&sn.color)||'#e9ddff')+'">'+escT(label)+' <span style="display:inline-block;vertical-align:-2px">'+symRaw+'</span></b>';
     if(near===0)return 'Yours is the first light this map holds for this place \u2014 a '+symHTML+' \u2014 it is learning what here feels like, through you.';
     if(senseNear===0)return 'The first '+symHTML+' this map holds here \u2014 your light joins '+near+' other'+(near>1?'s':'')+' sensing this place.';
@@ -4511,7 +4608,7 @@ function mjLocked(k){
   if(!reg)return true;
   if(k==='soul')return !questDone();
   if(k==='life')return !soulDone();
-  if(k==='bonds'||k==='work'||k==='sync')return !window.AS_SEEN_ALPHA;
+  if(k==='bonds'||k==='work'||k==='sync'||k==='openings')return !window.AS_SEEN_ALPHA;
   return false;
 }
 function mjPrev(k){
@@ -4519,7 +4616,7 @@ function mjPrev(k){
   if(!reg)return ['profile','Set up your Aurasenser profile'];
   if(k==='soul')return ['quest','Shape your aura'];
   if(k==='life')return ['soul','Soul Search'];
-  if(k==='bonds'||k==='work'||k==='sync')return ['alpha','\u2727 Alphasense symbols'];
+  if(k==='bonds'||k==='work'||k==='sync'||k==='openings')return ['alpha','\u2727 Alphasense symbols'];
   return ['profile','Set up your Aurasenser profile'];
 }
 function menuRefresh(){
