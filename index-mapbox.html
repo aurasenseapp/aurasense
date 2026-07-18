@@ -630,6 +630,9 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 .qz-card{background:rgba(18,15,38,.55);border:0.5px solid rgba(167,139,250,.18);border-radius:15px;padding:15px 17px;margin-bottom:12px;cursor:pointer;transition:border .2s,transform .2s}
 .qz-card:hover{border-color:rgba(167,139,250,.45);transform:translateY(-1px)}
 .qz-card.qz-done{background:rgba(167,139,250,.14);border-color:rgba(196,181,253,.5)}
+.qz-card.qz-locked{opacity:.42;cursor:default;filter:saturate(.6)}
+.qz-card.qz-hint{animation:mjGlow 1.5s ease-in-out 2;opacity:1!important;filter:none!important}
+#wev-accord{margin-top:10px;font-size:11.5px;line-height:1.55;color:#9a8fc2;border-top:0.5px solid rgba(167,139,250,.22);padding-top:9px}
 .qz-tick{font-size:10px;color:#cbbff0;font-weight:400;margin-left:6px}
 .qz-card .qn{font-size:14px;color:#e6dfff;font-weight:500}
 .qz-card .qd{font-size:11px;color:#9a8fc2;margin-top:4px;line-height:1.5}
@@ -1206,6 +1209,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="wev-d"></div>
     <div id="wev-c"></div>
     <button id="wev-send">✦ Answer with an aura of compassion</button>
+    <div id="wev-accord">Where many answer one circumstance, an Aura Accord will gather the reachings into one shared light — arriving with Gate profiles ✧</div>
   </div>
   <div id="locality-tip">Set your home (only you see this)</div>
   <button id="mobile-offer">✦ Offer an aurasense</button>
@@ -1383,7 +1387,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="ma-layout">
     <div class="ma-col" id="ma-left">
       <button id="calm-toggle" type="button" title="Calm mode stills the fine motion and keeps the silence — only the slow breath remains. For anyone who senses better in stillness.">☾ Calm mode — off</button>
-      <button id="mr-open" type="button">\ud83e\ude9e The Mirror \u2014 a reflection, when you want one</button>
+      <button id="mr-open" type="button">🪞 The Mirror — a reflection, when you want one</button>
       <div id="ma-widen"></div>
       <button id="ss-open" type="button">✉ SenseShare — send someone a light</button>
       <div class="ma-h">What you have offered</div>
@@ -1807,7 +1811,7 @@ function playSound(id){
     });
   }catch(e){}
 }
-function maRenderBonds(){const el=document.getElementById('ma-bonds');if(!el)return;if(!myBonds.length){el.innerHTML='<div class="ma-empty">When you Aurabond with a place or a person, the thread takes root here — bonds that connect people, places and moments, beyond time.</div>';return;}el.innerHTML=myBonds.slice().reverse().map(b=>'<div class="mab-row"><span class="mab-dot" style="background:'+b.color+';box-shadow:0 0 10px '+b.color+'"></span><span class="mab-w">'+escT(b.to)+'</span><span class="mab-m">'+escT(b.label)+' · 📍 '+escT(b.place)+' · '+relTime(b.t)+'</span></div>').join('');}
+function maRenderBonds(){const el=document.getElementById('ma-bonds');if(!el)return;if(!myBonds.length){el.innerHTML='<div class="ma-empty">Aurabonds are never pressed into being — they form through reaching, and through the Weave. When one takes root between you and a person, a place, or a moment, its thread appears here.</div>';return;}el.innerHTML=myBonds.slice().reverse().map(b=>'<div class="mab-row"><span class="mab-dot" style="background:'+b.color+';box-shadow:0 0 10px '+b.color+'"></span><span class="mab-w">'+escT(b.to)+'</span><span class="mab-m">'+escT(b.label)+' · 📍 '+escT(b.place)+' · '+relTime(b.t)+'</span></div>').join('');}
 function playShift(base,dur,vol){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
  const t=actx.currentTime,d=dur||1.8,v=vol||.05;
  [[1,1.5,1],[1.006,1.494,1],[0.5,0.75,0.6]].forEach(a=>{
@@ -3355,7 +3359,7 @@ function closeQuest(){const p=document.getElementById('quest-page');if(p)p.class
 function qzShowMenu(){
   const menu=document.getElementById('qz-menu'),act=document.getElementById('qz-active'),sub=document.getElementById('qz-submit'),intro=document.getElementById('qz-intro');
   if(intro)intro.textContent='Gentle, private prompts. There are no wrong answers — only a truer reading of your aura. Each one you share adds colour and depth to your aura.';
-  if(menu){menu.style.display='';menu.innerHTML=QUESTS.map((q,i)=>{const done=myProfile&&myProfile.qzDone&&myProfile.qzDone[q.name];return '<div class="qz-card'+(done?' qz-done':'')+'" data-i="'+i+'"><div class="qn">'+q.name+(done?' <span class="qz-tick">✓ woven in</span>':'')+'</div><div class="qd">'+q.desc+'</div></div>';}).join('');menu.querySelectorAll('.qz-card').forEach(card=>card.addEventListener('click',()=>qzOpen(parseInt(card.getAttribute('data-i'),10))));}
+  if(menu){menu.style.display='';let _pv=true;menu.innerHTML=QUESTS.map((q,i)=>{const done=!!(myProfile&&myProfile.qzDone&&myProfile.qzDone[q.name]);const open=done||_pv;if(!done)_pv=false;return '<div class="qz-card'+(done?' qz-done':'')+(open?'':' qz-locked')+'" data-i="'+i+'"><div class="qn">'+q.name+(done?' <span class="qz-tick">✓ woven in</span>':'')+'</div><div class="qd">'+q.desc+'</div></div>';}).join('');menu.querySelectorAll('.qz-card').forEach(card=>card.addEventListener('click',()=>{const i=parseInt(card.getAttribute('data-i'),10);if(card.classList.contains('qz-locked')){const pv=QUESTS[i-1];showMsg('Each reading opens on the ground of the one before. Complete \u201c'+((pv&&pv.name)||'the reading before')+'\u201d first \u2014 it is glowing for you now \u2727',6800);const pc=menu.querySelector('.qz-card[data-i="'+(i-1)+'"]');if(pc){pc.classList.remove('qz-hint');void pc.offsetWidth;pc.classList.add('qz-hint');setTimeout(()=>pc.classList.remove('qz-hint'),3400);}return;}qzOpen(i);}));}
   if(act)act.style.display='none';if(sub)sub.style.display='none';
 }
 function qzOpen(i){
@@ -3416,7 +3420,7 @@ function lfVisible(){
   if(lfFilter){const q=lfFilter.toLowerCase();rows=rows.filter(r=>(r.street+' '+r.city+' '+r.label).toLowerCase().indexOf(q)>=0);}
   return rows;
 }
-const LF_HAND='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" style="vertical-align:-3px"><path d="M3.5 15 Q12 19.6 20.5 15"/><path d="M5.8 14.2 L4.9 10.8 M9.5 15.4 L9 10.2 M13.4 15.4 L13.9 10.2 M17.1 14.2 L18 10.8"/><path d="M3.5 15 Q1.7 13.8 2.4 11.6"/><circle cx="12" cy="15.8" r="1.15" fill="currentColor" stroke="none" opacity=".85"/></svg>';
+const LF_HAND='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M17.9 10.7V6a1.9 1.9 0 0 0-3.8 0v4.2"/><path d="M14.1 9.8V4a1.9 1.9 0 0 0-3.8 0v5.8"/><path d="M10.3 10.2V6a1.9 1.9 0 0 0-3.8 0v7.6"/><path d="M17.9 8.2a1.9 1.9 0 0 1 3.8 0v5.6a7.7 7.7 0 0 1-7.7 7.7h-1.9c-2.7 0-4.3-.8-5.7-2.2l-3.5-3.5a1.9 1.9 0 0 1 2.7-2.7l1.9 1.9"/><circle cx="13.1" cy="15.6" r="1.1" fill="currentColor" stroke="none" opacity=".85"/></svg>';
 function lfRender(){
   const list=document.getElementById('lf-list');if(!list)return;
   const rows=lfVisible();
@@ -3433,11 +3437,9 @@ function lfRender(){
     list.innerHTML='<div class="ma-empty" style="text-align:center;padding:22px 10px">The world is still waking'+sc+'. As Aurasense grows, this fills with offerings'+(lfScope==='planet'?' from around the world':' from around you')+'.</div>';return;}
   list.innerHTML=rows.map(r=>{const i=lfRows.indexOf(r),sym=SENSE_SYMBOLS[r.sid]||'',ago=Math.max(1,Math.round((Date.now()-r.t)/1000)),agoTxt=ago<60?ago+'s ago':Math.round(ago/60)+'m ago',loc=escT(r.street)+(r.city?(', '+escT(r.city)):''),who=r.handle?(' \u00b7 <span class="h" data-h="'+i+'">'+escT(r.handle)+'</span>'):'';
     return '<div class="lf-row" data-i="'+i+'"><div class="lf-sym" style="color:'+r.color+'">'+sym+'</div><div class="lf-body"><div class="lf-top"><b style="color:'+r.color+'">'+escT(r.label)+'</b> — '+escT(r.intent)+'</div>'+(r.exp?'<div class="lf-exp">✧ carries lived experience — offered humbly</div>':'')+'<div class="lf-meta">\ud83d\udccd '+loc+who+' · '+agoTxt+'</div><div class="lf-icons">'
-    +'<span class="lf-ic" data-act="absorb" data-i="'+i+'">\u25ce<span class="lic-lbl">Absorb</span><span class="lic-tip">Draw this aura\u2019s light into yours</span></span>'
     +'<span class="lf-ic" data-act="offer" data-i="'+i+'"'+(r.given?' data-on="1"':'')+'>'+LF_HAND+'<span class="lic-lbl">'+(r.given?'Offered':'Offer')+'</span><span class="lic-tip">'+(r.given?('You offered '+escT(r.given)):'Offer something to this aura')+'</span></span>'
     +'<span class="lf-ic" data-act="visit" data-i="'+i+'"><svg viewBox="0 0 24 24" class="lfi"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg><span class="lic-lbl">Visit</span><span class="lic-tip">Visit this aura on the map</span></span>'
     +'<span class="lf-ic" data-act="comment" data-i="'+i+'"><svg viewBox="0 0 24 24" class="lfi"><path d="M8 16a6 6 0 1 1 8-5.6c0 2.4-1.7 3.4-3.2 4.3"/><circle cx="12" cy="19.4" r="1.2"/></svg><span class="lic-lbl">Question</span><span class="lic-tip">Ask a question of this aura</span></span>'
-    +'<span class="lf-ic" data-act="bond" data-i="'+i+'"><svg viewBox="0 0 40 24" class="lfi lfi-w"><circle cx="11" cy="12" r="7"/><circle cx="29" cy="12" r="7"/></svg><span class="lic-lbl">Aurabond</span><span class="lic-tip">Begin an aurabond</span></span>'
     +'<span class="lf-ic" data-act="share" data-i="'+i+'"><svg viewBox="0 0 24 24" class="lfi"><circle cx="18" cy="5.5" r="2.3"/><circle cx="6" cy="12" r="2.3"/><circle cx="18" cy="18.5" r="2.3"/><path d="M8.1 10.9 15.9 6.6 M8.1 13.1 15.9 17.4"/></svg><span class="lic-lbl">Share</span><span class="lic-tip">Share</span></span>'
     +'</div></div></div>';
   }).join('');
@@ -3447,11 +3449,9 @@ function lfRender(){
 }
 function lfAction(act,i,ic){
   const r=lfRows[i];if(!r)return;
-  if(act==='absorb'){myProfile.auraBoost=(myProfile.auraBoost||0)+1;myAuraColors.push(r.color);paFeedAt=performance.now();paFeedColor=r.color;if(ic){ic.dataset.on='1';const t=ic.querySelector('.lic-tip');if(t)t.textContent='Absorbed into your aura';}showMsg('You reached \u2014 and a thread of this light now weaves through your own aura.',4200,'witness',r.color);}
-  else if(act==='offer'){lfOpenOffer(i);}
+  if(act==='offer'){lfOpenOffer(i);}
   else if(act==='visit'){closeLiveFeed();if(typeof map!=='undefined'&&map.flyTo)map.flyTo({center:[r.lng,r.lat],zoom:14,duration:2600});showMsg('Travelling to this aura…');}
   else if(act==='comment'){myAuraColors.push(r.color);paFeedAt=performance.now();paFeedColor=r.color;showMsg('A question is a reaching \u2014 in the asking, a thread of this light joined your aura. Questions themselves will travel in alphasense, arriving with profiles.',5600,'witness',r.color);}
-  else if(act==='bond'){if(!r.bonded){r.bonded=1;myBonds.push({to:r.handle,place:r.street+', '+r.city,label:r.label,color:r.color,t:Date.now()});}myAuraColors.push(r.color);paFeedAt=performance.now();paFeedColor=r.color;const mo=document.getElementById('orbMy');if(mo){mo.classList.add('orb-fed');setTimeout(()=>mo.classList.remove('orb-fed'),3000);}showMsg('An aurabond thread reaches toward '+r.handle+' \u2014 it completes when they feel it too');}
   else if(act==='share'){openPostcard({title:r.label,color:r.color,words:r.intent,place:'📍 '+r.street+', '+r.city,symbolSVG:(SENSE_SYMBOLS[r.sid]||'').replace('width="22" height="22"','width="460" height="460"')});}
 }
 let myPostcards=[],pcLast=null,myBonds=[];
@@ -3563,13 +3563,13 @@ function lfSendOffer(){
   const exp=en?en.value.trim().slice(0,500):'';
   myGiven.push({kind:lfoKind,to:r.handle,place:r.street+', '+r.city,t:Date.now(),exp:exp,status:'offered'});
   if(exp)r.exp=true;
-  if(w)myAuraColors.push(w.c);
+  if(w)myAuraColors.push(w.c);myAuraColors.push(r.color);
   myProfile.auraBoost=(myProfile.auraBoost||0)+1;
   paFeedAt=performance.now();paFeedColor=(w?w.c:'#f0a8c0');
   const mo=document.getElementById('orbMy');if(mo){mo.classList.add('orb-fed');setTimeout(()=>mo.classList.remove('orb-fed'),3000);}
   r.given=lfoKind;
   lfCloseOffer();lfRender();
-  closeLiveFeed();try{flyToMyAura(w?w.c:'#f0a8c0');}catch(e){}try{playShift(392,2.0,.05);}catch(e){}showMsg('Aura energy and sentiments offered successfully ✧'+(exp?' — carrying your lived experience.':''));
+  closeLiveFeed();try{flyToMyAura(w?w.c:'#f0a8c0');}catch(e){}try{playShift(392,2.0,.05);}catch(e){}showMsg('Offered \u2727 \u2014 and in the giving, a thread of this aura\u2019s light now weaves through your own.'+(exp?' Your lived experience travels with it.':''),5600,'witness',r.color);
 }
 (function(){
   const cl=document.getElementById('lfo-close'),cc=document.getElementById('lfo-cancel'),sd=document.getElementById('lfo-send'),ov=document.getElementById('lf-offer');
@@ -3583,11 +3583,9 @@ function lfShowTip(){
   if(lfTipShown)return;lfTipShown=true;
   showPointTips([
     {sel:'.lf-sym',t:'Reading the Aura Feed ✧',s:'Each aura carries its sense symbol from the alphasense language — the feeling of a real place, offered by a real person.'},
-    {sel:'.lf-ic[data-act="absorb"]',t:'◎ Absorb',s:'Draws an aura’s light into your own — as a show of empathy.'},
-    {sel:'.lf-ic[data-act="offer"]',t:'Offer',s:'Give empathy, love, compassion, joy, hope — or the Unspoken — and, where appropriate, what your own life learned.'},
+    {sel:'.lf-ic[data-act="offer"]',t:'Offer',s:'Give empathy, love, compassion, joy, hope — or the Unspoken — and, where appropriate, what your own life learned. In the giving, a thread of the beheld light joins your own aura.'},
     {sel:'.lf-ic[data-act="visit"]',t:'Visit',s:'Travel to its place on the living map.'},
     {sel:'.lf-ic[data-act="comment"]',t:'Question',s:'Ask the Senser a question about the aura they have offered.'},
-    {sel:'.lf-ic[data-act="bond"]',t:'Aurabond',s:'Begin a thread of connection — bonds link people, places and moments, beyond time.'},
     {sel:'.lf-ic[data-act="share"]',t:'Share',s:'Carry it beyond Aurasense as an Aura Postcard.'}
   ]);
 }
@@ -4258,11 +4256,11 @@ function wevAddLayers(){
   const R=(a,b,c,d,e2,f2)=>['interpolate',['linear'],['zoom'],0,a,3,b,6,c,9,d,12,e2,16,f2];
   // Each layer stands alone: one failing can never take the others with it.
   const adds=[
-    ['wev-outer',{'circle-color':['get','col'],'circle-blur':0.9,'circle-radius':R(30,46,70,100,138,180),'circle-opacity':['*',0.16,['case',['==',['get','st'],'unverified'],0.45,1]]}],
-    ['wev-mid',{'circle-color':['get','col'],'circle-blur':0.5,'circle-radius':R(16,24,32,32,28,22),'circle-opacity':['*',0.66,['case',['==',['get','st'],'unverified'],0.45,1]]}],
-    ['wev-core',{'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':R(7.5,9,10.5,11,11,10),'circle-opacity':['*',0.9,['case',['==',['get','st'],'unverified'],0.45,1]]}],
-    ['wev-dot',{'circle-color':'#ffffff','circle-radius':R(2.6,3,3.2,3.2,3,2.8),'circle-opacity':['*',0.85,['case',['==',['get','st'],'unverified'],0.45,1]]}],
-    ['wev-sent',{'circle-color':'rgba(0,0,0,0)','circle-radius':R(12,17,21,23,22,19),'circle-opacity':0,'circle-stroke-color':'#ffe6b0','circle-stroke-width':1.4,'circle-stroke-opacity':['min',0.6,['*',0.09,['get','sent']]]}]
+    ['wev-outer',{'circle-emissive-strength':1,'circle-color':['get','col'],'circle-blur':0.9,'circle-radius':R(30,46,70,100,138,180),'circle-opacity':['*',0.16,['case',['==',['get','st'],'unverified'],0.45,1]]}],
+    ['wev-mid',{'circle-emissive-strength':1,'circle-color':['get','col'],'circle-blur':0.5,'circle-radius':R(16,24,32,32,28,22),'circle-opacity':['*',0.66,['case',['==',['get','st'],'unverified'],0.45,1]]}],
+    ['wev-core',{'circle-emissive-strength':1,'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':R(7.5,9,10.5,11,11,10),'circle-opacity':['*',0.95,['case',['==',['get','st'],'unverified'],0.45,1]]}],
+    ['wev-dot',{'circle-emissive-strength':1,'circle-color':'#ffffff','circle-radius':R(2.6,3,3.2,3.2,3,2.8),'circle-opacity':['*',0.85,['case',['==',['get','st'],'unverified'],0.45,1]]}],
+    ['wev-sent',{'circle-emissive-strength':1,'circle-color':'rgba(0,0,0,0)','circle-radius':R(12,17,21,23,22,19),'circle-opacity':0,'circle-stroke-color':'#ffe6b0','circle-stroke-width':1.4,'circle-stroke-opacity':['min',0.75,['*',0.12,['get','sent']]]}]
   ];
   adds.forEach(a=>{try{if(!map.getLayer(a[0]))map.addLayer({id:a[0],type:'circle',source:'wevents',paint:a[1]});}catch(e){console.warn('[wev] layer '+a[0],e);}});
   try{console.log('[wev] layers live:',['wev-outer','wev-mid','wev-core','wev-dot','wev-sent'].filter(id=>{try{return !!map.getLayer(id);}catch(e){return false;}}).join(' '));}catch(e){}
@@ -4286,9 +4284,9 @@ function wevBreath(){
     if(ts-wevLastT<66)return;
     wevLastT=ts;
     const s=0.5+0.5*Math.sin(ts/6000*Math.PI*2),f=0.9+0.2*s;
-    try{map.setPaintProperty('wev-outer','circle-opacity',0.15+0.16*s);}catch(e){}
-    try{map.setPaintProperty('wev-mid','circle-opacity',0.26+0.2*s);}catch(e){}
-    try{map.setPaintProperty('wev-dot','circle-opacity',0.5+0.45*s);}catch(e){}
+    try{map.setPaintProperty('wev-outer','circle-opacity',0.2+0.18*s);}catch(e){}
+    try{map.setPaintProperty('wev-mid','circle-opacity',0.5+0.28*s);}catch(e){}
+    try{map.setPaintProperty('wev-dot','circle-opacity',0.62+0.36*s);}catch(e){}
     try{map.setPaintProperty('wev-core','circle-radius',['interpolate',['linear'],['zoom'],0,CR[0]*f,3,CR[1]*f,6,CR[2]*f,9,CR[3]*f,12,CR[4]*f,16,CR[5]*f]);}catch(e){}
   }
   wevRaf=requestAnimationFrame(tick);
@@ -4370,8 +4368,8 @@ function wevWeaveRefresh(){
     if(map.getSource&&map.getSource('wev-weave-src')){map.getSource('wev-weave-src').setData(data);}
     else{
       map.addSource('wev-weave-src',{type:'geojson',data:data});
-      map.addLayer({id:'wev-weave',type:'circle',source:'wev-weave-src',paint:{'circle-color':'#cfd6ff','circle-blur':0.9,'circle-radius':['interpolate',['linear'],['zoom'],0,18,6,34,12,60],'circle-opacity':0.28}});
-      map.addLayer({id:'wev-weave-dot',type:'circle',source:'wev-weave-src',paint:{'circle-color':'#eef0ff','circle-radius':2.4,'circle-opacity':0.9}});
+      map.addLayer({id:'wev-weave',type:'circle',source:'wev-weave-src',paint:{'circle-emissive-strength':1,'circle-color':'#cfd6ff','circle-blur':0.9,'circle-radius':['interpolate',['linear'],['zoom'],0,18,6,34,12,60],'circle-opacity':0.28}});
+      map.addLayer({id:'wev-weave-dot',type:'circle',source:'wev-weave-src',paint:{'circle-emissive-strength':1,'circle-color':'#eef0ff','circle-radius':2.4,'circle-opacity':0.9}});
     }
   }catch(e){console.warn('[wev] weave',e);}
 }
@@ -4472,7 +4470,9 @@ function witnessLine(sid,lat,lng,label){
     }
     const mineOfSense=myOfferings.filter(o=>o.sense===sid).length;
     const sn=SENSES.find(x=>x.id===sid);
-    const symHTML='<b style="color:'+((sn&&sn.color)||'#e9ddff')+'">'+escT(label)+' <span style="font-size:1.18em;vertical-align:-1px">'+escT((typeof SENSE_SYMBOLS==='object'&&SENSE_SYMBOLS[sid])||'\u2727')+'</span></b>';
+    let symRaw=(typeof SENSE_SYMBOLS==='object'&&SENSE_SYMBOLS[sid])||'\u2727';
+    if(/^<svg/i.test(symRaw)){symRaw=symRaw.replace('width="22"','width="15"').replace('height="22"','height="15"');}else{symRaw=escT(symRaw);}
+    const symHTML='<b style="color:'+((sn&&sn.color)||'#e9ddff')+'">'+escT(label)+' <span style="display:inline-block;vertical-align:-2px">'+symRaw+'</span></b>';
     if(near===0)return 'Yours is the first light this map holds for this place \u2014 a '+symHTML+' \u2014 it is learning what here feels like, through you.';
     if(senseNear===0)return 'The first '+symHTML+' this map holds here \u2014 your light joins '+near+' other'+(near>1?'s':'')+' sensing this place.';
     if(mineOfSense===1)return 'A sense you have never offered before \u2014 '+symHTML+' \u2014 your aura widens.';
@@ -4501,9 +4501,9 @@ function applyCalm(){
 }
 (function calmWire(){try{applyCalm();const b=document.getElementById('calm-toggle');if(b)b.addEventListener('click',()=>{window.AS_CALM=!window.AS_CALM;try{localStorage.setItem('aurasense_calm',window.AS_CALM?'1':'0');}catch(e){}applyCalm();showMsg(window.AS_CALM?'Calm \u2014 the fine motion rests; only the slow breath remains.':'The fine motion returns \u2014 welcome back to the weather.',3600);});}catch(e){}})();
 window.AS_SEEN_ALPHA=false;try{window.AS_SEEN_ALPHA=(localStorage.getItem('aurasense_seen_alpha')==='1');}catch(e){}
-window.AS_QUEST_DONE=false; // in-memory only, like registration \u2014 persistence arrives with Gate profiles
-document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#qz-submit')){window.AS_QUEST_DONE=true;setTimeout(menuRefresh,600);}}catch(_){}});
-function questDone(){return !!window.AS_QUEST_DONE;}
+// Shape-your-aura completes only when EVERY reading is woven \u2014 computed truth from myProfile.qzDone, in-memory like registration.
+document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#qz-submit')){setTimeout(menuRefresh,600);}}catch(_){}});
+function questDone(){try{return (typeof QUESTS!=='undefined')&&QUESTS.length>0&&QUESTS.every(q=>myProfile&&myProfile.qzDone&&myProfile.qzDone[q.name]);}catch(e){return false;}}
 function soulDone(){try{const g=document.querySelectorAll('.qp-gate');if(!g.length)return false;return document.querySelectorAll('.qp-gate.done').length>=g.length;}catch(e){return false;}}
 function mjLocked(k){
   const reg=!!(myProfile&&myProfile.handle);
@@ -4611,7 +4611,7 @@ function openSenseShare(){
 }
 document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#ss-open')){e.preventDefault();openSenseShare();}}catch(_){}});
 // A small svg of the sense's symbol, for postcards.
-function _offSym(sid,color){const sym=(typeof SENSE_SYMBOLS==='object'&&SENSE_SYMBOLS[sid])||'\u2727';return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><text x="40" y="54" text-anchor="middle" font-size="42" fill="'+color+'">'+sym+'</text></svg>';}
+function _offSym(sid,color){const sym=(typeof SENSE_SYMBOLS==='object'&&SENSE_SYMBOLS[sid])||'';if(/^<svg/i.test(sym))return sym.replace('width="22"','width="460"').replace('height="22"','height="460"');return '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 80"><text x="40" y="54" text-anchor="middle" font-size="42" fill="'+color+'">\u2727</text></svg>';}
 // THE NEW SENSE DOOR \u2014 the belly of the table, as a feature. The vocabulary grows only
 // from what sensers truly reach for; here is where they reach. A named sense becomes a real,
 // first-class sense on this device immediately \u2014 nothing faked, nothing gated.
@@ -4723,8 +4723,8 @@ function auraLayersAdd(){
     if(!map.getSource('auraglow'))map.addSource('auraglow',{type:'geojson',data:auraGeo()});
     const zi=(a,b,c,d2,e2)=>['interpolate',['linear'],['zoom'],0,a,4,b,8,c,11,d2,12.5,e2];
     const _bw=(map.getLayer&&map.getLayer('wev-outer'))?'wev-outer':undefined;
-    if(!map.getLayer('aura-glow'))map.addLayer({id:'aura-glow',type:'circle',source:'auraglow',paint:{'circle-color':['get','col'],'circle-blur':1,'circle-radius':zi(4.4,7,12,17,20),'circle-opacity':zi(0.2,0.26,0.24,0.16,0)}},_bw);
-    if(!map.getLayer('aura-pt'))map.addLayer({id:'aura-pt',type:'circle',source:'auraglow',paint:{'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':zi(1.4,1.9,2.6,3.1,3.4),'circle-opacity':zi(0.92,0.92,0.88,0.7,0)}},_bw);
+    if(!map.getLayer('aura-glow'))map.addLayer({id:'aura-glow',type:'circle',source:'auraglow',paint:{'circle-emissive-strength':1,'circle-color':['get','col'],'circle-blur':1,'circle-radius':zi(4.4,7,12,17,20),'circle-opacity':zi(0.2,0.26,0.24,0.16,0)}},_bw);
+    if(!map.getLayer('aura-pt'))map.addLayer({id:'aura-pt',type:'circle',source:'auraglow',paint:{'circle-emissive-strength':1,'circle-color':['get','col'],'circle-blur':0.15,'circle-radius':zi(1.4,1.9,2.6,3.1,3.4),'circle-opacity':zi(0.92,0.92,0.88,0.7,0)}},_bw);
   }catch(e){}
 }
 function auraGeo(){
