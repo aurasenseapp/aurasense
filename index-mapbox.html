@@ -204,7 +204,7 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #wev-wit{display:none;width:100%;margin-top:8px;padding:11px 12px;border-radius:12px;font-size:12.5px;font-family:inherit;color:#fff2d9;border:1px solid rgba(255,230,176,.55);background:rgba(255,214,166,.1);cursor:pointer}
 #ptitle{position:sticky;top:-1px;z-index:6;background:rgba(10,9,20,.94);backdrop-filter:blur(6px)}
 /* THE MIRROR \u2014 a reflection, only ever when asked for */
-#mr-open,#gp-open{display:block;width:calc(100% - 4px);margin:0 2px 10px;padding:11px 13px;border-radius:13px;font-size:12.5px;letter-spacing:.04em;font-family:inherit;color:#e8e2ff;border:1px solid rgba(210,200,255,.45);background:linear-gradient(135deg,rgba(210,200,255,.12),rgba(167,139,250,.10));cursor:pointer}
+#mr-open,#gp-open,#fc-open{display:block;width:calc(100% - 4px);margin:0 2px 10px;padding:11px 13px;border-radius:13px;font-size:12.5px;letter-spacing:.04em;font-family:inherit;color:#e8e2ff;border:1px solid rgba(210,200,255,.45);background:linear-gradient(135deg,rgba(210,200,255,.12),rgba(167,139,250,.10));cursor:pointer}
 #mr-back{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.72);opacity:0;transition:opacity .6s ease}
 #mr-back.show{opacity:1}
 #mr-modal{position:fixed;left:50%;top:46%;transform:translate(-50%,-50%);z-index:100001;width:min(450px,94vw);max-height:86vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(210,200,255,.5);border-radius:20px;padding:22px 19px 16px;box-shadow:0 12px 48px rgba(0,0,0,.65),0 0 38px rgba(210,200,255,.22);opacity:0;transition:opacity .7s ease}
@@ -212,6 +212,7 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 .mr-bal{display:flex;justify-content:center;margin:6px 0 8px}
 @keyframes mrB{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 #gp-open{border-color:rgba(150,215,190,.5);background:linear-gradient(135deg,rgba(150,215,190,.10),rgba(167,139,250,.08))}
+#fc-open{border-color:rgba(240,200,150,.45);background:linear-gradient(135deg,rgba(240,200,150,.09),rgba(167,139,250,.07))}
 #gp-back{position:fixed;inset:0;background:rgba(4,3,10,.6);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);z-index:100000;opacity:0;transition:opacity .5s}
 #gp-back.show{opacity:1}
 #gp-modal{position:fixed;left:50%;top:46%;transform:translate(-50%,-50%);z-index:100001;width:min(430px,94vw);max-height:82vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(150,215,190,.55);border-radius:20px;padding:22px 19px 16px;box-shadow:0 12px 48px rgba(0,0,0,.65),0 0 38px rgba(150,215,190,.2);opacity:0;transition:opacity .6s}
@@ -222,6 +223,29 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #gp-modal button{font-family:inherit;cursor:pointer;border-radius:13px;font-size:12.5px;padding:10px 14px;border:0.5px solid rgba(150,215,190,.55);background:rgba(150,215,190,.16);color:#e9fff6;margin-right:8px;margin-bottom:8px}
 #gp-modal .gp-note{font-size:11.5px;color:#9bd8c0;min-height:16px;margin:2px 0 6px}
 #gp-modal .gp-x{display:block;width:100%;margin-top:8px;background:none;border:none;color:#8a80b4;font-size:11.5px}
+#mv-orb{position:fixed;right:16px;bottom:18px;z-index:99990;width:46px;height:46px;border-radius:50%;border:0.5px solid rgba(196,181,253,.55);background:radial-gradient(circle at 38% 34%,rgba(233,221,255,.9),rgba(167,139,250,.5) 46%,rgba(20,16,42,.9) 78%);box-shadow:0 0 18px rgba(167,139,250,.5),0 6px 20px rgba(0,0,0,.5);cursor:pointer;animation:mvBreath 6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-size:19px;color:#0c0a1c}
+@keyframes mvBreath{0%,100%{transform:scale(1);box-shadow:0 0 16px rgba(167,139,250,.42),0 6px 20px rgba(0,0,0,.5)}50%{transform:scale(1.07);box-shadow:0 0 30px rgba(196,181,253,.75),0 6px 20px rgba(0,0,0,.5)}}
+body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.25}
+#mv-panel{position:fixed;right:14px;bottom:74px;z-index:99991;width:min(340px,92vw);max-height:66vh;overflow-y:auto;background:rgba(12,10,26,.97);border:0.5px solid rgba(196,181,253,.45);border-radius:18px;padding:15px 15px 11px;box-shadow:0 12px 44px rgba(0,0,0,.6),0 0 30px rgba(167,139,250,.18);opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s;pointer-events:none}
+#mv-panel.show{opacity:1;transform:none;pointer-events:auto}
+#mv-panel .mv-h{font-size:12.5px;color:#e9ddff;letter-spacing:.06em;margin-bottom:7px}
+#mv-panel .mv-b{font-size:12px;line-height:1.7;color:#b9aee0;margin-bottom:9px}
+#mv-panel .mv-q{font-size:12px;line-height:1.65;color:#d8ccff;font-style:italic;border-left:2px solid rgba(196,181,253,.5);padding-left:9px;margin:8px 0 10px}
+#mv-panel .mv-do{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px}
+#mv-panel .mv-do button{background:rgba(24,18,48,.85);border:0.5px solid rgba(167,139,250,.45);color:#d8ccff;border-radius:13px;padding:6px 11px;font-size:11.5px;cursor:pointer;font-family:inherit}
+#mv-panel .mv-x{display:block;width:100%;background:none;border:none;color:#8a80b4;font-size:11px;cursor:pointer;font-family:inherit;padding-top:4px}
+#fc-modal{position:fixed;left:50%;top:47%;transform:translate(-50%,-50%);z-index:100001;width:min(440px,94vw);max-height:84vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(167,139,250,.5);border-radius:20px;padding:20px 18px 14px;box-shadow:0 12px 48px rgba(0,0,0,.65);opacity:0;transition:opacity .55s}
+#fc-modal.show{opacity:1}
+#fc-modal textarea{width:100%;box-sizing:border-box;min-height:96px;background:rgba(10,8,24,.85);border:0.5px solid rgba(167,139,250,.4);border-radius:12px;color:#efe8ff;font-size:13px;padding:10px 11px;font-family:inherit;line-height:1.5;resize:vertical}
+#fc-modal .fc-t{font-size:15px;color:#efe8ff;letter-spacing:.05em;margin-bottom:5px}
+#fc-modal .fc-s{font-size:11.5px;line-height:1.65;color:#a89cd0;margin-bottom:11px}
+#fc-modal button.fc-go{margin-top:9px;background:rgba(196,181,253,.9);border:none;color:#14102a;border-radius:13px;padding:9px 15px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+#fc-out{margin-top:12px}
+.fc-card{background:rgba(18,14,38,.75);border:0.5px solid rgba(167,139,250,.3);border-radius:14px;padding:12px 13px;margin-bottom:9px}
+.fc-card .fch{font-size:11px;letter-spacing:.07em;color:#9d8fcc;margin-bottom:5px;text-transform:uppercase}
+.fc-card .fcb{font-size:12.5px;line-height:1.65;color:#ddd4f5}
+.fc-read{display:inline-block;font-size:11px;color:#0c0a1c;background:var(--rd,#c4b5fd);border-radius:10px;padding:2px 8px;margin:2px 5px 2px 0}
+#fc-modal .fc-x{display:block;width:100%;margin-top:6px;background:none;border:none;color:#8a80b4;font-size:11.5px;cursor:pointer;font-family:inherit}
 #mr-t{font-size:16.5px;color:#f2edff;letter-spacing:.03em;text-align:center;text-shadow:0 0 16px rgba(210,200,255,.6)}
 #mr-s,.mr-s2{font-size:11.5px;color:#a99cd4;margin-top:7px;line-height:1.6;text-align:center;font-style:italic}
 .mr-card{margin-top:13px;text-align:left;background:rgba(210,200,255,.05);border:0.5px solid rgba(210,200,255,.2);border-radius:14px;padding:12px 13px}
@@ -1457,6 +1481,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button id="calm-toggle" type="button" title="Calm mode stills the fine motion and keeps the silence — only the slow breath remains. For anyone who senses better in stillness.">☾ Calm mode — off</button>
       <button id="mr-open" type="button">🪞 The Mirror — a reflection, when you want one</button>
       <button id="gp-open" type="button">◇ Keep my light — carry this aura beyond today</button>
+      <button id="fc-open" type="button">◈ The Felt-Context Lantern — read what a message may carry</button>
       <div id="ma-widen"></div>
       <button id="ss-open" type="button">✉ SenseShare — send someone a light</button>
       <div class="ma-h">What you have offered</div>
@@ -1541,8 +1566,8 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     </div>
 
     <div class="rg-card">
-      <div class="rg-h">Keep this light beyond today <span class="rg-opt">optional</span></div>
-      <div class="rg-sub">Everything above lives only in this visit unless you keep it. Give an email and we send a six-digit code — no password, ever. Your email is never shown anywhere and never joins your auras; it only lets this same light return to you on any device.</div>
+      <div class="rg-h">Keep this light beyond today <span class="rg-req">asked, so your aura endures</span></div>
+      <div class="rg-sub">Wander as long as you like without any of this. But to <i>become</i> an Aurasenser — to have an aura that endures — we ask for an email. A six-digit code follows; no password, ever. Your email is never shown anywhere and never joins your auras; it only lets this same light return to you on any device.</div>
       <div class="rg-row">
         <input id="rg-email" class="rg-in" type="email" placeholder="you@somewhere" maxlength="120" autocomplete="email">
         <button id="rg-keep" class="rg-mini" type="button">Send my code ✧</button>
@@ -3433,6 +3458,14 @@ const rgCreate=document.getElementById('rg-create');
 if(rgCreate)rgCreate.addEventListener('click',()=>{
   const h=(rgHandle?rgHandle.value.trim():'');
   if(!h){if(rgNote)rgNote.textContent='Please choose an Aurasenser name to continue — it is the one thing we ask.';if(rgHandle)rgHandle.focus();return;}
+  const _em=((document.getElementById('rg-email')||{}).value||'').trim();
+  const _kn=document.getElementById('rg-keep-note');
+  if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(_em)){
+    if(_kn)_kn.textContent='An email is asked for here \u2014 without it your aura would vanish when this visit ends. It is never shown, never joined to your auras \u2727';
+    const _ee=document.getElementById('rg-email');if(_ee){_ee.focus();try{_ee.scrollIntoView({block:'center',behavior:'smooth'});}catch(e){}}
+    return;
+  }
+  if(!(gate.user)){try{gpSendCode(_em,_kn);const cr=document.getElementById('rg-code-row');if(cr)cr.style.display='';}catch(e){}}
   const free=((document.getElementById('rg-interests-free')||{}).value||'');
   myProfile=Object.assign(myProfile||{},{handle:h,realname:((document.getElementById('rg-realname')||{}).value||''),address:((document.getElementById('rg-address')||{}).value||''),personality:rgCollect('personality'),mood:rgCollect('mood'),sensory:rgCollect('sensory'),spiritual:rgCollect('spiritual'),interests:rgCollect('interests').concat(free.split(',').map(s=>s.trim()).filter(Boolean))});
   if(typeof menuRefresh==='function')menuRefresh();
@@ -4975,6 +5008,100 @@ if(gate.user){d.innerHTML='<div class="gp-t">\u25c7 Your light is kept</div>'+'<
 else{d.innerHTML='<div class="gp-t">\u25c7 Keep my light</div>'+'<div class="gp-s">An email and a six-digit code \u2014 no password, ever. Your email is never shown and never joins your auras; it only lets this same light return to you anywhere.</div>'+'<input id="gp-em" type="email" placeholder="you@somewhere" maxlength="120" autocomplete="email">'+'<button id="gp-send" type="button">Send my code \u2727</button>'+'<div id="gp-c-row" style="display:none"><input id="gp-code" type="text" inputmode="numeric" placeholder="the six digits" maxlength="8" autocomplete="one-time-code"><button id="gp-go" type="button">Keep my light</button></div>'+'<div class="gp-note" id="gp-note"></div>'+'<button class="gp-x" id="gp-x" type="button">not now</button>';}
 document.body.appendChild(d);requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},600);};back.addEventListener('click',close);d.querySelector('#gp-x').addEventListener('click',close);const note=d.querySelector('#gp-note');const sn=d.querySelector('#gp-send');if(sn)sn.addEventListener('click',async()=>{sn.disabled=true;const ok=await gpSendCode((d.querySelector('#gp-em').value||'').trim(),note);sn.disabled=false;if(ok)d.querySelector('#gp-c-row').style.display='';});const go=d.querySelector('#gp-go');if(go)go.addEventListener('click',()=>gpVerify((d.querySelector('#gp-em').value||'').trim(),(d.querySelector('#gp-code').value||''),note,()=>setTimeout(close,1600)));const nw=d.querySelector('#gp-now');if(nw)nw.addEventListener('click',()=>{gpSave(true);if(note)note.textContent='\u2713 Held.';});const out=d.querySelector('#gp-out');if(out)out.addEventListener('click',async()=>{try{await gate.db.auth.signOut();}catch(e){}gate.user=null;gpDoor();close();showMsg('Set down \u2014 this visit walks light again. Your kept aura waits where you left it \u2727',5600);});}
 document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#gp-open')){e.preventDefault();gpModal();return;}if(e.target&&e.target.closest&&e.target.closest('#rg-keep')){const n=document.getElementById('rg-keep-note');const em=(document.getElementById('rg-email')||{value:''}).value.trim();gpSendCode(em,n).then(ok=>{if(ok){const cr=document.getElementById('rg-code-row');if(cr)cr.style.display='';}});return;}if(e.target&&e.target.closest&&e.target.closest('#rg-verify')){const n=document.getElementById('rg-keep-note');const em=(document.getElementById('rg-email')||{value:''}).value.trim();const cd=(document.getElementById('rg-code')||{value:''}).value;gpVerify(em,cd,n);return;}if(e.target&&e.target.closest&&e.target.closest('#rg-create')){setTimeout(()=>{try{gpSave();}catch(_){}},1400);}}catch(_){}});
+// THE MIRROR'S VOICE \u2014 the third heartbeat, bones. Page-aware guidance in the Mirror's grammar:
+// it never instructs, never scores; it says where you are, what is possible here, and asks one open question.
+// (The living dialogue \u2014 AI reached toward and answering \u2014 lands with Gate profiles; this is its body and socket.)
+function mvWhere(){
+  const on=id=>{const e=document.getElementById(id);return !!(e&&e.classList&&e.classList.contains('show'));};
+  if(on('open-page'))return 'openings';
+  if(on('sync-page'))return 'weave';
+  if(on('alpha-page'))return 'alpha';
+  if(on('soul-page'))return 'soul';
+  if(on('quest-page'))return 'quest';
+  if(on('register-page'))return 'register';
+  if(on('livefeed-page'))return 'feed';
+  if(on('myaura-page'))return 'myaura';
+  try{if(typeof map!=='undefined'&&map.getZoom&&map.getZoom()<4.2)return 'world';}catch(e){}
+  return 'map';
+}
+const MV={
+ map:{h:'Where you stand',b:'This is the map \u2014 the living ground. A sense offered here settles where you felt it, and becomes part of the light of that place.',q:'What is the true quality of this moment, before you reach for a word for it?',d:[['Offer a sense here','#mobile-offer'],['See the live feed','#feed-full'],['Your own aura','#my-aura-btn']]},
+ world:{h:'The world view',b:'Zoomed to the whole earth, auras gather into the light of nations and the circumstances people are answering. Every world event can hold an Accord \u2014 many lights standing with one circumstance.',q:'Which circumstance do you find you cannot look away from \u2014 and what does that say of you?',d:[['Your own aura','#my-aura-btn']]},
+ myaura:{h:'Your aura',b:'Everything here is yours alone. The rings hold every light you have offered, every reading woven, every Opening you stood into.',q:'If your aura could speak one thing back to you today, what would you least want it to say \u2014 and what would that be pointing at?',d:[['The Mirror','#mr-open'],['Your journey','#mj-btn'],['Keep my light','#gp-open']]},
+ quest:{h:'Shape your aura',b:'Eight readings, opening one at a time. Each answers in colour, not in score \u2014 nothing here is graded, and nothing is wrong.',q:'Which of these questions do you want to skip? That reluctance usually knows something.',d:[['Your aura','#my-aura-btn']]},
+ soul:{h:'The Soul Search',q:'What would you have to admit is true, for the answer you just gave to be entirely honest?',b:'Five gates, drawn from Jung, modern psychology and Krishnamurti. It asks; it does not conclude.',d:[]},
+ alpha:{h:'Alphasense',b:'A language of symbols. Two words touching make a third meaning \u2014 an Alphabond \u2014 which is where most of the truth lives.',q:'Which two of these would you never have put together \u2014 and what would their meeting mean?',d:[]},
+ weave:{h:'The Synchronicity Weave',b:'A noticing practice. Symbols, dreams and visions bond here when their rhyme becomes undeniable.',q:'What has repeated lately that you have been calling a coincidence?',d:[]},
+ openings:{h:'The Openings',b:'Questions of existence, held open \u2014 not to be settled. Two symbols interlock; the words beneath are only the addendum.',q:'Which of these questions would change how you live, if it were answered? Sit with that one.',d:[]},
+ feed:{h:'The live feed',b:'Auras others have offered, as they arrive. To offer to one, or to question it, is already to absorb some of its light \u2014 the thread runs both ways.',q:'Whose light here do you find hardest to sit with? That difficulty is worth its own attention.',d:[]},
+ register:{h:'Becoming an Aurasenser',b:'A handle is the only name ever shown. An email is asked so your aura endures beyond this visit \u2014 it is never shown, never joined to your auras.',q:'What would you want an aura of yours to carry, that your name never could?',d:[]}
+};
+function mvPanel(){
+  let d=document.getElementById('mv-panel');
+  if(d&&d.classList.contains('show')){d.classList.remove('show');return;}
+  if(!d){d=document.createElement('div');d.id='mv-panel';document.body.appendChild(d);}
+  const w=mvWhere(),m=MV[w]||MV.map;
+  const doors=(m.d||[]).filter(x=>document.querySelector(x[1])).map(x=>'<button type="button" data-go="'+x[1]+'">'+escT(x[0])+'</button>').join('');
+  d.innerHTML='<div class="mv-h">\U0001FA9E '+escT(m.h)+'</div><div class="mv-b">'+escT(m.b)+'</div><div class="mv-q">'+escT(m.q)+'</div>'+(doors?'<div class="mv-do">'+doors+'</div>':'')+'<div class="mv-b" style="font-size:11px;color:#8a80b4;margin-bottom:4px">Reaching further \u2014 the Voice answering in your own words, in dialogue \u2014 opens with Gate profiles \u2727</div><button class="mv-x" type="button">close</button>';
+  requestAnimationFrame(()=>d.classList.add('show'));
+}
+(function mvBoot(){try{if(document.getElementById('mv-orb'))return;const o=document.createElement('div');o.id='mv-orb';o.title='The Mirror\u2019s Voice \u2014 where you are, and what is possible here';o.textContent='\u25c9';document.body.appendChild(o);}catch(e){}})();
+document.addEventListener('click',function(e){try{
+  if(e.target&&e.target.closest&&e.target.closest('#mv-orb')){mvPanel();return;}
+  const p=e.target&&e.target.closest?e.target.closest('#mv-panel'):null;if(!p)return;
+  if(e.target.closest('.mv-x')){p.classList.remove('show');return;}
+  const g=e.target.closest('[data-go]');if(g){const t=document.querySelector(g.getAttribute('data-go'));p.classList.remove('show');if(t)setTimeout(()=>t.click(),260);}
+}catch(_){}});
+// THE FELT-CONTEXT LANTERN \u2014 paste any message and see what it may be carrying beneath the words.
+// Bones: honest pattern-reading, always plural, never a verdict; the AI reading lands with the Gate.
+const FC_R=[
+ {k:/\b(asap|urgent|immediately|right away|by (eod|end of day))\b/i,w:'time pressure',r:['They may be under pressure from someone above them','It may simply be a habit of phrasing, not aimed at you']},
+ {k:/\b(just|only|simply)\s+(wondering|checking|asking|following up)/i,w:'softened approach',r:['They are trying not to seem demanding','They may actually need this more than the wording admits']},
+ {k:/\b(fine|whatever|sure|ok)\.?$/im,w:'flat closing',r:['They may be tired or busy rather than upset with you','Something may be unresolved that they have not said aloud']},
+ {k:/\b(as (i|we) (said|mentioned)|per my last|to reiterate|again,)/i,w:'repetition marked',r:['They feel unheard and are signalling it indirectly','It may be a formality of their workplace writing, not annoyance']},
+ {k:/\b(no worries|no rush|whenever you can|no pressure)\b/i,w:'pressure released',r:['They mean it kindly and literally','Sometimes this softens a real deadline \u2014 asking directly is fair']},
+ {k:/\b(we need to talk|can we chat|got a minute|quick word)\b/i,w:'an unnamed subject',r:['Something specific is on their mind that they would rather say live','It is often smaller than the phrasing feels \u2014 asking the topic is reasonable']},
+ {k:/\b(sorry|apolog(y|ies|ise|ize))\b/i,w:'apology present',r:['They may be genuinely regretful','It may be politeness, not fault \u2014 many apologise as punctuation']},
+ {k:/\b(thanks|thank you|appreciate|grateful)\b/i,w:'gratitude stated',r:['Warmth is being offered plainly','In brief work notes this can be closing punctuation rather than feeling']},
+ {k:/\b(hope (you|this) (are|is|find)|how are you)\b/i,w:'an opening courtesy',r:['A real check-in','A standard opener \u2014 the request beneath it is usually the point']},
+ {k:/[!]{2,}|[A-Z]{6,}/,w:'raised intensity',r:['Strong feeling \u2014 excitement or frustration; the words around it tell which','Some people write at this pitch always, with no anger behind it']},
+ {k:/\?{2,}/,w:'repeated questioning',r:['Confusion or urgency about a real gap','Playful emphasis \u2014 the rest of the tone will tell']},
+ {k:/\b(lol|haha|\ud83d\ude02|\ud83d\ude05|\ud83d\ude4f|\u2764)/i,w:'lightening added',r:['Softening something that felt too blunt','Genuine warmth or humour']},
+ {k:/\b(if you (want|like)|up to you|your call|no obligation)\b/i,w:'choice handed over',r:['They mean the choice sincerely','Sometimes a preference is held back \u2014 asking what they would prefer is safe']},
+ {k:/\b(disappointed|frustrated|concerned|unhappy)\b/i,w:'feeling named outright',r:['They have said the feeling plainly \u2014 that is a gift; take it at face value','Naming it usually means they want it resolved, not to punish']}
+];
+function fcRead(t){
+  const hits=FC_R.filter(x=>x.k.test(t));
+  const words=(t.trim().match(/\S+/g)||[]).length;
+  const q=(t.match(/\?/g)||[]).length, ex=(t.match(/!/g)||[]).length;
+  let shape;
+  if(words<=8)shape='Very short. Brevity often means haste or habit \u2014 it is rarely the coldness it can feel like.';
+  else if(words>140)shape='Long. Length usually means care or worry \u2014 someone wanting to be understood properly.';
+  else shape='Ordinary length \u2014 nothing in the size of it suggests strong feeling either way.';
+  if(q>=2)shape+=' Several questions: they want a reply, and probably a specific one.';
+  if(ex>=2)shape+=' Repeated exclamation marks raise the pitch \u2014 warm or tense, depending on the words.';
+  let h='<div class="fc-card"><div class="fch">The shape of it</div><div class="fcb">'+escT(shape)+'</div></div>';
+  if(hits.length){
+    h+='<div class="fc-card"><div class="fch">What it may be carrying</div><div class="fcb">'+hits.slice(0,5).map(x=>'<span class="fc-read" style="--rd:#c4b5fd">'+escT(x.w)+'</span>').join('')+'</div></div>';
+    h+=hits.slice(0,5).map(x=>'<div class="fc-card"><div class="fch">'+escT(x.w)+'</div><div class="fcb">Could mean: '+escT(x.r[0])+'.<br>Could equally mean: '+escT(x.r[1])+'.</div></div>').join('');
+  }else{
+    h+='<div class="fc-card"><div class="fch">What it may be carrying</div><div class="fcb">No strong emotional markers stand out. That usually means it is straightforward \u2014 an absence of signals is not a hidden signal.</div></div>';
+  }
+  h+='<div class="fc-card"><div class="fch">A fair thing to ask</div><div class="fcb">If the meaning still will not settle, asking is legitimate and costs nothing: \u201cI want to be sure I have read you right \u2014 did you mean X?\u201d Most people answer gladly.</div></div>';
+  h+='<div class="fc-card"><div class="fch">Held lightly</div><div class="fcb">These are possibilities, never verdicts. Only the sender knows what they meant \u2014 and sometimes they do not either.</div></div>';
+  return h;
+}
+function fcOpen(){
+  if(document.getElementById('fc-modal'))return;
+  const back=document.createElement('div');back.id='gp-back';document.body.appendChild(back);
+  const d=document.createElement('div');d.id='fc-modal';
+  d.innerHTML='<div class="fc-t">\u25c8 The Felt-Context Lantern</div><div class="fc-s">Paste a message, email, or post \u2014 anything whose tone is hard to read. The lantern shows what it <i>may</i> be carrying, always more than one reading, never a verdict. Nothing you paste leaves this device.</div><textarea id="fc-in" placeholder="Paste the message here\u2026"></textarea><button class="fc-go" type="button" id="fc-go">Light it \u2727</button><div id="fc-out"></div><button class="fc-x" type="button" id="fc-x">close</button>';
+  document.body.appendChild(d);requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});
+  const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},600);};
+  back.addEventListener('click',close);d.querySelector('#fc-x').addEventListener('click',close);
+  d.querySelector('#fc-go').addEventListener('click',()=>{const t=(d.querySelector('#fc-in').value||'').trim();const o=d.querySelector('#fc-out');if(!t){o.innerHTML='<div class="fc-card"><div class="fcb">Paste something first \u2014 the lantern needs words to light \u2727</div></div>';return;}o.innerHTML=fcRead(t);});
+}
+document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#fc-open')){e.preventDefault();fcOpen();}}catch(_){}});
 async function gateLoadEvents(){
   if(!GATE_CONFIGURED||!gate.on)return;
   try{
