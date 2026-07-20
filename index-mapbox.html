@@ -54,8 +54,11 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .tab.active{color:#c4b5fd}
 .tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0;transition:background .3s,box-shadow .3s}
 .tab.active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
-.tab-orb-my{--myglow:11px;position:relative;width:21px;height:21px;flex-shrink:0;overflow:visible;transition:width .6s ease,height .6s ease}
-.tab-orb-my canvas{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:330%;height:330%;pointer-events:none;filter:drop-shadow(0 0 7px rgba(196,181,253,.85))}
+/* The aura grows by light, never by layout — the box stays 21px so the strip cannot shift. */
+.tab-orb-my{--myglow:11px;--orbscale:1;position:relative;width:21px;height:21px;flex-shrink:0;overflow:visible}
+/* The phone's 6px orb rule must not shrink the living aura to a speck. */
+#tabs .tab-orb.tab-orb-my{width:21px;height:21px;margin-right:6px}
+.tab-orb-my canvas{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) scale(var(--orbscale,1));transition:transform .6s ease;width:330%;height:330%;pointer-events:none;filter:drop-shadow(0 0 7px rgba(196,181,253,.85))}
 .tab-orb-my.orb-fed{animation:orbFed 3s ease-out}
 @keyframes orbFed{0%,28%,56%{transform:scale(1)}14%{transform:scale(1.55)}42%{transform:scale(1.4)}70%{transform:scale(1.28)}100%{transform:scale(1)}}
 /* Region lives under Town on every size now — its own tab retires so the strip can breathe. */
@@ -78,7 +81,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .tab-caret.open{transform:rotate(180deg)}
 .tab-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;background:rgba(14,12,28,.98);border:0.5px solid rgba(167,139,250,.3);border-radius:12px;padding:4px;flex-direction:column;gap:1px;z-index:120;box-shadow:0 8px 26px rgba(0,0,0,.6);min-width:120px}
 .tab-menu.open{display:flex}
-.tab-mi{font-size:11px;padding:7px 11px;border-radius:9px;border:none;background:transparent;color:#a99bd6;cursor:pointer;text-align:left;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:background .2s,color .2s;pointer-events:all}
+.tab-mi{font-size:14px;padding:10px 14px;border-radius:9px;border:none;background:transparent;color:#a99bd6;cursor:pointer;text-align:left;font-family:inherit;white-space:nowrap;display:flex;align-items:center;gap:6px;transition:background .2s,color .2s;pointer-events:all}
 .tab-mi:hover{background:rgba(167,139,250,.14);color:#e0d8ff}
 .tab-mi.mi-active{color:#c4b5fd}
 .tab-mi.mi-active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
@@ -99,6 +102,9 @@ body.panel-live #search-box{display:none!important}
 #panel:not(.show-mobile):not(.show):not(.just-offered){display:none!important}
 /* At planet height there is no place to offer to — the pill rests with the tip. */
 body.space-view #mobile-offer{display:none!important}
+/* At planet height the tabs stop competing with the world — they wake at a touch. */
+body.space-view #hdr2{opacity:.55;transition:opacity .9s ease}
+body.space-view #hdr2:hover,body.space-view #hdr2:focus-within,body.space-view #hdr2:active{opacity:1}
 #threshold{position:fixed;inset:0;z-index:99999;background:radial-gradient(70% 60% at 50% 42%,#141126 0%,#0a0918 55%,#07060e 100%);display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:1;transition:opacity 2.2s ease}
 #threshold.lift{opacity:0}
 #th-glow{width:min(58vw,300px);height:min(58vw,300px);border-radius:50%;background:radial-gradient(closest-side at 46% 44%,rgba(196,181,253,.5),transparent 70%),radial-gradient(closest-side at 56% 56%,rgba(255,159,192,.34),transparent 72%),radial-gradient(closest-side at 50% 48%,rgba(255,255,255,.55),transparent 26%);filter:blur(5px);animation:thBreathe 6s ease-in-out infinite}
@@ -592,6 +598,9 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.25}
 #ma-left{border-right:0.5px solid rgba(167,139,250,.1)}
 #ma-explain{margin-top:22px;line-height:1.75}
 #ma-explain .mae-hint{display:block;margin-top:10px}
+.as-rail{position:fixed;width:4px;border-radius:3px;background:rgba(167,139,250,.14);z-index:2400;pointer-events:none;opacity:0;transition:opacity .7s ease}
+.as-rail.on{opacity:1}
+.as-rail i{position:absolute;left:0;display:block;width:100%;border-radius:3px;background:linear-gradient(rgba(196,181,253,.95),rgba(255,159,192,.7));box-shadow:0 0 9px rgba(167,139,250,.8);transition:top .14s linear,height .14s linear}
 #ma-selfie-wrap{margin-top:20px}
 #ma-selfie-note{margin-top:8px}
 #ma-left::-webkit-scrollbar{width:6px}
@@ -905,12 +914,12 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.25}
   #logo h1{font-size:15px}#logo p{display:none}
   #hdr2{top:58px;left:8px;right:8px;justify-content:center}
   #tabs{width:100%;justify-content:space-between;gap:2px}
-  #tabs .tab{font-size:15px;padding:7px 3px;letter-spacing:.01em}
-  @media(max-width:380px){#tabs .tab{font-size:13.5px;padding:7px 2px}}
+  #tabs .tab{font-size:16px;padding:7px 6px;letter-spacing:.01em}
+  @media(max-width:380px){#tabs .tab{font-size:14.5px;padding:7px 4px}}
   #tabs .tab-orb{width:6px;height:6px;margin-right:4px}
   #tabs .tab-menu{display:none}
   #tabs .tab-caret{display:block}
-  #tabs{font-size:13px;padding:5px 5px;max-width:calc(100vw - 24px);overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+  #tabs{font-size:13px;padding:5px 5px;max-width:calc(100vw - 24px);overflow:visible;flex-wrap:nowrap}
   #tabs::-webkit-scrollbar{display:none}
   .tab{padding:6px 8px;white-space:nowrap}
   #panel{left:0;right:0;width:auto;transform:none;box-sizing:border-box}
@@ -1244,13 +1253,14 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button class="tab active" data-i="0"><span class="tab-orb" id="orb0"></span>Street</button>
       <div class="tab-group">
         <button class="tab" data-i="1"><span class="tab-orb" id="orb1"></span>Town</button>
-        <button class="tab-caret" data-menu="town" title="Region">▾</button>
+        <button class="tab-caret" data-menu="town" title="Region and Nation">▾</button>
         <div class="tab-menu" id="town-menu">
           <button class="tab-mi" data-i="2"><span class="tab-orb"></span>Region</button>
+          <button class="tab-mi" data-i="3"><span class="tab-orb"></span>Nation</button>
         </div>
       </div>
       <button class="tab top-region" data-i="2"><span class="tab-orb" id="orb2"></span>Region</button>
-      <button class="tab" data-i="3"><span class="tab-orb" id="orb3"></span>Nation</button>
+      <button class="tab top-region" data-i="3"><span class="tab-orb" id="orb3"></span>Nation</button>
       <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>World</button>
     </div>
     <div id="search-box">
@@ -1844,7 +1854,7 @@ const GATE_CONFIGURED=!!(GATE_URL&&GATE_ANON_KEY);
 
 mapboxgl.accessToken='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
 const map=new mapboxgl.Map({container:'map',style:'mapbox://styles/aurasense/cmqjxke2e00h401soguspgmck',center:[-0.128,51.508],zoom:15,projection:'globe'});
-map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-right');
+map.addControl(new mapboxgl.NavigationControl({showCompass:false}),'bottom-left');
 // The planet is the map itself now: globe projection, a breath of atmosphere, and quiet stars.
 map.on('style.load',()=>{
   try{if(map.setProjection)map.setProjection('globe');}catch(e){}
@@ -1920,9 +1930,11 @@ let actx=null;
 function playSound(id){
   if(window.AS_CALM)return;   // calm keeps its silence
   try{
-    if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
+    if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}
     const s=SENSES.find(x=>x.id===id);if(!s)return;
-    s.freqs.forEach(([freq,delay,vol,at,dur])=>{
+    // A newly named sense arrives without a tone of its own — it is given a true one, never silence.
+    const _fr=(s.freqs&&s.freqs.length)?s.freqs:[[528,0,.17,.05,1.9],[792,.16,.11,.06,1.6]];
+    _fr.forEach(([freq,delay,vol,at,dur])=>{
       const o=actx.createOscillator(),g=actx.createGain();
       o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;
       g.gain.setValueAtTime(0,actx.currentTime+delay);
@@ -1933,7 +1945,7 @@ function playSound(id){
   }catch(e){}
 }
 function maRenderBonds(){const el=document.getElementById('ma-bonds');if(!el)return;if(!myBonds.length){el.innerHTML='<div class="ma-empty">Aurabonds are never pressed into being — they form through reaching, and through the Weave. When one takes root between you and a person, a place, or a moment, its thread appears here.</div>';return;}el.innerHTML=myBonds.slice().reverse().map(b=>'<div class="mab-row"><span class="mab-dot" style="background:'+b.color+';box-shadow:0 0 10px '+b.color+'"></span><span class="mab-w">'+escT(b.to)+'</span><span class="mab-m">'+escT(b.label)+' · 📍 '+escT(b.place)+' · '+relTime(b.t)+'</span></div>').join('');}
-function playShift(base,dur,vol){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
+function playShift(base,dur,vol){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}
  const t=actx.currentTime,d=dur||1.8,v=vol||.05;
  [[1,1.5,1],[1.006,1.494,1],[0.5,0.75,0.6]].forEach(a=>{
    const o=actx.createOscillator(),g=actx.createGain();o.type='sine';
@@ -1943,7 +1955,7 @@ function playShift(base,dur,vol){try{if(!actx)actx=new(window.AudioContext||wind
    g.gain.exponentialRampToValueAtTime(.0008,t+d);
    o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.1);});
 }catch(e){}}
-function playBond(fa,fb){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
+function playBond(fa,fb){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}
  const t=actx.currentTime,fm=(fa+fb)/2,d=1.7;
  [fa,fb].forEach(f0=>{const o=actx.createOscillator(),g=actx.createGain();o.type='sine';
   o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(fm,t+d*0.75);
@@ -1955,7 +1967,7 @@ function playBond(fa,fb){try{if(!actx)actx=new(window.AudioContext||window.webki
 }catch(e){}}
 function maMote(c,dur){try{const cv=document.getElementById('ma-canvas');if(!cv)return;const r=cv.getBoundingClientRect(),tx=r.left+r.width/2,ty=r.top+r.height*0.42;const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:18px;height:18px;border-radius:50%;pointer-events:none;left:'+(Math.random()*innerWidth*0.7+innerWidth*0.15)+'px;top:-20px;background:radial-gradient(circle,#fff,'+c+' 60%,transparent);box-shadow:0 0 20px '+c+';';document.body.appendChild(d);d.animate([{opacity:1},{left:(tx-9)+'px',top:(ty-9)+'px',opacity:0,transform:'scale(.4)'}],{duration:dur||1500,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
 function flyToMyAura(color){try{const t=document.querySelector('.tab-myaura')||document.querySelector('#tabs .tab');const r=t?t.getBoundingClientRect():{left:innerWidth/2,top:20,width:0,height:0};const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:16px;height:16px;border-radius:50%;pointer-events:none;left:'+(innerWidth/2-8)+'px;top:'+(innerHeight/2-8)+'px;background:radial-gradient(circle,#fff,'+color+' 60%,transparent);box-shadow:0 0 18px '+color+';';document.body.appendChild(d);d.animate([{left:(innerWidth/2-8)+'px',top:(innerHeight/2-8)+'px',opacity:1,transform:'scale(1)'},{left:(r.left+r.width/2-8)+'px',top:(r.top+r.height/2-8)+'px',opacity:0,transform:'scale(.4)'}],{duration:950,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
-function playChime(fs){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();fs.forEach(([freq,delay,vol,at,dur])=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,actx.currentTime+delay);g.gain.linearRampToValueAtTime(vol,actx.currentTime+delay+at);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);});}catch(e){}}
+function playChime(fs){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}fs.forEach(([freq,delay,vol,at,dur])=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,actx.currentTime+delay);g.gain.linearRampToValueAtTime(vol,actx.currentTime+delay+at);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);});}catch(e){}}
 // Main draw
 let T=0;
 (function draw(){
@@ -2131,7 +2143,7 @@ function updateMyOrb(){
   const mo=document.getElementById('orbMy');if(!mo)return;
   const n=(typeof myShareCount!=='undefined')?myShareCount:0;
   const sz=Math.min(21+n*1.3,38);
-  mo.style.width=sz+'px';mo.style.height=sz+'px';
+  mo.style.setProperty('--orbscale',(sz/21).toFixed(3));
 }
 function animateWave(ts){
   try{
@@ -2417,7 +2429,7 @@ function setActiveTab(i){
   const cellW=window.matchMedia&&window.matchMedia('(max-width:600px)').matches;
   document.querySelectorAll('.tab[data-i]').forEach(t=>{
     const ti=+t.dataset.i;
-    t.classList.toggle('active', ti===i || (i===2&&ti===1));
+    t.classList.toggle('active', ti===i || ((i===2||i===3)&&ti===1));
     t.style.color='';
   });
   document.querySelectorAll('.tab-mi[data-i]').forEach(m=>{ m.classList.toggle('mi-active', +m.dataset.i===i); });
@@ -2507,7 +2519,10 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
   const safeText=(text||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const atSpot=auraPoints.filter(p=>haversine(p.lat,p.lng,lat,lng)<30);
   const hereCount=atSpot.length;
-  const sharedTitle=hereCount>1?('✨ '+hereCount+' auras offered here'):'✨ Aurasense just offered';
+  // A light opened by touch is not a light just given — the title tells the truth of its age.
+  const _bn=(atSpot.find(p=>p.sense===senseId&&(p.text||'')===(text||''))||{}).born||0;
+  const _fresh=!_bn||(Date.now()-_bn)<3600000;
+  const sharedTitle=hereCount>1?('✨ '+hereCount+' auras rest here'):(_fresh?'✨ Aurasense just offered':'✨ An aura rests here');
   const shortLoc=(loc||'this place').split(',')[0];
   let listInner;
   if(hereCount>1){
@@ -2560,6 +2575,12 @@ map.on('click',async function(e){
   const s=SENSES.find(x=>x.id===selSense)||{id:null,label:'aurasense',color:'#a78bfa',icon:'✧'};
   const streetName=(await reverseAddress(clat,clng))||`${clat.toFixed(4)}°N, ${Math.abs(clng).toFixed(4)}°${clng<0?'W':'E'}`;
   const shortAddr=streetName.split(',')[0];
+  // A light already resting under the finger opens itself — the offering sheet steps aside.
+  try{
+    const _tp=map.project([clng,clat]);let _hit=null,_hd=1e9;
+    auraPoints.forEach(q=>{try{const w=map.project([q.lng,q.lat]);const dd=Math.hypot(w.x-_tp.x,w.y-_tp.y);if(dd<_hd){_hd=dd;_hit=q;}}catch(_){}});
+    if(_hit&&_hd<=30){showSharedPopup(_hit.lat,_hit.lng,_hit.sense,_hit.text,streetName);return;}
+  }catch(_){}
   const list=(atHere.length?atHere:nearBy).slice(0,3);
   const senseListHTML=list.length?'<div class="pop-sense-list">'+list.map(p=>{
     const ps=SENSES.find(x=>x.id===p.sense);
@@ -2656,6 +2677,14 @@ function submit(lat,lng,text){
       first.insertBefore(el,meta);
     }
   };
+  // The sheet collapses to its confirm strip immediately — the landing must be watchable, not waited for.
+  try{
+    const _ob=document.getElementById('offer-confirm');
+    if(_ob)_ob.innerHTML='<div class="oc-head">\u2728 Aura offered \u2014 finding this place\u2026</div>';
+    const _pn=document.getElementById('panel');
+    if(_pn){_pn.classList.add('show-mobile','just-offered','offer-quiet','has-last');_pn.classList.remove('locating','sense-picked');_pn.style.maxHeight='';_pn.style.bottom='';}
+    window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
+  }catch(e){}
   if(_gScale==='street'){
     lookupPlace(lat,lng).then(_finishPlace);
     // Leave the shared sense showing in the arrowed box, with the full house-number address.
@@ -3241,9 +3270,14 @@ function showPointTips(steps){
       if(r.width>2&&r.height>2){
         const big=r.height>260;
         const px=r.left+r.width/2, py=big?(r.top+r.height*0.26):r.bottom;
-        let by=py+(big?96:26);if(by>window.innerHeight-200)by=Math.max(14,(big?py:r.top)-190);
         const bx=Math.max(12,Math.min(px-180,window.innerWidth-372));
-        bub.style.left=bx+'px';bub.style.top=by+'px';ov.appendChild(bub);
+        bub.style.left=bx+'px';bub.style.top=(py+(big?96:26))+'px';ov.appendChild(bub);
+        // Measure the bubble as it truly is, then lift it if its Next button would fall off the screen.
+        try{const bb=bub.getBoundingClientRect();
+          if(bb.bottom>window.innerHeight-14){
+            bub.style.top=Math.max(12,Math.min(py-bb.height-22,window.innerHeight-bb.height-14))+'px';
+          }}catch(e){}
+        const by=parseFloat(bub.style.top)||0;
         const arr=document.createElement('div');arr.className='ob-arrow';
         const above=by<py; arr.textContent=above?'\u2193':'\u2191';if(big){arr.style.fontSize='58px';}
         arr.style.left=(Math.max(20,Math.min(px-15,window.innerWidth-40)))+'px';
@@ -3267,14 +3301,47 @@ function maShowTip(){
     {sel:'#ma-offerings .ma-offering',t:'Beneath every offering',s:'Visit its place on the map · begin a Weave rhyme · share it as an Aura Postcard.'}
   ]);
 }
+// The explain card is bottom-anchored and the selfie block was placed by percentage — they met.
+// Now the selfie block is measured to rest exactly above it, at any text length.
+function maStackFix(){
+  try{
+    const ex=document.getElementById('ma-explain'),sw=document.getElementById('ma-selfie-wrap');
+    if(!ex||!sw)return;
+    const h=ex.getBoundingClientRect().height||0;
+    if(h>4){sw.style.top='auto';sw.style.bottom=(h+16)+'px';}
+  }catch(e){}
+}
+// A true vertical rail on the side of a scrolling section — iOS hides its own, so this one is ours.
+function attachScrollRail(el){
+  try{
+    if(!el||el.dataset.railed)return;el.dataset.railed='1';
+    const rail=document.createElement('div');rail.className='as-rail';rail.innerHTML='<i></i>';
+    document.body.appendChild(rail);const thumb=rail.querySelector('i');
+    const sync=()=>{try{
+      const r=el.getBoundingClientRect(),vh=el.clientHeight,sh=el.scrollHeight;
+      if(r.height<40||sh<=vh+8){rail.classList.remove('on');return;}
+      rail.style.left=(r.right-9)+'px';rail.style.top=(r.top+10)+'px';
+      const rh=Math.max(40,r.height-20);rail.style.height=rh+'px';rail.classList.add('on');
+      const th=Math.max(28,Math.round(rh*vh/sh));
+      thumb.style.height=th+'px';
+      thumb.style.top=Math.round((rh-th)*(el.scrollTop/Math.max(1,sh-vh)))+'px';
+    }catch(e){}};
+    el.addEventListener('scroll',sync,{passive:true});
+    window.addEventListener('resize',sync);window.addEventListener('scroll',sync,{passive:true});
+    setTimeout(sync,60);setTimeout(sync,700);setInterval(sync,1200);
+  }catch(e){}
+}
 function openMyAuraPage(){
   const page=document.getElementById('myaura-page');if(!page)return;setTimeout(maShowTip,350);
   setTimeout(()=>{try{
     const cands=['ma-left','myaura-page','ma-cols','ma-body','ma-center'];let L=null;
     for(const cid of cands){const el=document.getElementById(cid);if(el&&el.scrollHeight>el.clientHeight+8){L=el;break;}}
-    let h=document.getElementById('ma-scrollhint');
-    if(L&&!h&&!L.dataset.hinted){h=document.createElement('div');h.id='ma-scrollhint';h.textContent='\u2304 scroll for more';L.appendChild(h);L.addEventListener('scroll',()=>{L.dataset.hinted='1';const hh=document.getElementById('ma-scrollhint');if(hh)hh.remove();},{once:true,passive:true});}
-    if(!L&&h)h.remove();}catch(e){}},600);
+    if(L)attachScrollRail(L);
+    const off=document.getElementById('ma-offerings');
+    if(off&&off.scrollHeight>off.clientHeight+8)attachScrollRail(off);
+    const h=document.getElementById('ma-scrollhint');if(h)h.remove();
+    maStackFix();}catch(e){}},600);
+  setTimeout(maStackFix,900);
   const mt=document.querySelector('.tab-myaura');if(mt)mt.classList.add('mypage-open');
   if(typeof updateMyOrb==='function')updateMyOrb();
   const mh=document.getElementById('ma-handle');if(mh)mh.textContent=(myProfile&&myProfile.handle)?('@'+myProfile.handle):'';
@@ -3819,7 +3886,7 @@ function obShow(){
     {sel:'.tab-myaura',t:'This is your aura — in the menu',s:'The glowing orb beside My Aura is your living aura. It grows and shifts colour with every sense you offer. Tap it any time to see your aura up close.'},
     {sel:'#register-btn',t:'Become an Aurasenser',s:'Create your aura so the senses you share become your own.'}
   ];
-  function finish(){ob.classList.remove('show');ob.innerHTML='';if(typeof twoDoors==='function'&&(!myOfferings||myOfferings.length===0)){twoDoors();}else if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}if(typeof showMsg==='function')showMsg('The world is breathing \u2014 and it senses you here. Touch the map where you stand, or find a place you love, and offer what you feel.');}else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}}
+  function finish(){ob.classList.remove('show');ob.innerHTML='';if(typeof twoDoors==='function'&&(!myOfferings||myOfferings.length===0)){twoDoors();}else if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}if(typeof showMsg==='function')showMsg('The world is breathing \u2014 and it senses you here. \u2727 Every glow on this map was a real person, standing still long enough to feel something. Touch the map where you stand, or find a place you love, and offer what it makes you feel.',11500,'witness','#c4b5fd');}else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}}
   let idx=0;
   function visible(el){if(!el)return false;const r=el.getBoundingClientRect();return r.width>2&&r.height>2;}
   function draw(){
@@ -4514,7 +4581,7 @@ function wevFlyWorld(){
   flyProgrammatic({center:[c.lng,Math.max(-50,Math.min(50,c.lat))],zoom:1.05,pitch:0,bearing:0,duration:reduce?0:6500,essential:true});
   if(!wevWorldTipShown){
     wevWorldTipShown=true;
-    setTimeout(()=>{if(typeof showMsg==='function')showMsg('The living aura of humanity \u2014 every glow holds something real to its kind. Tap one to feel it, and to answer in kind. \u2727');},reduce?500:5200);
+    setTimeout(()=>{if(typeof showMsg==='function')showMsg('The living aura of humanity. \u2727 Every light below is something truly felt by someone, somewhere \u2014 grief, wonder, belonging, alarm. Nothing here is invented. Tap a light to feel what it holds, and answer it in kind.',12500,'witness','#c4b5fd');},reduce?500:5200);
   }
 }
 function wevOpenPanel(i){
@@ -4844,7 +4911,10 @@ function _offSym(sid,color){const sym=(typeof SENSE_SYMBOLS==='object'&&SENSE_SY
         +'<div id="ns-s">Some senses are real long before they have a name. If this place gave you one, name it \u2014 a word or two, as true as you can make it. Aurasense grows only from what sensers truly reach for.</div>'
         +'<input id="ns-in" maxlength="24" placeholder="name what you sensed\u2026" autocomplete="off">'
         +'<div id="ns-row"><button id="ns-go" type="button">\u2727 Offer this new sense</button><button id="ns-x" type="button">not now</button></div>';
-      document.body.appendChild(d);requestAnimationFrame(()=>d.classList.add('show'));
+      document.body.appendChild(d);
+      // iOS raises the keyboard only for a focus that happens inside the tap itself — never on a timer.
+      try{const _ni=d.querySelector('#ns-in');if(_ni)_ni.focus({preventScroll:true});}catch(e){}
+      requestAnimationFrame(()=>d.classList.add('show'));
       const close=()=>{d.classList.remove('show');try{back.style.opacity='0';}catch(e){}setTimeout(()=>{try{d.remove();back.remove();}catch(e){}},650);};
       back.addEventListener('click',close);
       d.querySelector('#ns-x').addEventListener('click',close);
