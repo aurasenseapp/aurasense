@@ -98,6 +98,8 @@ button,.tab{touch-action:manipulation}
 body:has(#panel.show-mobile) #mobile-offer,body:has(#panel.show) #mobile-offer,body:has(#panel.just-offered) #mobile-offer{display:none!important}
 body.panel-live #mobile-offer{display:none!important}
 body.panel-live #search-box{display:none!important}
+/* With the sheet up, a message must never speak from behind it. */
+body.panel-live #pmsg{top:112px}
 /* One bottom action, always: the resting bar retires so the breathing Offer pill stands alone (Plan Phase 2). */
 #panel:not(.show-mobile):not(.show):not(.just-offered){display:none!important}
 /* At planet height there is no place to offer to — the pill rests with the tip. */
@@ -299,9 +301,11 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.25}
 .fi-meta{font-size:10px;color:#4a4260;margin-top:3px}
 #stip{position:fixed;background:rgba(10,8,20,.97);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 13px;font-size:11px;color:#c0b8d8;max-width:185px;line-height:1.6;pointer-events:none;opacity:0;transition:opacity .2s;z-index:9999;font-style:italic}
 #panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(680px,calc(100% - 32px));pointer-events:all;display:block;background:rgba(8,7,16,.96);border:0.5px solid rgba(167,139,250,.3);border-bottom:none;border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.55)}
-#panel.show-mobile{display:block;padding:12px 12px 16px;max-height:64vh;overflow-y:auto}
-#ptitle-row{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:6;background:rgba(10,8,24,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);padding:6px 0;margin:-6px 0 4px}
+#panel.show-mobile{display:block;padding:0 12px 16px;max-height:64vh;overflow-y:auto}
+#ptitle-row{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:6;background:#0a0818;padding:12px 0 8px;margin:0 0 4px;border-radius:16px 16px 0 0;box-shadow:0 6px 10px -6px rgba(0,0,0,.75)}
 #ptitle-row #ptitle{flex:1;margin:0}
+/* A sense symbol is a word, not a decoration — it stands a touch larger than the text it sits in. */
+#pmsg svg,#offer-confirm svg,.fi-sense svg,.pop-sense-item svg,.oc-head svg{width:1.4em;height:1.4em;vertical-align:-0.34em}
 #panel.show-mobile #sheet-close{display:inline-block;background:rgba(44,34,78,.94);border:0.5px solid rgba(167,139,250,.45);color:#cbbff0;font-size:11.5px;padding:6px 11px;border-radius:14px;cursor:pointer;font-family:inherit;flex-shrink:0}
 #pi{background:rgba(10,10,20,.93);border:0.5px solid rgba(167,139,250,.18);border-radius:16px;padding:12px 14px;backdrop-filter:blur(12px)}
 #offer-locate{display:none;margin-bottom:6px}
@@ -600,6 +604,37 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.25}
 #ma-explain .mae-hint{display:block;margin-top:10px}
 .as-rail{position:fixed;width:4px;border-radius:3px;background:rgba(167,139,250,.14);z-index:2400;pointer-events:none;opacity:0;transition:opacity .7s ease}
 .as-rail.on{opacity:1}
+#np-page{position:fixed;inset:0;z-index:100003;background:rgba(5,4,12,.72);opacity:0;transition:opacity .4s ease;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#np-page.show{opacity:1}
+#np-page .np-in{max-width:520px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(30px + env(safe-area-inset-bottom))}
+#np-page .np-in.np-dim .np-sec,#np-page .np-in.np-dim .np-row:not([data-k="on"]),#np-page .np-in.np-dim .np-chips,#np-page .np-in.np-dim .np-dist{opacity:.34;pointer-events:none;transition:opacity .4s}
+#np-page .np-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+#np-page .np-h1{flex:1;font-size:19px;color:#e9ddff}
+#np-page #np-x{background:rgba(30,24,58,.9);border:.5px solid rgba(167,139,250,.45);color:#cbbff0;font-size:15px;width:36px;height:36px;border-radius:50%;cursor:pointer;font-family:inherit}
+#np-page .np-note{font-size:12.5px;line-height:1.65;color:#a99bd6;margin-bottom:14px}
+#np-page .np-note.np-sm{font-size:11.5px;margin:6px 0 8px}
+#np-page .np-sec{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:#7d73a6;margin:20px 0 8px}
+#np-page .np-row{display:flex;align-items:center;gap:12px;padding:12px 13px;margin-bottom:7px;background:rgba(14,11,30,.82);border:.5px solid rgba(167,139,250,.2);border-radius:14px;cursor:pointer}
+#np-page .np-l{flex:1}
+#np-page .np-t{font-size:14px;color:#ded3ff;line-height:1.35}
+#np-page .np-s{font-size:11.5px;color:#8b81b4;margin-top:3px;line-height:1.45}
+#np-page .np-sw{width:46px;height:27px;border-radius:16px;background:rgba(60,52,96,.8);position:relative;flex-shrink:0;transition:background .3s}
+#np-page .np-sw i{position:absolute;top:3px;left:3px;width:21px;height:21px;border-radius:50%;background:#9b91c4;transition:left .3s,background .3s;display:block}
+#np-page .np-sw.on{background:linear-gradient(135deg,rgba(167,139,250,.85),rgba(255,159,192,.6))}
+#np-page .np-sw.on i{left:22px;background:#fff;box-shadow:0 0 10px rgba(255,255,255,.8)}
+#np-page .np-chips{display:flex;flex-wrap:wrap;gap:7px}
+#np-page .np-chip{font-family:inherit;font-size:13px;padding:8px 13px;border-radius:15px;cursor:pointer;background:rgba(18,14,38,.8);border:.5px solid rgba(167,139,250,.3);color:#b6a9e0}
+#np-page .np-chip.on{background:linear-gradient(135deg,rgba(167,139,250,.42),rgba(255,159,192,.26));border-color:var(--sc,rgba(196,181,253,.9));color:#f4efff}
+#np-page .np-dist{display:flex;align-items:center;gap:7px;font-size:12px;color:#8b81b4;margin:2px 0 4px;padding-left:2px}
+#np-page .np-km{font-family:inherit;font-size:12.5px;padding:6px 12px;border-radius:14px;cursor:pointer;background:rgba(18,14,38,.8);border:.5px solid rgba(167,139,250,.3);color:#b6a9e0}
+#np-page .np-km.on{background:rgba(167,139,250,.4);color:#fff;border-color:rgba(196,181,253,.9)}
+#np-page .np-honest{margin-top:22px;font-size:11.5px;line-height:1.7;color:#7d73a6;font-style:italic;border-top:.5px solid rgba(167,139,250,.18);padding-top:14px}
+#ma-retake-ask{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.94);z-index:100004;background:rgba(12,10,26,.97);border:.5px solid rgba(233,221,255,.5);border-radius:18px;padding:18px 20px;text-align:center;opacity:0;transition:opacity .35s ease,transform .35s ease;box-shadow:0 0 40px rgba(0,0,0,.7)}
+#ma-retake-ask.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#ma-retake-ask .mra-t{font-size:15px;color:#e9ddff;margin-bottom:13px}
+#ma-retake-ask .mra-r{display:flex;gap:9px;justify-content:center}
+#ma-retake-ask button{font-family:inherit;font-size:14px;padding:9px 16px;border-radius:16px;cursor:pointer;background:rgba(28,22,54,.9);border:.5px solid rgba(167,139,250,.5);color:#d8ccff}
+#ma-retake-ask #mra-yes{background:linear-gradient(135deg,rgba(167,139,250,.5),rgba(255,159,192,.34));color:#fff}
 .as-rail i{position:absolute;left:0;display:block;width:100%;border-radius:3px;background:linear-gradient(rgba(196,181,253,.95),rgba(255,159,192,.7));box-shadow:0 0 9px rgba(167,139,250,.8);transition:top .14s linear,height .14s linear}
 #ma-selfie-wrap{margin-top:20px}
 #ma-selfie-note{margin-top:8px}
@@ -1485,6 +1520,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button class="mj-i" data-mj="soul" title="Five gates, deeper questions — the strongest colours come from here">Soul Search</button>
       <button class="mj-i" data-mj="life" title="Tell your story in your own words; it becomes lasting light">Begin your life story</button>
       <button class="mj-i" data-mj="traj" title="Where your current path leads — and what shifts it. Readings, never predictions">Conscious Trajectory</button>
+      <button class="mj-i" data-mj="notify" title="Choose exactly what may reach you, and what may not">◉ What reaches you</button>
       <div class="mj-sep"></div>
       <button class="mj-i" data-mj="alpha" title="The living symbols — words made of light">✧ Alphasense symbols</button>
       <button class="mj-i" data-mj="bonds" title="Two symbols meet; a third meaning is born at the junction">✧ Alphabonds</button>
@@ -1502,7 +1538,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button id="mr-open" type="button">🪞 The Mirror — a reflection, when you want one</button>
       <button id="gp-open" type="button">◇ Keep my light — carry this aura beyond today</button>
       <button id="fc-open" type="button">◈ The Felt-Context Lantern — read what a message may carry</button>
-      <button id="ra-open" type="button">◐ How to read your aura — the plain guide</button>
+      <button id="ra-open" type="button">◐ How to read My Aura — the plain guide</button>
       <div id="ma-widen"></div>
       <button id="ss-open" type="button">✉ SenseShare — send someone a light</button>
       <div class="ma-h">What you have offered</div>
@@ -1644,7 +1680,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <button class="qz-back" id="qz-back">← Return</button>
   <div id="qz-inner">
     <div id="qz-title">Shape your aura</div>
-    <div id="qz-course">Can you read your own aura? <span id="qz-course-link"><b>Learn how here</b> →</span></div>
+    <div id="qz-course">Can you read your physical aura? <span id="qz-course-link"><b>Learn how here</b> →</span></div>
     <div id="qz-intro"></div>
     <div id="qz-menu"></div>
     <div id="qz-active" style="display:none"></div>
@@ -2677,23 +2713,24 @@ function submit(lat,lng,text){
       first.insertBefore(el,meta);
     }
   };
-  // The sheet collapses to its confirm strip immediately — the landing must be watchable, not waited for.
+  // The sheet leaves the screen entirely for the witness moment — the landing must be seen, not waited for.
+  // The confirm strip returns on its own a breath later, so nothing is lost.
   try{
-    const _ob=document.getElementById('offer-confirm');
-    if(_ob)_ob.innerHTML='<div class="oc-head">\u2728 Aura offered \u2014 finding this place\u2026</div>';
     const _pn=document.getElementById('panel');
-    if(_pn){_pn.classList.add('show-mobile','just-offered','offer-quiet','has-last');_pn.classList.remove('locating','sense-picked');_pn.style.maxHeight='';_pn.style.bottom='';}
+    if(_pn){_pn.classList.remove('show-mobile','just-offered','offer-quiet','locating','sense-picked');_pn.style.maxHeight='';_pn.style.bottom='';}
+    const _ui=document.getElementById('ui');if(_ui)_ui.classList.remove('offer-open');
+    if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
     window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
   }catch(e){}
   if(_gScale==='street'){
     lookupPlace(lat,lng).then(_finishPlace);
     // Leave the shared sense showing in the arrowed box, with the full house-number address.
-    reverseAddress(lat,lng).then(addr=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,addr,lat,lng);});
+    reverseAddress(lat,lng).then(addr=>{setTimeout(()=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,addr,lat,lng);},2600);});
   } else {
     // Given from a height, the offering belongs to the whole place being beheld — its label says so, honestly.
     scalePlaceLabel(lat,lng,_gScale).then(lbl=>{
       _finishPlace(lbl);
-      if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,lbl,lat,lng);
+      setTimeout(()=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,lbl,lat,lng);},2600);
     });
   }
   playSound(sid);
@@ -2778,11 +2815,10 @@ const sbtnGo=()=>{
   const inp=document.getElementById('inp');
   const v=inp.value.trim();
   const spot=resolveSpot();
-  if(!spot){ const panel=document.getElementById('panel'); if(panel&&panel.classList.contains('show-mobile')){panel.classList.add('locating');} else {openPlacePrompt('Where would you like to place this Aurasense?');} showMsg('Choose where to offer — search a place, or tap the map',6000); return; }
-  if(!v && !emptyPrompted){ showMsg('Would you like to add a description of the aurasense you are submitting? (optional — but preferred)'); inp.focus(); inp.classList.add('inp-glow'); emptyPrompted=true; return; }
+  if(!spot){ const panel=document.getElementById('panel'); if(panel&&panel.classList.contains('show-mobile')){panel.classList.add('locating');} else {openPlacePrompt('Where would you like to place this Aurasense?');} showMsg('Choose where to offer — search a place, or tap the map',6000); try{const _oi=document.getElementById('ol-input');if(_oi){_oi.scrollIntoView({block:'center'});_oi.focus({preventScroll:true});}}catch(e){} return; }
+  if(!v && !emptyPrompted){ showMsg('Would you like to say what this felt like? — optional, but it is the part another senser will feel. Press offer again to send it wordlessly.',7000,'witness','#c4b5fd'); inp.focus(); inp.classList.add('inp-glow'); emptyPrompted=true; return; }
   if(spot.fromClick)lastClickPoint=null;
   materializeAndSubmit(spot.lat,spot.lng,v);
-  if(typeof selSense!=='undefined'&&selSense&&typeof showOfferConfirm==='function')showOfferConfirm(selSense,v,null,spot.lat,spot.lng);
   if(spot.fromSearch && lastSearchLabel){
     lastSearchLabel.textContent='✨ Aura just offered at '+lastSearchName;
     const lblRef=lastSearchLabel, nameRef=lastSearchName;
@@ -3247,6 +3283,7 @@ function closeAlphaPage(){const p=document.getElementById('alpha-page');if(p)p.c
       else if(k==='alpha'&&typeof openAlphaPage==='function')openAlphaPage();
       else if(k==='bonds'&&typeof openJunc==='function')openJunc();
       else if(k==='work'&&typeof openWorkshop==='function')openWorkshop();
+      else if(k==='notify'&&typeof openNotifyPrefs==='function')openNotifyPrefs();
       else if(k==='sync'&&typeof openSyncPage==='function')openSyncPage();
       else if(k==='openings'&&typeof openOpeningsPage==='function')openOpeningsPage();
       else showMsg('This door is still being built \u2014 it opens in a coming light \u2727',4600);
@@ -3303,6 +3340,107 @@ function maShowTip(){
 }
 // The explain card is bottom-anchored and the selfie block was placed by percentage — they met.
 // Now the selfie block is measured to rest exactly above it, at any text length.
+// A photo is tapped, not buttoned — the image is never covered by the thing that replaces it.
+function maAskRetake(){
+  try{
+    if(document.getElementById('ma-retake-ask'))return;
+    const d=document.createElement('div');d.id='ma-retake-ask';
+    d.innerHTML='<div class="mra-t">Retake your photo?</div>'
+      +'<div class="mra-r"><button type="button" id="mra-yes">\u21bb Retake</button><button type="button" id="mra-no">keep it</button></div>';
+    document.body.appendChild(d);requestAnimationFrame(()=>d.classList.add('show'));
+    const go=()=>{try{d.remove();}catch(e){}};
+    d.querySelector('#mra-no').onclick=go;
+    d.querySelector('#mra-yes').onclick=()=>{go();const b=document.getElementById('ma-selfie-btn');if(b){b.style.display='';b.click();}};
+    setTimeout(()=>{try{if(document.getElementById('ma-retake-ask'))d.remove();}catch(e){}},9000);
+  }catch(e){}
+}
+function maWireRetake(){
+  try{
+    const cv=document.getElementById('ma-canvas');
+    if(!cv||cv.dataset.retakeWired)return;cv.dataset.retakeWired='1';
+    cv.addEventListener('click',function(e){
+      if(!maSelfieImg)return;
+      const r=cv.getBoundingClientRect();
+      const dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2);
+      if(Math.hypot(dx,dy)/(Math.min(r.width,r.height)/2)>0.34)return;  // the rings keep their own taps
+      e.stopPropagation();e.preventDefault();maAskRetake();
+    },true);
+  }catch(e){}
+}
+/* WHAT REACHES YOU — nothing arrives that was not asked for. Every switch begins at rest
+   except the two a senser plainly wants: their own senses, and a reply to something of theirs. */
+const NOTIFY_FAMS={news:'World news',conflict:'Conflict and harm',env:'Earth and climate',
+  decisions:'Decisions being made',events:'Gatherings and events',weave:'Weave rhymes'};
+function notifyPrefs(){
+  if(!myProfile)myProfile={};
+  if(!myProfile.notify)myProfile.notify={on:false,near:false,nearKm:5,senses:[],world:false,fams:{},
+    follows:[],accords:true,share:true,bonds:true};
+  return myProfile.notify;
+}
+function openNotifyPrefs(){
+  try{
+    const N=notifyPrefs();
+    let d=document.getElementById('np-page');
+    if(d)d.remove();
+    d=document.createElement('div');d.id='np-page';
+    const sw=(k,lbl,sub,on)=>'<div class="np-row" data-k="'+k+'"><div class="np-l"><div class="np-t">'+lbl+'</div>'
+      +(sub?'<div class="np-s">'+sub+'</div>':'')+'</div><div class="np-sw'+(on?' on':'')+'"><i></i></div></div>';
+    let senseChips='';
+    try{senseChips=SENSES.filter(x=>x.freqs).map(x=>'<button type="button" class="np-chip'
+      +((N.senses||[]).indexOf(x.id)>=0?' on':'')+'" data-s="'+x.id+'" style="--sc:'+x.color+'">'+x.label+'</button>').join('');}catch(e){}
+    const famRows=Object.keys(NOTIFY_FAMS).map(f=>'<button type="button" class="np-chip'
+      +((N.fams&&N.fams[f])?' on':'')+'" data-f="'+f+'">'+NOTIFY_FAMS[f]+'</button>').join('');
+    d.innerHTML='<div class="np-in">'
+      +'<div class="np-head"><div class="np-h1">\u25c9 What reaches you</div><button type="button" id="np-x">\u2715</button></div>'
+      +'<div class="np-note">Nothing reaches you that you did not ask for. Every switch below begins at rest \u2014 you turn on only what you want, and you can turn it off again at any moment.</div>'
+      +sw('on','Let Aurasense reach me','The one switch above all others \u2014 off, and nothing below can reach you',N.on)
+      +'<div class="np-sec">Where you are</div>'
+      +sw('near','Auras offered near me','When someone offers an aurasense close to where you are',N.near)
+      +'<div class="np-dist"><span>within</span>'
+        +[1,5,25].map(k=>'<button type="button" class="np-km'+(N.nearKm===k?' on':'')+'" data-km="'+k+'">'+k+' km</button>').join('')+'</div>'
+      +'<div class="np-sec">Senses you care about</div>'
+      +'<div class="np-note np-sm">Choose any. You will hear only when one of these is offered near you.</div>'
+      +'<div class="np-chips">'+senseChips+'</div>'
+      +'<div class="np-sec">The wider world</div>'
+      +sw('world','World event aurasenses','When sensers answer something happening in the world',N.world)
+      +'<div class="np-note np-sm">And only these kinds:</div>'
+      +'<div class="np-chips">'+famRows+'</div>'
+      +'<div class="np-sec">Things of your own</div>'
+      +sw('accords','An Accord begins on something I stood in','When others start gathering around a light you offered',N.accords)
+      +sw('share','A SenseShare arrives for me','When someone sends you a card asking you to feel before you read',N.share)
+      +sw('bonds','Bonds and Weave rhymes','When a symbol of yours meets another, or a rhyme answers yours',N.bonds)
+      +'<div class="np-sec">Events you follow</div>'
+      +'<div class="np-note np-sm">'+((N.follows&&N.follows.length)
+        ? ('You follow '+N.follows.length+' event'+(N.follows.length>1?'s':'')+'. Open any world event and choose \u201cfollow\u201d to add or remove it.')
+        : 'You follow no single event yet. Open any world event and choose \u201cfollow\u201d, and only that one will reach you.')+'</div>'
+      +'<div class="np-honest">These choices are kept from this moment on. Reaching your phone while Aurasense is closed needs it added to your Home Screen first \u2014 that step is still being built, and until it is, these choices shape what you meet inside the app.</div>'
+      +'</div>';
+    document.body.appendChild(d);requestAnimationFrame(()=>d.classList.add('show'));
+    const save=()=>{try{if(typeof gpSave==='function')gpSave();}catch(e){}};
+    const close=()=>{d.classList.remove('show');setTimeout(()=>{try{d.remove();}catch(e){}},420);save();};
+    d.querySelector('#np-x').onclick=close;
+    d.addEventListener('click',e=>{if(e.target===d)close();});
+    d.querySelectorAll('.np-row').forEach(r=>r.addEventListener('click',()=>{
+      const k=r.dataset.k,el=r.querySelector('.np-sw');
+      N[k]=!N[k];el.classList.toggle('on',!!N[k]);
+      if(k==='on')d.querySelector('.np-in').classList.toggle('np-dim',!N.on);
+      save();
+    }));
+    d.querySelectorAll('.np-km').forEach(b=>b.addEventListener('click',()=>{
+      N.nearKm=parseInt(b.dataset.km,10);
+      d.querySelectorAll('.np-km').forEach(x=>x.classList.remove('on'));b.classList.add('on');save();}));
+    d.querySelectorAll('.np-chip[data-s]').forEach(b=>b.addEventListener('click',()=>{
+      if(!N.senses)N.senses=[];
+      const i=N.senses.indexOf(b.dataset.s);
+      if(i>=0)N.senses.splice(i,1);else N.senses.push(b.dataset.s);
+      b.classList.toggle('on',i<0);save();}));
+    d.querySelectorAll('.np-chip[data-f]').forEach(b=>b.addEventListener('click',()=>{
+      if(!N.fams)N.fams={};
+      N.fams[b.dataset.f]=!N.fams[b.dataset.f];
+      b.classList.toggle('on',!!N.fams[b.dataset.f]);save();}));
+    d.querySelector('.np-in').classList.toggle('np-dim',!N.on);
+  }catch(e){try{showMsg('That door did not open \u2014 tell Karl it was What reaches you \u2727');}catch(_){}}
+}
 function maStackFix(){
   try{
     const ex=document.getElementById('ma-explain'),sw=document.getElementById('ma-selfie-wrap');
@@ -3340,7 +3478,7 @@ function openMyAuraPage(){
     const off=document.getElementById('ma-offerings');
     if(off&&off.scrollHeight>off.clientHeight+8)attachScrollRail(off);
     const h=document.getElementById('ma-scrollhint');if(h)h.remove();
-    maStackFix();}catch(e){}},600);
+    maStackFix();maWireRetake();}catch(e){}},600);
   setTimeout(maStackFix,900);
   const mt=document.querySelector('.tab-myaura');if(mt)mt.classList.add('mypage-open');
   if(typeof updateMyOrb==='function')updateMyOrb();
@@ -3387,7 +3525,8 @@ function openMyAuraPage(){
   maStopStream();
   const v=document.getElementById('ma-video');if(v)v.style.display='none';
   const sa=document.getElementById('ma-selfie-actions');if(sa)sa.style.display='none';
-  const sb=document.getElementById('ma-selfie-btn');if(sb){sb.style.display='';sb.textContent=maSelfieImg?'📷 Retake':'📷 Take a selfie';}
+  const sb=document.getElementById('ma-selfie-btn');if(sb){sb.style.display=maSelfieImg?'none':'';sb.textContent='📷 Take a selfie';}
+  const _sn=document.getElementById('ma-selfie-note');if(_sn)_sn.textContent=maSelfieImg?'Tap your photo to retake it — only you will see it, unless you choose otherwise':'(Only you will see this, unless you choose otherwise)';
   maSizeCanvas();
   if(!maRaf)maRaf=requestAnimationFrame(maDraw);
 }
@@ -3475,7 +3614,8 @@ if(maCapture)maCapture.addEventListener('click',()=>{
   tc.drawImage(maVideo,(vw-sz)/2,(vh-sz)/2,sz,sz,0,0,sz,sz);
   const img=new Image();img.onload=()=>{maSelfieImg=img;};img.src=tmp.toDataURL('image/png');
   maStopStream();if(maVideo)maVideo.style.display='none';if(maSelfieActions)maSelfieActions.style.display='none';
-  if(maSelfieBtn){maSelfieBtn.style.display='';maSelfieBtn.textContent='📷 Retake';}
+  if(maSelfieBtn){maSelfieBtn.style.display='none';}
+  const _sn2=document.getElementById('ma-selfie-note');if(_sn2)_sn2.textContent='Tap your photo to retake it — only you will see it, unless you choose otherwise';
 });
 const maCancelSelfie=document.getElementById('ma-cancel-selfie');
 if(maCancelSelfie)maCancelSelfie.addEventListener('click',()=>{maStopStream();if(maVideo)maVideo.style.display='none';if(maSelfieActions)maSelfieActions.style.display='none';if(maSelfieBtn)maSelfieBtn.style.display='';});
@@ -4791,6 +4931,8 @@ function soulDone(){try{const g=document.querySelectorAll('.qp-gate');if(!g.leng
 function mjLocked(k){
   const reg=!!(myProfile&&myProfile.handle);
   if(k==='profile')return false;
+  // A senser's control over what may reach them is never locked behind anything.
+  if(k==='notify')return false;
   if(!reg)return true;
   if(k==='soul')return !questDone();
   if(k==='life')return !soulDone();
@@ -4816,7 +4958,9 @@ function menuRefresh(){
 function menuLockedTap(it){
   try{
     const k=it.dataset.mj;
-    const pv=mjPrev(k);
+    // Walk back past any door that is itself still locked — point at the one truly open next.
+    let pv=mjPrev(k),guard=0;
+    while(pv&&pv[0]&&mjLocked(pv[0])&&guard++<6){const nx=mjPrev(pv[0]);if(!nx||nx[0]===pv[0])break;pv=nx;}
     const target=document.querySelector('.mj-i[data-mj="'+pv[0]+'"]');
     const reg=!!(myProfile&&myProfile.handle);
     let msg;
@@ -5202,7 +5346,7 @@ function raOpen(){
   if(document.getElementById('ra-modal'))return;
   const back=document.createElement('div');back.id='gp-back';document.body.appendChild(back);
   const d=document.createElement('div');d.id='ra-modal';d.setAttribute('style','position:fixed;left:50%;top:47%;transform:translate(-50%,-50%);z-index:100001;width:min(440px,94vw);max-height:84vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(167,139,250,.5);border-radius:20px;padding:20px 18px 14px;box-shadow:0 12px 48px rgba(0,0,0,.65);opacity:0;transition:opacity .55s');
-  d.innerHTML='<div class="fc-t">\u25d0 How to read your aura</div><div class="fc-s">Six plain things. No jargon, no scoring \u2014 just what the light is showing you.</div>'+RA_CARDS.map(c=>'<div class="fc-card"><div class="fch">'+escT(c[0])+'</div><div class="fcb">'+escT(c[1])+'</div></div>').join('')+'<button class="fc-x" type="button" id="ra-x">close</button>';
+  d.innerHTML='<div class="fc-t">\u25d0 How to read My Aura</div><div class="fc-s">Six plain things. No jargon, no scoring \u2014 just what the light is showing you.</div>'+RA_CARDS.map(c=>'<div class="fc-card"><div class="fch">'+escT(c[0])+'</div><div class="fcb">'+escT(c[1])+'</div></div>').join('')+'<button class="fc-x" type="button" id="ra-x">close</button>';
   document.body.appendChild(d);requestAnimationFrame(()=>{back.classList.add('show');d.style.opacity='1';});
   const close=()=>{back.classList.remove('show');d.style.opacity='0';setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},600);};
   back.addEventListener('click',close);d.querySelector('#ra-x').addEventListener('click',close);
