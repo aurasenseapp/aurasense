@@ -30,7 +30,17 @@
 @keyframes as-sv{0%,100%{transform:translateX(-.6px)}50%{transform:translateX(.6px)}}
 .as-ring{transform-box:fill-box;transform-origin:center;animation:as-rg 2.4s ease-out infinite}
 @keyframes as-rg{0%{transform:scale(.3);opacity:.9}100%{transform:scale(1.05);opacity:0}}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0a0a10;color:#f0f0f0;height:100vh;overflow:hidden}
+:root{
+  --serif:Georgia,'Iowan Old Style','Palatino Linotype','Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+  --ink:#e8e2ff; --ink2:#b9aee2; --mute:#a79dc9; --label:#9a90c4;
+  --line:rgba(167,139,250,.22); --card:rgba(20,16,42,.94);
+}
+/* THE STYLE SHIFT (Karl loved the study's feel): the reading surfaces wear the serif and quiet
+   spacing; the map's tight chrome stays on the sans so nothing overflows a fixed strip. */
+body{font-family:var(--serif);background:#0a0a10;color:#f0f0f0;height:100vh;overflow:hidden;letter-spacing:.005em}
+/* chrome that must not grow: the horizontal tab strip and the small map chips keep the sans. */
+#tabs,#tabs .tab,#tabs .tab-caret,#tabs .tab-mi,#wev-chips,.wev-chip,#place-mini,#wbal{font-family:var(--sans)}
 #map{position:absolute;inset:0;transition:opacity .6s}
 .mapboxgl-ctrl-logo,.mapboxgl-ctrl-attrib{display:none!important}
 canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
@@ -664,7 +674,7 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.25}
 #ma-feed-label:hover{transform:translateX(-50%) scale(1.06)}
 @keyframes maFeedPulse{0%,100%{box-shadow:0 0 22px rgba(167,139,250,.45),inset 0 0 16px rgba(167,139,250,.16)}50%{box-shadow:0 0 42px rgba(167,139,250,.85),inset 0 0 22px rgba(167,139,250,.3)}}
 #ma-branch-tip{position:absolute;max-width:215px;font-size:10.5px;line-height:1.5;color:#e6dfff;background:rgba(8,7,20,.93);border:0.5px solid rgba(167,139,250,.35);border-radius:9px;padding:8px 11px;pointer-events:none;opacity:0;transition:opacity .22s;z-index:5;box-shadow:0 0 18px rgba(0,0,0,.6);font-style:italic}
-.ma-h{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#9d8fcc;margin:22px 0 10px;font-weight:500}
+.ma-h{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:#b3a6dd;margin:24px 0 11px;font-weight:500}
 .ma-col .ma-h:first-child{margin-top:0}
 .ma-offering{border-left:2px solid transparent;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px}
 .ma-offering .s{font-size:11px;font-weight:500;margin-bottom:2px}
@@ -5280,7 +5290,7 @@ function mvPanel(){
   if(!d){d=document.createElement('div');d.id='mv-panel';document.body.appendChild(d);}
   const w=mvWhere(),m=MV[w]||MV.map;
   const doors=(m.d||[]).filter(x=>document.querySelector(x[1])).map(x=>'<button type="button" data-go="'+x[1]+'">'+escT(x[0])+'</button>').join('');
-  d.innerHTML='<div class="mv-h">\U0001FA9E '+escT(m.h)+'</div><div class="mv-b">'+escT(m.b)+'</div><div class="mv-q">'+escT(m.q)+'</div>'+(doors?'<div class="mv-do">'+doors+'</div>':'')+'<div class="mv-b" style="font-size:11px;color:#8a80b4;margin-bottom:4px">Reaching further \u2014 the Voice answering in your own words, in dialogue \u2014 opens with Gate profiles \u2727</div><button class="mv-x" type="button">close</button>';
+  d.innerHTML='<div class="mv-h">🪞 '+escT(m.h)+'</div><div class="mv-b">'+escT(m.b)+'</div><div class="mv-q">'+escT(m.q)+'</div>'+(doors?'<div class="mv-do">'+doors+'</div>':'')+'<div class="mv-b" style="font-size:11px;color:#8a80b4;margin-bottom:4px">Reaching further \u2014 the Voice answering in your own words, in dialogue \u2014 opens with Gate profiles \u2727</div><button class="mv-x" type="button">close</button>';
   requestAnimationFrame(()=>d.classList.add('show'));
 }
 (function mvBoot(){try{if(document.getElementById('mv-orb'))return;const o=document.createElement('div');o.id='mv-orb';o.title='The Mirror\u2019s Voice \u2014 where you are, and what is possible here';o.textContent='\u25c9';document.body.appendChild(o);}catch(e){}})();
