@@ -62,7 +62,9 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .tab-orb-my.orb-fed{animation:orbFed 3s ease-out}
 @keyframes orbFed{0%,28%,56%{transform:scale(1)}14%{transform:scale(1.55)}42%{transform:scale(1.4)}70%{transform:scale(1.28)}100%{transform:scale(1)}}
 /* Region lives under Town on every size now — its own tab retires so the strip can breathe. */
-.tab.top-region{display:none!important}
+/* Region & Nation ride the horizontal strip on wide screens (there is room); on phones they fold under Town ▾. */
+.tab.top-region{display:flex!important}
+.tab-caret,#tabs .tab-menu{display:none!important}
 
 #panel-tip{display:flex;align-items:center;justify-content:center;gap:9px;padding:13px 14px;cursor:pointer;font-size:15px;font-weight:700;color:#e6dcff;letter-spacing:.02em;text-shadow:0 0 14px rgba(167,139,250,.55)}
 #panel-tip .tip-arrow{font-size:13px;color:#c4b5fd;animation:tipRise 2.6s ease-in-out infinite}
@@ -952,8 +954,9 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.25}
   #tabs .tab{font-size:16px;padding:7px 6px;letter-spacing:.01em}
   @media(max-width:380px){#tabs .tab{font-size:14.5px;padding:7px 4px}}
   #tabs .tab-orb{width:6px;height:6px;margin-right:4px}
+  .tab.top-region{display:none!important}
   #tabs .tab-menu{display:none}
-  #tabs .tab-caret{display:block}
+  #tabs .tab-caret{display:block!important}
   #tabs{font-size:13px;padding:5px 5px;max-width:calc(100vw - 24px);overflow:visible;flex-wrap:nowrap}
   #tabs::-webkit-scrollbar{display:none}
   .tab{padding:6px 8px;white-space:nowrap}
@@ -2600,6 +2603,10 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
 map.on('click',async function(e){
   // World-event glows own their taps — the offering flow steps aside when a glow is under the finger.
   try{if(typeof wevReady!=='undefined'&&wevReady&&map.queryRenderedFeatures){const _wh=map.queryRenderedFeatures(e.point,{layers:['wev-mid','wev-core','wev-dot']});if(_wh&&_wh.length)return;}}catch(_){}
+  // An open world-event panel closes on the next tap anywhere — that tap is a dismissal, never an offering.
+  try{if(typeof wevOpenId!=='undefined'&&wevOpenId>=0){wevClosePanel();closeExplore();return;}}catch(_){}
+  // At planet height there is no single place to offer to — a bare tap rests the view, it does not open the sheet.
+  try{if(map.getZoom()<3.6){closeExplore();return;}}catch(_){}
   closeExplore();
   const clat=e.lngLat.lat,clng=e.lngLat.lng;
   lastClickPoint=[clng,clat];openSenseGate();
