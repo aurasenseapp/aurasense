@@ -285,6 +285,18 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #mv-panel .mv-in button{background:linear-gradient(135deg,rgba(167,139,250,.44),rgba(255,159,192,.28));border:.5px solid rgba(196,181,253,.7);color:#fff;border-radius:13px;padding:0 15px;font-size:16px;cursor:pointer;font-family:var(--serif)}
 #mv-panel .mv-foot{font-size:10.5px;color:var(--label);line-height:1.55;margin-top:8px;font-style:italic}
 #mv-orb span{font-size:21px;line-height:1}
+#gd-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);z-index:100008;width:min(400px,93vw);max-height:88vh;overflow-y:auto;background:radial-gradient(120% 80% at 50% 0%,#1b1330 0%,#100b22 60%,#0a0818 100%);border:1px solid rgba(240,200,150,.45);border-radius:20px;padding:20px 20px 15px;box-shadow:0 16px 60px rgba(0,0,0,.72),0 0 40px rgba(240,200,150,.16);opacity:0;transition:opacity .4s ease,transform .4s ease;font-family:var(--serif)}
+#gd-card.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#gd-card .gd-h{font-size:18px;color:#f6ecdc;text-align:center;letter-spacing:.01em;margin-bottom:11px}
+#gd-card .gd-b{font-size:14px;line-height:1.7;color:var(--ink2)}
+#gd-card .gd-b b{color:#f6ecdc}
+#gd-card .gd-b i{color:var(--mute)}
+#gd-card .gd-t{font-size:13.5px;color:#e8c794;text-align:center;margin:14px 0 4px}
+#gd-card .gd-doors{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+#gd-card .gd-doors button{font-family:var(--serif);font-size:14px;text-align:left;padding:12px 14px;border-radius:14px;cursor:pointer;background:rgba(24,19,48,.96);border:.5px solid rgba(167,139,250,.4);color:var(--ink);transition:border-color .25s,background .25s}
+#gd-card .gd-doors button:hover{border-color:rgba(196,181,253,.7);background:rgba(32,25,62,.98)}
+#gd-card .gd-n{font-size:12px;color:var(--label);text-align:center;margin-top:12px;font-style:italic;line-height:1.6}
+#gd-card .gd-x{display:block;width:100%;margin-top:9px;background:none;border:none;color:var(--mute);font-size:13px;cursor:pointer;font-family:var(--serif)}
 #mv-hint{position:fixed;right:16px;bottom:74px;z-index:99989;max-width:min(260px,72vw);background:rgba(14,11,30,.98);border:.5px solid rgba(196,181,253,.5);border-radius:15px;padding:11px 13px;font-family:var(--serif);font-size:12.5px;line-height:1.55;color:var(--ink2);opacity:0;transform:translateY(8px);transition:opacity .8s ease,transform .8s ease;pointer-events:auto;cursor:pointer;box-shadow:0 10px 34px rgba(0,0,0,.6)}
 #mv-hint.show{opacity:1;transform:none}
 #fc-modal{position:fixed;left:50%;top:47%;transform:translate(-50%,-50%);z-index:100001;width:min(440px,94vw);max-height:84vh;overflow-y:auto;background:rgba(12,10,26,.97);border:1px solid rgba(167,139,250,.5);border-radius:20px;padding:20px 18px 14px;box-shadow:0 12px 48px rgba(0,0,0,.65);opacity:0;transition:opacity .55s}
@@ -2824,9 +2836,112 @@ function submit(lat,lng,text){
   }
 }
 
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   THE PAUSE — a time out, never a punishment.
+
+   Anger is a real sense and belongs on this map. Grief, rage, despair, alarm:
+   the shared field can hold all of it. What it cannot hold is something thrown
+   AT a person. That is the only line, and it is drawn around direction, not heat.
+
+   Three strikes, each longer: 3 minutes, 15 minutes, an hour. Strikes fade after
+   a week. A pause stops OUTWARD offering only — the map stays readable, Calm mode
+   stays open, and the Mirror stays open, because someone in an outburst needs the
+   inward doors most, not least.
+   ───────────────────────────────────────────────────────────────────────────── */
+const GUARD_MIN=[3,15,60];
+/* Directed at a person. Second-person aim, or a threat, or a slur used as a weapon. */
+const GUARD_AIM=[
+  /\b(f+u+c+k|screw|damn)\s*(you|u|ur|yourself|off)\b/i,
+  /\b(you|u|ur|yer|you\s*['\u2019\u02bc]?\s*re|youre)\s*(are|r|is|was|were)?\s*(a|an|such\s+a|such\s+an|so|one)?\s*(stupid|idiot\w*|moron\w*|retard\w*|scum\w*|trash|worthless|pathetic|disgusting|vile|filth\w*|bitch\w*|bastard\w*|whore\w*|slut\w*|c+u+n+t|dickhead|arsehole|asshole|prick|wanker|twat)\b/i,
+  /\b(kys|kill yourself|go die|drop dead|hope you die|you should die|you'?re dead|watch your back)\b/i,
+  /\bi\s*'?\s*(m|ll|will|am|ve)?\s*(going to|gonna)?\s*(find|hunt|come for|kill|hurt|harm|stab|shoot|beat)\s+(you|him|her|them)\b/i,
+  /\b(shut the\s*\w{0,6}\s*up)\b/i,
+  /\b(n+i+g+[3ge]+r|f+a+g+[o0]*t*|k+i+k+e|sp+i+c\b|tr+a+nn+y)\b/i,
+  /\b(all|those)\s+(jews|muslims|blacks|whites|gays|immigrants|foreigners)\s+(should|are|must)\b/i
+];
+/* Written ABOUT harm, not aimed at anyone — always allowed, always honoured. */
+const GUARD_TELLING=/\b(i (felt|feel|was|remember|used to|have been|froze|cried|still)|happened to me|my (dad|father|mum|mother|brother|sister|ex|partner|boss)|when i was|they (hit|hurt|left|shouted|called)|(a|the) (man|woman|boy|girl|stranger|neighbour|neighbor)|some(one|body) (said|shouted|called|told)|called me|told me|shouted at|it was|this place|here (i|the))\b/i;
+function guardAimed(t){
+  const x=String(t||'').replace(/[\u2018\u2019\u02bc]/g,"'");
+  if(!x.trim())return false;
+  if(typeof MV_HEAVY!=='undefined'&&MV_HEAVY.test(x))return false;   /* despair is never abuse */
+  const hit=GUARD_AIM.some(r=>r.test(x));
+  if(!hit)return false;
+  /* a slur or threat quoted inside someone's own account of being harmed stays allowed */
+  /* Someone recounting what was done to them, or quoting it, is telling — not aiming. */
+  if(GUARD_TELLING.test(x)&&!/\b(you|u|ur|yer|youre|you're)\b/i.test(x))return false;
+  if(/['"\u2018\u2019\u201c\u201d]/.test(x)&&GUARD_TELLING.test(x))return false;
+  return true;
+}
+function guardState(){
+  let g={strikes:[],until:0};
+  try{const raw=localStorage.getItem('aurasense_guard');if(raw)g=JSON.parse(raw)||g;}catch(e){}
+  if(!Array.isArray(g.strikes))g.strikes=[];
+  const wk=Date.now()-7*86400000;
+  g.strikes=g.strikes.filter(t=>t>wk);          /* a week clean, and the slate is clean */
+  return g;
+}
+function guardSave(g){try{localStorage.setItem('aurasense_guard',JSON.stringify(g));}catch(e){}}
+function guardPaused(){const g=guardState();return (g.until&&g.until>Date.now())?g:null;}
+function guardLeft(g){return Math.max(1,Math.ceil((g.until-Date.now())/60000));}
+function guardStrike(){
+  const g=guardState();
+  g.strikes.push(Date.now());
+  const n=Math.min(g.strikes.length,GUARD_MIN.length);
+  g.until=Date.now()+GUARD_MIN[n-1]*60000;
+  guardSave(g);
+  guardCard(n,GUARD_MIN[n-1]);
+  return g;
+}
+function guardCard(n,mins,already){
+  try{
+    const old=document.getElementById('gd-card');if(old)old.remove();
+    let head,body;
+    if(already){
+      head='Offering is resting';
+      body='There are <b>'+mins+' minute'+(mins>1?'s':'')+'</b> left of the pause. Nothing is being held against you \u2014 the clock simply has not finished.';
+    }else if(n===1){
+      head='A pause \u2014 not a punishment';
+      body='What you were about to offer was aimed at a person rather than at what you feel. This map can hold rage, grief, despair, alarm \u2014 all of it, honestly. What it cannot hold is something thrown at someone.<br><br>Nothing has been recorded about you, and nothing was sent.';
+    }else if(n===2){
+      head='A second pause, a little longer';
+      body='Twice now. That usually means something underneath is asking for room rather than a target.<br><br>Say what the anger is <i>about</i> and it belongs here \u2014 <b>Stress</b>, <b>Anxiety</b>, <b>Overwhelm</b> and <b>Anomaly</b> are all real senses, and the field is better for holding them.';
+    }else{
+      head='A third pause \u2014 an hour this time';
+      body='Three times in a week. I am not going to lecture you, and nothing about this leaves your device.<br><br>But an hour is long enough to notice: something is asking for more than a map tonight. If there is a person you could tell, tonight is a fair night to tell them.';
+    }
+    const d=document.createElement('div');d.id='gd-card';
+    d.innerHTML='<div class="gd-h">'+head+'</div><div class="gd-b">'+body+'</div>'
+      +'<div class="gd-t">Offering opens again in <b>'+mins+' minute'+(mins>1?'s':'')+'</b>.</div>'
+      +'<div class="gd-doors"><button type="button" data-d="breath">\u25cc Take the breath</button>'
+      +'<button type="button" data-d="mirror">\ud83e\ude9e The Mirror \u2014 it does not mind anger</button>'
+      +'<button type="button" data-d="calm">\u263e Calm mode</button></div>'
+      +'<div class="gd-n">The map stays open to read. Your own aura is untouched.</div>'
+      +'<button type="button" class="gd-x">close</button>';
+    document.body.appendChild(d);requestAnimationFrame(()=>d.classList.add('show'));
+    const go=()=>{d.classList.remove('show');setTimeout(()=>{try{d.remove();}catch(e){}},500);};
+    d.querySelector('.gd-x').onclick=go;
+    d.querySelectorAll('.gd-doors button').forEach(b=>b.addEventListener('click',()=>{
+      const k=b.dataset.d;go();
+      if(k==='mirror'){setTimeout(()=>{try{if(typeof mvPanel==='function')mvPanel();}catch(e){}},420);}
+      else if(k==='calm'){const c=document.getElementById('calm-toggle');if(c&&!window.AS_CALM)c.click();else showMsg('Calm is already holding \u2014 only the slow breath remains.',4200);}
+      else{showMsg('Two quick breaths in \u2014 then one long, slow breath out through pursed lips. Three times. Nothing else is asked of you.',11000,'witness','#bfe9da');}
+    }));
+  }catch(e){}
+}
+/* One gate every outward path passes through. Returns true when the path may continue. */
+function guardOK(text){
+  const g=guardPaused();
+  if(g){guardCard(Math.min(g.strikes.length,3),guardLeft(g),true);return false;}
+  if(guardAimed(text)){guardStrike();return false;}
+  return true;
+}
+
 // Full-screen materialization: the chosen sense symbol blooms large with its name against a
 // darkened backdrop so it stands out, holds, then descends to the exact spot it was offered.
 function materializeAndSubmit(lat,lng,text){
+  if(typeof guardOK==='function'&&!guardOK(text))return;
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);
   if(!s){submit(lat,lng,text);return;}
@@ -5120,6 +5235,7 @@ function openSenseShare(){
       const chain=sel.map(i=>pal[i]);
       const to=(d.querySelector('#ss-to').value||'').trim();
       const msg=(d.querySelector('#ss-msg').value||'').trim().slice(0,140);
+      if(typeof guardOK==='function'&&!guardOK(msg+' '+to))return;
       if(typeof fuseGlyphs!=='function'||typeof openPostcard!=='function'){showMsg('The postcard press is still waking \u2014 one moment.');return;}
       const glyph=fuseGlyphs(chain,140);
       const code=chain.map(w=>w.w.toLowerCase()).join('+');
@@ -5304,6 +5420,7 @@ document.addEventListener('click',async function(e){
       const on=box.querySelector('.wa-w.on');
       if(!on){showMsg('Choose the light you stand with first \u2727');return;}
       const line=(box.querySelector('.wa-i')||{value:''}).value.trim().slice(0,140);
+      if(typeof guardOK==='function'&&!guardOK(line))return;
       send.disabled=true;send.textContent='Offering\u2026';
       try{
         const r=await gate.db.from('accord_lights').insert({event_id:box.dataset.ev,session_id:gate.sid||gateSid(),word:on.dataset.w,color:on.dataset.c,line:line||null});
@@ -5428,9 +5545,21 @@ function mvHeavy(){
    +'Please reach someone tonight \u2014 someone who knows you, or a crisis line where you are; they are there exactly for this and you would not be a burden. '
    +'I am glad you wrote it down rather than carried it silently. Nothing you have typed here leaves this device.';
 }
+let mvHeat=0,mvRest=0;
 function mvReply(txt,mode){
   const t=(txt||'').trim();
-  if(MV_HEAVY.test(t))return mvHeavy();
+  if(MV_HEAVY.test(t)){mvHeat=0;return mvHeavy();}
+  /* Anger at the Mirror costs no strike — the shared field is one thing, this room is another.
+     But the Mirror keeps its own line, and says so plainly. That is worth modelling. */
+  if(Date.now()<mvRest)return 'Still resting a moment. I am not offended and I am not gone — I will be here shortly.';
+  if(typeof guardAimed==='function'&&guardAimed(t)){
+    mvHeat++;
+    if(mvHeat===1)return 'That landed on me rather than on what is bothering you — and I can take it. Nothing here counts against you; this room keeps no score.<br><br>What is it actually about?';
+    if(mvHeat===2)return 'Twice now. I would rather stay than pretend that is fine, so plainly: I will keep listening, and I would still rather hear the thing underneath it.<br><br>What happened just before you opened this?';
+    mvRest=Date.now()+3*60000;mvHeat=0;
+    return 'I am going to rest for three minutes. Not as a punishment — I have none to give — but because staying while being shouted at is not good for either of us, and a small boundary is a kind thing.<br><br>Two breaths in, one long breath out. I will be here after.';
+  }
+  mvHeat=0;
   const f=mvFacts(),low=t.toLowerCase();
   const has=(re)=>re.test(low);
   /* self-criticism — noticed, never argued with */
@@ -5708,6 +5837,7 @@ function openRaiseEvent(){
       const dw=(d.querySelector('#we-door').value||'').trim();
       const ty=d.querySelector('#we-type').value,fa=d.querySelector('#we-fam').value;
       if(ti.length<6){showMsg('A few true words for the title first \u2727');return;}
+      if(typeof guardOK==='function'&&!guardOK(ti+' '+no+' '+dw))return;
       const cc=map.getCenter();
       try{
         const r=await gate.db.from('world_events').insert({title:ti,note:no,doorway:dw,type:ty,fam:fa,lat:cc.lat,lng:cc.lng,submitter:gate.sid}).select('id');
