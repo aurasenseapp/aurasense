@@ -159,6 +159,12 @@ body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #
 #ma-widen .mw-dots{margin-top:6px;display:flex;gap:5px;flex-wrap:wrap}
 #ma-widen .mw-dot{width:9px;height:9px;border-radius:50%;box-shadow:0 0 7px currentColor}
 /* SENSESHARE \u2014 compassion, spoken in alphasense */
+/* My Aura doors — unified roomy cards (the study's feel; replaces the clunky single-line buttons) */
+#ma-left #calm-toggle,#ma-left #mr-open,#ma-left #gp-open,#ma-left #fc-open,#ma-left #ra-open,#ma-left #ss-open{display:flex;flex-direction:column;justify-content:center;gap:3px;width:calc(100% - 4px);margin:0 2px 9px;padding:14px 15px;min-height:54px;border-radius:15px;font-family:var(--serif);color:var(--ink);text-align:left;line-height:1.3;letter-spacing:.005em;cursor:pointer;font-size:15px;border:.5px solid var(--line);background:var(--card);animation:none;transition:border-color .3s,background .3s}
+#ma-left #mr-open{border-color:rgba(196,181,253,.5);background:linear-gradient(135deg,rgba(167,139,250,.22),rgba(255,159,192,.1))}
+#ma-left #calm-toggle:hover,#ma-left #mr-open:hover,#ma-left #gp-open:hover,#ma-left #fc-open:hover,#ma-left #ra-open:hover,#ma-left #ss-open:hover{border-color:rgba(196,181,253,.62);background:rgba(28,22,54,.97)}
+#ma-left #mr-open .s,#ma-left #gp-open .s,#ma-left #fc-open .s,#ma-left #ra-open .s,#ma-left #ss-open .s{font-size:11.5px;color:var(--label);line-height:1.35;font-weight:400;letter-spacing:.01em}
+#ma-left #mr-open b,#ma-left #gp-open b,#ma-left #fc-open b,#ma-left #ra-open b,#ma-left #ss-open b{font-weight:400;font-size:15px;color:var(--ink);display:block}
 #ss-open{display:block;width:calc(100% - 4px);margin:0 2px 14px;padding:12px 14px;border-radius:14px;font-size:13px;letter-spacing:.03em;font-family:inherit;color:#f5f1ff;border:1px solid rgba(196,181,253,.6);background:linear-gradient(135deg,rgba(167,139,250,.26),rgba(255,159,192,.18));cursor:pointer;animation:moBreathe 6s ease-in-out infinite}
 #ss-back{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.6);opacity:0;transition:opacity .5s ease}
 #ss-back.show{opacity:1}
@@ -1194,6 +1200,13 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #pc-row{display:flex;gap:8px}
 #pc-save,#pc-sharebtn{flex:1;background:rgba(124,92,255,.3);border:0.5px solid rgba(196,181,253,.6);color:#efe8ff;border-radius:12px;padding:9px 0;font-size:12px;cursor:pointer;font-family:inherit}
 #pc-save:hover,#pc-sharebtn:hover{background:rgba(124,92,255,.5)}
+#pcs-pop{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);z-index:100010;width:min(340px,92vw);background:rgba(14,11,30,.98);border:.5px solid rgba(196,181,253,.5);border-radius:18px;padding:18px 18px 14px;box-shadow:0 20px 60px rgba(0,0,0,.7);opacity:0;transition:opacity .3s,transform .3s;font-family:var(--serif)}
+#pcs-pop.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
+#pcs-pop .pcs-t{font-size:17px;color:var(--ink);margin-bottom:14px;text-align:center}
+#pcs-pop .pcs-b{display:block;width:100%;text-align:left;font-family:var(--serif);font-size:14.5px;color:var(--ink);background:rgba(24,19,48,.96);border:.5px solid rgba(167,139,250,.34);border-radius:13px;padding:13px 15px;margin-bottom:8px;cursor:pointer;transition:border-color .25s,background .25s}
+#pcs-pop .pcs-b:hover{border-color:rgba(196,181,253,.6);background:rgba(30,24,58,.98)}
+#pcs-pop .pcs-note{font-size:11.5px;color:var(--label);line-height:1.6;margin:10px 2px 4px}
+#pcs-pop .pcs-x{display:block;margin:8px auto 0;background:transparent;border:none;color:var(--mute);font-family:var(--serif);font-size:13px;cursor:pointer}
 .mab-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border:0.5px solid rgba(167,139,250,.18);border-radius:11px;margin-bottom:7px;background:rgba(255,255,255,.02)}
 .mab-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
 .mab-w{font-size:12px;color:#efe8ff}
@@ -1548,12 +1561,12 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   <div id="ma-layout">
     <div class="ma-col" id="ma-left">
       <button id="calm-toggle" type="button" title="Calm mode stills the fine motion and keeps the silence — only the slow breath remains. For anyone who senses better in stillness.">☾ Calm mode — off</button>
-      <button id="mr-open" type="button">🪞 The Mirror — a reflection, when you want one</button>
-      <button id="gp-open" type="button">◇ Keep my light — carry this aura beyond today</button>
-      <button id="fc-open" type="button">◈ The Felt-Context Lantern — read what a message may carry</button>
-      <button id="ra-open" type="button">◐ How to read My Aura — the plain guide</button>
+      <button id="mr-open" type="button"><b>🪞 The Mirror</b><span class="s">A reflection of yourself, only when you ask</span></button>
+      <button id="gp-open" type="button"><b>◇ Keep my light</b><span class="s">Carry this aura beyond today, on any device</span></button>
+      <button id="fc-open" type="button"><b>◈ Felt-Context Lantern</b><span class="s">Read what a message may be carrying</span></button>
+      <button id="ra-open" type="button"><b>◐ How to read My Aura</b><span class="s">Six plain things. No jargon, no scoring.</span></button>
       <div id="ma-widen"></div>
-      <button id="ss-open" type="button">✉ SenseShare — send someone a light</button>
+      <button id="ss-open" type="button"><b>✉ SenseShare</b><span class="s">Send someone a card that asks them to feel first</span></button>
       <div class="ma-h">What you have offered</div>
       <div id="ma-offerings"></div>
       <div class="ma-h" id="mab-h" style="margin-top:18px">Aurabonds — taking root</div>
@@ -3927,10 +3940,39 @@ function pcSave(){pcLog();const cv=document.getElementById('pc-cv');if(!cv)retur
       if(navigator.share&&cv&&cv.toBlob){cv.toBlob(async b=>{try{const fl=new File([b],pcName(),{type:'image/png'});
         if(navigator.canShare&&navigator.canShare({files:[fl]}))await navigator.share({files:[fl],title:'Aurasense',text:'An aura I felt — aurasense.app'});
         else{await navigator.share({title:'Aurasense',text:'An aura I felt — aurasense.app',url:'https://aurasense.app'});}}catch(e){pcSave();}},'image/png');}
-      else pcSave();
-    }catch(e){pcSave();}
+      else pcShareDesktop();      // desktop browsers have no native sheet — offer named places instead
+    }catch(e){pcShareDesktop();}
   });
 })();
+// The caption a postcard carries out into the world. One place to edit its words.
+const PC_CAPTION='I felt something here — this is its aura. \u2728';
+const PC_URL='https://aurasense.app';
+function pcShareDesktop(){
+  try{
+    if(document.getElementById('pcs-pop'))return;
+    const cap=PC_CAPTION+' '+PC_URL;
+    const d=document.createElement('div');d.id='pcs-pop';
+    d.innerHTML='<div class="pcs-t">Share this aura</div>'
+      +'<button type="button" class="pcs-b" data-a="x">\U0001D54F  Post on X</button>'
+      +'<button type="button" class="pcs-b" data-a="ig">\u25c8  Instagram \u2014 save image &amp; copy caption</button>'
+      +'<button type="button" class="pcs-b" data-a="copy">\u29c9  Copy caption &amp; link</button>'
+      +'<button type="button" class="pcs-b" data-a="save">\u21e9  Save the image</button>'
+      +'<div class="pcs-note" id="pcs-note">The image saves to your downloads. Instagram has no web posting \u2014 save the image, then upload it there with the caption.</div>'
+      +'<button type="button" class="pcs-x" id="pcs-x">close</button>';
+    document.body.appendChild(d);requestAnimationFrame(()=>d.classList.add('show'));
+    const close=()=>{d.classList.remove('show');setTimeout(()=>{try{d.remove();}catch(e){}},300);};
+    const note=(t)=>{const n=document.getElementById('pcs-note');if(n)n.textContent=t;};
+    d.querySelector('#pcs-x').onclick=close;
+    d.addEventListener('click',e=>{if(e.target===d)close();});
+    d.querySelectorAll('.pcs-b').forEach(bn=>bn.addEventListener('click',()=>{
+      const a=bn.dataset.a;
+      if(a==='x'){window.open('https://x.com/intent/post?text='+encodeURIComponent(cap),'_blank','noopener');}
+      else if(a==='ig'){pcSave();try{navigator.clipboard.writeText(cap);}catch(e){}note('\u2713 Image saved and caption copied. Open Instagram, start a post, and paste the caption.');}
+      else if(a==='copy'){try{navigator.clipboard.writeText(cap).then(()=>note('\u2713 Caption and link copied.'));}catch(e){note('Copy this: '+cap);}}
+      else if(a==='save'){pcSave();note('\u2713 Saved to your downloads.');}
+    }));
+  }catch(e){pcSave();}
+}
 const LFO_KINDS=['Empathy','Compassion','Love','Joy','Hope','Unspoken'];
 let lfoRow=-1,lfoKind='';
 const LFO_STRUGGLE=['stress','pain','hunger','hydration','innertemp','cold','anomaly','anxiety','socialanxiety','overwhelm','loneliness'];
@@ -5247,7 +5289,7 @@ function gpBlob(){let prof={};try{prof=JSON.parse(JSON.stringify(myProfile||{}))
 function gpSave(now){if(!gate.on||!gate.user)return;if(_gpT)clearTimeout(_gpT);const go=async()=>{try{await gate.db.from('profiles').upsert({id:gate.user.id,handle:(myProfile&&myProfile.handle)||null,ground:(myProfile&&myProfile.address)||null,aura:gpBlob()});}catch(e){}};if(now)go();else _gpT=setTimeout(go,2500);}
 function gpRestore(row){try{if(!row)return;if(row.handle&&!(myProfile&&myProfile.handle))myProfile.handle=row.handle;if(row.ground&&!(myProfile&&myProfile.address))myProfile.address=row.ground;const a=row.aura||{};if(a.profile&&typeof a.profile==='object')Object.assign(myProfile,a.profile);if(Array.isArray(a.colors)&&a.colors.length>myAuraColors.length){myAuraColors.length=0;a.colors.forEach(c=>myAuraColors.push(c));}if(a.ops&&typeof opState!=='undefined')Object.assign(opState,a.ops);if(a.seenAlpha){window.AS_SEEN_ALPHA=true;try{localStorage.setItem('aurasense_seen_alpha','1');}catch(e){}}try{menuRefresh();}catch(e){}try{const mp=document.getElementById('myaura-page');if(mp&&mp.classList.contains('show'))maBuildLayers();}catch(e){}if(!_gpQuiet)showMsg('Your kept light has returned to you \u2014 aura, journey, and all \u2727',6200,'witness','#9bd8c0');}catch(e){}}
 async function gpLoadProfile(){if(!gate.on||!gate.user)return;try{const r=await gate.db.from('profiles').select('id,handle,ground,aura,updated_at').eq('id',gate.user.id).maybeSingle();if(r&&!r.error&&r.data)gpRestore(r.data);else gpSave(true);}catch(e){}}
-function gpDoor(){try{const b=document.getElementById('gp-open');if(!b)return;if(gate.user){const em=(gate.user.email||'').replace(/(.{2}).+(@.*)/,'$1\u2026$2');b.textContent='\u25c7 Your light is kept \u2014 '+em;}else b.textContent='\u25c7 Keep my light \u2014 carry this aura beyond today';}catch(e){}}
+function gpDoor(){try{const b=document.getElementById('gp-open');if(!b)return;if(gate.user){const em=(gate.user.email||'').replace(/(.{2}).+(@.*)/,'$1\u2026$2');b.innerHTML='<b>\u25c7 Your light is kept</b><span class="s">'+escT(em)+'</span>';}else b.innerHTML='<b>\u25c7 Keep my light</b><span class="s">Carry this aura beyond today, on any device</span>';}catch(e){}}
 function gpInit(){if(!gate.on||!gate.db||!gate.db.auth)return;try{gate.db.auth.onAuthStateChange((_e,s)=>{gate.user=(s&&s.user)||null;gpDoor();});gate.db.auth.getSession().then(r=>{const s=r&&r.data&&r.data.session;gate.user=(s&&s.user)||null;gpDoor();if(gate.user)gpLoadProfile();}).catch(()=>{});}catch(e){}}
 async function gpSendCode(email,note){if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){if(note)note.textContent='A whole email address first \u2014 the code needs somewhere to land \u2727';return false;}if(!gate.on||!gate.db.auth){if(note)note.textContent='The Gate is not keeping lights just yet \u2014 soon \u2727';return false;}try{const r=await gate.db.auth.signInWithOtp({email:email,options:{shouldCreateUser:true}});if(r&&r.error){if(note)note.textContent='The Gate is not keeping lights just yet \u2014 soon \u2727';return false;}if(note)note.textContent='\u2713 Sent. Six digits are on their way to '+email+' \u2014 they open below.';return true;}catch(e){if(note)note.textContent='The Gate is not keeping lights just yet \u2014 soon \u2727';return false;}}
 async function gpVerify(email,code,note,done){if(!code||code.replace(/\D/g,'').length<6){if(note)note.textContent='The six digits from the email \u2014 check once more \u2727';return;}try{const r=await gate.db.auth.verifyOtp({email:email,token:code.replace(/\D/g,''),type:'email'});if(r&&r.error){if(note)note.textContent='That code did not open \u2014 check it, or send a fresh one.';return;}gate.user=(r&&r.data&&r.data.user)||gate.user;_gpQuiet=true;await gpLoadProfile();_gpQuiet=false;gpSave(true);gpDoor();if(note)note.textContent='\u2713 Kept. This light now travels with you \u2014 any device, this same aura.';if(done)done();}catch(e){if(note)note.textContent='That code did not open \u2014 check it, or send a fresh one.';}}
