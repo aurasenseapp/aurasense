@@ -110,8 +110,6 @@ button,.tab{touch-action:manipulation}
 body:has(#panel.show-mobile) #mobile-offer,body:has(#panel.show) #mobile-offer,body:has(#panel.just-offered) #mobile-offer{display:none!important}
 body.panel-live #mobile-offer{display:none!important}
 body.panel-live #search-box{display:none!important}
-/* With the sheet up, a message must never speak from behind it. */
-body.panel-live #pmsg{top:112px}
 /* One bottom action, always: the resting bar retires so the breathing Offer pill stands alone (Plan Phase 2). */
 #panel:not(.show-mobile):not(.show):not(.just-offered){display:none!important}
 /* At planet height there is no place to offer to — the pill rests with the tip. */
@@ -141,7 +139,7 @@ body.space-view #hdr2:hover,body.space-view #hdr2:focus-within,body.space-view #
 body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #locality-btn,body.first-quiet #place-mini,body.first-quiet #wev-chips,body.first-quiet #wbal{opacity:.35;transition:opacity 1.2s ease}
 /* THE WITNESS — the one true sentence arrives like a small ceremony, in the aura's own light */
 #pmsg.witness{font-size:15.5px;line-height:1.6;padding:16px 22px;max-width:min(480px,88vw);color:#fff;background:rgba(12,10,26,.96);border:1px solid var(--wc,rgba(196,181,253,.7));border-radius:18px;box-shadow:0 0 42px var(--wc,rgba(167,139,250,.55)),0 8px 34px rgba(0,0,0,.55);text-shadow:0 0 16px var(--wc,rgba(196,181,253,.85));letter-spacing:.015em;animation:witnessBloom 1.4s ease}
-@keyframes witnessBloom{0%{transform:translateX(-50%) scale(.92);filter:brightness(.7)}60%{transform:translateX(-50%) scale(1.03);filter:brightness(1.25)}100%{transform:translateX(-50%) scale(1);filter:brightness(1)}}
+@keyframes witnessBloom{0%{transform:translateX(-50%) scale(.94);filter:brightness(.75)}60%{transform:translateX(-50%) scale(1.02);filter:brightness(1.2)}100%{transform:translateX(-50%) scale(1);filter:brightness(1)}}
 /* THE NEW SENSE DOOR — the belly of the table, as a chip in the picker */
 .sc-new{border-style:dashed!important;border-color:rgba(233,221,255,.6)!important;color:#f2ecff!important;background:rgba(233,221,255,.07)!important}
 #ns-modal{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:100001;width:min(400px,92vw);background:rgba(12,10,26,.97);border:1px solid rgba(233,221,255,.55);border-radius:20px;padding:22px 20px 18px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(233,221,255,.28);text-align:center;opacity:0;transition:opacity .6s ease}
@@ -617,7 +615,7 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #sbtn{touch-action:manipulation;padding:8px 13px;border-radius:10px;border:0.5px solid rgba(196,181,253,.7);background:rgba(167,139,250,.32);color:#f1ecff;box-shadow:0 0 12px rgba(167,139,250,.35);font-size:11px;cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap}
 #sbtn:hover{background:rgba(167,139,250,.25);box-shadow:0 0 14px rgba(167,139,250,.2)}
 #sheet-close{display:none}
-#pmsg{position:fixed;top:42%;left:50%;transform:translate(-50%,-50%);max-width:min(400px,88vw);font-size:14px;color:#efe8ff;font-style:italic;opacity:0;pointer-events:none;text-align:center;line-height:1.6;padding:12px 18px;background:rgba(12,10,26,.92);border:1px solid rgba(196,181,253,.55);border-radius:16px;box-shadow:0 0 26px rgba(124,92,255,.5),0 8px 30px rgba(0,0,0,.5);text-shadow:0 0 14px rgba(196,181,253,.7);transition:opacity .5s;letter-spacing:.03em;z-index:100005}
+#pmsg{position:fixed;top:210px;left:50%;transform:translateX(-50%);max-width:min(400px,88vw);font-size:14px;color:#efe8ff;font-style:italic;opacity:0;pointer-events:none;text-align:center;line-height:1.6;padding:12px 18px;background:rgba(12,10,26,.92);border:1px solid rgba(196,181,253,.55);border-radius:16px;box-shadow:0 0 26px rgba(124,92,255,.5),0 8px 30px rgba(0,0,0,.5);text-shadow:0 0 14px rgba(196,181,253,.7);transition:opacity .5s;letter-spacing:.03em;z-index:100005}
 #pmsg.show{opacity:1}
 .aura-popup .mapboxgl-popup-content{background:rgba(10,10,20,.96)!important;border:0.5px solid rgba(167,139,250,.3)!important;border-radius:12px!important;box-shadow:0 0 20px rgba(167,139,250,.15)!important;color:#e0d8ff!important}
 .aura-popup .mapboxgl-popup-tip{background:rgba(10,10,20,.96)!important}
@@ -2336,7 +2334,10 @@ function senseChip(s){
   b.className='sc';
   b.style.setProperty('--c',s.color);
   b.innerHTML=`<span>${SENSE_SYMBOLS[s.id]}</span>${s.label}`;
-  b.onclick=()=>{selSense=s.id;const _p=document.getElementById('panel');if(_p)_p.classList.remove('just-offered','offer-quiet');_p.classList.add('sense-picked');document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');setTimeout(()=>{const prr=document.getElementById('photo-row');if(prr){try{prr.scrollIntoView({block:'end',behavior:'smooth'});}catch(e){}}const pnl=document.getElementById('panel');if(pnl){try{pnl.scrollTo({top:pnl.scrollHeight,behavior:'smooth'});}catch(e){}}},280);};
+  b.onclick=()=>{selSense=s.id;const _p=document.getElementById('panel');if(_p)_p.classList.remove('just-offered','offer-quiet');_p.classList.add('sense-picked');document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');/* The Offer row is already sticky at the foot of the sheet — so nothing needs scrolling to reach it.
+     Flinging the panel to its bottom was what pushed the alphasense symbols off the screen. */
+  setTimeout(()=>{try{const g=b.closest('.sgrp'),pnl=document.getElementById('panel');
+    if(g&&pnl){const off=g.offsetTop-8;if(pnl.scrollTop>off)pnl.scrollTo({top:Math.max(0,off),behavior:'smooth'});}}catch(e){}},280);};
   b.onmouseenter=e=>{
     if(!(window.matchMedia&&window.matchMedia('(hover: hover)').matches))return;
     const ex=s.examples[Math.floor(Math.random()*s.examples.length)];
@@ -2387,12 +2388,35 @@ function addFeed(text,sense,time,glow,lat,lng,place){
 });
 
 let _pmsgT=null;
-function showMsg(txt,dur,cls,color,html){
+/* A message must never speak from on top of the thing it is speaking about, and never from
+   behind the menu. It picks the freer half of the screen — once, before it appears, so it
+   cannot jump when the page settles beneath it. `at` is a screen point to keep clear of. */
+function msgPlace(el,at){
+  try{
+    const H=window.innerHeight,cell=window.innerWidth<=600;
+    const topSafe=cell?208:118;                    // clear of logo, tabs and the search box
+    const botSafe=cell?196:120;                    // clear of the Offer pill and the Mirror orb
+    el.style.top=topSafe+'px';el.style.bottom='auto';
+    const h=el.getBoundingClientRect().height||120;
+    const upper=topSafe, lower=Math.max(topSafe,H-botSafe-h);
+    let y=upper;
+    if(at&&typeof at.y==='number'){
+      const clash=(ty)=>!(at.y<ty-40||at.y>ty+h+40);
+      if(clash(upper)&&!clash(lower))y=lower;
+      else if(clash(upper)&&clash(lower))y=at.y>H/2?upper:lower;
+      else if(at.y<H*0.45)y=lower;                 // it landed high — speak from below
+    }
+    el.style.top=Math.round(y)+'px';
+  }catch(e){}
+}
+function showMsg(txt,dur,cls,color,html,at){
   const el=document.getElementById('pmsg');
   el.classList.remove('witness');el.style.removeProperty('--wc');
   if(cls){el.classList.add(cls);if(color)el.style.setProperty('--wc',color);}
   if(html)el.innerHTML=txt;else el.textContent=txt;
-  el.classList.add('show');
+  el.style.visibility='hidden';el.classList.add('show');
+  msgPlace(el,at);
+  el.style.visibility='';
   if(_pmsgT)clearTimeout(_pmsgT);
   _pmsgT=setTimeout(()=>{el.classList.remove('show');setTimeout(()=>{el.classList.remove('witness');el.style.removeProperty('--wc');},700);},dur||2800);
 }
@@ -2806,7 +2830,11 @@ function submit(lat,lng,text){
   if(_gScale==='street'){
     lookupPlace(lat,lng).then(_finishPlace);
     // Leave the shared sense showing in the arrowed box, with the full house-number address.
-    reverseAddress(lat,lng).then(addr=>{setTimeout(()=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,addr,lat,lng);},2600);});
+    let _shown=false;
+    const _confirm=(addr)=>{if(_shown)return;_shown=true;
+      setTimeout(()=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,addr,lat,lng);},2600);};
+    reverseAddress(lat,lng).then(_confirm).catch(()=>_confirm(null));
+    setTimeout(()=>_confirm(null),6000);      // the strip always arrives, lookup or no lookup
   } else {
     // Given from a height, the offering belongs to the whole place being beheld — its label says so, honestly.
     scalePlaceLabel(lat,lng,_gScale).then(lbl=>{
@@ -2832,7 +2860,9 @@ function submit(lat,lng,text){
       setTimeout(()=>flyProgrammatic({center:[here.lng,here.lat],zoom:hereZoom,duration:2500}),4000);
     },6000);
   } else {
-    setTimeout(()=>{const _wl=witnessLine(sid,lat,lng,s.label);if(_wl)witnessShow(_wl,8200,s.color);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)]);},900);
+    setTimeout(()=>{let _at=null;try{const _pp=map.project([lng,lat]);_at={x:_pp.x,y:_pp.y};}catch(e){}
+      const _wl=witnessLine(sid,lat,lng,s.label);
+      if(_wl)witnessShow(_wl,8200,s.color,_at);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)],null,null,null,null,_at);},900);
   }
 }
 
@@ -5085,11 +5115,13 @@ function twoDoors(){
   }catch(e){}
 }
 // THE WITNESS LINE \u2014 one true sentence after every offering, computed only from what this map holds. Never flattery; always fact.
-function witnessShow(htmlTxt,dur,color){
+function witnessShow(htmlTxt,dur,color,at){
   try{
     const el=document.getElementById('pmsg');if(!el)return;
     el.classList.add('witness');if(color)el.style.setProperty('--wc',color);
-    el.innerHTML=htmlTxt;el.classList.add('show');
+    el.innerHTML=htmlTxt;el.style.visibility='hidden';el.classList.add('show');
+    if(typeof msgPlace==='function')msgPlace(el,at);
+    el.style.visibility='';
     if(typeof _pmsgT!=='undefined'&&_pmsgT)clearTimeout(_pmsgT);
     _pmsgT=setTimeout(()=>{el.classList.remove('show');setTimeout(()=>{el.classList.remove('witness');el.style.removeProperty('--wc');el.textContent='';},700);},dur||8000);
   }catch(e){}
@@ -5515,6 +5547,10 @@ function mvFacts(){
 }
 function mvOpening(mode){
   const f=mvFacts(),w=mvWhere(),m=MV[w]||MV.map;
+  if(w==='world'&&mode==='mirror'){
+    const wq=mvWorldAsk();
+    return 'You are looking at the whole of it — and from up here the questions change.<br><br>'+escT(wq.q);
+  }
   if(mode==='mirror'){
     if(!f.n)return 'You are at <b>'+escT(m.h.toLowerCase())+'</b>, and nothing has been offered yet. That is a clean surface, not an empty one. '+escT(m.q);
     let l='You are at <b>'+escT(m.h.toLowerCase())+'</b>. ';
@@ -5531,12 +5567,16 @@ function mvOpening(mode){
     if(q.length)l+='These rooms are unopened: '+q.map(x=>'<b style="color:'+x.color+'">'+escT(x.label)+'</b>').join(' \u00b7 ')+'. ';
     return l+'Which of them did you skim past just now, and why do you think that was?';
   }
-  if(!f.n)return 'A line needs two points. Offer one light, then another, and the direction between them becomes something you can look at.';
+  if(mvWhere()==='world'&&mode!=='shadow'){
+    const w=mvWorldAsk();
+    return 'You are looking at the whole of it. From here the questions change.<br><br>'+escT(w.q);
+  }
+  if(!f.n)return 'A line needs two points. Offer one light, then another, and the direction between them becomes something you can look at.<br><br>Even so — <b>who are you hoping to become?</b> Say it, and it starts feeding the voice that will one day say it back to you.';
   let l='';
   if(f.days)l+='Between your first light and your latest lie '+(f.days===1?'a single day':f.days+' days')+'. ';
   if(f.places)l+='You have felt '+f.places+' place'+(f.places>1?'s':'')+' closely enough to name. ';
   if(f.gates)l+=f.gates+' gate'+(f.gates>1?'s':'')+' of the Soul Search stand open behind you. ';
-  return l+'If that line kept its exact direction for a year, who arrives? And what one thing would bend it?';
+  return l+'If that line kept its exact direction for a year, who arrives? And what one thing would bend it?<br><br><i>Anything you say here feeds the self that answers from further along.</i>';
 }
 /* When someone writes something heavy, the Mirror stops asking and simply stays. */
 const MV_HEAVY=/\b(kill myself|end (it|my life)|suicid|self ?harm|hurt myself|want to die|don'?t want to (live|be here)|no reason to (live|go on)|better off without me)\b/i;
@@ -5545,7 +5585,7 @@ function mvHeavy(){
    +'Please reach someone tonight \u2014 someone who knows you, or a crisis line where you are; they are there exactly for this and you would not be a burden. '
    +'I am glad you wrote it down rather than carried it silently. Nothing you have typed here leaves this device.';
 }
-let mvHeat=0,mvRest=0;
+let mvHeat=0,mvRest=0,mvPend=null,mvSeen={};
 function mvReply(txt,mode){
   const t=(txt||'').trim();
   if(MV_HEAVY.test(t)){mvHeat=0;return mvHeavy();}
@@ -5561,6 +5601,30 @@ function mvReply(txt,mode){
   }
   mvHeat=0;
   const f=mvFacts(),low=t.toLowerCase();
+  /* yes to the forward door */
+  if(mvPend&&/^(yes|yeah|yep|ok|okay|please|go on|show me|i'?m ready|ready)\b/i.test(low)){
+    const th=mvPend;mvPend=null;return mvForward(th);
+  }
+  if(mvPend&&/^(no|not now|not yet|later|maybe later)\b/i.test(low)){mvPend=null;return 'Then it waits. It is not going anywhere, and neither is the question.<br><br>What would you rather look at instead?';}
+  /* the world's own questions, when standing at planet height */
+  if(mvWhere()==='world'&&t.length>12&&!/\?$/.test(t)){
+    if(mvWorldI<0)mvWorldAsk();
+    const keep=mvWorldKeep();const nx=mvWorldAsk();
+    return keep+'<br><br>'+escT(nx.q);
+  }
+  /* a theme that has come round twice earns the door forward */
+  const TH=[['anger',/\b(angry|anger|rage|furious|fuming|livid|seething)\b/],['sadness',/\b(sad|grief|grieving|heartbroken|mourning)\b/],['fear',/\b(anxious|anxiety|afraid|scared|terrified|dread)\b/]];
+  for(const [name,re] of TH){
+    if(re.test(low)){
+      mvSeen[name]=(mvSeen[name]||0)+1;
+      if(mvSeen[name]>=2&&!mvPend){
+        mvPend=name;
+        return 'That is the second time '+name+' has come round in this room.<br><br>'
+          +'There is a version of you further along this line who already knows how this one ends — and it can only speak because you have been feeding it. '
+          +'<b>Would you like to see where cyclical '+name+' goes, when you are ready? Where it takes you, and where it does not?</b><br><br><i>yes, or not now — both are fine.</i>';
+      }
+    }
+  }
   const has=(re)=>re.test(low);
   /* self-criticism — noticed, never argued with */
   if(has(/\b(i'?m (so )?(stupid|useless|pathetic|a failure|rubbish|worthless)|hate myself|i'?m not good enough|i always ruin)\b/))
@@ -5600,6 +5664,56 @@ function mvReply(txt,mode){
       +'If the person you are becoming read that sentence back to you, what would they want to ask you about it?';
   }
   return 'Held. Nothing you write here leaves this device. Now look at the sentence again \u2014 which word in it is doing the most work?';
+}
+/* THE WORLD VOICE — when a senser stands at planet height, the Mirror asks the questions that
+   only make sense from there. Answering one is itself an act of sensing, and it colours the aura. */
+const MV_WORLD=[
+ {q:'From up here, where do you feel your edge ends and the world begins?',c:'#8fc8f0'},
+ {q:'Do you believe what you do reaches beyond the people you can actually see? Not whether it should — whether you feel that it does.',c:'#c9b8f0'},
+ {q:'Which circumstance below could you not look away from — and what does that say of you, rather than of it?',c:'#f0a8c0'},
+ {q:'If one thing changed in the world tomorrow, and you were not allowed to choose a big thing, what would you choose?',c:'#9fd8c8'},
+ {q:'When you feel connected to all of it — is that a feeling, a belief, or something you have actually sensed?',c:'#ffd9a0'},
+ {q:'Somewhere on this globe, someone is feeling exactly what you are feeling right now. Does knowing that change its weight?',c:'#f6b26b'},
+ {q:'What would you want the world to be carrying, a year from tonight, that it is not carrying now?',c:'#c4b5fd'}
+];
+let mvWorldI=-1;
+function mvWorldAsk(){mvWorldI=(mvWorldI+1)%MV_WORLD.length;return MV_WORLD[mvWorldI];}
+function mvWorldKeep(){
+  try{
+    const w=MV_WORLD[Math.max(0,mvWorldI)];
+    if(typeof myAuraColors!=='undefined')myAuraColors.push(w.c);
+    if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor=w.c;}
+    try{gpSave();}catch(e){}
+    try{const mp=document.getElementById('myaura-page');if(mp&&mp.classList.contains('show'))maBuildLayers();}catch(e){}
+    return '<b style="color:'+w.c+'">That has entered your aura</b> — not as an answer, as a noticing. '
+      +'What you just said is now part of what the Becoming voice can say back to you.';
+  }catch(e){return 'Held.';}
+}
+/* BOTH DIRECTIONS — a future self can only speak because the present self fed it.
+   Two honest branches from the senser's own data: where the line arrives, and where it does not.
+   Never a prediction. A reading, offered only when asked for. */
+function mvForward(theme){
+  const f=mvFacts();
+  const T=theme||'this';
+  const known=f.n?('You have given it '+f.n+' light'+(f.n>1?'s':'')
+      +(f.gates?', '+f.gates+' gate'+(f.gates>1?'s':'')+' of the Soul Search':'')
+      +(f.notes?', and '+f.notes+' thing'+(f.notes>1?'s':'')+' held in this Mirror':'')+'. ')
+    :'It has almost nothing of yours yet, so it can only speak in outline. ';
+  let where,wont;
+  if(/anger|rage|furious|angry/.test(T)){
+    where='<b>Where it takes you:</b> anger that is felt all the way through tends to arrive somewhere — it names the thing that was wrong, it moves a boundary, and then it sets itself down. People who let it finish usually describe feeling clearer, not harder.';
+    wont='<b>Where it does not take you:</b> anger that circles without ever landing does not arrive anywhere at all. It costs sleep and it costs company, and its target is almost never the thing that caused it. That is the loop worth watching for — not the feeling.';
+  }else if(/sad|grief|loss|lonely/.test(T)){
+    where='<b>Where it takes you:</b> grief that is allowed to be grief tends to widen a person. Almost everyone who has come through it describes being able to sit with someone else’s worst night afterwards, without flinching.';
+    wont='<b>Where it does not take you:</b> grief pushed down does not shrink; it just stops being called by its name, and shows up wearing something else — tiredness, distance, a short temper.';
+  }else if(/fear|anxious|anxiety|worry|scared/.test(T)){
+    where='<b>Where it takes you:</b> fear that gets looked at directly usually turns out to be pointing at one specific thing, and that thing can often be prepared for. Named fear gets smaller almost every time.';
+    wont='<b>Where it does not take you:</b> fear that is only ever avoided grows to fit whatever room you give it, and quietly begins choosing what you do not attempt.';
+  }else{
+    where='<b>Where it takes you:</b> '+(f.days?('you have been at this '+f.days+' day'+(f.days>1?'s':'')+' already. '):'')+'a line kept honestly tends to arrive somewhere specific, and usually earlier than the person walking it expects.';
+    wont='<b>Where it does not take you:</b> a line walked without ever looking at it arrives too — just somewhere nobody chose. That is the whole difference.';
+  }
+  return known+'<br><br>'+where+'<br><br>'+wont+'<br><br><i>This is a reading, not a prediction — and it can only say this much because you fed it. Every light you offer changes what it is able to say back.</i>';
 }
 function mvSay(who,html){
   mvTurns.push({who,html});
@@ -5641,6 +5755,23 @@ function mvPanel(){
   go.addEventListener('click',send);
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();send();}});
 }
+(function mvKeyboard(){
+  try{
+    if(!window.visualViewport)return;
+    const fit=()=>{
+      const d=document.getElementById('mv-panel');
+      if(!d||!d.classList.contains('show'))return;
+      const vv=window.visualViewport;
+      const kb=Math.max(0,Math.round(window.innerHeight-vv.height-vv.offsetTop));
+      d.style.bottom=(kb?kb+10:74)+'px';
+      d.style.maxHeight=Math.round(vv.height-90)+'px';
+    };
+    window.visualViewport.addEventListener('resize',fit);
+    window.visualViewport.addEventListener('scroll',fit);
+    document.addEventListener('focusin',e=>{if(e.target&&e.target.id==='mv-say')setTimeout(fit,120);});
+    document.addEventListener('focusout',e=>{if(e.target&&e.target.id==='mv-say')setTimeout(()=>{const d=document.getElementById('mv-panel');if(d){d.style.bottom='';d.style.maxHeight='';}},160);});
+  }catch(e){}
+})();
 (function mvBoot(){try{
   if(document.getElementById('mv-orb'))return;
   const o=document.createElement('div');o.id='mv-orb';
