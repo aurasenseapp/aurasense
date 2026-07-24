@@ -283,6 +283,35 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #mv-panel .mv-in button{background:linear-gradient(135deg,rgba(167,139,250,.44),rgba(255,159,192,.28));border:.5px solid rgba(196,181,253,.7);color:#fff;border-radius:13px;padding:0 15px;font-size:16px;cursor:pointer;font-family:var(--serif)}
 #mv-panel .mv-foot{font-size:10.5px;color:var(--label);line-height:1.55;margin-top:8px;font-style:italic}
 #mv-orb span{font-size:21px;line-height:1}
+#sd-page{position:fixed;inset:0;z-index:100011;background:radial-gradient(80% 60% at 50% 12%,#171232 0%,#0b0919 62%,#07060e 100%);opacity:0;transition:opacity .45s ease;overflow-y:auto;-webkit-overflow-scrolling:touch;font-family:var(--serif)}
+#sd-page.show{opacity:1}
+#sd-page .sd-in{max-width:560px;margin:0 auto;padding:calc(18px + env(safe-area-inset-top)) 16px calc(40px + env(safe-area-inset-bottom))}
+#sd-page .sd-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+#sd-page .sd-h1{flex:1;font-size:20px;color:var(--ink)}
+#sd-page #sd-x{background:rgba(30,24,58,.95);border:.5px solid rgba(167,139,250,.45);color:#cbbff0;font-size:15px;width:36px;height:36px;border-radius:50%;cursor:pointer;font-family:var(--serif)}
+#sd-page .sd-note{font-size:13.5px;line-height:1.7;color:var(--ink2);background:rgba(20,16,42,.92);border:.5px solid rgba(240,200,150,.32);border-radius:14px;padding:13px 15px}
+#sd-page .sd-note b{color:#f6ecdc}
+#sd-page .sd-sec{font-size:12px;letter-spacing:.09em;text-transform:uppercase;color:#b3a6dd;margin:20px 0 8px}
+#sd-page input,#sd-page textarea,#sd-page select{width:100%;box-sizing:border-box;background:#140f30;border:.5px solid rgba(167,139,250,.45);border-radius:13px;padding:12px 13px;color:var(--ink);font-size:16px;outline:none;font-family:var(--serif);margin-bottom:9px}
+#sd-page textarea{min-height:66px;resize:vertical;line-height:1.55}
+#sd-page input:focus,#sd-page textarea:focus{border-color:rgba(196,181,253,.9);box-shadow:0 0 14px rgba(167,139,250,.3)}
+#sd-page .sd-find{display:flex;gap:8px}
+#sd-page .sd-find input{flex:1;margin-bottom:0}
+#sd-page .sd-find button{background:linear-gradient(135deg,rgba(167,139,250,.45),rgba(255,159,192,.28));border:.5px solid rgba(196,181,253,.75);color:#fff;border-radius:13px;padding:0 18px;font-size:14.5px;cursor:pointer;font-family:var(--serif);white-space:nowrap}
+#sd-page .sd-found{font-size:13px;color:#9bd8c0;min-height:18px;margin:8px 2px 4px;line-height:1.5}
+#sd-page .sd-alt{width:100%;background:rgba(24,19,48,.94);border:.5px solid rgba(167,139,250,.34);color:var(--mute);border-radius:13px;padding:11px;font-size:13px;cursor:pointer;font-family:var(--serif)}
+#sd-page .sd-two{display:flex;gap:8px}
+#sd-page .sd-two select{flex:1;font-size:14px}
+#sd-page .sd-add{width:100%;margin-top:4px;background:linear-gradient(135deg,rgba(167,139,250,.4),rgba(150,215,190,.24));border:.5px solid rgba(196,181,253,.7);color:#f4efff;border-radius:15px;padding:14px;font-size:15px;cursor:pointer;font-family:var(--serif)}
+#sd-page .sd-row{border-left:2.5px solid var(--c);background:rgba(18,14,38,.9);border-radius:0 13px 13px 0;padding:11px 13px;margin-bottom:8px;position:relative}
+#sd-page .sd-rt{font-size:14.5px;color:var(--ink);line-height:1.35;padding-right:62px}
+#sd-page .sd-rm{font-size:11.5px;color:var(--label);margin-top:4px;line-height:1.45}
+#sd-page .sd-del{position:absolute;right:10px;top:10px;background:transparent;border:.5px solid rgba(167,139,250,.35);color:var(--mute);border-radius:11px;padding:5px 9px;font-size:11px;cursor:pointer;font-family:var(--serif)}
+#sd-page .sd-empty{font-size:13px;color:var(--label);font-style:italic;line-height:1.65;padding:4px 2px}
+#sd-page .sd-out{width:100%;background:rgba(24,19,48,.96);border:.5px solid rgba(167,139,250,.42);color:var(--ink);border-radius:14px;padding:13px 15px;font-size:14px;cursor:pointer;font-family:var(--serif);text-align:left;margin-bottom:8px;line-height:1.4}
+#sd-page .sd-out:hover{border-color:rgba(196,181,253,.75);background:rgba(32,25,62,.98)}
+#sd-page .sd-msg{font-size:13px;color:#9bd8c0;line-height:1.6;margin:8px 2px;min-height:18px}
+#sd-page .sd-sqlbox{display:none;min-height:150px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.5;color:#cfe8dc;background:#0a0a18}
 #gd-card{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.96);z-index:100008;width:min(400px,93vw);max-height:88vh;overflow-y:auto;background:radial-gradient(120% 80% at 50% 0%,#1b1330 0%,#100b22 60%,#0a0818 100%);border:1px solid rgba(240,200,150,.45);border-radius:20px;padding:20px 20px 15px;box-shadow:0 16px 60px rgba(0,0,0,.72),0 0 40px rgba(240,200,150,.16);opacity:0;transition:opacity .4s ease,transform .4s ease;font-family:var(--serif)}
 #gd-card.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 #gd-card .gd-h{font-size:18px;color:#f6ecdc;text-align:center;letter-spacing:.01em;margin-bottom:11px}
@@ -377,6 +406,7 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #offer-confirm .oc-btn{font-size:12px;color:#efe8ff;cursor:pointer;border:0.5px solid rgba(167,139,250,.55);border-radius:11px;padding:7px 13px;background:rgba(167,139,250,.18);white-space:nowrap;font-family:inherit}
 #offer-confirm .oc-btn.oc-social{background:rgba(167,139,250,.08)}
 #alpha-page,#junc-page,#sync-page,#open-page{overflow-x:hidden;touch-action:pan-y;overscroll-behavior:contain}
+#alpha-page,#junc-page,#sync-page,#open-page,#soul-page,#course-page,#work-page,#quest-page,#register-page,#trajectory-page,#lifestory-page,#livefeed-page,#myaura-page{font-family:var(--serif)}
 #alpha-page,#junc-page,#sync-page,#open-page{position:fixed;inset:0;z-index:1700;background:radial-gradient(ellipse at 50% 0%,#191430 0%,#0a0818 60%,#060512 100%);display:none;overflow-y:auto;padding:64px 18px 60px;pointer-events:all}
 #alpha-page.show{display:block}
 #junc-page{z-index:1720}
@@ -609,6 +639,9 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 .sgrp-b{display:none;padding:2px 9px 9px}
 .sgrp.open .sgrp-b{display:flex}
 #srow{display:flex;gap:7px}
+/* The Offer row rides the foot of the sheet at EVERY width — so picking a sense never has to
+   scroll the panel, and the alphasense symbols never get pushed off the top. */
+#panel.show-mobile #srow{position:sticky;bottom:0;background:linear-gradient(rgba(8,7,16,0),rgba(8,7,16,.98) 26%);padding:11px 0 2px;margin-top:2px;z-index:5}
 #inp{flex:1;background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 11px;font-size:12px;color:#e0d8ff;outline:none;font-family:inherit}
 #inp::placeholder{color:#5a5270}
 #inp:focus{border-color:rgba(167,139,250,.35)}
@@ -800,7 +833,7 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #ma-quest-done .sub{font-size:9.5px;color:#86b0a4;margin:3px 0 8px;font-style:italic;line-height:1.5}
 #ma-trajectory,#ma-lifestory{border-top:1px dotted rgba(167,139,250,.42);padding-top:16px;margin-top:20px}
 #ma-trajectory .pk,#ma-lifestory .pk{font-family:Georgia,'Times New Roman',serif;font-size:15.5px;font-weight:600;color:#e3d9ff;letter-spacing:.02em;text-shadow:0 0 12px rgba(167,139,250,.45)}
-#ma-trajectory .sub,#ma-lifestory .sub{font-family:-apple-system,'Segoe UI',Helvetica,Arial,sans-serif;font-size:11px;color:#9a90c0;line-height:1.55;margin:6px 0 10px;font-style:normal}
+#ma-trajectory .sub,#ma-lifestory .sub{font-family:var(--serif);font-size:12.5px;color:var(--mute);line-height:1.65;margin:7px 0 11px;font-style:normal}
 /* Questionnaire page */
 #quest-page,#livefeed-page{position:fixed;inset:0;z-index:1750;background:radial-gradient(circle at 50% 16%,#16122e 0%,#0b0a1c 55%,#070612 100%);opacity:0;pointer-events:none;transition:opacity .5s;overflow-y:auto}
 #quest-page.show,#livefeed-page.show{opacity:1;pointer-events:auto}
@@ -2334,10 +2367,8 @@ function senseChip(s){
   b.className='sc';
   b.style.setProperty('--c',s.color);
   b.innerHTML=`<span>${SENSE_SYMBOLS[s.id]}</span>${s.label}`;
-  b.onclick=()=>{selSense=s.id;const _p=document.getElementById('panel');if(_p)_p.classList.remove('just-offered','offer-quiet');_p.classList.add('sense-picked');document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');/* The Offer row is already sticky at the foot of the sheet — so nothing needs scrolling to reach it.
-     Flinging the panel to its bottom was what pushed the alphasense symbols off the screen. */
-  setTimeout(()=>{try{const g=b.closest('.sgrp'),pnl=document.getElementById('panel');
-    if(g&&pnl){const off=g.offsetTop-8;if(pnl.scrollTop>off)pnl.scrollTo({top:Math.max(0,off),behavior:'smooth'});}}catch(e){}},280);};
+  b.onclick=()=>{selSense=s.id;const _p=document.getElementById('panel');if(_p)_p.classList.remove('just-offered','offer-quiet');_p.classList.add('sense-picked');document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');/* Nothing is scrolled. The Offer row is sticky at the foot of the sheet at every width, so the
+     symbols stay exactly where the senser left them. */};
   b.onmouseenter=e=>{
     if(!(window.matchMedia&&window.matchMedia('(hover: hover)').matches))return;
     const ex=s.examples[Math.floor(Math.random()*s.examples.length)];
@@ -2830,11 +2861,13 @@ function submit(lat,lng,text){
   if(_gScale==='street'){
     lookupPlace(lat,lng).then(_finishPlace);
     // Leave the shared sense showing in the arrowed box, with the full house-number address.
-    let _shown=false;
-    const _confirm=(addr)=>{if(_shown)return;_shown=true;
-      setTimeout(()=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,addr,lat,lng);},2600);};
-    reverseAddress(lat,lng).then(_confirm).catch(()=>_confirm(null));
-    setTimeout(()=>_confirm(null),6000);      // the strip always arrives, lookup or no lookup
+    /* The strip rises on the same breath every time. If the place-name arrives later, it simply
+       fills itself in — the senser never waits on a lookup to know their light landed. */
+    let _addr=null,_done=false;
+    reverseAddress(lat,lng).then(a=>{_addr=a;
+      if(_done&&a){try{const h=document.querySelector('#offer-confirm .oc-head');
+        if(h)h.innerHTML='\u2728 Aura just offered at <b>'+escT(a)+'</b>';}catch(e){}}}).catch(()=>{});
+    setTimeout(()=>{_done=true;if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,_addr,lat,lng);},2600);
   } else {
     // Given from a height, the offering belongs to the whole place being beheld — its label says so, honestly.
     scalePlaceLabel(lat,lng,_gScale).then(lbl=>{
@@ -4505,7 +4538,9 @@ let lastOfferInfo=null;
 function offerHasSpot(){try{return !!lastClickPoint||!!lastSearchPoint;}catch(e){return false;}}
 function openOfferSheet(){
   const panel=document.getElementById('panel');
-  if(panel){panel.classList.add('show-mobile');panel.classList.remove('just-offered','offer-quiet');panel.classList.toggle('locating',!senseGateOpen);}
+  if(panel){panel.classList.add('show-mobile');panel.classList.remove('just-offered','offer-quiet');panel.classList.toggle('locating',!senseGateOpen);
+    /* a sheet always opens at its top — a carried-over scroll is what hid the symbols */
+    panel.style.bottom='';panel.style.maxHeight='';try{panel.scrollTop=0;}catch(e){}}
   const ui=document.getElementById('ui');if(ui)ui.classList.add('offer-open');
   /* the pill hides itself through body.panel-live — one source of truth, no per-flow toggles */
 }
@@ -4530,7 +4565,7 @@ function showOfferConfirm(senseId,text,place,lat,lng){
   if(_cb)_cb.addEventListener('click',()=>{const s2=SENSES.find(x=>x.id===senseId);if(typeof openPostcard==='function'&&s2){openPostcard({title:'Aurasense of '+s2.label,color:s2.color,words:(text||'').slice(0,140),place:place||'',symbolSVG:_offSym(senseId,s2.color)});}});}catch(e){}
   const again=box.querySelector('.oc-here');
   if(again)again.addEventListener('click',()=>{
-    if(panel){panel.classList.remove('just-offered','offer-quiet');}
+    if(panel){panel.classList.remove('just-offered','offer-quiet');panel.style.bottom='';panel.style.maxHeight='';try{panel.scrollTop=0;}catch(e){}}
     const inp=document.getElementById('inp');if(inp){inp.value='';inp.classList.remove('inp-glow');}
     selSense=null;(function(){const p=document.getElementById('panel');if(p)p.classList.remove('sense-picked');})();document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));
     const scf=document.getElementById('sense-confirm');if(scf)scf.textContent='';
@@ -5081,6 +5116,135 @@ function wevZoomUI(){
   if(logoEl)logoEl.addEventListener('click',()=>{if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor='#c4b5fd';}showMsg('The living aura of humanity, sensed together');});
 })();
 
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   SEED WORLD AURAS — the founder's tool. Open with  aurasense.app/#seed
+
+   Only what is true. Every event needs a doorway, because the standing law is that a
+   constriction is never shown without a way through it. Places are found by name, so a
+   whole evening of seeding never requires flying the map by hand.
+
+   It writes two ways, and neither is a guess:
+     • straight to the Gate, where the event stands as any senser's would;
+     • or as SQL to paste into Supabase, which is how a founder-seeded event arrives
+       already verified without weakening a single access rule.
+   ───────────────────────────────────────────────────────────────────────────── */
+const SEED_TYPES=[['suffering','Suffering — answered with compassion'],['need','Need — answered with hope'],
+ ['disaster','Disaster — answered with renewal'],['joy','Joy — joined'],['sport','Gathering — joined']];
+let seedQueue=[],seedPt=null;
+function seedEsc(v){return String(v==null?'':v).replace(/'/g,"''");}
+function seedSQL(){
+  if(!seedQueue.length)return '-- nothing queued yet';
+  const rows=seedQueue.map(e=>"  ('"+seedEsc(e.title)+"', '"+seedEsc(e.note)+"', '"+seedEsc(e.doorway)+"', '"
+    +e.type+"', '"+e.fam+"', "+(+e.lat).toFixed(5)+", "+(+e.lng).toFixed(5)+", 'verified', 3, 'founder')").join(",\n");
+  return "-- Aurasense · seeded world auras · "+new Date().toISOString().slice(0,10)+"\n"
+    +"-- Paste into Supabase → SQL Editor → Run. These arrive already standing in the world's light.\n"
+    +"insert into public.world_events (title, note, doorway, type, fam, lat, lng, status, witness_count, submitter)\nvalues\n"+rows+";";
+}
+function seedRender(){
+  const L=document.getElementById('sd-list');if(!L)return;
+  L.innerHTML=seedQueue.length?seedQueue.map((e,i)=>'<div class="sd-row" style="--c:'+(WA_HEX[e.type]||'#c4b5fd')+'">'
+    +'<div class="sd-rt">'+escT(e.title)+'</div>'
+    +'<div class="sd-rm">'+escT(WA_LABEL[e.type]||e.type)+' \u00b7 '+escT(WEV_FAMS[e.fam]||e.fam)+' \u00b7 \ud83d\udccd '+escT(e.place||((+e.lat).toFixed(2)+', '+(+e.lng).toFixed(2)))+'</div>'
+    +'<button type="button" class="sd-del" data-i="'+i+'">remove</button></div>').join('')
+    :'<div class="sd-empty">Nothing queued yet. Find a place, describe what is true there, and add it.</div>';
+  const n=document.getElementById('sd-count');if(n)n.textContent=seedQueue.length?(seedQueue.length+' queued'):'';
+}
+async function seedFind(){
+  const q=(document.getElementById('sd-place').value||'').trim();
+  const note=document.getElementById('sd-found');
+  if(!q){if(note)note.textContent='Name a place first \u2014 a city, a region, a country.';return;}
+  if(note)note.textContent='Looking\u2026';
+  try{
+    const r=await fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/'+encodeURIComponent(q)+'.json?access_token='+MAPBOX_TOKEN+'&limit=1');
+    const d=await r.json();
+    if(d&&d.features&&d.features.length){
+      const f=d.features[0];
+      seedPt={lng:f.center[0],lat:f.center[1],place:f.place_name};
+      if(note)note.innerHTML='\u2713 <b>'+escT(f.place_name)+'</b> \u2014 '+f.center[1].toFixed(3)+', '+f.center[0].toFixed(3);
+      try{flyProgrammatic({center:f.center,zoom:4.2,duration:1800});}catch(e){}
+    }else{seedPt=null;if(note)note.textContent='Not found \u2014 try the country, or a larger nearby city.';}
+  }catch(e){seedPt=null;if(note)note.textContent='The lookup did not answer. You can still place it by moving the map and pressing \u201cuse the map centre\u201d.';}
+}
+function openSeed(){
+  if(document.getElementById('sd-page'))return;
+  const d=document.createElement('div');d.id='sd-page';
+  d.innerHTML='<div class="sd-in">'
+    +'<div class="sd-head"><div class="sd-h1">\u25c6 Seed World Auras</div><button type="button" id="sd-x">\u2715</button></div>'
+    +'<div class="sd-note">Only what is true. Nothing invented, nothing simulated \u2014 a real person\u2019s circumstance placed wrongly is the worst error this map can make.<br><br>Every event needs a <b>doorway</b>: the way through. That is a standing law, not a field to fill.</div>'
+    +'<div class="sd-sec">Where</div>'
+    +'<div class="sd-find"><input id="sd-place" maxlength="80" placeholder="a city, region or country\u2026" autocomplete="off"><button type="button" id="sd-go">Find</button></div>'
+    +'<div id="sd-found" class="sd-found"></div>'
+    +'<button type="button" id="sd-here" class="sd-alt">\u2295 or use the map centre where it is now</button>'
+    +'<div class="sd-sec">What is happening</div>'
+    +'<input id="sd-title" maxlength="80" placeholder="in a few true words">'
+    +'<textarea id="sd-note" maxlength="240" placeholder="what a senser arriving here should know"></textarea>'
+    +'<div class="sd-sec">The doorway \u2014 required</div>'
+    +'<textarea id="sd-door" maxlength="200" placeholder="how compassion, hope or joining actually helps here"></textarea>'
+    +'<div class="sd-sec">Kind</div>'
+    +'<div class="sd-two"><select id="sd-type">'+SEED_TYPES.map(t=>'<option value="'+t[0]+'">'+t[1]+'</option>').join('')+'</select>'
+    +'<select id="sd-fam">'+Object.keys(WEV_FAMS).map(k=>'<option value="'+k+'">'+WEV_FAMS[k]+'</option>').join('')+'</select></div>'
+    +'<button type="button" id="sd-add" class="sd-add">\u2295 Add to the queue</button>'
+    +'<div class="sd-sec">Queued <span id="sd-count"></span></div>'
+    +'<div id="sd-list"></div>'
+    +'<div class="sd-sec">Send them out</div>'
+    +'<button type="button" id="sd-sql" class="sd-out">\u29c9 Copy as SQL \u2014 paste into Supabase (arrives verified)</button>'
+    +'<button type="button" id="sd-live" class="sd-out">\u2727 Send to the Gate now (arrives unverified, needs 3 witnesses)</button>'
+    +'<div id="sd-msg" class="sd-msg"></div>'
+    +'<textarea id="sd-out" class="sd-sqlbox" readonly></textarea>'
+    +'</div>';
+  document.body.appendChild(d);requestAnimationFrame(()=>d.classList.add('show'));
+  seedRender();
+  const msg=t=>{const m=document.getElementById('sd-msg');if(m)m.innerHTML=t;};
+  d.querySelector('#sd-x').onclick=()=>{d.classList.remove('show');setTimeout(()=>{try{d.remove();}catch(e){}},400);
+    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}};
+  d.querySelector('#sd-go').onclick=seedFind;
+  d.querySelector('#sd-place').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();seedFind();}});
+  d.querySelector('#sd-here').onclick=()=>{try{const c=map.getCenter();seedPt={lng:c.lng,lat:c.lat,place:null};
+    document.getElementById('sd-found').innerHTML='\u2713 the map centre \u2014 '+c.lat.toFixed(3)+', '+c.lng.toFixed(3);}catch(e){}};
+  d.querySelector('#sd-add').onclick=()=>{
+    const g=id=>(document.getElementById(id).value||'').trim();
+    const ti=g('sd-title'),no=g('sd-note'),dw=g('sd-door');
+    if(!seedPt){msg('Find the place first \u2014 nothing may stand nowhere.');return;}
+    if(ti.length<6){msg('A few true words for the title.');return;}
+    if(dw.length<12){msg('The doorway is required. A constriction is never shown without a way through it \u2014 that is the law this map is built on.');return;}
+    if(typeof guardOK==='function'&&!guardOK(ti+' '+no+' '+dw))return;
+    seedQueue.push({title:ti,note:no,doorway:dw,type:g('sd-type'),fam:g('sd-fam'),lat:seedPt.lat,lng:seedPt.lng,place:seedPt.place});
+    ['sd-title','sd-note','sd-door'].forEach(id=>document.getElementById(id).value='');
+    msg('\u2713 Queued. The place is still held \u2014 add another here, or find a new one.');
+    seedRender();
+    const o=document.getElementById('sd-out');if(o&&o.value)o.value=seedSQL();
+  };
+  d.querySelector('#sd-list').addEventListener('click',e=>{const b=e.target.closest('.sd-del');if(!b)return;
+    seedQueue.splice(+b.dataset.i,1);seedRender();
+    const o=document.getElementById('sd-out');if(o&&o.value)o.value=seedSQL();});
+  d.querySelector('#sd-sql').onclick=()=>{
+    if(!seedQueue.length){msg('Queue something first.');return;}
+    const sql=seedSQL();const o=document.getElementById('sd-out');o.value=sql;o.style.display='block';
+    try{navigator.clipboard.writeText(sql).then(()=>msg('\u2713 Copied. Supabase \u2192 SQL Editor \u2192 New query \u2192 paste \u2192 Run.'),
+      ()=>msg('Select the text below and copy it, then paste into Supabase \u2192 SQL Editor.'));}
+    catch(e){msg('Select the text below and copy it, then paste into Supabase \u2192 SQL Editor.');}
+  };
+  d.querySelector('#sd-live').onclick=async()=>{
+    if(!seedQueue.length){msg('Queue something first.');return;}
+    if(!GATE_CONFIGURED||!gate||!gate.on){msg('The Gate is resting \u2014 use \u201cCopy as SQL\u201d instead. It is the surer road anyway.');return;}
+    msg('Sending\u2026');
+    try{
+      const rows=seedQueue.map(e=>({title:e.title,note:e.note,doorway:e.doorway,type:e.type,fam:e.fam,lat:e.lat,lng:e.lng,submitter:'founder'}));
+      const r=await gate.db.from('world_events').insert(rows);
+      if(r&&r.error){msg('The Gate refused: '+escT(r.error.message||'unknown')+'<br>Use \u201cCopy as SQL\u201d \u2014 nothing is lost.');return;}
+      msg('\u2713 '+rows.length+' sent. They stand dim until three sensers witness them \u2014 or run the SQL to stand them fully.');
+      seedQueue=[];seedRender();
+      try{if(typeof gateLoadEvents==='function')gateLoadEvents();}catch(e){}
+    }catch(e){msg('The Gate did not answer. Use \u201cCopy as SQL\u201d \u2014 nothing is lost.');}
+  };
+}
+(function seedDoor(){try{
+  const want=()=>/(^|[#&])seed\b/i.test(location.hash||'');
+  if(want())setTimeout(openSeed,1400);
+  window.addEventListener('hashchange',()=>{if(want())openSeed();});
+}catch(e){}})();
+
 // ---- The Gate (Supabase) — phase 1: every true offering persisted, and returned to the living map ----
 // One true offering is worth more than a thousand simulated ones — nothing here fakes success, nothing is lost silently.
 const gate={on:false,db:null,sid:null};
@@ -5585,7 +5749,22 @@ function mvHeavy(){
    +'Please reach someone tonight \u2014 someone who knows you, or a crisis line where you are; they are there exactly for this and you would not be a burden. '
    +'I am glad you wrote it down rather than carried it silently. Nothing you have typed here leaves this device.';
 }
-let mvHeat=0,mvRest=0,mvPend=null,mvSeen={};
+let mvHeat=0,mvRest=0,mvPend=null,mvSeen={},mvLastQ=null;
+/* Every question the Mirror asks carries a plainer twin. Asking "what do you mean?" is not a
+   failure of the senser — it is the Mirror having spoken above the thing it meant. */
+function mvQ(html,plain){mvLastQ=plain||null;return html;}
+/* Their own words, given back. Nothing is understood like hearing yourself quoted accurately. */
+function mvEcho(t){
+  const pats=[/pointing at ([^.,;!?]{4,70})/i,/point(?:ing)? to ([^.,;!?]{4,70})/i,
+    /because ([^.,;!?]{4,70})/i,/it would be ([^.,;!?]{4,70})/i,/about ([^.,;!?]{4,70})/i,
+    /feels? like ([^.,;!?]{4,70})/i,/i have been ([^.,;!?]{4,70})/i];
+  for(const r of pats){const m=t.match(r);if(!m||!m[1])continue;
+    /* keep the clause, not the whole run-on — a quote is only warm if it is accurate and short */
+    let v=m[1].trim().replace(/\s+/g,' ').split(/\s+(?:and|but|so|as|because|which|while|although)\s+/i)[0].trim();
+    v=v.replace(/[,;:]+$/,'');
+    if(v.length>3)return escT(v.length>46?v.slice(0,43).trim()+'…':v);}
+  return null;
+}
 function mvReply(txt,mode){
   const t=(txt||'').trim();
   if(MV_HEAVY.test(t)){mvHeat=0;return mvHeavy();}
@@ -5601,6 +5780,12 @@ function mvReply(txt,mode){
   }
   mvHeat=0;
   const f=mvFacts(),low=t.toLowerCase();
+  const echo=mvEcho(t);
+  /* Asking what a question meant is answered plainly — never with another riddle. */
+  if(/\b(don'?t|do not|dont)\s+(understand|get|follow|know what)\b|what do you mean|explain( that| it)?|say (that|it) again|in plain|simpler|rephrase|confus/i.test(low)){
+    if(mvLastQ)return 'Fair — that was asked above the thing it meant. In plainer words:<br><br><b>'+mvLastQ+'</b>';
+    return 'Fair. Tell me which part did not land, and I will put it another way.';
+  }
   /* yes to the forward door */
   if(mvPend&&/^(yes|yeah|yep|ok|okay|please|go on|show me|i'?m ready|ready)\b/i.test(low)){
     const th=mvPend;mvPend=null;return mvForward(th);
@@ -5640,7 +5825,23 @@ function mvReply(txt,mode){
     if(has(/\b(what (do you|are you)|who are you|are you (real|conscious|ai|alive))\b/))
       return 'I am a mirror built from what is true here: your own offerings, your own words, and nothing else. I do not know you beyond that, and I will not pretend to. '
         +'The living dialogue \u2014 something that truly answers \u2014 arrives when the Gate can carry it. Until then, what I reflect is genuinely yours.';
-    return 'A good question. Rather than reach for an answer, sit with it half a breath longer \u2014 what would have to be true for the answer to be one you did not want?';
+    return mvQ('A good question. Rather than reach for an answer, sit with it half a breath longer \u2014 what would have to be true for the answer to be one you did not want?','What would have to be true for you to dislike the answer to your own question?');
+  }
+  /* Something felt in the body rather than the mood — a real and different thing. */
+  if(/\b(biological|physiolog|chemical|hormonal|in my (body|gut|stomach|chest)|something i ate|food|digest|gut)\b/i.test(low)){
+    return mvQ('You called it <b>biological</b> rather than emotional — and that distinction is doing real work. '
+      +(echo?('You put it at <i>“'+echo+'”</i>. '):'')
+      +'The body often arrives at a thing before the story about it does.<br><br>'
+      +'So: if it <i>is</i> the body and not the mood — does that make it easier to sit with, or harder?',
+      'You said this feels like it comes from your body, not from your mood. I am asking whether knowing that makes it easier to sit with, or harder.');
+  }
+  /* Care that did not protect — the disappointment is about the care, not the symptom. */
+  if(/\b(disappoint\w*|so careful|been careful|selective|tried (so )?hard|worked (so )?hard|done everything|watched what)\b/i.test(low)){
+    return mvQ('The disappointment sounds like it is about the <b>care</b>, not the symptom. '
+      +(echo?('You said <i>“'+echo+'”</i>. '):'')
+      +'You were careful, and carefulness was meant to be the thing that protected you.<br><br>'
+      +'What did you expect the carefulness to buy you — and who taught you that it would?',
+      'You were careful and it did not protect you. I am asking what you expected that carefulness to give you in return.');
   }
   /* named feelings */
   const feels=[['tired|exhausted|worn out|drained','Tiredness is data, not weakness. What has been taking the most from you lately, that you have not called by its name?'],
@@ -5652,7 +5853,29 @@ function mvReply(txt,mode){
     ['calm|peaceful|still|settled','Stillness is worth staying in longer than feels necessary. What is it about right now that let it arrive?'],
     ['overwhelm|too much|can\'?t cope|drowning','When everything arrives at once, one true thing is enough. Name the single nearest one \u2014 not the biggest.'],
     ['confused|lost|stuck|don\'?t understand','Being stuck is often two true things pulling opposite ways. What are the two?']];
-  for(const [k,r] of feels){if(new RegExp('\\b('+k+')').test(low))return r;}
+  const plains={'tired':'What has been taking the most out of you lately that you have not named?',
+    'angry':'What softer feeling might the anger be standing in front of?',
+    'sad':'Where would you set the grief down, if it could be set anywhere?',
+    'anxious':'What exactly does the fear think is coming — and how likely is that, really?',
+    'lonely':'Are you actually on your own, or with people and still lonely? Those are different rooms.',
+    'happy':'Where in your body did you feel the good thing first?',
+    'calm':'What about right now let the stillness arrive?',
+    'overwhelm':'Name the nearest one thing, not the biggest one.',
+    'confused':'What are the two things pulling you in opposite directions?'};
+  for(const [k,r] of feels){
+    if(new RegExp('\\b('+k+')').test(low)){
+      const key=Object.keys(plains).find(pk=>new RegExp('\\b'+pk).test(k));
+      const lead=echo?('You said <i>“'+echo+'”</i>.<br><br>'):'';
+      return mvQ(lead+r,plains[key]||null);
+    }
+  }
+  /* Nothing matched a theme, but they told you something real — quote it back rather than
+     reach for a stock line. Being heard accurately is most of what a mirror is for. */
+  if(echo&&t.length>34){
+    return mvQ('You said <i>“'+echo+'”</i>. I would rather stay on that than move you along.<br><br>'
+      +'Which part of it is the part you would not say to anyone else — and what makes that the private half?',
+      'Of what you just said, which piece would you keep to yourself? I am asking why that piece in particular.');
+  }
   /* mode-shaped reflection when nothing else matches */
   if(mode==='shadow'){
     const q=f.quiet.length?f.quiet[Math.floor(Math.random()*Math.min(6,f.quiet.length))]:null;
@@ -5755,6 +5978,22 @@ function mvPanel(){
   go.addEventListener('click',send);
   inp.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();send();}});
 }
+(function mvFollow(){
+  /* The Mirror belongs to the page you are on. Leaving a page closes it, so it never hangs
+     over the map after you have walked away from My Aura. */
+  try{
+    const shut=()=>{const d=document.getElementById('mv-panel');if(d)d.classList.remove('show');};
+    document.addEventListener('click',e=>{
+      const t=e.target;if(!t||!t.closest)return;
+      if(t.closest('#mv-panel')||t.closest('#mv-orb'))return;
+      if(t.closest('.tab')||t.closest('.tab-mi')||t.closest('#ma-back')||t.closest('.qz-back')
+        ||t.closest('#mj-btn')||t.closest('.mj-i')||t.closest('#mobile-offer')||t.closest('#sw-back')
+        ||t.closest('#alpha-back')||t.closest('#junc-back')||t.closest('#op-back')||t.closest('#quest-back')
+        ||t.closest('#lf-back')||t.closest('#rg-back')||t.closest('#work-back')||t.closest('#course-back'))shut();
+    },true);
+    try{map.on('movestart',shut);}catch(e){}
+  }catch(e){}
+})();
 (function mvKeyboard(){
   try{
     if(!window.visualViewport)return;
