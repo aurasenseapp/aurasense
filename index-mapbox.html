@@ -2545,7 +2545,12 @@ async function contextualZoom(level,aLng,aLat){
     if(d&&d.features&&d.features.length&&d.features[0].center){
       const _f0=d.features[0];
       const _kind=(_f0.place_type&&_f0.place_type[0])||typeFor.split(',')[0];
-      flyToPlaceFeature(_f0,_kind,2000);
+      // The pull-back law: a tab widens the view AROUND where you are. The zoom comes from the
+      // containing place's true size, but the centre stays your place — centring the region's own
+      // middle is what used to land London's Region view on Northampton.
+      const _z=zoomForFeature(_f0,_kind);
+      const _mob=window.innerWidth<=600;
+      flyProgrammatic({center:[aLng,aLat],zoom:_z,duration:2000,offset:_mob?[0,-24]:[0,-30]});
       return;
     }
   }catch(e){}
@@ -2613,12 +2618,8 @@ function setActiveTab(i){
 const MAPBOX_TOKEN='pk.eyJ1IjoiYXVyYXNlbnNlIiwiYSI6ImNtcWpvMnk5MTBobGoycHB6OHplaXBrODQifQ.BAQJA0r7fK3BvW-k1kFHiw';
 let flyTimer=null;
 let searching=false;
-function flyToBounds(bounds,maxZoom){
-  isMovingProgrammatically=true;
-  if(flyTimer)clearTimeout(flyTimer);
-  map.fitBounds(bounds,{padding:{top:50,bottom:75,left:35,right:140},duration:2000,maxZoom:maxZoom||15});
-  flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },2300);
-}
+// flyToBounds retired 24 July — it was the last fitBounds and had no callers left.
+// The framing law stands whole: fly to a centre at a deliberate zoom; never fitBounds a returned bbox.
 function flyProgrammatic(opts){
   isMovingProgrammatically=true;
   if(flyTimer)clearTimeout(flyTimer);
