@@ -64,6 +64,12 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .tab.active{color:#c4b5fd}
 .tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0;transition:background .3s,box-shadow .3s}
 .tab.active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
+/* THE SCALE CROSSED — the journey from street to planet narrates itself: each scale flares
+   once as the view passes through it, outward and back. Two flares a second at most. */
+@keyframes tabCrossed{0%{box-shadow:0 0 7px rgba(196,181,253,.9);transform:scale(1)}
+  40%{box-shadow:0 0 15px rgba(255,214,230,1),0 0 26px rgba(196,181,253,.75);transform:scale(1.5)}
+  100%{box-shadow:0 0 7px rgba(196,181,253,.9);transform:scale(1)}}
+.tab-orb.crossed{animation:tabCrossed .9s ease-out}
 /* The aura grows by light, never by layout — the box stays 21px so the strip cannot shift. */
 .tab-orb-my{--myglow:11px;--orbscale:1;position:relative;width:21px;height:21px;flex-shrink:0;overflow:visible}
 /* The phone's 6px orb rule must not shrink the living aura to a speck. */
@@ -358,6 +364,27 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #ebtn:hover{border-color:rgba(167,139,250,.5);color:#c4b5fd;background:rgba(167,139,250,.1)}
 #explore-panel{position:absolute;left:16px;top:182px;width:268px;background:rgba(10,10,20,.96);border:0.5px solid rgba(167,139,250,.2);border-radius:14px;padding:13px 14px;backdrop-filter:blur(12px);pointer-events:all;display:none}
 #explore-panel.open{display:block}
+/* ── AURATOUR · the walking symphony ─────────────────────────────────── */
+#at-panel{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));
+  width:min(330px,calc(100vw - 28px));background:rgba(10,9,22,.95);border:0.5px solid rgba(167,139,250,.45);
+  border-radius:17px;padding:13px 15px;backdrop-filter:blur(13px);z-index:1650;display:none;
+  box-shadow:0 0 34px rgba(0,0,0,.6),0 0 22px rgba(167,139,250,.14);pointer-events:all}
+#at-panel.on{display:block}
+#at-head{display:flex;align-items:center;gap:9px;margin-bottom:9px}
+#at-pulse{width:9px;height:9px;border-radius:50%;background:#c4b5fd;flex-shrink:0;
+  box-shadow:0 0 9px rgba(196,181,253,.95);animation:atPulse 6s ease-in-out infinite}
+@keyframes atPulse{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:1;transform:scale(1.35)}}
+#at-title{font-size:12px;color:#c4b5fd;letter-spacing:.04em;flex:1}
+#at-stop{font-size:11px;color:#9d8fcc;background:transparent;border:0.5px solid rgba(167,139,250,.4);
+  border-radius:11px;padding:5px 11px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent}
+#at-stop:hover{color:#e9ddff;border-color:rgba(196,181,253,.85)}
+#at-nums{display:flex;gap:14px;margin-bottom:7px}
+#at-nums div{font-size:10px;color:#7870a0;letter-spacing:.03em}
+#at-nums b{display:block;font-size:16px;color:#e9ddff;font-weight:400;margin-bottom:1px;
+  text-shadow:0 0 11px rgba(196,181,253,.5)}
+#at-line{font-size:11.5px;color:#cbbff0;font-style:italic;line-height:1.55;min-height:17px}
+#at-senses{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+#at-senses span{width:15px;height:15px;border-radius:50%;opacity:.9}
 .ep-title{font-size:11px;color:#9d8fcc;margin-bottom:10px;letter-spacing:.03em}
 .ep-opt{padding:9px 12px;border-radius:10px;border:0.5px solid rgba(255,255,255,.08);background:transparent;margin-bottom:6px;cursor:pointer;transition:all .25s;text-align:left;font-family:inherit;width:100%}
 .ep-opt:hover{border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.07)}
@@ -1485,6 +1512,21 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div class="ep-opt-title">Conscious Trajectory</div>
       <div class="ep-opt-sub">Where this place's aura is heading — coming in v1</div>
     </button>
+    <button class="ep-opt" id="ep5">
+      <div class="ep-opt-title">❈ Walk this place — an Auratour</div>
+      <div class="ep-opt-sub">Set off on foot and the auras around you sound as you pass through them</div>
+    </button>
+  </div>
+  <div id="at-panel">
+    <div id="at-head"><span id="at-pulse"></span><span id="at-title">Auratour — walking</span>
+      <button id="at-stop">end walk</button></div>
+    <div id="at-nums">
+      <div><b id="at-dist">0 m</b>walked</div>
+      <div><b id="at-met">0</b>auras met</div>
+      <div><b id="at-time">0:00</b>afoot</div>
+    </div>
+    <div id="at-line">Move, and the map listens with you.</div>
+    <div id="at-senses"></div>
   </div>
   <button id="feed-full">◉ See Full Live Feed</button>
   <div id="feed"></div>
@@ -2114,15 +2156,23 @@ function flyToMyAura(color){try{const t=document.querySelector('.tab-myaura')||d
 function playChime(fs){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}fs.forEach(([freq,delay,vol,at,dur])=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,actx.currentTime+delay);g.gain.linearRampToValueAtTime(vol,actx.currentTime+delay+at);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);});}catch(e){}}
 // Main draw
 let T=0;
+// AURATOUR state, declared above the paint loop because the loop reads it on its very first
+// frame — which happens before the walk's own block further down has run. Declaring it after
+// left the loop reading a binding that did not exist yet, and the whole canvas died on arrival.
+let atOn=false, atWatch=null, atPath=[], atDist=0, atStart=0, atMet=0, atSenses=[], atTick=null, atLastFix=0;
 (function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);T+=0.016;
+  atDrawTrail(ctx);
   auraPoints.forEach((p,i)=>{
     const pt=map.project([p.lng,p.lat]);
     const x=pt.x,y=pt.y;
     const s=SENSES.find(s=>s.id===p.sense),col=s?s.color:'#a78bfa';
     const life=Math.min(1,(Date.now()-p.born)/2000);
     const breath=0.82+Math.sin(T*0.55+i*1.3)*0.30;
-    const r=(45+p.intensity*35)*breath*life*Math.pow(2,(map.getZoom()-14)*0.7);
+    // AURATOUR — an aura met on foot swells and settles, over about three seconds.
+    let _sw=1;
+    if(p._met){const e=(Date.now()-p._met)/3000;_sw=e>=1?1:(1+1.35*Math.sin(Math.PI*Math.min(1,e))*(1-e*0.35));if(e>=1)p._met=0;}
+    const r=(45+p.intensity*35)*breath*life*_sw*Math.pow(2,(map.getZoom()-14)*0.7);
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
     const swell=(breath-0.52)/0.60;
     // From the street the field is intimate; seen from the town it turns to mist — mid and inner bands thin toward the outer fog.
@@ -2597,8 +2647,37 @@ function dropSearchMarker(center,placeName){
   setTimeout(()=>{ if(el){el.style.transition='opacity 18s ease-in-out';el.style.opacity='0.6';} },17000);
   if(typeof raiseOfferPanel==='function')raiseOfferPanel((placeName||'this place').split(',')[0]);
 }
+// THE SCALE LADDER — one source of truth for which scale a zoom belongs to.
+// Street -> Town -> Region -> Nation -> World. Used by the tabs, and by the live walk below.
+function levelForZoom(z){ if(z>=13.5)return 0; if(z>=10.5)return 1; if(z>=7)return 2; if(z>=3.6)return 3; return 4; }
+// THE ASCENT — the offering's climb into the collective, made visible.
+// One line per scale, once each, only for a light this senser actually gave, and only for a while
+// after giving it. The witness moment owns the first thirteen seconds; the ascent never talks over it.
+let ascent=null;
+const ASCENT_WORDS={
+  1:'Widened out, your light is still there \u2014 it is part of this town\u2019s aura now.',
+  2:'The region holds it too. Smaller from here, and no less yours.',
+  3:'At the scale of a nation it is one point of light. It is still the one you gave.',
+  4:'One light among all of them. Yours is in there.'
+};
+function ascentCheck(lv){
+  if(!ascent||!lv)return;
+  if(Date.now()-ascent.from<13000)return;                 // the witness, and the tour, speak first
+  if(Date.now()-ascent.from>900000){ascent=null;return;}   // fifteen minutes, then it rests
+  if(ascent.seen[lv])return;
+  ascent.seen[lv]=true;
+  try{ripples.push({lat:ascent.lat,lng:ascent.lng,color:ascent.color,age:0,strong:true});}catch(e){}
+  try{showMsg(ASCENT_WORDS[lv],6400,'witness',ascent.color);}catch(e){}
+  if(lv>=4)ascent=null;                                    // the whole climb is made; it says no more
+}
+// paintActiveTab lights a scale WITHOUT claiming it. setActiveTab lights it AND makes it the
+// senser's true standing level. The walk below only ever paints — so a flight in progress can
+// never overwrite the level a deliberate act has set (this is what protects the offering tour).
 function setActiveTab(i){
   auraLevel=i;
+  paintActiveTab(i);
+}
+function paintActiveTab(i){
   const cellW=window.matchMedia&&window.matchMedia('(max-width:600px)').matches;
   document.querySelectorAll('.tab[data-i]').forEach(t=>{
     const ti=+t.dataset.i;
@@ -2626,12 +2705,31 @@ function flyProgrammatic(opts){
   map.flyTo(opts);
   flyTimer=setTimeout(()=>{ isMovingProgrammatically=false; },(opts.duration||2000)+250);
 }
+// THE LIVING PULL-BACK — the scales walk with the view, continuously, in both directions.
+// Rise to the planet and Street hands to Town hands to Region hands to Nation hands to World,
+// each flaring once as it is crossed; descend and it runs back the other way. Paint only —
+// the senser's true standing level is never touched here, so nothing in flight can steal it.
+let _walkLevel=-1;
+map.on('move',()=>{
+  let z;try{z=map.getZoom();}catch(e){return;}
+  const wl=levelForZoom(z);
+  if(wl===_walkLevel)return;
+  _walkLevel=wl;
+  paintActiveTab(wl);
+  if(window.AS_CALM)return;                       // in Calm, the scales change without flaring
+  try{
+    const orb=document.getElementById(ORB_IDS[wl]);
+    if(orb){orb.classList.remove('crossed');void orb.offsetWidth;orb.classList.add('crossed');
+      setTimeout(()=>{try{orb.classList.remove('crossed');}catch(e){}},950);}
+  }catch(e){}
+});
 map.on('moveend',()=>{
+  _walkLevel=-1;                                  // the next journey re-announces every scale it crosses
+  try{ascentCheck(levelForZoom(map.getZoom()));}catch(e){}   // before the programmatic return: a tab press counts too
   if(searching){ searching=false; return; }
   if(isMovingProgrammatically)return;
   const c=map.getCenter(),z=map.getZoom();
-  // Pinching is a journey through the levels — the tabs walk with it.
-  let nl;if(z>=13.5)nl=0;else if(z>=10.5)nl=1;else if(z>=7)nl=2;else if(z>=3.6)nl=3;else nl=4;
+  const nl=levelForZoom(z);
   if(nl!==auraLevel)setActiveTab(nl);
   lastViews[auraLevel]={lat:c.lat,lng:c.lng,zoom:z};
   if(auraLevel===0){lastStreetView={lat:c.lat,lng:c.lng,zoom:z};lastOfferedPoint={lat:c.lat,lng:c.lng,zoom:z};anchorPoint={lat:c.lat,lng:c.lng,zoom:z};}
@@ -2642,6 +2740,160 @@ document.getElementById('ep1').onclick=()=>{showMsg('Sensing Aurasenser contribu
 document.getElementById('ep2').onclick=()=>{showMsg('Sensing live Aurasenser activity in this area...');closeExplore();};
 document.getElementById('ep3').onclick=()=>{showMsg('Aura pulse from the wider world — coming in v1');closeExplore();};
 document.getElementById('ep4').onclick=()=>{showMsg('Conscious Trajectory — coming in v1');closeExplore();};
+
+/* ════════════════════════════════════════════════════════════════════════
+   AURATOUR v1 — THE WALKING SYMPHONY
+   Set off on foot and the auras you pass through swell and sound. Every note
+   is the sense's own real frequency, already carried in SENSES[].freqs — the
+   score was always there; the walk plays it.
+   Laws kept: nothing invented (only true auras sound); no permanent animation
+   cycle (the walk rides the draw loop that already runs, and rests when the
+   screen sleeps — this is what kept Karl's iPhone hot before); Calm mode walks
+   in silence; the senser can end it in one tap, and it ends itself if left.
+   ════════════════════════════════════════════════════════════════════════ */
+const AT_REACH=45;           // metres — close enough to have walked through it
+const AT_IDLE=1800000;       // half an hour with no movement and the walk rests itself
+
+function atDrawTrail(c){
+  if(!atOn||atPath.length<2)return;
+  try{
+    const pts=atPath.map(p=>map.project([p.lng,p.lat]));
+    // the walked line, fading toward where you began
+    for(let i=1;i<pts.length;i++){
+      const f=i/pts.length;
+      c.strokeStyle='rgba(196,181,253,'+(0.10+0.42*f)+')';
+      c.lineWidth=1.6;c.lineCap='round';
+      c.beginPath();c.moveTo(pts[i-1].x,pts[i-1].y);c.lineTo(pts[i].x,pts[i].y);c.stroke();
+    }
+    // where you stand
+    const last=pts[pts.length-1];
+    const br=0.55+Math.sin(T*0.55)*0.45;
+    const g=c.createRadialGradient(last.x,last.y,0,last.x,last.y,17+7*br);
+    g.addColorStop(0,'rgba(233,221,255,'+(0.85*br+0.15)+')');
+    g.addColorStop(1,'rgba(196,181,253,0)');
+    c.fillStyle=g;c.beginPath();c.arc(last.x,last.y,17+7*br,0,Math.PI*2);c.fill();
+  }catch(e){}
+}
+
+function atFmtDist(m){return m<1000?Math.round(m)+' m':(m/1000).toFixed(2)+' km';}
+function atFmtTime(ms){const s=Math.floor(ms/1000);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+function atSay(t){const el=document.getElementById('at-line');if(el)el.textContent=t;}
+
+function atFace(){
+  const d=document.getElementById('at-dist'),m=document.getElementById('at-met'),t=document.getElementById('at-time');
+  if(d)d.textContent=atFmtDist(atDist);
+  if(m)m.textContent=String(atMet);
+  if(t)t.textContent=atFmtTime(Date.now()-atStart);
+}
+
+function atMeet(p){
+  p._met=Date.now();
+  atMet++;
+  const s=SENSES.find(x=>x.id===p.sense);
+  if(s){
+    if(!window.AS_CALM){try{playChime(s.freqs);}catch(e){}}     // the sense's own note
+    if(atSenses.indexOf(s.id)<0){
+      atSenses.push(s.id);
+      const row=document.getElementById('at-senses');
+      if(row){const dot=document.createElement('span');dot.style.background=s.color;
+        dot.style.boxShadow='0 0 9px '+s.color;dot.title=s.label;row.appendChild(dot);}
+    }
+    try{ripples.push({lat:p.lat,lng:p.lng,color:s.color,age:0,strong:false});}catch(e){}
+    const words=(p.text&&!p.priv)?('\u201c'+String(p.text).slice(0,72)+'\u201d'):'wordless, and no less felt';
+    atSay('\u2727 You walked through '+s.label.toLowerCase()+' \u2014 '+words);
+  }
+  atFace();
+}
+
+function atStep(pos){
+  if(!atOn)return;
+  const la=pos.coords.latitude, lo=pos.coords.longitude;
+  const now=Date.now();
+  const prev=atPath.length?atPath[atPath.length-1]:null;
+  if(prev){
+    const d=haversine(prev.lat,prev.lng,la,lo);
+    if(d<4)return;                                  // stillness and GPS drift are not steps
+    if(d<400)atDist+=d;                             // a jump that big is a fix error, not a stride
+  }
+  atLastFix=now;
+  atPath.push({lat:la,lng:lo,t:now});
+  if(atPath.length>900)atPath.shift();
+
+  // the map walks with you, gently, and never fights a senser who is looking elsewhere
+  try{ if(!isMovingProgrammatically && map.getZoom()>=13.5 ){
+    flyProgrammatic({center:[lo,la],zoom:Math.max(15.4,map.getZoom()),duration:1400,essential:true});
+  }}catch(e){}
+
+  // auras within reach, met once each
+  try{
+    for(const p of auraPoints){
+      if(p._walked)continue;
+      if(haversine(p.lat,p.lng,la,lo)<=AT_REACH){ p._walked=true; atMeet(p); }
+    }
+  }catch(e){}
+  atFace();
+}
+
+function atStop(quiet){
+  if(!atOn)return;
+  atOn=false;
+  try{if(atWatch!=null)navigator.geolocation.clearWatch(atWatch);}catch(e){}
+  atWatch=null;
+  if(atTick){clearInterval(atTick);atTick=null;}
+  const pnl=document.getElementById('at-panel');if(pnl)pnl.classList.remove('on');
+  try{for(const p of auraPoints){p._walked=false;p._met=0;}}catch(e){}
+  if(quiet)return;
+  const mins=Math.max(1,Math.round((Date.now()-atStart)/60000));
+  const kinds=atSenses.length;
+  let line;
+  if(atMet===0){
+    line='Walk ended \u2014 '+atFmtDist(atDist)+' in '+mins+' minute'+(mins===1?'':'s')+
+         ', and no aura crossed your path. That is not emptiness. It is a place still waiting for its first light \u2014 and you are standing in it.';
+  }else{
+    line='Walk ended \u2014 '+atFmtDist(atDist)+', '+atMet+' aura'+(atMet===1?'':'s')+' met across '+
+         kinds+' sense'+(kinds===1?'':'s')+', in '+mins+' minute'+(mins===1?'':'s')+
+         '. Every one of them was something a person truly felt here. \u2727';
+  }
+  try{showMsg(line,11000,'witness','#c4b5fd');}catch(e){}
+  atPath=[];atDist=0;atMet=0;atSenses=[];
+}
+
+function atBegin(){
+  if(atOn){atStop();return;}
+  if(!navigator.geolocation){
+    showMsg('This device keeps its place to itself, so a walk cannot be followed. You can still search a place you love and offer from there. \u2727',7000);
+    return;
+  }
+  showMsg('Asking your device where you are \u2014 an Auratour follows your feet, and your path never leaves this phone.',6000,'witness','#c4b5fd');
+  navigator.geolocation.getCurrentPosition(pos=>{
+    atOn=true;atPath=[];atDist=0;atMet=0;atSenses=[];atStart=Date.now();atLastFix=Date.now();
+    try{for(const p of auraPoints){p._walked=false;p._met=0;}}catch(e){}
+    const row=document.getElementById('at-senses');if(row)row.innerHTML='';
+    const pnl=document.getElementById('at-panel');if(pnl)pnl.classList.add('on');
+    atSay(window.AS_CALM?'Calm is on, so the walk stays silent \u2014 the auras will still swell as you pass.'
+                        :'Move, and the auras you pass through will sound.');
+    try{setActiveTab(0);}catch(e){}
+    atStep(pos);
+    try{atWatch=navigator.geolocation.watchPosition(atStep,()=>{},{enableHighAccuracy:true,maximumAge:4000,timeout:20000});}catch(e){}
+    atTick=setInterval(()=>{
+      if(!atOn)return;
+      atFace();
+      if(Date.now()-atLastFix>AT_IDLE)atStop();      // left alone, the walk lets itself go
+    },1000);
+    try{if(navigator.vibrate)navigator.vibrate([35,70,35]);}catch(e){}
+  },()=>{
+    showMsg('Your device kept its place to itself \u2014 no walk this time, and nothing lost. Search a place you love instead and offer from there. \u2727',8000,'witness','#c4b5fd');
+  },{enableHighAccuracy:true,timeout:12000,maximumAge:0});
+}
+
+document.getElementById('ep5').onclick=()=>{closeExplore();atBegin();};
+document.getElementById('at-stop').onclick=()=>atStop();
+// A sleeping screen must not keep a watch running — this is the heat lesson, kept.
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden&&atOn&&atTick){clearInterval(atTick);atTick=null;}
+  else if(!document.hidden&&atOn&&!atTick){atTick=setInterval(()=>{if(!atOn)return;atFace();
+    if(Date.now()-atLastFix>AT_IDLE)atStop();},1000);}
+});
 
 // One popup at a time, so the post-submit box replaces any "forming" box rather than stacking.
 let currentPopup=null;
@@ -2839,6 +3091,10 @@ function submit(lat,lng,text){
   lastViews[0]={lat,lng,zoom:sz};
   // The offering also flows into the personal aura — a spark rises to the My Aura orb.
   feedMyAura(lat,lng,s.color);
+  // THE ASCENT — armed here, spoken later. The light just given is now findable at every scale,
+  // and the first time the senser widens out to a scale they have not yet seen it from, it says so
+  // once, quietly, in their own colour. Nothing invented: it is the very point they placed.
+  ascent={lat:lat,lng:lng,color:s.color,from:Date.now(),seen:{0:true}};
   const _finishPlace=(place)=>{
     if(typeof gateSaveOffering==='function')gateSaveOffering({sense:sid,text:text,priv:isPriv,lat:lat,lng:lng,place:place||null,scale:_gScale,born:Date.now()});
     if(!place)return;
