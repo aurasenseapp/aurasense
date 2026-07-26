@@ -364,6 +364,21 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #ebtn:hover{border-color:rgba(167,139,250,.5);color:#c4b5fd;background:rgba(167,139,250,.1)}
 #explore-panel{position:absolute;left:16px;top:182px;width:268px;background:rgba(10,10,20,.96);border:0.5px solid rgba(167,139,250,.2);border-radius:14px;padding:13px 14px;backdrop-filter:blur(12px);pointer-events:all;display:none}
 #explore-panel.open{display:block}
+/* ── ↩ THE UNDO — a light can always be taken back ────────────────────── */
+#undo-pill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));
+  z-index:1700;display:none;align-items:center;gap:11px;background:rgba(12,10,26,.96);
+  border:0.5px solid rgba(233,221,255,.45);border-radius:20px;padding:9px 15px 9px 12px;
+  backdrop-filter:blur(12px);box-shadow:0 6px 26px rgba(0,0,0,.55);pointer-events:all}
+#undo-pill.on{display:flex}
+#undo-ring{width:22px;height:22px;flex-shrink:0;transform:rotate(-90deg)}
+#undo-ring .ub{fill:none;stroke:rgba(167,139,250,.28);stroke-width:2.4}
+#undo-ring .uf{fill:none;stroke:#e9ddff;stroke-width:2.4;stroke-linecap:round;
+  stroke-dasharray:56.5;stroke-dashoffset:0;filter:drop-shadow(0 0 4px rgba(233,221,255,.8))}
+#undo-btn{font-family:inherit;font-size:12.5px;color:#e9ddff;background:transparent;border:none;
+  cursor:pointer;letter-spacing:.02em;-webkit-tap-highlight-color:transparent;padding:0}
+#undo-btn:hover{text-shadow:0 0 12px rgba(233,221,255,.7)}
+#undo-x{font-family:inherit;font-size:11px;color:#7870a0;background:transparent;border:none;cursor:pointer;padding:0 0 0 3px}
+#undo-x:hover{color:#c4b5fd}
 /* ── AURATOUR · the walking symphony ─────────────────────────────────── */
 #at-panel{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(18px + env(safe-area-inset-bottom));
   width:min(330px,calc(100vw - 28px));background:rgba(10,9,22,.95);border:0.5px solid rgba(167,139,250,.45);
@@ -1517,6 +1532,12 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div class="ep-opt-sub">Set off on foot and the auras around you sound as you pass through them</div>
     </button>
   </div>
+  <div id="undo-pill">
+    <svg id="undo-ring" viewBox="0 0 22 22"><circle class="ub" cx="11" cy="11" r="9"/>
+      <circle class="uf" id="undo-arc" cx="11" cy="11" r="9"/></svg>
+    <button id="undo-btn" type="button">↩ Undo that offering</button>
+    <button id="undo-x" type="button" title="keep it">keep</button>
+  </div>
   <div id="at-panel">
     <div id="at-head"><span id="at-pulse"></span><span id="at-title">Auratour — walking</span>
       <button id="at-stop">end walk</button></div>
@@ -2168,6 +2189,10 @@ let atOn=false, atWatch=null, atPath=[], atDist=0, atStart=0, atMet=0, atSenses=
     const x=pt.x,y=pt.y;
     const s=SENSES.find(s=>s.id===p.sense),col=s?s.color:'#a78bfa';
     const life=Math.min(1,(Date.now()-p.born)/2000);
+    // OFFERED AT HEIGHT — this light was never given to a doorstep. It was given to a whole
+    // place, so the whole place carries it: a breathing field with a luminous edge, filling
+    // the place's own extent. No hard border is drawn, because an aura does not have one.
+    if(p.field&&p.field.bbox){ drawPlaceField(ctx,p,col,life,i); return; }
     const breath=0.82+Math.sin(T*0.55+i*1.3)*0.30;
     // AURATOUR — an aura met on foot swells and settles, over about three seconds.
     let _sw=1;
@@ -2417,7 +2442,7 @@ function senseChip(s){
   b.className='sc';
   b.style.setProperty('--c',s.color);
   b.innerHTML=`<span>${SENSE_SYMBOLS[s.id]}</span>${s.label}`;
-  b.onclick=()=>{selSense=s.id;const _p=document.getElementById('panel');if(_p)_p.classList.remove('just-offered','offer-quiet');_p.classList.add('sense-picked');document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');/* Nothing is scrolled. The Offer row is sticky at the foot of the sheet at every width, so the
+  b.onclick=()=>{selSense=s.id;const _p=document.getElementById('panel');if(_p)_p.classList.remove('just-offered','offer-quiet');_p.classList.add('sense-picked');document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');try{keepAboveKeyboard(inp);}catch(e){}}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');/* Nothing is scrolled. The Offer row is sticky at the foot of the sheet at every width, so the
      symbols stay exactly where the senser left them. */};
   b.onmouseenter=e=>{
     if(!(window.matchMedia&&window.matchMedia('(hover: hover)').matches))return;
@@ -3037,6 +3062,95 @@ async function lookupPlace(lat,lng){
   }catch(e){}
   return null;
 }
+/* ════════════════════════════════════════════════════════════════════════
+   THE PLACE FIELD — an offering made from a height
+   Karl's call, 26 July: offer from Town, Region or Nation view and the place
+   itself lights up, rather than a pin dropping on a doorstep the senser never
+   chose. The shape is an organic closed curve inscribed in the place's own
+   extent — never a rectangle and never a legal border, because an aura has
+   neither. It breathes on the same six-second rhythm as every other light.
+   ════════════════════════════════════════════════════════════════════════ */
+const FIELD_TYPES={town:'place',region:'region,district',nation:'country'};
+async function placeExtent(lat,lng,scale){
+  if(scale==='world')return {name:'the whole living Earth',bbox:[-179,-60,179,72]};
+  const tp=FIELD_TYPES[scale]||'place';
+  try{
+    const r=await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}&types=${tp}&limit=1`);
+    const d=await r.json();
+    const f=d&&d.features&&d.features[0];
+    if(f){
+      const name=f.text||String(f.place_name||'').split(',')[0];
+      let bb=f.bbox;
+      if(!bb){                                   // no extent given — hold a modest one around the centre
+        const pad={town:0.06,region:0.55,nation:3.2}[scale]||0.1;
+        const c=f.center||[lng,lat];
+        bb=[c[0]-pad,c[1]-pad*0.7,c[0]+pad,c[1]+pad*0.7];
+      }
+      return {name:name,bbox:bb};
+    }
+  }catch(e){}
+  return null;
+}
+// A deterministic organic outline — the same place always breathes the same shape.
+function fieldShape(seed){
+  const pts=[],N=22;
+  for(let k=0;k<N;k++){
+    const a=(k/N)*Math.PI*2;
+    const w=0.86+0.14*Math.sin(a*3+seed)+0.07*Math.sin(a*5-seed*1.7);
+    pts.push({a:a,w:w});
+  }
+  return pts;
+}
+function drawPlaceField(c,p,col,life,i){
+  try{
+    const b=p.field.bbox;
+    const sw=map.project([b[0],b[1]]), ne=map.project([b[2],b[3]]);
+    const cx=(sw.x+ne.x)/2, cy=(sw.y+ne.y)/2;
+    let rx=Math.abs(ne.x-sw.x)/2, ry=Math.abs(sw.y-ne.y)/2;
+    if(!isFinite(rx)||!isFinite(ry))return;
+    rx=Math.max(26,rx); ry=Math.max(20,ry);
+    const W=c.canvas.width,H=c.canvas.height;
+    if(cx+rx<-400||cx-rx>W+400||cy+ry<-400||cy-ry>H+400)return;   // wholly off-screen
+    const breath=0.88+Math.sin(T*0.55+i*1.3)*0.12;                 // the same six-second breath
+    const swell=(breath-0.88)/0.12;
+    if(!p._shape)p._shape=fieldShape((p.born%1000)/159);
+    const S=p._shape;
+
+    c.save();
+    c.translate(cx,cy);
+    c.scale(rx*breath,ry*breath);
+    c.beginPath();
+    for(let k=0;k<=S.length;k++){
+      const q=S[k%S.length];
+      const px=Math.cos(q.a)*q.w, py=Math.sin(q.a)*q.w;
+      if(k===0)c.moveTo(px,py); else c.lineTo(px,py);
+    }
+    c.closePath();
+    c.restore();
+
+    // the haze within — soft, never solid, so the map still reads through it
+    const g=c.createRadialGradient(cx,cy,0,cx,cy,Math.max(rx,ry)*breath);
+    g.addColorStop(0,   hexA(col,(0.13+0.05*swell)*life));
+    g.addColorStop(0.55,hexA(col,(0.08+0.03*swell)*life));
+    g.addColorStop(1,   hexA(col,0));
+    c.fillStyle=g; c.fill();
+
+    // the luminous edge — the outline Karl asked for, breathing rather than fixed
+    c.save();
+    c.lineWidth=1.5;
+    c.strokeStyle=hexA(col,(0.42+0.30*swell)*life);
+    c.shadowColor=col; c.shadowBlur=16+10*swell;
+    c.stroke();
+    c.restore();
+
+    // a small steady heart at the middle, so the place still has a centre to find
+    const cr=8*(0.9+0.2*swell)*life;
+    const core=c.createRadialGradient(cx,cy,0,cx,cy,cr);
+    core.addColorStop(0,hexA('#ffffff',0.75*life));
+    core.addColorStop(1,hexA(col,0));
+    c.fillStyle=core;c.beginPath();c.arc(cx,cy,cr,0,Math.PI*2);c.fill();
+  }catch(e){}
+}
 // A place-name at the scale the offering was given from — town, region, nation, or the whole living Earth.
 async function scalePlaceLabel(lat,lng,scale){
   if(scale==='world')return 'the whole living Earth';
@@ -3066,19 +3180,31 @@ function submit(lat,lng,text){
   if(_oz<13){
     _gScale=(_oz>=10.5)?'town':(_oz>=7)?'region':(_oz>=3.6)?'nation':'world';
     try{const _c=map.getCenter();lat=_c.lat;lng=_c.lng;}catch(e){}
-    setActiveTab(0);
-    flyProgrammatic({center:[lng,lat],zoom:15,duration:2800});
+    // The senser stays where they offered from. The place they gave it to lights up beneath
+    // them — dragging them down to a doorstep would answer a question they never asked.
   }
   if(typeof collapsePlacePrompt==='function')collapsePlacePrompt();
   const isPriv=(sid==='memory'&&typeof memoryPrivate!=='undefined'&&memoryPrivate);
   const pubText=isPriv?'(a memory, kept private)':text;
-  auraPoints.push({lat,lng,sense:sid,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2,priv:isPriv,photo:pp});
+  const _ap={lat,lng,sense:sid,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2,priv:isPriv,photo:pp,scale:_gScale};
+  auraPoints.push(_ap);
+  // Given from a height, the whole place takes the light. Its extent is fetched, then the
+  // field blooms across it — the senser sees their town, region or nation light up beneath them.
+  if(_gScale!=='street'){
+    placeExtent(lat,lng,_gScale).then(ex=>{
+      if(!ex)return;
+      _ap.field={bbox:ex.bbox,name:ex.name,scale:_gScale};
+      const _w={town:'town',region:'region',nation:'nation',world:'living Earth'}[_gScale]||'place';
+      try{showMsg('\u2727 The whole '+_w+' carries it \u2014 '+ex.name+' is lit with what you gave.',7000,'witness',s.color);}catch(e){}
+    }).catch(()=>{});
+  }
   ripples.push({lat,lng,color:s.color,age:0,strong:true});
   setTimeout(()=>{ripples.push({lat,lng,color:s.color,age:0,strong:true});},600);
   setTimeout(()=>{ripples.push({lat,lng,color:s.color,age:0,strong:true});},1200);
   // The search-marker label walks its states for any offering landed beside it: awaiting → just offered → (an hour on) offered.
   try{if(lastSearchPoint&&lastSearchLabel&&haversine(lastSearchPoint[1],lastSearchPoint[0],lat,lng)<120){lastSearchLabel.textContent='✨ Aura just offered at '+lastSearchName;const _lr=lastSearchLabel,_nr=lastSearchName;setTimeout(()=>{try{_lr.textContent='✨ Aura offered at '+_nr;}catch(e){}},3600000);}}catch(e){}
   addFeed(pubText,sid,'just now',true,lat,lng);
+  try{const _fe=document.getElementById('feed');if(_fe)_ap._feedEl=_fe.firstElementChild;}catch(e){}
   // This offering becomes a thread in the senser's own aura.
   myAuraColors.push(s.color);
   myOfferings.unshift({photo:pp,sense:sid,label:s.label,color:s.color,text:text,time:'just now',born:Date.now(),place:null,lat:lat,lng:lng});if(typeof clearPhoto==='function')clearPhoto();try{gpSave();}catch(e){}
@@ -3096,7 +3222,7 @@ function submit(lat,lng,text){
   // once, quietly, in their own colour. Nothing invented: it is the very point they placed.
   ascent={lat:lat,lng:lng,color:s.color,from:Date.now(),seen:{0:true}};
   const _finishPlace=(place)=>{
-    if(typeof gateSaveOffering==='function')gateSaveOffering({sense:sid,text:text,priv:isPriv,lat:lat,lng:lng,place:place||null,scale:_gScale,born:Date.now()});
+    if(typeof gateSaveOffering==='function')gateSaveOffering({sense:sid,text:text,priv:isPriv,lat:lat,lng:lng,place:place||null,scale:_gScale,born:Date.now(),_ap:_ap});
     if(!place)return;
     if(myOfferings[0])myOfferings[0].place=place;
     const first=document.getElementById('feed').firstChild;
@@ -3120,6 +3246,7 @@ function submit(lat,lng,text){
     // Leave the shared sense showing in the arrowed box, with the full house-number address.
     /* The strip rises on the same breath every time. If the place-name arrives later, it simply
        fills itself in — the senser never waits on a lookup to know their light landed. */
+    try{offerUndoOffer(_ap,120000);}catch(e){}   // ↩ two minutes to take it back
     let _addr=null,_done=false;
     reverseAddress(lat,lng).then(a=>{_addr=a;
       if(_done&&a){try{const h=document.querySelector('#offer-confirm .oc-head');
@@ -3131,6 +3258,8 @@ function submit(lat,lng,text){
       _finishPlace(lbl);
       setTimeout(()=>{if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,lbl,lat,lng);},2600);
     });
+    // ↩ THE UNDO — a light given from a height is a bigger act, so the door back stays open longest.
+    try{offerUndoOffer(_ap,180000);}catch(e){}
   }
   playSound(sid);
   try{if(navigator.vibrate)navigator.vibrate([35,70,35]);}catch(e){}   // a heartbeat where the device allows one; silence where it doesn't
@@ -4861,6 +4990,71 @@ function closeOfferSheet(){
   window.visualViewport.addEventListener('resize',adjust);
   window.visualViewport.addEventListener('scroll',adjust);
 })();
+/* ════════════════════════════════════════════════════════════════════════
+   THE KEYBOARD SHELF
+   iOS puts a grey bar with arrows and a Done tick directly above the keyboard.
+   No web page can remove it (Safari's own furniture). What a page CAN do is
+   refuse to leave anything the senser is typing into sitting underneath it.
+   Karl hit this naming a new sense: the description box landed behind the bar.
+   Every text field, wherever it is and whenever it appears, is now lifted clear.
+   ════════════════════════════════════════════════════════════════════════ */
+const KB_BAR=52;   // the accessory bar's height, plus air
+function scrollableAncestor(el){
+  let n=el&&el.parentElement;
+  while(n&&n!==document.body){
+    const st=getComputedStyle(n);
+    if(/(auto|scroll)/.test(st.overflowY)&&n.scrollHeight>n.clientHeight+4)return n;
+    n=n.parentElement;
+  }
+  return null;
+}
+function keepAboveKeyboard(el){
+  if(!el)return;
+  const lift=()=>{
+    try{
+      const vv=window.visualViewport;
+      const panel=document.getElementById('panel');
+      if(vv&&panel&&panel.classList.contains('show-mobile')&&!panel.classList.contains('just-offered')){
+        const kb=Math.max(0,Math.round(window.innerHeight-vv.height-vv.offsetTop));
+        panel.style.bottom=kb+'px';
+        panel.style.maxHeight=Math.round(vv.height-10)+'px';
+      }
+      const floor=(vv?vv.height:window.innerHeight)-KB_BAR;
+      const r=el.getBoundingClientRect();
+      if(r.bottom<=floor)return;                      // already in clear air
+      const by=Math.ceil(r.bottom-floor)+14;
+      const sc=scrollableAncestor(el);
+      if(sc){sc.scrollTop+=by;return;}
+      // nothing to scroll — the field sits in a fixed window, so lift the window itself
+      let n=el.parentElement;
+      while(n&&n!==document.body){
+        if(getComputedStyle(n).position==='fixed'){
+          const cur=parseFloat(n.dataset.kbLift||'0');
+          n.dataset.kbLift=String(cur+by);
+          n.style.marginTop=(-(cur+by))+'px';
+          return;
+        }
+        n=n.parentElement;
+      }
+      try{el.scrollIntoView({block:'center'});}catch(e){}
+    }catch(e){}
+  };
+  lift();
+  [90,240,520].forEach(ms=>setTimeout(lift,ms));      // iOS settles its layout late; catch it three times
+}
+function releaseKeyboardLift(){
+  try{document.querySelectorAll('[data-kb-lift]').forEach(n=>{n.style.marginTop='';delete n.dataset.kbLift;});}catch(e){}
+}
+// Any text field anywhere — including ones created moments ago, like the new-sense box.
+document.addEventListener('focusin',e=>{
+  const t=e.target;
+  if(!t||typeof t.matches!=='function')return;
+  if(t.matches('textarea, input[type="text"], input[type="search"], input[type="email"], input:not([type])'))
+    keepAboveKeyboard(t);
+});
+document.addEventListener('focusout',()=>{setTimeout(()=>{
+  if(!document.activeElement||!/^(INPUT|TEXTAREA)$/.test(document.activeElement.tagName))releaseKeyboardLift();
+},140);});
 // On phones the on-screen keyboard can scroll the whole page, leaving the header off-screen.
 // After any text field closes, gently bring the view back to the top.
 (function(){
@@ -5036,7 +5230,7 @@ let memoryPrivate=false;
       const pw=document.getElementById('mem-priv-wrap');if(pw)pw.classList.add('show');
       const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='A memory of this place — add details (optional):';
       const inp=document.getElementById('inp');
-      if(inp){inp.placeholder='Share a memory of this place\u2026';inp.focus();inp.classList.add('inp-glow');}
+      if(inp){inp.placeholder='Share a memory of this place\u2026';inp.focus();inp.classList.add('inp-glow');try{keepAboveKeyboard(inp);}catch(e){}}
       showMsg('Offer a memory \u2014 it becomes a golden layer in this place\u2019s aura');
     });
   }
@@ -5741,7 +5935,7 @@ function _offSym(sid,color){const sym=(typeof SENSE_SYMBOLS==='object'&&SENSE_SY
         const _p=document.getElementById('panel');if(_p){_p.classList.remove('just-offered','offer-quiet');_p.classList.add('sense-picked');}
         document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));nb.classList.add('sel');
         const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='A new sense \u2014 '+w+' \u2014 tell what it was (optional):';
-        const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+w.toLowerCase()+'\u2026';inp.focus();inp.classList.add('inp-glow');}
+        const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+w.toLowerCase()+'\u2026';inp.focus();inp.classList.add('inp-glow');try{keepAboveKeyboard(inp);}catch(e){}}
         const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');
         showMsg('This map has never held this sense before. It begins with you.',6200,'witness','#e9ddff');
       };
@@ -6611,11 +6805,75 @@ document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&
     setTimeout(lift,7000);
   }catch(e){}
 })();
+/* ════════════════════════════════════════════════════════════════════════
+   ↩ THE UNDO — a light can always be taken back
+   Karl, 26 July. An offering is a real act, so the door back stays open a
+   little while rather than for ever: two minutes at street level, three when
+   a whole place was lit. Taking it back removes it from the map, the feed,
+   your own aura, and — where the Gate allows a delete — from the Gate too.
+   Nothing is silently kept. If the Gate refuses the delete, the senser is told.
+   ════════════════════════════════════════════════════════════════════════ */
+let undoTarget=null, undoTimer=null, undoEnds=0;
+function undoHide(){
+  if(undoTimer){clearInterval(undoTimer);undoTimer=null;}
+  undoTarget=null;
+  const el=document.getElementById('undo-pill');if(el)el.classList.remove('on');
+}
+function offerUndoOffer(ap,ms){
+  const pill=document.getElementById('undo-pill'),arc=document.getElementById('undo-arc');
+  if(!pill||!ap)return;
+  undoTarget=ap; undoEnds=Date.now()+ms;
+  pill.classList.add('on');
+  if(undoTimer)clearInterval(undoTimer);
+  const tick=()=>{
+    const left=undoEnds-Date.now();
+    if(left<=0){undoHide();return;}
+    if(arc)arc.style.strokeDashoffset=String(56.5*(1-left/ms));
+  };
+  tick();
+  undoTimer=setInterval(tick,120);
+}
+async function undoTakeBack(){
+  const ap=undoTarget;
+  if(!ap){undoHide();return;}
+  undoHide();
+  // off the map
+  try{const i=auraPoints.indexOf(ap);if(i>=0)auraPoints.splice(i,1);}catch(e){}
+  // out of the feed
+  try{if(ap._feedEl&&ap._feedEl.parentNode)ap._feedEl.parentNode.removeChild(ap._feedEl);}catch(e){}
+  // out of your own aura — the newest thread of this colour, and the offering itself
+  try{
+    const s=SENSES.find(x=>x.id===ap.sense);
+    if(s){const k=myAuraColors.lastIndexOf(s.color);if(k>=0)myAuraColors.splice(k,1);}
+    const j=myOfferings.findIndex(o=>o.born===ap.born&&o.sense===ap.sense);
+    if(j>=0)myOfferings.splice(j,1);
+    if(typeof gpSave==='function')gpSave();
+    // the My Aura list repaints itself whenever that page is opened, so nothing to call here
+    if(typeof auraSyncMap==='function')auraSyncMap();
+  }catch(e){}
+  // and, honestly, out of the Gate
+  let gateSaid='';
+  try{
+    if(ap.gateId&&typeof gate!=='undefined'&&gate.on&&gate.db){
+      const r=await gate.db.from('offerings').delete().eq('id',ap.gateId);
+      gateSaid=(r&&r.error)?' It is gone from here, though the Gate kept its copy — I will tell Karl.':'';
+      if(r&&r.error)console.warn('[gate] undo delete refused:',r.error.message||r.error);
+    }
+  }catch(e){console.warn('[gate] undo delete',e);}
+  try{showMsg('\u21a9 Taken back. The light is out, and nothing was kept against your wish.'+gateSaid,6500,'witness','#e9ddff');}catch(e){}
+}
+(function wireUndo(){
+  const b=document.getElementById('undo-btn'),x=document.getElementById('undo-x');
+  if(b)b.addEventListener('click',undoTakeBack);
+  if(x)x.addEventListener('click',undoHide);
+})();
 function gateTooFast(e){const m=String((e&&(e.message||e.msg||e))||'');return m.indexOf('Too many')>=0;}
 function gateRest(){try{if(typeof showMsg==='function')showMsg('That is a great many offerings very quickly \u2014 rest a moment, and offer again.');}catch(e){}}
 async function gateSaveOffering(o){
   if(!gate.on){gateQueue(o);return;}
-  try{const r=await gate.db.from('offerings').insert(gateRow(o));
+  try{const r=await gate.db.from('offerings').insert(gateRow(o)).select('id');
+    // keep the row's own id so an undo can take it back out of the Gate, not merely off this screen
+    try{if(r&&r.data&&r.data[0]&&r.data[0].id&&o._ap)o._ap.gateId=r.data[0].id;}catch(_){}
     if(r&&r.error){
       if(gateTooFast(r.error)){console.warn('[gate] flood guard');gateRest();return;}   // refused, not lost at sea \u2014 never queue a retry storm
       console.warn('[gate] save',r.error.message||r.error);gateQueue(o);
