@@ -59,6 +59,22 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .soc-tip{position:fixed;background:rgba(15,12,25,.98);border:0.5px solid rgba(167,139,250,.3);border-radius:8px;padding:5px 9px;font-size:10px;color:#9d8fcc;white-space:nowrap;z-index:9999;pointer-events:none;display:none}
 #hdr2{position:absolute;top:13px;left:330px;right:16px;display:flex;align-items:center;justify-content:flex-start;pointer-events:all;gap:12px}
 #tabs{display:flex;gap:1px;background:rgba(10,10,20,.88);border:0.5px solid rgba(255,255,255,.08);border-radius:20px;padding:4px 5px;backdrop-filter:blur(8px);flex-shrink:0}
+/* ── WORLD VIEW · the scale strip settles into two rows of three ───────────
+   Six scales crowded into one line reads as a jumble out at planet range,
+   where there is room to breathe. Out here they lay out properly and larger. */
+body.world-view #tabs{flex-wrap:wrap;justify-content:center;gap:3px;border-radius:18px;
+  padding:6px 7px;max-width:min(94vw,430px);row-gap:4px}
+body.world-view #tabs .tab{flex:0 0 calc(33.333% - 4px);justify-content:center;font-size:13px;
+  padding:8px 4px;letter-spacing:.02em}
+body.world-view #tabs .tab.top-region{display:flex!important}
+body.world-view #tabs .tab-group{flex:0 0 calc(33.333% - 4px);justify-content:center}
+body.world-view #tabs .tab-group .tab{flex:1 1 auto}
+body.world-view #tabs .tab-caret{display:none!important}
+body.world-view #tabs .tab-orb{width:8px;height:8px}
+@media (max-width:600px){
+  body.world-view #tabs .tab{font-size:14px;padding:9px 3px}
+  body.world-view #tabs .tab.top-region{display:flex!important}
+}
 .tab{font-size:11px;padding:5px 9px;border-radius:14px;border:none;background:transparent;color:#7870a0;cursor:pointer;transition:color .3s;letter-spacing:.03em;display:flex;align-items:center;gap:4px;font-family:inherit;white-space:nowrap;pointer-events:all}
 .tab:hover{color:#c4b5fd}
 .tab.active{color:#c4b5fd}
@@ -110,7 +126,7 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #si:focus{border-color:rgba(167,139,250,.85);box-shadow:0 0 0 2px rgba(167,139,250,.25),0 0 24px rgba(124,92,255,.5)}
 #si::placeholder{color:#5a5270}
 #si:focus{border-color:rgba(167,139,250,.4)}
-#sg{flex-shrink:0;min-width:54px;padding:10px 17px;border-radius:10px;border:1px solid rgba(196,181,253,.75);background:linear-gradient(135deg,rgba(167,139,250,.42),rgba(255,159,192,.30));color:#f5f1ff;font-size:12.5px;letter-spacing:.05em;cursor:pointer;font-family:inherit;box-shadow:0 0 14px rgba(167,139,250,.30);transition:all .2s}
+#sg{flex-shrink:0;min-width:56px;padding:10px 18px;border-radius:10px;border:1px solid rgba(214,200,255,.92);background:linear-gradient(135deg,rgba(167,139,250,.95),rgba(255,159,192,.82));color:#fffdff;font-size:13px;font-weight:500;letter-spacing:.05em;cursor:pointer;font-family:inherit;box-shadow:0 0 18px rgba(167,139,250,.5),0 2px 8px rgba(0,0,0,.35);transition:all .2s;text-shadow:0 1px 2px rgba(0,0,0,.3)}
 #sg:hover{background:linear-gradient(135deg,rgba(167,139,250,.62),rgba(255,159,192,.46));box-shadow:0 0 22px rgba(196,181,253,.5);transform:translateY(-1px)}
 button,.tab{touch-action:manipulation}
 body:has(#panel.show-mobile) #mobile-offer,body:has(#panel.show) #mobile-offer,body:has(#panel.just-offered) #mobile-offer{display:none!important}
@@ -364,6 +380,17 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #ebtn:hover{border-color:rgba(167,139,250,.5);color:#c4b5fd;background:rgba(167,139,250,.1)}
 #explore-panel{position:absolute;left:16px;top:182px;width:268px;background:rgba(10,10,20,.96);border:0.5px solid rgba(167,139,250,.2);border-radius:14px;padding:13px 14px;backdrop-filter:blur(12px);pointer-events:all;display:none}
 #explore-panel.open{display:block}
+/* ── CLOSE CONTROLS — a thing you tap to leave should be easy to hit ──── */
+.mapboxgl-popup-close-button{font-size:22px!important;line-height:1!important;width:34px!important;
+  height:34px!important;color:#cbbff0!important;opacity:.95!important;right:2px!important;top:2px!important;
+  background:rgba(20,16,40,.55)!important;border-radius:50%!important;transition:all .25s}
+.mapboxgl-popup-close-button:hover{color:#fff!important;background:rgba(167,139,250,.35)!important}
+#gv-close,#wbal-x,#wev-x,#pa2-close,#lfo-close,#pc-close{font-size:19px!important;min-width:34px;min-height:34px;
+  display:inline-flex;align-items:center;justify-content:center;line-height:1}
+/* ↩ the withdraw button on the just-offered panel reads as the way back, not another action */
+.oc-btn.oc-withdraw{border-color:rgba(233,221,255,.55)!important;color:#e9ddff!important;
+  background:rgba(233,221,255,.10)!important}
+.oc-btn.oc-withdraw:hover{background:rgba(233,221,255,.20)!important}
 /* ── ↩ THE UNDO — a light can always be taken back ────────────────────── */
 #undo-pill{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom));
   z-index:1700;display:none;align-items:center;gap:11px;background:rgba(12,10,26,.96);
@@ -415,16 +442,20 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 .fi:hover{border-color:rgba(167,139,250,.3)}
 .fi.glow{border-color:rgba(167,139,250,.55);box-shadow:0 0 18px rgba(167,139,250,.28)}
 @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.fi-sense{font-size:10px;font-weight:500;margin-bottom:3px;letter-spacing:.04em}
-.fi-text{font-size:11px;color:#c0b8d8;line-height:1.5;font-style:italic}
-.fi-meta{font-size:10px;color:#4a4260;margin-top:3px}
+.fi-sense{font-size:12.5px;font-weight:500;margin-bottom:4px;letter-spacing:.04em}
+.fi-text{font-size:13.5px;color:#cdc5e4;line-height:1.55;font-style:italic}
+.fi-meta{font-size:11px;color:#5c5478;margin-top:4px}
 #stip{position:fixed;background:rgba(10,8,20,.97);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 13px;font-size:11px;color:#c0b8d8;max-width:185px;line-height:1.6;pointer-events:none;opacity:0;transition:opacity .2s;z-index:9999;font-style:italic}
 #panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:min(680px,calc(100% - 32px));pointer-events:all;display:block;background:rgba(8,7,16,.96);border:0.5px solid rgba(167,139,250,.3);border-bottom:none;border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(0,0,0,.55)}
 #panel.show-mobile{display:block;padding:0 12px 16px;max-height:64vh;overflow-y:auto}
 #ptitle-row{display:flex;align-items:center;gap:8px;position:sticky;top:0;z-index:6;background:#0a0818;padding:12px 0 8px;margin:0 0 4px;border-radius:16px 16px 0 0;box-shadow:0 6px 10px -6px rgba(0,0,0,.75)}
 #ptitle-row #ptitle{flex:1;margin:0}
 /* A sense symbol is a word, not a decoration — it stands a touch larger than the text it sits in. */
-#pmsg svg,#offer-confirm svg,.fi-sense svg,.pop-sense-item svg,.oc-head svg{width:1.4em;height:1.4em;vertical-align:-0.34em}
+/* A sense symbol is a word, not a decoration — it stands a touch larger than the text it sits in,
+   in every place a symbol can appear, including the description box and the offerings list. */
+#pmsg svg,#offer-confirm svg,.fi-sense svg,.pop-sense-item svg,.oc-head svg,#sense-confirm svg,
+.ma-offering .s svg,.pop-aura svg,#lfo-title svg,.oc-sense svg,#at-line svg
+{width:1.62em;height:1.62em;vertical-align:-0.42em}
 #panel.show-mobile #sheet-close{display:inline-block;background:rgba(44,34,78,.94);border:0.5px solid rgba(167,139,250,.45);color:#cbbff0;font-size:11.5px;padding:6px 11px;border-radius:14px;cursor:pointer;font-family:inherit;flex-shrink:0}
 #pi{background:rgba(10,10,20,.93);border:0.5px solid rgba(167,139,250,.18);border-radius:16px;padding:12px 14px;backdrop-filter:blur(12px)}
 #offer-locate{display:none;margin-bottom:6px}
@@ -687,7 +718,7 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #inp{flex:1;background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 11px;font-size:12px;color:#e0d8ff;outline:none;font-family:inherit}
 #inp::placeholder{color:#5a5270}
 #inp:focus{border-color:rgba(167,139,250,.35)}
-#sbtn{touch-action:manipulation;padding:8px 13px;border-radius:10px;border:0.5px solid rgba(196,181,253,.7);background:rgba(167,139,250,.32);color:#f1ecff;box-shadow:0 0 12px rgba(167,139,250,.35);font-size:11px;cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap}
+#sbtn{touch-action:manipulation;padding:9px 15px;border-radius:10px;border:1px solid rgba(214,200,255,.9);background:linear-gradient(135deg,rgba(167,139,250,.92),rgba(139,110,235,.88));color:#fffdff;box-shadow:0 0 18px rgba(167,139,250,.5),0 2px 8px rgba(0,0,0,.35);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.3)}
 #sbtn:hover{background:rgba(167,139,250,.25);box-shadow:0 0 14px rgba(167,139,250,.2)}
 #sheet-close{display:none}
 #pmsg{position:fixed;top:210px;left:50%;transform:translateX(-50%);max-width:min(400px,88vw);font-size:14px;color:#efe8ff;font-style:italic;opacity:0;pointer-events:none;text-align:center;line-height:1.6;padding:12px 18px;background:rgba(12,10,26,.92);border:1px solid rgba(196,181,253,.55);border-radius:16px;box-shadow:0 0 26px rgba(124,92,255,.5),0 8px 30px rgba(0,0,0,.5);text-shadow:0 0 14px rgba(196,181,253,.7);transition:opacity .5s;letter-spacing:.03em;z-index:100005}
@@ -807,8 +838,8 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 .ma-h{font-size:10.5px;letter-spacing:.11em;text-transform:uppercase;color:#b3a6dd;margin:24px 0 11px;font-weight:500}
 .ma-col .ma-h:first-child{margin-top:0}
 .ma-offering{border-left:2px solid transparent;padding:7px 10px;background:rgba(255,255,255,.03);border-radius:8px;margin-bottom:6px}
-.ma-offering .s{font-size:11px;font-weight:500;margin-bottom:2px}
-.ma-offering .t{font-size:10.5px;color:#bdb4d8;font-style:italic;line-height:1.5}
+.ma-offering .s{font-size:13.5px;font-weight:500;margin-bottom:3px}
+.ma-offering .t{font-size:12.5px;color:#c8c0e0;font-style:italic;line-height:1.55}
 .ma-offering .m{font-size:9px;color:#5b5478;margin-top:3px}
 .ma-line{font-size:11px;color:#c4bce0;line-height:1.55;margin-bottom:7px;padding-left:14px;position:relative}
 .ma-line:before{content:"";position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--lc,#a78bfa);box-shadow:0 0 7px var(--lc,#a78bfa)}
@@ -995,7 +1026,7 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
   #search-box{display:flex !important;position:fixed !important;top:112px !important;left:50% !important;right:auto !important;transform:translateX(-50%) !important;width:min(350px,92vw);margin:0 !important;pointer-events:all;z-index:41;justify-content:center}
   #si{flex:1;width:auto;box-shadow:0 0 26px rgba(124,92,255,.55),0 0 8px rgba(196,181,253,.4);border-color:rgba(196,181,253,.7)}
   #si{flex:1;width:auto;font-size:16px;padding:13px 13px}
-  #sg{font-size:12.5px}
+  #sg{font-size:13.5px;padding:11px 18px}
   #place-prompt,#place-mini{display:none!important}
   #left-stack{top:196px!important}
 }
@@ -1712,6 +1743,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button id="ra-open" type="button"><b>◐ How to read My Aura</b><span class="s">Six plain things. No jargon, no scoring.</span></button>
       <div id="ma-widen"></div>
       <button id="ss-open" type="button"><b>✉ SenseShare</b><span class="s">Send someone a card that asks them to feel first</span></button>
+      <button id="at-open" type="button"><b>❈ Auratour — walk this place</b><span class="s">Set off on foot and the auras you pass sound as you go</span></button>
       <div class="ma-h">What you have offered</div>
       <div id="ma-offerings"></div>
       <div class="ma-h" id="mab-h" style="margin-top:18px">Aurabonds — taking root</div>
@@ -2687,6 +2719,11 @@ const ASCENT_WORDS={
 };
 function ascentCheck(lv){
   if(!ascent||!lv)return;
+  // Never speak over another message. The World arrival tip runs twelve seconds; the ascent
+  // waits its turn rather than shoving it off the screen half-read.
+  try{const _m=document.getElementById('pmsg');
+    if(_m&&_m.classList.contains('show')){setTimeout(()=>{try{ascentCheck(lv);}catch(e){}},3500);return;}
+  }catch(e){}
   if(Date.now()-ascent.from<13000)return;                 // the witness, and the tour, speak first
   if(Date.now()-ascent.from>900000){ascent=null;return;}   // fifteen minutes, then it rests
   if(ascent.seen[lv])return;
@@ -2912,6 +2949,14 @@ function atBegin(){
 }
 
 document.getElementById('ep5').onclick=()=>{closeExplore();atBegin();};
+// The Explore button that ep5 sits behind is display:none, so the walk also lives in My Aura,
+// where the senser's own tools are — this is the door Karl will actually find.
+(function(){const b=document.getElementById('at-open');
+  if(b)b.addEventListener('click',()=>{
+    try{const mp=document.getElementById('myaura-page');if(mp)mp.classList.remove('open','show');}catch(e){}
+    try{if(typeof closeMyAuraPage==='function')closeMyAuraPage();}catch(e){}
+    setTimeout(()=>{try{atBegin();}catch(e){}},260);
+  });})();
 document.getElementById('at-stop').onclick=()=>atStop();
 // A sleeping screen must not keep a watch running — this is the heat lesson, kept.
 document.addEventListener('visibilitychange',()=>{
@@ -4945,7 +4990,22 @@ function showOfferConfirm(senseId,text,place,lat,lng){
   box.innerHTML='<div class="oc-head">'+(place?('✨ Aura just offered at <b>'+esc(place)+'</b>'):'✨ Aura just offered here')+'</div>'
     +'<div class="oc-actions"><span class="oc-lbl">Offer another aura</span><button type="button" class="oc-btn oc-here">Here</button><button type="button" class="oc-btn oc-elsewhere">Elsewhere</button><button type="button" class="oc-btn oc-social">Share</button></div>';
   const panel=document.getElementById('panel');
-  if(panel){panel.classList.add('show-mobile','just-offered','offer-quiet','has-last');panel.classList.remove('locating');panel.style.maxHeight='';panel.style.bottom='';}
+  if(panel){panel.classList.add('show-mobile','just-offered','offer-quiet','has-last');panel.classList.remove('locating');panel.style.maxHeight='';panel.style.bottom='';
+    // The sheet keeps whatever scroll it had, which sometimes left the symbol strip pushed up
+    // out of sight above the panel's top. Every state change returns it to the top.
+    try{panel.scrollTop=0;}catch(e){}
+    setTimeout(()=>{try{panel.scrollTop=0;}catch(e){}},60);}
+  // ↩ WITHDRAW — the door back, on the panel itself, for as long as the panel is up.
+  try{const _wa=box.querySelector('.oc-actions');
+    if(_wa&&undoTarget)_wa.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-withdraw">↩ Withdraw offering</button>');
+    const _wb=box.querySelector('.oc-withdraw');
+    if(_wb)_wb.addEventListener('click',()=>{
+      try{undoTakeBack();}catch(e){}
+      try{box.innerHTML='<div class="oc-head">↩ Withdrawn. The light is out, and nothing was kept against your wish.</div>';}catch(e){}
+      setTimeout(()=>{try{const pl=document.getElementById('panel');
+        if(pl){pl.classList.remove('just-offered','offer-quiet','has-last');}box.innerHTML='';}catch(e){}},4200);
+    });
+  }catch(e){}
   try{const _oa=box.querySelector('.oc-actions');if(_oa)_oa.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-card">\ud83c\udfb4 Keep this light</button>');
   const _cb=box.querySelector('.oc-card');
   if(_cb)_cb.addEventListener('click',()=>{const s2=SENSES.find(x=>x.id===senseId);if(typeof openPostcard==='function'&&s2){openPostcard({title:'Aurasense of '+s2.label,color:s2.color,words:(text||'').slice(0,140),place:place||'',symbolSVG:_offSym(senseId,s2.color)});}});}catch(e){}
@@ -5525,7 +5585,9 @@ function wevWeaveRefresh(){
 }
 function wevZoomUI(){
   let z=15;try{const g=map.getZoom();if(typeof g==='number'&&isFinite(g))z=g;}catch(e){}
-  const chips=document.getElementById('wev-chips');if(chips)chips.classList.toggle('show',z<6.8);
+  // The World chips belong to the World. 6.8 reached down into Nation and lit them there.
+  const chips=document.getElementById('wev-chips');if(chips)chips.classList.toggle('show',z<3.6);
+  try{document.body.classList.toggle('world-view',z<3.6);}catch(e){}
   const wb=document.getElementById('wbal');if(wb)wb.classList.toggle('show',z<3.6);
   const tip=document.getElementById('panel-tip');if(tip)tip.style.display=(z<3.6?'none':'');try{document.body.classList.toggle('space-view',z<3.6);}catch(e){}
   if(z>=3.6){const wp=document.getElementById('wbal-panel');if(wp)wp.classList.remove('show');}
