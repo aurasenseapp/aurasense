@@ -180,11 +180,11 @@ body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #
 #ma-widen .mw-dot{width:9px;height:9px;border-radius:50%;box-shadow:0 0 7px currentColor}
 /* SENSESHARE \u2014 compassion, spoken in alphasense */
 /* My Aura doors — unified roomy cards (the study's feel; replaces the clunky single-line buttons) */
-#ma-left #calm-toggle,#ma-left #mr-open,#ma-left #gp-open,#ma-left #fc-open,#ma-left #ra-open,#ma-left #ss-open{display:flex;flex-direction:column;justify-content:center;gap:3px;width:calc(100% - 4px);margin:0 2px 9px;padding:14px 15px;min-height:54px;border-radius:15px;font-family:var(--serif);color:var(--ink);text-align:left;line-height:1.3;letter-spacing:.005em;cursor:pointer;font-size:15px;border:.5px solid var(--line);background:var(--card);animation:none;transition:border-color .3s,background .3s}
+#ma-left #calm-toggle,#ma-left #mr-open,#ma-left #gp-open,#ma-left #fc-open,#ma-left #ra-open,#ma-left #ss-open,#ma-left #at-open{display:flex;flex-direction:column;justify-content:center;gap:3px;width:calc(100% - 4px);margin:0 2px 9px;padding:14px 15px;min-height:54px;border-radius:15px;font-family:var(--serif);color:var(--ink);text-align:left;line-height:1.3;letter-spacing:.005em;cursor:pointer;font-size:15px;border:.5px solid var(--line);background:var(--card);animation:none;transition:border-color .3s,background .3s}
 #ma-left #mr-open{border-color:rgba(196,181,253,.5);background:linear-gradient(135deg,rgba(167,139,250,.22),rgba(255,159,192,.1))}
-#ma-left #calm-toggle:hover,#ma-left #mr-open:hover,#ma-left #gp-open:hover,#ma-left #fc-open:hover,#ma-left #ra-open:hover,#ma-left #ss-open:hover{border-color:rgba(196,181,253,.62);background:rgba(28,22,54,.97)}
-#ma-left #mr-open .s,#ma-left #gp-open .s,#ma-left #fc-open .s,#ma-left #ra-open .s,#ma-left #ss-open .s{font-size:11.5px;color:var(--label);line-height:1.35;font-weight:400;letter-spacing:.01em}
-#ma-left #mr-open b,#ma-left #gp-open b,#ma-left #fc-open b,#ma-left #ra-open b,#ma-left #ss-open b{font-weight:400;font-size:15px;color:var(--ink);display:block}
+#ma-left #calm-toggle:hover,#ma-left #mr-open:hover,#ma-left #gp-open:hover,#ma-left #fc-open:hover,#ma-left #ra-open:hover,#ma-left #ss-open:hover,#ma-left #at-open:hover{border-color:rgba(196,181,253,.62);background:rgba(28,22,54,.97)}
+#ma-left #mr-open .s,#ma-left #gp-open .s,#ma-left #fc-open .s,#ma-left #ra-open .s,#ma-left #ss-open .s,#ma-left #at-open .s{font-size:11.5px;color:var(--label);line-height:1.35;font-weight:400;letter-spacing:.01em}
+#ma-left #mr-open b,#ma-left #gp-open b,#ma-left #fc-open b,#ma-left #ra-open b,#ma-left #ss-open b,#ma-left #at-open b{font-weight:400;font-size:15px;color:var(--ink);display:block}
 #ss-open{display:block;width:calc(100% - 4px);margin:0 2px 14px;padding:12px 14px;border-radius:14px;font-size:13px;letter-spacing:.03em;font-family:inherit;color:#f5f1ff;border:1px solid rgba(196,181,253,.6);background:linear-gradient(135deg,rgba(167,139,250,.26),rgba(255,159,192,.18));cursor:pointer;animation:moBreathe 6s ease-in-out infinite}
 #ss-back{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.6);opacity:0;transition:opacity .5s ease}
 #ss-back.show{opacity:1}
@@ -380,6 +380,26 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #ebtn:hover{border-color:rgba(167,139,250,.5);color:#c4b5fd;background:rgba(167,139,250,.1)}
 #explore-panel{position:absolute;left:16px;top:182px;width:268px;background:rgba(10,10,20,.96);border:0.5px solid rgba(167,139,250,.2);border-radius:14px;padding:13px 14px;backdrop-filter:blur(12px);pointer-events:all;display:none}
 #explore-panel.open{display:block}
+/* ── AURATOUR · THE BLOOM ─────────────────────────────────────────────────
+   Karl's vision, 26 July: walking into an aura, its Alphasense symbol rises to
+   fill the screen with the sense's own light blazing around it, while its tone
+   sounds. It fades on the breath and hands the screen back. */
+#at-bloom{position:fixed;inset:0;z-index:1640;display:none;align-items:center;justify-content:center;
+  pointer-events:none;opacity:0;transition:opacity 1s ease}
+#at-bloom.on{display:flex;opacity:1}
+#at-bloom-back{position:absolute;inset:0;opacity:0;transition:opacity 1.1s ease}
+#at-bloom.on #at-bloom-back{opacity:1}
+#at-bloom-sym{position:relative;width:min(62vw,340px);height:min(62vw,340px);
+  transform:scale(.62);opacity:0;transition:transform 1.5s cubic-bezier(.22,1,.36,1),opacity 1.2s ease}
+#at-bloom.on #at-bloom-sym{transform:scale(1);opacity:1}
+#at-bloom-sym svg{width:100%;height:100%}
+#at-bloom-word{position:absolute;left:0;right:0;bottom:19vh;text-align:center;font-family:var(--serif);
+  font-size:17px;color:#f4eeff;letter-spacing:.03em;opacity:0;transition:opacity 1.3s ease .3s;
+  padding:0 26px;line-height:1.5;text-shadow:0 2px 14px rgba(0,0,0,.8)}
+#at-bloom.on #at-bloom-word{opacity:1}
+#at-bloom-said{position:absolute;left:0;right:0;bottom:12vh;text-align:center;font-family:var(--serif);
+  font-size:13.5px;color:#cbbff0;font-style:italic;opacity:0;transition:opacity 1.3s ease .55s;padding:0 30px}
+#at-bloom.on #at-bloom-said{opacity:1}
 /* ── CLOSE CONTROLS — a thing you tap to leave should be easy to hit ──── */
 .mapboxgl-popup-close-button{font-size:22px!important;line-height:1!important;width:34px!important;
   height:34px!important;color:#cbbff0!important;opacity:.95!important;right:2px!important;top:2px!important;
@@ -718,7 +738,8 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #inp{flex:1;background:rgba(255,255,255,.05);border:0.5px solid rgba(255,255,255,.1);border-radius:10px;padding:7px 11px;font-size:12px;color:#e0d8ff;outline:none;font-family:inherit}
 #inp::placeholder{color:#5a5270}
 #inp:focus{border-color:rgba(167,139,250,.35)}
-#sbtn{touch-action:manipulation;padding:9px 15px;border-radius:10px;border:1px solid rgba(214,200,255,.9);background:linear-gradient(135deg,rgba(167,139,250,.92),rgba(139,110,235,.88));color:#fffdff;box-shadow:0 0 18px rgba(167,139,250,.5),0 2px 8px rgba(0,0,0,.35);font-size:12px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+#sbtn{touch-action:manipulation;padding:12px 20px;border-radius:12px;border:1px solid #d6c8ff;background:linear-gradient(135deg,#a78bfa,#8b6eeb 55%,#c78ad0);color:#fff;box-shadow:0 0 26px rgba(167,139,250,.72),0 3px 12px rgba(0,0,0,.45);font-size:14px;font-weight:600;letter-spacing:.02em;cursor:pointer;font-family:inherit;transition:all .3s;white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.45)}
+#sbtn:hover{background:linear-gradient(135deg,#b79bff,#9b7efb 55%,#d79ae0);box-shadow:0 0 34px rgba(196,181,253,.9),0 3px 14px rgba(0,0,0,.5)}
 #sbtn:hover{background:rgba(167,139,250,.25);box-shadow:0 0 14px rgba(167,139,250,.2)}
 #sheet-close{display:none}
 #pmsg{position:fixed;top:210px;left:50%;transform:translateX(-50%);max-width:min(400px,88vw);font-size:14px;color:#efe8ff;font-style:italic;opacity:0;pointer-events:none;text-align:center;line-height:1.6;padding:12px 18px;background:rgba(12,10,26,.92);border:1px solid rgba(196,181,253,.55);border-radius:16px;box-shadow:0 0 26px rgba(124,92,255,.5),0 8px 30px rgba(0,0,0,.5);text-shadow:0 0 14px rgba(196,181,253,.7);transition:opacity .5s;letter-spacing:.03em;z-index:100005}
@@ -1305,7 +1326,14 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 .wev-chip.on[data-fam=news]{box-shadow:0 0 14px rgba(160,190,255,.35);border-color:rgba(160,190,255,.5)}
 .wev-chip.on[data-fam=decisions]{box-shadow:0 0 14px rgba(216,180,106,.35);border-color:rgba(216,180,106,.5)}
 .wev-chip.on[data-fam=weave]{box-shadow:0 0 14px rgba(207,214,255,.4);border-color:rgba(207,214,255,.55)}
-@media (max-width:600px){#wev-chips{top:226px}.wev-chip{font-size:10px;padding:5px 9px}}
+@media (max-width:600px){
+  /* The seven event chips — conflicts, peace, and the rest, Raise among them — lay out in two
+     rows rather than crowding into one jumbled line. */
+  #wev-chips{top:226px;display:none;flex-wrap:wrap;gap:5px 5px;justify-content:center;
+    max-width:min(94vw,400px);left:50%;transform:translateX(-50%)}
+  #wev-chips.show{display:flex}
+  .wev-chip{font-size:11.5px;padding:7px 11px;flex:0 0 auto;letter-spacing:.02em}
+}
 /* Search-a-location mini moved to top-centre (clear of the bottom symbol panel) */
 #place-mini{top:90px;left:50%;transform:translateX(-50%);bottom:auto;right:auto}
 @media(min-width:601px){#place-prompt{display:none!important}#place-mini{display:none!important}}
@@ -1569,6 +1597,12 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <button id="undo-btn" type="button">↩ Undo that offering</button>
     <button id="undo-x" type="button" title="keep it">keep</button>
   </div>
+  <div id="at-bloom" aria-hidden="true">
+    <div id="at-bloom-back"></div>
+    <div id="at-bloom-sym"></div>
+    <div id="at-bloom-word"></div>
+    <div id="at-bloom-said"></div>
+  </div>
   <div id="at-panel">
     <div id="at-head"><span id="at-pulse"></span><span id="at-title">Auratour — walking</span>
       <button id="at-stop">end walk</button></div>
@@ -1743,7 +1777,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button id="ra-open" type="button"><b>◐ How to read My Aura</b><span class="s">Six plain things. No jargon, no scoring.</span></button>
       <div id="ma-widen"></div>
       <button id="ss-open" type="button"><b>✉ SenseShare</b><span class="s">Send someone a card that asks them to feel first</span></button>
-      <button id="at-open" type="button"><b>❈ Auratour — walk this place</b><span class="s">Set off on foot and the auras you pass sound as you go</span></button>
+      <button id="at-open" type="button"><b>❈ Auratour</b><span class="s">Move through offered energy. Experience the sound and sight of auras as you walk.</span></button>
       <div class="ma-h">What you have offered</div>
       <div id="ma-offerings"></div>
       <div class="ma-h" id="mab-h" style="margin-top:18px">Aurabonds — taking root</div>
@@ -2584,12 +2618,24 @@ function goToLevel(i){
   }
   if(i===0){
     flyProgrammatic({center:[aLng,aLat],zoom:anchorPoint.zoom||15,duration:1800});
-  }else if(fromSpace){
-    // Coming down from the World view, land squarely on the anchor at a fixed zoom (avoids mis-geocoded sea landings)
-    const lz={1:12,2:8.5,3:5.7}[i]||10;
-    flyProgrammatic({center:[aLng,aLat],zoom:lz,duration:2200});
   }else{
-    contextualZoom(i,aLng,aLat);
+    /* THE SCALE LAW — a scale tab always works on WHAT YOU ARE LOOKING AT.
+       It used to fly to a remembered anchor instead, which is why pressing Region while
+       looking at China landed on Cardiff: Cardiff was the anchor, not the view. The centre
+       of the view now decides, always, at every scale, from every starting height. */
+    let cLng=aLng,cLat=aLat;
+    try{const c=map.getCenter();
+      if(c&&isFinite(c.lng)&&isFinite(c.lat)){cLng=c.lng;cLat=c.lat;}
+    }catch(e){}
+    const lz={1:12,2:8.5,3:5.7}[i]||10;
+    if(fromSpace){
+      // From the planet there is nothing under the view to measure, so a fixed height is honest.
+      flyProgrammatic({center:[cLng,cLat],zoom:lz,duration:2200});
+    }else{
+      contextualZoom(i,cLng,cLat);
+    }
+    // And the anchor follows the senser, so the next tab widens around here, not around history.
+    try{anchorPoint={lng:cLng,lat:cLat,zoom:anchorPoint.zoom||15};}catch(e){}
   }
   if(window.innerWidth<=600){const _p=document.getElementById('panel');if(_p)_p.classList.remove('show-mobile');}
   closeTabMenus();
@@ -2741,10 +2787,20 @@ function setActiveTab(i){
 }
 function paintActiveTab(i){
   const cellW=window.matchMedia&&window.matchMedia('(max-width:600px)').matches;
+  const SCALE_NAMES=['Street','Town','Region','Nation','World'];
   document.querySelectorAll('.tab[data-i]').forEach(t=>{
     const ti=+t.dataset.i;
-    t.classList.toggle('active', ti===i || (cellW && (i===2||i===3) && ti===1));
+    // On a phone Region and Nation live inside the Town button. Lighting "Town" while standing
+    // at Region said the wrong thing, so the button now carries the name of the scale you are at.
+    const folded = cellW && (i===2||i===3) && ti===1;
+    t.classList.toggle('active', ti===i || folded);
     t.style.color='';
+    if(ti===1&&cellW){
+      for(let n=t.childNodes.length-1;n>=0;n--){
+        const nd=t.childNodes[n];
+        if(nd.nodeType===3&&nd.nodeValue.trim()){nd.nodeValue=folded?SCALE_NAMES[i]:'Town';break;}
+      }
+    }
   });
   document.querySelectorAll('.tab-mi[data-i]').forEach(m=>{ m.classList.toggle('mi-active', +m.dataset.i===i); });
   ORB_IDS.forEach((id,k)=>{
@@ -2863,8 +2919,35 @@ function atMeet(p){
     try{ripples.push({lat:p.lat,lng:p.lng,color:s.color,age:0,strong:false});}catch(e){}
     const words=(p.text&&!p.priv)?('\u201c'+String(p.text).slice(0,72)+'\u201d'):'wordless, and no less felt';
     atSay('\u2727 You walked through '+s.label.toLowerCase()+' \u2014 '+words);
+    atBloom(s,p);          // and the symbol rises to fill the screen
   }
   atFace();
+}
+// THE BLOOM — the Alphasense symbol fills the screen, its own light blazing around it.
+let atBloomT=null;
+function atBloom(s,p){
+  const el=document.getElementById('at-bloom');
+  if(!el||!s)return;
+  const sym=document.getElementById('at-bloom-sym'),back=document.getElementById('at-bloom-back'),
+        word=document.getElementById('at-bloom-word'),said=document.getElementById('at-bloom-said');
+  try{
+    // The symbol is an SVG string and goes in whole — never through a text escaper.
+    sym.innerHTML=SENSE_SYMBOLS[s.id]||'';
+    const g=sym.querySelector('svg');
+    if(g){g.setAttribute('width','100%');g.setAttribute('height','100%');}
+    sym.style.filter='drop-shadow(0 0 3px rgba(2,1,8,.95)) drop-shadow(0 0 46px '+s.color+') '
+                    +'drop-shadow(0 0 96px '+s.color+') drop-shadow(0 0 26px rgba(255,255,255,.55))';
+    back.style.background='radial-gradient(circle at 50% 46%, '+hexA(s.color,.55)+' 0%, '
+                    +hexA(s.color,.24)+' 34%, rgba(6,5,16,.86) 72%, rgba(6,5,16,.95) 100%)';
+    word.textContent=s.label;
+    const t=(p&&p.text&&!p.priv)?String(p.text).slice(0,110):'';
+    said.textContent=t?('\u201c'+t+'\u201d'):'offered wordlessly, and no less felt';
+  }catch(e){}
+  el.classList.add('on');
+  if(atBloomT)clearTimeout(atBloomT);
+  atBloomT=setTimeout(()=>{ el.classList.remove('on');
+    setTimeout(()=>{try{document.getElementById('at-bloom-sym').innerHTML='';}catch(e){}},1100);
+  },4200);
 }
 
 function atStep(pos){
@@ -2903,6 +2986,8 @@ function atStop(quiet){
   atWatch=null;
   if(atTick){clearInterval(atTick);atTick=null;}
   const pnl=document.getElementById('at-panel');if(pnl)pnl.classList.remove('on');
+  try{const bl=document.getElementById('at-bloom');if(bl)bl.classList.remove('on');
+    if(atBloomT){clearTimeout(atBloomT);atBloomT=null;}}catch(e){}
   try{for(const p of auraPoints){p._walked=false;p._met=0;}}catch(e){}
   if(quiet)return;
   const mins=Math.max(1,Math.round((Date.now()-atStart)/60000));
@@ -3440,6 +3525,13 @@ function materializeAndSubmit(lat,lng,text){
   const s=SENSES.find(x=>x.id===sid);
   if(!s){submit(lat,lng,text);return;}
   if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}
+  // The sheet leaves at once. It used to sit through the flight, pushing the symbol up out of
+  // sight on a phone and hiding the best part — the light falling to the ground — on a laptop.
+  try{const _pn=document.getElementById('panel');
+    if(_pn){_pn.classList.remove('show-mobile','show','locating','offer-quiet');_pn.style.bottom='';_pn.style.maxHeight='';}
+    const _ui=document.getElementById('ui');if(_ui)_ui.classList.remove('offer-open');
+    if(document.activeElement&&document.activeElement.blur)document.activeElement.blur();
+  }catch(e){}
   const overlay=document.getElementById('materialize');
   const backdrop=document.getElementById('mat-backdrop');
   const nameEl=document.getElementById('mat-name');
@@ -5626,7 +5718,11 @@ function wevZoomUI(){
   wevZoomUI();
   wevBalance();
   const logoEl=document.getElementById('logo');
-  if(logoEl)logoEl.addEventListener('click',()=>{if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor='#c4b5fd';}showMsg('The living aura of humanity, sensed together');});
+  // THE LOGO IS THE WAY HOME. Tapping it carries the senser back to the locality they set.
+  if(logoEl)logoEl.addEventListener('click',()=>{
+    if(typeof paFeedAt!=='undefined'){paFeedAt=performance.now();paFeedColor='#c4b5fd';}
+    goHomeLocality();
+  });
 })();
 
 
@@ -6876,12 +6972,48 @@ document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&
    Nothing is silently kept. If the Gate refuses the delete, the senser is told.
    ════════════════════════════════════════════════════════════════════════ */
 let undoTarget=null, undoTimer=null, undoEnds=0;
+let homeLL=null;   // the home locality's point, found once and kept for the rest of the visit
+/* ════════════════════════════════════════════════════════════════════════
+   THE WAY HOME — the logo carries the senser back to the locality they set.
+   If none is set yet it says so kindly, and points at where to set one.
+   ════════════════════════════════════════════════════════════════════════ */
+function goHomeLocality(){
+  const home=(typeof myProfile!=='undefined'&&myProfile&&(myProfile.homeCity||myProfile.address))
+    ?String(myProfile.homeCity||myProfile.address).trim():'';
+  if(!home){
+    showMsg('No home locality set yet \u2014 open My Aura and set one, and this mark will always bring you back to it. \u2727',7000,'witness','#c4b5fd');
+    return;
+  }
+  const land=()=>{
+    setActiveTab(0);
+    flyProgrammatic({center:[homeLL.lng,homeLL.lat],zoom:14.4,duration:2600});
+    try{anchorPoint={lng:homeLL.lng,lat:homeLL.lat,zoom:14.4};}catch(e){}
+  };
+  showMsg('\u2727 Home \u2014 '+home,4200,'witness','#c4b5fd');
+  if(homeLL){land();return;}
+  fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/'+encodeURIComponent(home)
+        +'.json?access_token='+MAPBOX_TOKEN+'&types=place,locality,neighborhood,address&limit=1')
+    .then(r=>r.json()).then(d=>{
+      const f=d&&d.features&&d.features[0];
+      if(!f||!f.center){showMsg('That home locality could not be found on the map \u2014 try setting it again in My Aura.',6500);return;}
+      homeLL={lng:f.center[0],lat:f.center[1]};
+      land();
+    }).catch(()=>{showMsg('Could not reach the map service just now \u2014 try again in a moment.',5000);});
+}
 function undoHide(){
   if(undoTimer){clearInterval(undoTimer);undoTimer=null;}
   undoTarget=null;
   const el=document.getElementById('undo-pill');if(el)el.classList.remove('on');
 }
 function offerUndoOffer(ap,ms){
+  // The pill is retired: 'Withdraw offering' now sits on the just-offered panel itself, so the
+  // senser is never asked the same question twice. This only arms the target and the clock.
+  if(!ap)return;
+  undoTarget=ap; undoEnds=Date.now()+ms;
+  if(undoTimer)clearInterval(undoTimer);
+  undoTimer=setInterval(()=>{if(Date.now()>=undoEnds)undoHide();},1000);
+  return;
+  /* eslint-disable no-unreachable */
   const pill=document.getElementById('undo-pill'),arc=document.getElementById('undo-arc');
   if(!pill||!ap)return;
   undoTarget=ap; undoEnds=Date.now()+ms;
@@ -6922,7 +7054,15 @@ async function undoTakeBack(){
       if(r&&r.error)console.warn('[gate] undo delete refused:',r.error.message||r.error);
     }
   }catch(e){console.warn('[gate] undo delete',e);}
-  try{showMsg('\u21a9 Taken back. The light is out, and nothing was kept against your wish.'+gateSaid,6500,'witness','#e9ddff');}catch(e){}
+  // Say exactly which light went, so nobody is left wondering whether the right one was taken.
+  let _what='';
+  try{
+    const s2=SENSES.find(x=>x.id===ap.sense);
+    const w=(ap.text||'').trim();
+    const where=(ap.field&&ap.field.name)?(' at '+ap.field.name):(ap.place?(' at '+ap.place):'');
+    _what=' Withdrawn: '+(s2?s2.label:'your offering')+(w?(' \u2014 \u201c'+w.slice(0,60)+(w.length>60?'\u2026':'')+'\u201d'):' \u2014 offered wordlessly')+where+'.';
+  }catch(e){}
+  try{showMsg('\u21a9 Taken back.'+_what+' The light is out, and nothing was kept against your wish.'+gateSaid,8000,'witness','#e9ddff');}catch(e){}
 }
 (function wireUndo(){
   const b=document.getElementById('undo-btn'),x=document.getElementById('undo-x');
