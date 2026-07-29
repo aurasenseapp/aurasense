@@ -67,7 +67,7 @@ window.addEventListener('resize',size);
 const SENSES=[
  // particle:true → the emotional body is drawn as fine grains riding a wave, not solid blobs.
  // vortex:n  → a circling spiral is drawn into the field (0 = none).
- // dash:true → a white light dashes across, horizontal, every ~8–9s (Anomaly only).
+ // dash:true → Anomaly's visitations: a repertoire of movements, never the same twice.
  {id:'belonging',label:'Belonging',c:'#ff9fc0',c2:'#ffd6e6',breath:6.2,ether:1.5,swirl:0.055,dir:1,
   mental:3400,shimmer:1.0,soft:1.25,particle:false,vortex:0,note:'warm, slow, gathering — solid, held; the field leans inward'},
  {id:'nature',   label:'Nature',   c:'#8fd8a0',c2:'#dff6e4',breath:6.8,ether:1.9,swirl:0.038,dir:1,
@@ -79,14 +79,25 @@ const SENSES=[
  {id:'grief',    label:'Grief',    c:'#7f93c8',c2:'#c6d2ef',breath:8.4,ether:2.9,swirl:0.018,dir:-1,
   mental:7000,shimmer:0.5,soft:1.60,particle:false,vortex:-0.35,note:'solid and slow, counter-turning, releasing — it does not rush'},
  {id:'anomaly',  label:'Anomaly',  c:'#f0c76a',c2:'#fff0c9',breath:5.2,ether:0.75,swirl:0.085,dir:-1,
-  mental:1100,shimmer:1.9,soft:0.80,particle:true,vortex:0,dash:true,note:'irregular, quick, grainy — and every so often a white light dashes clean across'}
+  mental:1100,shimmer:1.9,soft:0.80,particle:true,vortex:0,dash:true,note:'irregular, quick, grainy — and every so often a visitation: a dart, a zigzag, a hesitation, a slow red ember, or a hover that zips to orbit'}
 ];
 let S=SENSES[0], mode='live', calm=false, two=false, vit=0.62;
 
 /* the mental body's ripples — discrete, linear, outward */
 let ripples=[],lastRip=0;
-/* Anomaly's dash: a white light crossing horizontally, at an irregular 8–9s cadence. */
-let dashStart=-1, dashNext=2500+Math.random()*1500;
+/* Anomaly's visitations: a repertoire of movements, chosen fresh each time —
+   as they have actually been seen. Karl's sightings, 28 July 2026. */
+let anomBeh=null, anomStart=-1, anomNext=2500+Math.random()*2000, anomP={};
+function anomPick(){
+  const roll=Math.random();
+  if(roll<0.22)return{n:'dart',dur:520+Math.random()*300};
+  if(roll<0.40)return{n:'backforth',dur:1500+Math.random()*500};
+  if(roll<0.58)return{n:'zigzag',dur:1100+Math.random()*400};
+  if(roll<0.72)return{n:'hesitate',dur:1400+Math.random()*400};
+  if(roll<0.84)return{n:'ember',dur:3600+Math.random()*1600};
+  if(roll<0.93)return{n:'approach',dur:2400+Math.random()*600};
+  return{n:'hoverzip',dur:1900+Math.random()*500};
+}
 /* the emotional body's blobs — fluid, smoke-like, never repeating */
 const blobs=[];
 for(let i=0;i<6;i++)blobs.push({a:Math.random()*Math.PI*2,r:0.5+Math.random()*0.33,
@@ -196,23 +207,43 @@ function drawField(t,cx,cy,R,sig,strength){
     ctx.beginPath();ctx.arc(cx,cy,er,0,7);ctx.stroke();
   }
 
-  /* ── ANOMALY'S DASH · a white light crosses horizontally, occasional and clean ── */
+  /* ── ANOMALY'S VISITATIONS · never the same twice, as they have been seen ──
+     a dart at any angle · back-and-forth · zigzag · cross-halfway-and-hesitate ·
+     a slow red ember · approach, sidestep, closer, repeat, blink out ·
+     hover, then zip almost faster than the eye — to orbit.                    */
   if(live && sig.dash){
-    if(dashStart<0 && performance.now()>dashNext){dashStart=performance.now();}
-    if(dashStart>=0){
-      const k=(performance.now()-dashStart)/620;        // ~0.6s to cross
-      if(k>=1){dashStart=-1;dashNext=performance.now()+8000+Math.random()*1000;}
+    const now=performance.now();
+    if(anomStart<0 && now>anomNext){
+      anomStart=now; anomBeh=anomPick();
+      anomP={ang:Math.random()*Math.PI*2, zig:3+((Math.random()*2)|0),
+             hov:{x:cx+(Math.random()-0.5)*r*0.9, y:cy+(Math.random()-0.5)*r*0.7},
+             exit:Math.random()*Math.PI*2, emberY:cy+r*(0.15+Math.random()*0.45)};
+    }
+    if(anomStart>=0){
+      const k=(now-anomStart)/anomBeh.dur;
+      if(k>=1){anomStart=-1;anomNext=now+5000+Math.random()*4000;}
       else{
-        const x=cx + (k*2-1)*r*1.7;                      // left rim → right rim
-        const trail=r*0.5;
+        let x=cx,y=cy,al=Math.sin(Math.min(k,1)*Math.PI),sz=0.03,tint='255,255,255',trail=true;
+        const span=r*1.7, ca=Math.cos(anomP.ang), sa=Math.sin(anomP.ang);
+        const along=u=>{x=cx+(u*2-1)*span*ca; y=cy+(u*2-1)*span*0.6*sa;};
+        if(anomBeh.n==='dart'){ along(k); }
+        else if(anomBeh.n==='backforth'){ const u=k<0.4?(k/0.4)*0.72 : k<0.62?0.72-((k-0.4)/0.22)*0.5 : 0.22+((k-0.62)/0.38)*0.78; along(u); }
+        else if(anomBeh.n==='zigzag'){ along(k); y+=Math.sin(k*Math.PI*anomP.zig)*r*0.22; }
+        else if(anomBeh.n==='hesitate'){ const u=k<0.35?(k/0.35)*0.5 : k<0.6?0.5+Math.sin((k-0.35)*40)*0.006 : 0.5+((k-0.6)/0.4)*0.5; along(u); }
+        else if(anomBeh.n==='ember'){ along(k); y=anomP.emberY+Math.sin(k*Math.PI*2.3)*r*0.05; tint='255,122,92'; sz=0.035; al*=0.85; trail=false; }
+        else if(anomBeh.n==='approach'){ const step=Math.min(2,(k*3)|0), g=(k*3)%1;
+          x=anomP.hov.x+((step%2)?1:-1)*r*0.10*Math.sin(g*Math.PI); y=anomP.hov.y-step*r*0.06;
+          sz=0.028+step*0.016+g*0.010; al=k>0.965?0:(0.55+step*0.2); trail=false; }
+        else if(anomBeh.n==='hoverzip'){ if(k<0.8){ x=anomP.hov.x+Math.sin(k*22)*r*0.012; y=anomP.hov.y+Math.cos(k*17)*r*0.012; trail=false; }
+          else { const q=(k-0.8)/0.2; x=anomP.hov.x+Math.cos(anomP.exit)*span*1.3*q; y=anomP.hov.y+Math.sin(anomP.exit)*span*1.3*q; sz=0.024; al=1-q*0.4; } }
         ctx.globalCompositeOperation='lighter';
-        const g=ctx.createLinearGradient(x-trail,cy,x,cy);
-        g.addColorStop(0,'rgba(255,255,255,0)');
-        g.addColorStop(1,'rgba(255,255,255,'+(0.9*Math.sin(k*Math.PI))+')');
-        ctx.fillStyle=g;
-        ctx.fillRect(x-trail,cy-r*0.02,trail,r*0.04);
-        ctx.fillStyle='rgba(255,255,255,'+(Math.sin(k*Math.PI))+')';
-        ctx.beginPath();ctx.arc(x,cy,r*0.03,0,7);ctx.fill();
+        if(trail){ const tl=r*0.4;
+          const g2=ctx.createLinearGradient(x-tl*ca,y-tl*sa,x,y);
+          g2.addColorStop(0,'rgba('+tint+',0)'); g2.addColorStop(1,'rgba('+tint+','+(0.85*al)+')');
+          ctx.strokeStyle=g2; ctx.lineWidth=r*0.028; ctx.lineCap='round';
+          ctx.beginPath(); ctx.moveTo(x-tl*ca,y-tl*sa); ctx.lineTo(x,y); ctx.stroke(); }
+        ctx.fillStyle='rgba('+tint+','+al+')';
+        ctx.beginPath();ctx.arc(x,y,r*sz,0,7);ctx.fill();
         ctx.globalCompositeOperation='source-over';
       }
     }
