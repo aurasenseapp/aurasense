@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!-- Aurasense · Living Aura Motion — study v1. Standalone. Nothing here touches the app yet. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Aurasense — Living Motion Study</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden;background:radial-gradient(70% 60% at 50% 38%,#141126 0%,#0a0918 55%,#07060e 100%);
+  font-family:Georgia,'Iowan Old Style',serif;color:#e0d8ff;-webkit-font-smoothing:antialiased}
+#wrap{position:fixed;inset:0;display:flex;flex-direction:column;align-items:center}
+#stage{flex:1;width:100%;position:relative}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+#title{position:absolute;top:calc(14px + env(safe-area-inset-top));left:0;right:0;text-align:center;
+  font-size:12.5px;letter-spacing:.06em;color:#9d92c9;pointer-events:none;z-index:3}
+#layername{position:absolute;top:calc(38px + env(safe-area-inset-top));left:0;right:0;text-align:center;
+  font-size:11px;font-style:italic;color:#6f6694;pointer-events:none;z-index:3;transition:opacity .6s}
+#panel{width:100%;padding:10px 12px calc(14px + env(safe-area-inset-bottom));
+  background:linear-gradient(rgba(8,7,16,0),rgba(8,7,16,.92) 22%);z-index:4}
+.row{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-bottom:9px}
+button{font-family:inherit;font-size:13px;padding:9px 13px;border-radius:16px;cursor:pointer;
+  background:rgba(20,16,40,.72);border:.5px solid rgba(167,139,250,.4);color:#cfc3f5;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;transition:all .25s}
+button.on{background:linear-gradient(135deg,rgba(167,139,250,.4),rgba(255,159,192,.28));
+  border-color:rgba(196,181,253,.85);color:#f5f1ff;box-shadow:0 0 16px rgba(167,139,250,.4)}
+.sl{display:flex;align-items:center;gap:10px;justify-content:center;font-size:11px;color:#8f85b8;margin-bottom:8px}
+input[type=range]{-webkit-appearance:none;width:min(260px,62vw);height:3px;border-radius:3px;
+  background:linear-gradient(90deg,#4b4270,#c4b5fd);outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;
+  background:#e9ddff;box-shadow:0 0 12px rgba(196,181,253,.9);cursor:pointer}
+.note{font-size:10.5px;color:#645c88;text-align:center;line-height:1.5;max-width:420px;margin:0 auto}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="stage">
+    <canvas id="c"></canvas>
+    <div id="title">LIVING AURA MOTION · study</div>
+    <div id="layername">the breath is the heartbeat — everything else rides it</div>
+  </div>
+  <div id="panel">
+    <div class="row" id="senses"></div>
+    <div class="sl"><span>constricted</span><input type="range" id="vit" min="0" max="100" value="62"><span>vital</span></div>
+    <div class="row">
+      <button id="bBase">breath only</button>
+      <button id="bLive" class="on">living motion</button>
+      <button id="bTwo">two fields meet</button>
+      <button id="bCalm">calm</button>
+    </div>
+    <div class="note">Etheric throb · emotional swirl · mental ripples · spiritual shimmer — four speeds, one breath.</div>
+  </div>
+</div>
+<script>
+(function(){
+const cvs=document.getElementById('c'),ctx=cvs.getContext('2d');
+let W=0,H=0,DPR=Math.min(2,window.devicePixelRatio||1);
+function size(){const r=cvs.getBoundingClientRect();W=r.width;H=r.height;
+  cvs.width=Math.round(W*DPR);cvs.height=Math.round(H*DPR);ctx.setTransform(DPR,0,0,DPR,0,0);}
+window.addEventListener('resize',size);
+
+/* ── the signatures ────────────────────────────────────────────────
+   Every sense breathes at ~6s. What differs is how each body of the
+   field carries that breath: how fast the etheric throbs, how the
+   emotional swirls, how often the mental sends a ripple outward,
+   and how fine the spiritual shimmer is at the edge.            */
+const SENSES=[
+ // particle:true → the emotional body is drawn as fine grains riding a wave, not solid blobs.
+ // vortex:n  → a circling spiral is drawn into the field (0 = none).
+ // dash:true → a white light dashes across, horizontal, every ~8–9s (Anomaly only).
+ {id:'belonging',label:'Belonging',c:'#ff9fc0',c2:'#ffd6e6',breath:6.2,ether:1.5,swirl:0.055,dir:1,
+  mental:3400,shimmer:1.0,soft:1.25,particle:false,vortex:0,note:'warm, slow, gathering — solid, held; the field leans inward'},
+ {id:'nature',   label:'Nature',   c:'#8fd8a0',c2:'#dff6e4',breath:6.8,ether:1.9,swirl:0.038,dir:1,
+  mental:5200,shimmer:0.8,soft:1.45,particle:true,vortex:0.5,note:'fine grains adrift, a slow green spiral — nothing moves in a straight line'},
+ {id:'sound',    label:'Sound',    c:'#8fd8d0',c2:'#d8f7f4',breath:5.6,ether:1.1,swirl:0.030,dir:1,
+  mental:1500,shimmer:1.2,soft:0.95,particle:true,vortex:0,note:'ripples leave often, carried on fine particles — the mental body speaks outward'},
+ {id:'wonder',   label:'Wonder',   c:'#c9b8f0',c2:'#f0e9ff',breath:6.0,ether:1.6,swirl:0.048,dir:1,
+  mental:2600,shimmer:1.6,soft:1.30,particle:false,vortex:0.8,note:'a bright slow vortex, the edge shimmering highest — the cocoon is awake'},
+ {id:'grief',    label:'Grief',    c:'#7f93c8',c2:'#c6d2ef',breath:8.4,ether:2.9,swirl:0.018,dir:-1,
+  mental:7000,shimmer:0.5,soft:1.60,particle:false,vortex:-0.35,note:'solid and slow, counter-turning, releasing — it does not rush'},
+ {id:'anomaly',  label:'Anomaly',  c:'#f0c76a',c2:'#fff0c9',breath:5.2,ether:0.75,swirl:0.085,dir:-1,
+  mental:1100,shimmer:1.9,soft:0.80,particle:true,vortex:0,dash:true,note:'irregular, quick, grainy — and every so often a white light dashes clean across'}
+];
+let S=SENSES[0], mode='live', calm=false, two=false, vit=0.62;
+
+/* the mental body's ripples — discrete, linear, outward */
+let ripples=[],lastRip=0;
+/* Anomaly's dash: a white light crossing horizontally, at an irregular 8–9s cadence. */
+let dashStart=-1, dashNext=2500+Math.random()*1500;
+/* the emotional body's blobs — fluid, smoke-like, never repeating */
+const blobs=[];
+for(let i=0;i<6;i++)blobs.push({a:Math.random()*Math.PI*2,r:0.5+Math.random()*0.33,
+  va:0.6+Math.random()*0.9, vr:0.25+Math.random()*0.5, ph:Math.random()*Math.PI*2});
+
+function hexA(h,a){const n=parseInt(h.slice(1),16);
+  return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';}
+
+function drawField(t,cx,cy,R,sig,strength){
+  const T=t/1000;
+  const v=calm?0.5:vit;                       // vitality: expansion and pace
+  const slow=calm?0.45:(0.55+v*0.9);          // constriction slows everything
+  /* THE BREATH — the heartbeat under everything. Never amplified, never lost. */
+  const br=0.5-0.5*Math.cos(2*Math.PI*T/sig.breath);
+  const scale=(0.93+br*0.20)*(0.86+v*0.24);
+  const r=R*scale*strength;
+  const live=(mode==='live'&&!calm);
+
+  /* ── SPIRITUAL · the outer cocoon: highest frequency, finest grain ── */
+  const og=ctx.createRadialGradient(cx,cy,r*0.55,cx,cy,r*1.62*sig.soft);
+  og.addColorStop(0,hexA(sig.c,0.16+br*0.10));
+  og.addColorStop(0.45,hexA(sig.c,0.07+br*0.05));
+  og.addColorStop(1,hexA(sig.c,0));
+  ctx.globalCompositeOperation='lighter';
+  ctx.fillStyle=og;ctx.beginPath();ctx.arc(cx,cy,r*1.62*sig.soft,0,7);ctx.fill();
+  if(live){
+    const n=54, sh=sig.shimmer*(0.5+v*0.8);
+    for(let i=0;i<n;i++){
+      const a=(i/n)*Math.PI*2;
+      /* high-frequency, quasi-random: three incommensurate waves, so it never loops */
+      const f=Math.sin(T*7.1*sh+i*2.13)*0.5+Math.sin(T*11.3*sh+i*0.77)*0.3+Math.sin(T*3.7*sh+i*4.9)*0.2;
+      const al=Math.max(0,f)*0.30*(0.4+br*0.6);
+      if(al<0.012)continue;
+      const rr=r*(1.30+0.06*f)*sig.soft;
+      ctx.fillStyle=hexA(sig.c2,al);
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr,r*0.016,0,7);ctx.fill();
+    }
+  }
+
+  /* ── MENTAL · linear ripples leaving the field ── */
+  if(live){
+    for(const p of ripples){
+      const k=p.age;                                  // 0 → 1
+      const rr=r*(0.72+k*0.95);
+      ctx.strokeStyle=hexA(sig.c2,(1-k)*(1-k)*0.34);
+      ctx.lineWidth=Math.max(0.6,r*0.010*(1-k*0.6));
+      ctx.beginPath();ctx.arc(cx,cy,rr,0,7);ctx.stroke();
+    }
+  }
+
+  /* ── EMOTIONAL · smoke in water (blobs) OR fine grains on a wave (particles) ── */
+  if(live && sig.particle){
+    const grains=90, al=(0.5+v*0.7);
+    for(let i=0;i<grains;i++){
+      const a=(i/grains)*Math.PI*2 + T*0.05*slow*sig.dir;
+      /* a travelling wave sets each grain's radius — the ring reads as particles, not a solid band */
+      const wv=Math.sin(a*3 - T*1.4*slow)*0.5 + Math.sin(a*5 + T*0.9*slow)*0.3;
+      const rad=r*(0.66 + 0.30*(0.5+0.5*wv));
+      const gx=cx+Math.cos(a)*rad, gy=cy+Math.sin(a)*rad;
+      const gv=Math.max(0,wv)*al*(0.4+br*0.6);
+      if(gv<0.02)continue;
+      ctx.fillStyle=hexA(i%3?sig.c2:sig.c, gv*0.5);
+      ctx.beginPath();ctx.arc(gx,gy,r*0.014,0,7);ctx.fill();
+    }
+  } else if(live){
+    for(let i=0;i<blobs.length;i++){
+      const b=blobs[i];
+      const a=b.a, rad=r*(b.r*(0.72+0.28*Math.sin(T*b.vr*slow+b.ph)));
+      const bx=cx+Math.cos(a)*rad, by=cy+Math.sin(a)*rad;
+      const size=r*(0.30+0.12*Math.sin(T*0.7*slow+b.ph*1.7))*(0.7+v*0.5);
+      const g=ctx.createRadialGradient(bx,by,0,bx,by,size);
+      const al=(0.13+br*0.11)*(0.5+v*0.7);
+      g.addColorStop(0,hexA(i%2?sig.c2:sig.c,al));
+      g.addColorStop(1,hexA(sig.c,0));
+      ctx.fillStyle=g;ctx.beginPath();ctx.arc(bx,by,size,0,7);ctx.fill();
+    }
+  } else {
+    const g=ctx.createRadialGradient(cx,cy,0,cx,cy,r*1.05);
+    g.addColorStop(0,hexA(sig.c2,0.30+br*0.16));
+    g.addColorStop(0.6,hexA(sig.c,0.16+br*0.10));
+    g.addColorStop(1,hexA(sig.c,0));
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(cx,cy,r*1.05,0,7);ctx.fill();
+  }
+
+  /* ── VORTEX · a circling spiral, for the signatures that carry one ── */
+  if(live && sig.vortex){
+    const arms=2, per=arms*46, spin=T*0.5*slow*Math.sign(sig.vortex);
+    ctx.globalCompositeOperation='lighter';
+    for(let i=0;i<per;i++){
+      const tt=i/per;                       // 0 at core → 1 at rim
+      const a=tt*Math.PI*2*arms + spin;
+      const rad=r*(0.14 + tt*1.05);
+      const al=Math.abs(sig.vortex)*(1-tt)*0.5*(0.4+br*0.6);
+      if(al<0.02)continue;
+      ctx.fillStyle=hexA(sig.c2, al*0.4);
+      ctx.beginPath();ctx.arc(cx+Math.cos(a)*rad, cy+Math.sin(a)*rad, r*0.02*(1-tt*0.5), 0,7);ctx.fill();
+    }
+    ctx.globalCompositeOperation='source-over';
+  }
+
+  /* ── ETHERIC · the fast throb held close to the body ── */
+  if(live){
+    const th=0.5-0.5*Math.cos(2*Math.PI*T/(sig.ether*(calm?2:1)/(0.6+v*0.7)));
+    const er=r*(0.44+0.055*th);
+    ctx.strokeStyle=hexA(sig.c2,(0.10+th*0.26)*(0.45+br*0.55));
+    ctx.lineWidth=Math.max(0.8,r*0.030*(0.5+th*0.7));
+    ctx.beginPath();ctx.arc(cx,cy,er,0,7);ctx.stroke();
+  }
+
+  /* ── ANOMALY'S DASH · a white light crosses horizontally, occasional and clean ── */
+  if(live && sig.dash){
+    if(dashStart<0 && performance.now()>dashNext){dashStart=performance.now();}
+    if(dashStart>=0){
+      const k=(performance.now()-dashStart)/620;        // ~0.6s to cross
+      if(k>=1){dashStart=-1;dashNext=performance.now()+8000+Math.random()*1000;}
+      else{
+        const x=cx + (k*2-1)*r*1.7;                      // left rim → right rim
+        const trail=r*0.5;
+        ctx.globalCompositeOperation='lighter';
+        const g=ctx.createLinearGradient(x-trail,cy,x,cy);
+        g.addColorStop(0,'rgba(255,255,255,0)');
+        g.addColorStop(1,'rgba(255,255,255,'+(0.9*Math.sin(k*Math.PI))+')');
+        ctx.fillStyle=g;
+        ctx.fillRect(x-trail,cy-r*0.02,trail,r*0.04);
+        ctx.fillStyle='rgba(255,255,255,'+(Math.sin(k*Math.PI))+')';
+        ctx.beginPath();ctx.arc(x,cy,r*0.03,0,7);ctx.fill();
+        ctx.globalCompositeOperation='source-over';
+      }
+    }
+  }
+
+  /* ── THE CORE · brightness rides the swell ── */
+  const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,r*0.42);
+  cg.addColorStop(0,'rgba(255,255,255,'+(0.50+br*0.42)+')');
+  cg.addColorStop(0.34,hexA(sig.c2,0.42+br*0.30));
+  cg.addColorStop(1,hexA(sig.c,0));
+  ctx.fillStyle=cg;ctx.beginPath();ctx.arc(cx,cy,r*0.42,0,7);ctx.fill();
+  ctx.globalCompositeOperation='source-over';
+  return {r:r,br:br};
+}
+
+/* where two fields meet, threads cross between them — mixing, never merging */
+function drawMeeting(t,ax,ay,bx,by,r,sigA,sigB){
+  if(calm)return;
+  const T=t/1000;
+  ctx.globalCompositeOperation='lighter';
+  for(let i=0;i<10;i++){
+    const k=((T*0.22+i/10)%1);
+    const s=(i%2)?[ax,ay,sigA]:[bx,by,sigB];
+    const e=(i%2)?[bx,by,sigB]:[ax,ay,sigA];
+    const mx=(ax+bx)/2, my=(ay+by)/2;
+    const bow=Math.sin(k*Math.PI)*r*0.55*((i%2)?1:-1);
+    const px=(1-k)*(1-k)*s[0]+2*(1-k)*k*(mx)+k*k*e[0];
+    const py=(1-k)*(1-k)*s[1]+2*(1-k)*k*(my+bow)+k*k*e[1];
+    const size=r*0.20*Math.sin(k*Math.PI);
+    if(size<=0)continue;
+    const g=ctx.createRadialGradient(px,py,0,px,py,size);
+    g.addColorStop(0,hexA(k<0.5?s[2].c2:e[2].c2,0.17*Math.sin(k*Math.PI)));
+    g.addColorStop(1,hexA(k<0.5?s[2].c:e[2].c,0));
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(px,py,size,0,7);ctx.fill();
+  }
+  ctx.globalCompositeOperation='source-over';
+}
+
+let raf=null;
+function frame(t){
+  ctx.clearRect(0,0,W,H);
+  const R=Math.min(W,H)*0.30;
+  /* the mental body emits on its own clock */
+  const iv=S.mental/(calm?1:(0.55+vit*0.9));
+  if(mode==='live'&&!calm&&t-lastRip>iv){lastRip=t;ripples.push({age:0});}
+  for(const p of ripples)p.age+=0.0075*(calm?0.5:(0.55+vit*0.9));
+  ripples=ripples.filter(p=>p.age<1);
+
+  if(two){
+    const off=Math.min(W,H)*0.19;
+    const B=SENSES[(SENSES.indexOf(S)+3)%SENSES.length];
+    drawField(t,W/2-off,H/2,R*0.78,S,1);
+    drawField(t,W/2+off,H/2,R*0.78,B,1);
+    drawMeeting(t,W/2-off,H/2,W/2+off,H/2,R*0.78,S,B);
+  } else {
+    drawField(t,W/2,H/2,R,S,1);
+  }
+  raf=requestAnimationFrame(frame);
+}
+
+/* ── controls ── */
+const sw=document.getElementById('senses');
+SENSES.forEach((s,i)=>{
+  const b=document.createElement('button');b.textContent=s.label;
+  if(i===0)b.classList.add('on');
+  b.onclick=()=>{S=s;ripples=[];dashStart=-1;dashNext=performance.now()+8000+Math.random()*1000;
+    [...sw.children].forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    const ln=document.getElementById('layername');ln.style.opacity='0';
+    setTimeout(()=>{ln.textContent=s.note;ln.style.opacity='1';},280);};
+  sw.appendChild(b);
+});
+const bBase=document.getElementById('bBase'),bLive=document.getElementById('bLive'),
+      bTwo=document.getElementById('bTwo'),bCalm=document.getElementById('bCalm');
+bBase.onclick=()=>{mode='base';bBase.classList.add('on');bLive.classList.remove('on');
+  document.getElementById('layername').textContent='the 6-second breath alone — the current baseline';};
+bLive.onclick=()=>{mode='live';bLive.classList.add('on');bBase.classList.remove('on');
+  document.getElementById('layername').textContent=S.note;};
+bTwo.onclick=()=>{two=!two;bTwo.classList.toggle('on',two);
+  document.getElementById('layername').textContent=two
+    ?'two fields meet — they swirl and thread, they do not merge'
+    :S.note;};
+bCalm.onclick=()=>{calm=!calm;bCalm.classList.toggle('on',calm);
+  document.getElementById('layername').textContent=calm
+    ?'calm — fine motion rests, the breath always remains'
+    :S.note;};
+document.getElementById('vit').oninput=e=>{vit=(+e.target.value)/100;};
+
+try{if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches){
+  calm=true;bCalm.classList.add('on');}}catch(e){}
+size();raf=requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
