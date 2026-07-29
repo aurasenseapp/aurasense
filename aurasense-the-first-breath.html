@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Aurasense · THE FIRST BREATH — the opening sequence. Study v3. Standalone.
+<!-- Aurasense · THE FIRST BREATH — the opening sequence. Study v4. Standalone.
      Revised to Karl's direction, 28 July 2026:
        · One continual motion — the 'sense' light becomes the light above Feeling;
          the 'Aura' light travels on to become the centre of the scale.
@@ -11,7 +11,7 @@
        · v3: zones widened on Karl's word — Stress seated mid-left; Proprioception
          joins the neutral middle; Safety, Belonging, Gratitude on the rise;
          Joy, Love, Peace, Wonder at the far light. Serenity awaits its gesture.
-       · v3 fix: the breathing guidance bows out the moment a sense is chosen,
+       · v4: chips sit in one clear centred column, never overlapping; on choosing,\n         the picked sense settles alone in a small band and everything else clears,\n         so Where arrives into open space.\n       · v3 fix: the breathing guidance bows out the moment a sense is chosen,
          so nothing clashes with Where.
      Nothing here touches the app. Nothing entered here leaves this page.
      The breath is ~6s everywhere. Inputs are 16px (the iOS law).
@@ -134,21 +134,21 @@ body.white #field{display:flex}
 #afterBreath.show{opacity:1}
 
 /* the visible line, and the living zones it runs to */
-#fanArea{position:relative;width:100%;max-width:400px;height:0;transition:height .8s ease;perspective:700px}
-#fanArea.open{height:292px}
+#fanArea{position:relative;width:100%;max-width:400px;height:0;transition:height .6s ease}
+#fanArea.open{overflow:visible}
 #lineSvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 #fanPath{fill:none;stroke:url(#lineGrad);stroke-width:2.2;stroke-linecap:round;
   filter:drop-shadow(0 0 6px rgba(167,139,250,.5));opacity:0;transition:opacity .7s ease}
 #fanArea.open #fanPath{opacity:1}
-.chip{position:absolute;display:flex;align-items:center;gap:9px;padding:8px 14px 8px 9px;border-radius:22px;
-  background:rgba(20,16,40,.045);border:.5px solid rgba(124,111,158,.28);cursor:pointer;
+.chip{position:absolute;left:50%;display:flex;align-items:center;gap:9px;padding:8px 15px 8px 10px;border-radius:22px;
+  background:rgba(20,16,40,.05);border:.5px solid rgba(124,111,158,.3);cursor:pointer;max-width:88vw;
   font-family:var(--serif);font-size:15px;color:var(--w-ink);white-space:nowrap;opacity:0;
-  transform:scale(.7);transition:opacity .5s ease,transform .5s ease,background .3s,border-color .3s,box-shadow .3s}
+  transform:translateX(-50%) scale(.7);transition:opacity .5s ease,transform .6s ease,top .6s ease,background .3s,border-color .3s,box-shadow .3s}
 .chip svg{width:26px!important;height:26px!important;display:block}
-.chip.inz{opacity:1}
+.chip.inz{opacity:1;transform:translateX(-50%) scale(var(--sc,1))}
 .chip.picked{background:rgba(255,255,255,.92);box-shadow:0 0 22px var(--cc);border-color:var(--cc)}
-#zoneHint{position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:11.5px;
-  color:var(--w-dim);font-style:italic;letter-spacing:.04em;opacity:0;transition:opacity .8s ease}
+#zoneHint{position:absolute;left:0;right:0;text-align:center;font-size:11.5px;
+  color:var(--w-dim);font-style:italic;letter-spacing:.04em;opacity:0;transition:opacity .8s ease,top .5s ease}
 #fanArea.open #zoneHint{opacity:1}
 
 /* 8 · where + home, one gentle step */
@@ -513,37 +513,32 @@ function armThumb(){
 }
 function drawLine(thumbX){
   const area=$('fanArea'), W=area.clientWidth||360;
-  const cx=Math.max(120,Math.min(W-120,thumbX));
-  $('fanPath').setAttribute('d','M '+thumbX+' -30 Q '+((thumbX+cx)/2)+' 34 '+cx+' 66');
+  $('fanPath').setAttribute('d','M '+thumbX+' -30 Q '+((thumbX+W/2)/2)+' 26 '+(W/2)+' 50');
 }
 function updateZones(t,force){
   const z=zoneOf(t);
   if(z===currentZone&&!force)return;
   currentZone=z;
-  const area=$('fanArea'), W=area.clientWidth||360;
+  const area=$('fanArea');
   chipEls.forEach(c=>{c.classList.remove('inz'); setTimeout(()=>c.remove(),450);});
   chipEls=[];
   const opts=ZONES[z];
-  const wrapRect=$('scaleWrap').getBoundingClientRect();
-  const thumbX=parseFloat($('thumb').style.left)||wrapRect.width/2;
-  const cx=Math.max(120,Math.min(W-120,thumbX));
   opts.forEach((o,i)=>{
     const m=optMeta(o);
     const c=document.createElement('button');
     c.type='button'; c.className='chip'; c.style.setProperty('--cc',m.color);
+    c.style.setProperty('--sc',String(1-i*0.045));
     c.innerHTML=m.svg+'<span>'+m.label+'</span>';
-    const depth=opts.length>1?i/(opts.length-1):0;
-    c.style.top=(60+depth*158)+'px';
-    c.style.transform='scale('+(1-depth*0.16)+') translateZ('+(-depth*110)+'px)';
-    c.style.zIndex=String(20-i);
+    c.style.top=(54+i*50)+'px';
+    c.style.zIndex=String(30-i);
     area.appendChild(c);
-    const cw=c.offsetWidth;
-    c.style.left=Math.max(6,Math.min(W-cw-6,cx-cw/2+(i%2?26:-26)*depth*2))+'px';
     requestAnimationFrame(()=>c.classList.add('inz'));
     c.addEventListener('pointerdown',()=>pickSense(o,m,c));
     chipEls.push(c);
   });
-  drawLine(thumbX);
+  area.style.height=(54+opts.length*50+44)+'px';
+  $('zoneHint').style.top=(54+opts.length*50+8)+'px';
+  drawLine(parseFloat($('thumb').style.left)||($('scaleWrap').getBoundingClientRect().width/2));
 }
 
 /* ── the choice — distance recorded silently as strength ── */
@@ -554,15 +549,18 @@ function pickSense(o,m,chip){
   breathState.severity=Math.max(0.1,Math.abs(breathState.valence||0));
   breathState.pickedColor=m.color; breathState.pickedSvg=(o.k==='panel')?(SENSE_SYMBOLS[o.id]||''):alphaSvg(ALPHA.find(a=>a.w===o.id),58);
   chip.classList.add('picked');
-  chipEls.forEach(c=>{if(c!==chip){c.style.opacity='.22';} c.style.pointerEvents='none';});
+  chipEls.forEach(c=>{c.style.pointerEvents='none'; if(c!==chip){c.classList.remove('inz'); setTimeout(()=>c.remove(),500);}});
   $('thumb').classList.add('locked');
   $('breatheLine').style.opacity='0';
   $('afterBreath').classList.remove('show'); $('afterBreath').style.opacity='0';
   $('zoneHint').style.opacity='0';
+  $('fanPath').style.opacity='0';
+  chip.style.top='16px'; chip.style.setProperty('--sc','1');
+  $('fanArea').style.height='78px';
   setTimeout(()=>{
     stepIn('stWhere');
     $('stWhere').scrollIntoView({behavior:'smooth',block:'center'});
-  },800);
+  },700);
 }
 
 /* ── 8 : where, and home, in one breath ── */
