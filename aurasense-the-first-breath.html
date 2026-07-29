@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<!-- Aurasense · THE FIRST BREATH — the opening sequence. Study v3. Standalone.
+     Revised to Karl's direction, 28 July 2026:
+       · One continual motion — the 'sense' light becomes the light above Feeling;
+         the 'Aura' light travels on to become the centre of the scale.
+       · The scale lives on both sides at once — options change with distance,
+         so how far you travel IS how strongly you feel it. Severity is folded
+         into distance and recorded silently. No separate severity step.
+       · Words and the photo are invited AFTER the light lands — a gift, not a gate.
+       · Where + home locality merged into one gentle step.
+       · v3: zones widened on Karl's word — Stress seated mid-left; Proprioception
+         joins the neutral middle; Safety, Belonging, Gratitude on the rise;
+         Joy, Love, Peace, Wonder at the far light. Serenity awaits its gesture.
+       · v3 fix: the breathing guidance bows out the moment a sense is chosen,
+         so nothing clashes with Where.
+     Nothing here touches the app. Nothing entered here leaves this page.
+     The breath is ~6s everywhere. Inputs are 16px (the iOS law).
+     Alphasense marks are inline SVG — never passed through a text escaper.
+     Hope and Joy are the app's own established gestures, spliced verbatim,
+     rendered with the app's own wrapper. Nothing invented. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Aurasense — The First Breath</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --ink:#e0d8ff; --label:#9d92c9; --dim:#6f6694; --deep:#4b4270;
+  --lav:#a78bfa; --lav2:#c4b5fd; --pale:#e9ddff; --rose:#ff9fc0;
+  --w-ink:#4b4270; --w-label:#7c6f9e; --w-dim:#a79bc8;
+  --card:rgba(20,16,40,.78); --line:rgba(167,139,250,.4);
+  --serif:Georgia,'Iowan Old Style',serif;
+}
+html,body{height:100%;overflow:hidden;background:#07060e;font-family:var(--serif);
+  color:var(--ink);-webkit-font-smoothing:antialiased}
+#stage{position:fixed;inset:0;background:radial-gradient(70% 60% at 50% 38%,#141126 0%,#0a0918 55%,#07060e 100%)}
+
+/* ── the breath — ~6 seconds, everywhere ─────────────────────────── */
+@keyframes breathe{0%,100%{transform:scale(1);opacity:.82;filter:brightness(1)}
+  50%{transform:scale(1.045);opacity:1;filter:brightness(1.2)}}
+@keyframes breatheSoft{0%,100%{opacity:.5}50%{opacity:.95}}
+@keyframes breatheRing{0%,100%{transform:scale(1);opacity:.35}50%{transform:scale(1.28);opacity:.9}}
+@keyframes drift1{0%,100%{transform:translate(0,0)}50%{transform:translate(3%,-2%)}}
+@keyframes drift2{0%,100%{transform:translate(0,0)}50%{transform:translate(-3%,2%)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition-duration:.01s!important}}
+
+/* ── scene shells ─────────────────────────────────────────────────── */
+.scene{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;opacity:0;pointer-events:none;transition:opacity 1.6s ease}
+.scene.on{opacity:1;pointer-events:auto}
+
+/* ── 1 · the aura cloud ───────────────────────────────────────────── */
+.blob{position:absolute;border-radius:50%;filter:blur(46px);will-change:transform,opacity}
+#b1{width:64vmin;height:64vmin;left:14%;top:22%;background:radial-gradient(circle,rgba(167,139,250,.5),rgba(167,139,250,0) 70%);
+  animation:breathe 6s ease-in-out infinite,drift1 21s ease-in-out infinite}
+#b2{width:52vmin;height:52vmin;right:10%;top:34%;background:radial-gradient(circle,rgba(255,159,192,.4),rgba(255,159,192,0) 70%);
+  animation:breathe 6s ease-in-out -2s infinite,drift2 26s ease-in-out infinite}
+#b3{width:58vmin;height:58vmin;left:30%;bottom:12%;background:radial-gradient(circle,rgba(109,158,235,.32),rgba(109,158,235,0) 70%);
+  animation:breathe 6s ease-in-out -4s infinite,drift1 24s ease-in-out -8s infinite}
+#cloudhint{position:absolute;bottom:calc(34px + env(safe-area-inset-bottom));font-size:12px;
+  font-style:italic;color:var(--dim);letter-spacing:.05em;animation:breatheSoft 6s ease-in-out infinite}
+
+/* ── 2 · the joining — atoms above, words below ──────────────────── */
+#join{gap:34px}
+.atomrow{position:relative;height:120px;width:min(84vw,420px)}
+.atom{position:absolute;top:50%;width:96px;height:96px;margin-top:-48px;
+  transition:left 2.6s cubic-bezier(.4,.05,.2,1),right 2.6s cubic-bezier(.4,.05,.2,1)}
+#atomL{left:-6%}#atomR{right:-6%}
+#join.meet #atomL{left:calc(50% - 66px)}
+#join.meet #atomR{right:calc(50% - 66px)}
+.atom svg,.flyer svg{width:100%;height:100%;display:block}
+.atom svg{animation:breathe 6s ease-in-out infinite}
+#atomR svg{animation-delay:-3s}
+.wordrow{position:relative;height:52px;width:min(84vw,420px);font-size:clamp(28px,7vw,38px);
+  color:var(--pale);text-shadow:0 0 24px rgba(233,221,255,.4);letter-spacing:.02em}
+.wj{position:absolute;top:0;transition:left 2.6s cubic-bezier(.4,.05,.2,1),right 2.6s cubic-bezier(.4,.05,.2,1)}
+#wAura{left:2%}#wSense{right:2%;color:var(--lav2)}
+#join.meet #wAura{left:calc(50% - 2.42em)}
+#join.meet #wSense{right:calc(50% - 2.55em)}
+
+/* ── the two travelling lights — one continual motion ─────────────── */
+.flyer{position:fixed;width:96px;height:96px;z-index:40;pointer-events:none;opacity:0;
+  transition:transform 2.3s cubic-bezier(.45,.05,.25,1),opacity 1s ease,width 2.3s ease,height 2.3s ease}
+.flyer.show{opacity:1}
+.flyer.hold svg{animation:breathe 6s ease-in-out infinite}
+
+/* ── 3 · the passage into white ──────────────────────────────────── */
+#veil{position:absolute;left:50%;top:44%;width:12px;height:12px;border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,#fdfbff 60%,rgba(255,255,255,0) 72%);
+  transform:translate(-50%,-50%) scale(0);pointer-events:none;z-index:5}
+#veil.bloom{transform:translate(-50%,-50%) scale(260);transition:transform 3.2s cubic-bezier(.55,0,.6,1)}
+body.white #stage{background:#fdfcff;transition:background 1s ease 2.4s}
+
+/* ── the white field ─────────────────────────────────────────────── */
+#field{position:absolute;inset:0;z-index:6;display:none;flex-direction:column;align-items:center;
+  color:var(--w-ink);overflow-y:auto;overscroll-behavior:contain;
+  padding:calc(44px + env(safe-area-inset-top)) 22px calc(44px + env(safe-area-inset-bottom))}
+body.white #field{display:flex}
+.step{width:100%;max-width:430px;display:none;flex-direction:column;align-items:center;
+  opacity:0;transform:translateY(10px);transition:opacity 1.4s ease,transform 1.4s ease}
+.step.in{display:flex}
+.step.seen{opacity:1;transform:none}
+.q{font-size:clamp(21px,5.6vw,26px);color:var(--w-ink);text-align:center;letter-spacing:.02em;line-height:1.35}
+.wq{font-size:13px;color:var(--w-dim);font-style:italic;text-align:center;margin-top:10px;line-height:1.6}
+
+/* 4 · feeling — received from the travelling light */
+#coreFeel{width:96px;height:96px;margin:2px 0 12px;opacity:0;transition:opacity .9s ease}
+#coreFeel.here{opacity:1}
+#coreFeel svg{animation:breathe 6s ease-in-out infinite}
+#feelWord{font-size:clamp(24px,6vw,30px);color:var(--deep);letter-spacing:.14em;opacity:0;transition:opacity 1.6s ease}
+#feelQ{opacity:0;transition:opacity 1.6s ease;margin-top:24px}
+.faded{opacity:1;transition:opacity 1s ease}
+.faded.dim{opacity:.28}
+
+/* 5–7 · the scale — alive on both sides */
+#scaleWrap{position:relative;width:100%;max-width:400px;height:132px;margin-top:20px}
+#track{position:absolute;left:52px;right:52px;top:66px;height:2px;border-radius:2px;
+  background:linear-gradient(90deg,#e89aa8,#e2dcf0 46%,#e2dcf0 54%,#ffcf6e)}
+.endSym{position:absolute;top:34px;width:62px;height:62px;display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:rgba(20,16,40,.05)}
+#endNeg{left:-8px}#endPos{right:-8px}
+#thumb{position:absolute;top:47px;left:50%;width:40px;height:40px;margin-left:-20px;border-radius:50%;
+  cursor:grab;touch-action:none;z-index:3;opacity:0;transition:opacity .9s ease}
+#thumb.here{opacity:1}
+#thumb.locked{cursor:default}
+#thumb:active{cursor:grabbing}
+#thumb svg{width:100%;height:100%;display:block}
+#breathRing{position:absolute;top:43px;left:50%;width:48px;height:48px;margin-left:-24px;border-radius:50%;
+  border:1.5px solid rgba(167,139,250,.8);pointer-events:none;opacity:0}
+#breathRing.go{animation:breatheRing 6s ease-in-out infinite;opacity:1}
+#breatheLine{font-size:clamp(19px,5vw,23px);color:var(--w-ink);letter-spacing:.05em;text-align:center;transition:opacity 1.2s ease}
+#afterBreath{font-size:13px;color:var(--w-dim);font-style:italic;margin-top:8px;opacity:0;transition:opacity 1.4s ease;text-align:center}
+#afterBreath.show{opacity:1}
+
+/* the visible line, and the living zones it runs to */
+#fanArea{position:relative;width:100%;max-width:400px;height:0;transition:height .8s ease;perspective:700px}
+#fanArea.open{height:292px}
+#lineSvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+#fanPath{fill:none;stroke:url(#lineGrad);stroke-width:2.2;stroke-linecap:round;
+  filter:drop-shadow(0 0 6px rgba(167,139,250,.5));opacity:0;transition:opacity .7s ease}
+#fanArea.open #fanPath{opacity:1}
+.chip{position:absolute;display:flex;align-items:center;gap:9px;padding:8px 14px 8px 9px;border-radius:22px;
+  background:rgba(20,16,40,.045);border:.5px solid rgba(124,111,158,.28);cursor:pointer;
+  font-family:var(--serif);font-size:15px;color:var(--w-ink);white-space:nowrap;opacity:0;
+  transform:scale(.7);transition:opacity .5s ease,transform .5s ease,background .3s,border-color .3s,box-shadow .3s}
+.chip svg{width:26px!important;height:26px!important;display:block}
+.chip.inz{opacity:1}
+.chip.picked{background:rgba(255,255,255,.92);box-shadow:0 0 22px var(--cc);border-color:var(--cc)}
+#zoneHint{position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:11.5px;
+  color:var(--w-dim);font-style:italic;letter-spacing:.04em;opacity:0;transition:opacity .8s ease}
+#fanArea.open #zoneHint{opacity:1}
+
+/* 8 · where + home, one gentle step */
+input[type=text],textarea{width:100%;font-family:var(--serif);font-size:16px;
+  border-radius:14px;padding:13px 15px;outline:none;line-height:1.5}
+#field input[type=text]{color:var(--w-ink);background:rgba(255,255,255,.75);border:.5px solid rgba(124,111,158,.4)}
+#field input::placeholder{color:var(--w-dim);font-style:italic}
+#field input:focus{border-color:var(--lav);box-shadow:0 0 14px rgba(167,139,250,.25)}
+.softbtn{margin-top:16px;font-family:var(--serif);font-size:15px;color:var(--deep);
+  background:rgba(255,255,255,.8);border:.5px solid rgba(124,111,158,.45);border-radius:22px;
+  padding:11px 26px;cursor:pointer;letter-spacing:.03em;transition:all .3s}
+.softbtn:hover{border-color:var(--lav);box-shadow:0 0 16px rgba(167,139,250,.3)}
+#homeRow{display:flex;align-items:flex-start;gap:10px;margin-top:14px;cursor:pointer;max-width:340px}
+#homeMark{font-size:17px;color:var(--w-dim);line-height:1.3;transition:color .3s}
+#homeRow.on #homeMark{color:var(--lav)}
+#homeText{font-size:13px;color:var(--w-dim);font-style:italic;line-height:1.55;text-align:left}
+#homeRow.on #homeText{color:var(--w-label)}
+
+/* ── 9 · the landing — dusk again, one true light ────────────────── */
+#land{background:radial-gradient(70% 60% at 50% 38%,#141126 0%,#0a0918 55%,#07060e 100%);z-index:8}
+#horizon{position:absolute;left:0;right:0;bottom:0;height:36%}
+#horizon svg{width:100%;height:100%}
+#dropLight{position:absolute;left:50%;top:-8%;width:26px;height:26px;margin-left:-13px;border-radius:50%;
+  transition:top 3.4s cubic-bezier(.5,.02,.65,1)}
+#dropLight.fall{top:60%}
+#ripple{position:absolute;left:50%;top:60%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;
+  border:1.5px solid var(--lc,#c4b5fd);opacity:0;pointer-events:none}
+#ripple.go{animation:rippleOnce 2.6s ease-out forwards}
+@keyframes rippleOnce{0%{transform:scale(1);opacity:.85}100%{transform:scale(9);opacity:0}}
+#landSym{position:absolute;left:50%;top:60%;width:58px;height:58px;margin:-29px 0 0 -29px;opacity:0;
+  transition:opacity 2.4s ease 1.2s}
+#landSym.on{opacity:1}
+#landSym svg{width:100%!important;height:100%!important;animation:breathe 6s ease-in-out infinite}
+#landLines{position:absolute;left:0;right:0;top:13%;text-align:center;padding:0 30px;opacity:0;transition:opacity 2.2s ease}
+#landLines.on{opacity:1}
+#landLines .big{font-size:clamp(22px,6vw,28px);color:var(--pale);text-shadow:0 0 22px rgba(233,221,255,.35);letter-spacing:.03em}
+#landLines .small{font-size:13.5px;color:var(--label);font-style:italic;margin-top:12px;line-height:1.7}
+
+/* the after-gift — words and the second instrument, once the light is home */
+#invite{position:absolute;left:14px;right:14px;bottom:calc(16px + env(safe-area-inset-bottom));
+  max-width:430px;margin:0 auto;background:var(--card);border:.5px solid var(--line);border-radius:20px;
+  padding:18px 18px 16px;backdrop-filter:blur(6px);max-height:62vh;overflow-y:auto;
+  opacity:0;transform:translateY(24px);transition:opacity 1.4s ease,transform 1.4s ease;pointer-events:none}
+#invite.on{opacity:1;transform:none;pointer-events:auto}
+#invite .q2{font-size:16.5px;color:var(--pale);letter-spacing:.02em}
+#invite .wq2{font-size:12.5px;color:var(--dim);font-style:italic;margin-top:6px;line-height:1.55}
+#invite textarea{margin-top:12px;min-height:84px;resize:none;color:var(--ink);
+  background:rgba(255,255,255,.06);border:.5px solid var(--line)}
+#invite textarea::placeholder{color:var(--dim);font-style:italic}
+#invite textarea:focus{border-color:var(--lav2);box-shadow:0 0 14px rgba(167,139,250,.25)}
+.duskbtn{margin-top:12px;font-family:var(--serif);font-size:14px;color:var(--ink);
+  background:rgba(20,16,40,.7);border:.5px solid var(--line);border-radius:20px;
+  padding:10px 20px;cursor:pointer;letter-spacing:.03em;transition:all .3s}
+.duskbtn:hover{border-color:rgba(196,181,253,.8);box-shadow:0 0 14px rgba(167,139,250,.35)}
+#photoInput{display:none}
+#photoThumb{display:none;margin-top:10px;max-width:110px;max-height:110px;border-radius:12px;
+  box-shadow:0 0 18px rgba(167,139,250,.3)}
+.quiet{font-size:11px;color:var(--dim);font-style:italic;margin-top:12px;letter-spacing:.04em}
+#again{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(24px + env(safe-area-inset-bottom));
+  font-family:var(--serif);font-size:12px;color:var(--dim);background:none;border:.5px solid rgba(111,102,148,.4);
+  border-radius:16px;padding:7px 16px;cursor:pointer;letter-spacing:.05em;opacity:0;transition:opacity 1.5s ease;pointer-events:none}
+#again.on{opacity:1;pointer-events:auto}
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- 1 · THE AURA CLOUD -->
+  <div class="scene on" id="sCloud">
+    <div class="blob" id="b1"></div><div class="blob" id="b2"></div><div class="blob" id="b3"></div>
+    <div id="cloudhint">breathe with it, or touch it to begin</div>
+  </div>
+
+  <!-- 2 · THE JOINING -->
+  <div class="scene" id="join">
+    <div class="atomrow">
+      <div class="atom" id="atomL"></div>
+      <div class="atom" id="atomR"></div>
+    </div>
+    <div class="wordrow">
+      <span class="wj" id="wAura">Aura</span><span class="wj" id="wSense">sense</span>
+    </div>
+  </div>
+
+  <!-- the two travelling lights -->
+  <div class="flyer" id="flyA"></div>
+  <div class="flyer" id="flyS"></div>
+
+  <!-- 3 · THE PASSAGE -->
+  <div id="veil"></div>
+
+  <!-- THE WHITE FIELD -->
+  <div id="field">
+
+    <!-- 4 · FEELING — the sense-light arrives, and becomes it -->
+    <div class="step" id="stFeel">
+      <div id="coreFeel"></div>
+      <div id="feelWord">Feeling</div>
+      <div class="q" id="feelQ">What are you feeling?</div>
+    </div>
+
+    <!-- 5–7 · the scale, the breath, the living zones -->
+    <div class="step" id="stScale">
+      <div id="scaleWrap">
+        <div class="endSym" id="endNeg"></div>
+        <div id="track"></div>
+        <div class="endSym" id="endPos"></div>
+        <div id="breathRing"></div>
+        <div id="thumb" class="locked"></div>
+      </div>
+      <div id="breatheLine">Take a moment. Breathe.</div>
+      <div id="afterBreath">…and when you are ready, move toward what you feel.<br>The further you go, the stronger it is.</div>
+    </div>
+
+    <div id="fanArea">
+      <svg id="lineSvg"><defs>
+        <linearGradient id="lineGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#a78bfa"/><stop offset="100%" stop-color="#e9ddff"/>
+        </linearGradient></defs>
+        <path id="fanPath" d=""/>
+      </svg>
+      <div id="zoneHint">touch the one that is closest</div>
+    </div>
+
+    <!-- 8 · where, and home, in one breath -->
+    <div class="step" id="stWhere" style="margin-top:14px">
+      <div class="q">Where are you sensing this?</div>
+      <input type="text" id="whereBox" placeholder="A street, a town — anywhere real" style="margin-top:18px">
+      <div id="homeRow"><span id="homeMark">◇</span><span id="homeText">Also make this my home locality — no one else will see this.</span></div>
+      <button class="softbtn" id="whereGo">Continue →</button>
+    </div>
+
+  </div>
+
+  <!-- 9 · THE LANDING, and the after-gift -->
+  <div class="scene" id="land">
+    <div id="landLines">
+      <div class="big">Your light is here.</div>
+      <div class="small">This is what the map will feel like —<br>every light on it, someone's true moment.</div>
+    </div>
+    <div id="dropLight"></div>
+    <div id="ripple"></div>
+    <div id="landSym"></div>
+    <div id="horizon">
+      <svg viewBox="0 0 400 140" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0 62 Q100 38 200 46 Q300 54 400 40 L400 140 L0 140 Z" fill="#0b0a18"/>
+        <path d="M0 62 Q100 38 200 46 Q300 54 400 40" fill="none" stroke="rgba(167,139,250,.28)" stroke-width="1"/>
+      </svg>
+    </div>
+
+    <div id="invite">
+      <div class="q2">Say what it is, in your own words</div>
+      <div class="wq2">— or leave it wordless. Feelings are allowed to be.</div>
+      <textarea id="wordsBox" placeholder="It feels like…"></textarea>
+      <button class="duskbtn" id="photoBtn">◈&nbsp; Add a photo of what was there</button>
+      <input type="file" id="photoInput" accept="image/*" capture="environment">
+      <div class="wq2">so your feeling has something to stand next to</div>
+      <img id="photoThumb" alt="what was there">
+      <div style="display:flex;justify-content:flex-end"><button class="duskbtn" id="doneBtn">Done ✧</button></div>
+      <div class="quiet">Nothing leaves this page.</div>
+    </div>
+
+    <button id="again">begin again</button>
+  </div>
+
+</div>
+
+<script>
+'use strict';
+/* ── the two orb gestures — the atoms of the joining ─────────────── */
+const ORB_A='<svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="fbCoreA" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="45%" stop-color="#e9ddff"/><stop offset="72%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/></radialGradient><radialGradient id="fbHaloA" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#c4b5fd" stop-opacity=".3"/><stop offset="100%" stop-color="#a78bfa" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#fbHaloA)"/><circle cx="48" cy="48" r="11" fill="url(#fbCoreA)"/></svg>';
+const ORB_S='<svg viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="fbCoreB" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="45%" stop-color="#ffe4ef"/><stop offset="72%" stop-color="#f3bfd4"/><stop offset="100%" stop-color="#ff9fc0" stop-opacity="0"/></radialGradient><radialGradient id="fbHaloB" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd6e6" stop-opacity=".28"/><stop offset="100%" stop-color="#ff9fc0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#fbHaloB)"/><circle cx="48" cy="48" r="11" fill="url(#fbCoreB)"/></svg>';
+
+/* ── real sense-panel meta — labels and colours exactly as the app holds them ── */
+const META={
+  anxiety:{label:'Anxiety',color:'#e89aa8'},
+  socialanxiety:{label:'Social Anxiety',color:'#d98fc0'},
+  pain:{label:'Pain',color:'#d44a4a'},
+  overwhelm:{label:'Emotional Overwhelm',color:'#c08ae0'},
+  loneliness:{label:'Loneliness',color:'#8fa0c8'},
+  intuition:{label:'Intuition',color:'#b57edc'},
+  innertemp:{label:'Inner Temperature',color:'#f0b090'},
+  stress:{label:'Stress',color:'#d97777'},
+  safety:{label:'Safety',color:'#e69138'},
+  belonging:{label:'Belonging',color:'#f6b26b'},
+  proprioception:{label:'Proprioception',color:'#7fb3a0'}
+};
+
+/* the living symbols — spliced verbatim from the live app. Never escaped. */
+const SENSE_SYMBOLS={
+anxiety:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,154,168,0.5))"><defs><radialGradient id="as-anxCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#e89aa8" stop-opacity="0"/></radialGradient><radialGradient id="as-anxHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f2b6c0" stop-opacity="0.28"/><stop offset="100%" stop-color="#e89aa8" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-anxHalo)"/><path d="M30 44 l5 -6 5 6 5 -6 5 6 5 -6 5 6" fill="none" stroke="#f2b6c0" stroke-width="1.8" stroke-linecap="round" opacity="0.8" class="as-shimmer"/><path d="M33 58 l4 -4 4 4 4 -4 4 4 4 -4 4 4" fill="none" stroke="#f2b6c0" stroke-width="1.4" stroke-linecap="round" opacity="0.5"/><circle cx="48" cy="50" r="5" fill="url(#as-anxCore)" class="as-breathe"/></svg>',
+socialanxiety:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(217,143,192,0.5))"><defs><radialGradient id="as-soxCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#d98fc0" stop-opacity="0"/></radialGradient><radialGradient id="as-soxHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ecb4da" stop-opacity="0.28"/><stop offset="100%" stop-color="#d98fc0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-soxHalo)"/><g fill="#ecb4da" opacity="0.55" class="as-slowShimmer"><circle cx="26" cy="34" r="2.4"/><circle cx="48" cy="26" r="2.4"/><circle cx="70" cy="34" r="2.4"/><circle cx="76" cy="54" r="2.4"/><circle cx="20" cy="54" r="2.4"/></g><path d="M40 62 Q48 54 56 62" fill="none" stroke="#ecb4da" stroke-width="1.8" stroke-linecap="round" opacity="0.75"/><circle cx="48" cy="66" r="5" fill="url(#as-soxCore)" class="as-breathe"/></svg>',
+pain:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(212,74,74,0.6))"><defs><radialGradient id="as-painCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="45%" stop-color="#e85858" stop-opacity="0.85"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient><radialGradient id="as-painHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e87878" stop-opacity="0.3"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-painHalo)"/><path d="M48 18 L54 42 L78 48 L54 54 L48 78 L42 54 L18 48 L42 42 Z" fill="url(#as-painCore)" stroke="#f09696" stroke-width="1" class="as-flicker"/></svg>',
+overwhelm:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(192,138,224,0.5))"><defs><radialGradient id="as-ovwCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#c08ae0" stop-opacity="0"/></radialGradient><radialGradient id="as-ovwHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#d8b0f0" stop-opacity="0.3"/><stop offset="100%" stop-color="#c08ae0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-ovwHalo)"/><g fill="none" stroke="#d8b0f0" stroke-linecap="round" class="as-drift"><path d="M16 30 Q34 38 42 46" stroke-width="2" opacity="0.75"/><path d="M80 30 Q62 38 54 46" stroke-width="2" opacity="0.75"/><path d="M22 72 Q36 62 44 54" stroke-width="1.7" opacity="0.6"/><path d="M74 72 Q60 62 52 54" stroke-width="1.7" opacity="0.6"/></g><circle cx="48" cy="50" r="4.5" fill="url(#as-ovwCore)" class="as-breathe"/></svg>',
+loneliness:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(143,160,200,0.5))"><defs><radialGradient id="as-lonCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#8fa0c8" stop-opacity="0"/></radialGradient><radialGradient id="as-lonHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b4c2e0" stop-opacity="0.26"/><stop offset="100%" stop-color="#8fa0c8" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-lonHalo)"/><g fill="#b4c2e0" opacity="0.4" class="as-slowShimmer"><circle cx="66" cy="26" r="1.8"/><circle cx="74" cy="34" r="1.6"/><circle cx="70" cy="43" r="1.5"/></g><circle cx="36" cy="60" r="6" fill="url(#as-lonCore)" class="as-breathe"/></svg>',
+intuition:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 6px rgba(190,140,225,0.6))"><defs><radialGradient id="as-intCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="55%" stop-color="#cfa6e8" stop-opacity="0.7"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient><radialGradient id="as-intHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#cfa6e8" stop-opacity="0.32"/><stop offset="100%" stop-color="#b57edc" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-intHalo)"/><path d="M20 48 Q 48 26 76 48 Q 48 70 20 48 Z" fill="none" stroke="#d9b8f0" stroke-width="3.2" stroke-linejoin="round" opacity="0.9" class="as-slowShimmer"/><circle cx="48" cy="48" r="13" fill="url(#as-intCore)" class="as-breathe"/><circle cx="48" cy="48" r="4.5" fill="#ffffff" opacity="0.92"/></svg>',
+innertemp:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(240,176,144,0.5))"><defs><radialGradient id="as-itpCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#f0b090" stop-opacity="0"/></radialGradient><radialGradient id="as-itpHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f8cdb4" stop-opacity="0.28"/><stop offset="100%" stop-color="#f0b090" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-itpHalo)"/><rect x="38" y="20" width="20" height="52" rx="10" fill="none" stroke="#f4c2a4" stroke-width="2" opacity="0.8"/><path d="M44 30 L48 26 L52 30 M44 62 L48 66 L52 62" fill="none" stroke="#f8d6c0" stroke-width="1.4" stroke-linecap="round" opacity="0.55" class="as-shimmer"/><circle cx="48" cy="46" r="7" fill="url(#as-itpCore)" class="as-breathe"/></svg>',
+stress:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,130,130,0.5))"><defs><radialGradient id="as-strCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient><radialGradient id="as-strHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e89a9a" stop-opacity="0.28"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-strHalo)"/><path d="M48 28 L55 40 L66 42 L57 50 L61 63 L48 56 L35 63 L39 50 L30 42 L41 40 Z" fill="none" stroke="#ec9e9e" stroke-width="2" stroke-linejoin="miter" opacity="0.9" class="as-shiver"/><circle cx="48" cy="48" r="6" fill="url(#as-strCore)" class="as-flicker"/></svg>',
+safety:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(250,190,110,0.5))"><defs><radialGradient id="as-safCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#e69138" stop-opacity="0"/></radialGradient><radialGradient id="as-safHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fabe6e" stop-opacity="0.3"/><stop offset="100%" stop-color="#e69138" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="55" r="45" fill="url(#as-safHalo)"/><path d="M18 58 A 30 30 0 0 1 78 58" fill="none" stroke="#fabe6e" stroke-width="4" stroke-linecap="round" opacity="1" class="as-breathe"/><path d="M26 58 A 22 22 0 0 1 70 58" fill="none" stroke="#fabe6e" stroke-width="2" stroke-linecap="round" opacity="0.55"/><circle cx="48" cy="65" r="13" fill="url(#as-safCore)" class="as-shimmer"/></svg>',
+belonging:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(250,195,140,0.5))"><defs><radialGradient id="as-belCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#f6b26b" stop-opacity="0"/></radialGradient><radialGradient id="as-belHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#facb96" stop-opacity="0.3"/><stop offset="100%" stop-color="#f6b26b" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="53" r="45" fill="url(#as-belHalo)"/><g class="as-breathe"><path d="M24 30 C 8 46, 8 60, 24 76" fill="none" stroke="#facb96" stroke-width="4" stroke-linecap="round" opacity="1"/><path d="M72 30 C 88 46, 88 60, 72 76" fill="none" stroke="#facb96" stroke-width="4" stroke-linecap="round" opacity="1"/></g><circle cx="48" cy="53" r="15" fill="url(#as-belCore)" class="as-shimmer"/></svg>',
+proprioception:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(127,179,160,0.5))"><defs><radialGradient id="as-prCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#7fb3a0" stop-opacity="0"/></radialGradient><radialGradient id="as-prHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9fcbb8" stop-opacity="0.28"/><stop offset="100%" stop-color="#7fb3a0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-prHalo)"/><g class="as-drift"><path d="M24 66 L46 44 L70 52" fill="none" stroke="#a3cebb" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><circle cx="24" cy="66" r="4" fill="#a3cebb" opacity="0.85"/><circle cx="70" cy="52" r="4" fill="#a3cebb" opacity="0.85"/><circle cx="46" cy="44" r="6" fill="url(#as-prCore)" class="as-breathe"/></g></svg>',
+};
+
+/* the app's own established emotion gestures — spliced verbatim */
+const ALPHA=[
+{w:'Hope',c:'#ffe0a0',d:'a small sun above the horizon',g:'<path d="M10 32h28"/><circle cx="24" cy="24" r="3.4" class="f"/><path d="M24 17v-4M17 19l-3-3M31 19l3-3" opacity="0.8"/>'},
+{w:'Joy',c:'#ffcf6e',d:'light leaping upward from the core',g:'<circle cx="24" cy="30" r="3" class="f"/><path d="M24 26 C 23 20, 20 16, 15 11"/><path d="M24 26 C 24 19, 24 14, 24 8"/><path d="M24 26 C 25 20, 28 16, 33 11"/>'},
+{w:'Gratitude',c:'#f2ce8e',d:'an open vessel, receiving upward',g:'<path d="M14 26a10 10 0 0 0 20 0"/><circle cx="24" cy="16" r="3" class="f"/>'},
+{w:'Peace',c:'#aee0d8',d:'stillness inside the whole',g:'<circle cx="24" cy="24" r="11"/><path d="M17 24h14"/>'},
+{w:'Wonder',c:'#d8b8ff',d:'a centre leaning toward the unknown',g:'<circle cx="22" cy="26" r="3" class="f"/><ellipse cx="26" cy="22" rx="12" ry="7" transform="rotate(-24 26 22)"/>'},
+{w:'Love',c:'#ff9db4',d:'two fields sharing one core',g:'<circle cx="19" cy="24" r="8"/><circle cx="29" cy="24" r="8"/><circle cx="24" cy="24" r="2.6" class="f"/>'},
+];
+/* the app's own wrapper, faithfully reproduced */
+function alphaSvg(word,s){
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 48 48" fill="none" stroke="'+word.c+'" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 7px '+word.c+'aa) drop-shadow(0 0 14px '+word.c+'44)">'+word.g.replace(/class="f"/g,'fill="'+word.c+'" stroke="none"')+'</svg>';
+}
+const HOPE=ALPHA.find(a=>a.w==='Hope'), JOY=ALPHA.find(a=>a.w==='Joy');
+
+/* ── the zones — distance is intensity ───────────────────────────── */
+function zoneOf(t){
+  if(t<=-0.68)return 'deepneg';
+  if(t<=-0.22)return 'midneg';
+  if(t<0.22)return 'neutral';
+  if(t<0.68)return 'midpos';
+  return 'deeppos';
+}
+const ZONES={
+  deepneg:[{k:'panel',id:'anxiety'}],
+  midneg:[{k:'panel',id:'socialanxiety'},{k:'panel',id:'stress'},{k:'panel',id:'pain'},{k:'panel',id:'overwhelm'},{k:'panel',id:'loneliness'}],
+  neutral:[{k:'panel',id:'intuition'},{k:'panel',id:'innertemp'},{k:'panel',id:'proprioception'}],
+  midpos:[{k:'alpha',id:'Hope'},{k:'panel',id:'safety'},{k:'panel',id:'belonging'},{k:'alpha',id:'Gratitude'}],
+  deeppos:[{k:'alpha',id:'Joy'},{k:'alpha',id:'Love'},{k:'alpha',id:'Peace'},{k:'alpha',id:'Wonder'}]
+};
+function optMeta(o){
+  if(o.k==='panel')return {label:META[o.id].label,color:META[o.id].color,svg:SENSE_SYMBOLS[o.id]||''};
+  const w=ALPHA.find(a=>a.w===o.id);
+  return {label:w.w,color:w.c,svg:alphaSvg(w,26)};
+}
+
+/* what this breath gathers — held in memory only; nothing leaves this page */
+const breathState={valence:null,senseId:null,senseLabel:null,severity:null,place:'',home:false,words:'',photo:null};
+
+const $=id=>document.getElementById(id);
+let phase='cloud';
+
+/* mount the atoms */
+$('atomL').innerHTML=ORB_A; $('atomR').innerHTML=ORB_S;
+
+/* ── 1 → 2 : cloud into the joining ── */
+function toJoin(){
+  if(phase!=='cloud')return; phase='join';
+  $('sCloud').classList.remove('on');
+  const j=$('join'); j.classList.add('on');
+  setTimeout(()=>j.classList.add('meet'),900);
+  setTimeout(toWhite,5200);
+}
+$('sCloud').addEventListener('pointerdown',toJoin);
+setTimeout(toJoin,6500);
+
+/* helper: place a flyer exactly over an element, sized to it */
+function seatFlyer(fly,el){
+  const r=el.getBoundingClientRect();
+  fly.style.width=r.width+'px'; fly.style.height=r.height+'px';
+  fly.style.transition='none';
+  fly.style.transform='translate('+r.left+'px,'+r.top+'px)';
+  void fly.offsetWidth; /* settle before any transition */
+  fly.style.transition='';
+}
+function flyTo(fly,el,ms){
+  const r=el.getBoundingClientRect();
+  fly.style.transitionDuration=ms+'ms,1s,'+ms+'ms,'+ms+'ms';
+  fly.style.width=r.width+'px'; fly.style.height=r.height+'px';
+  fly.style.transform='translate('+r.left+'px,'+r.top+'px)';
+}
+
+/* ── 3 : the passage — the lights travel through the whitening ── */
+function toWhite(){
+  if(phase!=='join')return; phase='white';
+  /* the lights lift out of the joining and keep moving */
+  const fa=$('flyA'), fs=$('flyS');
+  fa.innerHTML=ORB_A; fs.innerHTML=ORB_S;
+  seatFlyer(fa,$('atomL')); seatFlyer(fs,$('atomR'));
+  fa.classList.add('show','hold'); fs.classList.add('show','hold');
+  $('atomL').style.opacity='0'; $('atomR').style.opacity='0';
+  $('veil').classList.add('bloom');
+  setTimeout(()=>{
+    document.body.classList.add('white');
+    $('join').classList.remove('on');
+    ['b1','b2','b3'].forEach(b=>{const e=$(b); e.style.animation='none'; e.style.opacity='0';});
+    const v=$('veil'); v.style.opacity='0'; v.style.transition='opacity 1.2s ease';
+    arriveFeeling();
+  },2600);
+}
+
+/* ── 4 : the sense-light becomes the light above Feeling ── */
+function stepIn(id){const s=$(id); s.classList.add('in'); requestAnimationFrame(()=>requestAnimationFrame(()=>s.classList.add('seen')));}
+function arriveFeeling(){
+  stepIn('stFeel');
+  const cf=$('coreFeel'); cf.innerHTML=ORB_S;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    flyTo($('flyS'),cf,2200);
+    /* the Aura light drifts to a waiting place beneath, still breathing */
+    const r=cf.getBoundingClientRect(), fa=$('flyA');
+    fa.style.transitionDuration='2200ms,1s,2200ms,2200ms';
+    fa.style.width='40px'; fa.style.height='40px';
+    fa.style.transform='translate('+(window.innerWidth/2-20)+'px,'+(r.bottom+150)+'px)';
+    setTimeout(()=>{
+      cf.classList.add('here'); $('flyS').classList.remove('show');
+      $('feelWord').style.opacity='1';
+      setTimeout(()=>{$('feelQ').style.opacity='1';},1400);
+      setTimeout(showScale,3400);
+    },2300);
+  }));
+}
+
+/* ── 5 : the scale emerges; the Aura light becomes its centre ── */
+function showScale(){
+  if(phase!=='white')return; phase='scale';
+  $('endNeg').innerHTML=SENSE_SYMBOLS.anxiety||'';
+  $('endPos').innerHTML=alphaSvg(JOY,44);
+  ['coreFeel','feelWord','feelQ'].forEach(i=>{$(i).classList.add('faded','dim');});
+  stepIn('stScale');
+  const th=$('thumb'); th.innerHTML=ORB_A;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    flyTo($('flyA'),th,1500);
+    setTimeout(()=>{
+      th.classList.add('here'); $('flyA').classList.remove('show');
+      startBreath();
+    },1600);
+  }));
+}
+
+/* ── 6 : the breath — load-bearing, one full cycle, not skippable ── */
+function startBreath(){
+  $('breathRing').classList.add('go');
+  setTimeout(()=>{
+    $('breathRing').classList.remove('go');
+    $('thumb').classList.remove('locked');
+    $('breatheLine').style.opacity='.35';
+    $('afterBreath').classList.add('show');
+    $('fanArea').classList.add('open');
+    armThumb(); updateZones(0,true);
+  },6200);
+}
+
+/* ── 7 : both sides alive — the options change with distance ── */
+let currentZone=null, chipEls=[], dragging=false;
+function armThumb(){
+  const th=$('thumb'), wrap=$('scaleWrap');
+  function setX(clientX){
+    const r=wrap.getBoundingClientRect();
+    let x=clientX-r.left; x=Math.max(58,Math.min(r.width-58,x));
+    th.style.left=x+'px'; th.style.marginLeft='-20px';
+    const t=(x-r.width/2)/((r.width-116)/2);
+    breathState.valence=Math.max(-1,Math.min(1,t));
+    updateZones(breathState.valence,false);
+    drawLine(x);
+  }
+  th.addEventListener('pointerdown',e=>{if(th.classList.contains('locked'))return; dragging=true; th.setPointerCapture(e.pointerId); setX(e.clientX);});
+  th.addEventListener('pointermove',e=>{if(dragging)setX(e.clientX);});
+  th.addEventListener('pointerup',()=>{dragging=false;});
+}
+function drawLine(thumbX){
+  const area=$('fanArea'), W=area.clientWidth||360;
+  const cx=Math.max(120,Math.min(W-120,thumbX));
+  $('fanPath').setAttribute('d','M '+thumbX+' -30 Q '+((thumbX+cx)/2)+' 34 '+cx+' 66');
+}
+function updateZones(t,force){
+  const z=zoneOf(t);
+  if(z===currentZone&&!force)return;
+  currentZone=z;
+  const area=$('fanArea'), W=area.clientWidth||360;
+  chipEls.forEach(c=>{c.classList.remove('inz'); setTimeout(()=>c.remove(),450);});
+  chipEls=[];
+  const opts=ZONES[z];
+  const wrapRect=$('scaleWrap').getBoundingClientRect();
+  const thumbX=parseFloat($('thumb').style.left)||wrapRect.width/2;
+  const cx=Math.max(120,Math.min(W-120,thumbX));
+  opts.forEach((o,i)=>{
+    const m=optMeta(o);
+    const c=document.createElement('button');
+    c.type='button'; c.className='chip'; c.style.setProperty('--cc',m.color);
+    c.innerHTML=m.svg+'<span>'+m.label+'</span>';
+    const depth=opts.length>1?i/(opts.length-1):0;
+    c.style.top=(60+depth*158)+'px';
+    c.style.transform='scale('+(1-depth*0.16)+') translateZ('+(-depth*110)+'px)';
+    c.style.zIndex=String(20-i);
+    area.appendChild(c);
+    const cw=c.offsetWidth;
+    c.style.left=Math.max(6,Math.min(W-cw-6,cx-cw/2+(i%2?26:-26)*depth*2))+'px';
+    requestAnimationFrame(()=>c.classList.add('inz'));
+    c.addEventListener('pointerdown',()=>pickSense(o,m,c));
+    chipEls.push(c);
+  });
+  drawLine(thumbX);
+}
+
+/* ── the choice — distance recorded silently as strength ── */
+function pickSense(o,m,chip){
+  if(phase!=='scale')return; phase='where';
+  breathState.senseId=(o.k==='panel')?o.id:o.id.toLowerCase();
+  breathState.senseLabel=m.label;
+  breathState.severity=Math.max(0.1,Math.abs(breathState.valence||0));
+  breathState.pickedColor=m.color; breathState.pickedSvg=(o.k==='panel')?(SENSE_SYMBOLS[o.id]||''):alphaSvg(ALPHA.find(a=>a.w===o.id),58);
+  chip.classList.add('picked');
+  chipEls.forEach(c=>{if(c!==chip){c.style.opacity='.22';} c.style.pointerEvents='none';});
+  $('thumb').classList.add('locked');
+  $('breatheLine').style.opacity='0';
+  $('afterBreath').classList.remove('show'); $('afterBreath').style.opacity='0';
+  $('zoneHint').style.opacity='0';
+  setTimeout(()=>{
+    stepIn('stWhere');
+    $('stWhere').scrollIntoView({behavior:'smooth',block:'center'});
+  },800);
+}
+
+/* ── 8 : where, and home, in one breath ── */
+$('homeRow').addEventListener('pointerdown',()=>{
+  const on=$('homeRow').classList.toggle('on');
+  $('homeMark').textContent=on?'◆':'◇';
+  breathState.home=on;
+});
+document.querySelectorAll('input[type=text],textarea').forEach(el=>{
+  el.addEventListener('focus',()=>setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),300));
+});
+$('whereGo').addEventListener('pointerdown',()=>{
+  if(phase!=='where')return; phase='land';
+  breathState.place=$('whereBox').value.trim();
+  toLanding();
+});
+
+/* ── 9 : taken to the map, to watch it land — then the after-gift ── */
+function toLanding(){
+  const d=$('dropLight'), col=breathState.pickedColor||'#c4b5fd';
+  d.style.background='radial-gradient(circle,#fff 16%,'+col+' 46%,transparent 72%)';
+  d.style.boxShadow='0 0 22px '+col;
+  $('ripple').style.setProperty('--lc',col);
+  $('landSym').innerHTML=breathState.pickedSvg||'';
+  document.body.classList.remove('white');
+  $('field').style.display='none';
+  $('land').classList.add('on');
+  setTimeout(()=>d.classList.add('fall'),900);
+  setTimeout(()=>{$('ripple').classList.add('go');},4200);
+  setTimeout(()=>{d.style.opacity='0';d.style.transition='opacity 1.2s';$('landSym').classList.add('on');},4400);
+  setTimeout(()=>{$('landLines').classList.add('on');},5400);
+  setTimeout(()=>{$('invite').classList.add('on');},7000);
+}
+$('photoBtn').addEventListener('pointerdown',()=>$('photoInput').click());
+$('photoInput').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f)return;
+  const rd=new FileReader();
+  rd.onload=ev=>{breathState.photo=ev.target.result;const t=$('photoThumb');t.src=breathState.photo;t.style.display='block';};
+  rd.readAsDataURL(f);
+});
+$('doneBtn').addEventListener('pointerdown',()=>{
+  if(phase!=='land')return; phase='done';
+  breathState.words=$('wordsBox').value.trim();
+  $('invite').classList.remove('on');
+  setTimeout(()=>{$('again').classList.add('on');},900);
+});
+$('again').addEventListener('pointerdown',()=>location.reload());
+</script>
+</body>
+</html>
