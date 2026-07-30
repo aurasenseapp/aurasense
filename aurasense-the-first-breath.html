@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Aurasense · THE FIRST BREATH — the opening sequence. Study v4. Standalone.
+<!-- Aurasense · THE FIRST BREATH — the opening sequence. Study v5. Standalone.
      Revised to Karl's direction, 28 July 2026:
        · One continual motion — the 'sense' light becomes the light above Feeling;
          the 'Aura' light travels on to become the centre of the scale.
@@ -11,6 +11,10 @@
        · v3: zones widened on Karl's word — Stress seated mid-left; Proprioception
          joins the neutral middle; Safety, Belonging, Gratitude on the rise;
          Joy, Love, Peace, Wonder at the far light. Serenity awaits its gesture.
+       · v5: the travelling light lands true on the scale's centre (no jump);
+         on choosing, everything folds away and your chosen sense reappears above
+         Where — overlap is now impossible; home-locality is a full-width button
+         (tap anywhere on it); side-drift on the landing steadied.
        · v4: chips sit in one clear centred column, never overlapping; on choosing,\n         the picked sense settles alone in a small band and everything else clears,\n         so Where arrives into open space.\n       · v3 fix: the breathing guidance bows out the moment a sense is chosen,
          so nothing clashes with Where.
      Nothing here touches the app. Nothing entered here leaves this page.
@@ -94,13 +98,13 @@ body.white #stage{background:#fdfcff;transition:background 1s ease 2.4s}
 
 /* ── the white field ─────────────────────────────────────────────── */
 #field{position:absolute;inset:0;z-index:6;display:none;flex-direction:column;align-items:center;
-  color:var(--w-ink);overflow-y:auto;overscroll-behavior:contain;
+  color:var(--w-ink);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
   padding:calc(44px + env(safe-area-inset-top)) 22px calc(44px + env(safe-area-inset-bottom))}
 body.white #field{display:flex}
 .step{width:100%;max-width:430px;display:none;flex-direction:column;align-items:center;
-  opacity:0;transform:translateY(10px);transition:opacity 1.4s ease,transform 1.4s ease}
+  opacity:0;transition:opacity 1.4s ease}
 .step.in{display:flex}
-.step.seen{opacity:1;transform:none}
+.step.seen{opacity:1}
 .q{font-size:clamp(21px,5.6vw,26px);color:var(--w-ink);text-align:center;letter-spacing:.02em;line-height:1.35}
 .wq{font-size:13px;color:var(--w-dim);font-style:italic;text-align:center;margin-top:10px;line-height:1.6}
 
@@ -149,6 +153,9 @@ body.white #field{display:flex}
 .chip.picked{background:rgba(255,255,255,.92);box-shadow:0 0 22px var(--cc);border-color:var(--cc)}
 #zoneHint{position:absolute;left:0;right:0;text-align:center;font-size:11.5px;
   color:var(--w-dim);font-style:italic;letter-spacing:.04em;opacity:0;transition:opacity .8s ease,top .5s ease}
+#chosenLine{display:none;align-items:center;gap:9px;font-size:15px;color:var(--w-label);margin-bottom:14px}
+#chosenLine svg{width:26px!important;height:26px!important}
+#chosenLine.on{display:flex}
 #fanArea.open #zoneHint{opacity:1}
 
 /* 8 · where + home, one gentle step */
@@ -161,7 +168,7 @@ input[type=text],textarea{width:100%;font-family:var(--serif);font-size:16px;
   background:rgba(255,255,255,.8);border:.5px solid rgba(124,111,158,.45);border-radius:22px;
   padding:11px 26px;cursor:pointer;letter-spacing:.03em;transition:all .3s}
 .softbtn:hover{border-color:var(--lav);box-shadow:0 0 16px rgba(167,139,250,.3)}
-#homeRow{display:flex;align-items:flex-start;gap:10px;margin-top:14px;cursor:pointer;max-width:340px}
+#homeRow{display:flex;align-items:flex-start;gap:10px;margin-top:14px;cursor:pointer;max-width:340px;width:100%;background:none;border:none;padding:6px 4px;font-family:var(--serif);text-align:left}
 #homeMark{font-size:17px;color:var(--w-dim);line-height:1.3;transition:color .3s}
 #homeRow.on #homeMark{color:var(--lav)}
 #homeText{font-size:13px;color:var(--w-dim);font-style:italic;line-height:1.55;text-align:left}
@@ -274,10 +281,11 @@ input[type=text],textarea{width:100%;font-family:var(--serif);font-size:16px;
     </div>
 
     <!-- 8 · where, and home, in one breath -->
-    <div class="step" id="stWhere" style="margin-top:14px">
+    <div class="step" id="stWhere" style="margin-top:22px">
+      <div id="chosenLine"></div>
       <div class="q">Where are you sensing this?</div>
       <input type="text" id="whereBox" placeholder="A street, a town — anywhere real" style="margin-top:18px">
-      <div id="homeRow"><span id="homeMark">◇</span><span id="homeText">Also make this my home locality — no one else will see this.</span></div>
+      <button type="button" id="homeRow"><span id="homeMark">◇</span><span id="homeText">Also make this my home locality — no one else will see this.</span></button>
       <button class="softbtn" id="whereGo">Continue →</button>
     </div>
 
@@ -549,18 +557,20 @@ function pickSense(o,m,chip){
   breathState.severity=Math.max(0.1,Math.abs(breathState.valence||0));
   breathState.pickedColor=m.color; breathState.pickedSvg=(o.k==='panel')?(SENSE_SYMBOLS[o.id]||''):alphaSvg(ALPHA.find(a=>a.w===o.id),58);
   chip.classList.add('picked');
-  chipEls.forEach(c=>{c.style.pointerEvents='none'; if(c!==chip){c.classList.remove('inz'); setTimeout(()=>c.remove(),500);}});
+  chipEls.forEach(c=>{c.style.pointerEvents='none';});
   $('thumb').classList.add('locked');
   $('breatheLine').style.opacity='0';
   $('afterBreath').classList.remove('show'); $('afterBreath').style.opacity='0';
   $('zoneHint').style.opacity='0';
   $('fanPath').style.opacity='0';
-  chip.style.top='16px'; chip.style.setProperty('--sc','1');
-  $('fanArea').style.height='78px';
   setTimeout(()=>{
+    chipEls.forEach(c=>{c.classList.remove('inz'); setTimeout(()=>c.remove(),450);});
+    $('fanArea').style.height='0px';
+    const cl=$('chosenLine');
+    cl.innerHTML=m.svg+'<span>'+m.label+'</span>'; cl.classList.add('on');
     stepIn('stWhere');
-    $('stWhere').scrollIntoView({behavior:'smooth',block:'center'});
-  },700);
+    $('stWhere').scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'});
+  },650);
 }
 
 /* ── 8 : where, and home, in one breath ── */
@@ -570,7 +580,7 @@ $('homeRow').addEventListener('pointerdown',()=>{
   breathState.home=on;
 });
 document.querySelectorAll('input[type=text],textarea').forEach(el=>{
-  el.addEventListener('focus',()=>setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),300));
+  el.addEventListener('focus',()=>setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center',inline:'nearest'}),300));
 });
 $('whereGo').addEventListener('pointerdown',()=>{
   if(phase!=='where')return; phase='land';
@@ -586,6 +596,7 @@ function toLanding(){
   $('ripple').style.setProperty('--lc',col);
   $('landSym').innerHTML=breathState.pickedSvg||'';
   document.body.classList.remove('white');
+  window.scrollTo(0,0);
   $('field').style.display='none';
   $('land').classList.add('on');
   setTimeout(()=>d.classList.add('fall'),900);
