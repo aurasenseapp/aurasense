@@ -1,17 +1,28 @@
 # Keeps the Aurasense Gate (Supabase) awake.
 #
-# Supabase pauses a free project after 7 days without activity. This runs one
-# tiny, harmless read EVERY DAY, so the Gate never sleeps. It costs nothing and
-# needs no attention once it exists.
+# Supabase pauses a free project after 7 days without activity. This touches the
+# Gate once a day so it never sleeps. Costs nothing, needs no attention.
 #
-# NO SECRET TO SET. The earlier version kept the project URL in a GitHub secret,
-# which added a step that could fail silently — and did. That URL is already
-# public in gate-config.js on the live site, so hiding it bought nothing. It is
-# written in plainly below, along with the publishable key, which is also public
-# by design.
+# TWO THINGS LEARNED THE HARD WAY, WRITTEN DOWN SO THEY ARE NOT RELEARNED
+#
+# 1. THE NEWER PUBLISHABLE KEYS NEED TWO HEADERS WHEN CALLED RAW.
+#    supabase-js sends both apikey AND Authorization: Bearer automatically, which
+#    is why the live site works. A plain curl sending only apikey gets a 401.
+#    Both are sent below.
+#
+# 2. A PING SHOULD NOT GO RED FOR THE WRONG REASONS.
+#    The first version demanded exactly 200 from one named table, so a renamed
+#    table, a missing policy or a changed key would all show failure even though
+#    THE PING HAD WORKED -- the request reached Supabase, which is the whole job.
+#    Worse, a red mark that means nothing gets ignored, and that is how a silent
+#    failure begins. This asks the REST ROOT, which exists on every project
+#    whatever the tables say, and goes red only when the Gate does not answer.
+#
+# NO SECRET TO SET. The project URL and the publishable key are already public in
+# gate-config.js on the live site. Hiding them here bought nothing and added a
+# step that could be missed -- which is very likely why this never ran at all.
 #
 # THIS FILE MUST LIVE AT EXACTLY:  .github/workflows/keep-gate-awake.yml
-# If it sits anywhere else, GitHub will not see it.
 
 name: Keep Gate Awake
 
@@ -20,21 +31,59 @@ on:
     - cron: "0 9 * * *"      # 09:00 UTC, every day
   workflow_dispatch: {}      # and by hand, from the Actions tab
 
+env:
+  GATE: "https://iwuqcmhlbjyjhqexbeyy.supabase.co"
+  KEY:  "sb_publishable_trDTjqSBIqdwSyd2EVtJHw_JD2exVmr"
+
 jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
       - name: Touch the Gate
         run: |
-          echo "Waking the Gate with a harmless read..."
-          CODE=$(curl -s -o /dev/null -w "%{http_code}" \
-            "https://iwuqcmhlbjyjhqexbeyy.supabase.co/rest/v1/accord_lights?select=id&limit=1" \
-            -H "apikey: sb_publishable_trDTjqSBIqdwSyd2EVtJHw_JD2exVmr" \
+          echo "-- Touching the Gate --"
+          CODE=$(curl -s -m 25 -o /dev/null -w "%{http_code}" \
+            "$GATE/rest/v1/" \
+            -H "apikey: $KEY" \
+            -H "Authorization: Bearer $KEY" \
             -H "Accept: application/json")
           echo "The Gate answered HTTP $CODE"
-          if [ "$CODE" != "200" ]; then
-            echo "That is not a 200. The Gate may be paused, or the key may have changed."
-            echo "Fails loudly on purpose: a silent ping that does nothing is worse than none."
-            exit 1
-          fi
-          echo "Awake. Sleeping again tomorrow."
+          case "$CODE" in
+            200)
+              echo "AWAKE, and the key was accepted. Nothing to do." ;;
+            401|403|404)
+              echo "AWAKE. The Gate answered, so the request reached Supabase and the"
+              echo "seven-day clock is reset -- which is the entire purpose of this job."
+              echo "The $CODE is about permission, not about sleep. See the next step." ;;
+            000)
+              echo "NO ANSWER AT ALL. The project is paused, or the address is wrong."
+              echo "Go to supabase.com/dashboard and check whether aurasense says Paused."
+              exit 1 ;;
+            5*)
+              echo "There but unwell (a 5xx). Usually means it is still waking after being"
+              echo "restored. Try again in five minutes."
+              exit 1 ;;
+            *)
+              echo "An answer nobody expected. Not fatal -- the Gate is awake -- but worth a look." ;;
+          esac
+
+      - name: Look at the tables, for information only
+        continue-on-error: true
+        run: |
+          echo "-- Not part of keeping the Gate awake. Just useful to know. --"
+          for T in accord_lights profiles offerings world_events; do
+            C=$(curl -s -m 20 -o /dev/null -w "%{http_code}" \
+              "$GATE/rest/v1/$T?select=*&limit=1" \
+              -H "apikey: $KEY" -H "Authorization: Bearer $KEY" -H "Accept: application/json")
+            case "$C" in
+              200) echo "  $T  ->  200  readable" ;;
+              401) echo "  $T  ->  401  the key was refused" ;;
+              403) echo "  $T  ->  403  it exists, but a policy is refusing to show it" ;;
+              404) echo "  $T  ->  404  no such table -- its SQL may never have been run" ;;
+              *)   echo "  $T  ->  $C" ;;
+            esac
+          done
+          echo ""
+          echo "None of the above can turn this job red. Only a Gate that does not answer can."
+          echo "If every line says 401, the key has been rotated in Supabase and gate-config.js"
+          echo "needs the new one -- and the live site will be failing in the same way."
