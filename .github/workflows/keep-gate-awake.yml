@@ -1,0 +1,40 @@
+# Keeps the Aurasense Gate (Supabase) awake.
+#
+# Supabase pauses a free project after 7 days without activity. This runs one
+# tiny, harmless read EVERY DAY, so the Gate never sleeps. It costs nothing and
+# needs no attention once it exists.
+#
+# NO SECRET TO SET. The earlier version kept the project URL in a GitHub secret,
+# which added a step that could fail silently — and did. That URL is already
+# public in gate-config.js on the live site, so hiding it bought nothing. It is
+# written in plainly below, along with the publishable key, which is also public
+# by design.
+#
+# THIS FILE MUST LIVE AT EXACTLY:  .github/workflows/keep-gate-awake.yml
+# If it sits anywhere else, GitHub will not see it.
+
+name: Keep Gate Awake
+
+on:
+  schedule:
+    - cron: "0 9 * * *"      # 09:00 UTC, every day
+  workflow_dispatch: {}      # and by hand, from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Touch the Gate
+        run: |
+          echo "Waking the Gate with a harmless read..."
+          CODE=$(curl -s -o /dev/null -w "%{http_code}" \
+            "https://iwuqcmhlbjyjhqexbeyy.supabase.co/rest/v1/accord_lights?select=id&limit=1" \
+            -H "apikey: sb_publishable_trDTjqSBIqdwSyd2EVtJHw_JD2exVmr" \
+            -H "Accept: application/json")
+          echo "The Gate answered HTTP $CODE"
+          if [ "$CODE" != "200" ]; then
+            echo "That is not a 200. The Gate may be paused, or the key may have changed."
+            echo "Fails loudly on purpose: a silent ping that does nothing is worse than none."
+            exit 1
+          fi
+          echo "Awake. Sleeping again tomorrow."
