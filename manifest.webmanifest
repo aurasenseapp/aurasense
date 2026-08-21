@@ -1,0 +1,31 @@
+{
+  "id": "/index-mapbox.html",
+  "name": "Aurasense",
+  "short_name": "Aurasense",
+  "description": "A living map of felt experience. Offer your light; see it among the others.",
+  "start_url": "/index-mapbox.html",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#07060e",
+  "theme_color": "#07060e",
+  "icons": [
+    {
+      "src": "/aurasense-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/aurasense-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/aurasense-icon-512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}
