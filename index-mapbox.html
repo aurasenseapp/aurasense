@@ -1028,66 +1028,20 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 /* Input glow to draw the eye after choosing a sense */
 #inp.inp-glow{border-color:rgba(167,139,250,.9)!important;box-shadow:0 0 0 2px rgba(167,139,250,.25),0 0 20px rgba(167,139,250,.5);animation:inpGlow 1.3s ease-in-out infinite}
 #sbtn.sbtn-glow{border-color:rgba(167,139,250,.95)!important;background:rgba(167,139,250,.22);color:#efe8ff;animation:inpGlow 1.4s ease-in-out infinite}
-/* ═══ THE SEEKING, INSIDE THE MAP ═══════════════════════════════════════════
-   The circle answers rather than asks. Standing laws, all of them load-bearing:
-   nothing snaps; the ring carries no words; a three-second hold commits and a
-   tap commits nothing; the circle itself fills with colour as the hold runs,
-   with no separate widget; families and realms open the circle INWARD; and the
-   list door stays, permanently, as a true second door — not a fallback. */
-#sk-wrap{margin:2px 0 10px}
-#panel.locating #sk-wrap,#panel.locating #sk-tools{display:none}
-#panel:not(.list-door) #scats-all{display:none}
-#panel.list-door #sk-wrap{display:none}
-#sk-circle{position:relative;width:100%;max-width:344px;margin:0 auto;
-  border-radius:50%;border:0.5px solid rgba(167,139,250,.16);
-  background:radial-gradient(circle at 50% 50%,rgba(24,18,48,.55) 0%,rgba(10,8,24,.15) 70%,transparent 100%);
-  -webkit-tap-highlight-color:transparent}
-#sk-circle:before{content:'';display:block;padding-bottom:100%}
-/* the fill IS the progress. It grows from the heart outward — dark theme, so
-   the motion is outward — and reaches the rim exactly at three seconds. */
-#sk-fill{position:absolute;left:50%;top:50%;width:100%;height:100%;
-  margin:-50% 0 0 -50%;border-radius:50%;opacity:0;transform:scale(.12);
-  pointer-events:none;will-change:opacity,transform}
-#sk-ring{position:absolute;inset:0;opacity:1;transition:opacity .26s ease}
-#sk-ring.sk-fading{opacity:0}
-.sk-m{position:absolute;transform:translate(-50%,-50%);width:70px;min-height:58px;
-  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
-  gap:2px;padding:4px 0 0;border-radius:13px;border:0.5px solid transparent;background:transparent;
-  cursor:pointer;font-family:inherit;touch-action:pan-y;user-select:none;
-  -webkit-user-select:none;-webkit-touch-callout:none;
-  -webkit-tap-highlight-color:transparent;
-  transition:border-color .3s ease,background .3s ease,transform .3s ease,filter .3s ease;
-  filter:opacity(.94)}
-.sk-m svg{width:32px!important;height:32px!important}
-.sk-lb{font-size:9px;line-height:1.14;color:#9d93c8;letter-spacing:.01em;
-  text-align:center;max-width:68px;transition:color .3s ease;pointer-events:none;
-  overflow-wrap:anywhere;hyphens:auto;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.sk-m:hover .sk-lb,.sk-m.sk-held .sk-lb{color:#efe8ff}
-.sk-m:hover,.sk-m:focus-visible{filter:none;border-color:rgba(196,181,253,.3);outline:none}
-.sk-m.sk-held{filter:none;transform:translate(-50%,-50%) scale(1.12);
-  border-color:var(--mc,rgba(196,181,253,.6));background:rgba(255,255,255,.05)}
-.sk-m svg{pointer-events:none;display:block}
-/* the heart. The word lives HERE, never on the ring. */
-#sk-core{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
-  width:118px;text-align:center;pointer-events:none;
-  opacity:0;transition:opacity .3s ease}
-#sk-core.on{opacity:1}
-#sk-core-sym{height:34px;display:flex;align-items:center;justify-content:center;margin-bottom:5px}
-#sk-core-sym svg{width:30px;height:30px}
-#sk-core-w{font-size:12.5px;color:#e8e2ff;letter-spacing:.03em;line-height:1.3}
-#sk-hint{text-align:center;font-size:10.5px;color:#7d74a8;margin-top:9px;
-  letter-spacing:.02em;line-height:1.5;min-height:15px;transition:color .3s ease}
-#sk-tools{display:flex;gap:7px;justify-content:center;margin:8px 0 10px;flex-wrap:wrap}
-#sk-tools button{background:rgba(16,13,34,.66);border:0.5px solid rgba(167,139,250,.22);
-  color:#8a82b4;font-size:11px;padding:6px 13px;border-radius:15px;cursor:pointer;
-  font-family:inherit;transition:all .25s ease;letter-spacing:.02em}
-#sk-tools button:hover{color:#d8d0f0;border-color:rgba(167,139,250,.45)}
-#sk-back{display:none}
-#sk-back.on{display:inline-block}
-@media (max-width:600px){#sk-circle{max-width:min(344px,86vw)}
-  .sk-m{width:64px}
-  .sk-lb{font-size:8.5px;max-width:62px}}
+/* ═══ THE THRESHOLD ═══ the Seeking, carried at the front of Aurasense ══════
+   Treatise §3.1: a threshold is CROSSED ONCE. That is what makes it a
+   threshold and not a corridor. The pale cloud is the porch; the map is the
+   room. A person passes through once, on their first visit, and afterwards
+   offers on the dark surface they are already standing on.
+   Nothing snaps: the crossing is a two-second dissolve, both ways at once. */
+#thr{position:fixed;inset:0;z-index:99998;background:#f4f1fb;
+  opacity:1;transition:opacity 2s ease;pointer-events:auto}
+#thr.thr-gone{opacity:0;pointer-events:none}
+#thr iframe{width:100%;height:100%;border:0;display:block;background:#f4f1fb}
+/* the map waits underneath, already breathing, so the dissolve reveals
+   something alive rather than something starting up */
+body.thr-open #panel,body.thr-open #mv-orb,body.thr-open #tabs{opacity:0!important;
+  pointer-events:none!important}
 #sense-confirm{display:block;margin:9px 2px 8px;padding:8px 10px;background:rgba(167,139,250,.08);border:0.5px solid rgba(167,139,250,.25);border-radius:10px;font-size:12px;color:#d7ccf2;letter-spacing:.01em;line-height:1.35}
 @media (max-width:600px){#sense-confirm{display:none!important}}
 #sense-confirm:empty{display:none}
@@ -1697,18 +1651,6 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div id="offer-confirm"></div>
       <div id="offer-lastlink">▾ see last aura I offered</div>
       <div id="ptitle-row"><div id="ptitle">Energize a place with your senses</div><button id="sheet-close">✕ Close</button></div>
-      <div id="sk-wrap">
-        <div id="sk-circle">
-          <div id="sk-fill"></div>
-          <div id="sk-ring"></div>
-          <div id="sk-core"><div id="sk-core-sym"></div><div id="sk-core-w"></div></div>
-        </div>
-        <div id="sk-hint"></div>
-      </div>
-      <div id="sk-tools">
-        <button type="button" id="sk-back">← out</button>
-        <button type="button" id="sk-door">▤ see them as a list</button>
-      </div>
       <div id="scats-all"></div>
       <div class="srealm-label" id="memory-label">Light up this spot with the aura of a personal memory</div>
       <div id="memory-row"><button id="memory-btn">A Memory</button><div id="mem-priv-wrap"><button id="mem-private" class="mem-priv">Memory words: Public</button></div></div>
@@ -7382,193 +7324,96 @@ async function gateLoadOfferings(){
 })();
 
 
-/* ═══ THE SEEKING, INSIDE THE MAP ═══════════════════════════════════════════
-   This does NOT reimplement offering. When the hold completes it finds the
-   sense's existing list chip and clicks it, so every downstream behaviour —
-   the confirm line, the placeholder, the glow, the offer button, anything
-   wired to chips later — stays identical by construction. One path, not two.
 
-   The list door is not a fallback. Some people cannot hold a finger still;
-   some are on their fifth offering of the day and want no ceremony; some
-   simply know the name of the sense they want. All three are served by it. */
+/* ═══ THE THRESHOLD ═══ the Seeking, carried at the front of Aurasense ══════
+   The Seeking runs whole and unaltered inside its own frame. That is deliberate:
+   it is the instrument Karl felt-tested, and rebuilding it here would mean two
+   versions drifting apart. It speaks to the map by one message and nothing else.
+
+   It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
+   and §3.1: crossed once. Anyone who has offered before lands straight on the
+   map, because the threshold has already been crossed. */
 (function(){
-  var wrap=document.getElementById('sk-wrap'); if(!wrap) return;
-  var panel=document.getElementById('panel'),
-      ringEl=document.getElementById('sk-ring'),
-      fillEl=document.getElementById('sk-fill'),
-      coreEl=document.getElementById('sk-core'),
-      coreS=document.getElementById('sk-core-sym'),
-      coreW=document.getElementById('sk-core-w'),
-      hintEl=document.getElementById('sk-hint'),
-      backEl=document.getElementById('sk-back'),
-      doorEl=document.getElementById('sk-door');
-  if(!panel||!ringEl||!fillEl) return;
+  var KEY='aurasense_threshold_crossed';
+  var crossed=false; try{crossed=localStorage.getItem(KEY)==='1';}catch(e){}
+  var forced=false; try{forced=/[?&]seeking=1/.test(location.search);}catch(e){}
+  if(crossed&&!forced) return;
 
-  var HOLD=3000, RADIUS=34, level=null, raf=null, t0=0,
-      heldEl=null, heldItem=null, downX=0, downY=0, committed=false;
+  var thr=document.createElement('div'); thr.id='thr';
+  var fr=document.createElement('iframe');
+  fr.setAttribute('title','The Seeking');
+  fr.setAttribute('allow','geolocation');
+  fr.src='seeking.html';
+  thr.appendChild(fr); document.body.appendChild(thr);
+  document.body.classList.add('thr-open');
 
-  var HINT_REALM='Tap a light to open it.',
-      HINT_SENSE='Hold a light for three seconds. A tap alone offers nothing.',
-      HINT_DONE='Held. Add words below, or offer it as it is.';
-
-  function items(){
-    var out=[];
-    if(level===null){
-      SENSE_CATS.forEach(function(c,i){
-        out.push({kind:'realm',i:i,label:c.t,sub:c.s,
-                  mark:(typeof SGRP_ICONS!=='undefined'&&SGRP_ICONS[i])||'',color:'#a78bfa'});
-      });
-    }else{
-      var c=SENSE_CATS[level]; if(!c) return out;
-      c.ids.forEach(function(id){
-        var s=SENSES.find(function(x){return x.id===id;});
-        if(!s||s.hidden) return;
-        out.push({kind:'sense',id:s.id,label:s.label,sub:'',
-                  mark:SENSE_SYMBOLS[s.id]||'',color:s.color});
-      });
-    }
-    return out;
+  var closed=false;
+  function cross(){
+    if(closed) return; closed=true;
+    try{localStorage.setItem(KEY,'1');}catch(e){}
+    thr.classList.add('thr-gone');
+    document.body.classList.remove('thr-open');
+    setTimeout(function(){ try{thr.remove();}catch(e){} },2400);
   }
 
-  /* nothing snaps — the ring cross-fades out, changes, and fades back in */
-  function draw(fade){
-    if(fade){
-      ringEl.classList.add('sk-fading');
-      setTimeout(function(){ build(); ringEl.classList.remove('sk-fading'); },260);
-    }else build();
-  }
+  /* If the frame cannot load at all, the person still reaches the map.
+     A threshold that traps someone is a wall. */
+  var failsafe=setTimeout(function(){ if(!fr.dataset.ok) cross(); },12000);
+  fr.addEventListener('load',function(){ fr.dataset.ok='1'; clearTimeout(failsafe); });
 
-  function build(){
-    var list=items(); ringEl.innerHTML='';
-    var n=list.length; if(!n) return;
-    list.forEach(function(it,i){
-      var a=(-90+(360/n)*i)*Math.PI/180;
-      var b=document.createElement('button');
-      b.type='button'; b.className='sk-m';
-      b.style.left=(50+RADIUS*Math.cos(a))+'%';
-      b.style.top=(50+RADIUS*Math.sin(a))+'%';
-      b.style.setProperty('--mc',it.color);
-      if(n>=11) b.style.width='56px';
-      b.setAttribute('aria-label',it.label+(it.kind==='realm'?' — open':' — hold three seconds to offer'));
-      b.innerHTML=it.mark+'<span class="sk-lb"></span>';
-      var lb=b.querySelector('.sk-lb');
-      if(lb){ lb.textContent=it.label;
-        // the gap the ring can actually spare between two neighbours, in pixels
-        var gap=2*RADIUS*Math.sin(Math.PI/n)/100*300;
-        lb.style.maxWidth=Math.max(42,Math.min(68,Math.round(gap)-8))+'px';
-        if(n>=11) lb.style.fontSize='8px';
-      }
-      b.addEventListener('pointerenter',function(){ showCore(it); });
-      b.addEventListener('pointerdown',function(e){ onDown(e,b,it); });
-      b.addEventListener('keydown',function(e){
-        if(it.kind==='realm'&&(e.key==='Enter'||e.key===' ')){ e.preventDefault(); enter(it.i); }
-      });
-      ringEl.appendChild(b);
-    });
-  }
+  window.addEventListener('message',function(ev){
+    var d=ev&&ev.data;
+    if(!d||d.aurasense!=='seeking-complete') return;
+    if(ev.source!==fr.contentWindow) return;         /* only from our own frame */
+    cross();
+    try{ carryTheLight(d); }catch(e){ console.warn('[threshold]',e); }
+  },false);
 
-  function showCore(it){
-    if(!coreEl) return;
-    coreEl.classList.remove('on');
-    setTimeout(function(){
-      coreS.innerHTML=it.mark; coreW.textContent=it.label;
-      coreEl.classList.add('on');
-    },140);
-  }
+  /* ── carrying what the Seeking gathered into the map's own offering path ──
+     The map's flow is not duplicated here. The sense is chosen by clicking its
+     real chip, exactly as a finger would, so every downstream behaviour stays
+     identical by construction. */
+  function carryTheLight(d){
+    var id=String(d.senseKey||'').toLowerCase();
+    if(typeof SENSES==='undefined') return;
+    if(!SENSES.some(function(s){return s.id===id;})) return;
 
-  function enter(i){
-    level=i; if(backEl) backEl.classList.add('on');
-    if(hintEl) hintEl.textContent=HINT_SENSE;
-    if(coreEl) coreEl.classList.remove('on');
-    draw(true);
-  }
-  function out(){
-    level=null; if(backEl) backEl.classList.remove('on');
-    if(hintEl) hintEl.textContent=HINT_REALM;
-    if(coreEl) coreEl.classList.remove('on');
-    draw(true);
-  }
+    var where=String(d.where||'').trim();
+    var m=/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/.exec(where);
 
-  function onDown(e,el,it){
-    if(it.kind==='realm'){ enter(it.i); return; }
-    downX=e.clientX; downY=e.clientY;
-    heldEl=el; heldItem=it; committed=false;
-    el.classList.add('sk-held');
-    showCore(it);
-    fillEl.style.transition='none';
-    fillEl.style.background='radial-gradient(circle at 50% 50%,'+it.color+' 0%,'+it.color+'00 72%)';
-    t0=(window.performance&&performance.now)?performance.now():Date.now();
-    if(raf) cancelAnimationFrame(raf);
-    raf=requestAnimationFrame(tick);
-    try{ el.setPointerCapture&&el.setPointerCapture(e.pointerId); }catch(_){}
-  }
-
-  function tick(){
-    var now=(window.performance&&performance.now)?performance.now():Date.now();
-    var p=Math.min(1,(now-t0)/HOLD);
-    fillEl.style.opacity=(0.08+0.5*p).toFixed(3);
-    fillEl.style.transform='scale('+(0.12+0.94*p).toFixed(3)+')';
-    if(p>=1){ commit(); return; }
-    raf=requestAnimationFrame(tick);
-  }
-
-  /* released early, or scrolled away — the light recedes. It never snaps off. */
-  function release(){
-    if(raf){ cancelAnimationFrame(raf); raf=null; }
-    if(heldEl) heldEl.classList.remove('sk-held');
-    heldEl=null; heldItem=null;
-    if(committed) return;
-    fillEl.style.transition='opacity .5s ease, transform .5s ease';
-    fillEl.style.opacity='0'; fillEl.style.transform='scale(.12)';
-  }
-
-  function commit(){
-    if(!heldItem) return;
-    var id=heldItem.id, label=heldItem.label;
-    committed=true;
-    if(raf){ cancelAnimationFrame(raf); raf=null; }
-    fillEl.style.transition='opacity .6s ease, transform .6s ease';
-    fillEl.style.opacity='0'; fillEl.style.transform='scale(1.3)';
-    if(heldEl) heldEl.classList.remove('sk-held');
-    heldEl=null; heldItem=null;
-    if(hintEl) hintEl.textContent=HINT_DONE;
-    /* hand it to the path that already exists */
-    var chip=document.querySelector('.sc[data-sid="'+id+'"]');
-    if(chip){ chip.click(); return; }
-    try{
-      selSense=id;
-      panel.classList.remove('just-offered','offer-quiet');
-      panel.classList.add('sense-picked');
-      var sc=document.getElementById('sense-confirm');
-      if(sc) sc.textContent='Aurasense of '+label+' — add more information about this (optional):';
+    /* choose the sense by clicking its real chip — the same path a finger takes,
+       so the confirm line, the glow and the offer button all behave as usual */
+    function openWithSense(){
+      var chip=document.querySelector('.sc[data-sid="'+id+'"]');
+      if(chip) chip.click();
       var ip=document.getElementById('inp');
-      if(ip){ ip.placeholder='Describe this '+label.toLowerCase()+'\u2026'; ip.focus(); }
-    }catch(_){}
+      if(ip&&d.words) ip.value=String(d.words).slice(0,280);
+    }
+
+    if(m){
+      /* the device named a point. resolveSpot() reads lastClickPoint, so setting
+         it is exactly what a tap on that spot would have done */
+      var la=parseFloat(m[1]), ln=parseFloat(m[2]);
+      try{ flyProgrammatic({center:[ln,la],zoom:15,duration:2400}); }catch(e){}
+      setTimeout(function(){
+        try{
+          lastClickPoint=[ln,la];
+          anchorPoint={lat:la,lng:ln,zoom:15};
+          openSenseGate();
+        }catch(e){}
+        openWithSense();
+      },2600);
+    }else if(where){
+      /* the person named the place in their own words. The map's own search
+         resolves it, so one geocoder and one framing law govern both routes. */
+      var si=document.getElementById('si'), sg=document.getElementById('sg');
+      if(si&&sg){ si.value=where; sg.click(); setTimeout(openWithSense,3400); }
+      else setTimeout(openWithSense,600);
+    }else{
+      try{ openSenseGate(); }catch(e){}
+      setTimeout(openWithSense,600);
+    }
   }
-
-  document.addEventListener('pointerup',release,true);
-  document.addEventListener('pointercancel',release,true);
-  document.addEventListener('pointermove',function(e){
-    if(!heldEl) return;
-    if(Math.abs(e.clientX-downX)>12||Math.abs(e.clientY-downY)>12) release();
-  },true);
-
-  if(backEl) backEl.addEventListener('click',out);
-  if(doorEl) doorEl.addEventListener('click',function(){
-    var onList=panel.classList.toggle('list-door');
-    doorEl.textContent=onList?'\u25ce back to the circle':'\u25a4 see them as a list';
-  });
-
-  /* if the panel is reset elsewhere, the circle forgets with it */
-  try{
-    new MutationObserver(function(){
-      if(!panel.classList.contains('sense-picked')&&hintEl&&hintEl.textContent===HINT_DONE)
-        hintEl.textContent=(level===null?HINT_REALM:HINT_SENSE);
-    }).observe(panel,{attributes:true,attributeFilter:['class']});
-  }catch(_){}
-
-  if(hintEl) hintEl.textContent=HINT_REALM;
-  build();
 })();
 
 });

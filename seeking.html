@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<!-- Aurasense · THE SEEKING — the First Breath, v40. Standalone study.
+     15 August 2026. v40. The map screen scrolls and carries proper bottom
+     padding, so the last button can no longer sit against the edge of the
+     browser. Everything else as v39.
+
+     THE LAW OF TRANSITION: nothing in Aurasense snaps.
+
+     THE SHAPE OF IT
+       One continuous motion. No screens, no pauses between.
+       · The breath.
+       · A circle with NO WORDS. The senser SEEKS their sensation inside an
+         unmarked space; Aurasense answers with an Alphasense mark and a word.
+         The first act is already a shared one.
+       · Hold three seconds. That circle dissolves into the cloud and becomes
+         a bead; a second circle is BORN FROM IT — strength. Same motion.
+       · A third, born from the second — place. It offers where they already
+         are, so the finger need not stop.
+       · Then the map. Words and a photograph are invited only there, once
+         the light exists.
+       The beads accumulate as they go: the aura being assembled, in view.
+
+     THE CLOUD
+       A free-form BED, not rings. Solid colour cut by fractal noise into
+       wisps, MULTIPLYING where masses cross so colour deepens instead of
+       averaging toward a flat middle. That averaging was the smudge.
+
+     ON LOCATION, FLAGGED
+       "Where I am now" is one door among several, never assumed. The browser
+       shows its own permission box the first time. Nothing is read unless
+       that door is chosen. This changes what the Privacy Policy must say on
+       the day it ships.
+
+     Laws kept: one coordinate frame (a single 440x440 viewBox; every hit-test
+     converts through toFrame and nowhere else). No rhythm exceeds 3/second.
+     Inputs are 16px (the iOS law). Reduced motion honoured. The ring is gone
+     before any typing begins. The text-selection callout is blocked except in
+     fields meant for typing. Every Alphasense mark is spliced VERBATIM.
+     Nothing here touches the app. Nothing entered here leaves this page. -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>Aurasense — The Seeking</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;
+  -webkit-user-select:none;-moz-user-select:none;user-select:none;-webkit-touch-callout:none}
+input,textarea{-webkit-user-select:text;user-select:text;-webkit-touch-callout:default}
+/* THE THEME IS TWO VALUES. Everything else derives from them. One switch,
+   two numbers, no exceptions — otherwise it rots. See the light-and-dark
+   document. LIGHT IS INWARD (alone with yourself). DARK IS OUTWARD (the
+   world, and other people's lights, which only read as lights at night). */
+:root{
+  --sheet:#fdfcff; --ink:#4b4270;
+  --soft:#7c6f9e; --far:#b3adc7; --hair:rgba(120,105,170,.20);
+  --serif:Georgia,'Iowan Old Style',serif;--cx:50vw;--cy:30vh}
+body.night{
+  --sheet:#07060e; --ink:#e0d8ff;
+  --soft:#9a8fc4; --far:#6a6090; --hair:rgba(167,139,250,.26)}
+html,body{height:100%;overflow:hidden;background:var(--sheet);font-family:var(--serif);
+  color:var(--ink);-webkit-font-smoothing:antialiased;
+  transition:background 3s ease,color 3s ease}
+#stage{position:fixed;inset:0;background:
+  radial-gradient(122% 92% at 50% 30%,#ffffff 0%,#fbfaff 42%,#f0ebfa 76%,#e3dcf3 100%)}
+/* the night is cross-faded over the day — gradients do not interpolate */
+#stageNight{position:fixed;inset:0;opacity:0;transition:opacity 3s ease;
+  background:radial-gradient(122% 92% at 50% 42%,#191434 0%,#0d0b20 48%,#07060e 100%)}
+body.night #stageNight{opacity:1}
+body.night .wash{mix-blend-mode:screen}
+body.night #vign{background:radial-gradient(74% 58% at 50% 44%,
+  rgba(0,0,0,0) 46%,rgba(0,0,0,.42) 100%)}
+#vign{position:fixed;inset:0;pointer-events:none;z-index:1;
+  background:radial-gradient(74% 58% at 50% 44%,rgba(255,255,255,0) 48%,rgba(110,95,165,.14) 100%)}
+#depth{position:fixed;inset:-18%;z-index:0;pointer-events:none;transition:transform 1.6s cubic-bezier(.2,.6,.3,1)}
+#fore{position:fixed;inset:-24%;z-index:9;pointer-events:none;transition:transform .7s cubic-bezier(.2,.6,.3,1)}
+.wash{position:absolute;border-radius:50%;mix-blend-mode:multiply;will-change:transform}
+#w1{width:104vmin;height:104vmin;left:-12%;top:-4%;filter:blur(70px);opacity:.40;
+  background:radial-gradient(circle,#b9a2f2 0%,rgba(185,162,242,0) 70%);animation:drift1 34s ease-in-out infinite}
+#w2{width:86vmin;height:86vmin;right:-14%;top:16%;filter:blur(62px);opacity:.36;
+  background:radial-gradient(circle,#f7aecb 0%,rgba(247,174,203,0) 70%);animation:drift2 41s ease-in-out infinite}
+#w3{width:96vmin;height:96vmin;left:8%;bottom:-20%;filter:blur(76px);opacity:.32;
+  background:radial-gradient(circle,#94b8ed 0%,rgba(148,184,237,0) 70%);animation:drift1 47s ease-in-out -12s infinite}
+#f1{width:78vmin;height:78vmin;left:-18%;top:32%;filter:blur(46px);opacity:.20;
+  background:radial-gradient(circle,#c7b4f5 0%,rgba(199,180,245,0) 66%);animation:drift2 24s ease-in-out infinite}
+@keyframes drift1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(5%,-4%) scale(1.08)}}
+@keyframes drift2{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(-5%,4%) scale(1.07)}}
+/* one breath: out for 7 seconds, in for 5. The circle that does this IS the
+   circle the senser then seeks in — the same element, never replaced. */
+@keyframes guided{0%{transform:scale(1.02);opacity:.40}
+  58%{transform:scale(.44);opacity:1}
+  100%{transform:scale(1.20);opacity:.62}}
+@keyframes orbBreathe{0%,100%{transform:scale(.82);opacity:.58}50%{transform:scale(1.14);opacity:1}}
+@keyframes lockGlow{0%,100%{opacity:.4}50%{opacity:1}}
+@keyframes as-b{0%,100%{transform:scale(.9);opacity:.75}50%{transform:scale(1.08);opacity:1}}
+@keyframes as-s{0%,100%{opacity:.42}50%{opacity:.95}}
+@keyframes as-f{0%,100%{opacity:.6}50%{opacity:1}}
+@keyframes as-d{0%,100%{transform:translate(0,0)}50%{transform:translate(1.5px,-1.5px)}}
+@keyframes as-sh{0%,100%{transform:translate(0,0)}50%{transform:translate(.8px,0)}}
+.as-breathe,.as-shimmer,.as-flicker,.as-drift,.as-shiver,.as-slowShimmer{transform-box:fill-box;transform-origin:center}
+.as-breathe{animation:as-b 6s ease-in-out infinite}
+.as-shimmer{animation:as-s 3.2s ease-in-out infinite}
+.as-slowShimmer{animation:as-s 8s ease-in-out infinite}
+.as-flicker{animation:as-f 1.1s ease-in-out infinite}
+.as-drift{animation:as-d 7s ease-in-out infinite}
+.as-shiver{animation:as-sh 1.4s ease-in-out infinite}
+/* Reduced motion removes MOVEMENT — drift, parallax, breathing, travel —
+   and keeps every fade, and keeps the hold ring's progress, which is the
+   only warning a person gets before a choice is made. Never switch that off. */
+@media (prefers-reduced-motion:reduce){
+  .mass,#bedBreath,.wash,#ringBreath,#ringCore,
+  .as-breathe,.as-shimmer,.as-flicker,.as-drift,.as-shiver,.as-slowShimmer{
+    animation:none!important}
+  #ringBreath{transform:scale(1.12)!important;opacity:.58!important}
+  #topText{transform:none!important;transition:opacity 1.4s ease,top 1.1s ease!important}
+  #flyer{transition:opacity .7s ease!important}
+}
+/* a weaker device drops the heaviest layers rather than stuttering */
+/* a weaker device drops the two finest fields rather than stuttering */
+html.lite #L3,html.lite #L4{display:none}
+
+/* ══ THE FIELD ══ a clean wash of the sense's colour, gathered on the mark.
+   Six attempts at cloud all read as patchwork, because noise shows its cells
+   at every scale. Real cloud wants a shader. This is quiet and honest until
+   then, and it never competes with the mark it carries. ══ */
+#bed{position:fixed;inset:-14%;z-index:2;pointer-events:none;opacity:0;
+  mix-blend-mode:multiply;filter:blur(22px);
+  transition:opacity 1.3s ease,background 1100ms cubic-bezier(.4,0,.3,1);
+  animation:bedBreathe 7s ease-in-out infinite}
+#bed.here{opacity:1}
+@keyframes bedBreathe{0%,100%{transform:scale(1)}50%{transform:scale(1.055)}}
+
+/* the mark and its word lie ON the bed, clear */
+#clear{position:fixed;left:var(--cx);top:var(--cy);width:58vmin;height:58vmin;z-index:5;
+  pointer-events:none;border-radius:50%;transform:translate(-50%,-50%);opacity:0;
+  background:radial-gradient(circle,rgba(255,255,255,.80) 0%,rgba(255,255,255,.62) 24%,
+    rgba(255,255,255,.34) 46%,rgba(255,255,255,.12) 66%,rgba(255,255,255,0) 84%);
+  filter:blur(20px);transition:opacity 1s ease}
+#clear.here{opacity:1}
+#mark{position:fixed;left:var(--cx);top:var(--cy);z-index:8;pointer-events:none;
+  transform:translate(-50%,-50%) scale(.88);opacity:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+  transition:opacity .8s ease,transform 1s cubic-bezier(.2,.7,.3,1)}
+#mark.here{opacity:1;transform:translate(-50%,-50%) scale(1)}
+/* two layers each, cross-fading. THE LAW: nothing in Aurasense snaps. */
+#symWrap{position:relative;width:21vmin;max-width:122px;aspect-ratio:1}
+/* pale hues have nothing to push against on white. The HUE is untouched;
+   only the value drops, and only while the page is light. */
+.symInk{width:100%;height:100%;filter:brightness(.84) saturate(1.18)}
+body.night .symInk{filter:none}
+.sym{position:absolute;inset:0;opacity:0;transition:opacity .7s cubic-bezier(.4,0,.3,1);overflow:visible;
+  filter:drop-shadow(0 0 7px #fff) drop-shadow(0 0 15px rgba(255,255,255,.98))
+         drop-shadow(0 0 34px rgba(255,255,255,.9))}
+.sym.on{opacity:1}
+.sym svg{width:100%!important;height:100%!important;display:block;overflow:visible}
+#wordWrap{position:relative;width:86vw;max-width:420px;height:clamp(30px,7.4vw,38px)}
+.wd{position:absolute;left:50%;top:0;transform:translateX(-50%);white-space:nowrap;
+  font-size:clamp(21px,5.6vw,27px);letter-spacing:.02em;line-height:1.2;opacity:0;
+  transition:opacity .7s cubic-bezier(.4,0,.3,1);
+  text-shadow:0 0 2px #fff,0 0 5px #fff,0 0 10px #fff,0 0 20px #fff,0 0 36px #fff}
+.wd.on{opacity:1}
+/* THE CIRCLE ITSELF FILLS AS YOU HOLD. It cannot reach the words above,
+   it cannot be lost in the symbol's glow, and only a fraction of it is ever
+   under a hand. The instrument answers, rather than a widget appearing. */
+#holdArc{fill:none;stroke-width:8;stroke-linecap:round;opacity:0;filter:blur(2px);
+  transition:opacity .45s ease}
+#holdArc.pulse{animation:lockGlow 1.4s ease-in-out 3}
+
+
+.scene{position:absolute;inset:0;z-index:4;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;opacity:0;pointer-events:none;transition:opacity 1.5s ease;
+  padding:calc(18px + env(safe-area-inset-top)) 16px calc(18px + env(safe-area-inset-bottom))}
+.scene.on{opacity:1;pointer-events:auto}
+#typed.on,#map.on{z-index:14}
+
+/* ── the breath ── */
+/* the ONE circle — top level, never inside a scene, never crossfaded */
+#ringWrap{position:fixed;left:50%;top:62%;width:min(70vmin,46vh);height:min(70vmin,46vh);
+  transform:translate(-50%,-50%);z-index:6;pointer-events:none;
+  transition:opacity 1.1s ease}
+#ringBreath{position:absolute;inset:0;transform:scale(1.02);opacity:.40;
+  animation:guided 12s ease-in-out 4.2s 1 both}
+#ringInner{position:absolute;inset:0;
+  transition:transform 1.7s cubic-bezier(.25,.7,.3,1),opacity 1.4s ease}
+#ringSoft{position:absolute;inset:0;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(167,139,250,0) 46%,rgba(167,139,250,.10) 56%,
+    rgba(150,120,238,.38) 66%,rgba(167,139,250,.14) 76%,rgba(167,139,250,0) 88%);
+  filter:blur(7px)}
+/* THE MERGED AURA REMAINS. The two lights that became one stay at the heart
+   of every circle the senser seeks in — faint, breathing, present. */
+#ringCore{position:absolute;left:50%;top:50%;width:44%;height:44%;border-radius:50%;
+  transform:translate(-50%,-50%);pointer-events:none;transition:opacity 2.6s ease;
+  background:radial-gradient(circle,rgba(226,214,255,.80) 0%,
+    rgba(196,181,253,.30) 44%,rgba(167,139,250,0) 74%);filter:blur(10px)}
+#ringWrap.live #ringCore{animation:coreBreathe 6s ease-in-out infinite}
+@keyframes coreBreathe{0%,100%{transform:translate(-50%,-50%) scale(.86);opacity:.38}
+  50%{transform:translate(-50%,-50%) scale(1.10);opacity:.62}}
+.orb{position:absolute;top:62%;width:15vmin;height:15vmin;border-radius:50%;margin-top:-7.5vmin;
+  transition:left 3.4s cubic-bezier(.35,.02,.3,1),right 3.4s cubic-bezier(.35,.02,.3,1),
+  opacity 1.4s ease,transform 1.4s ease;pointer-events:none;z-index:3}
+#orbL{left:4%;background:radial-gradient(circle,#ffffff 4%,#c3aaf9 42%,rgba(167,139,250,0) 74%);
+  animation:orbBreathe 12s ease-in-out 4.2s infinite both}
+#orbR{right:4%;background:radial-gradient(circle,#ffffff 4%,#ffb0cb 42%,rgba(255,159,192,0) 74%);
+  animation:orbBreathe 12s ease-in-out 4.2s infinite both}
+#intro.near #orbL{left:calc(50% - 15vmin)} #intro.near #orbR{right:calc(50% - 15vmin)}
+#intro.merge #orbL{left:calc(50% - 7.5vmin)} #intro.merge #orbR{right:calc(50% - 7.5vmin)}
+#intro.merge .orb{transform:scale(1.4);opacity:.7}
+/* the two words that become the name — AFTER the breath, never during it */
+/* the two words carry the two lights' own colours, and become one colour as
+   they meet — with a bloom at the junction, which in Alphasense is the point
+   where one thing joins another */
+#brand{position:absolute;left:0;right:0;top:62%;z-index:8;pointer-events:none;
+  display:flex;justify-content:center;align-items:baseline;
+  font-size:clamp(31px,8.6vw,50px);letter-spacing:.10em;
+  opacity:0;transition:opacity 1.8s ease,letter-spacing 4.4s cubic-bezier(.35,.02,.3,1);
+  text-shadow:0 0 5px #fff,0 0 12px #fff,0 0 28px #fff,0 0 54px #fff}
+#brand.on{opacity:1}
+#brand.met{letter-spacing:.01em}
+#brand span{transition:transform 5s cubic-bezier(.35,.02,.3,1),color 2.6s ease 2.6s}
+#bA{transform:translateX(-34vw);color:#8f74d8}
+#bS{transform:translateX(34vw);color:#d8779e}
+#brand.met #bA,#brand.met #bS{transform:translateX(0);color:var(--ink)}
+#seam{position:absolute;left:50%;top:62%;width:26vmin;height:26vmin;z-index:7;
+  margin:-13vmin 0 0 -13vmin;border-radius:50%;pointer-events:none;opacity:0;
+  background:radial-gradient(circle,rgba(255,255,255,.95) 0%,rgba(233,221,255,.55) 34%,
+    rgba(196,181,253,0) 72%);filter:blur(6px)}
+@keyframes seamBloom{0%{opacity:0;transform:scale(.3)}
+  40%{opacity:1;transform:scale(1.25)}100%{opacity:0;transform:scale(2.1)}}
+#seam.bloom{animation:seamBloom 2.6s ease-out}
+#breathText{position:absolute;top:12%;left:0;right:0;text-align:center;padding:0 22px;z-index:6}
+.beat{opacity:0}
+.beat.on{opacity:1}
+#beat1{font-size:clamp(26px,7.2vw,38px);color:var(--ink);line-height:1.3;
+  text-shadow:0 2px 30px rgba(255,255,255,.95);transition:opacity 5s ease}
+#beat2{font-size:clamp(26px,7.2vw,38px);color:var(--ink);line-height:1.3;margin-top:6px;
+  text-shadow:0 2px 30px rgba(255,255,255,.95);transition:opacity 4.5s ease}
+/* ── the seeking ── an unmarked circle, and a chain of beads ── */
+#seek{justify-content:flex-start}
+#topText{position:absolute;top:calc(22px + env(safe-area-inset-top));left:0;right:0;
+  text-align:center;padding:0 18px;z-index:10;transform:translateY(30vh);
+  transition:transform 4s cubic-bezier(.25,.7,.3,1),opacity 1.4s ease,
+             top 1.1s cubic-bezier(.4,0,.3,1)}
+#topText.risen{transform:translateY(0)}
+.head{font-size:clamp(19px,5vw,23px);color:var(--ink);line-height:1.3;
+  opacity:0;transition:opacity 1.1s ease;
+  text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 12px #fff,0 0 24px #fff,0 0 42px #fff}
+.sub{margin-top:13px;font-size:clamp(18px,4.7vw,21px);color:#4a4172;font-style:italic;line-height:1.55;
+  min-height:26px;opacity:0;transition:opacity 1.6s ease;
+  text-shadow:0 0 3px #fff,0 0 6px #fff,0 0 12px #fff,0 0 22px #fff,0 0 38px #fff}
+body.beaded #topText{top:calc(80px + env(safe-area-inset-top))}
+#beads{position:fixed;left:0;right:0;top:calc(18px + env(safe-area-inset-top));z-index:11;
+  display:flex;align-items:center;justify-content:center;gap:0;
+  opacity:0;transition:opacity 1s ease;pointer-events:none}
+#beads.here{opacity:1}
+.bead{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 0 3px #fff,0 4px 14px rgba(110,95,165,.22);flex:0 0 auto;
+  cursor:pointer;pointer-events:auto;opacity:0;transform:scale(.7);
+  transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.2,.7,.3,1),box-shadow .4s ease}
+.bead.grown{opacity:1;transform:scale(1)}
+.bead.grown:hover{transform:scale(1.1)}
+.bead:hover{transform:scale(1.1);box-shadow:0 0 0 3px #fff,0 6px 20px rgba(110,95,165,.34)}
+.bead svg{width:64%!important;height:64%!important;display:block}
+.link{width:16px;height:2px;border-radius:2px;flex:0 0 auto;opacity:0;transition:opacity 1.2s ease}
+.link.grown{opacity:1}
+svg#ring{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible;
+  touch-action:none;z-index:7;pointer-events:none}
+#ringWrap.live svg#ring{pointer-events:auto}
+/* an ordered scale has ends. It runs as an arc, and simply stops. */
+#ringArc{fill:none;stroke-width:9;stroke-linecap:round;opacity:0;filter:blur(4px);
+  transition:opacity .9s ease,stroke .9s ease}
+/* the ring keeps the faintest memory of where the finger has been */
+#trace circle{fill:none;stroke-width:7;stroke-linecap:round;opacity:0;filter:blur(3px);
+  transition:opacity 1.2s ease}
+#trace circle.seen{opacity:.20}
+
+/* ── the typed place, only if they ask for it ── */
+.panel{width:100%;max-width:400px;display:flex;flex-direction:column;align-items:center;gap:22px}
+.pHead{font-size:clamp(18px,4.7vw,22px);color:var(--ink);text-align:center;padding:0 10px}
+input[type=text]{width:100%;font-size:19px;font-family:var(--serif);text-align:center;
+  background:transparent;border:none;border-bottom:1px solid var(--hair);color:var(--ink);
+  padding:14px 8px;outline:none;transition:border-color .4s ease}
+input[type=text]:focus{border-bottom-color:#7a63c8}
+textarea{width:100%;font-size:16px;font-family:var(--serif);background:rgba(255,255,255,.86);
+  border:1px solid var(--hair);border-radius:12px;color:var(--ink);padding:13px 15px;outline:none;
+  min-height:88px;resize:none;line-height:1.5}
+input::placeholder,textarea::placeholder{color:var(--far)}
+.btn{font-family:var(--serif);font-size:16px;color:#fff;background:#7a63c8;border:none;
+  border-radius:26px;padding:14px 32px;cursor:pointer;letter-spacing:.04em;
+  box-shadow:0 10px 26px rgba(122,99,200,.28);transition:box-shadow .3s,transform .3s,opacity .3s}
+.btn[disabled]{opacity:.4;pointer-events:none;box-shadow:none}
+.ghost{font-family:var(--serif);font-size:15px;color:var(--soft);background:rgba(255,255,255,.66);
+  border:1px solid var(--hair);border-radius:24px;padding:11px 24px;cursor:pointer;letter-spacing:.03em}
+.tiny{font-size:12px;color:var(--far);font-style:italic;text-align:center;line-height:1.7;max-width:330px}
+
+/* ── the map ── where the light actually lands ── */
+#map{justify-content:flex-start;overflow-y:auto;
+  padding-top:calc(7vh + env(safe-area-inset-top));
+  padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+#mapLight{width:74px;height:74px;border-radius:50%;transition:transform 2.6s cubic-bezier(.4,0,.5,1),opacity 1.2s ease}
+#mapLight.fall{transform:translateY(112px) scale(.42)}
+#mapRipple{position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;
+  border-radius:50%;border:1.5px solid var(--lc,#7a63c8);opacity:0}
+#mapRipple.go{animation:rip 3.2s ease-out 2}
+@keyframes rip{0%{transform:scale(1);opacity:.75}100%{transform:scale(11);opacity:0}}
+#mapWord{font-size:clamp(23px,6vw,29px);letter-spacing:.09em;opacity:0;transition:opacity 1.6s ease;text-align:center}
+#mapWord.on{opacity:1}
+#mapSym{width:19vmin;max-width:104px;aspect-ratio:1;margin:14px auto 0;opacity:0;transition:opacity 1.6s ease}
+#mapSym.on{opacity:1}
+#mapSym svg{width:100%!important;height:100%!important;display:block}
+#mapLines{font-size:17px;color:var(--soft);text-align:center;line-height:1.8;opacity:0;
+  transition:opacity 1.6s ease;margin-top:16px;max-width:340px}
+body.night #mapLines{color:#cfc4f2}
+body.night #map .tiny{color:#a99cd6;font-size:14.5px}
+body.night #map textarea{font-size:17px;color:#efe9ff}
+body.night #map textarea::placeholder{color:#8d81bb}
+body.night #map .ghost{font-size:16px;color:#d8cffa}
+#mapLines.on{opacity:1}
+#againBtn{margin-top:26px;opacity:0;pointer-events:none;transition:opacity 1.4s ease}
+#againBtn.on{opacity:.8;pointer-events:auto}
+#hereBtn{font-size:17px;padding:14px 28px}
+#orName{font-size:15px;color:var(--far);background:none;border:none;cursor:pointer;
+  font-family:var(--serif);text-decoration:underline;text-underline-offset:4px;padding:6px}
+#orName:hover{color:var(--soft)}
+#whereBox{display:none}
+#typed.naming #whereBox{display:block}
+#typed.naming #hereBtn,#typed.naming #orName{display:none}
+/* what they were doing, offered only once the light exists */
+#doing{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;max-width:360px}
+.dchip{font-family:var(--serif);font-size:15px;color:var(--soft);
+  background:rgba(233,221,255,.08);border:1px solid var(--hair);border-radius:22px;
+  padding:9px 16px;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
+.dchip:hover{color:var(--ink);background:rgba(233,221,255,.16)}
+.dchip.on{background:#7a63c8;color:#fff;border-color:#7a63c8}
+#gift{opacity:0;transition:opacity 1.4s ease;margin-top:26px;pointer-events:none}
+#gift.on{opacity:1;pointer-events:auto}
+#thumbImg{max-width:112px;border-radius:10px;display:none;margin:2px auto 0}
+/* the travelling circle — the one that rises to become a bead */
+#flyer{position:fixed;z-index:12;pointer-events:none;opacity:0;
+  transition:transform 1.4s cubic-bezier(.4,0,.3,1),opacity .55s ease}
+#flyerSoft{position:absolute;inset:0;border-radius:50%;filter:blur(6px)}
+#flyerSym{position:absolute;left:50%;top:50%;width:34%;height:34%;transform:translate(-50%,-50%);
+  filter:drop-shadow(0 0 5px #fff) drop-shadow(0 0 12px rgba(255,255,255,.95))}
+#flyerSym svg{width:100%!important;height:100%!important;display:block}
+/* not everyone can hold a finger still on a moving target for five seconds.
+   This door is quiet, but it is always there, and it works from a keyboard. */
+#listDoor{position:absolute;left:0;right:0;bottom:calc(16px + env(safe-area-inset-bottom));
+  text-align:center;z-index:13;opacity:0;transition:opacity 1s ease;pointer-events:none}
+#listDoor.on{opacity:.85;pointer-events:auto}
+#listPanel{position:fixed;inset:0;z-index:24;background:rgba(253,252,255,.97);display:none;
+  flex-direction:column;align-items:center;overflow-y:auto;
+  padding:calc(26px + env(safe-area-inset-top)) 18px calc(26px + env(safe-area-inset-bottom))}
+#listPanel.on{display:flex}
+#listHead{font-size:clamp(18px,4.7vw,22px);color:var(--ink);text-align:center;margin-bottom:18px}
+#listInner{width:100%;max-width:420px;display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.litem{display:flex;align-items:center;gap:14px;width:100%;font-family:var(--serif);font-size:17px;
+  color:var(--ink);background:rgba(255,255,255,.9);border:1px solid var(--hair);border-radius:14px;
+  padding:13px 16px;cursor:pointer;text-align:left;transition:background .25s,box-shadow .25s}
+.litem:hover,.litem:focus-visible{background:#fff;box-shadow:0 6px 20px rgba(120,105,170,.18);outline:none}
+.lsym{width:34px;height:34px;flex:0 0 auto}
+.lsym svg{width:100%!important;height:100%!important;display:block}
+.ldot{width:16px;height:16px;border-radius:50%;flex:0 0 auto}
+/* the night version of anything that assumed a white page */
+body.night textarea{background:rgba(233,221,255,.07);border-color:var(--hair);color:var(--ink)}
+body.night .ghost{background:rgba(233,221,255,.07);color:var(--soft);border-color:var(--hair)}
+body.night .ghost:hover{background:rgba(233,221,255,.14);color:var(--ink)}
+body.night .tiny{color:var(--far)}
+/* the hint that a sense has more inside it */
+#ringHint{fill:none;stroke-width:1;opacity:0;stroke-dasharray:3 7;
+  transition:opacity .9s ease,stroke .9s ease}
+#back{position:fixed;left:calc(12px + env(safe-area-inset-left));top:calc(14px + env(safe-area-inset-top));
+  width:52px;height:52px;border-radius:50%;font-size:30px;line-height:1;color:var(--soft);
+  background:rgba(255,255,255,.82);border:1px solid var(--hair);cursor:pointer;font-family:var(--serif);
+  opacity:0;pointer-events:none;transition:opacity .6s ease,background .3s;z-index:31;
+  display:flex;align-items:center;justify-content:center;padding-bottom:4px;
+  box-shadow:0 6px 20px rgba(120,105,170,.16)}
+#back.on{opacity:1;pointer-events:auto}
+#back:hover{background:#fff;color:var(--ink)}
+
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div id="stageNight"></div>
+<div id="depth"><div class="wash" id="w1"></div><div class="wash" id="w2"></div><div class="wash" id="w3"></div></div>
+<div id="vign"></div>
+<div id="bed"></div>
+
+<div id="clear"></div>
+<div id="mark">
+  <div id="symWrap"><div class="sym" id="symA"></div><div class="sym" id="symB"></div></div>
+  <div id="wordWrap"><div class="wd" id="wordA"></div><div class="wd" id="wordB"></div></div>
+</div>
+<div id="flyer"><div id="flyerSoft"></div><div id="flyerSym"></div></div>
+<div id="beads"></div>
+<button id="back" type="button" aria-label="back">&lsaquo;</button>
+
+<div id="listPanel" role="dialog" aria-label="choose from a list">
+  <div id="listHead"></div>
+  <div id="listInner"></div>
+  <button class="btn" id="listClose" type="button">back to the circle</button>
+</div>
+
+<!-- ══ 1 · THE BREATH ══ -->
+<div id="ringWrap">
+  <div id="ringBreath">
+    <div id="ringInner">
+      <div id="ringSoft"></div>
+      <div id="ringCore"></div>
+      <svg id="ring" viewBox="0 0 440 440" xmlns="http://www.w3.org/2000/svg">
+        <circle id="ringHint" cx="220" cy="220" r="96"/>
+        <circle id="holdArc" cx="220" cy="220" r="162"/>
+        <g id="trace"></g>
+        <circle id="ringArc" cx="220" cy="220" r="145"/>
+        <rect id="touch" x="0" y="0" width="440" height="440" fill="transparent"/>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<section class="scene on" id="intro">
+  <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
+  <div id="seam"></div>
+  <div id="brand"><span id="bA">Aura</span><span id="bS">sense</span></div>
+  <div id="breathText">
+    <div class="beat" id="beat1">Before anything else</div>
+    <div class="beat" id="beat2">&mdash; one breath.</div>
+  </div>
+</section>
+
+<!-- ══ 2 · THE SEEKING ══ one unmarked circle, three times over ══ -->
+<section class="scene" id="seek">
+  <div id="topText">
+    <div class="head" id="sHead">What are you sensing right now?</div>
+    <div class="sub" id="sSub">Sense how you are feeling within the circle and hold it for 3.</div>
+  </div>
+  <div id="listDoor"><button class="ghost" id="listBtn" type="button">See them as a list</button></div>
+</section>
+
+<!-- ══ 3 · a typed place, only for those who ask for one ══ -->
+<section class="scene" id="typed">
+  <div class="panel">
+    <div class="pHead" id="tHead">Where should this light land?</div>
+    <button class="btn" id="hereBtn" type="button">Use where I am</button>
+    <button id="orName" type="button">or name the place instead</button>
+    <input type="text" id="whereBox" placeholder="a street, a park, or just the town" autocomplete="off">
+    <button class="btn" id="typedGo" type="button" disabled>let it land</button>
+    <div class="tiny">The place is shown on the map. Who left it is not.</div>
+  </div>
+</section>
+
+<!-- ══ 4 · THE MAP ══ the light lands, and only now are words invited ══ -->
+<section class="scene" id="map">
+  <div id="mapRipple"></div>
+  <div id="mapLight"></div>
+  <div id="mapWord"></div>
+  <div id="mapSym"></div>
+  <div id="mapLines"></div>
+  <button class="ghost" id="againBtn" type="button">begin again</button>
+  <div id="gift">
+    <div class="panel">
+      <div class="tiny" style="max-width:320px">What were you doing?</div>
+      <div id="doing"></div>
+      <div class="tiny" style="max-width:320px">Describe how this feels &mdash;<br>then watch what happens next.</div>
+      <textarea id="wordsBox" placeholder="in your own words&hellip;"></textarea>
+      <button class="ghost" id="photoBtn" type="button">&#9673;&nbsp; add a photograph</button>
+      <input type="file" id="photoInput" accept="image/*" style="display:none">
+      <img id="thumbImg" alt="">
+      <button class="btn" id="doneBtn" type="button">Let your light live among the others</button>
+      <div class="tiny">Nothing here leaves this page.</div>
+    </div>
+  </div>
+</section>
+<div id="fore"><div class="wash" id="f1"></div></div>
+
+<script>
+'use strict';
+var $=function(i){return document.getElementById(i);};
+var reduced=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+function parallax(cx,cy){
+  if(reduced)return;
+  var dx=(cx/window.innerWidth-.5),dy=(cy/window.innerHeight-.5);
+  $('depth').style.transform='translate('+(-dx*64).toFixed(1)+'px,'+(-dy*46).toFixed(1)+'px)';
+  $('fore').style.transform ='translate('+( dx*76).toFixed(1)+'px,'+( dy*56).toFixed(1)+'px)';
+}
+document.addEventListener('pointermove',function(e){parallax(e.clientX,e.clientY);},{passive:true});
+
+/* ═══ the marks — spliced VERBATIM. Never retyped, never escaped. ═══ */
+var SENSE_SYMBOLS={
+anxiety:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,154,168,0.5))"><defs><radialGradient id="as-anxCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#e89aa8" stop-opacity="0"/></radialGradient><radialGradient id="as-anxHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f2b6c0" stop-opacity="0.28"/><stop offset="100%" stop-color="#e89aa8" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-anxHalo)"/><path d="M30 44 l5 -6 5 6 5 -6 5 6 5 -6 5 6" fill="none" stroke="#f2b6c0" stroke-width="1.8" stroke-linecap="round" opacity="0.8" class="as-shimmer"/><path d="M33 58 l4 -4 4 4 4 -4 4 4 4 -4 4 4" fill="none" stroke="#f2b6c0" stroke-width="1.4" stroke-linecap="round" opacity="0.5"/><circle cx="48" cy="50" r="5" fill="url(#as-anxCore)" class="as-breathe"/></svg>',
+socialanxiety:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(217,143,192,0.5))"><defs><radialGradient id="as-soxCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#d98fc0" stop-opacity="0"/></radialGradient><radialGradient id="as-soxHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ecb4da" stop-opacity="0.28"/><stop offset="100%" stop-color="#d98fc0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-soxHalo)"/><g fill="#ecb4da" opacity="0.55" class="as-slowShimmer"><circle cx="26" cy="34" r="2.4"/><circle cx="48" cy="26" r="2.4"/><circle cx="70" cy="34" r="2.4"/><circle cx="76" cy="54" r="2.4"/><circle cx="20" cy="54" r="2.4"/></g><path d="M40 62 Q48 54 56 62" fill="none" stroke="#ecb4da" stroke-width="1.8" stroke-linecap="round" opacity="0.75"/><circle cx="48" cy="66" r="5" fill="url(#as-soxCore)" class="as-breathe"/></svg>',
+pain:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(212,74,74,0.6))"><defs><radialGradient id="as-painCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="45%" stop-color="#e85858" stop-opacity="0.85"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient><radialGradient id="as-painHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e87878" stop-opacity="0.3"/><stop offset="100%" stop-color="#d44a4a" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-painHalo)"/><path d="M48 18 L54 42 L78 48 L54 54 L48 78 L42 54 L18 48 L42 42 Z" fill="url(#as-painCore)" stroke="#f09696" stroke-width="1" class="as-flicker"/></svg>',
+overwhelm:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(192,138,224,0.5))"><defs><radialGradient id="as-ovwCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#c08ae0" stop-opacity="0"/></radialGradient><radialGradient id="as-ovwHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#d8b0f0" stop-opacity="0.3"/><stop offset="100%" stop-color="#c08ae0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-ovwHalo)"/><g fill="none" stroke="#d8b0f0" stroke-linecap="round" class="as-drift"><path d="M16 30 Q34 38 42 46" stroke-width="2" opacity="0.75"/><path d="M80 30 Q62 38 54 46" stroke-width="2" opacity="0.75"/><path d="M22 72 Q36 62 44 54" stroke-width="1.7" opacity="0.6"/><path d="M74 72 Q60 62 52 54" stroke-width="1.7" opacity="0.6"/></g><circle cx="48" cy="50" r="4.5" fill="url(#as-ovwCore)" class="as-breathe"/></svg>',
+loneliness:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(143,160,200,0.5))"><defs><radialGradient id="as-lonCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#8fa0c8" stop-opacity="0"/></radialGradient><radialGradient id="as-lonHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b4c2e0" stop-opacity="0.26"/><stop offset="100%" stop-color="#8fa0c8" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-lonHalo)"/><g fill="#b4c2e0" opacity="0.4" class="as-slowShimmer"><circle cx="66" cy="26" r="1.8"/><circle cx="74" cy="34" r="1.6"/><circle cx="70" cy="43" r="1.5"/></g><circle cx="36" cy="60" r="6" fill="url(#as-lonCore)" class="as-breathe"/></svg>',
+stress:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(225,130,130,0.5))"><defs><radialGradient id="as-strCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0e0" stop-opacity="1"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient><radialGradient id="as-strHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#e89a9a" stop-opacity="0.28"/><stop offset="100%" stop-color="#d97777" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-strHalo)"/><path d="M48 28 L55 40 L66 42 L57 50 L61 63 L48 56 L35 63 L39 50 L30 42 L41 40 Z" fill="none" stroke="#ec9e9e" stroke-width="2" stroke-linejoin="miter" opacity="0.9" class="as-shiver"/><circle cx="48" cy="48" r="6" fill="url(#as-strCore)" class="as-flicker"/></svg>',
+safety:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(250,190,110,0.5))"><defs><radialGradient id="as-safCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#e69138" stop-opacity="0"/></radialGradient><radialGradient id="as-safHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fabe6e" stop-opacity="0.3"/><stop offset="100%" stop-color="#e69138" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="55" r="45" fill="url(#as-safHalo)"/><path d="M18 58 A 30 30 0 0 1 78 58" fill="none" stroke="#fabe6e" stroke-width="4" stroke-linecap="round" opacity="1" class="as-breathe"/><path d="M26 58 A 22 22 0 0 1 70 58" fill="none" stroke="#fabe6e" stroke-width="2" stroke-linecap="round" opacity="0.55"/><circle cx="48" cy="65" r="13" fill="url(#as-safCore)" class="as-shimmer"/></svg>',
+belonging:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(250,195,140,0.5))"><defs><radialGradient id="as-belCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#f6b26b" stop-opacity="0"/></radialGradient><radialGradient id="as-belHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#facb96" stop-opacity="0.3"/><stop offset="100%" stop-color="#f6b26b" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="53" r="45" fill="url(#as-belHalo)"/><g class="as-breathe"><path d="M24 30 C 8 46, 8 60, 24 76" fill="none" stroke="#facb96" stroke-width="4" stroke-linecap="round" opacity="1"/><path d="M72 30 C 88 46, 88 60, 72 76" fill="none" stroke="#facb96" stroke-width="4" stroke-linecap="round" opacity="1"/></g><circle cx="48" cy="53" r="15" fill="url(#as-belCore)" class="as-shimmer"/></svg>'
+};
+var ALPHA=[
+{w:'Hope',c:'#ffe0a0',g:'<path d="M10 32h28"/><circle cx="24" cy="24" r="3.4" class="f"/><path d="M24 17v-4M17 19l-3-3M31 19l3-3" opacity="0.8"/>'},
+{w:'Joy',c:'#ffcf6e',g:'<circle cx="24" cy="30" r="3" class="f"/><path d="M24 26 C 23 20, 20 16, 15 11"/><path d="M24 26 C 24 19, 24 14, 24 8"/><path d="M24 26 C 25 20, 28 16, 33 11"/>'},
+{w:'Gratitude',c:'#f2ce8e',g:'<path d="M14 26a10 10 0 0 0 20 0"/><circle cx="24" cy="16" r="3" class="f"/>'},
+{w:'Peace',c:'#aee0d8',g:'<circle cx="24" cy="24" r="11"/><path d="M17 24h14"/>'},
+{w:'Wonder',c:'#d8b8ff',g:'<circle cx="22" cy="26" r="3" class="f"/><ellipse cx="26" cy="22" rx="12" ry="7" transform="rotate(-24 26 22)"/>'},
+{w:'Love',c:'#ff9db4',g:'<circle cx="19" cy="24" r="8"/><circle cx="29" cy="24" r="8"/><circle cx="24" cy="24" r="2.6" class="f"/>'},
+{w:'Weariness',c:'#a99cc9',g:'<path d="M11 21 A15 15 0 0 1 37 21"/><circle cx="24" cy="32" r="3.2" class="f"/>'},
+{w:'Heaviness',c:'#8f86b8',g:'<path d="M12 17 Q24 26 36 17"/><circle cx="24" cy="31" r="3.2" class="f"/>'},
+{w:'Numbness',c:'#9aa3ad',g:'<circle cx="24" cy="24" r="3" class="f"/><path d="M11 24a13 13 0 0 1 8-12"/><path d="M37 24a13 13 0 0 1-8 12"/>'},
+{w:'Rest',c:'#8fd8b0',g:'<path d="M12 26q12 12 24 0"/><circle cx="24" cy="24" r="3.4" class="f"/>'},
+{w:'Relief',c:'#ffd9a0',g:'<path d="M13 31q11 10 22 0"/><circle cx="24" cy="22" r="3.2" class="f"/><path d="M24 13v-4"/>'}
+];
+function alphaSvg(word,s,deep){
+  /* the gesture is drawn TWICE: a thick white pass beneath, the colour on top.
+     A true outline, exact and edgeless — a stacked CSS glow gets clipped to a
+     rectangle by the browser, which is where the box around Joy came from. */
+  var ink=deep?readable(word.c,0.22):word.c;
+  var rim=word.g.replace(/class="f"/g,'fill="#ffffff" stroke="#ffffff" stroke-width="6"');
+  var col=word.g.replace(/class="f"/g,'fill="'+ink+'" stroke="none"');
+  return '<svg width="'+s+'" height="'+s+'" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" overflow="visible">'
+    +'<g stroke="#ffffff" stroke-width="6.5" fill="none" opacity="0.96">'+rim+'</g>'
+    +'<g stroke="'+ink+'" stroke-width="2.2" fill="none" style="filter:drop-shadow(0 0 6px '+word.c+'99)">'+col+'</g>'
+    +'</svg>';
+}
+function gestureOf(key,deep){
+  if(!key)return '';
+  /* the fixed marks carry no white rim of their own, so a gentle ink filter is
+     safe on them. The drawn gestures DO carry one, and filtering greyed it —
+     that was the thick dark edge. They get a darkened stroke instead. */
+  if(SENSE_SYMBOLS[key])
+    return deep?'<div class="symInk">'+SENSE_SYMBOLS[key]+'</div>':SENSE_SYMBOLS[key];
+  var a=ALPHA.filter(function(x){return x.w===key;})[0];
+  return a?alphaSvg(a,150,deep):'';
+}
+
+/* ═══ what can be found in each circle ═══
+   The ring carries NO words. These are what the seeking discloses. */
+var SENSES=[
+ {w:'Rest',               k:'Rest',         c:'#8fd8b0'},
+ {w:'Numbness',           k:'Numbness',     c:'#9aa3ad'},
+ {w:'Loneliness',         k:'loneliness',   c:'#8fa0c8'},
+ {w:'Weariness',          k:'Weariness',    c:'#a99cc9'},
+ {w:'Heaviness',          k:'Heaviness',    c:'#8f86b8'},
+ {w:'Social Anxiety',     k:'socialanxiety',c:'#d98fc0'},
+ {w:'Stress',             k:'stress',       c:'#d97777'},
+ {w:'Anxiety',            k:'anxiety',      c:'#e89aa8'},
+ {w:'Emotional Overwhelm',k:'overwhelm',    c:'#c08ae0'},
+ {w:'Pain',               k:'pain',         c:'#d44a4a'},
+ {w:'Joy',                k:'Joy',          c:'#ffcf6e'},
+ {w:'Love',               k:'Love',         c:'#ff9db4'},
+ {w:'Wonder',             k:'Wonder',       c:'#d8b8ff'},
+ {w:'Belonging',          k:'belonging',    c:'#f6b26b'},
+ {w:'Gratitude',          k:'Gratitude',    c:'#f2ce8e'},
+ {w:'Hope',               k:'Hope',         c:'#ffe0a0'},
+ {w:'Safety',             k:'safety',       c:'#e69138'},
+ {w:'Relief',             k:'Relief',       c:'#ffd9a0'},
+ {w:'Peace',              k:'Peace',        c:'#aee0d8'}
+];
+/* ═══ FAMILIES ═══ Some senses have more inside them. Holding one opens the
+   circle INWARD rather than moving on — a different motion for a different
+   meaning: rising completes a step, contracting goes deeper.
+
+   NOTHING HERE IS INVENTED. The exhaustion family is the one commissioned and
+   drawn in the project record: Weariness holds the seat, with Heaviness,
+   Numbness, Rest and Relief inside it. Restlessness stays out of the ring,
+   as recorded, while remaining in the language.
+
+   And this is where the third guardrail does its work — NEVER A NEGATIVE
+   WITHOUT ITS DOORWAY OUT. When Weariness opens, Rest and Relief are already
+   there, beside it. The way out lives inside the constriction, not elsewhere.
+
+   Adding another family is one line. The parent always appears first, so its
+   plain form is always choosable. */
+var FAMILIES={
+ /* Karl's own list, 14 Aug 2026. A family is SHADES OF THE SAME THING.
+    A doorway out is a different relationship and does not belong here —
+    Loneliness leading to Belonging was that mistake, and is removed.
+
+    AWAITING GESTURES. None of the six shades has a drawn mark yet, so each
+    carries Weariness's own mark, dimmed, and Weariness's colour. That is
+    honest: they ARE Weariness until they are distinguished. Six gestures to
+    commission, and six felt-temperatures to choose. Nothing invented here.
+
+    NOTE FOR KARL: the record says Weariness holds the exhaustion seat with
+    no separate Exhaustion gesture. That was a decision about the RING. It is
+    left in the family here, but it is your call. */
+ 'Weariness':[
+   {w:'Weariness',       k:'Weariness', c:'#a99cc9', own:true},
+   {w:'Burnout',         k:'Weariness', c:'#a99cc9'},
+   {w:'Exhaustion',      k:'Weariness', c:'#a99cc9'},
+   {w:'Jadedness',       k:'Weariness', c:'#a99cc9'},
+   {w:'World-weariness', k:'Weariness', c:'#a99cc9'},
+   {w:'Ennui',           k:'Weariness', c:'#a99cc9'},
+   {w:'Listlessness',    k:'Weariness', c:'#a99cc9'}
+ ]
+};
+
+/* An ordered scale must not loop. STRENGTHS runs as an arc across the top —
+   weakest at the left, strongest at the right — and simply stops at each end.
+   The senses have no order, so they keep the whole circle. */
+var ARC_STRENGTH={from:180,to:360};
+var STRENGTHS=[
+ {w:'A whisper',                  s:.12},
+ {w:'A background hum',           s:.32},
+ {w:'It simmers gently',          s:.54},
+ {w:'It sits with me',            s:.76},
+ {w:'Takes up all my attention',  s:.96}
+];
+/* Two paths, never both. If the device already shares its position, the
+   circle offers the REAL places around them — one motion, no typing.
+   Otherwise it offers doors. Home and Work are not categories: they are
+   saved coordinates. Chosen once while standing there, they ARE a street
+   location every time after. */
+/* "Where are you?" followed by "Where I am now" was asking the same thing
+   twice. The question carries the redundancy, so the question changed. */
+var saved={home:null,work:null},coords=null;
+
+/* ═══ the single coordinate frame ═══ */
+var CX=220,CY=220,R=145,DEAD=58;
+function toFrame(ev){var r=$('ring').getBoundingClientRect(),s=440/r.width;
+  return {x:(ev.clientX-r.left)*s,y:(ev.clientY-r.top)*s};}
+function polar(p){var dx=p.x-CX,dy=p.y-CY,a=Math.atan2(dy,dx)*180/Math.PI;if(a<0)a+=360;
+  return {a:a,r:Math.sqrt(dx*dx+dy*dy)};}
+
+/* Pale hues have nothing to push against on white. This keeps the HUE and the
+   saturation exactly, and lowers only the value — and only far enough to be
+   read. On the night side nothing is changed at all. */
+function relLum(r,g,b){
+  var a=[r,g,b].map(function(v){v/=255;
+    return v<=0.03928?v/12.92:Math.pow((v+0.055)/1.055,2.4);});
+  return 0.2126*a[0]+0.7152*a[1]+0.0722*a[2];
+}
+function readable(hex,target){
+  if(document.body.classList.contains('night'))return hex;
+  var r=parseInt(hex.substr(1,2),16),g=parseInt(hex.substr(3,2),16),b=parseInt(hex.substr(5,2),16);
+  var k=1;
+  while(k>0.16&&relLum(r*k,g*k,b*k)>target)k-=0.03;
+  return 'rgb('+Math.round(r*k)+','+Math.round(g*k)+','+Math.round(b*k)+')';
+}
+function hazed(hex,t){
+  var r=parseInt(hex.substr(1,2),16),g=parseInt(hex.substr(3,2),16),b=parseInt(hex.substr(5,2),16);
+  return 'rgb('+Math.round(r+(255-r)*t)+','+Math.round(g+(255-g)*t)+','+Math.round(b+(255-b)*t)+')';
+}
+
+/* ═══ THE FIELD ═══
+   Six attempts at cloud — CSS masks, blobs, morphing outlines, noise masks,
+   and a drawn canvas — all read as patchwork, because noise at any scale
+   shows its cells. Real cloud wants a shader, which is a different piece of
+   work. Until then this is a clean field of the sense's colour: soft,
+   breathing, edgeless, and quiet enough not to compete with the mark. */
+function paintBed(c){
+  var el=$('bed'); if(!el)return;
+  el.style.background='radial-gradient(ellipse 92% 74% at var(--cx) var(--cy),'+
+    c+'e6 0%,'+c+'c4 22%,'+c+'8f 44%,'+c+'4d 66%,'+c+'1a 82%,'+c+'00 100%)';
+}
+function drawCloud(){}
+var state={sense:null,senseColor:null,senseKey:null,doing:null,strength:null,place:null,where:'',words:'',photo:null};
+var stage='sense',SET=SENSES,ARC=null,familyOf=null,lit=null,locked=false,down=false;
+var holdTimer=null,dwellTimer=null,restTimer=null,beadList=[],lastQ=null,symFlip=false,wordFlip=false;
+/* Unhurried the first time. Less ceremonious once it is known — the same
+   gesture should not cost the same on the hundredth offering as the first.
+   In the live app `known` is remembered between visits. */
+var known=false;
+function dwellMs(){ return stage==='sense' ? (known?1400:2000) : 1100; }
+function holdMs(){  return stage==='sense' ? (known?2400:3000) : 2200; }
+
+/* ═══ the breath ═══ out first, then in, and the two lights come together ═══ */
+var T=[],skipped=false;
+function at(ms,fn){T.push(setTimeout(fn,ms));}
+at(400,  function(){$('beat1').classList.add('on');});
+at(4200, function(){$('beat2').classList.add('on');});
+/* the circle begins to move the moment "one breath" appears, at 4.2s.
+   Out until 11.2s, in until 16.2s, the two lights arriving together on it. */
+if(reduced){ T.forEach(clearTimeout); T=[];
+  at(400,function(){$('beat1').classList.add('on');});
+  at(3400,function(){$('beat2').classList.add('on');});
+  at(6400,function(){$('brand').classList.add('met');$('brand').classList.add('on');});
+  at(7000,function(){$('intro').classList.add('merge');$('seam').classList.add('bloom');});
+  at(7400,function(){$('beat1').classList.remove('on');$('beat2').classList.remove('on');});
+  at(10200,function(){$('brand').classList.remove('on');});
+  at(11800,function(){toSeek();});
+}
+at(11400,function(){$('intro').classList.add('near');$('brand').classList.add('met');});
+at(12900,function(){$('brand').classList.add('on');});   /* the name only now */
+at(13300,function(){$('beat1').classList.remove('on');$('beat2').classList.remove('on');});
+at(16300,function(){$('intro').classList.add('merge');
+                    $('seam').classList.add('bloom');});   /* the junction blooms */
+at(19800,function(){$('brand').classList.remove('on');});
+at(21800,function(){toSeek();});
+$('intro').addEventListener('click',function(){
+  if(skipped)return; skipped=true; T.forEach(clearTimeout);
+  $('beat1').classList.remove('on');$('beat2').classList.remove('on');
+  $('brand').classList.remove('on');
+  setTimeout(toSeek,900);
+});
+
+function toSeek(){
+  T.forEach(clearTimeout);
+  $('intro').classList.remove('on');
+  reset();
+  setTimeout(function(){
+    $('seek').classList.add('on'); placeMark();
+    showCircle(); drawArc(); $('listDoor').classList.add('on');
+    /* THE MERGED AURA REMAINS — faint, breathing, at the heart of every circle */
+    setTimeout(function(){$('topText').classList.add('risen');
+      $('sHead').style.opacity='1';},180);
+    setTimeout(function(){$('sSub').style.opacity='1';},2800);
+  },700);
+}
+
+/* ═══ the circle ═══ unmarked. The seeking is the whole point. ═══ */
+function reset(){
+  lit=null;locked=false;
+  $('ring').classList.remove('locked');
+  $('holdArc').style.opacity='0';$('holdArc').classList.remove('pulse');
+   $('ringHint').style.opacity='0';
+  hideBed();
+  if(restTimer){clearTimeout(restTimer);restTimer=null;}
+}
+function angleOf(i){
+  if(!ARC)return i*(360/SET.length);
+  var span=(ARC.to-ARC.from+360)%360||360;
+  return ARC.from+(i/(SET.length-1))*span;
+}
+function segWidth(){
+  if(!ARC)return 360/SET.length;
+  var span=(ARC.to-ARC.from+360)%360||360;
+  return span/(SET.length-1);
+}
+function nearest(a){
+  if(!ARC){
+    var step=360/SET.length,i=Math.round(a/step)%SET.length;
+    return i<0?i+SET.length:i;
+  }
+  var span=(ARC.to-ARC.from+360)%360||360;
+  var rel=(a-ARC.from+360)%360;
+  if(rel>span){                       /* off the end of the scale — it stops */
+    rel=((rel-span)<(360-rel))?span:0;
+  }
+  var k=Math.round(rel/span*(SET.length-1));
+  return Math.max(0,Math.min(SET.length-1,k));
+}
+function drawArc(){
+  var a=$('ringArc'),C=2*Math.PI*145;
+  if(!ARC){a.style.opacity='0';return;}
+  var span=(ARC.to-ARC.from+360)%360||360;
+  a.setAttribute('stroke',state.senseColor||'#a78bfa');
+  a.setAttribute('stroke-dasharray',(C*span/360).toFixed(1)+' '+C.toFixed(1));
+  a.style.transform='rotate('+ARC.from+'deg)';
+  a.style.transformOrigin='220px 220px';
+  a.style.opacity='.30';
+}
+/* the ring keeps the faintest memory of where the finger has already been.
+   After one sweep the shape of the whole continuum is visible, with nothing
+   explained and no word written. */
+var seen={};
+function markSeen(i,col){
+  if(seen[stage+':'+i])return;
+  var C=2*Math.PI*145,w=segWidth();
+  var c=document.createElementNS('http://www.w3.org/2000/svg','circle');
+  c.setAttribute('cx','220');c.setAttribute('cy','220');c.setAttribute('r','145');
+  c.setAttribute('stroke',col);
+  c.setAttribute('stroke-dasharray',(C*w/360*0.72).toFixed(1)+' '+C.toFixed(1));
+  c.style.transform='rotate('+(angleOf(i)-w*0.36)+'deg)';
+  c.style.transformOrigin='220px 220px';
+  $('trace').appendChild(c);
+  seen[stage+':'+i]=c;
+  requestAnimationFrame(function(){c.classList.add('seen');});
+}
+function clearTrace(){ $('trace').innerHTML=''; seen={}; }
+function showCircle(){
+  $('ringWrap').classList.add('live'); $('ringWrap').style.opacity='';
+}
+function hideCircle(){             /* it is outside the scenes, so it is told */
+  $('ringWrap').classList.remove('live'); $('ringWrap').style.opacity='0';
+  $('holdArc').style.opacity='0'; $('holdArc').classList.remove('pulse');
+}
+function restoreLayers(){          /* everything hidden by hand, given back */
+  ['mark','clear','bed'].forEach(function(k){$(k).style.opacity='';});
+  showCircle(); $('listDoor').classList.add('on'); placeMark();
+}
+function placeMark(){
+  var r=$('ring').getBoundingClientRect();
+  var bandTop=r.top+r.height*0.34;      /* the visible band, not the box */
+  var topB=$('topText').getBoundingClientRect().bottom;
+  var h=$('mark').offsetHeight||150;
+  var y=topB+20+h/2;                    /* always clear of the words above */
+  var maxY=bandTop-16-h/2;              /* and clear of the circle below */
+  if(y>maxY)y=Math.max(topB+8+h/2,maxY);
+  document.documentElement.style.setProperty('--cx',(r.left+r.width/2).toFixed(0)+'px');
+  document.documentElement.style.setProperty('--cy',y.toFixed(0)+'px');
+}
+window.addEventListener('resize',placeMark);
+
+function showBed(c){ paintBed(c); $('bed').classList.add('here');
+  $('clear').classList.add('here'); $('mark').classList.add('here'); }
+function hideBed(){ $('bed').classList.remove('here');
+  $('clear').classList.remove('here'); $('mark').classList.remove('here'); }
+
+function crossSym(html){
+  if(!html){$('symA').classList.remove('on');$('symB').classList.remove('on');return;}
+  var inEl=symFlip?$('symA'):$('symB'), outEl=symFlip?$('symB'):$('symA');
+  inEl.innerHTML=html; inEl.classList.add('on'); outEl.classList.remove('on');
+  symFlip=!symFlip;
+}
+function crossWord(txt,col){
+  var inEl=wordFlip?$('wordA'):$('wordB'), outEl=wordFlip?$('wordB'):$('wordA');
+  inEl.textContent=txt; inEl.style.color=col;
+  inEl.classList.add('on'); outEl.classList.remove('on');
+  wordFlip=!wordFlip;
+}
+function light(i){
+  if(i===lit)return;
+  cancelHold();                       /* a new sense restarts the quiet second */
+  if(restTimer){clearTimeout(restTimer);restTimer=null;}
+  lit=i; placeMark();
+  var o=SET[i], col=(stage==='sense'||stage==='family')?o.c:state.senseColor;
+  crossSym((stage==='sense'||stage==='family')?gestureOf(o.k,true)
+          :(stage==='strength'?gestureOf(state.senseKey,true):''));
+  $('symWrap').style.opacity=(stage==='family'&&!o.own)?'.42':'1';
+  crossWord(o.w,readable(col,0.15));
+  /* the ring brightens where the finger is, and slides there — no marker */
+  markSeen(i,col);
+  var hint=$('ringHint');
+  if(stage==='sense'&&FAMILIES[o.k]){
+    hint.setAttribute('stroke',col); hint.style.opacity='.55';
+  }else{ hint.style.opacity='0'; }
+  if(stage==='strength'){
+    var t=SET[i].s;
+    $('mark').style.transform='translate(-50%,-50%) scale('+(0.84+t*0.38).toFixed(3)+')';
+    $('bed').style.opacity=(0.46+t*0.54).toFixed(2);
+  }
+  showBed(col);
+  if(down)startHold();                /* the quiet second begins again */
+}
+function restDown(){
+  if(locked)return;
+  hideBed(); lit=null;
+}
+
+/* the hold — nothing appears for a full second, so no one feels hurried
+   and no one is nudged away from what they actually sense. Only then does
+   the band begin to close, over three seconds. */
+function startHold(){
+  cancelHold();
+  if(lit===null)return;
+  dwellTimer=setTimeout(function(){
+    dwellTimer=null;
+    if(lit===null||locked)return;
+    var col=(stage==='sense'||stage==='family')?SET[lit].c:state.senseColor;
+    var arc=$('holdArc'),C=2*Math.PI*162;
+    arc.setAttribute('stroke',col);
+    arc.style.transition='none';
+    arc.setAttribute('stroke-dasharray',C.toFixed(1));
+    arc.setAttribute('stroke-dashoffset',C.toFixed(1));
+    arc.style.transform='rotate(-90deg)';       /* it closes from the top */
+    arc.style.transformOrigin='220px 220px';
+    arc.style.opacity='1';
+    void arc.getBoundingClientRect();
+    var hm=holdMs();
+    arc.style.transition='stroke-dashoffset '+(hm/1000)+'s linear';
+    arc.setAttribute('stroke-dashoffset','0');
+    holdTimer=setTimeout(function(){holdTimer=null;commit();},hm);
+  },dwellMs());
+}
+function cancelHold(){
+  if(holdTimer){clearTimeout(holdTimer);holdTimer=null;}
+  if(dwellTimer){clearTimeout(dwellTimer);dwellTimer=null;}
+  $('holdArc').style.opacity='0';
+}
+
+var ring=$('ring');
+ring.addEventListener('pointerdown',function(e){
+  down=true;
+  if(restTimer){clearTimeout(restTimer);restTimer=null;}
+  try{ring.setPointerCapture(e.pointerId);}catch(err){}
+  if(locked)return;
+  move(e); if(lit!==null)startHold();
+  e.preventDefault();
+},{passive:false});
+ring.addEventListener('pointermove',function(e){
+  if(!down)return;
+  lastQ=polar(toFrame(e));            /* remembered, so a still finger is not lost */
+  if(locked)return;
+  move(e);
+},{passive:false});
+ring.addEventListener('pointerup',function(){down=false;up();});
+ring.addEventListener('pointercancel',function(){down=false;cancelHold();});
+function move(e){
+  var q=polar(toFrame(e)); lastQ=q;
+  if(q.r<DEAD)return;
+  light(nearest(q.a));
+}
+function up(){
+  cancelHold();
+  if(lit===null||locked)return;
+  if(restTimer)clearTimeout(restTimer);
+  restTimer=setTimeout(function(){restTimer=null;restDown();},2200);
+}
+
+/* ═══ a circle dissolves into the cloud and becomes a bead;
+       the next is born from it. One continuous motion. ═══ */
+function addBead(col,key,which){
+  var box=$('beads');
+  if(beadList.length){
+    var l=document.createElement('div');
+    l.className='link'; l.style.background=col; box.appendChild(l);
+    beadList[beadList.length-1].link=l;
+  }
+  var b=document.createElement('div');
+  b.className='bead'; b.style.background=col;
+  b.innerHTML=key?gestureOf(key):'';
+  b.addEventListener('click',function(){goBackTo(which);});
+  box.appendChild(b); beadList.push(b); b.which=which;
+  box.classList.add('here');
+  return b;
+}
+function dropBeadsFrom(which){
+  while(beadList.length&&beadList[beadList.length-1].which!==which){
+    var b=beadList.pop();
+    if(b.link&&b.link.parentNode)b.link.parentNode.removeChild(b.link);
+    if(b.parentNode)b.parentNode.removeChild(b);
+  }
+  var last=beadList.pop();
+  if(last){
+    if(last.link&&last.link.parentNode)last.link.parentNode.removeChild(last.link);
+    if(last.parentNode)last.parentNode.removeChild(last);
+  }
+  if(beadList.length){
+    var prev=beadList[beadList.length-1];
+    if(prev.link&&prev.link.parentNode)prev.link.parentNode.removeChild(prev.link);
+    prev.link=null;
+  }else{
+    $('beads').classList.remove('here'); document.body.classList.remove('beaded');
+  }
+  setTimeout(placeMark,1200);
+}
+function goBackTo(which){
+  if(which==='sense'){
+    dropBeadsFrom('sense');
+    born('sense','What are you sensing right now?',
+      'Sense how you are feeling within the circle, and hold it for three.',SENSES,null);
+    setTimeout(function(){$('back').classList.remove('on');},1200);
+  }else if(which==='strength'){
+    dropBeadsFrom('strength');
+    born('strength','How strong is it?',
+      'Sense how strong it is along the arc, and hold it for three.',STRENGTHS,ARC_STRENGTH);
+  }
+}
+$('back').addEventListener('click',function(){
+  if($('typed').classList.contains('on')){
+    $('typed').classList.remove('on');
+    setTimeout(function(){ $('seek').classList.add('on'); goBackTo('strength'); },900);
+    return;
+  }
+  if(stage==='family'){closeFamily();return;}
+  if(stage==='strength')goBackTo('sense');
+});
+function commit(){
+  if(locked||lit===null)return;
+  locked=true;
+  if(restTimer){clearTimeout(restTimer);restTimer=null;}
+  $('holdArc').classList.add('pulse');
+  var o=SET[lit];
+  if(stage==='sense'&&FAMILIES[o.k]){ openFamily(o); return; }
+  if(stage==='sense'||stage==='family'){
+    state.sense=o.w; state.senseColor=o.c; state.senseKey=o.k;
+    fly(o.c,o.k,'sense',function(){
+      born('strength','How strong is it?',
+        'Sense how strong it is along the arc, and hold it for three.',STRENGTHS,ARC_STRENGTH);
+    });
+  }else if(stage==='strength'){
+    state.strength=o.w;
+    fly(state.senseColor,null,'strength',function(){ toTyped(); });
+  }
+}
+function fly(col,key,which,then){
+  /* the finished circle RISES — above the hand, where its motion can be seen —
+     shrinking as it goes, and lands as the bead. */
+  var r=$('ring').getBoundingClientRect();
+  var bead=addBead(col,key,which);          /* placed, but not yet shown */
+  var t=bead.getBoundingClientRect();
+  var f=$('flyer'),fs=$('flyerSoft'),fy=$('flyerSym');
+  f.style.transition='none';
+  f.style.left=r.left+'px'; f.style.top=r.top+'px';
+  f.style.width=r.width+'px'; f.style.height=r.height+'px';
+  f.style.transform='translate(0,0) scale(1)';
+  fs.style.background='radial-gradient(circle,'+col+'00 46%,'+col+'26 56%,'+
+    col+'a8 66%,'+col+'2e 76%,'+col+'00 88%)';
+  fy.innerHTML=key?gestureOf(key):'';
+  void f.getBoundingClientRect();
+  f.style.transition=''; f.style.opacity='1';
+  $('ringInner').style.transition='none'; $('ringInner').style.opacity='0';
+  void $('ringInner').getBoundingClientRect();
+  $('ringInner').style.transition='';
+  var dx=(t.left+t.width/2)-(r.left+r.width/2);
+  var dy=(t.top+t.height/2)-(r.top+r.height/2);
+  var sc=t.width/r.width;
+  if(reduced){ f.style.opacity='0'; }      /* no travel — it simply hands over */
+  else requestAnimationFrame(function(){
+    f.style.transform='translate('+dx.toFixed(1)+'px,'+dy.toFixed(1)+'px) scale('+sc.toFixed(4)+')';
+  });
+  setTimeout(function(){
+    bead.classList.add('grown');
+    if(beadList.length>1&&beadList[beadList.length-2].link)
+      beadList[beadList.length-2].link.classList.add('grown');
+    f.style.opacity='0';
+    document.body.classList.add('beaded');   /* the words move only now */
+  },1400);
+  setTimeout(then,1500);
+}
+function openFamily(o){
+  /* the circle draws INWARD — deeper, not onward. No bead is laid, because
+     nothing has been finished yet. */
+  var g=$('ringInner'),fam=FAMILIES[o.k];
+  familyOf=o;
+  $('sHead').style.opacity='0'; $('sSub').style.opacity='0';
+  $('mark').classList.remove('here');
+  $('ringHint').style.opacity='0';
+  g.style.transition='transform 1.5s cubic-bezier(.4,0,.3,1),opacity 1.2s ease';
+  g.style.transform='scale(.34)'; g.style.opacity='.25';
+  setTimeout(function(){
+    stage='family'; SET=fam; ARC=null; reset(); clearTrace();
+    g.style.transform='scale(1)'; g.style.opacity='1';
+    restoreLayers();
+  },1300);
+  setTimeout(function(){
+    $('sHead').textContent='And what kind?';
+    $('sSub').innerHTML='Within <b style="color:'+o.c+'">'+o.w+
+      '</b> &mdash; seek the shade of it.';
+    $('sHead').style.opacity='1'; $('sSub').style.opacity='1';
+    $('back').classList.add('on');
+    placeMark();
+    if(down&&lastQ&&lastQ.r>=DEAD){ light(nearest(lastQ.a)); }
+  },2100);
+}
+function closeFamily(){
+  familyOf=null;
+  born('sense','What are you sensing right now?',
+    'Sense how you are feeling within the circle, and hold it for three.',SENSES,null);
+  setTimeout(function(){ if(!beadList.length)$('back').classList.remove('on'); },1200);
+}
+function born(next,head,sub,set,arc){
+  /* ORDER MATTERS, and it is the order Karl asked for:
+     the symbol clears first, then the room makes space for the bead,
+     then and only then the words change. Nothing overlaps, nothing snaps. */
+  $('sHead').style.opacity='0'; $('sSub').style.opacity='0';
+  $('mark').classList.remove('here');
+  setTimeout(function(){                 /* the next circle rises in its place */
+    stage=next; SET=set; ARC=arc||null; if(next!=='family')familyOf=null;
+    reset(); clearTrace(); drawArc();
+    $('mark').style.transform='translate(-50%,-50%) scale(1)';
+    restoreLayers();
+    var g=$('ringInner');
+    g.style.transition='none'; g.style.transform='scale(.28)'; g.style.opacity='0';
+    void g.getBoundingClientRect();
+    g.style.transition='';
+    g.style.transform='scale(1)'; g.style.opacity='1';
+  },120);
+  setTimeout(function(){                 /* the words, last of all */
+    $('sHead').textContent=head; $('sSub').innerHTML=sub;
+    $('sHead').style.opacity='1'; $('sSub').style.opacity='1';
+    $('back').classList.add('on');
+    placeMark();
+    if(down&&lastQ&&lastQ.r>=DEAD){ light(nearest(lastQ.a)); }
+  },1000);
+}
+
+/* ═══ where they already are, if they choose that door ═══ */
+/* offered, never assumed. Nothing is read from the device unless this is
+   tapped, and the field is the senser's to overwrite. */
+/* NOTE: a browser only allows this on a real website. Opened as a plain file
+   it will always decline, and the naming field appears instead. */
+function toNaming(line){
+  $('typed').classList.add('naming');
+  if(line)$('tHead').innerHTML=line;
+  setTimeout(function(){$('whereBox').focus();},400);
+}
+$('orName').addEventListener('click',function(){toNaming();});
+$('hereBtn').addEventListener('click',function(){
+  var b=$('hereBtn'); b.textContent='asking your device\u2026';
+  if(!navigator.geolocation){toNaming('Where should this light land?');return;}
+  navigator.geolocation.getCurrentPosition(function(pos){
+    coords=pos.coords.latitude.toFixed(4)+', '+pos.coords.longitude.toFixed(4);
+    state.where=coords;              /* the live app names the street here */
+    land();
+  },function(){
+    b.textContent='Use where I am';
+    toNaming('That is fine. Name the place instead.');
+  },{timeout:9000,maximumAge:600000});
+});
+/* if the device already shares its position, the place circle offers the real
+   places around them instead of doors. In the live app these carry street and
+   town names from the map's own place lookup. */
+(function(){
+  if(navigator.permissions&&navigator.permissions.query){
+    navigator.permissions.query({name:'geolocation'}).then(function(p){
+      if(p.state==='granted'&&navigator.geolocation){
+        navigator.geolocation.getCurrentPosition(function(pos){
+          coords=pos.coords.latitude.toFixed(4)+', '+pos.coords.longitude.toFixed(4);
+        },function(){},{timeout:9000,maximumAge:600000});
+      }
+    }).catch(function(){});
+  }
+})();
+function toTyped(){
+  $('seek').classList.remove('on'); hideBed(); hideCircle();
+  $('typed').classList.remove('naming');
+  $('tHead').innerHTML='Where should this light land?';
+  $('hereBtn').textContent='Use where I am';
+  $('listDoor').classList.remove('on'); $('back').classList.add('on');
+  $('mark').style.opacity='0';$('clear').style.opacity='0';$('bed').style.opacity='0';
+  $('tHead').innerHTML='Where should this light land?';
+  setTimeout(function(){$('typed').classList.add('on');},1400);
+}
+$('whereBox').addEventListener('input',function(){
+  $('typedGo').disabled=!$('whereBox').value.trim();
+});
+$('typedGo').addEventListener('click',function(){
+  state.where=$('whereBox').value.trim();
+  $('typed').classList.remove('on');
+  setTimeout(land,1300);
+});
+
+/* ═══ the map ═══ where the light lands, and only now are words invited ═══ */
+function land(){
+  known=true;                        /* it is known now — the next one is lighter */
+  /* LIGHT IS INWARD, DARK IS OUTWARD. This is the moment the senser's private
+     white space opens out onto the night-lit world, with their own light now
+     among the others. It obeys the law of transition: three seconds, no switch. */
+  document.body.classList.add('night');
+  $('seek').classList.remove('on'); $('typed').classList.remove('on'); hideCircle();
+  $('listDoor').classList.remove('on');
+  $('beads').classList.remove('here'); $('back').classList.remove('on');
+  document.body.classList.remove('beaded'); hideBed();
+  $('mark').style.opacity='0';$('clear').style.opacity='0';$('bed').style.opacity='0';
+  setTimeout(function(){
+    var col=state.senseColor||'#7a63c8',L=$('mapLight');
+    L.style.background='radial-gradient(circle,#ffffff 14%,'+col+' 50%,'+col+'00 76%)';
+    L.style.boxShadow='0 16px 40px '+col+'55';
+    $('mapRipple').style.setProperty('--lc',col);
+    $('mapWord').textContent=state.sense||''; $('mapWord').style.color=col;
+    $('mapSym').innerHTML=gestureOf(state.senseKey);
+    var bits=[];
+    if(state.strength)bits.push(state.strength);
+    if(state.where)bits.push(state.where);
+    $('mapLines').innerHTML='This light is yours.'+(bits.length?'<br>'+bits.join(' &middot; '):'');
+    $('map').classList.add('on');
+    setTimeout(function(){L.classList.add('fall');},800);
+    setTimeout(function(){$('mapRipple').classList.add('go');},3300);
+    setTimeout(function(){L.style.opacity='0';},3500);
+    setTimeout(function(){$('mapWord').classList.add('on');},3900);
+    setTimeout(function(){$('mapSym').classList.add('on');},4500);
+    setTimeout(function(){$('mapLines').classList.add('on');},5300);
+    setTimeout(function(){$('gift').classList.add('on');},6900);
+  },1400);
+}
+/* Karl's own contexts, returned to the one place they are a pleasure rather
+   than a gate: after the light exists. One tap, or ignore them entirely. */
+var DOING=['At home','At work','On a walk','In a car','On a plane'];
+(function(){
+  var box=$('doing');
+  DOING.forEach(function(c){
+    var b=document.createElement('button');
+    b.type='button'; b.className='dchip'; b.textContent=c;
+    b.addEventListener('click',function(){
+      var all=box.childNodes, was=b.classList.contains('on');
+      for(var i=0;i<all.length;i++)all[i].classList.remove('on');
+      if(was){state.doing=null;} else {b.classList.add('on');state.doing=c;}
+    });
+    box.appendChild(b);
+  });
+})();
+$('photoBtn').addEventListener('click',function(){$('photoInput').click();});
+$('photoInput').addEventListener('change',function(e){
+  var f=e.target.files&&e.target.files[0];if(!f)return;
+  var rd=new FileReader();
+  rd.onload=function(ev){state.photo=ev.target.result;
+    var t=$('thumbImg');t.src=state.photo;t.style.display='block';};
+  rd.readAsDataURL(f);
+});
+$('doneBtn').addEventListener('click',function(){
+  state.words=$('wordsBox').value.trim();
+  if(state.doing)$('mapLines').innerHTML+='<br><span style="opacity:.75">'+
+    state.doing.toLowerCase()+'</span>';
+  $('gift').classList.remove('on');
+  /* ═══ THE HANDOVER ═══════════════════════════════════════════════════════
+     Standing alone, this page behaves exactly as it always has. Carried inside
+     Aurasense, it hands the light to the map instead — and the map answers by
+     crossing from this pale cloud into its own dark. The crossing happens ONCE,
+     which is what makes it a threshold rather than a corridor. */
+  var _embedded=false; try{_embedded=(window.parent&&window.parent!==window);}catch(e){}
+  if(_embedded){
+    setTimeout(function(){
+      $('mapLines').innerHTML='<span style="opacity:.75">Your light is taking its '+
+        'place among the others&hellip;</span>';
+    },1200);
+    setTimeout(function(){
+      try{
+        window.parent.postMessage({aurasense:'seeking-complete',
+          sense:state.sense, senseKey:state.senseKey, senseColor:state.senseColor,
+          strength:state.strength, strengthValue:(function(){
+            for(var i=0;i<STRENGTHS.length;i++) if(STRENGTHS[i].w===state.strength) return STRENGTHS[i].s;
+            return null; })(),
+          where:state.where, words:state.words, doing:state.doing},'*');
+      }catch(e){}
+    },2600);
+    return;
+  }
+  setTimeout(function(){
+    $('mapLines').innerHTML='<span style="opacity:.75">In the live app the map opens here, '+
+      'and this light takes its place among the others.</span>';
+  },1200);
+  setTimeout(function(){$('againBtn').classList.add('on');},3400);
+});
+$('againBtn').addEventListener('click',function(){location.reload();});
+
+
+/* ═══ THE LIST DOOR ═══ quiet, always present, and reachable by keyboard.
+   Everything else here asks a person to hold a finger still on a moving
+   target for five seconds. Not everyone can. This asks for one tap. */
+function openList(){
+  var box=$('listInner'); box.innerHTML='';
+  $('listHead').textContent=(stage==='family'&&familyOf)
+    ? 'Within '+familyOf.w : $('sHead').textContent;
+  SET.forEach(function(o,i){
+    var b=document.createElement('button');
+    b.type='button'; b.className='litem';
+    var col=(stage==='sense'||stage==='family')?o.c:(state.senseColor||'#7a63c8');
+    if((stage==='sense'||stage==='family')&&o.k){
+      b.innerHTML='<span class="lsym">'+gestureOf(o.k)+'</span><span>'+o.w+'</span>';
+    }else{
+      b.innerHTML='<span class="ldot" style="background:'+col+'"></span><span>'+o.w+'</span>';
+    }
+    b.addEventListener('click',function(){
+      $('listPanel').classList.remove('on');
+      lit=null; light(i);
+      setTimeout(function(){ if(!locked)commit(); },900);
+    });
+    box.appendChild(b);
+  });
+  $('listPanel').classList.add('on');
+  var f=box.querySelector('.litem'); if(f)f.focus();
+}
+$('listBtn').addEventListener('click',openList);
+$('listClose').addEventListener('click',function(){$('listPanel').classList.remove('on');});
+
+/* ═══ a weaker device drops the heaviest layers rather than stuttering.
+   Measured, not guessed: the first two seconds are sampled. ═══ */
+(function(){
+  if((navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||
+     (navigator.deviceMemory&&navigator.deviceMemory<=4)){
+    document.documentElement.classList.add('lite'); return;
+  }
+  var f=0,t0=performance.now();
+  function tick(){
+    f++;
+    var dt=performance.now()-t0;
+    if(dt<2000){requestAnimationFrame(tick);return;}
+    if(f/(dt/1000)<38)document.documentElement.classList.add('lite');
+  }
+  requestAnimationFrame(tick);
+})();
+
+</script>
+</body>
+</html>
