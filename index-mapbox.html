@@ -1415,6 +1415,9 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #wev-t{font-size:14.5px;color:#fff;font-weight:500;line-height:1.4;padding-right:18px}
 #wev-k{font-size:10.5px;letter-spacing:.05em;margin-top:4px}
 #wev-n{font-size:12px;color:#cfc7ea;line-height:1.6;margin-top:9px}
+#wev-src{font-size:10.5px;color:#8a80b4;line-height:1.5;margin-top:9px;letter-spacing:.02em}
+#wev-src:empty{display:none}
+#wev-src b{font-weight:500;color:#a79ccc}
 #wev-d{font-size:11.5px;color:#e8d9b0;line-height:1.6;margin-top:9px;font-style:italic;border-left:2px solid rgba(232,192,116,.4);padding-left:9px}
 #wev-d:empty{display:none}
 #wev-c{font-size:10.5px;color:#9a8fc2;margin-top:11px}
@@ -1555,6 +1558,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="wev-k"></div>
     <div id="wev-n"></div>
     <div id="wev-d"></div>
+    <div id="wev-src"></div>
     <div id="wev-c"></div>
     <button id="wev-send">✦ Answer with an aura of compassion</button>
     <div id="wev-accord">Where many answer one circumstance, an Aura Accord will gather the reachings into one shared light — arriving with Gate profiles ✧</div>
@@ -5718,6 +5722,17 @@ function wevOpenPanel(i){
   const t=document.getElementById('wev-t');if(t)t.textContent=ev.title;
   const k=document.getElementById('wev-k');if(k){const _aw=ALPHA_WORDS.find(x=>x.w===({suffering:'Compassion',need:'Hope',disaster:'Renewal',joy:'Joy',sport:'Together'}[ev.type]||'Presence'));k.innerHTML=(_aw?alphaGlyph(_aw,18)+' ':'')+escT((WEV_FAMS[ev.fam]||'')+' \u00b7 '+(WA_LABEL[ev.type]||ev.type));k.style.color=WA_HEX[ev.type]||'#c4b5fd';k.style.display='inline-flex';k.style.alignItems='center';k.style.gap='6px';}
   const n=document.getElementById('wev-n');if(n)n.textContent=ev.note;
+  const sv=document.getElementById('wev-src');
+  if(sv){
+    const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    let g='';
+    if(ev.gathered){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(ev.gathered));
+      g=m?(parseInt(m[3],10)+' '+MON[parseInt(m[2],10)-1]+' '+m[1]):String(ev.gathered);}
+    const bits=[];
+    if(ev.src)bits.push('<b>Source</b> '+escT(String(ev.src)));
+    if(g)bits.push('<b>Gathered</b> '+escT(g));
+    sv.innerHTML=bits.join(' \u00b7 ');
+  }
   try{accRender(ev);}catch(e){}
   const d=document.getElementById('wev-d');if(d)d.textContent=(ev._db&&ev._status==='unverified'?'\u2691 Raised by a senser \u2014 unverified. It stands here fully once three sensers witness it is real.\n':'')+(ev.doorway||'');
   try{
