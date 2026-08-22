@@ -2069,9 +2069,31 @@ const SENSES=[
   {id:"clairsentience",realm:"internal",label:"Clairsentience",icon:"❋",color:"#f0a8c0",freqs:[[528,.0,.08,.09,3.2],[792,.3,.05,.07,2.4],[1056,.65,.03,.06,1.9]],examples:["I feel what this room has been holding","The emotion of this place enters me whole"]},
   {id:"claircognizance",realm:"internal",label:"Claircognizance",icon:"✶",color:"#ffd9a0",freqs:[[594,.0,.08,.08,3.0],[891,.3,.05,.06,2.2],[1188,.6,.03,.05,1.8]],examples:["I simply knew, here, without knowing how","An undeniable certainty arrived at this spot"]},
   {id:"synchronicity",realm:"internal",label:"Synchronicity",icon:"∞",color:"#c9b8f0",freqs:[[528,.0,.07,.09,3.2],[792,.4,.045,.07,2.4]],examples:["The same symbol reached me twice today, from strangers","This place answered a thought I hadn\u2019t spoken","Two moments rhymed here — I felt the pattern wink"]},
+  {id:"heaviness",realm:"internal",label:"Heaviness",icon:"⊻",color:"#8f86b8",freqs:[[147,0.0,0.18,0.11,3.4],[110,0.35,0.1,0.1,2.6]],examples:["A weight settles on me the moment I arrive here","Everything feels heavier on this stretch of road","I carry something extra whenever I stand in this room"]},
+  {id:"weariness",realm:"internal",label:"Weariness",icon:"⌒",color:"#a99cc9",freqs:[[196,0.0,0.16,0.1,3.2],[147,0.3,0.09,0.09,2.4]],examples:["A tiredness that sleep does not touch","I run out here before the day is done","Worn thin by this place, without knowing why"]},
+  {id:"numbness",realm:"internal",label:"Numbness",icon:"◌",color:"#9aa3ad",freqs:[[210,0.0,0.1,0.12,3.4]],examples:["I feel very little here, and that is its own signal","Something goes quiet in me on this street","Neither good nor bad — just distant"]},
+  {id:"rest",realm:"internal",label:"Rest",icon:"⌣",color:"#8fd8b0",freqs:[[174,0.0,0.2,0.1,3.0],[261,0.25,0.11,0.09,2.2]],examples:["My shoulders drop as soon as I get here","This is where I stop bracing","A place my body treats as safe enough to soften"]},
+  {id:"peace",realm:"internal",label:"Peace",icon:"⊙",color:"#aee0d8",freqs:[[174,0.0,0.22,0.11,3.4],[261,0.3,0.12,0.09,2.6]],examples:["Genuine quiet — the kind that reaches inside","Nothing here is asking anything of me","Still, and not empty"]},
+  {id:"relief",realm:"internal",label:"Relief",icon:"⌢",color:"#ffd9a0",freqs:[[432,0.0,0.15,0.09,2.6],[324,0.3,0.09,0.08,2.0]],examples:["The tightness let go the moment I turned this corner","Something I had been holding finally set down","Not joy — release"]},
+  {id:"hope",realm:"internal",label:"Hope",icon:"⊹",color:"#ffe0a0",freqs:[[396,0.0,0.14,0.08,2.6],[528,0.28,0.1,0.07,2.0]],examples:["Something here suggests things could change","A small opening, and I noticed it","The first light I have felt in a while"]},
+  {id:"gratitude",realm:"internal",label:"Gratitude",icon:"◡",color:"#f2ce8e",freqs:[[639,0.0,0.15,0.07,2.4],[852,0.25,0.09,0.06,1.8]],examples:["I stood here and was simply thankful","Someone was kind on this corner and it stayed with me","Glad, quietly, to have been here at all"]},
+  {id:"wonder",realm:"internal",label:"Wonder",icon:"◉",color:"#d8b8ff",freqs:[[741,0.0,0.13,0.08,2.8],[988,0.3,0.08,0.06,2.0]],examples:["Something here is larger than I can account for","I stopped walking without meaning to","The sky did something I had no words for"]},
+  {id:"love",realm:"internal",label:"Love",icon:"♡",color:"#ff9db4",freqs:[[528,0.0,0.17,0.07,2.4],[639,0.2,0.12,0.06,2.0]],examples:["This place holds someone I love","Warmth that has a direction to it","I was cared for here, and the street remembers"]},
+  {id:"joy",realm:"internal",label:"Joy",icon:"✧",color:"#ffcf6e",freqs:[[528,0.0,0.16,0.05,1.8],[660,0.15,0.12,0.05,1.5],[792,0.3,0.09,0.05,1.2]],examples:["Something lifted in me here and stayed lifted","I laughed out loud on this pavement","Bright, and not for any reason I can name"]},
   {id:"memory",realm:"memory",label:"Memory",icon:"\u2756",color:"#e8b76b",hidden:true,freqs:[[432,.0,.16,.08,2.6],[540,.3,.08,.08,1.4]],examples:["The summer we spent here as kids","Where we said goodbye, and meant it","The night everything changed for us"]},
 ];
 const SENSE_SYMBOLS={
+heaviness:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(143,134,184,0.55))"><g stroke="#8f86b8" stroke-width="3.2" fill="none"><path d="M12 17 Q24 26 36 17"/><circle cx="24" cy="31" r="3.2" fill="#8f86b8" stroke="none"/></g></svg>',
+weariness:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(169,156,201,0.55))"><g stroke="#a99cc9" stroke-width="3.2" fill="none"><path d="M11 21 A15 15 0 0 1 37 21"/><circle cx="24" cy="32" r="3.2" fill="#a99cc9" stroke="none"/></g></svg>',
+numbness:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(154,163,173,0.55))"><g stroke="#9aa3ad" stroke-width="3.2" fill="none"><circle cx="24" cy="24" r="3" fill="#9aa3ad" stroke="none"/><path d="M11 24a13 13 0 0 1 8-12"/><path d="M37 24a13 13 0 0 1-8 12"/></g></svg>',
+rest:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(143,216,176,0.55))"><g stroke="#8fd8b0" stroke-width="3.2" fill="none"><path d="M12 26q12 12 24 0"/><circle cx="24" cy="24" r="3.4" fill="#8fd8b0" stroke="none"/></g></svg>',
+peace:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(174,224,216,0.55))"><g stroke="#aee0d8" stroke-width="3.2" fill="none"><circle cx="24" cy="24" r="11"/><path d="M17 24h14"/></g></svg>',
+relief:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,217,160,0.55))"><g stroke="#ffd9a0" stroke-width="3.2" fill="none"><path d="M13 31q11 10 22 0"/><circle cx="24" cy="22" r="3.2" fill="#ffd9a0" stroke="none"/><path d="M24 13v-4"/></g></svg>',
+hope:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,224,160,0.55))"><g stroke="#ffe0a0" stroke-width="3.2" fill="none"><path d="M10 32h28"/><circle cx="24" cy="24" r="3.4" fill="#ffe0a0" stroke="none"/><path d="M24 17v-4M17 19l-3-3M31 19l3-3" opacity="0.8"/></g></svg>',
+gratitude:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(242,206,142,0.55))"><g stroke="#f2ce8e" stroke-width="3.2" fill="none"><path d="M14 26a10 10 0 0 0 20 0"/><circle cx="24" cy="16" r="3" fill="#f2ce8e" stroke="none"/></g></svg>',
+wonder:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(216,184,255,0.55))"><g stroke="#d8b8ff" stroke-width="3.2" fill="none"><circle cx="22" cy="26" r="3" fill="#d8b8ff" stroke="none"/><ellipse cx="26" cy="22" rx="12" ry="7" transform="rotate(-24 26 22)"/></g></svg>',
+love:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,157,180,0.55))"><g stroke="#ff9db4" stroke-width="3.2" fill="none"><circle cx="19" cy="24" r="8"/><circle cx="29" cy="24" r="8"/><circle cx="24" cy="24" r="2.6" fill="#ff9db4" stroke="none"/></g></svg>',
+joy:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,207,110,0.55))"><g stroke="#ffcf6e" stroke-width="3.2" fill="none"><circle cx="24" cy="30" r="3" fill="#ffcf6e" stroke="none"/><path d="M24 26 C 23 20, 20 16, 15 11"/><path d="M24 26 C 24 19, 24 14, 24 8"/><path d="M24 26 C 25 20, 28 16, 33 11"/></g></svg>',
 memory:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,183,107,0.55))"><defs><radialGradient id="as-memHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe6b0" stop-opacity="0.34"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient><radialGradient id="as-memCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fffaf0" stop-opacity="1"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-memHalo)"/><path d="M48 54 a6 6 0 1 1 6 -6 a12 12 0 1 0 -12 12 a18 18 0 1 1 18 -18 a24 24 0 1 0 -24 24" fill="none" stroke="#f0cd8a" stroke-width="2.4" stroke-linecap="round" opacity="0.9" class="as-slowShimmer"/><circle cx="48" cy="48" r="7" fill="url(#as-memCore)" class="as-breathe"/></svg>',
 sound:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(180,200,255,0.42))"><defs><radialGradient id="as-sndCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient><radialGradient id="as-sndHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8c8ff" stop-opacity="0.30"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-sndHalo)"/><g class="as-wave"><path d="M6 48 Q 20 28, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="2.3" stroke-linecap="round" opacity="0.82" class="as-shimmer"/><path d="M24 64 Q 32 56, 40 64 T 56 64 T 72 64" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/></g><circle cx="48" cy="48" r="14" fill="url(#as-sndCore)" class="as-breathe"/></svg>',
 smell:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(190,235,170,0.5))"><defs><radialGradient id="as-smlCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient><radialGradient id="as-smlHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#beeba9" stop-opacity="0.32"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-smlHalo)"/><g class="as-drift"><path d="M40 78 C 36 60, 50 52, 42 36 C 36 24, 48 18, 44 8" fill="none" stroke="#beeba9" stroke-width="3" stroke-linecap="round" opacity="0.95" class="as-shimmer"/><path d="M55 78 C 59 58, 47 50, 57 34 C 63 22, 51 16, 57 6" fill="none" stroke="#beeba9" stroke-width="2.4" stroke-linecap="round" opacity="0.7"/><g class="as-wiggle"><path d="M47 74 C 52 60, 43 52, 50 38 C 54 30, 45 26, 49 20" fill="none" stroke="#beeba9" stroke-width="2" stroke-linecap="round" opacity="0.6"/></g></g><ellipse cx="48" cy="80" rx="16" ry="7" fill="url(#as-smlCore)" class="as-breathe"/></svg>',
@@ -2496,12 +2518,14 @@ const SGRP_ICONS=[
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9fc4ff" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(159,196,255,.6))"><path d="M3 15 Q12 6 21 15"/><path d="M5 18.5 H19" opacity=".5"/><circle cx="12" cy="11.5" r="1.6" fill="#eaf3ff" stroke="none"/></svg>',
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f0b090" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(240,176,144,.6))"><rect x="8" y="6" width="8" height="12" rx="4"/><path d="M12 3 v3 M12 18 v3" opacity=".6"/><circle cx="12" cy="12" r="1.6" fill="#ffe9dc" stroke="none"/></svg>',
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f0a8c0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(240,168,192,.6))"><path d="M4 16 Q8 8 12 12 M20 16 Q16 8 12 12"/><circle cx="12" cy="12" r="1.6" fill="#ffe4ee" stroke="none"/></svg>',
-'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cf9ff0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(207,159,240,.6))"><circle cx="12" cy="12" r="5" opacity=".55"/><path d="M12 3 v3 M12 18 v3 M3 12 h3 M18 12 h3" opacity=".8"/><circle cx="12" cy="12" r="1.5" fill="#f3e8ff" stroke="none"/></svg>'];
+'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cf9ff0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(207,159,240,.6))"><circle cx="12" cy="12" r="5" opacity=".55"/><path d="M12 3 v3 M12 18 v3 M3 12 h3 M18 12 h3" opacity=".8"/><circle cx="12" cy="12" r="1.5" fill="#f3e8ff" stroke="none"/></svg>',
+'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a9d8c0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(169,216,192,.6))"><path d="M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3.2"/></svg>'];
 const SENSE_CATS=[
  {t:'External senses',s:'Exteroception \u2014 the physical world around you',ids:['light','sound','taste','touch','smell','heat','cold','vibration','atmosphere','nature']},
  {t:'Internal senses',s:'Interoception \u2014 the felt state of your own body',ids:['hunger','hydration','innertemp','pain','proprioception']},
  {t:'Socio-emotional',s:'Neuroception \u2014 safety, stress and connection',ids:['safety','stress','belonging','anxiety','socialanxiety','overwhelm','loneliness']},
- {t:'Mind, time & beyond',s:'Cognitive & temporal \u2014 time, intuition and the further senses',ids:['chronosception','intuition','dream','preddream','premonition','dejavu','clairvoyance','clairaudience','clairsentience','claircognizance','synchronicity','anomaly']}
+ {t:'Mind, time & beyond',s:'Cognitive & temporal \u2014 time, intuition and the further senses',ids:['chronosception','intuition','dream','preddream','premonition','dejavu','clairvoyance','clairaudience','clairsentience','claircognizance','synchronicity','anomaly']},
+ {t:'Weight and light',s:'The felt continuum \u2014 what presses down, what rests, and what opens',ids:['heaviness','weariness','numbness','rest','peace','relief','hope','gratitude','wonder','love','joy']}
 ];
 function senseChip(s){
   const b=document.createElement('button');
@@ -5509,19 +5533,101 @@ function lsPrev(){lsSaveCurrent();if(lsState.idx>0){lsState.idx--;lsShowQuestion
 // Data honesty, standing law: illustrative kinds only until the Gate's live source is wired.
 // Never simulated specifics, never invented tragedies. Every constriction paired with a doorway.
 const WORLD_EVENTS=[
-  {lat:34.5,lng:69.2,type:'need',fam:'conflict',title:'Communities facing hunger',note:'Families in this region need food and clean water. Held in thought \u2014 and awareness is a beginning.',doorway:'Aid reaches further when the world keeps looking \u2014 steady attention keeps hands, food and water moving here.',compassion:0},
-  {lat:31.5,lng:34.47,type:'suffering',fam:'conflict',title:'People living through conflict',note:'Civilians here are enduring loss and fear. They are being thought of, with compassion.',doorway:'Peace has begun in smaller rooms than this. Every mind that refuses hatred \u2014 including toward those making the decisions \u2014 widens the door.',compassion:0},
-  {lat:37.0,lng:37.4,type:'disaster',fam:'env',title:'Recovering from an earthquake',note:'Towns rebuilding after the ground shook. Awareness and aid still matter here.',doorway:'Rebuilding is already underway \u2014 steady attention after the news moves on is what finishes homes.',compassion:0},
-  {lat:-1.95,lng:30.06,type:'need',fam:'env',title:'A region facing drought',note:'A long dry season is straining whole communities. They are not forgotten.',doorway:'Water projects and patient farming are answering \u2014 care that arrives early softens the hardest months.',compassion:0},
-  {lat:40.81,lng:-74.07,type:'sport',fam:'events',title:'FIFA World Cup 2026 \u2014 New York / New Jersey',note:'The world\u2019s game, gathering millions of hearts. The final comes here on July 19.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
-  {lat:19.30,lng:-99.15,type:'sport',fam:'events',title:'World Cup 2026 \u2014 Mexico City',note:'Estadio Azteca opened this World Cup \u2014 a city alive with song.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
-  {lat:49.28,lng:-123.12,type:'sport',fam:'events',title:'World Cup 2026 \u2014 Vancouver',note:'A coastal city buzzing with matches and shared joy.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
-  {lat:32.75,lng:-97.08,type:'sport',fam:'events',title:'World Cup 2026 \u2014 Dallas',note:'Crowds from every nation, one game in common.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
-  {lat:51.43,lng:-0.21,type:'sport',fam:'events',title:'Wimbledon, London',note:'The championships in full flow \u2014 quiet courts, held breath, sudden joy.',doorway:'Quiet courts and held breath \u2014 joy shared in stillness travels too.',compassion:0},
-  {lat:41.39,lng:2.17,type:'sport',fam:'events',title:'Tour de France \u2014 Grand D\u00e9part, Barcelona',note:'The great race rolls out from Barcelona this July.',doorway:'A moving celebration \u2014 joy that travels roads gathers everyone it passes.',compassion:0},
-  {lat:14.6,lng:121.0,type:'disaster',fam:'env',title:'After the storm',note:'Coastal communities recovering from a powerful storm.',doorway:'Coastal communities know how to rebuild \u2014 what they need is the world\u2019s memory to outlast the weather.',compassion:0},
-  {lat:-23.55,lng:-46.63,type:'joy',fam:'events',title:'A festival of life',note:'Streets full of music, colour and gladness.',doorway:'Let some of this travel \u2014 light is contagious too.',compassion:0},
-  {lat:48.85,lng:2.35,type:'joy',fam:'events',title:'A city in celebration',note:'A day of collective joy and togetherness.',doorway:'Let some of this travel \u2014 light is contagious too.',compassion:0}
+
+  // ── CONFLICT & PEACE ──────────────────────────────────────────────────
+  {lat:13.63,lng:25.35,type:'need',fam:'conflict',
+   title:'Darfur \u2014 families living with hunger',
+   note:'Around 19.5 million people in Sudan face acute food insecurity, and famine risk persists across fourteen areas. Half of those needing help are children. Aid is reaching roughly three million people a month against a need far larger.',
+   doorway:'Sudan\u2019s response plan is only a fifth funded \u2014 which means the gap is money and attention, not possibility. Aid moves where the world keeps looking. This is a door that opens by being watched.',
+   src:'UNICEF / IPC / WFP, 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:31.50,lng:34.47,type:'suffering',fam:'conflict',
+   title:'Gaza \u2014 people burying their own',
+   note:'A mass funeral was held this month for 112 Palestinians. Families here are living with loss on a scale that does not fit into a news cycle.',
+   doorway:'Peace has begun in smaller rooms than this one. Every mind that refuses hatred \u2014 including toward those making the decisions \u2014 widens the door a little.',
+   src:'Democracy Now!, 4 Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:50.45,lng:30.52,type:'suffering',fam:'conflict',
+   title:'Ukraine \u2014 nights interrupted',
+   note:'Drone strikes continue to be exchanged, and civilians continue to be among those killed. For millions, the sound of the sky has changed meaning.',
+   doorway:'Wars end. All of them, eventually, and usually sooner than the people inside them can believe. Holding that is not naivety \u2014 it is the thing that makes the ending thinkable.',
+   src:'Democracy Now!, Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:26.57,lng:56.25,type:'need',fam:'decisions',
+   title:'Strait of Hormuz \u2014 a narrow stretch of water the world depends on',
+   note:'About a fifth of the world\u2019s oil passes here, and passage has been disrupted since the spring. Sudan alone draws over half its fertiliser through this strait \u2014 so a decision made about shipping arrives, months later, as a harvest that did or did not happen.',
+   doorway:'Talks toward safe passage are underway. This is the clearest case on the map of a distant decision landing in a distant kitchen \u2014 and of why watching the decision matters as much as watching the hunger.',
+   src:'CNN / UNCTAD, Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  // ── ENVIRONMENT \u2014 HARM AND REPAIR ───────────────────────────────────
+  {lat:38.05,lng:23.73,type:'disaster',fam:'env',
+   title:'Southern Europe \u2014 a summer of fire',
+   note:'Thousands have been evacuated across Greece, Croatia, France, Germany and the UK. Around 500,000 hectares have burned in the EU this year, after western Europe\u2019s warmest June and July on record.',
+   doorway:'Europe has mounted its largest firefighting mobilisation yet \u2014 twenty-two aircraft and hundreds of pre-positioned crews shared across twelve countries. Nations lending each other their firefighters is a quiet kind of proof.',
+   src:'Al Jazeera / Copernicus, 14 Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:44.70,lng:-0.60,type:'disaster',fam:'env',
+   title:'Gironde and Landes \u2014 homes left behind',
+   note:'Around 330,000 people have been moved from their homes in Spain and France this summer. France has passed its national record for hectares burned in a year.',
+   doorway:'People go home again. The rebuilding is slower than the leaving, and it needs the world\u2019s memory to outlast the weather report.',
+   src:'Mappr / EU rescEU, Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:49.60,lng:-119.67,type:'disaster',fam:'env',
+   title:'Okanagan, British Columbia \u2014 a village emptied',
+   note:'The Bald Range fire has forced 20,000 people to evacuate, including the whole village of Summerland. A state of emergency has been declared.',
+   doorway:'This valley has done this before and come back. Neighbours here already know each other\u2019s names \u2014 which is most of what recovery is made of.',
+   src:'CTV News, Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:51.19,lng:-114.47,type:'need',fam:'env',
+   title:'Alberta \u2014 breathing the smoke of other people\u2019s fires',
+   note:'Air quality warnings have run through the summer across the foothills, Calgary, Cochrane and Banff, as smoke arrives from fires in British Columbia and Saskatchewan. Seniors, children, pregnant people and outdoor workers are told to stay inside.',
+   doorway:'Smoke passes, and it always has. But a place that keeps being told to stay indoors is a place worth sensing honestly \u2014 which is exactly what this map is for.',
+   src:'Environment and Climate Change Canada / CochraneNow, 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:-3.12,lng:-60.02,type:'joy',fam:'env',
+   title:'The Amazon \u2014 the forest is losing less of itself',
+   note:'Deforestation alerts in the Brazilian Amazon have fallen to their lowest level in thirteen years \u2014 2,874 square kilometres in the year to July, a 37% annual fall and 56% below the ten-year average. Alerts fell in the Cerrado, Caatinga, Atlantic Forest and Pampa too.',
+   doorway:'A scientist there put it plainly: this is evidence that destruction is not inevitable, and that it responds to what people decide. Fires are still rising even as cutting falls \u2014 so this door is open, not finished.',
+   src:'INPE / Mongabay, Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:4.90,lng:-76.23,type:'disaster',fam:'env',
+   title:'Choc\u00f3, Colombia \u2014 the ground moved',
+   note:'An earthquake struck near San Jos\u00e9 del Palmar, a community of about 4,800 people, 250 miles west of Bogot\u00e1.',
+   doorway:'Small places recover when they are not forgotten in the second week. Attention that arrives late is worth more than attention that arrives loud.',
+   src:'USGS / Euronews, Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:14.47,lng:-90.88,type:'disaster',fam:'env',
+   title:'Fuego, Guatemala \u2014 evacuation under a volcano',
+   note:'A nationwide orange alert was declared after a major eruption of Central America\u2019s most active volcano, with villages evacuated.',
+   doorway:'These communities have lived beside this mountain for generations and know how to leave and how to return. Warning systems that work are the reason this is an evacuation and not a tragedy.',
+   src:'AFP / RNZ, Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:14.60,lng:121.00,type:'disaster',fam:'env',
+   title:'The Philippines \u2014 first in the path of the storms',
+   note:'The archipelago is the first major landmass facing the Pacific cyclone belt, and is struck by an average of twenty storms and typhoons a year.',
+   doorway:'Coastal communities here know how to rebuild. What they need is for the world\u2019s memory to outlast the weather.',
+   src:'Euronews, Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  // ── WORLD EVENTS & GATHERINGS ─────────────────────────────────────────
+  {lat:64.15,lng:-21.94,type:'joy',fam:'events',
+   title:'Iceland \u2014 the sky went dark in the afternoon',
+   note:'On 12 August a total solar eclipse crossed Greenland, Iceland and northern Spain \u2014 the first over mainland Europe since 1999. Iceland, a country of under 400,000 people, expected 20,000 visitors for it.',
+   doorway:'For about two minutes, a great many strangers looked at exactly the same thing at exactly the same time and made the same sound. That is not a small piece of evidence about what we are.',
+   src:'NASA / PBS, 12 Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  {lat:42.34,lng:-3.70,type:'joy',fam:'events',
+   title:'Northern Spain \u2014 an eclipse at sunset',
+   note:'Along the path across Spain the sun was not fully covered until late evening, just before it set \u2014 an eclipse and a sunset in the same few minutes.',
+   doorway:'Let some of this travel. Light is contagious too, and it costs nothing to pass on.',
+   src:'NASA, 12 Aug 2026', gathered:'2026-08-15', compassion:0},
+
+  // ── DECISIONS & TRAJECTORIES ──────────────────────────────────────────
+  {lat:52.52,lng:13.40,type:'need',fam:'decisions',
+   title:'Berlin \u2014 a room deciding what hunger costs',
+   note:'A conference sought to raise a billion dollars toward Sudan\u2019s three-billion-dollar 2026 crisis plan. The plan itself was reduced from the previous year \u2014 not because need fell, but because expectation did.',
+   doorway:'This is a decision, not a weather event. Decisions can be made differently, and rooms like this one have changed their minds before when enough people were watching them.',
+   src:'Health Policy Watch / UNDP, 2026', gathered:'2026-08-15', compassion:0}
+
 ];
 const WA_RGB={suffering:'229,90,90',need:'108,158,235',disaster:'240,150,70',joy:'247,206,107',sport:'134,224,192'};
 const WA_HEX={suffering:'#e55a5a',need:'#6c9eeb',disaster:'#f0964a',joy:'#f7ce6b',sport:'#86e0c0'};
