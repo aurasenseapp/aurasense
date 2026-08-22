@@ -278,7 +278,12 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #gp-modal .gp-x{display:block;width:100%;margin-top:8px;background:none;border:none;color:#8a80b4;font-size:11.5px}
 #mv-orb{position:fixed;right:16px;bottom:18px;z-index:99990;width:46px;height:46px;border-radius:50%;border:0.5px solid rgba(196,181,253,.55);background:radial-gradient(circle at 38% 34%,rgba(233,221,255,.9),rgba(167,139,250,.5) 46%,rgba(20,16,42,.9) 78%);box-shadow:0 0 18px rgba(167,139,250,.5),0 6px 20px rgba(0,0,0,.5);cursor:pointer;animation:mvBreath 6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-size:19px;color:#0c0a1c}
 @keyframes mvBreath{0%,100%{transform:scale(1);box-shadow:0 0 16px rgba(167,139,250,.42),0 6px 20px rgba(0,0,0,.5)}50%{transform:scale(1.07);box-shadow:0 0 30px rgba(196,181,253,.75),0 6px 20px rgba(0,0,0,.5)}}
-body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
+/* It used to dim to .62 and keep its place above the panel, still catching taps.
+   The panel is the working surface; the Mirror waits its turn. */
+body.panel-live #mv-orb{opacity:0;pointer-events:none;transform:translateY(10px)}
+body:has(#livefeed-page.show) #mv-orb{opacity:.62}
+#mv-orb{transition:opacity .45s ease,transform .45s ease}
+#mv-orb.mv-waiting{opacity:0;pointer-events:none}
 #mv-panel{position:fixed;right:14px;bottom:74px;z-index:99991;width:min(340px,92vw);max-height:66vh;overflow-y:auto;background:rgba(12,10,26,.97);border:0.5px solid rgba(196,181,253,.45);border-radius:18px;padding:15px 15px 11px;box-shadow:0 12px 44px rgba(0,0,0,.6),0 0 30px rgba(167,139,250,.18);opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s;pointer-events:none}
 #mv-panel.show{opacity:1;transform:none;pointer-events:auto}
 #mv-panel .mv-h{font-size:12.5px;color:#e9ddff;letter-spacing:.06em;margin-bottom:7px}
@@ -1033,7 +1038,7 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #panel.locating #sk-wrap,#panel.locating #sk-tools{display:none}
 #panel:not(.list-door) #scats-all{display:none}
 #panel.list-door #sk-wrap{display:none}
-#sk-circle{position:relative;width:100%;max-width:300px;margin:0 auto;
+#sk-circle{position:relative;width:100%;max-width:344px;margin:0 auto;
   border-radius:50%;border:0.5px solid rgba(167,139,250,.16);
   background:radial-gradient(circle at 50% 50%,rgba(24,18,48,.55) 0%,rgba(10,8,24,.15) 70%,transparent 100%);
   -webkit-tap-highlight-color:transparent}
@@ -1045,16 +1050,22 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
   pointer-events:none;will-change:opacity,transform}
 #sk-ring{position:absolute;inset:0;opacity:1;transition:opacity .26s ease}
 #sk-ring.sk-fading{opacity:0}
-.sk-m{position:absolute;transform:translate(-50%,-50%);width:46px;height:46px;
-  display:flex;align-items:center;justify-content:center;padding:0;
-  border-radius:50%;border:0.5px solid transparent;background:transparent;
+.sk-m{position:absolute;transform:translate(-50%,-50%);width:70px;min-height:58px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;
+  gap:2px;padding:4px 0 0;border-radius:13px;border:0.5px solid transparent;background:transparent;
   cursor:pointer;font-family:inherit;touch-action:pan-y;user-select:none;
   -webkit-user-select:none;-webkit-touch-callout:none;
   -webkit-tap-highlight-color:transparent;
   transition:border-color .3s ease,background .3s ease,transform .3s ease,filter .3s ease;
-  filter:saturate(.85) opacity(.82)}
+  filter:opacity(.94)}
+.sk-m svg{width:32px!important;height:32px!important}
+.sk-lb{font-size:9px;line-height:1.14;color:#9d93c8;letter-spacing:.01em;
+  text-align:center;max-width:68px;transition:color .3s ease;pointer-events:none;
+  overflow-wrap:anywhere;hyphens:auto;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sk-m:hover .sk-lb,.sk-m.sk-held .sk-lb{color:#efe8ff}
 .sk-m:hover,.sk-m:focus-visible{filter:none;border-color:rgba(196,181,253,.3);outline:none}
-.sk-m.sk-held{filter:none;transform:translate(-50%,-50%) scale(1.16);
+.sk-m.sk-held{filter:none;transform:translate(-50%,-50%) scale(1.12);
   border-color:var(--mc,rgba(196,181,253,.6));background:rgba(255,255,255,.05)}
 .sk-m svg{pointer-events:none;display:block}
 /* the heart. The word lives HERE, never on the ring. */
@@ -1074,8 +1085,9 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #sk-tools button:hover{color:#d8d0f0;border-color:rgba(167,139,250,.45)}
 #sk-back{display:none}
 #sk-back.on{display:inline-block}
-@media (max-width:600px){#sk-circle{max-width:min(300px,72vw)}
-  .sk-m{width:42px;height:42px}}
+@media (max-width:600px){#sk-circle{max-width:min(344px,86vw)}
+  .sk-m{width:64px}
+  .sk-lb{font-size:8.5px;max-width:62px}}
 #sense-confirm{display:block;margin:9px 2px 8px;padding:8px 10px;background:rgba(167,139,250,.08);border:0.5px solid rgba(167,139,250,.25);border-radius:10px;font-size:12px;color:#d7ccf2;letter-spacing:.01em;line-height:1.35}
 @media (max-width:600px){#sense-confirm{display:none!important}}
 #sense-confirm:empty{display:none}
@@ -2757,6 +2769,7 @@ document.querySelectorAll('.tab-mi[data-i]').forEach(mi=>{ mi.onclick=()=>goToLe
   document.addEventListener('click',(e)=>{ if(!e.target.closest('.tab-group'))closeTabMenus(); });
 })();
 
+let lastSearchedPlace=null;
 // ---- Framing law: never fitBounds a returned bbox (it oscillates and ignores maxZoom on big areas). ----
 // Fly to the feature's own centre at a zoom derived from its bbox span (log2), clamped per kind. Every number below is tunable.
 const ZOOM_CLAMP={place:[10.6,13.6,0.6],locality:[11.4,14.2,0.7],district:[7.4,11.5,0.5],postcode:[13.5,16,0.8],neighborhood:[13,16,0.8],region:[4.6,9.6,0.45],country:[1.55,6.2,0.45]};
@@ -3354,23 +3367,24 @@ function drawPlaceField(c,p,col,life,i){
 
     // the haze within — soft, never solid, so the map still reads through it
     const g=c.createRadialGradient(cx,cy,0,cx,cy,Math.max(rx,ry)*breath);
-    g.addColorStop(0,   hexA(col,(0.13+0.05*swell)*life));
-    g.addColorStop(0.55,hexA(col,(0.08+0.03*swell)*life));
+    g.addColorStop(0,   hexA(col,(0.30+0.09*swell)*life));
+    g.addColorStop(0.55,hexA(col,(0.17+0.05*swell)*life));
     g.addColorStop(1,   hexA(col,0));
     c.fillStyle=g; c.fill();
 
     // the luminous edge — the outline Karl asked for, breathing rather than fixed
     c.save();
-    c.lineWidth=1.5;
-    c.strokeStyle=hexA(col,(0.42+0.30*swell)*life);
-    c.shadowColor=col; c.shadowBlur=16+10*swell;
+    c.lineWidth=2.1;
+    c.strokeStyle=hexA(col,(0.62+0.30*swell)*life);
+    c.shadowColor=col; c.shadowBlur=22+12*swell;
     c.stroke();
     c.restore();
 
     // a small steady heart at the middle, so the place still has a centre to find
-    const cr=8*(0.9+0.2*swell)*life;
+    const cr=15*(0.9+0.2*swell)*life;
     const core=c.createRadialGradient(cx,cy,0,cx,cy,cr);
-    core.addColorStop(0,hexA('#ffffff',0.75*life));
+    core.addColorStop(0,hexA('#ffffff',0.95*life));
+    core.addColorStop(0.42,hexA(col,0.75*life));
     core.addColorStop(1,hexA(col,0));
     c.fillStyle=core;c.beginPath();c.arc(cx,cy,cr,0,Math.PI*2);c.fill();
   }catch(e){}
@@ -3401,9 +3415,17 @@ function submit(lat,lng,text){
   // The scale it was given from travels with it — a town offering belongs to the town, honestly labelled.
   let _oz=15;try{_oz=map.getZoom();}catch(e){}
   let _gScale='street';
+  // If the person searched a place by name and is still looking at it, THAT is the
+  // place they are lighting — whatever zoom the town's own size happened to land on.
+  let _sp=null;
+  try{ if(lastSearchedPlace&&(Date.now()-lastSearchedPlace.at)<1800000){
+        const _c=map.getCenter();
+        if(Math.abs(_c.lng-lastSearchedPlace.center[0])<0.6&&Math.abs(_c.lat-lastSearchedPlace.center[1])<0.6)
+          _sp=lastSearchedPlace; } }catch(e){}
   if(_oz<13){
     _gScale=(_oz>=10.5)?'town':(_oz>=7)?'region':(_oz>=3.6)?'nation':'world';
-    try{const _c=map.getCenter();lat=_c.lat;lng=_c.lng;}catch(e){}
+    if(_sp){ lng=_sp.center[0]; lat=_sp.center[1]; }
+    else try{const _c=map.getCenter();lat=_c.lat;lng=_c.lng;}catch(e){}
     // The senser stays where they offered from. The place they gave it to lights up beneath
     // them — dragging them down to a doorstep would answer a question they never asked.
   }
@@ -3415,6 +3437,13 @@ function submit(lat,lng,text){
   // Given from a height, the whole place takes the light. Its extent is fetched, then the
   // field blooms across it — the senser sees their town, region or nation light up beneath them.
   if(_gScale!=='street'){
+    // The searched extent is already in hand — the place lights at once, with no gap
+    // in which it renders as a point and then changes its mind.
+    if(_sp&&_sp.bbox){
+      _ap.field={bbox:_sp.bbox,name:_sp.name,scale:_gScale};
+      const _w0={town:'town',region:'region',nation:'nation',world:'living Earth'}[_gScale]||'place';
+      try{showMsg('\u2727 The whole '+_w0+' carries it \u2014 '+_sp.name+' is lit with what you gave.',7000,'witness',s.color);}catch(e){}
+    }else
     placeExtent(lat,lng,_gScale).then(ex=>{
       if(!ex)return;
       _ap.field={bbox:ex.bbox,name:ex.name,scale:_gScale};
@@ -3716,6 +3745,10 @@ document.getElementById('sg').onclick=async()=>{
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
       searching=true;
       // Searching a place makes it the spot the tabs and the World view return to.
+      // A place searched by name IS the place being offered to. Its extent came
+      // back with the search, so the offering never has to guess it or wait for it.
+      try{ lastSearchedPlace=(t==='place'||t==='locality'||t==='district'||t==='region'||t==='country')
+        ? {name:name,center:f.center,bbox:f.bbox||null,kind:t,at:Date.now()} : null; }catch(e){}
       if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
@@ -6812,9 +6845,18 @@ function mvPanel(){
   const o=document.createElement('div');o.id='mv-orb';
   o.title='The Mirror \u2014 mirror, shadow, and the self you are becoming';
   o.innerHTML='<span>\ud83e\ude9e</span>';
+  o.classList.add('mv-waiting');
   document.body.appendChild(o);
-  // It stands on every page: a lone hint the first time, then it simply waits.
-  let seen=false;try{seen=localStorage.getItem('aurasense_mv_seen')==='1';}catch(e){}
+  // It stands on every page — but it does not walk in ahead of the person.
+  // It waits for the first offering, or for a minute of quiet, whichever comes first.
+  var _mvWoke=false;
+  function mvWake(){ if(_mvWoke) return; _mvWoke=true; o.classList.remove('mv-waiting'); }
+  setTimeout(mvWake,60000);
+  try{ document.addEventListener('aurasense:offered',mvWake,{once:true}); }catch(e){}
+  // THE HINT IS DELETED, under the standing tips policy: a tip that explains a
+  // control means the control is not explaining itself. The orb's own title
+  // carries the meaning now, and the Living Tour will carry the rest.
+  let seen=true;try{localStorage.setItem('aurasense_mv_seen','1');}catch(e){}
   if(!seen){
     const h=document.createElement('div');h.id='mv-hint';
     h.textContent='\ud83e\ude9e The Mirror is here on every page \u2014 mirror, shadow, and who you are becoming.';
@@ -7362,7 +7404,7 @@ async function gateLoadOfferings(){
       doorEl=document.getElementById('sk-door');
   if(!panel||!ringEl||!fillEl) return;
 
-  var HOLD=3000, RADIUS=37, level=null, raf=null, t0=0,
+  var HOLD=3000, RADIUS=34, level=null, raf=null, t0=0,
       heldEl=null, heldItem=null, downX=0, downY=0, committed=false;
 
   var HINT_REALM='Tap a light to open it.',
@@ -7406,8 +7448,16 @@ async function gateLoadOfferings(){
       b.style.left=(50+RADIUS*Math.cos(a))+'%';
       b.style.top=(50+RADIUS*Math.sin(a))+'%';
       b.style.setProperty('--mc',it.color);
+      if(n>=11) b.style.width='56px';
       b.setAttribute('aria-label',it.label+(it.kind==='realm'?' — open':' — hold three seconds to offer'));
-      b.innerHTML=it.mark;
+      b.innerHTML=it.mark+'<span class="sk-lb"></span>';
+      var lb=b.querySelector('.sk-lb');
+      if(lb){ lb.textContent=it.label;
+        // the gap the ring can actually spare between two neighbours, in pixels
+        var gap=2*RADIUS*Math.sin(Math.PI/n)/100*300;
+        lb.style.maxWidth=Math.max(42,Math.min(68,Math.round(gap)-8))+'px';
+        if(n>=11) lb.style.fontSize='8px';
+      }
       b.addEventListener('pointerenter',function(){ showCore(it); });
       b.addEventListener('pointerdown',function(e){ onDown(e,b,it); });
       b.addEventListener('keydown',function(e){
