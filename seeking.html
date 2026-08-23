@@ -195,12 +195,12 @@ body.night .symInk{filter:none}
 @keyframes coreBreathe{0%,100%{transform:translate(-50%,-50%) scale(.86);opacity:.38}
   50%{transform:translate(-50%,-50%) scale(1.10);opacity:.62}}
 .orb{position:absolute;top:62%;width:15vmin;height:15vmin;border-radius:50%;margin-top:-7.5vmin;
-  transition:left 3.4s cubic-bezier(.35,.02,.3,1),right 3.4s cubic-bezier(.35,.02,.3,1),
-  opacity 1.4s ease,transform 1.4s ease;pointer-events:none;z-index:3}
+  transition:left 1.35s cubic-bezier(.35,.02,.3,1),right 1.35s cubic-bezier(.35,.02,.3,1),
+  opacity .7s ease,transform .7s ease;pointer-events:none;z-index:3}
 #orbL{left:4%;background:radial-gradient(circle,#ffffff 4%,#c3aaf9 42%,rgba(167,139,250,0) 74%);
-  animation:orbBreathe 12s ease-in-out 4.2s infinite both}
+  animation:orbBreathe 12s ease-in-out 0s infinite both}
 #orbR{right:4%;background:radial-gradient(circle,#ffffff 4%,#ffb0cb 42%,rgba(255,159,192,0) 74%);
-  animation:orbBreathe 12s ease-in-out 4.2s infinite both}
+  animation:orbBreathe 12s ease-in-out 0s infinite both}
 #intro.near #orbL{left:calc(50% - 15vmin)} #intro.near #orbR{right:calc(50% - 15vmin)}
 #intro.merge #orbL{left:calc(50% - 7.5vmin)} #intro.merge #orbR{right:calc(50% - 7.5vmin)}
 #intro.merge .orb{transform:scale(1.4);opacity:.7}
@@ -211,11 +211,11 @@ body.night .symInk{filter:none}
 #brand{position:absolute;left:0;right:0;top:62%;z-index:8;pointer-events:none;
   display:flex;justify-content:center;align-items:baseline;
   font-size:clamp(31px,8.6vw,50px);letter-spacing:.10em;
-  opacity:0;transition:opacity 1.8s ease,letter-spacing 4.4s cubic-bezier(.35,.02,.3,1);
+  opacity:0;transition:opacity .7s ease,letter-spacing 1.5s cubic-bezier(.35,.02,.3,1);
   text-shadow:0 0 5px #fff,0 0 12px #fff,0 0 28px #fff,0 0 54px #fff}
 #brand.on{opacity:1}
 #brand.met{letter-spacing:.01em}
-#brand span{transition:transform 5s cubic-bezier(.35,.02,.3,1),color 2.6s ease 2.6s}
+#brand span{transition:transform 1.5s cubic-bezier(.35,.02,.3,1),color .9s ease .8s}
 #bA{transform:translateX(-34vw);color:#8f74d8}
 #bS{transform:translateX(34vw);color:#d8779e}
 #brand.met #bA,#brand.met #bS{transform:translateX(0);color:var(--ink)}
@@ -225,7 +225,7 @@ body.night .symInk{filter:none}
     rgba(196,181,253,0) 72%);filter:blur(6px)}
 @keyframes seamBloom{0%{opacity:0;transform:scale(.3)}
   40%{opacity:1;transform:scale(1.25)}100%{opacity:0;transform:scale(2.1)}}
-#seam.bloom{animation:seamBloom 2.6s ease-out}
+#seam.bloom{animation:seamBloom 1.3s ease-out}
 #breathText{position:absolute;top:12%;left:0;right:0;text-align:center;padding:0 22px;z-index:6}
 .beat{opacity:0}
 .beat.on{opacity:1}
@@ -416,7 +416,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">seeking 22 Aug 2026 &middot; 23:55</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">seeking 23 Aug 2026 &middot; 00:40</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -667,20 +667,21 @@ var T=[],skipped=false;
 function at(ms,fn){T.push(setTimeout(fn,ms));}
 /* The written beats are gone. The two lights meeting say it without words —
    which is §3.7, show never say, applied to the app's own first breath. */
-/* the circle begins to move the moment "one breath" appears, at 4.2s.
-   Out until 11.2s, in until 16.2s, the two lights arriving together on it. */
+(function(){
 if(reduced){ T.forEach(clearTimeout); T=[];
   at(300, function(){$('brand').classList.add('met');$('brand').classList.add('on');});
   at(1200,function(){$('intro').classList.add('merge');$('seam').classList.add('bloom');});
   at(2600,function(){$('brand').classList.remove('on');});
   at(3200,function(){toSeek();});
+  return;
 }
 at(120,  function(){$('intro').classList.add('near');$('brand').classList.add('met');});
 at(360,  function(){$('brand').classList.add('on');});    /* Aura · sense, apart */
-at(1500, function(){$('intro').classList.add('merge');
+at(1650, function(){$('intro').classList.add('merge');
                     $('seam').classList.add('bloom');});   /* the junction blooms */
 at(2900, function(){$('brand').classList.remove('on');});
-at(3500, function(){toSeek();});
+at(3600, function(){toSeek();});
+})();
 $('intro').addEventListener('click',function(){
   if(skipped)return; skipped=true; T.forEach(clearTimeout);
   $('beat1').classList.remove('on');$('beat2').classList.remove('on');
