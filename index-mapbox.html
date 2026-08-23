@@ -3,6 +3,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<style id="no-tips">/* NO TIPS. ANYWHERE. 23 Aug 2026. Words kept in
+   Aurasense-Tips-Removed-22Aug2026.txt. This sits above every other rule in
+   the document so nothing can outrank it. */
+#stip,#panel-tip,#ol-hint,#ma-hover-hint,#pc-hint,#ss-hint,#soc-tip-el,#locality-tip,
+.tip-arrow,.lic-tip,.ma-tip,.mae-hint,.rg-tip,.soc-tip,.ol-hint,.panel-tip,
+[class*="-tip"]:not(#ma-branch-tip),[class*="-hint"],[id$="-tip"]:not(#ma-branch-tip),[id$="-hint"]{
+  display:none!important;visibility:hidden!important;opacity:0!important;
+  pointer-events:none!important;height:0!important;max-height:0!important;
+  margin:0!important;padding:0!important;border:0!important;overflow:hidden!important}
+</style>
 <script>/* Decided before the first pixel: is this visit an arrival? If it is,
    the page must not flash the map before the pale screen covers it. */
 try{var c=false;try{c=localStorage.getItem("aurasense_threshold_crossed")==="1";}catch(e){}
@@ -7484,7 +7494,7 @@ async function gateLoadOfferings(){
    It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
    and §3.1: crossed once. Anyone who has offered before lands straight on the
    map, because the threshold has already been crossed. */
-var BUILD='2026-08-23 · 15:30';
+var BUILD='2026-08-23 · 17:10';
 try{
   var _bs=document.getElementById('build-stamp');
   if(_bs)_bs.textContent='build '+BUILD;

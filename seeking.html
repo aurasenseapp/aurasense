@@ -161,8 +161,8 @@ body.night .symInk{filter:none}
 /* THE CIRCLE ITSELF FILLS AS YOU HOLD. It cannot reach the words above,
    it cannot be lost in the symbol's glow, and only a fraction of it is ever
    under a hand. The instrument answers, rather than a widget appearing. */
-#holdArcBed{fill:none;stroke-width:13;stroke-linecap:round;opacity:0;
-  stroke:rgba(38,28,66,.32);transition:opacity .16s ease}
+#holdArcBed{fill:none;stroke-width:14;stroke-linecap:round;opacity:0;
+  stroke:rgba(38,28,66,.10);transition:opacity .16s ease}
 #holdArc{fill:none;stroke-width:11;stroke-linecap:round;opacity:0;filter:none;
   transition:opacity .16s ease;will-change:stroke-dashoffset}
 #holdArc.pulse{animation:lockGlow 1.4s ease-in-out 3}
@@ -325,6 +325,9 @@ body.night #map .ghost{font-size:16px;color:#d8cffa}
 #orName{font-size:15px;color:var(--far);background:none;border:none;cursor:pointer;
   font-family:var(--serif);text-decoration:underline;text-underline-offset:4px;padding:6px}
 #orName:hover{color:var(--soft)}
+@keyframes asking{0%,100%{border-color:rgba(180,120,140,.55)}50%{border-color:rgba(205,105,140,.95)}}
+#whereBox.asking{animation:asking .95s ease-in-out 3}
+#whereBox.asking::placeholder{color:#a8607e}
 #whereBox{display:none}
 #typed.naming #whereBox{display:block}
 #typed.naming #hereBtn,#typed.naming #orName{display:none}
@@ -427,7 +430,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">build 2026-08-23 &middot; 15:30</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">build 2026-08-23 &middot; 17:10</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -453,7 +456,7 @@ body.night .tiny{color:var(--far)}
     <div class="pHead" id="tHead">Where should this light land?</div>
     <button class="btn" id="hereBtn" type="button">Use where I am</button>
     <button id="orName" type="button">or name the place instead</button>
-    <input type="text" id="whereBox" placeholder="a street, a park, or just the town" autocomplete="off">
+    <input type="text" id="whereBox" placeholder="12 Oak Ave, or Bow Riverfront Park" autocomplete="off">
     <button class="btn" id="typedGo" type="button" disabled>let it land</button>
     <div class="tiny">The place is shown on the map. Who left it is not.</div>
   </div>
@@ -1156,6 +1159,15 @@ $('whereBox').addEventListener('input',function(){
 });
 $('typedGo').addEventListener('click',function(){
   state.where=$('whereBox').value.trim();
+  /* Checked in the box it was typed into, not two screens later on the map. */
+  if(/^(a|an|the)\s+\w+$|^(park|street|road|town|city|home|work|here|beach|forest|shop|school)$/i.test(state.where)){
+    var wb=$('whereBox');
+    wb.value='';
+    wb.placeholder='That names a kind of place. Its actual name, or your street and number.';
+    try{wb.classList.add('asking'); setTimeout(function(){wb.classList.remove('asking');},2800);}catch(e){}
+    wb.focus();
+    return;
+  }
   $('typed').classList.remove('on');
   setTimeout(land,1300);
 });
