@@ -1054,6 +1054,8 @@ body.thr-open #panel,body.thr-open #mv-orb,body.thr-open #tabs{opacity:0!importa
 #ma-hover-hint{display:none!important}
 #pc-hint{display:none!important}
 #ss-hint{display:none!important}
+#build-stamp{font-size:8.5px;color:#4e4770;text-align:center;letter-spacing:.04em;
+  padding:10px 0 4px;user-select:text;-webkit-user-select:text}
 #sense-confirm{display:block;margin:9px 2px 8px;padding:8px 10px;background:rgba(167,139,250,.08);border:0.5px solid rgba(167,139,250,.25);border-radius:10px;font-size:12px;color:#d7ccf2;letter-spacing:.01em;line-height:1.35}
 @media (max-width:600px){#sense-confirm{display:none!important}}
 #sense-confirm:empty{display:none}
@@ -1664,6 +1666,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div id="offer-lastlink">▾ see last aura I offered</div>
       <div id="ptitle-row"><div id="ptitle">Energize a place with your senses</div><button id="sheet-close">✕ Close</button></div>
       <div id="scats-all"></div>
+      <div id="build-stamp"></div>
       <div class="srealm-label" id="memory-label">Light up this spot with the aura of a personal memory</div>
       <div id="memory-row"><button id="memory-btn">A Memory</button><div id="mem-priv-wrap"><button id="mem-private" class="mem-priv">Memory words: Public</button></div></div>
       <div id="sense-confirm"></div>
@@ -7359,6 +7362,12 @@ async function gateLoadOfferings(){
    It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
    and §3.1: crossed once. Anyone who has offered before lands straight on the
    map, because the threshold has already been crossed. */
+var BUILD='2026-08-22 · 23:55';
+try{
+  var _bs=document.getElementById('build-stamp');
+  if(_bs)_bs.textContent='build '+BUILD;
+  console.log('%c Aurasense build '+BUILD+' ','background:#1a1330;color:#c4b5fd');
+}catch(e){}
 (function(){
   var KEY='aurasense_threshold_crossed';
   var crossed=false; try{crossed=localStorage.getItem(KEY)==='1';}catch(e){}
@@ -7369,14 +7378,16 @@ async function gateLoadOfferings(){
   var fr=document.createElement('iframe');
   fr.setAttribute('title','The Seeking');
   fr.setAttribute('allow','geolocation');
-  fr.src='seeking.html';
+  fr.src='seeking.html?b='+encodeURIComponent(BUILD);
   thr.appendChild(fr); document.body.appendChild(thr);
   document.body.classList.add('thr-open');
 
   var closed=false;
-  function cross(){
+  function cross(done){
     if(closed) return; closed=true;
-    try{localStorage.setItem(KEY,'1');}catch(e){}
+    /* Only a FINISHED Seeking counts as crossed. Leaving partway through is not
+       a decision, and should not cost someone the arrival for ever. */
+    if(done){ try{localStorage.setItem(KEY,'1');}catch(e){} }
     thr.classList.add('thr-gone');
     document.body.classList.remove('thr-open');
     setTimeout(function(){ try{thr.remove();}catch(e){} },2400);
@@ -7384,14 +7395,14 @@ async function gateLoadOfferings(){
 
   /* If the frame cannot load at all, the person still reaches the map.
      A threshold that traps someone is a wall. */
-  var failsafe=setTimeout(function(){ if(!fr.dataset.ok) cross(); },12000);
+  var failsafe=setTimeout(function(){ if(!fr.dataset.ok) cross(false); },12000);
   fr.addEventListener('load',function(){ fr.dataset.ok='1'; clearTimeout(failsafe); });
 
   window.addEventListener('message',function(ev){
     var d=ev&&ev.data;
     if(!d||d.aurasense!=='seeking-complete') return;
     if(ev.source!==fr.contentWindow) return;         /* only from our own frame */
-    cross();
+    cross(true);
     try{ carryTheLight(d); }catch(e){ console.warn('[threshold]',e); }
   },false);
 
