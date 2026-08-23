@@ -491,6 +491,20 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #offer-locate{display:none;margin-bottom:6px}
 #offer-locate .ol-label{font-size:13px;color:#e3d9ff;margin-bottom:9px;font-family:Georgia,serif;text-align:center}
 #offer-locate .ol-row{display:flex;gap:6px}
+.ol-ways{display:flex;gap:8px;margin-bottom:9px}
+.ol-way{flex:1;padding:11px 8px;border-radius:11px;font-size:12.5px;font-family:inherit;
+  border:0.5px solid rgba(167,139,250,.4);background:rgba(167,139,250,.13);color:#e6dfff;
+  cursor:pointer;transition:background .25s ease,border-color .25s ease}
+.ol-way:hover{background:rgba(167,139,250,.24);border-color:rgba(167,139,250,.7)}
+.ol-way.waiting{opacity:.6;pointer-events:none}
+.ol-way.armed{background:rgba(196,181,253,.3);border-color:rgba(196,181,253,.9);color:#fff}
+.ol-or{text-align:center;font-size:10.5px;color:#6f6796;letter-spacing:.06em;margin:0 0 8px}
+#ol-prec{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:10px}
+.prec{padding:6px 12px;border-radius:14px;font-size:11px;font-family:inherit;cursor:pointer;
+  border:0.5px solid rgba(167,139,250,.28);background:transparent;color:#8a82b4;
+  transition:all .25s ease}
+.prec.on{background:rgba(167,139,250,.2);border-color:rgba(167,139,250,.6);color:#e6dfff}
+#prec-say{flex:1 0 100%;font-size:10.5px;color:#6f6796;line-height:1.5}
 #ol-input{flex:1;background:rgba(10,10,20,.9);border:0.5px solid rgba(167,139,250,.45);border-radius:11px;padding:9px 12px;font-size:12.5px;color:#e0d8ff;outline:none;font-family:inherit;box-shadow:0 0 16px rgba(124,92,255,.28)}
 #ol-input:focus{border-color:rgba(167,139,250,.85);box-shadow:0 0 0 2px rgba(167,139,250,.22),0 0 22px rgba(124,92,255,.5)}
 #ol-go{padding:9px 15px;border-radius:11px;border:0.5px solid rgba(167,139,250,.4);background:rgba(167,139,250,.18);color:#e6dfff;font-size:12.5px;cursor:pointer;font-family:inherit;white-space:nowrap}
@@ -1040,6 +1054,14 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
    offers on the dark surface they are already standing on.
    Nothing snaps: the crossing is a two-second dissolve, both ways at once. */
 html.thr-running #threshold{display:none!important}
+/* ═══ TIPS: ALL OF THEM, GONE. 23 Aug 2026. Words kept in
+   Aurasense-Tips-Removed-22Aug2026.txt. Nothing advisory floats over the map
+   or any page again. #ma-branch-tip is left alone — it reads out which layer
+   of the aura is under the finger, which is data, not advice. */
+#stip,#soc-tip-el,#locality-tip,#panel-tip,#ol-hint,#ma-hover-hint,#pc-hint,#ss-hint,
+.tip-arrow,.lic-tip,.ma-tip,.mae-hint,.rg-tip,.soc-tip,.ol-hint,.tip,.hint{
+  display:none!important;visibility:hidden!important;opacity:0!important;
+  pointer-events:none!important}
 html.thr-running{background:#f4f1fb}
 html.thr-running body{background:#f4f1fb}
 html.thr-running #map{visibility:hidden}
@@ -1536,7 +1558,6 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div class="soc-btn" data-tip="Share to Instagram">◎</div>
       <div class="soc-btn" data-tip="Share to Facebook">f</div>
       <div class="soc-btn" data-tip="Copy aura link">⌁</div>
-      <div class="soc-tip" id="soc-tip-el"></div>
     </div>
   </div>
   <div id="hdr2">
@@ -1556,7 +1577,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>World</button>
     </div>
     <div id="search-box">
-      <input id="si" maxlength="120" placeholder="Find a place to sense…"/>
+      <input id="si" maxlength="120" placeholder="Street and number, or a named building"/>
       <button id="sg">Go</button>
     </div>
   </div>
@@ -1614,7 +1635,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="pp-row"><input id="pp-input" maxlength="120" placeholder="Street, town, postcode, country..."/><button id="pp-go">Go</button></div>
     <button id="pp-select">…or select a spot on the map</button>
   </div>
-  <div id="place-mini"><input id="pm-input" placeholder="Search a location..."/><button id="pm-go">🔍</button></div>
+  <div id="place-mini"><input id="pm-input" placeholder="Street and number, or a named building"/><button id="pm-go">🔍</button></div>
   <div id="explore-btn"><button id="ebtn">✦ Read the aura of this place</button></div>
   <div id="explore-panel">
     <div class="ep-title">How would you like to read this aura?</div>
@@ -1664,12 +1685,21 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   </div>
   <button id="feed-full">◉ See Full Live Feed</button>
   <div id="feed"></div>
-  <div id="stip"></div>
   <div id="panel">
         <div id="pi">
       <div id="offer-locate">
         <div class="ol-label">Where would you like to offer your aurasense?</div>
-        <div class="ol-row"><input id="ol-input" type="text" maxlength="120" placeholder="Search a place…" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
+        <div class="ol-ways">
+          <button id="ol-here" type="button" class="ol-way">Where I am</button>
+          <button id="ol-pick" type="button" class="ol-way">Point on the map</button>
+        </div>
+        <div class="ol-or">or name it</div>
+        <div class="ol-row"><input id="ol-input" type="text" maxlength="120" placeholder="12 Oak Ave, or Bow Riverfront Park" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
+        <div id="ol-prec">
+          <button id="prec-exact" type="button" class="prec on">Exact spot</button>
+          <button id="prec-street" type="button" class="prec">Just the street</button>
+          <div id="prec-say">Your light lands where you actually are.</div>
+        </div>
       </div>
       <div id="offer-confirm"></div>
       <div id="offer-lastlink">▾ see last aura I offered</div>
@@ -2565,7 +2595,6 @@ function tabZoomSync(){
 }
 try{map.on('zoomend',tabZoomSync);}catch(e){}
 // Sense buttons — two rows: the world around you (external) and how it makes you feel (internal)
-const stip=document.getElementById('stip');
 const allEl=document.getElementById('scats-all');
 const SGRP_ICONS=[
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9fc4ff" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(159,196,255,.6))"><path d="M3 15 Q12 6 21 15"/><path d="M5 18.5 H19" opacity=".5"/><circle cx="12" cy="11.5" r="1.6" fill="#eaf3ff" stroke="none"/></svg>',
@@ -2588,16 +2617,7 @@ function senseChip(s){
   b.innerHTML=`<span>${SENSE_SYMBOLS[s.id]}</span>${s.label}`;
   b.onclick=()=>{selSense=s.id;const _p=document.getElementById('panel');if(_p)_p.classList.remove('just-offered','offer-quiet');_p.classList.add('sense-picked');document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');try{keepAboveKeyboard(inp);}catch(e){}}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');/* Nothing is scrolled. The Offer row is sticky at the foot of the sheet at every width, so the
      symbols stay exactly where the senser left them. */};
-  b.onmouseenter=e=>{
-    if(!(window.matchMedia&&window.matchMedia('(hover: hover)').matches))return;
-    const ex=s.examples[Math.floor(Math.random()*s.examples.length)];
-    stip.innerHTML=`<span style="color:${s.color}">${s.icon} ${s.label}</span><br><br>"${ex}"`;
-    stip.style.opacity='1';
-    const rect=b.getBoundingClientRect();
-    stip.style.left=Math.min(rect.left,window.innerWidth-205)+'px';
-    stip.style.top=(rect.top-88)+'px';
-  };
-  b.onmouseleave=()=>{stip.style.opacity='0'};
+  /* the hovering example box: deleted 23 Aug 2026 with the other tips */
   return b;
 }
 if(allEl){
@@ -3420,6 +3440,8 @@ function submit(lat,lng,text){
   const isPriv=(sid==='memory'&&typeof memoryPrivate!=='undefined'&&memoryPrivate);
   const pubText=isPriv?'(a memory, kept private)':text;
   const _ap={lat,lng,sense:sid,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2,priv:isPriv,photo:pp,scale:_gScale};
+  try{ if(typeof applyPrecision==='function'){
+    const _pp=applyPrecision(_ap.lat,_ap.lng); _ap.lat=_pp.lat; _ap.lng=_pp.lng; } }catch(e){}
   auraPoints.push(_ap);
   /* the bloom begins when the map SETTLES, not when the button was pressed —
      otherwise it is over before the person has arrived to see it */
@@ -3733,6 +3755,18 @@ document.getElementById('sg').onclick=async()=>{
     if(d&&d.features&&d.features.length){
       const f=d.features[0];
       const t=(f.place_type&&f.place_type[0])||'';
+      /* A weak match is a guess. Landing seven thousand kilometres away with
+         nothing placed is worse than saying plainly that it was not found. */
+      const _rel=(typeof f.relevance==='number')?f.relevance:1;
+      const _generic=/^(a|an|the)\s+\w+$|^(park|street|road|town|city|home|work|here|beach|forest|shop|school)$/i.test(q.trim());
+      if(_rel<0.8||_generic){
+        searching=false;
+        showMsg(_generic
+          ? 'That names a kind of place, not a place. Try its actual name \u2014 or use Where I am, or Point on the map.'
+          : 'I could not find that with any confidence, so nothing has moved. Try a street and number, or point it on the map.',
+          7000,'witness','#c4b5fd');
+        return;
+      }
       let name=f.text||f.place_name.split(',')[0];
       if(t==='address'&&f.address)name=f.address+' '+name;
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
@@ -3760,15 +3794,10 @@ document.getElementById('sg').onclick=async()=>{
 };
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
 
-const socTip=document.getElementById('soc-tip-el');
+
 document.querySelectorAll('.soc-btn').forEach(b=>{
-  b.onmouseenter=e=>{
-    socTip.textContent=b.dataset.tip+' — coming soon';
-    socTip.style.display='block';
-    socTip.style.top=(e.clientY+12)+'px';
-    socTip.style.left=Math.min(e.clientX-30,window.innerWidth-180)+'px';
-  };
-  b.onmouseleave=()=>{socTip.style.display='none'};
+  /* the 'coming soon' hover box: deleted 23 Aug 2026 with the other tips */
+  
   b.onclick=()=>{if(myOfferings&&myOfferings[0]){const o=myOfferings[0];openPostcard({title:o.label,color:o.color,words:o.text,place:'📍 '+(o.place||'somewhere on the living map'),symbolSVG:(SENSE_SYMBOLS[o.sense]||'').replace('width="22" height="22"','width="460" height="460"'),photo:o.photo||null});}else showMsg('Offer an aurasense first — then share it as a postcard ✧');};
 });
 
@@ -5345,9 +5374,73 @@ document.addEventListener('focusout',()=>{setTimeout(()=>{
   function olRun(){const q=(olInput&&olInput.value.trim())||'';if(!q)return;const si=document.getElementById('si'),sg=document.getElementById('sg');if(si)si.value=q;if(sg)sg.click();const panel=document.getElementById('panel');senseGateOpen=true;if(panel)panel.classList.remove('locating');if(olInput)olInput.value='';showMsg('Bringing you there — then choose a symbol and offer your aurasense');}
   if(olGo)olGo.addEventListener('click',olRun);
   if(olInput)olInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();olRun();}});
+  /* ── WHERE I AM ── For a park, a trail, a walk. The device gives a point
+     more exact than any street number ever could. */
+  const olHere=document.getElementById('ol-here');
+  if(olHere) olHere.addEventListener('click',function(){
+    if(!navigator.geolocation){showMsg('This device will not share its position.');return;}
+    olHere.classList.add('waiting'); olHere.textContent='Finding you…';
+    navigator.geolocation.getCurrentPosition(function(pos){
+      olHere.classList.remove('waiting'); olHere.textContent='Where I am';
+      const la=pos.coords.latitude, ln=pos.coords.longitude;
+      const pt=applyPrecision(la,ln);
+      try{
+        flyProgrammatic({center:[pt.lng,pt.lat],zoom:16,duration:1800});
+        lastClickPoint=[pt.lng,pt.lat];
+        anchorPoint={lat:pt.lat,lng:pt.lng,zoom:16};
+        lastSearchedPlace=null;
+        openSenseGate();
+        showMsg(precision==='street'
+          ? 'Here \u2014 softened to the street, not the doorstep.'
+          : 'Here. Now choose what you sense.',4500,'witness','#c4b5fd');
+      }catch(e){}
+    },function(){
+      olHere.classList.remove('waiting'); olHere.textContent='Where I am';
+      showMsg('Your device would not share its position. Point it on the map instead.',5000);
+    },{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
+  });
+
+  /* ── POINT ON THE MAP ── For anywhere with no address, or a place being
+     remembered from elsewhere. Tapping the map always worked; nothing said so. */
+  const olPick=document.getElementById('ol-pick');
+  if(olPick) olPick.addEventListener('click',function(){
+    const p=document.getElementById('panel');
+    if(p) p.classList.remove('show-mobile');
+    olPick.classList.add('armed'); olPick.textContent='Tap the map…';
+    showMsg('Tap anywhere on the map to place your light there.',6000,'witness','#c4b5fd');
+    const done=function(){ olPick.classList.remove('armed'); olPick.textContent='Point on the map'; };
+    try{ map.once('click',done); }catch(e){}
+    setTimeout(done,20000);
+  });
+
   const ll=document.getElementById('offer-lastlink');
   if(ll)ll.addEventListener('click',()=>{if(typeof reopenLastAura==='function')reopenLastAura();});
 })();
+/* ── HOW EXACT A LIGHT IS ALLOWED TO BE ────────────────────────────────────
+   An exact point is right for a park bench and wrong for someone's front door.
+   "Just the street" rounds the position to roughly a hundred metres, which is
+   the block rather than the building. It is applied BEFORE the point is stored,
+   so the exact position is never held anywhere. */
+let precision='exact';
+function applyPrecision(lat,lng){
+  if(precision!=='street') return {lat:lat,lng:lng};
+  return {lat:Math.round(lat*1000)/1000, lng:Math.round(lng*1000)/1000};
+}
+(function(){
+  const ex=document.getElementById('prec-exact'), st=document.getElementById('prec-street'),
+        say=document.getElementById('prec-say');
+  function set(v){
+    precision=v;
+    if(ex)ex.classList.toggle('on',v==='exact');
+    if(st)st.classList.toggle('on',v==='street');
+    if(say)say.textContent = v==='exact'
+      ? 'Your light lands where you actually are.'
+      : 'Your light lands on the street, not the doorstep \u2014 about a hundred metres of room.';
+  }
+  if(ex)ex.addEventListener('click',()=>set('exact'));
+  if(st)st.addEventListener('click',()=>set('street'));
+})();
+
 // ---- Photo attach for an offering (front-end preview) ----
 let pendingPhoto=null;
 function clearPhoto(){pendingPhoto=null;const pv=document.getElementById('photo-preview');if(pv)pv.innerHTML='';const pin=document.getElementById('photo-input');if(pin)pin.value='';}
@@ -7391,7 +7484,7 @@ async function gateLoadOfferings(){
    It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
    and §3.1: crossed once. Anyone who has offered before lands straight on the
    map, because the threshold has already been crossed. */
-var BUILD='2026-08-23 · 03:15';
+var BUILD='2026-08-23 · 14:05';
 try{
   var _bs=document.getElementById('build-stamp');
   if(_bs)_bs.textContent='build '+BUILD;
