@@ -1034,7 +1034,8 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
    room. A person passes through once, on their first visit, and afterwards
    offers on the dark surface they are already standing on.
    Nothing snaps: the crossing is a two-second dissolve, both ways at once. */
-#thr{position:fixed;inset:0;z-index:99998;background:#f4f1fb;
+html.thr-running #threshold{display:none!important}
+#thr{position:fixed;inset:0;z-index:100020;background:#f4f1fb;
   opacity:1;transition:opacity 2s ease;pointer-events:auto}
 #thr.thr-gone{opacity:0;pointer-events:none}
 #thr iframe{width:100%;height:100%;border:0;display:block;background:#f4f1fb}
@@ -2076,6 +2077,13 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 </div>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
+/* ── Is this visit an arrival? Decided FIRST, because the page's own older
+   arrival ritual is built further down and must not be built if it is. ── */
+try{
+  var _crossed=false; try{_crossed=localStorage.getItem('aurasense_threshold_crossed')==='1';}catch(e){}
+  var _forced=false;  try{_forced=/[?&]seeking=1/.test(location.search);}catch(e){}
+  if(!_crossed||_forced) document.documentElement.classList.add('thr-running');
+}catch(e){}
 const SENSES=[
   {id:"sound",realm:"external",label:"Sound",icon:"♪",color:"#6d9eeb",freqs:[[528,.0,.18,.05,2.2],[660,.2,.09,.05,1.0]],examples:["Birdsong every morning — no traffic until 8am","Bass from the pub shakes the walls on Fridays","Church bells at noon, gentle and distant"]},
   {id:"smell",realm:"external",label:"Smell",icon:"〜",color:"#93c47d",freqs:[[396,.0,.15,.1,2.4],[528,.35,.09,.1,1.5]],examples:["Pine air in the evenings — first time I breathed deeply","Weed smoke drifts through the walls after 9pm","Fresh bread from the bakery at 7am"]},
@@ -7170,6 +7178,9 @@ document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&
 })();
 (function threshold(){
   try{
+    /* The Seeking is the arrival now. Two arrivals is one too many, and this
+       one was built at z-index 99999 — on top of the Seeking, hiding it. */
+    if(document.documentElement.classList.contains('thr-running'))return;
     var REDUCED=false;try{REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
     var th=document.createElement('div');th.id='threshold';
     th.innerHTML='<div id="th-glow"></div>';
@@ -7379,7 +7390,7 @@ async function gateLoadOfferings(){
    It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
    and §3.1: crossed once. Anyone who has offered before lands straight on the
    map, because the threshold has already been crossed. */
-var BUILD='2026-08-23 · 00:40';
+var BUILD='2026-08-23 · 01:45';
 try{
   var _bs=document.getElementById('build-stamp');
   if(_bs)_bs.textContent='build '+BUILD;
@@ -7391,6 +7402,10 @@ try{
   var forced=false; try{forced=/[?&]seeking=1/.test(location.search);}catch(e){}
   if(crossed&&!forced) return;
 
+  /* the map's own dark arrival is removed outright when the Seeking runs —
+     two arrivals is one too many, and it was playing on top of this one */
+  try{document.documentElement.classList.add('thr-running');}catch(e){}
+  try{var _old=document.getElementById('threshold'); if(_old)_old.remove();}catch(e){}
   var thr=document.createElement('div'); thr.id='thr';
   var fr=document.createElement('iframe');
   fr.setAttribute('title','The Seeking');
