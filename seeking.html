@@ -664,26 +664,22 @@ function holdMs(){  return stage==='sense' ? (known?2400:3000) : 2200; }
 /* ═══ the breath ═══ out first, then in, and the two lights come together ═══ */
 var T=[],skipped=false;
 function at(ms,fn){T.push(setTimeout(fn,ms));}
-at(400,  function(){$('beat1').classList.add('on');});
-at(4200, function(){$('beat2').classList.add('on');});
+/* The written beats are gone. The two lights meeting say it without words —
+   which is §3.7, show never say, applied to the app's own first breath. */
 /* the circle begins to move the moment "one breath" appears, at 4.2s.
    Out until 11.2s, in until 16.2s, the two lights arriving together on it. */
 if(reduced){ T.forEach(clearTimeout); T=[];
-  at(400,function(){$('beat1').classList.add('on');});
-  at(3400,function(){$('beat2').classList.add('on');});
-  at(6400,function(){$('brand').classList.add('met');$('brand').classList.add('on');});
-  at(7000,function(){$('intro').classList.add('merge');$('seam').classList.add('bloom');});
-  at(7400,function(){$('beat1').classList.remove('on');$('beat2').classList.remove('on');});
-  at(10200,function(){$('brand').classList.remove('on');});
-  at(11800,function(){toSeek();});
+  at(300, function(){$('brand').classList.add('met');$('brand').classList.add('on');});
+  at(1200,function(){$('intro').classList.add('merge');$('seam').classList.add('bloom');});
+  at(2600,function(){$('brand').classList.remove('on');});
+  at(3200,function(){toSeek();});
 }
-at(11400,function(){$('intro').classList.add('near');$('brand').classList.add('met');});
-at(12900,function(){$('brand').classList.add('on');});   /* the name only now */
-at(13300,function(){$('beat1').classList.remove('on');$('beat2').classList.remove('on');});
-at(16300,function(){$('intro').classList.add('merge');
+at(120,  function(){$('intro').classList.add('near');$('brand').classList.add('met');});
+at(360,  function(){$('brand').classList.add('on');});    /* Aura · sense, apart */
+at(1500, function(){$('intro').classList.add('merge');
                     $('seam').classList.add('bloom');});   /* the junction blooms */
-at(19800,function(){$('brand').classList.remove('on');});
-at(21800,function(){toSeek();});
+at(2900, function(){$('brand').classList.remove('on');});
+at(3500, function(){toSeek();});
 $('intro').addEventListener('click',function(){
   if(skipped)return; skipped=true; T.forEach(clearTimeout);
   $('beat1').classList.remove('on');$('beat2').classList.remove('on');
@@ -1122,6 +1118,21 @@ $('typedGo').addEventListener('click',function(){
 /* ═══ the map ═══ where the light lands, and only now are words invited ═══ */
 function land(){
   known=true;                        /* it is known now — the next one is lighter */
+  /* Carried inside Aurasense, the place is the last thing asked here. The light
+     lands on the real map, and words are invited there — the witness moment is
+     not rehearsed in the cloud first. */
+  var _emb=false; try{_emb=(window.parent&&window.parent!==window);}catch(e){}
+  if(_emb){
+    try{
+      window.parent.postMessage({aurasense:'seeking-complete',
+        sense:state.sense, senseKey:state.senseKey, senseColor:state.senseColor,
+        strength:state.strength, strengthValue:(function(){
+          for(var i=0;i<STRENGTHS.length;i++) if(STRENGTHS[i].w===state.strength) return STRENGTHS[i].s;
+          return null; })(),
+        where:state.where, words:'', doing:null},'*');
+    }catch(e){}
+    return;
+  }
   /* LIGHT IS INWARD, DARK IS OUTWARD. This is the moment the senser's private
      white space opens out onto the night-lit world, with their own light now
      among the others. It obeys the law of transition: three seconds, no switch. */

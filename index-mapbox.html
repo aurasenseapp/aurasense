@@ -1042,6 +1042,18 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
    something alive rather than something starting up */
 body.thr-open #panel,body.thr-open #mv-orb,body.thr-open #tabs{opacity:0!important;
   pointer-events:none!important}
+/* ═══ THE TIPS, REMOVED 22 AUGUST 2026 ═════════════════════════════════════
+   Recorded in full in Aurasense-Tips-Removed-22Aug2026.txt before removal.
+   Kept in the markup and hidden, so no code that reaches for them can break.
+   Restore any single one by deleting its line here.
+   NOT removed, because they are not tips: #ma-branch-tip reads out which aura
+   layer is under the finger (data), #soc-tip-el appears only on hover, and
+   #locality-tip is the label of a control, not advice about one. */
+#panel-tip{display:none!important}
+#ol-hint{display:none!important}
+#ma-hover-hint{display:none!important}
+#pc-hint{display:none!important}
+#ss-hint{display:none!important}
 #sense-confirm{display:block;margin:9px 2px 8px;padding:8px 10px;background:rgba(167,139,250,.08);border:0.5px solid rgba(167,139,250,.25);border-radius:10px;font-size:12px;color:#d7ccf2;letter-spacing:.01em;line-height:1.35}
 @media (max-width:600px){#sense-confirm{display:none!important}}
 #sense-confirm:empty{display:none}
@@ -1661,7 +1673,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
         <div id="photo-preview"></div>
       </div>
       <div id="srow">
-        <input id="inp" maxlength="280" placeholder="What does this place feel like right now?"/>
+        <input id="inp" maxlength="280" autocomplete="off" autocorrect="off" spellcheck="true" placeholder="What does this place feel like right now?"/>
         <button id="sbtn">Offer your sense to the aura</button>
       </div>
     </div>
@@ -2762,8 +2774,11 @@ let searchMarker=null;
 let lastSearchPoint=null;
 let lastClickPoint=null;let senseGateOpen=false;
 let sgrpIntroDone=false;
-function sgrpIntro(){if(sgrpIntroDone)return;sgrpIntroDone=true;const cs=Array.prototype.slice.call(document.querySelectorAll('.sgrp-c'));cs.forEach((el,i)=>setTimeout(()=>{el.classList.add('pulsing');setTimeout(()=>el.classList.remove('pulsing'),1650);},i*650));}
-function openSenseGate(){senseGateOpen=true;const p=document.getElementById('panel');if(p)p.classList.remove('locating');setTimeout(sgrpIntro,320);}
+function sgrpIntro(){return; /* the pulsing coach on the sense groups: removed
+  22 Aug 2026 with the other tips. The groups carry their own names. */
+  if(sgrpIntroDone)return;sgrpIntroDone=true;const cs=Array.prototype.slice.call(document.querySelectorAll('.sgrp-c'));cs.forEach((el,i)=>setTimeout(()=>{el.classList.add('pulsing');setTimeout(()=>el.classList.remove('pulsing'),1650);},i*650));}
+function openSenseGate(){senseGateOpen=true;
+  try{if(typeof wevOpenId!=='undefined'&&wevOpenId>=0)wevClosePanel();}catch(e){}const p=document.getElementById('panel');if(p)p.classList.remove('locating');setTimeout(sgrpIntro,320);}
 let lastSearchLabel=null;
 let lastSearchName=null;
 function dropSearchMarker(center,placeName){
@@ -3187,8 +3202,14 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
 }
 
 map.on('click',async function(e){
+  /* A tap on a NEW spot begins a new offering. Anything the browser restored
+     into the box from a previous visit is cleared before it can be sent —
+     but text typed in this session is kept, because typing then tapping the
+     map is a real way to offer. */
+  try{const _i=document.getElementById('inp');
+      if(_i&&!window.__inpTouched&&_i.value){_i.value='';}}catch(_){}
   // World-event glows own their taps — the offering flow steps aside when a glow is under the finger.
-  try{if(typeof wevReady!=='undefined'&&wevReady&&map.queryRenderedFeatures){const _wh=map.queryRenderedFeatures(e.point,{layers:['wev-mid','wev-core','wev-dot']});if(_wh&&_wh.length)return;}}catch(_){}
+  try{if(typeof wevReady!=='undefined'&&wevReady&&map.queryRenderedFeatures){const _wh=(map.getZoom()<10?map.queryRenderedFeatures(e.point,{layers:['wev-core','wev-dot']}):null);if(_wh&&_wh.length)return;}}catch(_){}
   // An open world-event panel closes on the next tap anywhere — that tap is a dismissal, never an offering.
   try{if(typeof wevOpenId!=='undefined'&&wevOpenId>=0){wevClosePanel();closeExplore();return;}}catch(_){}
   // At planet height there is no single place to offer to — a bare tap rests the view, it does not open the sheet.
@@ -3659,10 +3680,12 @@ const sbtnGo=()=>{
     const lblRef=lastSearchLabel, nameRef=lastSearchName;
     setTimeout(()=>{ if(lblRef)lblRef.textContent='✨ Aura offered at '+nameRef; },3600000);
   }
-  inp.value='';emptyPrompted=false;inp.classList.remove('inp-glow');
+  inp.value='';window.__inpTouched=false;emptyPrompted=false;inp.classList.remove('inp-glow');
   const scd=document.getElementById('sense-confirm');if(scd)scd.textContent='';
   if(typeof clearPhoto==='function')clearPhoto();
 };
+try{const _ii=document.getElementById('inp');
+    if(_ii)_ii.addEventListener('input',()=>{window.__inpTouched=true;});}catch(e){}
 document.getElementById('sbtn').onclick=sbtnGo;
 document.getElementById('sbtn').addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){e.preventDefault();sbtnGo();}});
 document.getElementById('sbtn').addEventListener('touchstart',e=>{e.preventDefault();sbtnGo();},{passive:false});
@@ -5715,9 +5738,12 @@ function wevAddLayers(){
   ];
   adds.forEach(a=>{try{if(!map.getLayer(a[0]))map.addLayer({id:a[0],type:'circle',source:'wevents',paint:a[1]});}catch(e){console.warn('[wev] layer '+a[0],e);}});
   try{console.log('[wev] layers live:',['wev-outer','wev-mid','wev-core','wev-dot','wev-sent'].filter(id=>{try{return !!map.getLayer(id);}catch(e){return false;}}).join(' '));}catch(e){}
-  ['wev-mid','wev-core','wev-dot','wev-sent'].forEach(id=>{
+  // 'wev-mid' is 28px across at town zoom and was catching taps meant for the
+  // map. Only the core takes a tap now, and only above town scale.
+  ['wev-core','wev-dot','wev-sent'].forEach(id=>{
     try{
-      map.on('click',id,e=>{try{if(e&&e.features&&e.features.length)wevOpenPanel(+e.features[0].properties.i);}catch(_){}});
+      map.on('click',id,e=>{try{if(map.getZoom()>=10)return;
+        if(e&&e.features&&e.features.length)wevOpenPanel(+e.features[0].properties.i);}catch(_){}});
       map.on('mouseenter',id,()=>{try{map.getCanvas().style.cursor='pointer';}catch(_){}});
       map.on('mouseleave',id,()=>{try{map.getCanvas().style.cursor='';}catch(_){}});
     }catch(e){}
