@@ -195,15 +195,17 @@ body.night .symInk{filter:none}
 @keyframes coreBreathe{0%,100%{transform:translate(-50%,-50%) scale(.86);opacity:.38}
   50%{transform:translate(-50%,-50%) scale(1.10);opacity:.62}}
 .orb{position:absolute;top:62%;width:15vmin;height:15vmin;border-radius:50%;margin-top:-7.5vmin;
-  transition:left 1.9s cubic-bezier(.35,.02,.3,1),right 1.9s cubic-bezier(.35,.02,.3,1),
-  opacity .7s ease,transform .7s ease;pointer-events:none;z-index:3}
-#orbL{left:4%;background:radial-gradient(circle,#ffffff 4%,#c3aaf9 42%,rgba(167,139,250,0) 74%);
-  animation:orbBreathe 12s ease-in-out 0s infinite both}
-#orbR{right:4%;background:radial-gradient(circle,#ffffff 4%,#ffb0cb 42%,rgba(255,159,192,0) 74%);
-  animation:orbBreathe 12s ease-in-out 0s infinite both}
-#intro.near #orbL{left:calc(50% - 15vmin)} #intro.near #orbR{right:calc(50% - 15vmin)}
-#intro.merge #orbL{left:calc(50% - 7.5vmin)} #intro.merge #orbR{right:calc(50% - 7.5vmin)}
-#intro.merge .orb{transform:scale(1.4);opacity:.7}
+  left:50%;right:auto;margin-left:-7.5vmin;
+  transition:transform 1.9s cubic-bezier(.35,.02,.3,1),opacity .9s ease;
+  pointer-events:none;z-index:3;will-change:transform;backface-visibility:hidden}
+#orbL{transform:translate3d(-38vw,0,0);background:radial-gradient(circle,#ffffff 4%,#c3aaf9 42%,rgba(167,139,250,0) 74%);
+  }
+#orbR{transform:translate3d(38vw,0,0);background:radial-gradient(circle,#ffffff 4%,#ffb0cb 42%,rgba(255,159,192,0) 74%);
+  }
+#intro.near #orbL{transform:translate3d(-7.5vmin,0,0)}
+#intro.near #orbR{transform:translate3d(7.5vmin,0,0)}
+#intro.merge #orbL{transform:translate3d(0,0,0) scale(1.4);opacity:.7}
+#intro.merge #orbR{transform:translate3d(0,0,0) scale(1.4);opacity:.7}
 /* the two words that become the name — AFTER the breath, never during it */
 /* the two words carry the two lights' own colours, and become one colour as
    they meet — with a bloom at the junction, which in Alphasense is the point
@@ -264,6 +266,7 @@ body.beaded #topText{top:calc(80px + env(safe-area-inset-top))}
 svg#ring{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible;
   touch-action:none;z-index:7;pointer-events:none}
 #ringWrap.live svg#ring{pointer-events:auto}
+#ringWrap.live{pointer-events:auto}
 /* an ordered scale has ends. It runs as an arc, and simply stops. */
 #ringArc{fill:none;stroke-width:9;stroke-linecap:round;opacity:0;filter:blur(4px);
   transition:opacity .9s ease,stroke .9s ease}
@@ -416,7 +419,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">build 2026-08-23 &middot; 02:30</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">build 2026-08-23 &middot; 03:15</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -878,7 +881,10 @@ ring.addEventListener('pointermove',function(e){
     /* A mouse hovering DISCLOSES the mark and its word. It chooses nothing:
        the three-second hold is still the only thing that commits. Touch has no
        hover, so this applies only to pointers that do. */
-    if(e.pointerType==='mouse'&&!locked){ lastQ=polar(toFrame(e)); move(e); }
+    if(e.pointerType!=='mouse'||locked) return;
+    var q=polar(toFrame(e)); lastQ=q;
+    if(q.r<22) return;              /* only the very centre stays neutral */
+    light(nearest(q.a));
     return;
   }
   lastQ=polar(toFrame(e));            /* remembered, so a still finger is not lost */
