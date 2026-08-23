@@ -3,6 +3,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<script>/* Decided before the first pixel: is this visit an arrival? If it is,
+   the page must not flash the map before the pale screen covers it. */
+try{var c=false;try{c=localStorage.getItem("aurasense_threshold_crossed")==="1";}catch(e){}
+var f=false;try{f=/[?&]seeking=1/.test(location.search);}catch(e){}
+if(!c||f)document.documentElement.className+=" thr-running";}catch(e){}</script>
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Aurasense — The Living Aura of Humanity</title>
@@ -160,7 +165,7 @@ body.space-view #hdr2:hover,body.space-view #hdr2:focus-within,body.space-view #
 /* THE QUIET FIRST SCREEN \u2014 secondary doors rest dim (never disabled) until the first offering */
 body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #locality-btn,body.first-quiet #place-mini,body.first-quiet #wev-chips,body.first-quiet #wbal{opacity:.35;transition:opacity 1.2s ease}
 /* THE WITNESS — the one true sentence arrives like a small ceremony, in the aura's own light */
-#pmsg.witness{font-size:15.5px;line-height:1.6;padding:16px 22px;max-width:min(480px,88vw);color:#fff;background:rgba(12,10,26,.96);border:1px solid var(--wc,rgba(196,181,253,.7));border-radius:18px;box-shadow:0 0 42px var(--wc,rgba(167,139,250,.55)),0 8px 34px rgba(0,0,0,.55);text-shadow:0 0 16px var(--wc,rgba(196,181,253,.85));letter-spacing:.015em;animation:witnessBloom 1.4s ease}
+#pmsg.witness{top:auto;bottom:150px;font-size:15.5px;line-height:1.6;padding:16px 22px;max-width:min(480px,88vw);color:#fff;background:rgba(12,10,26,.96);border:1px solid var(--wc,rgba(196,181,253,.7));border-radius:18px;box-shadow:0 0 42px var(--wc,rgba(167,139,250,.55)),0 8px 34px rgba(0,0,0,.55);text-shadow:0 0 16px var(--wc,rgba(196,181,253,.85));letter-spacing:.015em;animation:witnessBloom 1.4s ease}
 @keyframes witnessBloom{0%{transform:translateX(-50%) scale(.94);filter:brightness(.75)}60%{transform:translateX(-50%) scale(1.02);filter:brightness(1.2)}100%{transform:translateX(-50%) scale(1);filter:brightness(1)}}
 /* THE NEW SENSE DOOR — the belly of the table, as a chip in the picker */
 .sc-new{border-style:dashed!important;border-color:rgba(233,221,255,.6)!important;color:#f2ecff!important;background:rgba(233,221,255,.07)!important}
@@ -1035,6 +1040,10 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
    offers on the dark surface they are already standing on.
    Nothing snaps: the crossing is a two-second dissolve, both ways at once. */
 html.thr-running #threshold{display:none!important}
+html.thr-running{background:#f4f1fb}
+html.thr-running body{background:#f4f1fb}
+html.thr-running #map{visibility:hidden}
+html.thr-running body>*:not(#thr){visibility:hidden}
 #thr{position:fixed;inset:0;z-index:100020;background:#f4f1fb;
   opacity:1;transition:opacity 2s ease;pointer-events:auto}
 #thr.thr-gone{opacity:0;pointer-events:none}
@@ -7390,7 +7399,7 @@ async function gateLoadOfferings(){
    It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
    and §3.1: crossed once. Anyone who has offered before lands straight on the
    map, because the threshold has already been crossed. */
-var BUILD='2026-08-23 · 01:45';
+var BUILD='2026-08-23 · 02:30';
 try{
   var _bs=document.getElementById('build-stamp');
   if(_bs)_bs.textContent='build '+BUILD;
@@ -7420,6 +7429,7 @@ try{
     /* Only a FINISHED Seeking counts as crossed. Leaving partway through is not
        a decision, and should not cost someone the arrival for ever. */
     if(done){ try{localStorage.setItem(KEY,'1');}catch(e){} }
+    try{document.documentElement.classList.remove('thr-running');}catch(e){}
     thr.classList.add('thr-gone');
     document.body.classList.remove('thr-open');
     setTimeout(function(){ try{thr.remove();}catch(e){} },2400);

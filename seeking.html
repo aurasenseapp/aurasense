@@ -195,7 +195,7 @@ body.night .symInk{filter:none}
 @keyframes coreBreathe{0%,100%{transform:translate(-50%,-50%) scale(.86);opacity:.38}
   50%{transform:translate(-50%,-50%) scale(1.10);opacity:.62}}
 .orb{position:absolute;top:62%;width:15vmin;height:15vmin;border-radius:50%;margin-top:-7.5vmin;
-  transition:left 1.35s cubic-bezier(.35,.02,.3,1),right 1.35s cubic-bezier(.35,.02,.3,1),
+  transition:left 1.9s cubic-bezier(.35,.02,.3,1),right 1.9s cubic-bezier(.35,.02,.3,1),
   opacity .7s ease,transform .7s ease;pointer-events:none;z-index:3}
 #orbL{left:4%;background:radial-gradient(circle,#ffffff 4%,#c3aaf9 42%,rgba(167,139,250,0) 74%);
   animation:orbBreathe 12s ease-in-out 0s infinite both}
@@ -211,11 +211,11 @@ body.night .symInk{filter:none}
 #brand{position:absolute;left:0;right:0;top:62%;z-index:8;pointer-events:none;
   display:flex;justify-content:center;align-items:baseline;
   font-size:clamp(31px,8.6vw,50px);letter-spacing:.10em;
-  opacity:0;transition:opacity .7s ease,letter-spacing 1.5s cubic-bezier(.35,.02,.3,1);
+  opacity:0;transition:opacity .7s ease,letter-spacing 2s cubic-bezier(.35,.02,.3,1);
   text-shadow:0 0 5px #fff,0 0 12px #fff,0 0 28px #fff,0 0 54px #fff}
 #brand.on{opacity:1}
 #brand.met{letter-spacing:.01em}
-#brand span{transition:transform 1.5s cubic-bezier(.35,.02,.3,1),color .9s ease .8s}
+#brand span{transition:transform 2s cubic-bezier(.35,.02,.3,1),color .9s ease .8s}
 #bA{transform:translateX(-34vw);color:#8f74d8}
 #bS{transform:translateX(34vw);color:#d8779e}
 #brand.met #bA,#brand.met #bS{transform:translateX(0);color:var(--ink)}
@@ -416,7 +416,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">seeking 23 Aug 2026 &middot; 01:20</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">build 2026-08-23 &middot; 02:30</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -677,10 +677,10 @@ if(reduced){ T.forEach(clearTimeout); T=[];
 }
 at(120,  function(){$('intro').classList.add('near');$('brand').classList.add('met');});
 at(360,  function(){$('brand').classList.add('on');});    /* Aura · sense, apart */
-at(1650, function(){$('intro').classList.add('merge');
+at(2150, function(){$('intro').classList.add('merge');
                     $('seam').classList.add('bloom');});   /* the junction blooms */
-at(2900, function(){$('brand').classList.remove('on');});
-at(3600, function(){toSeek();});
+at(3500, function(){$('brand').classList.remove('on');});
+at(4300, function(){toSeek();});
 })();
 $('intro').addEventListener('click',function(){
   if(skipped)return; skipped=true; T.forEach(clearTimeout);
@@ -874,7 +874,13 @@ ring.addEventListener('pointerdown',function(e){
   e.preventDefault();
 },{passive:false});
 ring.addEventListener('pointermove',function(e){
-  if(!down)return;
+  if(!down){
+    /* A mouse hovering DISCLOSES the mark and its word. It chooses nothing:
+       the three-second hold is still the only thing that commits. Touch has no
+       hover, so this applies only to pointers that do. */
+    if(e.pointerType==='mouse'&&!locked){ lastQ=polar(toFrame(e)); move(e); }
+    return;
+  }
   lastQ=polar(toFrame(e));            /* remembered, so a still finger is not lost */
   if(locked)return;
   move(e);
