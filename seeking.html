@@ -176,7 +176,7 @@ body.night .symInk{filter:none}
 /* the ONE circle — top level, never inside a scene, never crossfaded */
 #ringWrap{position:fixed;left:50%;top:62%;width:min(70vmin,46vh);height:min(70vmin,46vh);
   transform:translate(-50%,-50%);z-index:6;pointer-events:none;
-  transition:opacity 1.1s ease}
+  opacity:0;transition:opacity 1.1s ease}
 #ringBreath{position:absolute;inset:0;transform:scale(1.02);opacity:.40;
   animation:guided 12s ease-in-out 4.2s 1 both}
 #ringInner{position:absolute;inset:0;
@@ -416,7 +416,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">seeking 23 Aug 2026 &middot; 00:40</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">seeking 23 Aug 2026 &middot; 01:20</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -764,7 +764,7 @@ function markSeen(i,col){
 }
 function clearTrace(){ $('trace').innerHTML=''; seen={}; }
 function showCircle(){
-  $('ringWrap').classList.add('live'); $('ringWrap').style.opacity='';
+  $('ringWrap').classList.add('live'); $('ringWrap').style.opacity='1';
 }
 function hideCircle(){             /* it is outside the scenes, so it is told */
   $('ringWrap').classList.remove('live'); $('ringWrap').style.opacity='0';
