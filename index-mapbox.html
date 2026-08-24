@@ -523,7 +523,9 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #panel.locating #offer-locate{display:block}
 /* The three ways to name a place belong BEFORE the sense is chosen. They were
    only appearing once an offering was already made. */
-#panel #offer-locate{display:block}
+#panel.show-mobile:not(.sense-picked):not(.just-offered) #offer-locate{display:block}
+#panel.show:not(.sense-picked):not(.just-offered) #offer-locate{display:block}
+#panel.sense-picked #offer-locate{display:none!important}
 #panel.just-offered #offer-locate{display:none!important}
 #panel.locating #ptitle,#panel.locating .srealm-label,#panel.locating .scats,#panel.locating #memory-label,#panel.locating #memory-row,#panel.locating #sense-confirm,#panel.locating #photo-row,#panel.locating #srow,#panel.locating #offer-confirm,#panel.locating #offer-lastlink{display:none}
 #panel.locating #scats-all,#panel.locating .sgrp{display:none}
@@ -3423,6 +3425,18 @@ function submit(lat,lng,text){
   try{document.body.classList.remove('first-quiet');}catch(e){}
   try{const _rb=document.getElementById('sbtn');if(_rb)_rb.classList.remove('ripen');}catch(e){}
   const pp=(typeof pendingPhoto!=='undefined')?pendingPhoto:null;
+  /* step aside so the light can be seen landing */
+  try{
+    const _p=document.getElementById('panel');
+    if(_p){ _p.classList.add('witnessing');
+      clearTimeout(window.__witnessT);
+      window.__witnessT=setTimeout(()=>{try{_p.classList.remove('witnessing');}catch(e){}},6000);
+      const _back=()=>{try{_p.classList.remove('witnessing');clearTimeout(window.__witnessT);}catch(e){}};
+      _p.addEventListener('pointerdown',_back,{once:true});
+    }
+  }catch(e){}
+  const sid=selSense;
+  const s=SENSES.find(x=>x.id===sid);if(!s)return;
   /* ── THE ASCENT ── the light travels to My Aura, then each scale lights in
      turn: My Aura, Street, Town, Region, Nation, World, and home again. It says
      what the offering has joined without a single word. One step every 420ms —
@@ -3446,18 +3460,6 @@ function submit(lat,lng,text){
     });
   }catch(e){}
 
-  /* step aside so the light can be seen landing */
-  try{
-    const _p=document.getElementById('panel');
-    if(_p){ _p.classList.add('witnessing');
-      clearTimeout(window.__witnessT);
-      window.__witnessT=setTimeout(()=>{try{_p.classList.remove('witnessing');}catch(e){}},6000);
-      const _back=()=>{try{_p.classList.remove('witnessing');clearTimeout(window.__witnessT);}catch(e){}};
-      _p.addEventListener('pointerdown',_back,{once:true});
-    }
-  }catch(e){}
-  const sid=selSense;
-  const s=SENSES.find(x=>x.id===sid);if(!s)return;
   // Offering from a height: the aura lands where you are looking, and the map descends to meet it.
   // The scale it was given from travels with it — a town offering belongs to the town, honestly labelled.
   let _oz=15;try{_oz=map.getZoom();}catch(e){}
@@ -7449,7 +7451,7 @@ async function gateLoadOfferings(){
    It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
    and §3.1: crossed once. Anyone who has offered before lands straight on the
    map, because the threshold has already been crossed. */
-var BUILD='2026-08-23 · 21:30';
+var BUILD='2026-08-23 · 23:05';
 try{
   var _bs=document.getElementById('build-stamp');
   if(_bs)_bs.textContent='map build '+BUILD;
