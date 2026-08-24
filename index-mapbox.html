@@ -1070,7 +1070,6 @@ html.thr-running #threshold{display:none!important}
 html.thr-running{background:#f4f1fb}
 html.thr-running body{background:#f4f1fb}
 html.thr-running #map{visibility:hidden}
-html.thr-running body>*:not(#thr){visibility:hidden}
 #thr{position:fixed;inset:0;z-index:100020;background:#f4f1fb;
   opacity:1;transition:opacity 2s ease;pointer-events:auto}
 #thr.thr-gone{opacity:0;pointer-events:none}
@@ -2832,6 +2831,22 @@ let lastSearchPoint=null;
 let lastClickPoint=null;let senseGateOpen=false;
 let sgrpIntroDone=false;
 function sgrpIntro(){/* the pulsing coach: deleted 23 Aug 2026 with the tips */}
+function openSenseGate(){
+  senseGateOpen=true;
+  try{if(typeof wevOpenId!=='undefined'&&wevOpenId>=0)wevClosePanel();}catch(e){}
+  const p=document.getElementById('panel');
+  if(p){
+    p.classList.remove('locating','just-offered','offer-quiet');
+    /* AND IT MUST ACTUALLY OPEN THE SHEET. The original only removed a class and
+       relied on something else having shown it already. */
+    if(!p.classList.contains('show')&&!p.classList.contains('show-mobile')){
+      p.classList.add(window.innerWidth<=600?'show-mobile':'show');
+    }
+    p.classList.remove('witnessing');
+    try{const _ui=document.getElementById('ui');if(_ui)_ui.classList.add('offer-open');}catch(e){}
+  }
+  setTimeout(sgrpIntro,320);
+}
 let lastSearchLabel=null;
 let lastSearchName=null;
 function dropSearchMarker(center,placeName){
@@ -5372,10 +5387,12 @@ document.addEventListener('focusout',()=>{setTimeout(()=>{
   const olPick=document.getElementById('ol-pick');
   if(olPick) olPick.addEventListener('click',function(){
     const p=document.getElementById('panel');
-    if(p) p.classList.remove('show-mobile');
+    /* stepped aside, not shut — it returns the moment the map is tapped */
+    if(p) p.classList.add('witnessing');
     olPick.classList.add('armed'); olPick.textContent='Tap the map…';
     showMsg('Tap anywhere on the map to place your light there.',6000,'witness','#c4b5fd');
-    const done=function(){ olPick.classList.remove('armed'); olPick.textContent='Point on the map'; };
+    const done=function(){ olPick.classList.remove('armed'); olPick.textContent='Point on the map';
+      try{const _p=document.getElementById('panel'); if(_p)_p.classList.remove('witnessing');}catch(e){} };
     try{ map.once('click',done); }catch(e){}
     setTimeout(done,20000);
   });
@@ -7451,7 +7468,7 @@ async function gateLoadOfferings(){
    It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
    and §3.1: crossed once. Anyone who has offered before lands straight on the
    map, because the threshold has already been crossed. */
-var BUILD='2026-08-23 · 23:05';
+var BUILD='2026-08-24 · 00:40';
 try{
   var _bs=document.getElementById('build-stamp');
   if(_bs)_bs.textContent='map build '+BUILD;
