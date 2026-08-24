@@ -1086,6 +1086,12 @@ body.thr-open #panel,body.thr-open #mv-orb,body.thr-open #tabs{opacity:0!importa
    #locality-tip is the label of a control, not advice about one. */
 /* THE WITNESS MOMENT MUST BE VISIBLE. The sheet steps aside while the light
    lands, then returns. §5.10. Touch anywhere on it to bring it straight back. */
+/* each scale lifts once as the light passes through it */
+@keyframes rising{0%{box-shadow:none;transform:translateY(0)}
+  45%{box-shadow:0 0 20px var(--rise,#a78bfa),0 0 40px var(--rise,#a78bfa);transform:translateY(-3px)}
+  100%{box-shadow:none;transform:translateY(0)}}
+.tab.rising{animation:rising .76s ease-in-out;color:#fff}
+.tab.rising .tab-orb{box-shadow:0 0 16px var(--rise,#a78bfa)}
 #panel.witnessing{transform:translateY(calc(100% - 78px));transition:transform 1.1s cubic-bezier(.4,0,.2,1)}
 #panel.witnessing:hover,#panel.witnessing:focus-within{transform:translateY(0)}
 @media (min-width:601px){#panel.witnessing{transform:translateY(0);opacity:.22;
@@ -3414,6 +3420,29 @@ function submit(lat,lng,text){
   try{document.body.classList.remove('first-quiet');}catch(e){}
   try{const _rb=document.getElementById('sbtn');if(_rb)_rb.classList.remove('ripen');}catch(e){}
   const pp=(typeof pendingPhoto!=='undefined')?pendingPhoto:null;
+  /* ── THE ASCENT ── the light travels to My Aura, then each scale lights in
+     turn: My Aura, Street, Town, Region, Nation, World, and home again. It says
+     what the offering has joined without a single word. One step every 420ms —
+     about 2.4 per second, well under the 3 Hz law. */
+  try{
+    const _c=s.color||'#a78bfa';
+    setTimeout(()=>{try{flyToMyAura(_c);}catch(e){}},1500);
+    const seq=[document.querySelector('.tab-myaura'),
+               document.querySelector('.tab[data-i="0"]'),
+               document.querySelector('.tab[data-i="1"]'),
+               document.querySelector('.tab[data-i="2"]'),
+               document.querySelector('.tab[data-i="3"]'),
+               document.querySelector('.tab[data-i="4"]'),
+               document.querySelector('.tab-myaura')];
+    seq.forEach((el,k)=>{
+      if(!el) return;
+      setTimeout(()=>{
+        try{ el.style.setProperty('--rise',_c); el.classList.add('rising');
+          setTimeout(()=>{try{el.classList.remove('rising');}catch(e){}},760); }catch(e){}
+      },2100+k*420);
+    });
+  }catch(e){}
+
   /* step aside so the light can be seen landing */
   try{
     const _p=document.getElementById('panel');
@@ -7417,7 +7446,7 @@ async function gateLoadOfferings(){
    It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
    and §3.1: crossed once. Anyone who has offered before lands straight on the
    map, because the threshold has already been crossed. */
-var BUILD='2026-08-23 · 18:40';
+var BUILD='2026-08-23 · 20:15';
 try{
   var _bs=document.getElementById('build-stamp');
   if(_bs)_bs.textContent='build '+BUILD;
