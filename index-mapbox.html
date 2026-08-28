@@ -3,21 +3,6 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<style id="no-tips">/* NO TIPS. ANYWHERE. 23 Aug 2026. Words kept in
-   Aurasense-Tips-Removed-22Aug2026.txt. This sits above every other rule in
-   the document so nothing can outrank it. */
-#stip,#panel-tip,#ol-hint,#ma-hover-hint,#pc-hint,#ss-hint,#soc-tip-el,#locality-tip,
-.tip-arrow,.lic-tip,.ma-tip,.mae-hint,.rg-tip,.soc-tip,.ol-hint,.panel-tip,
-[class*="-tip"]:not(#ma-branch-tip),[class*="-hint"],[id$="-tip"]:not(#ma-branch-tip),[id$="-hint"]{
-  display:none!important;visibility:hidden!important;opacity:0!important;
-  pointer-events:none!important;height:0!important;max-height:0!important;
-  margin:0!important;padding:0!important;border:0!important;overflow:hidden!important}
-</style>
-<script>/* Decided before the first pixel: is this visit an arrival? If it is,
-   the page must not flash the map before the pale screen covers it. */
-try{var c=false;try{c=localStorage.getItem("aurasense_threshold_crossed")==="1";}catch(e){}
-var f=false;try{f=/[?&]seeking=1/.test(location.search);}catch(e){}
-if(!c||f)document.documentElement.className+=" thr-running";}catch(e){}</script>
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Aurasense — The Living Aura of Humanity</title>
@@ -95,6 +80,14 @@ body.world-view #tabs .tab-orb{width:8px;height:8px}
 .tab.active{color:#c4b5fd}
 .tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0;transition:background .3s,box-shadow .3s}
 .tab.active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
+/* THE BUILD STAMP — one number, one place, bottom-left. Read it here and nowhere else. */
+#build-stamp{position:fixed;left:9px;bottom:6px;z-index:2200;pointer-events:none;font-family:var(--sans),system-ui,sans-serif;font-size:10px;letter-spacing:.04em;color:rgba(196,181,253,.42);text-shadow:0 0 8px rgba(6,5,16,.9)}
+/* THE ASCENT (build name: location lighting sequence) — the light climbing the scales after an
+   offering. Paint only: it never touches the senser's standing scale and never moves the map. */
+@keyframes ascGlow{0%{box-shadow:0 0 0 0 var(--asc,#c4b5fd);transform:scale(1)}34%{box-shadow:0 0 15px 4px var(--asc,#c4b5fd);transform:scale(2)}100%{box-shadow:0 0 0 0 var(--asc,#c4b5fd);transform:scale(1)}}
+.tab-orb.ascending{animation:ascGlow 1.1s ease-in-out both;background:var(--asc,#c4b5fd)!important;opacity:1!important}
+@keyframes ascLit{0%{color:inherit}30%{color:#fff;text-shadow:0 0 13px var(--asc,#c4b5fd)}100%{color:inherit}}
+.tab.asc-lit{animation:ascLit 1.1s ease-in-out both}
 /* THE SCALE CROSSED — the journey from street to planet narrates itself: each scale flares
    once as the view passes through it, outward and back. Two flares a second at most. */
 @keyframes tabCrossed{0%{box-shadow:0 0 7px rgba(196,181,253,.9);transform:scale(1)}
@@ -175,7 +168,7 @@ body.space-view #hdr2:hover,body.space-view #hdr2:focus-within,body.space-view #
 /* THE QUIET FIRST SCREEN \u2014 secondary doors rest dim (never disabled) until the first offering */
 body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #locality-btn,body.first-quiet #place-mini,body.first-quiet #wev-chips,body.first-quiet #wbal{opacity:.35;transition:opacity 1.2s ease}
 /* THE WITNESS — the one true sentence arrives like a small ceremony, in the aura's own light */
-#pmsg.witness{top:auto;bottom:150px;font-size:15.5px;line-height:1.6;padding:16px 22px;max-width:min(480px,88vw);color:#fff;background:rgba(12,10,26,.96);border:1px solid var(--wc,rgba(196,181,253,.7));border-radius:18px;box-shadow:0 0 42px var(--wc,rgba(167,139,250,.55)),0 8px 34px rgba(0,0,0,.55);text-shadow:0 0 16px var(--wc,rgba(196,181,253,.85));letter-spacing:.015em;animation:witnessBloom 1.4s ease}
+#pmsg.witness{font-size:15.5px;line-height:1.6;padding:16px 22px;max-width:min(480px,88vw);color:#fff;background:rgba(12,10,26,.96);border:1px solid var(--wc,rgba(196,181,253,.7));border-radius:18px;box-shadow:0 0 42px var(--wc,rgba(167,139,250,.55)),0 8px 34px rgba(0,0,0,.55);text-shadow:0 0 16px var(--wc,rgba(196,181,253,.85));letter-spacing:.015em;animation:witnessBloom 1.4s ease}
 @keyframes witnessBloom{0%{transform:translateX(-50%) scale(.94);filter:brightness(.75)}60%{transform:translateX(-50%) scale(1.02);filter:brightness(1.2)}100%{transform:translateX(-50%) scale(1);filter:brightness(1)}}
 /* THE NEW SENSE DOOR — the belly of the table, as a chip in the picker */
 .sc-new{border-style:dashed!important;border-color:rgba(233,221,255,.6)!important;color:#f2ecff!important;background:rgba(233,221,255,.07)!important}
@@ -293,12 +286,7 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #gp-modal .gp-x{display:block;width:100%;margin-top:8px;background:none;border:none;color:#8a80b4;font-size:11.5px}
 #mv-orb{position:fixed;right:16px;bottom:18px;z-index:99990;width:46px;height:46px;border-radius:50%;border:0.5px solid rgba(196,181,253,.55);background:radial-gradient(circle at 38% 34%,rgba(233,221,255,.9),rgba(167,139,250,.5) 46%,rgba(20,16,42,.9) 78%);box-shadow:0 0 18px rgba(167,139,250,.5),0 6px 20px rgba(0,0,0,.5);cursor:pointer;animation:mvBreath 6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-size:19px;color:#0c0a1c}
 @keyframes mvBreath{0%,100%{transform:scale(1);box-shadow:0 0 16px rgba(167,139,250,.42),0 6px 20px rgba(0,0,0,.5)}50%{transform:scale(1.07);box-shadow:0 0 30px rgba(196,181,253,.75),0 6px 20px rgba(0,0,0,.5)}}
-/* It used to dim to .62 and keep its place above the panel, still catching taps.
-   The panel is the working surface; the Mirror waits its turn. */
-body.panel-live #mv-orb{opacity:0;pointer-events:none;transform:translateY(10px)}
-body:has(#livefeed-page.show) #mv-orb{opacity:.62}
-#mv-orb{transition:opacity .45s ease,transform .45s ease}
-#mv-orb.mv-waiting{opacity:0;pointer-events:none}
+body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #mv-panel{position:fixed;right:14px;bottom:74px;z-index:99991;width:min(340px,92vw);max-height:66vh;overflow-y:auto;background:rgba(12,10,26,.97);border:0.5px solid rgba(196,181,253,.45);border-radius:18px;padding:15px 15px 11px;box-shadow:0 12px 44px rgba(0,0,0,.6),0 0 30px rgba(167,139,250,.18);opacity:0;transform:translateY(10px);transition:opacity .5s,transform .5s;pointer-events:none}
 #mv-panel.show{opacity:1;transform:none;pointer-events:auto}
 #mv-panel .mv-h{font-size:12.5px;color:#e9ddff;letter-spacing:.06em;margin-bottom:7px}
@@ -501,32 +489,12 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #offer-locate{display:none;margin-bottom:6px}
 #offer-locate .ol-label{font-size:13px;color:#e3d9ff;margin-bottom:9px;font-family:Georgia,serif;text-align:center}
 #offer-locate .ol-row{display:flex;gap:6px}
-.ol-ways{display:flex;gap:8px;margin-bottom:9px}
-.ol-way{flex:1;padding:11px 8px;border-radius:11px;font-size:12.5px;font-family:inherit;
-  border:0.5px solid rgba(167,139,250,.4);background:rgba(167,139,250,.13);color:#e6dfff;
-  cursor:pointer;transition:background .25s ease,border-color .25s ease}
-.ol-way:hover{background:rgba(167,139,250,.24);border-color:rgba(167,139,250,.7)}
-.ol-way.waiting{opacity:.6;pointer-events:none}
-.ol-way.armed{background:rgba(196,181,253,.3);border-color:rgba(196,181,253,.9);color:#fff}
-.ol-or{text-align:center;font-size:10.5px;color:#6f6796;letter-spacing:.06em;margin:0 0 8px}
-#ol-prec{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:10px}
-.prec{padding:6px 12px;border-radius:14px;font-size:11px;font-family:inherit;cursor:pointer;
-  border:0.5px solid rgba(167,139,250,.28);background:transparent;color:#8a82b4;
-  transition:all .25s ease}
-.prec.on{background:rgba(167,139,250,.2);border-color:rgba(167,139,250,.6);color:#e6dfff}
-#prec-say{flex:1 0 100%;font-size:10.5px;color:#6f6796;line-height:1.5}
 #ol-input{flex:1;background:rgba(10,10,20,.9);border:0.5px solid rgba(167,139,250,.45);border-radius:11px;padding:9px 12px;font-size:12.5px;color:#e0d8ff;outline:none;font-family:inherit;box-shadow:0 0 16px rgba(124,92,255,.28)}
 #ol-input:focus{border-color:rgba(167,139,250,.85);box-shadow:0 0 0 2px rgba(167,139,250,.22),0 0 22px rgba(124,92,255,.5)}
 #ol-go{padding:9px 15px;border-radius:11px;border:0.5px solid rgba(167,139,250,.4);background:rgba(167,139,250,.18);color:#e6dfff;font-size:12.5px;cursor:pointer;font-family:inherit;white-space:nowrap}
 #offer-locate .ol-hint{font-size:11px;color:#c4b5fd;margin-top:9px;text-align:center;cursor:pointer;text-decoration:underline dotted rgba(167,139,250,.6);text-underline-offset:3px}
 #offer-locate .ol-hint:hover{color:#e6dfff}
 #panel.locating #offer-locate{display:block}
-/* The three ways to name a place belong BEFORE the sense is chosen. They were
-   only appearing once an offering was already made. */
-#panel.show-mobile:not(.sense-picked):not(.just-offered) #offer-locate{display:block}
-#panel.show:not(.sense-picked):not(.just-offered) #offer-locate{display:block}
-#panel.sense-picked #offer-locate{display:none!important}
-#panel.just-offered #offer-locate{display:none!important}
 #panel.locating #ptitle,#panel.locating .srealm-label,#panel.locating .scats,#panel.locating #memory-label,#panel.locating #memory-row,#panel.locating #sense-confirm,#panel.locating #photo-row,#panel.locating #srow,#panel.locating #offer-confirm,#panel.locating #offer-lastlink{display:none}
 #panel.locating #scats-all,#panel.locating .sgrp{display:none}
 #panel:not(.sense-picked) #sense-confirm,#panel:not(.sense-picked) #srow,#panel:not(.sense-picked) #photo-row,#panel:not(.sense-picked) #sbtn{display:none}
@@ -1036,7 +1004,17 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 .lf-btn.bonded{background:rgba(134,224,192,.2);color:#bff0dd}
 .lf-btn:disabled{opacity:.7;cursor:default}
 /* Onboarding coachmarks */
+#onboard{position:fixed;inset:0;z-index:1900;pointer-events:none;display:none}
+#onboard.show{display:block}
+.ob-bub{position:absolute;min-width:240px;max-width:360px;background:rgba(14,11,30,.98);border:2px solid rgba(255,255,255,.92);border-radius:18px;padding:20px 22px;pointer-events:auto;box-shadow:0 0 0 4px rgba(124,92,255,.22),0 0 44px rgba(124,92,255,.6);font-family:Georgia,'Times New Roman',serif}
+.ob-bub .obt{font-size:18px;color:#fff;line-height:1.4;font-weight:600;letter-spacing:.01em;text-shadow:0 0 18px rgba(167,139,250,.7)}
+.ob-bub .obs{font-size:14px;color:#cfc6ec;line-height:1.55;margin-top:8px}
+.ob-next{background:rgba(167,139,250,.3);border:1px solid rgba(255,255,255,.6);color:#fff;font-size:13px;font-weight:600;padding:8px 18px;border-radius:14px;cursor:pointer;font-family:Georgia,serif}
 .ob-next:hover{background:rgba(167,139,250,.5)}
+.ob-arrow{position:absolute;font-size:44px;color:#fff;pointer-events:none;text-shadow:0 0 16px rgba(167,139,250,1),0 0 6px rgba(255,255,255,.9);animation:obFloat 1.4s ease-in-out infinite}
+.ob-arrow.ob-arrow-long{font-size:62px;line-height:.7}
+.ob-row{display:flex;justify-content:space-between;align-items:center;margin-top:14px}
+.ob-step{font-size:11px;color:#9a8fc2}
 @keyframes obFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
 /* My Aura: person / selfie */
 #ma-video{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) scaleX(-1);width:34%;aspect-ratio:1/1;object-fit:cover;border-radius:50%;display:none;z-index:5;box-shadow:0 0 40px rgba(167,139,250,.6);border:2px solid rgba(236,241,255,.6)}
@@ -1049,60 +1027,10 @@ body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #ma-capture{background:linear-gradient(135deg,#7c5cff,#a78bfa);box-shadow:0 0 20px rgba(124,92,255,.5)}
 #ma-cancel-selfie{background:rgba(28,22,52,.7);color:#b6acdc}
 /* Onboarding now locks the map until passed through */
+#onboard.show{pointer-events:auto;background:rgba(6,5,16,.55)}
 /* Input glow to draw the eye after choosing a sense */
 #inp.inp-glow{border-color:rgba(167,139,250,.9)!important;box-shadow:0 0 0 2px rgba(167,139,250,.25),0 0 20px rgba(167,139,250,.5);animation:inpGlow 1.3s ease-in-out infinite}
 #sbtn.sbtn-glow{border-color:rgba(167,139,250,.95)!important;background:rgba(167,139,250,.22);color:#efe8ff;animation:inpGlow 1.4s ease-in-out infinite}
-/* ═══ THE THRESHOLD ═══ the Seeking, carried at the front of Aurasense ══════
-   Treatise §3.1: a threshold is CROSSED ONCE. That is what makes it a
-   threshold and not a corridor. The pale cloud is the porch; the map is the
-   room. A person passes through once, on their first visit, and afterwards
-   offers on the dark surface they are already standing on.
-   Nothing snaps: the crossing is a two-second dissolve, both ways at once. */
-html.thr-running #threshold{display:none!important}
-/* ═══ TIPS: ALL OF THEM, GONE. 23 Aug 2026. Words kept in
-   Aurasense-Tips-Removed-22Aug2026.txt. Nothing advisory floats over the map
-   or any page again. #ma-branch-tip is left alone — it reads out which layer
-   of the aura is under the finger, which is data, not advice. */
-#stip,#soc-tip-el,#locality-tip,#panel-tip,#ol-hint,#ma-hover-hint,#pc-hint,#ss-hint,
-.tip-arrow,.lic-tip,.ma-tip,.mae-hint,.rg-tip,.soc-tip,.ol-hint,.tip,.hint{
-  display:none!important;visibility:hidden!important;opacity:0!important;
-  pointer-events:none!important}
-html.thr-running{background:#f4f1fb}
-html.thr-running body{background:#f4f1fb}
-html.thr-running #map{visibility:hidden}
-#thr{position:fixed;inset:0;z-index:100020;background:#f4f1fb;
-  opacity:1;transition:opacity 2s ease;pointer-events:auto}
-#thr.thr-gone{opacity:0;pointer-events:none}
-#thr iframe{width:100%;height:100%;border:0;display:block;background:#f4f1fb}
-/* the map waits underneath, already breathing, so the dissolve reveals
-   something alive rather than something starting up */
-body.thr-open #panel,body.thr-open #mv-orb,body.thr-open #tabs{opacity:0!important;
-  pointer-events:none!important}
-/* ═══ THE TIPS, REMOVED 22 AUGUST 2026 ═════════════════════════════════════
-   Recorded in full in Aurasense-Tips-Removed-22Aug2026.txt before removal.
-   Kept in the markup and hidden, so no code that reaches for them can break.
-   Restore any single one by deleting its line here.
-   NOT removed, because they are not tips: #ma-branch-tip reads out which aura
-   layer is under the finger (data), #soc-tip-el appears only on hover, and
-   #locality-tip is the label of a control, not advice about one. */
-/* THE WITNESS MOMENT MUST BE VISIBLE. The sheet steps aside while the light
-   lands, then returns. §5.10. Touch anywhere on it to bring it straight back. */
-/* each scale lifts once as the light passes through it */
-@keyframes rising{0%{box-shadow:none;transform:translateY(0)}
-  45%{box-shadow:0 0 20px var(--rise,#a78bfa),0 0 40px var(--rise,#a78bfa);transform:translateY(-3px)}
-  100%{box-shadow:none;transform:translateY(0)}}
-.tab.rising{animation:rising .76s ease-in-out;color:#fff}
-.tab.rising .tab-orb{box-shadow:0 0 16px var(--rise,#a78bfa)}
-#panel.witnessing{transform:translateY(calc(100% - 78px));transition:transform 1.1s cubic-bezier(.4,0,.2,1)}
-#panel.witnessing:hover,#panel.witnessing:focus-within{transform:translateY(0)}
-@media (min-width:601px){#panel.witnessing{transform:translateY(0);opacity:.22;
-  transition:opacity 1.1s ease}
-  #panel.witnessing:hover,#panel.witnessing:focus-within{opacity:1}}
-#map-build{position:fixed;left:8px;bottom:6px;z-index:100019;font-size:9px;
-  color:rgba(180,170,215,.75);letter-spacing:.03em;pointer-events:none;
-  text-shadow:0 1px 4px rgba(0,0,0,.9);font-family:ui-monospace,monospace}
-#build-stamp{font-size:8.5px;color:#4e4770;text-align:center;letter-spacing:.04em;
-  padding:10px 0 4px;user-select:text;-webkit-user-select:text}
 #sense-confirm{display:block;margin:9px 2px 8px;padding:8px 10px;background:rgba(167,139,250,.08);border:0.5px solid rgba(167,139,250,.25);border-radius:10px;font-size:12px;color:#d7ccf2;letter-spacing:.01em;line-height:1.35}
 @media (max-width:600px){#sense-confirm{display:none!important}}
 #sense-confirm:empty{display:none}
@@ -1495,9 +1423,6 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 #wev-t{font-size:14.5px;color:#fff;font-weight:500;line-height:1.4;padding-right:18px}
 #wev-k{font-size:10.5px;letter-spacing:.05em;margin-top:4px}
 #wev-n{font-size:12px;color:#cfc7ea;line-height:1.6;margin-top:9px}
-#wev-src{font-size:10.5px;color:#8a80b4;line-height:1.5;margin-top:9px;letter-spacing:.02em}
-#wev-src:empty{display:none}
-#wev-src b{font-weight:500;color:#a79ccc}
 #wev-d{font-size:11.5px;color:#e8d9b0;line-height:1.6;margin-top:9px;font-style:italic;border-left:2px solid rgba(232,192,116,.4);padding-left:9px}
 #wev-d:empty{display:none}
 #wev-c{font-size:10.5px;color:#9a8fc2;margin-top:11px}
@@ -1571,6 +1496,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <div class="soc-btn" data-tip="Share to Instagram">◎</div>
       <div class="soc-btn" data-tip="Share to Facebook">f</div>
       <div class="soc-btn" data-tip="Copy aura link">⌁</div>
+      <div class="soc-tip" id="soc-tip-el"></div>
     </div>
   </div>
   <div id="hdr2">
@@ -1590,7 +1516,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
       <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>World</button>
     </div>
     <div id="search-box">
-      <input id="si" maxlength="120" placeholder="Street and number, or a named building"/>
+      <input id="si" maxlength="120" placeholder="Find a place to sense…"/>
       <button id="sg">Go</button>
     </div>
   </div>
@@ -1600,6 +1526,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <canvas id="pac" width="80" height="80"></canvas>
     <div id="my-aura-label">Aurasenser</div>
     <button id="ma-register-inline">✦ Become an aurasenser</button>
+    <div id="ma-hover-hint">Click to see how your aura is progressing</div>
   </div>
   <div id="aura-views">
     <button id="aura-views-btn"><span class="av-eye"><svg viewBox="0 0 18 18" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 9S4 3.8 9 3.8 16.5 9 16.5 9 14 14.2 9 14.2 1.5 9 1.5 9z"/><circle cx="9" cy="9" r="2.1"/></svg></span>More Aura Views<span class="av-caret">▾</span></button>
@@ -1636,7 +1563,6 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="wev-k"></div>
     <div id="wev-n"></div>
     <div id="wev-d"></div>
-    <div id="wev-src"></div>
     <div id="wev-c"></div>
     <button id="wev-send">✦ Answer with an aura of compassion</button>
     <div id="wev-accord">Where many answer one circumstance, an Aura Accord will gather the reachings into one shared light — arriving with Gate profiles ✧</div>
@@ -1648,7 +1574,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
     <div id="pp-row"><input id="pp-input" maxlength="120" placeholder="Street, town, postcode, country..."/><button id="pp-go">Go</button></div>
     <button id="pp-select">…or select a spot on the map</button>
   </div>
-  <div id="place-mini"><input id="pm-input" placeholder="Street and number, or a named building"/><button id="pm-go">🔍</button></div>
+  <div id="place-mini"><input id="pm-input" placeholder="Search a location..."/><button id="pm-go">🔍</button></div>
   <div id="explore-btn"><button id="ebtn">✦ Read the aura of this place</button></div>
   <div id="explore-panel">
     <div class="ep-title">How would you like to read this aura?</div>
@@ -1698,27 +1624,19 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
   </div>
   <button id="feed-full">◉ See Full Live Feed</button>
   <div id="feed"></div>
+  <div id="stip"></div>
   <div id="panel">
+    <div id="panel-tip"><span class="tip-arrow">▲</span>Energize a place with your senses</div>
         <div id="pi">
       <div id="offer-locate">
         <div class="ol-label">Where would you like to offer your aurasense?</div>
-        <div class="ol-ways">
-          <button id="ol-here" type="button" class="ol-way">Where I am</button>
-          <button id="ol-pick" type="button" class="ol-way">Point on the map</button>
-        </div>
-        <div class="ol-or">or name it</div>
-        <div class="ol-row"><input id="ol-input" type="text" maxlength="120" placeholder="12 Oak Ave, or Bow Riverfront Park" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
-        <div id="ol-prec">
-          <button id="prec-exact" type="button" class="prec on">Exact spot</button>
-          <button id="prec-street" type="button" class="prec">Just the street</button>
-          <div id="prec-say">Your light lands where you actually are.</div>
-        </div>
+        <div class="ol-row"><input id="ol-input" type="text" maxlength="120" placeholder="Search a place…" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
+        <div class="ol-hint" id="ol-hint">…or tap a spot on the map</div>
       </div>
       <div id="offer-confirm"></div>
       <div id="offer-lastlink">▾ see last aura I offered</div>
       <div id="ptitle-row"><div id="ptitle">Energize a place with your senses</div><button id="sheet-close">✕ Close</button></div>
       <div id="scats-all"></div>
-      <div id="build-stamp"></div>
       <div class="srealm-label" id="memory-label">Light up this spot with the aura of a personal memory</div>
       <div id="memory-row"><button id="memory-btn">A Memory</button><div id="mem-priv-wrap"><button id="mem-private" class="mem-priv">Memory words: Public</button></div></div>
       <div id="sense-confirm"></div>
@@ -1728,7 +1646,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
         <div id="photo-preview"></div>
       </div>
       <div id="srow">
-        <input id="inp" maxlength="280" autocomplete="off" autocorrect="off" spellcheck="true" placeholder="What does this place feel like right now?"/>
+        <input id="inp" maxlength="280" placeholder="What does this place feel like right now?"/>
         <button id="sbtn">Offer your sense to the aura</button>
       </div>
     </div>
@@ -2050,8 +1968,10 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 <div id="pcard"><div id="pc-card">
   <div id="pc-head"><span>Aura postcard — preview</span><span id="pc-close">✕</span></div>
   <canvas id="pc-cv" width="1080" height="1350"></canvas>
+  <div id="pc-hint">Tap the card to save it, then post it anywhere ✧</div>
   <div id="pc-row"><button type="button" id="pc-save">⇩ Save image</button><button type="button" id="pc-sharebtn">↗ Share</button></div>
 </div></div>
+<div id="onboard"></div>
 <div id="pubprofile-page">
   <button class="qz-back" id="pp2-back">← Return</button>
   <div id="pp2-inner">
@@ -2119,13 +2039,6 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 </div>
 <script>
 document.addEventListener('DOMContentLoaded',function(){
-/* ── Is this visit an arrival? Decided FIRST, because the page's own older
-   arrival ritual is built further down and must not be built if it is. ── */
-try{
-  var _crossed=false; try{_crossed=localStorage.getItem('aurasense_threshold_crossed')==='1';}catch(e){}
-  var _forced=false;  try{_forced=/[?&]seeking=1/.test(location.search);}catch(e){}
-  if(!_crossed||_forced) document.documentElement.classList.add('thr-running');
-}catch(e){}
 const SENSES=[
   {id:"sound",realm:"external",label:"Sound",icon:"♪",color:"#6d9eeb",freqs:[[528,.0,.18,.05,2.2],[660,.2,.09,.05,1.0]],examples:["Birdsong every morning — no traffic until 8am","Bass from the pub shakes the walls on Fridays","Church bells at noon, gentle and distant"]},
   {id:"smell",realm:"external",label:"Smell",icon:"〜",color:"#93c47d",freqs:[[396,.0,.15,.1,2.4],[528,.35,.09,.1,1.5]],examples:["Pine air in the evenings — first time I breathed deeply","Weed smoke drifts through the walls after 9pm","Fresh bread from the bakery at 7am"]},
@@ -2164,31 +2077,9 @@ const SENSES=[
   {id:"clairsentience",realm:"internal",label:"Clairsentience",icon:"❋",color:"#f0a8c0",freqs:[[528,.0,.08,.09,3.2],[792,.3,.05,.07,2.4],[1056,.65,.03,.06,1.9]],examples:["I feel what this room has been holding","The emotion of this place enters me whole"]},
   {id:"claircognizance",realm:"internal",label:"Claircognizance",icon:"✶",color:"#ffd9a0",freqs:[[594,.0,.08,.08,3.0],[891,.3,.05,.06,2.2],[1188,.6,.03,.05,1.8]],examples:["I simply knew, here, without knowing how","An undeniable certainty arrived at this spot"]},
   {id:"synchronicity",realm:"internal",label:"Synchronicity",icon:"∞",color:"#c9b8f0",freqs:[[528,.0,.07,.09,3.2],[792,.4,.045,.07,2.4]],examples:["The same symbol reached me twice today, from strangers","This place answered a thought I hadn\u2019t spoken","Two moments rhymed here — I felt the pattern wink"]},
-  {id:"heaviness",realm:"internal",label:"Heaviness",icon:"⊻",color:"#8f86b8",freqs:[[147,0.0,0.18,0.11,3.4],[110,0.35,0.1,0.1,2.6]],examples:["A weight settles on me the moment I arrive here","Everything feels heavier on this stretch of road","I carry something extra whenever I stand in this room"]},
-  {id:"weariness",realm:"internal",label:"Weariness",icon:"⌒",color:"#a99cc9",freqs:[[196,0.0,0.16,0.1,3.2],[147,0.3,0.09,0.09,2.4]],examples:["A tiredness that sleep does not touch","I run out here before the day is done","Worn thin by this place, without knowing why"]},
-  {id:"numbness",realm:"internal",label:"Numbness",icon:"◌",color:"#9aa3ad",freqs:[[210,0.0,0.1,0.12,3.4]],examples:["I feel very little here, and that is its own signal","Something goes quiet in me on this street","Neither good nor bad — just distant"]},
-  {id:"rest",realm:"internal",label:"Rest",icon:"⌣",color:"#8fd8b0",freqs:[[174,0.0,0.2,0.1,3.0],[261,0.25,0.11,0.09,2.2]],examples:["My shoulders drop as soon as I get here","This is where I stop bracing","A place my body treats as safe enough to soften"]},
-  {id:"peace",realm:"internal",label:"Peace",icon:"⊙",color:"#aee0d8",freqs:[[174,0.0,0.22,0.11,3.4],[261,0.3,0.12,0.09,2.6]],examples:["Genuine quiet — the kind that reaches inside","Nothing here is asking anything of me","Still, and not empty"]},
-  {id:"relief",realm:"internal",label:"Relief",icon:"⌢",color:"#ffd9a0",freqs:[[432,0.0,0.15,0.09,2.6],[324,0.3,0.09,0.08,2.0]],examples:["The tightness let go the moment I turned this corner","Something I had been holding finally set down","Not joy — release"]},
-  {id:"hope",realm:"internal",label:"Hope",icon:"⊹",color:"#ffe0a0",freqs:[[396,0.0,0.14,0.08,2.6],[528,0.28,0.1,0.07,2.0]],examples:["Something here suggests things could change","A small opening, and I noticed it","The first light I have felt in a while"]},
-  {id:"gratitude",realm:"internal",label:"Gratitude",icon:"◡",color:"#f2ce8e",freqs:[[639,0.0,0.15,0.07,2.4],[852,0.25,0.09,0.06,1.8]],examples:["I stood here and was simply thankful","Someone was kind on this corner and it stayed with me","Glad, quietly, to have been here at all"]},
-  {id:"wonder",realm:"internal",label:"Wonder",icon:"◉",color:"#d8b8ff",freqs:[[741,0.0,0.13,0.08,2.8],[988,0.3,0.08,0.06,2.0]],examples:["Something here is larger than I can account for","I stopped walking without meaning to","The sky did something I had no words for"]},
-  {id:"love",realm:"internal",label:"Love",icon:"♡",color:"#ff9db4",freqs:[[528,0.0,0.17,0.07,2.4],[639,0.2,0.12,0.06,2.0]],examples:["This place holds someone I love","Warmth that has a direction to it","I was cared for here, and the street remembers"]},
-  {id:"joy",realm:"internal",label:"Joy",icon:"✧",color:"#ffcf6e",freqs:[[528,0.0,0.16,0.05,1.8],[660,0.15,0.12,0.05,1.5],[792,0.3,0.09,0.05,1.2]],examples:["Something lifted in me here and stayed lifted","I laughed out loud on this pavement","Bright, and not for any reason I can name"]},
   {id:"memory",realm:"memory",label:"Memory",icon:"\u2756",color:"#e8b76b",hidden:true,freqs:[[432,.0,.16,.08,2.6],[540,.3,.08,.08,1.4]],examples:["The summer we spent here as kids","Where we said goodbye, and meant it","The night everything changed for us"]},
 ];
 const SENSE_SYMBOLS={
-heaviness:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(143,134,184,0.55))"><g stroke="#8f86b8" stroke-width="3.2" fill="none"><path d="M12 17 Q24 26 36 17"/><circle cx="24" cy="31" r="3.2" fill="#8f86b8" stroke="none"/></g></svg>',
-weariness:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(169,156,201,0.55))"><g stroke="#a99cc9" stroke-width="3.2" fill="none"><path d="M11 21 A15 15 0 0 1 37 21"/><circle cx="24" cy="32" r="3.2" fill="#a99cc9" stroke="none"/></g></svg>',
-numbness:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(154,163,173,0.55))"><g stroke="#9aa3ad" stroke-width="3.2" fill="none"><circle cx="24" cy="24" r="3" fill="#9aa3ad" stroke="none"/><path d="M11 24a13 13 0 0 1 8-12"/><path d="M37 24a13 13 0 0 1-8 12"/></g></svg>',
-rest:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(143,216,176,0.55))"><g stroke="#8fd8b0" stroke-width="3.2" fill="none"><path d="M12 26q12 12 24 0"/><circle cx="24" cy="24" r="3.4" fill="#8fd8b0" stroke="none"/></g></svg>',
-peace:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(174,224,216,0.55))"><g stroke="#aee0d8" stroke-width="3.2" fill="none"><circle cx="24" cy="24" r="11"/><path d="M17 24h14"/></g></svg>',
-relief:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,217,160,0.55))"><g stroke="#ffd9a0" stroke-width="3.2" fill="none"><path d="M13 31q11 10 22 0"/><circle cx="24" cy="22" r="3.2" fill="#ffd9a0" stroke="none"/><path d="M24 13v-4"/></g></svg>',
-hope:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,224,160,0.55))"><g stroke="#ffe0a0" stroke-width="3.2" fill="none"><path d="M10 32h28"/><circle cx="24" cy="24" r="3.4" fill="#ffe0a0" stroke="none"/><path d="M24 17v-4M17 19l-3-3M31 19l3-3" opacity="0.8"/></g></svg>',
-gratitude:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(242,206,142,0.55))"><g stroke="#f2ce8e" stroke-width="3.2" fill="none"><path d="M14 26a10 10 0 0 0 20 0"/><circle cx="24" cy="16" r="3" fill="#f2ce8e" stroke="none"/></g></svg>',
-wonder:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(216,184,255,0.55))"><g stroke="#d8b8ff" stroke-width="3.2" fill="none"><circle cx="22" cy="26" r="3" fill="#d8b8ff" stroke="none"/><ellipse cx="26" cy="22" rx="12" ry="7" transform="rotate(-24 26 22)"/></g></svg>',
-love:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,157,180,0.55))"><g stroke="#ff9db4" stroke-width="3.2" fill="none"><circle cx="19" cy="24" r="8"/><circle cx="29" cy="24" r="8"/><circle cx="24" cy="24" r="2.6" fill="#ff9db4" stroke="none"/></g></svg>',
-joy:'<svg width="22" height="22" viewBox="0 0 48 48" fill="none" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,207,110,0.55))"><g stroke="#ffcf6e" stroke-width="3.2" fill="none"><circle cx="24" cy="30" r="3" fill="#ffcf6e" stroke="none"/><path d="M24 26 C 23 20, 20 16, 15 11"/><path d="M24 26 C 24 19, 24 14, 24 8"/><path d="M24 26 C 25 20, 28 16, 33 11"/></g></svg>',
 memory:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,183,107,0.55))"><defs><radialGradient id="as-memHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe6b0" stop-opacity="0.34"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient><radialGradient id="as-memCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fffaf0" stop-opacity="1"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-memHalo)"/><path d="M48 54 a6 6 0 1 1 6 -6 a12 12 0 1 0 -12 12 a18 18 0 1 1 18 -18 a24 24 0 1 0 -24 24" fill="none" stroke="#f0cd8a" stroke-width="2.4" stroke-linecap="round" opacity="0.9" class="as-slowShimmer"/><circle cx="48" cy="48" r="7" fill="url(#as-memCore)" class="as-breathe"/></svg>',
 sound:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(180,200,255,0.42))"><defs><radialGradient id="as-sndCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient><radialGradient id="as-sndHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8c8ff" stop-opacity="0.30"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-sndHalo)"/><g class="as-wave"><path d="M6 48 Q 20 28, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="2.3" stroke-linecap="round" opacity="0.82" class="as-shimmer"/><path d="M24 64 Q 32 56, 40 64 T 56 64 T 72 64" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/></g><circle cx="48" cy="48" r="14" fill="url(#as-sndCore)" class="as-breathe"/></svg>',
 smell:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(190,235,170,0.5))"><defs><radialGradient id="as-smlCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient><radialGradient id="as-smlHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#beeba9" stop-opacity="0.32"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-smlHalo)"/><g class="as-drift"><path d="M40 78 C 36 60, 50 52, 42 36 C 36 24, 48 18, 44 8" fill="none" stroke="#beeba9" stroke-width="3" stroke-linecap="round" opacity="0.95" class="as-shimmer"/><path d="M55 78 C 59 58, 47 50, 57 34 C 63 22, 51 16, 57 6" fill="none" stroke="#beeba9" stroke-width="2.4" stroke-linecap="round" opacity="0.7"/><g class="as-wiggle"><path d="M47 74 C 52 60, 43 52, 50 38 C 54 30, 45 26, 49 20" fill="none" stroke="#beeba9" stroke-width="2" stroke-linecap="round" opacity="0.6"/></g></g><ellipse cx="48" cy="80" rx="16" ry="7" fill="url(#as-smlCore)" class="as-breathe"/></svg>',
@@ -2376,17 +2267,11 @@ let atOn=false, atWatch=null, atPath=[], atDist=0, atStart=0, atMet=0, atSenses=
     // place, so the whole place carries it: a breathing field with a luminous edge, filling
     // the place's own extent. No hard border is drawn, because an aura does not have one.
     if(p.field&&p.field.bbox){ drawPlaceField(ctx,p,col,life,i); return; }
-    const breath=0.86+Math.sin(T*0.55+i*1.3)*0.34;
+    const breath=0.82+Math.sin(T*0.55+i*1.3)*0.30;
     // AURATOUR — an aura met on foot swells and settles, over about three seconds.
     let _sw=1;
-    if(p._met){const e=(Date.now()-p._met)/9000;
-      /* a long swell that eases down to the resting breath instead of snapping */
-      _sw = e>=1 ? 1 : 1 + 1.15*Math.sin(Math.PI*Math.min(1,e))*(1-e*0.15);
-      if(e>=1)p._met=0;}
-    /* a newly given light keeps a little extra brightness for a full minute,
-       so that arriving at it late still finds something alive */
-    const _fresh=Math.max(0,1-(Date.now()-p.born)/60000);
-    const r=(45+p.intensity*35)*breath*life*_sw*(1+0.10*_fresh)*Math.pow(2,(map.getZoom()-14)*0.7);
+    if(p._met){const e=(Date.now()-p._met)/3000;_sw=e>=1?1:(1+1.35*Math.sin(Math.PI*Math.min(1,e))*(1-e*0.35));if(e>=1)p._met=0;}
+    const r=(45+p.intensity*35)*breath*life*_sw*Math.pow(2,(map.getZoom()-14)*0.7);
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
     const swell=(breath-0.52)/0.60;
     // From the street the field is intimate; seen from the town it turns to mist — mid and inner bands thin toward the outer fog.
@@ -2613,29 +2498,36 @@ function tabZoomSync(){
 }
 try{map.on('zoomend',tabZoomSync);}catch(e){}
 // Sense buttons — two rows: the world around you (external) and how it makes you feel (internal)
+const stip=document.getElementById('stip');
 const allEl=document.getElementById('scats-all');
 const SGRP_ICONS=[
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9fc4ff" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(159,196,255,.6))"><path d="M3 15 Q12 6 21 15"/><path d="M5 18.5 H19" opacity=".5"/><circle cx="12" cy="11.5" r="1.6" fill="#eaf3ff" stroke="none"/></svg>',
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f0b090" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(240,176,144,.6))"><rect x="8" y="6" width="8" height="12" rx="4"/><path d="M12 3 v3 M12 18 v3" opacity=".6"/><circle cx="12" cy="12" r="1.6" fill="#ffe9dc" stroke="none"/></svg>',
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f0a8c0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(240,168,192,.6))"><path d="M4 16 Q8 8 12 12 M20 16 Q16 8 12 12"/><circle cx="12" cy="12" r="1.6" fill="#ffe4ee" stroke="none"/></svg>',
-'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cf9ff0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(207,159,240,.6))"><circle cx="12" cy="12" r="5" opacity=".55"/><path d="M12 3 v3 M12 18 v3 M3 12 h3 M18 12 h3" opacity=".8"/><circle cx="12" cy="12" r="1.5" fill="#f3e8ff" stroke="none"/></svg>',
-'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a9d8c0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(169,216,192,.6))"><path d="M2 12h6M16 12h6"/><circle cx="12" cy="12" r="3.2"/></svg>'];
+'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cf9ff0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(207,159,240,.6))"><circle cx="12" cy="12" r="5" opacity=".55"/><path d="M12 3 v3 M12 18 v3 M3 12 h3 M18 12 h3" opacity=".8"/><circle cx="12" cy="12" r="1.5" fill="#f3e8ff" stroke="none"/></svg>'];
 const SENSE_CATS=[
  {t:'External senses',s:'Exteroception \u2014 the physical world around you',ids:['light','sound','taste','touch','smell','heat','cold','vibration','atmosphere','nature']},
  {t:'Internal senses',s:'Interoception \u2014 the felt state of your own body',ids:['hunger','hydration','innertemp','pain','proprioception']},
  {t:'Socio-emotional',s:'Neuroception \u2014 safety, stress and connection',ids:['safety','stress','belonging','anxiety','socialanxiety','overwhelm','loneliness']},
- {t:'Mind, time & beyond',s:'Cognitive & temporal \u2014 time, intuition and the further senses',ids:['chronosception','intuition','dream','preddream','premonition','dejavu','clairvoyance','clairaudience','clairsentience','claircognizance','synchronicity','anomaly']},
- {t:'Weight and light',s:'The felt continuum \u2014 what presses down, what rests, and what opens',ids:['heaviness','weariness','numbness','rest','peace','relief','hope','gratitude','wonder','love','joy']}
+ {t:'Mind, time & beyond',s:'Cognitive & temporal \u2014 time, intuition and the further senses',ids:['chronosception','intuition','dream','preddream','premonition','dejavu','clairvoyance','clairaudience','clairsentience','claircognizance','synchronicity','anomaly']}
 ];
 function senseChip(s){
   const b=document.createElement('button');
   b.className='sc';
-  b.dataset.sid=s.id;
   b.style.setProperty('--c',s.color);
   b.innerHTML=`<span>${SENSE_SYMBOLS[s.id]}</span>${s.label}`;
   b.onclick=()=>{selSense=s.id;const _p=document.getElementById('panel');if(_p)_p.classList.remove('just-offered','offer-quiet');_p.classList.add('sense-picked');document.querySelectorAll('.sc').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');const mb=document.getElementById('memory-btn');if(mb)mb.classList.remove('sel-mem');const sc=document.getElementById('sense-confirm');if(sc)sc.textContent='Aurasense of '+s.label+' — add more information about this (optional):';const inp=document.getElementById('inp');if(inp){inp.placeholder='Describe this '+s.label.toLowerCase()+'…';inp.focus();inp.classList.add('inp-glow');try{keepAboveKeyboard(inp);}catch(e){}}const sbg=document.getElementById('sbtn');if(sbg)sbg.classList.add('sbtn-glow');/* Nothing is scrolled. The Offer row is sticky at the foot of the sheet at every width, so the
      symbols stay exactly where the senser left them. */};
-  /* the hovering example box: deleted 23 Aug 2026 with the other tips */
+  b.onmouseenter=e=>{
+    if(!(window.matchMedia&&window.matchMedia('(hover: hover)').matches))return;
+    const ex=s.examples[Math.floor(Math.random()*s.examples.length)];
+    stip.innerHTML=`<span style="color:${s.color}">${s.icon} ${s.label}</span><br><br>"${ex}"`;
+    stip.style.opacity='1';
+    const rect=b.getBoundingClientRect();
+    stip.style.left=Math.min(rect.left,window.innerWidth-205)+'px';
+    stip.style.top=(rect.top-88)+'px';
+  };
+  b.onmouseleave=()=>{stip.style.opacity='0'};
   return b;
 }
 if(allEl){
@@ -2779,7 +2671,6 @@ document.querySelectorAll('.tab-mi[data-i]').forEach(mi=>{ mi.onclick=()=>goToLe
   document.addEventListener('click',(e)=>{ if(!e.target.closest('.tab-group'))closeTabMenus(); });
 })();
 
-let lastSearchedPlace=null;
 // ---- Framing law: never fitBounds a returned bbox (it oscillates and ignores maxZoom on big areas). ----
 // Fly to the feature's own centre at a zoom derived from its bbox span (log2), clamped per kind. Every number below is tunable.
 const ZOOM_CLAMP={place:[10.6,13.6,0.6],locality:[11.4,14.2,0.7],district:[7.4,11.5,0.5],postcode:[13.5,16,0.8],neighborhood:[13,16,0.8],region:[4.6,9.6,0.45],country:[1.55,6.2,0.45]};
@@ -2830,23 +2721,8 @@ let searchMarker=null;
 let lastSearchPoint=null;
 let lastClickPoint=null;let senseGateOpen=false;
 let sgrpIntroDone=false;
-function sgrpIntro(){/* the pulsing coach: deleted 23 Aug 2026 with the tips */}
-function openSenseGate(){
-  senseGateOpen=true;
-  try{if(typeof wevOpenId!=='undefined'&&wevOpenId>=0)wevClosePanel();}catch(e){}
-  const p=document.getElementById('panel');
-  if(p){
-    p.classList.remove('locating','just-offered','offer-quiet');
-    /* AND IT MUST ACTUALLY OPEN THE SHEET. The original only removed a class and
-       relied on something else having shown it already. */
-    if(!p.classList.contains('show')&&!p.classList.contains('show-mobile')){
-      p.classList.add(window.innerWidth<=600?'show-mobile':'show');
-    }
-    p.classList.remove('witnessing');
-    try{const _ui=document.getElementById('ui');if(_ui)_ui.classList.add('offer-open');}catch(e){}
-  }
-  setTimeout(sgrpIntro,320);
-}
+function sgrpIntro(){if(sgrpIntroDone)return;sgrpIntroDone=true;const cs=Array.prototype.slice.call(document.querySelectorAll('.sgrp-c'));cs.forEach((el,i)=>setTimeout(()=>{el.classList.add('pulsing');setTimeout(()=>el.classList.remove('pulsing'),1650);},i*650));}
+function openSenseGate(){senseGateOpen=true;const p=document.getElementById('panel');if(p)p.classList.remove('locating');setTimeout(sgrpIntro,320);}
 let lastSearchLabel=null;
 let lastSearchName=null;
 function dropSearchMarker(center,placeName){
@@ -2895,6 +2771,36 @@ const ASCENT_WORDS={
   3:'At the scale of a nation it is one point of light. It is still the one you gave.',
   4:'One light among all of them. Yours is in there.'
 };
+// THE ASCENT — THE CLIMB ITSELF (build name: location lighting sequence).
+// After an offering the light walks the row of scales — My Aura, Street, Town, Region, Nation,
+// World — and comes home to My Aura. It shows what the offering has joined.
+// It only PAINTS: auraLevel is never touched, the map never moves, and nothing here can steal
+// the scale the senser is actually standing at.
+const ASCENT_STOPS=['orbMy','orb0','orb1','orb2','orb3','orb4','orbMy'];
+let _ascentTimers=[];
+function ascentClimb(color){
+  if(window.AS_CALM)return;                                   // in Calm the scales rest
+  try{if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}
+  try{_ascentTimers.forEach(t=>clearTimeout(t));}catch(e){}
+  _ascentTimers=[];
+  const col=color||'#c4b5fd';
+  ASCENT_STOPS.forEach((id,k)=>{
+    _ascentTimers.push(setTimeout(()=>{
+      try{
+        let orb=document.getElementById(id);
+        // On a phone, Region and Nation fold inside the Town button. Light Town in their place
+        // rather than lighting nothing at all.
+        if(orb&&orb.getBoundingClientRect().width<1)orb=document.getElementById('orb1');
+        if(!orb)return;
+        const btn=orb.closest?orb.closest('.tab'):null;
+        if(btn)btn.style.setProperty('--asc',col);
+        orb.classList.remove('ascending');void orb.offsetWidth;orb.classList.add('ascending');
+        if(btn){btn.classList.remove('asc-lit');void btn.offsetWidth;btn.classList.add('asc-lit');}
+        setTimeout(()=>{try{orb.classList.remove('ascending');if(btn){btn.classList.remove('asc-lit');btn.style.removeProperty('--asc');}}catch(e){}},1150);
+      }catch(e){}
+    },k*760));
+  });
+}
 function ascentCheck(lv){
   if(!ascent||!lv)return;
   // Never speak over another message. The World arrival tip runs twelve seconds; the ascent
@@ -3270,14 +3176,8 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
 }
 
 map.on('click',async function(e){
-  /* A tap on a NEW spot begins a new offering. Anything the browser restored
-     into the box from a previous visit is cleared before it can be sent —
-     but text typed in this session is kept, because typing then tapping the
-     map is a real way to offer. */
-  try{const _i=document.getElementById('inp');
-      if(_i&&!window.__inpTouched&&_i.value){_i.value='';}}catch(_){}
   // World-event glows own their taps — the offering flow steps aside when a glow is under the finger.
-  try{if(typeof wevReady!=='undefined'&&wevReady&&map.queryRenderedFeatures){const _wh=(map.getZoom()<10?map.queryRenderedFeatures(e.point,{layers:['wev-core','wev-dot']}):null);if(_wh&&_wh.length)return;}}catch(_){}
+  try{if(typeof wevReady!=='undefined'&&wevReady&&map.queryRenderedFeatures){const _wh=map.queryRenderedFeatures(e.point,{layers:['wev-mid','wev-core','wev-dot']});if(_wh&&_wh.length)return;}}catch(_){}
   // An open world-event panel closes on the next tap anywhere — that tap is a dismissal, never an offering.
   try{if(typeof wevOpenId!=='undefined'&&wevOpenId>=0){wevClosePanel();closeExplore();return;}}catch(_){}
   // At planet height there is no single place to offer to — a bare tap rests the view, it does not open the sheet.
@@ -3398,24 +3298,23 @@ function drawPlaceField(c,p,col,life,i){
 
     // the haze within — soft, never solid, so the map still reads through it
     const g=c.createRadialGradient(cx,cy,0,cx,cy,Math.max(rx,ry)*breath);
-    g.addColorStop(0,   hexA(col,(0.30+0.09*swell)*life));
-    g.addColorStop(0.55,hexA(col,(0.17+0.05*swell)*life));
+    g.addColorStop(0,   hexA(col,(0.13+0.05*swell)*life));
+    g.addColorStop(0.55,hexA(col,(0.08+0.03*swell)*life));
     g.addColorStop(1,   hexA(col,0));
     c.fillStyle=g; c.fill();
 
     // the luminous edge — the outline Karl asked for, breathing rather than fixed
     c.save();
-    c.lineWidth=2.1;
-    c.strokeStyle=hexA(col,(0.62+0.30*swell)*life);
-    c.shadowColor=col; c.shadowBlur=22+12*swell;
+    c.lineWidth=1.5;
+    c.strokeStyle=hexA(col,(0.42+0.30*swell)*life);
+    c.shadowColor=col; c.shadowBlur=16+10*swell;
     c.stroke();
     c.restore();
 
     // a small steady heart at the middle, so the place still has a centre to find
-    const cr=15*(0.9+0.2*swell)*life;
+    const cr=8*(0.9+0.2*swell)*life;
     const core=c.createRadialGradient(cx,cy,0,cx,cy,cr);
-    core.addColorStop(0,hexA('#ffffff',0.95*life));
-    core.addColorStop(0.42,hexA(col,0.75*life));
+    core.addColorStop(0,hexA('#ffffff',0.75*life));
     core.addColorStop(1,hexA(col,0));
     c.fillStyle=core;c.beginPath();c.arc(cx,cy,cr,0,Math.PI*2);c.fill();
   }catch(e){}
@@ -3440,56 +3339,15 @@ function submit(lat,lng,text){
   try{document.body.classList.remove('first-quiet');}catch(e){}
   try{const _rb=document.getElementById('sbtn');if(_rb)_rb.classList.remove('ripen');}catch(e){}
   const pp=(typeof pendingPhoto!=='undefined')?pendingPhoto:null;
-  /* step aside so the light can be seen landing */
-  try{
-    const _p=document.getElementById('panel');
-    if(_p){ _p.classList.add('witnessing');
-      clearTimeout(window.__witnessT);
-      window.__witnessT=setTimeout(()=>{try{_p.classList.remove('witnessing');}catch(e){}},6000);
-      const _back=()=>{try{_p.classList.remove('witnessing');clearTimeout(window.__witnessT);}catch(e){}};
-      _p.addEventListener('pointerdown',_back,{once:true});
-    }
-  }catch(e){}
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);if(!s)return;
-  /* ── THE ASCENT ── the light travels to My Aura, then each scale lights in
-     turn: My Aura, Street, Town, Region, Nation, World, and home again. It says
-     what the offering has joined without a single word. One step every 420ms —
-     about 2.4 per second, well under the 3 Hz law. */
-  try{
-    const _c=s.color||'#a78bfa';
-    setTimeout(()=>{try{flyToMyAura(_c);}catch(e){}},1500);
-    const seq=[document.querySelector('.tab-myaura'),
-               document.querySelector('.tab[data-i="0"]'),
-               document.querySelector('.tab[data-i="1"]'),
-               document.querySelector('.tab[data-i="2"]'),
-               document.querySelector('.tab[data-i="3"]'),
-               document.querySelector('.tab[data-i="4"]'),
-               document.querySelector('.tab-myaura')];
-    seq.forEach((el,k)=>{
-      if(!el) return;
-      setTimeout(()=>{
-        try{ el.style.setProperty('--rise',_c); el.classList.add('rising');
-          setTimeout(()=>{try{el.classList.remove('rising');}catch(e){}},760); }catch(e){}
-      },2100+k*420);
-    });
-  }catch(e){}
-
   // Offering from a height: the aura lands where you are looking, and the map descends to meet it.
   // The scale it was given from travels with it — a town offering belongs to the town, honestly labelled.
   let _oz=15;try{_oz=map.getZoom();}catch(e){}
   let _gScale='street';
-  // If the person searched a place by name and is still looking at it, THAT is the
-  // place they are lighting — whatever zoom the town's own size happened to land on.
-  let _sp=null;
-  try{ if(lastSearchedPlace&&(Date.now()-lastSearchedPlace.at)<1800000){
-        const _c=map.getCenter();
-        if(Math.abs(_c.lng-lastSearchedPlace.center[0])<0.6&&Math.abs(_c.lat-lastSearchedPlace.center[1])<0.6)
-          _sp=lastSearchedPlace; } }catch(e){}
   if(_oz<13){
     _gScale=(_oz>=10.5)?'town':(_oz>=7)?'region':(_oz>=3.6)?'nation':'world';
-    if(_sp){ lng=_sp.center[0]; lat=_sp.center[1]; }
-    else try{const _c=map.getCenter();lat=_c.lat;lng=_c.lng;}catch(e){}
+    try{const _c=map.getCenter();lat=_c.lat;lng=_c.lng;}catch(e){}
     // The senser stays where they offered from. The place they gave it to lights up beneath
     // them — dragging them down to a doorstep would answer a question they never asked.
   }
@@ -3497,24 +3355,10 @@ function submit(lat,lng,text){
   const isPriv=(sid==='memory'&&typeof memoryPrivate!=='undefined'&&memoryPrivate);
   const pubText=isPriv?'(a memory, kept private)':text;
   const _ap={lat,lng,sense:sid,text,born:Date.now(),intensity:1,phase:Math.random()*Math.PI*2,priv:isPriv,photo:pp,scale:_gScale};
-  try{ if(typeof applyPrecision==='function'){
-    const _pp=applyPrecision(_ap.lat,_ap.lng); _ap.lat=_pp.lat; _ap.lng=_pp.lng; } }catch(e){}
   auraPoints.push(_ap);
-  /* the bloom begins when the map SETTLES, not when the button was pressed —
-     otherwise it is over before the person has arrived to see it */
-  _ap._met=Date.now();
-  try{ map.once('idle',function(){ _ap._met=Date.now(); }); }catch(e){}
-  setTimeout(function(){ _ap._met=Date.now(); },2600);
   // Given from a height, the whole place takes the light. Its extent is fetched, then the
   // field blooms across it — the senser sees their town, region or nation light up beneath them.
   if(_gScale!=='street'){
-    // The searched extent is already in hand — the place lights at once, with no gap
-    // in which it renders as a point and then changes its mind.
-    if(_sp&&_sp.bbox){
-      _ap.field={bbox:_sp.bbox,name:_sp.name,scale:_gScale};
-      const _w0={town:'town',region:'region',nation:'nation',world:'living Earth'}[_gScale]||'place';
-      try{showMsg('\u2727 The whole '+_w0+' carries it \u2014 '+_sp.name+' is lit with what you gave.',7000,'witness',s.color);}catch(e){}
-    }else
     placeExtent(lat,lng,_gScale).then(ex=>{
       if(!ex)return;
       _ap.field={bbox:ex.bbox,name:ex.name,scale:_gScale};
@@ -3545,6 +3389,8 @@ function submit(lat,lng,text){
   // and the first time the senser widens out to a scale they have not yet seen it from, it says so
   // once, quietly, in their own colour. Nothing invented: it is the very point they placed.
   ascent={lat:lat,lng:lng,color:s.color,from:Date.now(),seen:{0:true}};
+  // THE CLIMB — begins once the witness strip has risen, so it never competes with the landing.
+  try{setTimeout(()=>{try{ascentClimb(s.color);}catch(e){}},4200);}catch(e){}
   const _finishPlace=(place)=>{
     if(typeof gateSaveOffering==='function')gateSaveOffering({sense:sid,text:text,priv:isPriv,lat:lat,lng:lng,place:place||null,scale:_gScale,born:Date.now(),_ap:_ap});
     if(!place)return;
@@ -3788,12 +3634,10 @@ const sbtnGo=()=>{
     const lblRef=lastSearchLabel, nameRef=lastSearchName;
     setTimeout(()=>{ if(lblRef)lblRef.textContent='✨ Aura offered at '+nameRef; },3600000);
   }
-  inp.value='';window.__inpTouched=false;emptyPrompted=false;inp.classList.remove('inp-glow');
+  inp.value='';emptyPrompted=false;inp.classList.remove('inp-glow');
   const scd=document.getElementById('sense-confirm');if(scd)scd.textContent='';
   if(typeof clearPhoto==='function')clearPhoto();
 };
-try{const _ii=document.getElementById('inp');
-    if(_ii)_ii.addEventListener('input',()=>{window.__inpTouched=true;});}catch(e){}
 document.getElementById('sbtn').onclick=sbtnGo;
 document.getElementById('sbtn').addEventListener('pointerdown',e=>{if(e.pointerType==='touch'){e.preventDefault();sbtnGo();}});
 document.getElementById('sbtn').addEventListener('touchstart',e=>{e.preventDefault();sbtnGo();},{passive:false});
@@ -3812,28 +3656,12 @@ document.getElementById('sg').onclick=async()=>{
     if(d&&d.features&&d.features.length){
       const f=d.features[0];
       const t=(f.place_type&&f.place_type[0])||'';
-      /* A weak match is a guess. Landing seven thousand kilometres away with
-         nothing placed is worse than saying plainly that it was not found. */
-      const _rel=(typeof f.relevance==='number')?f.relevance:1;
-      const _generic=/^(a|an|the)\s+\w+$|^(park|street|road|town|city|home|work|here|beach|forest|shop|school)$/i.test(q.trim());
-      if(_rel<0.8||_generic){
-        searching=false;
-        showMsg(_generic
-          ? 'That names a kind of place, not a place. Try its actual name \u2014 or use Where I am, or Point on the map.'
-          : 'I could not find that with any confidence, so nothing has moved. Try a street and number, or point it on the map.',
-          7000,'witness','#c4b5fd');
-        return;
-      }
       let name=f.text||f.place_name.split(',')[0];
       if(t==='address'&&f.address)name=f.address+' '+name;
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
       searching=true;
       // Searching a place makes it the spot the tabs and the World view return to.
-      // A place searched by name IS the place being offered to. Its extent came
-      // back with the search, so the offering never has to guess it or wait for it.
-      try{ lastSearchedPlace=(t==='place'||t==='locality'||t==='district'||t==='region'||t==='country')
-        ? {name:name,center:f.center,bbox:f.bbox||null,kind:t,at:Date.now()} : null; }catch(e){}
       if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
@@ -3851,10 +3679,15 @@ document.getElementById('sg').onclick=async()=>{
 };
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
 
-
+const socTip=document.getElementById('soc-tip-el');
 document.querySelectorAll('.soc-btn').forEach(b=>{
-  /* the 'coming soon' hover box: deleted 23 Aug 2026 with the other tips */
-  
+  b.onmouseenter=e=>{
+    socTip.textContent=b.dataset.tip+' — coming soon';
+    socTip.style.display='block';
+    socTip.style.top=(e.clientY+12)+'px';
+    socTip.style.left=Math.min(e.clientX-30,window.innerWidth-180)+'px';
+  };
+  b.onmouseleave=()=>{socTip.style.display='none'};
   b.onclick=()=>{if(myOfferings&&myOfferings[0]){const o=myOfferings[0];openPostcard({title:o.label,color:o.color,words:o.text,place:'📍 '+(o.place||'somewhere on the living map'),symbolSVG:(SENSE_SYMBOLS[o.sense]||'').replace('width="22" height="22"','width="460" height="460"'),photo:o.photo||null});}else showMsg('Offer an aurasense first — then share it as a postcard ✧');};
 });
 
@@ -4268,13 +4101,52 @@ function closeAlphaPage(){const p=document.getElementById('alpha-page');if(p)p.c
   }
 })();
 let maTipShown=false;
-/* showPointTips(): DELETED 23 Aug 2026. It drew "Tip 1 of 3" bubbles with an
-   arrow pointing at a control — the exact thing the tips policy forbids.
-   Every word it showed is kept in Aurasense-Tips-Removed-22Aug2026.txt. */
-function showPointTips(){}
+function showPointTips(steps){
+  const old=document.getElementById('pt-ov');if(old)old.remove();
+  const ov=document.createElement('div');ov.id='pt-ov';
+  ov.style.cssText='position:fixed;inset:0;z-index:2600;pointer-events:none';
+  document.body.appendChild(ov);let idx=0;
+  function drawTip(){
+    ov.innerHTML='';
+    const st=steps[idx];
+    const el=st.sel?document.querySelector(st.sel):null;
+    const bub=document.createElement('div');bub.className='ob-bub';
+    bub.innerHTML='<div class="obt">'+st.t+'</div><div class="obs">'+st.s+'</div><div class="ob-row"><span class="ob-step">Tip '+(idx+1)+' of '+steps.length+'</span><button type="button" class="ob-next">'+(idx<steps.length-1?'Next':'Got it')+'</button></div>';
+    let placed=false;
+    if(el){const r=el.getBoundingClientRect();
+      if(r.width>2&&r.height>2){
+        const big=r.height>260;
+        const px=r.left+r.width/2, py=big?(r.top+r.height*0.26):r.bottom;
+        const bx=Math.max(12,Math.min(px-180,window.innerWidth-372));
+        bub.style.left=bx+'px';bub.style.top=(py+(big?96:26))+'px';ov.appendChild(bub);
+        // Measure the bubble as it truly is, then lift it if its Next button would fall off the screen.
+        try{const bb=bub.getBoundingClientRect();
+          if(bb.bottom>window.innerHeight-14){
+            bub.style.top=Math.max(12,Math.min(py-bb.height-22,window.innerHeight-bb.height-14))+'px';
+          }}catch(e){}
+        const by=parseFloat(bub.style.top)||0;
+        const arr=document.createElement('div');arr.className='ob-arrow';
+        const above=by<py; arr.textContent=above?'\u2193':'\u2191';if(big){arr.style.fontSize='58px';}
+        arr.style.left=(Math.max(20,Math.min(px-15,window.innerWidth-40)))+'px';
+        arr.style.top=(above?(py-70):(py+2))+'px';
+        ov.appendChild(arr);placed=true;
+      }
+    }
+    if(!placed){if(st.sel&&!st._r){st._r=1;setTimeout(drawTip,160);return;}bub.style.left='50%';bub.style.top='42%';bub.style.transform='translate(-50%,-50%)';ov.appendChild(bub);}
+    bub.querySelector('.ob-next').addEventListener('click',()=>{idx++;if(idx<steps.length)drawTip();else ov.remove();});
+  }
+  drawTip();
+}
 function maShowTip(){
   if(maTipShown)return;maTipShown=true;
-  /* tip set deleted 23 Aug 2026 */;
+  showPointTips([
+    {sel:'#ma-canvas',t:'Welcome to your aura ✧',s:'Everything here is yours alone — a living picture of the energy you carry and offer.'},
+    {sel:'#mj-btn',t:'✦ Your journey',s:'Shape your aura, the Soul Search, your life story… each adds real colour, richness and balance to your aura.'},
+    {sel:'#mr-open',t:'🪞 The Mirror',s:'A reflection, only when you ask for one — it speaks back only what your true offerings hold, and asks open questions, never verdicts.'},
+    {sel:'#ss-open',t:'✉ SenseShare',s:'Choose up to three lights and send someone a card that asks them to feel before they read — the looking is the love arriving.'},
+    {sel:'#ma-canvas',t:'Tap any layer of light',s:'Each layer of the ring is influenced by the unique auras you offer, bond with and share in a location — and by the life-experience insights and questions you answer. Tap the layers to see how they change and interact over time, as your life takes shape.'},
+    {sel:'#ma-offerings .ma-offering',t:'Beneath every offering',s:'Visit its place on the map · begin a Weave rhyme · share it as an Aura Postcard.'}
+  ]);
 }
 // The explain card is bottom-anchored and the selfie block was placed by percentage — they met.
 // Now the selfie block is measured to rest exactly above it, at any text length.
@@ -4931,7 +4803,13 @@ function lfSendOffer(){
 let lfTipShown=false;
 function lfShowTip(){
   if(lfTipShown)return;lfTipShown=true;
-  /* tip set deleted 23 Aug 2026 */;
+  showPointTips([
+    {sel:'.lf-sym',t:'Reading the Aura Feed ✧',s:'Each aura carries its sense symbol from the alphasense language — the feeling of a real place, offered by a real person.'},
+    {sel:'.lf-ic[data-act="offer"]',t:'Offer',s:'Give empathy, love, compassion, joy, hope — or the Unspoken — and, where appropriate, what your own life learned. In the giving, a thread of the beheld light joins your own aura.'},
+    {sel:'.lf-ic[data-act="visit"]',t:'Visit',s:'Travel to its place on the living map.'},
+    {sel:'.lf-ic[data-act="comment"]',t:'Question',s:'Ask the Senser a question about the aura they have offered.'},
+    {sel:'.lf-ic[data-act="share"]',t:'Share',s:'Carry it beyond Aurasense as an Aura Postcard.'}
+  ]);
 }
 // THE TRUTH-SWITCH. With the Gate open, the live feed carries only what was truly offered.
 // No invented handles, no invented streets, no arrival every eleven seconds from nobody.
@@ -4977,11 +4855,41 @@ const lfBtn=document.getElementById('livefeed-btn');if(lfBtn)lfBtn.addEventListe
 const lfFull=document.getElementById('feed-full');if(lfFull)lfFull.addEventListener('click',openLiveFeed);
 (function(){let hoverT=null;const open=()=>{hoverT=setTimeout(()=>{if(typeof openLiveFeed==='function')openLiveFeed();},350);};const cancel=()=>{if(hoverT){clearTimeout(hoverT);hoverT=null;}};if(window.matchMedia&&window.matchMedia('(min-width:601px)').matches){[document.getElementById('feed-full')].forEach(el=>{if(el){el.addEventListener('mouseenter',open);el.addEventListener('mouseleave',cancel);}});}})();
 const lfBackBtn=document.getElementById('lf-back');if(lfBackBtn)lfBackBtn.addEventListener('click',closeLiveFeed);
-// ---- First-visit guidance: DELETED 23 Aug 2026. "1 of 3", "2 of 3", "3 of 3",
-//      each with an arrow pointing at a control. Words kept in
-//      Aurasense-Tips-Removed-22Aug2026.txt. The Living Tour replaces it. ----
-function obShow(){}
-/* the walkthrough is gone; nothing is summoned here */
+// ---- First-visit guidance ----
+let obShown=false;
+function obShow(){
+  if(obShown)return;obShown=true;
+  const ob=document.getElementById('onboard');if(!ob)return;
+  const steps=[
+    {sel:null,t:'Welcome to Aurasense',s:'Aurasense reveals the felt energy of places and people. To begin, choose a place to feel — or to offer your own sense to.'},
+    {sel:'.tab-myaura',t:'This is your aura — in the menu',s:'The glowing orb beside My Aura is your living aura. It grows and shifts colour with every sense you offer. Tap it any time to see your aura up close.'},
+    {sel:'#register-btn',t:'Become an Aurasenser',s:'Create your aura so the senses you share become your own.'}
+  ];
+  function finish(){ob.classList.remove('show');ob.innerHTML='';if(typeof twoDoors==='function'&&(!myOfferings||myOfferings.length===0)){twoDoors();}else if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}if(typeof showMsg==='function')showMsg('The world is breathing \u2014 and it senses you here. \u2727 Every glow on this map was a real person, standing still long enough to feel something. Touch the map where you stand, or find a place you love, and offer what it makes you feel.',11500,'witness','#c4b5fd');}else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}}
+  let idx=0;
+  function visible(el){if(!el)return false;const r=el.getBoundingClientRect();return r.width>2&&r.height>2;}
+  function draw(){
+    let st=steps[idx],el=st.sel?document.querySelector(st.sel):null;
+    while(st.sel&&!visible(el)&&idx<steps.length-1){idx++;st=steps[idx];el=st.sel?document.querySelector(st.sel):null;}
+    ob.innerHTML='';
+    const bub=document.createElement('div');bub.className='ob-bub';
+    bub.innerHTML='<div class="obt">'+st.t+'</div><div class="obs">'+st.s+'</div><div class="ob-row"><span class="ob-step">'+(idx+1)+' of '+steps.length+'</span><button class="ob-next">'+(idx<steps.length-1?'Next':'Got it')+'</button></div>';
+    if(st.sel==='#register-btn'){const ttl=bub.querySelector('.obt');if(ttl){ttl.style.cursor='pointer';ttl.style.textDecoration='underline';ttl.style.textDecorationColor='rgba(167,139,250,.7)';ttl.addEventListener('click',()=>{finish();if(typeof openRegister==='function')openRegister();});}}
+    if(st.sel&&visible(el)){
+      const r=el.getBoundingClientRect();
+      let by=r.bottom+18;if(by>window.innerHeight-180)by=Math.max(14,r.top-180);
+      let bx=Math.max(12,Math.min(r.left,window.innerWidth-372));
+      bub.style.left=bx+'px';bub.style.top=by+'px';ob.appendChild(bub);
+      const arr=document.createElement('div');arr.className='ob-arrow'+(st.sel==='.tab-myaura'?' ob-arrow-long':'');arr.textContent='\u2191';
+      arr.style.left=(Math.max(20,Math.min(r.left+r.width/2-10,window.innerWidth-34)))+'px';arr.style.top=(r.bottom+(st.sel==='#my-aura'?-6:4))+'px';ob.appendChild(arr);
+    } else {
+      bub.style.left='50%';bub.style.top='42%';bub.style.transform='translate(-50%,-50%)';ob.appendChild(bub);
+    }
+    bub.querySelector('.ob-next').addEventListener('click',()=>{idx++;if(idx<steps.length)draw();else finish();});
+  }
+  ob.classList.add('show');draw();
+}
+setTimeout(()=>{try{obShow();}catch(e){}},1600);
 // ---- Place-an-aurasense prompt ----
 function openPlacePrompt(heading){const p=document.getElementById('place-prompt');if(!p)return;if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}const t=document.getElementById('pp-title');if(t&&heading)t.textContent=heading;p.classList.add('show');const m=document.getElementById('place-mini');if(m)m.classList.remove('show');const inp=document.getElementById('pp-input');if(inp)setTimeout(()=>{try{inp.focus();}catch(e){}},60);}
 function collapsePlacePrompt(){const p=document.getElementById('place-prompt');if(p)p.classList.remove('show');const m=document.getElementById('place-mini');if(m)m.classList.add('show');}
@@ -5356,75 +5264,9 @@ document.addEventListener('focusout',()=>{setTimeout(()=>{
   function olRun(){const q=(olInput&&olInput.value.trim())||'';if(!q)return;const si=document.getElementById('si'),sg=document.getElementById('sg');if(si)si.value=q;if(sg)sg.click();const panel=document.getElementById('panel');senseGateOpen=true;if(panel)panel.classList.remove('locating');if(olInput)olInput.value='';showMsg('Bringing you there — then choose a symbol and offer your aurasense');}
   if(olGo)olGo.addEventListener('click',olRun);
   if(olInput)olInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();olRun();}});
-  /* ── WHERE I AM ── For a park, a trail, a walk. The device gives a point
-     more exact than any street number ever could. */
-  const olHere=document.getElementById('ol-here');
-  if(olHere) olHere.addEventListener('click',function(){
-    if(!navigator.geolocation){showMsg('This device will not share its position.');return;}
-    olHere.classList.add('waiting'); olHere.textContent='Finding you…';
-    navigator.geolocation.getCurrentPosition(function(pos){
-      olHere.classList.remove('waiting'); olHere.textContent='Where I am';
-      const la=pos.coords.latitude, ln=pos.coords.longitude;
-      const pt=applyPrecision(la,ln);
-      try{
-        flyProgrammatic({center:[pt.lng,pt.lat],zoom:16,duration:1800});
-        lastClickPoint=[pt.lng,pt.lat];
-        anchorPoint={lat:pt.lat,lng:pt.lng,zoom:16};
-        lastSearchedPlace=null;
-        openSenseGate();
-        showMsg(precision==='street'
-          ? 'Here \u2014 softened to the street, not the doorstep.'
-          : 'Here. Now choose what you sense.',4500,'witness','#c4b5fd');
-      }catch(e){}
-    },function(){
-      olHere.classList.remove('waiting'); olHere.textContent='Where I am';
-      showMsg('Your device would not share its position. Point it on the map instead.',5000);
-    },{enableHighAccuracy:true,timeout:12000,maximumAge:60000});
-  });
-
-  /* ── POINT ON THE MAP ── For anywhere with no address, or a place being
-     remembered from elsewhere. Tapping the map always worked; nothing said so. */
-  const olPick=document.getElementById('ol-pick');
-  if(olPick) olPick.addEventListener('click',function(){
-    const p=document.getElementById('panel');
-    /* stepped aside, not shut — it returns the moment the map is tapped */
-    if(p) p.classList.add('witnessing');
-    olPick.classList.add('armed'); olPick.textContent='Tap the map…';
-    showMsg('Tap anywhere on the map to place your light there.',6000,'witness','#c4b5fd');
-    const done=function(){ olPick.classList.remove('armed'); olPick.textContent='Point on the map';
-      try{const _p=document.getElementById('panel'); if(_p)_p.classList.remove('witnessing');}catch(e){} };
-    try{ map.once('click',done); }catch(e){}
-    setTimeout(done,20000);
-  });
-
   const ll=document.getElementById('offer-lastlink');
   if(ll)ll.addEventListener('click',()=>{if(typeof reopenLastAura==='function')reopenLastAura();});
 })();
-/* ── HOW EXACT A LIGHT IS ALLOWED TO BE ────────────────────────────────────
-   An exact point is right for a park bench and wrong for someone's front door.
-   "Just the street" rounds the position to roughly a hundred metres, which is
-   the block rather than the building. It is applied BEFORE the point is stored,
-   so the exact position is never held anywhere. */
-let precision='exact';
-function applyPrecision(lat,lng){
-  if(precision!=='street') return {lat:lat,lng:lng};
-  return {lat:Math.round(lat*1000)/1000, lng:Math.round(lng*1000)/1000};
-}
-(function(){
-  const ex=document.getElementById('prec-exact'), st=document.getElementById('prec-street'),
-        say=document.getElementById('prec-say');
-  function set(v){
-    precision=v;
-    if(ex)ex.classList.toggle('on',v==='exact');
-    if(st)st.classList.toggle('on',v==='street');
-    if(say)say.textContent = v==='exact'
-      ? 'Your light lands where you actually are.'
-      : 'Your light lands on the street, not the doorstep \u2014 about a hundred metres of room.';
-  }
-  if(ex)ex.addEventListener('click',()=>set('exact'));
-  if(st)st.addEventListener('click',()=>set('street'));
-})();
-
 // ---- Photo attach for an offering (front-end preview) ----
 let pendingPhoto=null;
 function clearPhoto(){pendingPhoto=null;const pv=document.getElementById('photo-preview');if(pv)pv.innerHTML='';const pin=document.getElementById('photo-input');if(pin)pin.value='';}
@@ -5707,101 +5549,19 @@ function lsPrev(){lsSaveCurrent();if(lsState.idx>0){lsState.idx--;lsShowQuestion
 // Data honesty, standing law: illustrative kinds only until the Gate's live source is wired.
 // Never simulated specifics, never invented tragedies. Every constriction paired with a doorway.
 const WORLD_EVENTS=[
-
-  // ── CONFLICT & PEACE ──────────────────────────────────────────────────
-  {lat:13.63,lng:25.35,type:'need',fam:'conflict',
-   title:'Darfur \u2014 families living with hunger',
-   note:'Around 19.5 million people in Sudan face acute food insecurity, and famine risk persists across fourteen areas. Half of those needing help are children. Aid is reaching roughly three million people a month against a need far larger.',
-   doorway:'Sudan\u2019s response plan is only a fifth funded \u2014 which means the gap is money and attention, not possibility. Aid moves where the world keeps looking. This is a door that opens by being watched.',
-   src:'UNICEF / IPC / WFP, 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:31.50,lng:34.47,type:'suffering',fam:'conflict',
-   title:'Gaza \u2014 people burying their own',
-   note:'A mass funeral was held this month for 112 Palestinians. Families here are living with loss on a scale that does not fit into a news cycle.',
-   doorway:'Peace has begun in smaller rooms than this one. Every mind that refuses hatred \u2014 including toward those making the decisions \u2014 widens the door a little.',
-   src:'Democracy Now!, 4 Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:50.45,lng:30.52,type:'suffering',fam:'conflict',
-   title:'Ukraine \u2014 nights interrupted',
-   note:'Drone strikes continue to be exchanged, and civilians continue to be among those killed. For millions, the sound of the sky has changed meaning.',
-   doorway:'Wars end. All of them, eventually, and usually sooner than the people inside them can believe. Holding that is not naivety \u2014 it is the thing that makes the ending thinkable.',
-   src:'Democracy Now!, Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:26.57,lng:56.25,type:'need',fam:'decisions',
-   title:'Strait of Hormuz \u2014 a narrow stretch of water the world depends on',
-   note:'About a fifth of the world\u2019s oil passes here, and passage has been disrupted since the spring. Sudan alone draws over half its fertiliser through this strait \u2014 so a decision made about shipping arrives, months later, as a harvest that did or did not happen.',
-   doorway:'Talks toward safe passage are underway. This is the clearest case on the map of a distant decision landing in a distant kitchen \u2014 and of why watching the decision matters as much as watching the hunger.',
-   src:'CNN / UNCTAD, Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  // ── ENVIRONMENT \u2014 HARM AND REPAIR ───────────────────────────────────
-  {lat:38.05,lng:23.73,type:'disaster',fam:'env',
-   title:'Southern Europe \u2014 a summer of fire',
-   note:'Thousands have been evacuated across Greece, Croatia, France, Germany and the UK. Around 500,000 hectares have burned in the EU this year, after western Europe\u2019s warmest June and July on record.',
-   doorway:'Europe has mounted its largest firefighting mobilisation yet \u2014 twenty-two aircraft and hundreds of pre-positioned crews shared across twelve countries. Nations lending each other their firefighters is a quiet kind of proof.',
-   src:'Al Jazeera / Copernicus, 14 Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:44.70,lng:-0.60,type:'disaster',fam:'env',
-   title:'Gironde and Landes \u2014 homes left behind',
-   note:'Around 330,000 people have been moved from their homes in Spain and France this summer. France has passed its national record for hectares burned in a year.',
-   doorway:'People go home again. The rebuilding is slower than the leaving, and it needs the world\u2019s memory to outlast the weather report.',
-   src:'Mappr / EU rescEU, Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:49.60,lng:-119.67,type:'disaster',fam:'env',
-   title:'Okanagan, British Columbia \u2014 a village emptied',
-   note:'The Bald Range fire has forced 20,000 people to evacuate, including the whole village of Summerland. A state of emergency has been declared.',
-   doorway:'This valley has done this before and come back. Neighbours here already know each other\u2019s names \u2014 which is most of what recovery is made of.',
-   src:'CTV News, Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:51.19,lng:-114.47,type:'need',fam:'env',
-   title:'Alberta \u2014 breathing the smoke of other people\u2019s fires',
-   note:'Air quality warnings have run through the summer across the foothills, Calgary, Cochrane and Banff, as smoke arrives from fires in British Columbia and Saskatchewan. Seniors, children, pregnant people and outdoor workers are told to stay inside.',
-   doorway:'Smoke passes, and it always has. But a place that keeps being told to stay indoors is a place worth sensing honestly \u2014 which is exactly what this map is for.',
-   src:'Environment and Climate Change Canada / CochraneNow, 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:-3.12,lng:-60.02,type:'joy',fam:'env',
-   title:'The Amazon \u2014 the forest is losing less of itself',
-   note:'Deforestation alerts in the Brazilian Amazon have fallen to their lowest level in thirteen years \u2014 2,874 square kilometres in the year to July, a 37% annual fall and 56% below the ten-year average. Alerts fell in the Cerrado, Caatinga, Atlantic Forest and Pampa too.',
-   doorway:'A scientist there put it plainly: this is evidence that destruction is not inevitable, and that it responds to what people decide. Fires are still rising even as cutting falls \u2014 so this door is open, not finished.',
-   src:'INPE / Mongabay, Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:4.90,lng:-76.23,type:'disaster',fam:'env',
-   title:'Choc\u00f3, Colombia \u2014 the ground moved',
-   note:'An earthquake struck near San Jos\u00e9 del Palmar, a community of about 4,800 people, 250 miles west of Bogot\u00e1.',
-   doorway:'Small places recover when they are not forgotten in the second week. Attention that arrives late is worth more than attention that arrives loud.',
-   src:'USGS / Euronews, Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:14.47,lng:-90.88,type:'disaster',fam:'env',
-   title:'Fuego, Guatemala \u2014 evacuation under a volcano',
-   note:'A nationwide orange alert was declared after a major eruption of Central America\u2019s most active volcano, with villages evacuated.',
-   doorway:'These communities have lived beside this mountain for generations and know how to leave and how to return. Warning systems that work are the reason this is an evacuation and not a tragedy.',
-   src:'AFP / RNZ, Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:14.60,lng:121.00,type:'disaster',fam:'env',
-   title:'The Philippines \u2014 first in the path of the storms',
-   note:'The archipelago is the first major landmass facing the Pacific cyclone belt, and is struck by an average of twenty storms and typhoons a year.',
-   doorway:'Coastal communities here know how to rebuild. What they need is for the world\u2019s memory to outlast the weather.',
-   src:'Euronews, Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  // ── WORLD EVENTS & GATHERINGS ─────────────────────────────────────────
-  {lat:64.15,lng:-21.94,type:'joy',fam:'events',
-   title:'Iceland \u2014 the sky went dark in the afternoon',
-   note:'On 12 August a total solar eclipse crossed Greenland, Iceland and northern Spain \u2014 the first over mainland Europe since 1999. Iceland, a country of under 400,000 people, expected 20,000 visitors for it.',
-   doorway:'For about two minutes, a great many strangers looked at exactly the same thing at exactly the same time and made the same sound. That is not a small piece of evidence about what we are.',
-   src:'NASA / PBS, 12 Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  {lat:42.34,lng:-3.70,type:'joy',fam:'events',
-   title:'Northern Spain \u2014 an eclipse at sunset',
-   note:'Along the path across Spain the sun was not fully covered until late evening, just before it set \u2014 an eclipse and a sunset in the same few minutes.',
-   doorway:'Let some of this travel. Light is contagious too, and it costs nothing to pass on.',
-   src:'NASA, 12 Aug 2026', gathered:'2026-08-15', compassion:0},
-
-  // ── DECISIONS & TRAJECTORIES ──────────────────────────────────────────
-  {lat:52.52,lng:13.40,type:'need',fam:'decisions',
-   title:'Berlin \u2014 a room deciding what hunger costs',
-   note:'A conference sought to raise a billion dollars toward Sudan\u2019s three-billion-dollar 2026 crisis plan. The plan itself was reduced from the previous year \u2014 not because need fell, but because expectation did.',
-   doorway:'This is a decision, not a weather event. Decisions can be made differently, and rooms like this one have changed their minds before when enough people were watching them.',
-   src:'Health Policy Watch / UNDP, 2026', gathered:'2026-08-15', compassion:0}
-
+  {lat:34.5,lng:69.2,type:'need',fam:'conflict',title:'Communities facing hunger',note:'Families in this region need food and clean water. Held in thought \u2014 and awareness is a beginning.',doorway:'Aid reaches further when the world keeps looking \u2014 steady attention keeps hands, food and water moving here.',compassion:0},
+  {lat:31.5,lng:34.47,type:'suffering',fam:'conflict',title:'People living through conflict',note:'Civilians here are enduring loss and fear. They are being thought of, with compassion.',doorway:'Peace has begun in smaller rooms than this. Every mind that refuses hatred \u2014 including toward those making the decisions \u2014 widens the door.',compassion:0},
+  {lat:37.0,lng:37.4,type:'disaster',fam:'env',title:'Recovering from an earthquake',note:'Towns rebuilding after the ground shook. Awareness and aid still matter here.',doorway:'Rebuilding is already underway \u2014 steady attention after the news moves on is what finishes homes.',compassion:0},
+  {lat:-1.95,lng:30.06,type:'need',fam:'env',title:'A region facing drought',note:'A long dry season is straining whole communities. They are not forgotten.',doorway:'Water projects and patient farming are answering \u2014 care that arrives early softens the hardest months.',compassion:0},
+  {lat:40.81,lng:-74.07,type:'sport',fam:'events',title:'FIFA World Cup 2026 \u2014 New York / New Jersey',note:'The world\u2019s game, gathering millions of hearts. The final comes here on July 19.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
+  {lat:19.30,lng:-99.15,type:'sport',fam:'events',title:'World Cup 2026 \u2014 Mexico City',note:'Estadio Azteca opened this World Cup \u2014 a city alive with song.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
+  {lat:49.28,lng:-123.12,type:'sport',fam:'events',title:'World Cup 2026 \u2014 Vancouver',note:'A coastal city buzzing with matches and shared joy.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
+  {lat:32.75,lng:-97.08,type:'sport',fam:'events',title:'World Cup 2026 \u2014 Dallas',note:'Crowds from every nation, one game in common.',doorway:'Millions of strangers, one game in common \u2014 proof the field can meet in joy at planetary scale.',compassion:0},
+  {lat:51.43,lng:-0.21,type:'sport',fam:'events',title:'Wimbledon, London',note:'The championships in full flow \u2014 quiet courts, held breath, sudden joy.',doorway:'Quiet courts and held breath \u2014 joy shared in stillness travels too.',compassion:0},
+  {lat:41.39,lng:2.17,type:'sport',fam:'events',title:'Tour de France \u2014 Grand D\u00e9part, Barcelona',note:'The great race rolls out from Barcelona this July.',doorway:'A moving celebration \u2014 joy that travels roads gathers everyone it passes.',compassion:0},
+  {lat:14.6,lng:121.0,type:'disaster',fam:'env',title:'After the storm',note:'Coastal communities recovering from a powerful storm.',doorway:'Coastal communities know how to rebuild \u2014 what they need is the world\u2019s memory to outlast the weather.',compassion:0},
+  {lat:-23.55,lng:-46.63,type:'joy',fam:'events',title:'A festival of life',note:'Streets full of music, colour and gladness.',doorway:'Let some of this travel \u2014 light is contagious too.',compassion:0},
+  {lat:48.85,lng:2.35,type:'joy',fam:'events',title:'A city in celebration',note:'A day of collective joy and togetherness.',doorway:'Let some of this travel \u2014 light is contagious too.',compassion:0}
 ];
 const WA_RGB={suffering:'229,90,90',need:'108,158,235',disaster:'240,150,70',joy:'247,206,107',sport:'134,224,192'};
 const WA_HEX={suffering:'#e55a5a',need:'#6c9eeb',disaster:'#f0964a',joy:'#f7ce6b',sport:'#86e0c0'};
@@ -5844,12 +5604,9 @@ function wevAddLayers(){
   ];
   adds.forEach(a=>{try{if(!map.getLayer(a[0]))map.addLayer({id:a[0],type:'circle',source:'wevents',paint:a[1]});}catch(e){console.warn('[wev] layer '+a[0],e);}});
   try{console.log('[wev] layers live:',['wev-outer','wev-mid','wev-core','wev-dot','wev-sent'].filter(id=>{try{return !!map.getLayer(id);}catch(e){return false;}}).join(' '));}catch(e){}
-  // 'wev-mid' is 28px across at town zoom and was catching taps meant for the
-  // map. Only the core takes a tap now, and only above town scale.
-  ['wev-core','wev-dot','wev-sent'].forEach(id=>{
+  ['wev-mid','wev-core','wev-dot','wev-sent'].forEach(id=>{
     try{
-      map.on('click',id,e=>{try{if(map.getZoom()>=10)return;
-        if(e&&e.features&&e.features.length)wevOpenPanel(+e.features[0].properties.i);}catch(_){}});
+      map.on('click',id,e=>{try{if(e&&e.features&&e.features.length)wevOpenPanel(+e.features[0].properties.i);}catch(_){}});
       map.on('mouseenter',id,()=>{try{map.getCanvas().style.cursor='pointer';}catch(_){}});
       map.on('mouseleave',id,()=>{try{map.getCanvas().style.cursor='';}catch(_){}});
     }catch(e){}
@@ -5895,17 +5652,6 @@ function wevOpenPanel(i){
   const t=document.getElementById('wev-t');if(t)t.textContent=ev.title;
   const k=document.getElementById('wev-k');if(k){const _aw=ALPHA_WORDS.find(x=>x.w===({suffering:'Compassion',need:'Hope',disaster:'Renewal',joy:'Joy',sport:'Together'}[ev.type]||'Presence'));k.innerHTML=(_aw?alphaGlyph(_aw,18)+' ':'')+escT((WEV_FAMS[ev.fam]||'')+' \u00b7 '+(WA_LABEL[ev.type]||ev.type));k.style.color=WA_HEX[ev.type]||'#c4b5fd';k.style.display='inline-flex';k.style.alignItems='center';k.style.gap='6px';}
   const n=document.getElementById('wev-n');if(n)n.textContent=ev.note;
-  const sv=document.getElementById('wev-src');
-  if(sv){
-    const MON=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    let g='';
-    if(ev.gathered){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(ev.gathered));
-      g=m?(parseInt(m[3],10)+' '+MON[parseInt(m[2],10)-1]+' '+m[1]):String(ev.gathered);}
-    const bits=[];
-    if(ev.src)bits.push('<b>Source</b> '+escT(String(ev.src)));
-    if(g)bits.push('<b>Gathered</b> '+escT(g));
-    sv.innerHTML=bits.join(' \u00b7 ');
-  }
   try{accRender(ev);}catch(e){}
   const d=document.getElementById('wev-d');if(d)d.textContent=(ev._db&&ev._status==='unverified'?'\u2691 Raised by a senser \u2014 unverified. It stands here fully once three sensers witness it is real.\n':'')+(ev.doorway||'');
   try{
@@ -6314,7 +6060,7 @@ function openSenseShare(){
       +'<div id="ss-s">Where a greeting card does the feeling for you, this asks you to find it. Choose up to three lights and let them carry the weight \u2014 feel each one before you choose it. If you add words, speak from the heart and around the feeling, not at it: never name what the lights already say. Whoever receives this will have to look closely to uncover it \u2014 and that looking is the love arriving.</div>'
       +'<input id="ss-to" maxlength="40" placeholder="For\u2026 (their name \u2014 lives only on the card)" autocomplete="off">'
       +'<div id="ss-pal">'+chips+'</div>'
-      +''
+      +'<div id="ss-hint">tap up to three, in the order they should flow</div>'
       +'<textarea id="ss-msg" maxlength="140" placeholder="From your heart \u2014 around the feeling, not naming it\u2026 (optional)"></textarea>'
       +'<div id="ss-row"><button id="ss-go" type="button">\u2727 Make the postcard</button><button id="ss-x" type="button">not now</button></div>';
     document.body.appendChild(d);
@@ -6919,18 +6665,9 @@ function mvPanel(){
   const o=document.createElement('div');o.id='mv-orb';
   o.title='The Mirror \u2014 mirror, shadow, and the self you are becoming';
   o.innerHTML='<span>\ud83e\ude9e</span>';
-  o.classList.add('mv-waiting');
   document.body.appendChild(o);
-  // It stands on every page — but it does not walk in ahead of the person.
-  // It waits for the first offering, or for a minute of quiet, whichever comes first.
-  var _mvWoke=false;
-  function mvWake(){ if(_mvWoke) return; _mvWoke=true; o.classList.remove('mv-waiting'); }
-  setTimeout(mvWake,60000);
-  try{ document.addEventListener('aurasense:offered',mvWake,{once:true}); }catch(e){}
-  // THE HINT IS DELETED, under the standing tips policy: a tip that explains a
-  // control means the control is not explaining itself. The orb's own title
-  // carries the meaning now, and the Living Tour will carry the rest.
-  let seen=true;try{localStorage.setItem('aurasense_mv_seen','1');}catch(e){}
+  // It stands on every page: a lone hint the first time, then it simply waits.
+  let seen=false;try{seen=localStorage.getItem('aurasense_mv_seen')==='1';}catch(e){}
   if(!seen){
     const h=document.createElement('div');h.id='mv-hint';
     h.textContent='\ud83e\ude9e The Mirror is here on every page \u2014 mirror, shadow, and who you are becoming.';
@@ -7070,7 +6807,7 @@ async function gateLoadEvents(){
       if(!row||!row.id||typeof row.lat!=='number'||typeof row.lng!=='number')return;
       if(WORLD_EVENTS.some(ev=>ev._db===row.id))return;
       const cc=counts[row.id]||{a:0,w:row.witness_count||0};
-      WORLD_EVENTS.push({src:'Raised by a senser',gathered:(row.created_at?String(row.created_at).slice(0,10):''),title:String(row.title||'').slice(0,90),note:String(row.note||'').slice(0,240),doorway:String(row.doorway||'').slice(0,200),type:row.type||'need',fam:row.fam||'news',lat:row.lat,lng:row.lng,compassion:cc.a,_db:row.id,_status:row.status||'unverified',_wit:cc.w});
+      WORLD_EVENTS.push({title:String(row.title||'').slice(0,90),note:String(row.note||'').slice(0,240),doorway:String(row.doorway||'').slice(0,200),type:row.type||'need',fam:row.fam||'news',lat:row.lat,lng:row.lng,compassion:cc.a,_db:row.id,_status:row.status||'unverified',_wit:cc.w});
       added++;
     });
     if(added){try{const s3=map.getSource('wevents');if(s3)s3.setData(wevGeo());}catch(e){}try{if(typeof wevWeaveRefresh==='function')wevWeaveRefresh();}catch(e){}}
@@ -7256,9 +6993,6 @@ document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&
 })();
 (function threshold(){
   try{
-    /* The Seeking is the arrival now. Two arrivals is one too many, and this
-       one was built at z-index 99999 — on top of the Seeking, hiding it. */
-    if(document.documentElement.classList.contains('thr-running'))return;
     var REDUCED=false;try{REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
     var th=document.createElement('div');th.id='threshold';
     th.innerHTML='<div id="th-glow"></div>';
@@ -7458,116 +7192,8 @@ async function gateLoadOfferings(){
   }catch(e){console.warn('[gate] init',e);}
 })();
 
-
-
-/* ═══ THE THRESHOLD ═══ the Seeking, carried at the front of Aurasense ══════
-   The Seeking runs whole and unaltered inside its own frame. That is deliberate:
-   it is the instrument Karl felt-tested, and rebuilding it here would mean two
-   versions drifting apart. It speaks to the map by one message and nothing else.
-
-   It appears on a FIRST VISIT ONLY. Treatise §3.6 — the app that lets you go —
-   and §3.1: crossed once. Anyone who has offered before lands straight on the
-   map, because the threshold has already been crossed. */
-var BUILD='2026-08-24 · 00:40';
-try{
-  var _bs=document.getElementById('build-stamp');
-  if(_bs)_bs.textContent='map build '+BUILD;
-  var _mb=document.createElement('div'); _mb.id='map-build';
-  _mb.textContent='map '+BUILD;
-  document.body.appendChild(_mb);
-  console.log('%c Aurasense build '+BUILD+' ','background:#1a1330;color:#c4b5fd');
-}catch(e){}
-(function(){
-  var KEY='aurasense_threshold_crossed';
-  var crossed=false; try{crossed=localStorage.getItem(KEY)==='1';}catch(e){}
-  var forced=false; try{forced=/[?&]seeking=1/.test(location.search);}catch(e){}
-  if(crossed&&!forced) return;
-
-  /* the map's own dark arrival is removed outright when the Seeking runs —
-     two arrivals is one too many, and it was playing on top of this one */
-  try{document.documentElement.classList.add('thr-running');}catch(e){}
-  try{var _old=document.getElementById('threshold'); if(_old)_old.remove();}catch(e){}
-  var thr=document.createElement('div'); thr.id='thr';
-  var fr=document.createElement('iframe');
-  fr.setAttribute('title','The Seeking');
-  fr.setAttribute('allow','geolocation');
-  fr.src='seeking.html?b='+encodeURIComponent(BUILD);
-  thr.appendChild(fr); document.body.appendChild(thr);
-  document.body.classList.add('thr-open');
-
-  var closed=false;
-  function cross(done){
-    if(closed) return; closed=true;
-    /* Only a FINISHED Seeking counts as crossed. Leaving partway through is not
-       a decision, and should not cost someone the arrival for ever. */
-    if(done){ try{localStorage.setItem(KEY,'1');}catch(e){} }
-    try{document.documentElement.classList.remove('thr-running');}catch(e){}
-    thr.classList.add('thr-gone');
-    document.body.classList.remove('thr-open');
-    setTimeout(function(){ try{thr.remove();}catch(e){} },2400);
-  }
-
-  /* If the frame cannot load at all, the person still reaches the map.
-     A threshold that traps someone is a wall. */
-  var failsafe=setTimeout(function(){ if(!fr.dataset.ok) cross(false); },12000);
-  fr.addEventListener('load',function(){ fr.dataset.ok='1'; clearTimeout(failsafe); });
-
-  window.addEventListener('message',function(ev){
-    var d=ev&&ev.data;
-    if(!d||d.aurasense!=='seeking-complete') return;
-    if(ev.source!==fr.contentWindow) return;         /* only from our own frame */
-    cross(true);
-    try{ carryTheLight(d); }catch(e){ console.warn('[threshold]',e); }
-  },false);
-
-  /* ── carrying what the Seeking gathered into the map's own offering path ──
-     The map's flow is not duplicated here. The sense is chosen by clicking its
-     real chip, exactly as a finger would, so every downstream behaviour stays
-     identical by construction. */
-  function carryTheLight(d){
-    var id=String(d.senseKey||'').toLowerCase();
-    if(typeof SENSES==='undefined') return;
-    if(!SENSES.some(function(s){return s.id===id;})) return;
-
-    var where=String(d.where||'').trim();
-    var m=/^(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)$/.exec(where);
-
-    /* choose the sense by clicking its real chip — the same path a finger takes,
-       so the confirm line, the glow and the offer button all behave as usual */
-    function openWithSense(){
-      var chip=document.querySelector('.sc[data-sid="'+id+'"]');
-      if(chip) chip.click();
-      var ip=document.getElementById('inp');
-      if(ip&&d.words) ip.value=String(d.words).slice(0,280);
-    }
-
-    if(m){
-      /* the device named a point. resolveSpot() reads lastClickPoint, so setting
-         it is exactly what a tap on that spot would have done */
-      var la=parseFloat(m[1]), ln=parseFloat(m[2]);
-      try{ flyProgrammatic({center:[ln,la],zoom:15,duration:2400}); }catch(e){}
-      setTimeout(function(){
-        try{
-          lastClickPoint=[ln,la];
-          anchorPoint={lat:la,lng:ln,zoom:15};
-          openSenseGate();
-        }catch(e){}
-        openWithSense();
-      },2600);
-    }else if(where){
-      /* the person named the place in their own words. The map's own search
-         resolves it, so one geocoder and one framing law govern both routes. */
-      var si=document.getElementById('si'), sg=document.getElementById('sg');
-      if(si&&sg){ si.value=where; sg.click(); setTimeout(openWithSense,3400); }
-      else setTimeout(openWithSense,600);
-    }else{
-      try{ openSenseGate(); }catch(e){}
-      setTimeout(openWithSense,600);
-    }
-  }
-})();
-
 });
 </script>
+<div id="build-stamp">Build 25 Aug 2026 · 01</div>
 </body>
 </html>
