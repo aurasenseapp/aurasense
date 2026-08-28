@@ -452,7 +452,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 08</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 09</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -976,19 +976,20 @@ function qSize(){
 /* the field itself — the study's four layers, riding one breath */
 function qDraw(ms,v,pace,strength){
   if(!qCtx)return;
-  var S=qSig||QDEF, T=ms/1000, cx=qW/2, cy=qH/2, R=Math.min(qW,qH)*0.40;
-  var slow=0.55+pace*0.9;
-  var br=0.5-0.5*Math.cos(2*Math.PI*T/S.breath);
-  var r=R*(0.93+br*0.20)*(0.86+v*0.30)*strength;
+  var S=qSig||QDEF, T=ms/1000, cx=qW/2, cy=qH/2, R=Math.min(qW,qH)*0.44;
+  var slow=0.40+pace*0.72;
+  var br=0.5-0.5*Math.cos(2*Math.PI*T/(S.breath*1.22));   /* the whole field breathes longer */
+  var r=R*(0.93+br*0.20)*(0.88+v*0.34)*strength;
   qCtx.clearRect(0,0,qW,qH);
   qCtx.globalCompositeOperation=qNight?'lighter':'source-over';
 
   /* SPIRITUAL — the outer cocoon, finest grain, highest frequency */
-  var og=qCtx.createRadialGradient(cx,cy,r*0.55,cx,cy,r*1.62*S.soft);
-  og.addColorStop(0,qA(qT1,(0.16+br*0.10)*v));
-  og.addColorStop(0.45,qA(qT1,(0.07+br*0.05)*v));
+  var outer=Math.min(r*1.62*S.soft, Math.min(qW,qH)*0.495);   /* never a straight edge */
+  var og=qCtx.createRadialGradient(cx,cy,r*0.55,cx,cy,outer);
+  og.addColorStop(0,qA(qT1,(0.20+br*0.12)*v));
+  og.addColorStop(0.45,qA(qT1,(0.09+br*0.06)*v));
   og.addColorStop(1,qA(qT1,0));
-  qCtx.fillStyle=og;qCtx.beginPath();qCtx.arc(cx,cy,r*1.62*S.soft,0,7);qCtx.fill();
+  qCtx.fillStyle=og;qCtx.beginPath();qCtx.arc(cx,cy,outer,0,7);qCtx.fill();
   /* THE SHIMMER WAS THE FLICKER. Big and close on a pale ground it read as
      noise rather than a fine edge, and because every sense shimmers, it was
      also the layer making them all look alike. It is now roughly a third of
@@ -998,8 +999,8 @@ function qDraw(ms,v,pace,strength){
   var n=34, sh=S.shimmer*(0.4+pace*0.5);
   for(var i=0;i<n;i++){
     var a=(i/n)*Math.PI*2;
-    var f=Math.sin(T*2.3*sh+i*2.13)*0.5+Math.sin(T*3.6*sh+i*0.77)*0.3+Math.sin(T*1.3*sh+i*4.9)*0.2;
-    var al=Math.max(0,f)*0.26*(0.4+br*0.6)*v;
+    var f=Math.sin(T*1.5*sh+i*2.13)*0.5+Math.sin(T*2.4*sh+i*0.77)*0.3+Math.sin(T*0.85*sh+i*4.9)*0.2;
+    var al=Math.max(0,f)*0.31*(0.4+br*0.6)*v;
     if(al<0.012)continue;
     var rr=r*(1.30+0.06*f)*S.soft;
     qCtx.fillStyle=qA(qT2,al);
@@ -1009,7 +1010,7 @@ function qDraw(ms,v,pace,strength){
   /* MENTAL — linear ripples leaving the field */
   for(var p=0;p<qRips.length;p++){
     var k=qRips[p].age, ra=r*(0.72+k*0.95);
-    qCtx.strokeStyle=qA(qT2,(1-k)*(1-k)*0.34*v);
+    qCtx.strokeStyle=qA(qT2,(1-k)*(1-k)*0.40*v);
     qCtx.lineWidth=Math.max(0.6,r*0.010*(1-k*0.6));
     qCtx.beginPath();qCtx.arc(cx,cy,ra,0,7);qCtx.stroke();
   }
@@ -1033,7 +1034,7 @@ function qDraw(ms,v,pace,strength){
       var bx=cx+Math.cos(B.a+T*0.06*slow*S.dir)*brad, by=cy+Math.sin(B.a+T*0.06*slow*S.dir)*brad;
       var size=r*(0.30+0.12*Math.sin(T*0.7*slow+B.ph*1.7))*(0.7+v*0.5);
       var bg=qCtx.createRadialGradient(bx,by,0,bx,by,size);
-      bg.addColorStop(0,qA(b%2?qT2:qT1,(0.13+br*0.11)*(0.5+v*0.7)));
+      bg.addColorStop(0,qA(b%2?qT2:qT1,(0.17+br*0.13)*(0.5+v*0.7)));
       bg.addColorStop(1,qA(qT1,0));
       qCtx.fillStyle=bg;qCtx.beginPath();qCtx.arc(bx,by,size,0,7);qCtx.fill();
     }
@@ -1041,19 +1042,19 @@ function qDraw(ms,v,pace,strength){
 
   /* VORTEX — for the signatures that carry one */
   if(S.vortex){
-    var per=110, spin=T*0.34*slow*(S.vortex<0?-1:1);
+    var per=110, spin=T*0.24*slow*(S.vortex<0?-1:1);
     for(var q=0;q<per;q++){
       var tt=q/per, va=tt*Math.PI*4 + spin, vrad=r*(0.14+tt*1.05);
       var val=Math.abs(S.vortex)*(1-tt)*0.5*(0.4+br*0.6)*v;
       if(val<0.02)continue;
-      qCtx.fillStyle=qA(qT2,val*0.7);
+      qCtx.fillStyle=qA(qT2,val*0.88);
       qCtx.beginPath();qCtx.arc(cx+Math.cos(va)*vrad,cy+Math.sin(va)*vrad,r*0.034*(1-tt*0.5),0,7);qCtx.fill();
     }
   }
 
   /* ETHERIC — the fast throb held close to the body */
-  var th=0.5-0.5*Math.cos(2*Math.PI*T/(S.ether*1.7/(0.6+pace*0.7)));
-  qCtx.strokeStyle=qA(qT2,(0.10+th*0.26)*(0.45+br*0.55)*v);
+  var th=0.5-0.5*Math.cos(2*Math.PI*T/(S.ether*2.4/(0.6+pace*0.7)));
+  qCtx.strokeStyle=qA(qT2,(0.13+th*0.30)*(0.45+br*0.55)*v);
   qCtx.lineWidth=Math.max(0.8,r*0.030*(0.5+th*0.7));
   qCtx.beginPath();qCtx.arc(cx,cy,r*(0.44+0.055*th),0,7);qCtx.stroke();
 
@@ -1067,12 +1068,12 @@ function qFrame(ts){
      the field looks and how fast it moves — so raising one raised the other.
      They are parted now. PRESENCE starts already there and swells. PACE starts
      genuinely slow and quickens. The field arrives whole and then wakes. */
-  var vLook=qFade*(0.40+0.60*Math.pow(k,0.75));    /* opacity and reach */
-  var vPace=qFade*(0.16+0.84*Math.pow(k,1.15));    /* speed of everything */
-  var strength=0.66+0.34*k;                        /* wide from the first frame */
+  var vLook=qFade*(0.56+0.44*Math.pow(k,0.70));    /* opacity and reach */
+  var vPace=qFade*(0.10+0.90*Math.pow(k,1.30));    /* speed of everything */
+  var strength=0.78+0.22*k;                        /* wide from the first frame */
   var S=qSig||QDEF, iv=S.mental/(0.55+vPace*0.9);
   if(ts-qLastRip>iv){ qLastRip=ts; qRips.push({age:0}); }
-  for(var i=qRips.length-1;i>=0;i--){ qRips[i].age+=0.013*(0.5+vPace*0.8); if(qRips[i].age>=1)qRips.splice(i,1); }
+  for(var i=qRips.length-1;i>=0;i--){ qRips[i].age+=0.0100*(0.5+vPace*0.8); if(qRips[i].age>=1)qRips.splice(i,1); }
   qDraw(ts,vLook,vPace,strength);
   var num=$('qNum');
   if(num){ var d=Math.max(1,Math.ceil((qDur-el)/1000)); if(num.textContent!==String(d))num.textContent=d; }
@@ -1085,7 +1086,7 @@ function quickenStart(col,word,ms){
   qCol=col||'#c4b5fd';
   qSig=QSIG[word]||QDEF;
   qNight=document.body.classList.contains('night');
-  qAB=qNight?1:1.9;                       /* ink needs more weight than glow */
+  qAB=qNight?1.25:2.4;                    /* ink needs more weight than glow */
   qT1=qTriple(qCol,qNight);
   qT2=qTriple(qSig.c2||qCol,qNight);
   qDur=ms||3000; qFade=1; qOn=true; qRips=[]; qLastRip=0;
