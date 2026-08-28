@@ -4889,7 +4889,11 @@ function obShow(){
   }
   ob.classList.add('show');draw();
 }
-setTimeout(()=>{try{obShow();}catch(e){}},1600);
+// THE MAP WALKTHROUGH IS OFF — 25 Aug 2026. The three numbered boxes with arrows no longer run.
+// Its code above is left untouched and unreachable, deliberately: cutting it out is how the
+// app was broken before. It will be removed properly once the living walkthrough replaces it.
+// The door it used to open at the end still opens, so a first visitor is not left with nothing.
+setTimeout(()=>{try{ if(typeof twoDoors==='function' && (!myOfferings || myOfferings.length===0)) twoDoors(); }catch(e){}},1600);
 // ---- Place-an-aurasense prompt ----
 function openPlacePrompt(heading){const p=document.getElementById('place-prompt');if(!p)return;if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}const t=document.getElementById('pp-title');if(t&&heading)t.textContent=heading;p.classList.add('show');const m=document.getElementById('place-mini');if(m)m.classList.remove('show');const inp=document.getElementById('pp-input');if(inp)setTimeout(()=>{try{inp.focus();}catch(e){}},60);}
 function collapsePlacePrompt(){const p=document.getElementById('place-prompt');if(p)p.classList.remove('show');const m=document.getElementById('place-mini');if(m)m.classList.add('show');}
@@ -7194,6 +7198,6 @@ async function gateLoadOfferings(){
 
 });
 </script>
-<div id="build-stamp">Build 25 Aug 2026 · 01</div>
+<div id="build-stamp">Build 25 Aug 2026 · 02</div>
 </body>
 </html>
