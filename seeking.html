@@ -206,9 +206,11 @@ body.night .symInk{filter:none}
 #qNum{position:absolute;left:50%;top:50%;pointer-events:none;
   transform:translate(-50%,-50%) scale(.86);
   font-size:clamp(15px,3.4vmin,26px);font-weight:300;letter-spacing:.1em;
-  color:#f2ecff;text-shadow:0 0 14px rgba(10,8,24,.7);
+  color:#4a3b78;text-shadow:0 0 16px rgba(255,255,255,.9);
   opacity:0;transition:opacity .26s ease,transform .26s ease}
-#qNum.on{opacity:.46;transform:translate(-50%,-50%) scale(1)}
+#qNum.on{opacity:.62;transform:translate(-50%,-50%) scale(1)}
+body.night #qNum{color:#f2ecff;text-shadow:0 0 14px rgba(10,8,24,.7)}
+body.night #qNum.on{opacity:.46}
 @keyframes coreBreathe{0%,100%{transform:translate(-50%,-50%) scale(.86);opacity:.38}
   50%{transform:translate(-50%,-50%) scale(1.10);opacity:.62}}
 .orb{position:absolute;top:62%;width:15vmin;height:15vmin;border-radius:50%;margin-top:-7.5vmin;
@@ -450,7 +452,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 06</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 07</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -944,9 +946,21 @@ var qBlobs=[],qRips=[],qLastRip=0,qW=0,qH=0;
 for(var _qb=0;_qb<6;_qb++)qBlobs.push({a:Math.random()*Math.PI*2,r:0.5+Math.random()*0.33,
   vr:0.25+Math.random()*0.5,ph:Math.random()*Math.PI*2});
 
-function qHexA(h,a){ if(!h||h.charAt(0)!=='#')return 'rgba(196,181,253,'+a+')';
-  var n=parseInt(h.slice(1),16);
-  return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')'; }
+/* THE CIRCLE STANDS ON A NEAR-WHITE GROUND until the crossing to night.
+   Additive light does nothing on white — which is why the first build of this
+   was invisible. By day the field is INK ON PAPER: the sense's colour darkened
+   until it reads, laid down normally. By night it is light on darkness, as the
+   living motion study intended. Same field, two grounds. */
+var qNight=false, qT1=[196,181,253], qT2=[232,220,255], qAB=1;
+function qTriple(hex,night){
+  if(!hex||hex.charAt(0)!=='#')return [196,181,253];
+  var r=parseInt(hex.substr(1,2),16),g=parseInt(hex.substr(3,2),16),b=parseInt(hex.substr(5,2),16);
+  if(night)return [r,g,b];
+  var k=1;
+  try{ while(k>0.16&&relLum(r*k,g*k,b*k)>0.22)k-=0.03; }catch(e){ k=0.45; }
+  return [Math.round(r*k),Math.round(g*k),Math.round(b*k)];
+}
+function qA(t,a){ return 'rgba('+t[0]+','+t[1]+','+t[2]+','+Math.min(1,a*qAB).toFixed(3)+')'; }
 
 function qSize(){
   if(!qCv)return;
@@ -964,13 +978,13 @@ function qDraw(ms,v,strength){
   var br=0.5-0.5*Math.cos(2*Math.PI*T/S.breath);
   var r=R*(0.93+br*0.20)*(0.86+v*0.24)*strength;
   qCtx.clearRect(0,0,qW,qH);
-  qCtx.globalCompositeOperation='lighter';
+  qCtx.globalCompositeOperation=qNight?'lighter':'source-over';
 
   /* SPIRITUAL — the outer cocoon, finest grain, highest frequency */
   var og=qCtx.createRadialGradient(cx,cy,r*0.55,cx,cy,r*1.62*S.soft);
-  og.addColorStop(0,qHexA(qCol,(0.16+br*0.10)*v));
-  og.addColorStop(0.45,qHexA(qCol,(0.07+br*0.05)*v));
-  og.addColorStop(1,qHexA(qCol,0));
+  og.addColorStop(0,qA(qT1,(0.16+br*0.10)*v));
+  og.addColorStop(0.45,qA(qT1,(0.07+br*0.05)*v));
+  og.addColorStop(1,qA(qT1,0));
   qCtx.fillStyle=og;qCtx.beginPath();qCtx.arc(cx,cy,r*1.62*S.soft,0,7);qCtx.fill();
   var n=44, sh=S.shimmer*(0.5+v*0.8);
   for(var i=0;i<n;i++){
@@ -979,14 +993,14 @@ function qDraw(ms,v,strength){
     var al=Math.max(0,f)*0.30*(0.4+br*0.6)*v;
     if(al<0.012)continue;
     var rr=r*(1.30+0.06*f)*S.soft;
-    qCtx.fillStyle=qHexA(S.c2,al);
+    qCtx.fillStyle=qA(qT2,al);
     qCtx.beginPath();qCtx.arc(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr,r*0.016,0,7);qCtx.fill();
   }
 
   /* MENTAL — linear ripples leaving the field */
   for(var p=0;p<qRips.length;p++){
     var k=qRips[p].age, ra=r*(0.72+k*0.95);
-    qCtx.strokeStyle=qHexA(S.c2,(1-k)*(1-k)*0.34*v);
+    qCtx.strokeStyle=qA(qT2,(1-k)*(1-k)*0.34*v);
     qCtx.lineWidth=Math.max(0.6,r*0.010*(1-k*0.6));
     qCtx.beginPath();qCtx.arc(cx,cy,ra,0,7);qCtx.stroke();
   }
@@ -1000,7 +1014,7 @@ function qDraw(ms,v,strength){
       var rad=r*(0.66 + 0.30*(0.5+0.5*wv));
       var gv=Math.max(0,wv)*ga*(0.4+br*0.6)*v;
       if(gv<0.02)continue;
-      qCtx.fillStyle=qHexA(j%3?S.c2:qCol, gv*0.5);
+      qCtx.fillStyle=qA(j%3?qT2:qT1, gv*0.5);
       qCtx.beginPath();qCtx.arc(cx+Math.cos(ang)*rad,cy+Math.sin(ang)*rad,r*0.014,0,7);qCtx.fill();
     }
   } else {
@@ -1010,8 +1024,8 @@ function qDraw(ms,v,strength){
       var bx=cx+Math.cos(B.a+T*0.06*slow*S.dir)*brad, by=cy+Math.sin(B.a+T*0.06*slow*S.dir)*brad;
       var size=r*(0.30+0.12*Math.sin(T*0.7*slow+B.ph*1.7))*(0.7+v*0.5);
       var bg=qCtx.createRadialGradient(bx,by,0,bx,by,size);
-      bg.addColorStop(0,qHexA(b%2?S.c2:qCol,(0.13+br*0.11)*(0.5+v*0.7)));
-      bg.addColorStop(1,qHexA(qCol,0));
+      bg.addColorStop(0,qA(b%2?qT2:qT1,(0.13+br*0.11)*(0.5+v*0.7)));
+      bg.addColorStop(1,qA(qT1,0));
       qCtx.fillStyle=bg;qCtx.beginPath();qCtx.arc(bx,by,size,0,7);qCtx.fill();
     }
   }
@@ -1023,14 +1037,14 @@ function qDraw(ms,v,strength){
       var tt=q/per, va=tt*Math.PI*4 + spin, vrad=r*(0.14+tt*1.05);
       var val=Math.abs(S.vortex)*(1-tt)*0.5*(0.4+br*0.6)*v;
       if(val<0.02)continue;
-      qCtx.fillStyle=qHexA(S.c2,val*0.4);
+      qCtx.fillStyle=qA(qT2,val*0.4);
       qCtx.beginPath();qCtx.arc(cx+Math.cos(va)*vrad,cy+Math.sin(va)*vrad,r*0.02*(1-tt*0.5),0,7);qCtx.fill();
     }
   }
 
   /* ETHERIC — the fast throb held close to the body */
   var th=0.5-0.5*Math.cos(2*Math.PI*T/(S.ether/(0.6+v*0.7)));
-  qCtx.strokeStyle=qHexA(S.c2,(0.10+th*0.26)*(0.45+br*0.55)*v);
+  qCtx.strokeStyle=qA(qT2,(0.10+th*0.26)*(0.45+br*0.55)*v);
   qCtx.lineWidth=Math.max(0.8,r*0.030*(0.5+th*0.7));
   qCtx.beginPath();qCtx.arc(cx,cy,r*(0.44+0.055*th),0,7);qCtx.stroke();
 
@@ -1057,6 +1071,10 @@ function quickenStart(col,word,ms){
   qSize();
   qCol=col||'#c4b5fd';
   qSig=QSIG[word]||QDEF;
+  qNight=document.body.classList.contains('night');
+  qAB=qNight?1:1.9;                       /* ink needs more weight than glow */
+  qT1=qTriple(qCol,qNight);
+  qT2=qTriple(qSig.c2||qCol,qNight);
   qDur=ms||3000; qFade=1; qOn=true; qRips=[]; qLastRip=0;
   qT0=performance.now();
   qCv.classList.add('on');
