@@ -2476,6 +2476,13 @@ function animateWave(ts){
           if(tab){tab.classList.remove('active');tab.style.color='';}
         }
       });
+      // THE JOURNEY COMES HOME. It set out from My Aura when the offering was given; it returns
+      // there once the crest has been out to the World and back. One journey, both ends the
+      // senser's own aura.
+      try{const _mo=document.getElementById('orbMy');
+        if(_mo){_mo.classList.remove('orb-fed');void _mo.offsetWidth;_mo.classList.add('orb-fed');
+          setTimeout(()=>{try{_mo.classList.remove('orb-fed');}catch(e){}},3000);}
+      }catch(e){}
     }
   }catch(e){waveRaf=null;}
 }
@@ -3389,8 +3396,9 @@ function submit(lat,lng,text){
   // and the first time the senser widens out to a scale they have not yet seen it from, it says so
   // once, quietly, in their own colour. Nothing invented: it is the very point they placed.
   ascent={lat:lat,lng:lng,color:s.color,from:Date.now(),seen:{0:true}};
-  // THE CLIMB — begins once the witness strip has risen, so it never competes with the landing.
-  try{setTimeout(()=>{try{ascentClimb(s.color);}catch(e){}},4200);}catch(e){}
+  // THE CLIMB — turned off 25 Aug 2026. It was doing a second time what triggerWave (below)
+  // already does: sweeping the scales out and back in the sense's colour. Two journeys where
+  // there is one. The wave keeps the journey; ascentClimb stays defined but unused.
   const _finishPlace=(place)=>{
     if(typeof gateSaveOffering==='function')gateSaveOffering({sense:sid,text:text,priv:isPriv,lat:lat,lng:lng,place:place||null,scale:_gScale,born:Date.now(),_ap:_ap});
     if(!place)return;
@@ -7205,6 +7213,6 @@ async function gateLoadOfferings(){
 
 });
 </script>
-<div id="build-stamp">Build 25 Aug 2026 · 04</div>
+<div id="build-stamp">Build 25 Aug 2026 · 05</div>
 </body>
 </html>
