@@ -203,8 +203,13 @@ body.night .symInk{filter:none}
 /* THE CANVAS REACHES PAST THE RING. It used to be exactly ring-sized, so a wide
    field ran into the square edge of its own canvas — the invisible box. It now
    extends well outside, and the field is held inside it by the clamp in qDraw. */
-#qCanvas{position:absolute;inset:-26%;pointer-events:none;
-  opacity:0;transition:opacity .55s ease}
+/* THE SIZE IS STATED, NOT LEFT TO THE BROWSER. A canvas is a "replaced"
+   element — like an image — and when its width is left to work itself out, the
+   browser uses the canvas's own pixel size and quietly ignores the right and
+   bottom edges. So it sat 300x150 in the wrong place, and every hold doubled it
+   until it was too big to exist. Stated outright, none of that can happen. */
+#qCanvas{position:absolute;left:-26%;top:-26%;width:152%;height:152%;
+  pointer-events:none;opacity:0;transition:opacity .55s ease}
 #qCanvas.on{opacity:1}
 #qNum{position:absolute;left:50%;top:50%;pointer-events:none;
   transform:translate(-50%,-50%) scale(.86);
@@ -455,7 +460,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 10</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 12</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -968,10 +973,16 @@ function qTriple(hex,night){
 }
 function qA(t,a){ return 'rgba('+t[0]+','+t[1]+','+t[2]+','+Math.min(1,a*qAB).toFixed(3)+')'; }
 
+/* IT MEASURES THE RING, NEVER ITSELF. Measuring itself is what let it feed on
+   its own growth. The ring cannot be changed by anything the countdown does. */
 function qSize(){
   if(!qCv)return;
-  var d=Math.min(window.devicePixelRatio||1,2), b=qCv.getBoundingClientRect();
-  qW=Math.max(80,b.width); qH=Math.max(80,b.height);
+  var host=qCv.parentElement, hb=host?host.getBoundingClientRect():null;
+  var w=(hb&&hb.width>20)?hb.width*1.52:320;
+  var h=(hb&&hb.height>20)?hb.height*1.52:320;
+  if(w>1400)w=1400; if(h>1400)h=1400;          /* a ceiling, whatever happens */
+  var d=Math.min(window.devicePixelRatio||1,2);
+  qW=w; qH=h;
   qCv.width=Math.round(qW*d); qCv.height=Math.round(qH*d);
   qCtx=qCv.getContext('2d'); qCtx.setTransform(d,0,0,d,0,0);
 }
