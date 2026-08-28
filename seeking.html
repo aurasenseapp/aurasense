@@ -452,7 +452,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 07</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 08</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -467,7 +467,7 @@ body.night .tiny{color:var(--far)}
 <section class="scene" id="seek">
   <div id="topText">
     <div class="head" id="sHead">What are you sensing right now?</div>
-    <div class="sub" id="sSub">Sense how you are feeling within the circle and hold it for 3.</div>
+    <div class="sub" id="sSub">Sense how you are feeling within the circle, and hold until it wakes.</div>
   </div>
   <div id="listDoor"><button class="ghost" id="listBtn" type="button">See them as a list</button></div>
 </section>
@@ -699,7 +699,10 @@ var known=false;
 /* The quiet second before the arc appeared was built for a finger resting on
    glass. With a mouse it reads as the app not responding at all. */
 function dwellMs(){ return stage==='sense' ? (known?200:320) : 200; }
-function holdMs(){  return stage==='sense' ? (known?2400:3000) : 2200; }
+function holdMs(){  return stage==='sense' ? (known?3000:4000) : 3000; }
+/* A SECOND LONGER — 25 Aug 2026, Karl's call. Long enough to be watched rather
+   than waited out. The count says real seconds now, so a four-second hold
+   counts four, and a hold that is already known counts three. */
 
 /* ═══ the breath ═══ out first, then in, and the two lights come together ═══ */
 var T=[],skipped=false;
@@ -971,12 +974,12 @@ function qSize(){
 }
 
 /* the field itself — the study's four layers, riding one breath */
-function qDraw(ms,v,strength){
+function qDraw(ms,v,pace,strength){
   if(!qCtx)return;
   var S=qSig||QDEF, T=ms/1000, cx=qW/2, cy=qH/2, R=Math.min(qW,qH)*0.40;
-  var slow=0.55+v*0.9;
+  var slow=0.55+pace*0.9;
   var br=0.5-0.5*Math.cos(2*Math.PI*T/S.breath);
-  var r=R*(0.93+br*0.20)*(0.86+v*0.24)*strength;
+  var r=R*(0.93+br*0.20)*(0.86+v*0.30)*strength;
   qCtx.clearRect(0,0,qW,qH);
   qCtx.globalCompositeOperation=qNight?'lighter':'source-over';
 
@@ -986,15 +989,21 @@ function qDraw(ms,v,strength){
   og.addColorStop(0.45,qA(qT1,(0.07+br*0.05)*v));
   og.addColorStop(1,qA(qT1,0));
   qCtx.fillStyle=og;qCtx.beginPath();qCtx.arc(cx,cy,r*1.62*S.soft,0,7);qCtx.fill();
-  var n=44, sh=S.shimmer*(0.5+v*0.8);
+  /* THE SHIMMER WAS THE FLICKER. Big and close on a pale ground it read as
+     noise rather than a fine edge, and because every sense shimmers, it was
+     also the layer making them all look alike. It is now roughly a third of
+     its old speed, with fewer and softer points — an edge that moves, not a
+     strobe. What tells the senses apart is meant to be the slow things: how
+     the field breathes, which way it turns, whether it spirals. */
+  var n=34, sh=S.shimmer*(0.4+pace*0.5);
   for(var i=0;i<n;i++){
     var a=(i/n)*Math.PI*2;
-    var f=Math.sin(T*7.1*sh+i*2.13)*0.5+Math.sin(T*11.3*sh+i*0.77)*0.3+Math.sin(T*3.7*sh+i*4.9)*0.2;
-    var al=Math.max(0,f)*0.30*(0.4+br*0.6)*v;
+    var f=Math.sin(T*2.3*sh+i*2.13)*0.5+Math.sin(T*3.6*sh+i*0.77)*0.3+Math.sin(T*1.3*sh+i*4.9)*0.2;
+    var al=Math.max(0,f)*0.26*(0.4+br*0.6)*v;
     if(al<0.012)continue;
     var rr=r*(1.30+0.06*f)*S.soft;
     qCtx.fillStyle=qA(qT2,al);
-    qCtx.beginPath();qCtx.arc(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr,r*0.016,0,7);qCtx.fill();
+    qCtx.beginPath();qCtx.arc(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr,r*0.030,0,7);qCtx.fill();
   }
 
   /* MENTAL — linear ripples leaving the field */
@@ -1007,7 +1016,7 @@ function qDraw(ms,v,strength){
 
   /* EMOTIONAL — fine grains on a wave, or smoke in water */
   if(S.particle){
-    var gr=70, ga=(0.5+v*0.7);
+    var gr=52, ga=(0.5+v*0.7);
     for(var j=0;j<gr;j++){
       var ang=(j/gr)*Math.PI*2 + T*0.05*slow*S.dir;
       var wv=Math.sin(ang*3 - T*1.4*slow)*0.5 + Math.sin(ang*5 + T*0.9*slow)*0.3;
@@ -1015,7 +1024,7 @@ function qDraw(ms,v,strength){
       var gv=Math.max(0,wv)*ga*(0.4+br*0.6)*v;
       if(gv<0.02)continue;
       qCtx.fillStyle=qA(j%3?qT2:qT1, gv*0.5);
-      qCtx.beginPath();qCtx.arc(cx+Math.cos(ang)*rad,cy+Math.sin(ang)*rad,r*0.014,0,7);qCtx.fill();
+      qCtx.beginPath();qCtx.arc(cx+Math.cos(ang)*rad,cy+Math.sin(ang)*rad,r*0.026,0,7);qCtx.fill();
     }
   } else {
     for(var b=0;b<qBlobs.length;b++){
@@ -1032,18 +1041,18 @@ function qDraw(ms,v,strength){
 
   /* VORTEX — for the signatures that carry one */
   if(S.vortex){
-    var per=92, spin=T*0.5*slow*(S.vortex<0?-1:1);
+    var per=110, spin=T*0.34*slow*(S.vortex<0?-1:1);
     for(var q=0;q<per;q++){
       var tt=q/per, va=tt*Math.PI*4 + spin, vrad=r*(0.14+tt*1.05);
       var val=Math.abs(S.vortex)*(1-tt)*0.5*(0.4+br*0.6)*v;
       if(val<0.02)continue;
-      qCtx.fillStyle=qA(qT2,val*0.4);
-      qCtx.beginPath();qCtx.arc(cx+Math.cos(va)*vrad,cy+Math.sin(va)*vrad,r*0.02*(1-tt*0.5),0,7);qCtx.fill();
+      qCtx.fillStyle=qA(qT2,val*0.7);
+      qCtx.beginPath();qCtx.arc(cx+Math.cos(va)*vrad,cy+Math.sin(va)*vrad,r*0.034*(1-tt*0.5),0,7);qCtx.fill();
     }
   }
 
   /* ETHERIC — the fast throb held close to the body */
-  var th=0.5-0.5*Math.cos(2*Math.PI*T/(S.ether/(0.6+v*0.7)));
+  var th=0.5-0.5*Math.cos(2*Math.PI*T/(S.ether*1.7/(0.6+pace*0.7)));
   qCtx.strokeStyle=qA(qT2,(0.10+th*0.26)*(0.45+br*0.55)*v);
   qCtx.lineWidth=Math.max(0.8,r*0.030*(0.5+th*0.7));
   qCtx.beginPath();qCtx.arc(cx,cy,r*(0.44+0.055*th),0,7);qCtx.stroke();
@@ -1054,15 +1063,19 @@ function qDraw(ms,v,strength){
 function qFrame(ts){
   if(!qOn){ qRaf=null; return; }
   var el=ts-qT0, k=Math.min(1,el/qDur);
-  var v=qFade*(0.05+0.95*Math.pow(k,0.85));        /* VITALITY IS THE COUNTDOWN */
-  var strength=0.34+0.66*k;
-  /* the mental body emits on its own clock, and quickens as the field wakes */
-  var S=qSig||QDEF, iv=S.mental/(0.55+v*0.9);
+  /* VITALITY IS THE COUNTDOWN, but it was doing two jobs at once — how present
+     the field looks and how fast it moves — so raising one raised the other.
+     They are parted now. PRESENCE starts already there and swells. PACE starts
+     genuinely slow and quickens. The field arrives whole and then wakes. */
+  var vLook=qFade*(0.40+0.60*Math.pow(k,0.75));    /* opacity and reach */
+  var vPace=qFade*(0.16+0.84*Math.pow(k,1.15));    /* speed of everything */
+  var strength=0.66+0.34*k;                        /* wide from the first frame */
+  var S=qSig||QDEF, iv=S.mental/(0.55+vPace*0.9);
   if(ts-qLastRip>iv){ qLastRip=ts; qRips.push({age:0}); }
-  for(var i=qRips.length-1;i>=0;i--){ qRips[i].age+=0.016*(0.6+v*0.8); if(qRips[i].age>=1)qRips.splice(i,1); }
-  qDraw(ts,v,strength);
+  for(var i=qRips.length-1;i>=0;i--){ qRips[i].age+=0.013*(0.5+vPace*0.8); if(qRips[i].age>=1)qRips.splice(i,1); }
+  qDraw(ts,vLook,vPace,strength);
   var num=$('qNum');
-  if(num){ var d=Math.max(1,Math.ceil((1-k)*3)); if(num.textContent!==String(d))num.textContent=d; }
+  if(num){ var d=Math.max(1,Math.ceil((qDur-el)/1000)); if(num.textContent!==String(d))num.textContent=d; }
   qRaf=requestAnimationFrame(qFrame);
 }
 
@@ -1204,12 +1217,12 @@ function goBackTo(which){
   if(which==='sense'){
     dropBeadsFrom('sense');
     born('sense','What are you sensing right now?',
-      'Sense how you are feeling within the circle, and hold it for three.',SENSES,null);
+      'Sense how you are feeling within the circle, and hold until it wakes.',SENSES,null);
     setTimeout(function(){$('back').classList.remove('on');},1200);
   }else if(which==='strength'){
     dropBeadsFrom('strength');
     born('strength','How strong is it?',
-      'Sense how strong it is along the arc, and hold it for three.',STRENGTHS,ARC_STRENGTH);
+      'Sense how strong it is along the arc, and hold until it wakes.',STRENGTHS,ARC_STRENGTH);
   }
 }
 $('back').addEventListener('click',function(){
@@ -1232,7 +1245,7 @@ function commit(){
     state.sense=o.w; state.senseColor=o.c; state.senseKey=o.k;
     fly(o.c,o.k,'sense',function(){
       born('strength','How strong is it?',
-        'Sense how strong it is along the arc, and hold it for three.',STRENGTHS,ARC_STRENGTH);
+        'Sense how strong it is along the arc, and hold until it wakes.',STRENGTHS,ARC_STRENGTH);
     });
   }else if(stage==='strength'){
     state.strength=o.w;
@@ -1302,7 +1315,7 @@ function openFamily(o){
 function closeFamily(){
   familyOf=null;
   born('sense','What are you sensing right now?',
-    'Sense how you are feeling within the circle, and hold it for three.',SENSES,null);
+    'Sense how you are feeling within the circle, and hold until it wakes.',SENSES,null);
   setTimeout(function(){ if(!beadList.length)$('back').classList.remove('on'); },1200);
 }
 function born(next,head,sub,set,arc){
