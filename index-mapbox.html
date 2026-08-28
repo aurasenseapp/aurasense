@@ -4280,7 +4280,10 @@ function attachScrollRail(el){
   }catch(e){}
 }
 function openMyAuraPage(){
-  const page=document.getElementById('myaura-page');if(!page)return;setTimeout(maShowTip,350);
+  const page=document.getElementById('myaura-page');if(!page)return;
+  // THE MY AURA WALKTHROUGH IS OFF — 25 Aug 2026. "Tip 1 of 6" no longer runs.
+  // Same method as the map's: the trigger is removed, the code above is left whole and
+  // unreachable. It comes out properly when the living walkthrough replaces it.
   setTimeout(()=>{try{
     const cands=['ma-left','myaura-page','ma-cols','ma-body','ma-center'];let L=null;
     for(const cid of cands){const el=document.getElementById(cid);if(el&&el.scrollHeight>el.clientHeight+8){L=el;break;}}
@@ -7198,6 +7201,6 @@ async function gateLoadOfferings(){
 
 });
 </script>
-<div id="build-stamp">Build 25 Aug 2026 · 02</div>
+<div id="build-stamp">Build 25 Aug 2026 · 03</div>
 </body>
 </html>
