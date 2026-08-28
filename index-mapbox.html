@@ -4805,6 +4805,10 @@ function lfSendOffer(){
 })();
 let lfTipShown=false;
 function lfShowTip(){
+  // THE AURA FEED WALKTHROUGH IS OFF — 25 Aug 2026. Switched off here rather than at its two
+  // triggers, so one change closes both doors. The code below is left whole and unreachable,
+  // and comes out properly when the living walkthrough replaces it.
+  return;
   if(lfTipShown)return;lfTipShown=true;
   showPointTips([
     {sel:'.lf-sym',t:'Reading the Aura Feed ✧',s:'Each aura carries its sense symbol from the alphasense language — the feeling of a real place, offered by a real person.'},
@@ -7201,6 +7205,6 @@ async function gateLoadOfferings(){
 
 });
 </script>
-<div id="build-stamp">Build 25 Aug 2026 · 03</div>
+<div id="build-stamp">Build 25 Aug 2026 · 04</div>
 </body>
 </html>
