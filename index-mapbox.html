@@ -86,6 +86,12 @@ body.world-view #tabs .tab-orb{width:8px;height:8px}
 #seekFrame{position:fixed;inset:0;width:100%;height:100%;border:0;z-index:4000;
   background:transparent;opacity:1;transition:opacity 2.2s ease}
 #seekFrame.leaving{opacity:0;pointer-events:none}
+/* THE WORLD WAITS QUIETLY. 29 Aug 2026, Karl's felt note: when the cloud thins
+   and the planet shows through, it arrived too strongly. It now waits at just
+   under half and comes up to full as the Seeking withdraws — so the brightening
+   IS the arrival, and nothing snaps. Raise or lower the .45 to taste. */
+body.seeking #map{opacity:.45}
+#map{transition:opacity 2.8s ease}
 body.seeking #ui,body.seeking #left-stack,body.seeking #panel,
 body.seeking #build-stamp{opacity:0!important;pointer-events:none!important;
   transition:opacity 1.6s ease}
@@ -5960,6 +5966,11 @@ function gateQueue(o){if(!GATE_CONFIGURED)return;try{const q=JSON.parse(localSto
 // PHASE 1 WIRING \u2014 the Two Doors, the Witness Line, the ripening, the quiet first screen.
 function twoDoors(){
   try{
+    /* THE SEEKING IS IN FRONT — this page stays quiet. 29 Aug 2026.
+       This invitation stands above everything, so while the arrival is playing
+       it appeared over the top of it and the two lights meeting were never
+       seen. It is not removed, only held back until the Seeking withdraws. */
+    if(document.body.classList.contains('seeking'))return;
     if(document.getElementById('twodoors'))return;
     const d=document.createElement('div');d.id='twodoors';
     d.innerHTML='<div id="td-t">The world is breathing \u2014 and it senses you here.</div>'
@@ -7261,6 +7272,10 @@ try{
   window.SENSES = SENSES;
   window.showMsg = showMsg;
   window.materializeAndSubmit = materializeAndSubmit;
+  /* 29 Aug, second pass: the host code looks up the named place with this key,
+     and the key lives in here too. Without it the lookup threw, the place came
+     back as nothing, and the descent was abandoned before it began. */
+  window.MAPBOX_TOKEN = MAPBOX_TOKEN;
   /* selSense is a value, not a function, so it is lent as a window through to
      the real one rather than a copy that would go stale. */
   try{ Object.defineProperty(window,'selSense',{
@@ -7305,7 +7320,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 26</div>
+<div id="build-stamp">Build 29 Aug 2026 · 27</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
@@ -7328,7 +7343,12 @@ try{
   let seen=false; try{seen=localStorage.getItem('as_seeking_seen')==='1';}catch(e){}
   /* ?map=1 always reaches the plain map, whatever else is broken */
   const skip=/[?&]map=1/.test(location.search);
-  if(seen||skip){ fr.parentNode.removeChild(fr); return; }
+  /* ?seek=1 always plays the arrival again, however many times it has been
+     seen on this device. Added 29 Aug 2026 so it can be tested on a phone,
+     where the remembering had quietly switched it off altogether. */
+  const force=/[?&]seek=1/.test(location.search);
+  if(force){ try{localStorage.removeItem('as_seeking_seen');}catch(e){} }
+  if((seen&&!force)||skip){ fr.parentNode.removeChild(fr); return; }
   document.body.classList.add('seeking');
 
   /* while it is in front, the map waits at the whole world, turning */
