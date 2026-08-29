@@ -80,6 +80,15 @@ body.world-view #tabs .tab-orb{width:8px;height:8px}
 .tab.active{color:#c4b5fd}
 .tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0;transition:background .3s,box-shadow .3s}
 .tab.active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
+/* ═══ THE SEEKING IN FRONT, AND THE MAP'S OWN FURNITURE OUT OF THE WAY ═══
+   While the Seeking is up, none of this page's controls may show through the
+   thinning cloud — the senser is in one place, not two. */
+#seekFrame{position:fixed;inset:0;width:100%;height:100%;border:0;z-index:4000;
+  background:transparent;opacity:1;transition:opacity 2.2s ease}
+#seekFrame.leaving{opacity:0;pointer-events:none}
+body.seeking #ui,body.seeking #left-stack,body.seeking #panel,
+body.seeking #build-stamp{opacity:0!important;pointer-events:none!important;
+  transition:opacity 1.6s ease}
 /* THE BUILD STAMP — one number, one place, bottom-left. Read it here and nowhere else. */
 #build-stamp{position:fixed;left:9px;bottom:6px;z-index:2200;pointer-events:none;font-family:var(--sans),system-ui,sans-serif;font-size:10px;letter-spacing:.04em;color:rgba(196,181,253,.42);text-shadow:0 0 8px rgba(6,5,16,.9)}
 /* THE ASCENT (build name: location lighting sequence) — the light climbing the scales after an
@@ -7213,6 +7222,112 @@ async function gateLoadOfferings(){
 
 });
 </script>
-<div id="build-stamp">Build 25 Aug 2026 · 05</div>
+<!-- ═══ THE SEEKING, CARRIED IN FRONT ═══ 25 Aug 2026
+     It is not pasted into this page — it is its own page, laid over this one.
+     Both files keep their own names, so nothing here can be overwritten by
+     anything there. Two functions called `tick` in one document is how this app
+     was broken in August; embedding makes that impossible.
+     Its background is see-through, so when its cloud thins the world beneath is
+     ALREADY THERE. Nothing has to be swapped in. -->
+<iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation"></iframe>
+<div id="build-stamp">Build 25 Aug 2026 · 25</div>
+<script>
+/* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
+   would die with it — and the one thing that must never fail is the way back
+   to the plain map when something else has broken. ?map=1 always works. */
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE MERGE  ·  25 Aug 2026
+   ───────────────────────────────────────────────────────────────────────────
+   Karl's design, and it is the right one: the world is not switched to, it is
+   REVEALED. It is already behind the cloud, turning, before the senser has
+   finished naming the place. So there is no lurch — the cloud thins, the planet
+   is there, and the light they just made falls into it.
+
+   THE DESCENT then does what the Seeking's own circle did in miniature: World,
+   Nation, Region, Town, Street, each a held step rather than a slide, so the
+   senser can feel the scales they are passing through. The Ascent afterwards
+   climbs the same ladder back, which is why the two read as one movement.
+   ═══════════════════════════════════════════════════════════════════════════ */
+(function(){
+  const fr=document.getElementById('seekFrame'); if(!fr)return;
+  let seen=false; try{seen=localStorage.getItem('as_seeking_seen')==='1';}catch(e){}
+  /* ?map=1 always reaches the plain map, whatever else is broken */
+  const skip=/[?&]map=1/.test(location.search);
+  if(seen||skip){ fr.parentNode.removeChild(fr); return; }
+  document.body.classList.add('seeking');
+
+  /* while it is in front, the map waits at the whole world, turning */
+  function worldWaiting(){
+    try{ map.jumpTo({center:[8,26],zoom:1.35,pitch:0,bearing:0}); }catch(e){}
+  }
+  try{ map.on('load',worldWaiting); worldWaiting(); }catch(e){}
+
+  function leave(){
+    fr.classList.add('leaving');
+    document.body.classList.remove('seeking');
+    try{localStorage.setItem('as_seeking_seen','1');}catch(e){}
+    setTimeout(function(){ if(fr.parentNode)fr.parentNode.removeChild(fr); },2400);
+  }
+
+  /* THE FIVE HELD STEPS. Fixed zooms, chosen and never computed from a bounding
+     box — fitBounds on a large country zooms out past its own cap, which is the
+     bug that made search framing unreliable. */
+  const RUNGS=[{z:1.35,ms:0},{z:4.2,ms:1500},{z:6.6,ms:1400},
+               {z:10.4,ms:1400},{z:15.2,ms:1700}];
+  function descend(lat,lng,then){
+    let t=0;
+    RUNGS.forEach(function(r,i){
+      t+=r.ms;
+      setTimeout(function(){
+        try{ map.flyTo({center:[lng,lat],zoom:r.z,essential:true,
+              duration:Math.max(900,r.ms-120),curve:1.25}); }catch(e){}
+      },t);
+    });
+    setTimeout(then,t+1900);
+  }
+
+  /* the Seeking names a sense; this page holds them by id */
+  function senseIdFor(key,word){
+    try{
+      const want=String(key||word||'').toLowerCase();
+      let f=SENSES.find(x=>String(x.id).toLowerCase()===want);
+      if(!f)f=SENSES.find(x=>String(x.name||x.w||'').toLowerCase()===want);
+      if(!f)f=SENSES.find(x=>String(x.name||x.w||'').toLowerCase()===String(word||'').toLowerCase());
+      return f?f.id:null;
+    }catch(e){ return null; }
+  }
+
+  async function place(where){
+    const m=String(where||'').match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
+    if(m)return {lat:parseFloat(m[1]),lng:parseFloat(m[2])};
+    try{
+      const r=await fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/'+
+        encodeURIComponent(where)+'.json?access_token='+MAPBOX_TOKEN+'&limit=1');
+      const d=await r.json();
+      if(d&&d.features&&d.features.length)
+        return {lat:d.features[0].center[1],lng:d.features[0].center[0]};
+    }catch(e){}
+    return null;
+  }
+
+  window.addEventListener('message',async function(ev){
+    const d=ev.data; if(!d||!d.aurasense)return;
+
+    /* the place is being named — the world comes up behind the cloud */
+    if(d.aurasense==='seeking-place'){ worldWaiting(); return; }
+
+    if(d.aurasense!=='seeking-complete')return;
+    const spot=await place(d.where);
+    const id=senseIdFor(d.senseKey,d.sense);
+    if(id)selSense=id;
+    leave();
+    if(!spot||!id){ try{showMsg('Your light is here — choose where to place it ✧');}catch(e){} return; }
+    descend(spot.lat,spot.lng,function(){
+      try{ materializeAndSubmit(spot.lat,spot.lng,''); }catch(e){}
+    });
+  });
+})();
+
+</script>
 </body>
 </html>

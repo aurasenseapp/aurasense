@@ -65,6 +65,28 @@ html,body{height:100%;overflow:hidden;background:var(--sheet);font-family:var(--
 /* the night is cross-faded over the day — gradients do not interpolate */
 #stageNight{position:fixed;inset:0;opacity:0;transition:opacity 3s ease;
   background:radial-gradient(122% 92% at 50% 42%,#191434 0%,#0d0b20 48%,#07060e 100%)}
+/* ═══ THE CLOUD ═══ painted, above both grounds, beneath everything else.
+   It arrives by fading over the plain sky, so the opening does not begin on it. */
+#skyCloud{position:fixed;inset:0;z-index:0;pointer-events:none;
+  opacity:0;transition:opacity 3s ease}
+#skyCloud.on{opacity:1}
+/* ═══ THE WORLD COMES UP BEHIND ═══ 25 Aug 2026
+   Carried inside Aurasense, this page is see-through and the living map is
+   directly behind it. When the place is being named, the pale grounds step
+   aside and the cloud thins — and the planet is ALREADY THERE, turning. It is
+   not swapped in, it is uncovered, which is why there is no lurch.
+   Standing alone, none of this applies and the page is exactly as it was. */
+body.embedded #stage,body.embedded #stageNight{transition:opacity 2.6s ease}
+body.embedded.opening #stage,body.embedded.opening #stageNight{opacity:0}
+body.embedded.opening #skyCloud.on{opacity:.46}
+body.embedded.opening #depth,body.embedded.opening #vign{opacity:0}
+body.embedded.parting #skyCloud.on{opacity:0}
+body.embedded.parting #stage,body.embedded.parting #stageNight{opacity:0}
+/* THE OLD WASHES STAND DOWN. Three blurred circles multiplied over one another
+   were the smudge Karl's note named. The cloud does their work properly now, so
+   they are faded rather than removed — one line restores them. */
+#depth{transition:opacity 2.4s ease}
+body.cloud #depth{opacity:.16}
 body.night #stageNight{opacity:1}
 body.night .wash{mix-blend-mode:screen}
 body.night #vign{background:radial-gradient(74% 58% at 50% 44%,
@@ -356,6 +378,41 @@ body.night #map .ghost{font-size:16px;color:#d8cffa}
 #whereBox{display:none}
 #typed.naming #whereBox{display:block}
 #typed.naming #hereBtn,#typed.naming #orName{display:none}
+
+/* ═══ A CLEARING FOR THE WORDS ═══ 25 Aug 2026
+   The cloud drifts, so anything written over it has no fixed ground — a pale
+   grey line of text is legible until a dark mass passes behind it. The cloud is
+   not touched. Instead the words carry their own ground: a veil with no edge at
+   all, and a halo on the letters themselves for wherever the veil is thinnest.
+   Both cross to night on the same three seconds as everything else. */
+#typed .panel{position:relative}
+#typed .panel::before{
+  content:'';position:absolute;left:50%;top:50%;z-index:-1;pointer-events:none;
+  transform:translate(-50%,-50%);width:168%;height:150%;
+  background:radial-gradient(closest-side,
+    rgba(255,251,246,.90) 0%,rgba(255,251,246,.74) 40%,
+    rgba(255,251,246,.34) 72%,rgba(255,251,246,0) 100%);
+  transition:background 3s ease}
+body.night #typed .panel::before{
+  background:radial-gradient(closest-side,
+    rgba(12,8,14,.86) 0%,rgba(12,8,14,.68) 40%,
+    rgba(12,8,14,.30) 72%,rgba(12,8,14,0) 100%)}
+
+/* the two Karl named, given weight as well as ground */
+#typed #orName,#typed .tiny{color:#6a5f7e;
+  text-shadow:0 1px 9px rgba(255,251,246,.95),0 0 22px rgba(255,251,246,.7)}
+#typed .pHead{text-shadow:0 1px 11px rgba(255,251,246,.9)}
+body.night #typed #orName,body.night #typed .tiny{color:#c6bbe8;
+  text-shadow:0 1px 9px rgba(10,7,13,.98),0 0 22px rgba(10,7,13,.8)}
+body.night #typed .pHead{text-shadow:0 1px 11px rgba(10,7,13,.92)}
+
+/* what is typed needs a ground too, and so does the grey prompt inside it */
+#typed input[type=text]{background:rgba(255,252,248,.46);
+  border-radius:11px 11px 0 0;border-bottom-color:rgba(122,104,150,.42)}
+#typed input[type=text]::placeholder{color:#8b8098;opacity:1}
+body.night #typed input[type=text]{background:rgba(16,10,20,.46);
+  border-bottom-color:rgba(167,139,250,.34)}
+body.night #typed input[type=text]::placeholder{color:#9a8fbe}
 /* what they were doing, offered only once the light exists */
 #doing{display:flex;flex-wrap:wrap;justify-content:center;gap:9px;max-width:360px}
 .dchip{font-family:var(--serif);font-size:15px;color:var(--soft);
@@ -418,6 +475,7 @@ body.night .tiny{color:var(--far)}
 <body>
 <div id="stage"></div>
 <div id="stageNight"></div>
+<canvas id="skyCloud"></canvas>
 <div id="depth"><div class="wash" id="w1"></div><div class="wash" id="w2"></div><div class="wash" id="w3"></div></div>
 <div id="vign"></div>
 <div id="bed"></div>
@@ -460,7 +518,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 12</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 24</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -550,7 +608,10 @@ var ALPHA=[
 {w:'Heaviness',c:'#8f86b8',g:'<path d="M12 17 Q24 26 36 17"/><circle cx="24" cy="31" r="3.2" class="f"/>'},
 {w:'Numbness',c:'#9aa3ad',g:'<circle cx="24" cy="24" r="3" class="f"/><path d="M11 24a13 13 0 0 1 8-12"/><path d="M37 24a13 13 0 0 1-8 12"/>'},
 {w:'Rest',c:'#8fd8b0',g:'<path d="M12 26q12 12 24 0"/><circle cx="24" cy="24" r="3.4" class="f"/>'},
-{w:'Relief',c:'#ffd9a0',g:'<path d="M13 31q11 10 22 0"/><circle cx="24" cy="22" r="3.2" class="f"/><path d="M24 13v-4"/>'}
+{w:'Relief',c:'#ffd9a0',g:'<path d="M13 31q11 10 22 0"/><circle cx="24" cy="22" r="3.2" class="f"/><path d="M24 13v-4"/>'},
+/* ANOMALY — the shell with the ember inside it, "a glimpse through". Taken from
+   the symbol gallery and halved to this viewBox. Nothing about it is invented. */
+{w:'Anomaly',c:'#f0c76a',g:'<path d="M24 7C13 15 13 33 24 41C35 33 35 15 24 7Z"/><ellipse cx="24" cy="24" rx="4.2" ry="6.6" class="f"/>'}
 ];
 function alphaSvg(word,s,deep){
   /* the gesture is drawn TWICE: a thick white pass beneath, the colour on top.
@@ -588,6 +649,14 @@ var SENSES=[
  {w:'Anxiety',            k:'anxiety',      c:'#e89aa8'},
  {w:'Emotional Overwhelm',k:'overwhelm',    c:'#c08ae0'},
  {w:'Pain',               k:'pain',         c:'#d44a4a'},
+ /* IN THE CIRCLE, as Karl meant from the first asking. Holding it opens its
+    twelve, exactly as Weariness does.
+    IT SITS DIRECTLY OPPOSITE REST. The ring is a closed loop: Rest at one
+    point, the heavy senses running away one side, the light ones returning the
+    other, meeting at the far point. That meeting place is the only spot that
+    belongs to neither half — which is where an anomaly belongs. With twenty
+    words it falls at exactly 180 degrees from Rest. */
+ {w:'Anomaly',            k:'Anomaly',      c:'#f0c76a'},
  {w:'Joy',                k:'Joy',          c:'#ffcf6e'},
  {w:'Love',               k:'Love',         c:'#ff9db4'},
  {w:'Wonder',             k:'Wonder',       c:'#d8b8ff'},
@@ -626,6 +695,32 @@ var FAMILIES={
     NOTE FOR KARL: the record says Weariness holds the exhaustion seat with
     no separate Exhaustion gesture. That was a decision about the RING. It is
     left in the family here, but it is your call. */
+ /* ANOMALY'S TWELVE — Karl's own list, 14 July 2026. Five that were new to the
+    language, and seven that were already senses in their own right and are
+    gathered here because this is where someone would come looking for them.
+
+    AWAITING GESTURES, exactly as the Weariness family is: each carries
+    Anomaly's mark and Anomaly's colour until it is distinguished. They ARE
+    Anomaly until then, and saying so is honest.
+
+    IT IS NOT IN THE RING, AND MUST NOT BE. The nineteen are a continuum from
+    Pain to Joy and every place on it means something. There is no point
+    between Wonder and Love where a glimpse through belongs. An anomaly found
+    among the ordinary would have stopped being one. */
+ 'Anomaly':[
+   {w:'UFO',                       k:'Anomaly', c:'#f0c76a'},
+   {w:'Apparition',                k:'Anomaly', c:'#f0c76a'},
+   {w:'Manifested something here', k:'Anomaly', c:'#f0c76a'},
+   {w:'Dream connection',          k:'Anomaly', c:'#f0c76a'},
+   {w:'Discovery of something new',k:'Anomaly', c:'#f0c76a'},
+   {w:'Synchronicity',             k:'Anomaly', c:'#f0c76a'},
+   {w:'Clairaudience',             k:'Anomaly', c:'#f0c76a'},
+   {w:'Clairvoyance',              k:'Anomaly', c:'#f0c76a'},
+   {w:'D\u00e9j\u00e0 Vu',              k:'Anomaly', c:'#f0c76a'},
+   {w:'Remote-viewed',             k:'Anomaly', c:'#f0c76a'},
+   {w:'Prediction Dream',          k:'Anomaly', c:'#f0c76a'},
+   {w:'Premonition',               k:'Anomaly', c:'#f0c76a'}
+ ],
  'Weariness':[
    {w:'Burnout',         k:'Weariness', c:'#a99cc9'},
    {w:'Exhaustion',      k:'Weariness', c:'#a99cc9'},
@@ -755,6 +850,7 @@ function toSeek(){
     setTimeout(function(){$('sSub').classList.remove('calling');},2600+3*1400);
     setTimeout(function(){$('listDoor').classList.add('on');
       $('listDoor').classList.add('calling');},2600+3*1400+300);
+    /* it arrives a breath later than the list, and never calls for attention */
     setTimeout(function(){$('listDoor').classList.remove('calling');},2600+6*1400+300);
   },700);
 }
@@ -894,6 +990,153 @@ function restDown(){
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
+   THE CLOUD  ·  brought in from the study, 25 Aug 2026
+   ───────────────────────────────────────────────────────────────────────────
+   Karl's note, written long before it existed: "a free-form BED, not rings.
+   Solid colour cut by fractal noise into wisps, MULTIPLYING where masses cross
+   so colour deepens instead of averaging toward a flat middle."
+
+   Painted, not stacked. Two masses, the second steered by the first and
+   multiplied into it, then lit from the slope of the density so it has a near
+   face and a far one. Painted small and enlarged, which is what keeps it cheap
+   and what takes the last hard edge off.
+
+   THE SETTINGS ARE KARL'S OWN, felt on each screen on 25 August: warmth full,
+   bed almost nothing. Warmth is why the bed can be nothing — on an orange
+   ground the aura separates by hue rather than by darkness, so it no longer
+   needs a clearing to be seen in.
+   ═══════════════════════════════════════════════════════════════════════════ */
+var CLD = (Math.min(innerWidth,innerHeight)<560)
+  ? {size:34,cover:75,depth:29,oct:5,warp:22,light:31,bed:4,drift:41,res:240}   /* phone  */
+  : {size:48,cover:90,depth: 6,oct:5,warp:21,light: 5,bed:4,drift:92,res:229};  /* laptop */
+
+var PERM=new Uint8Array(512);
+(function(){var p=new Uint8Array(256),i,j,t;
+  for(i=0;i<256;i++)p[i]=i;
+  for(i=255;i>0;i--){ j=(Math.random()*(i+1))|0; t=p[i];p[i]=p[j];p[j]=t; }
+  for(i=0;i<512;i++)PERM[i]=p[i&255];})();
+function h3(x,y,z){ return PERM[(PERM[(PERM[x&255]+y)&255]+z)&255]*0.00392156862745098; }
+function cldEase(t){ return t*t*t*(t*(t*6-15)+10); }
+function vn(x,y,z){
+  var xi=Math.floor(x),yi=Math.floor(y),zi=Math.floor(z);
+  var u=cldEase(x-xi),v=cldEase(y-yi),w=cldEase(z-zi);
+  var a0=h3(xi,yi,zi),a1=h3(xi+1,yi,zi),b0=h3(xi,yi+1,zi),b1=h3(xi+1,yi+1,zi),
+      c0=h3(xi,yi,zi+1),c1=h3(xi+1,yi,zi+1),d0=h3(xi,yi+1,zi+1),d1=h3(xi+1,yi+1,zi+1);
+  var x0=a0+(a1-a0)*u,x1=b0+(b1-b0)*u,x2=c0+(c1-c0)*u,x3=d0+(d1-d0)*u;
+  var y0=x0+(x1-x0)*v,y1=x2+(x3-x2)*v;
+  return y0+(y1-y0)*w;
+}
+function fbm(x,y,z,oct){
+  var a=0.5,f=1,sm=0,n=0;
+  for(var i=0;i<oct;i++){ sm+=a*vn(x*f,y*f,z*f); n+=a; a*=0.5; f*=2.03; }
+  return sm/n;
+}
+/* the two grounds, both at full warmth — Karl's verdict */
+var CLD_DAY  ={ skyTop:[255,248,238], skyBot:[252,220,190], cloud:[214,150,112], lit:[255,246,228] };
+var CLD_NIGHT={ skyTop:[ 38, 20, 34], skyBot:[ 14,  7, 10], cloud:[136, 74, 66], lit:[248,190,148] };
+function mixPal(a,b,t){ var o={},k,i;
+  for(k in a){ o[k]=[]; for(i=0;i<3;i++)o[k][i]=a[k][i]+(b[k][i]-a[k][i])*t; } return o; }
+
+var cldCv=null,cldCx=null,cldBuf=null,cldBx=null,cldImg=null,cldDen=null;
+var cldBW=0,cldBH=0,cldT=0,cldPrev=0,cldNight=0,cldCost=0,cldLast=0,cldPainted=false;
+
+function cldSize(){
+  if(!cldCv)return;
+  var d=Math.min(window.devicePixelRatio||1,2);
+  cldCv.width=Math.round(innerWidth*d); cldCv.height=Math.round(innerHeight*d);
+  cldCv.style.width=innerWidth+'px'; cldCv.style.height=innerHeight+'px';
+  cldCx=cldCv.getContext('2d');
+  cldCx.imageSmoothingEnabled=true;
+  if(cldCx.imageSmoothingQuality)cldCx.imageSmoothingQuality='high';
+  cldBufSize();
+}
+function cldBufSize(){
+  var ar=innerWidth/innerHeight;
+  cldBW=Math.max(40,Math.round(CLD.res*Math.sqrt(ar)));
+  cldBH=Math.max(40,Math.round(CLD.res/Math.sqrt(ar)));
+  cldBuf.width=cldBW; cldBuf.height=cldBH;
+  cldImg=cldBx.createImageData(cldBW,cldBH);
+  cldDen=new Float32Array(cldBW*cldBH);
+}
+function cldPaint(ms){
+  var t0=performance.now();
+  /* the crossing is followed, never jumped — three seconds, same as the ground */
+  var want=document.body.classList.contains('night')?1:0;
+  var step=(ms-(cldPrev||ms))/3000; cldPrev=ms;
+  if(cldNight<want)cldNight=Math.min(want,cldNight+step);
+  else if(cldNight>want)cldNight=Math.max(want,cldNight-step);
+  var P=mixPal(CLD_DAY,CLD_NIGHT,cldEase(cldNight));
+
+  var units=90/CLD.size, cover=CLD.cover/100, depth=CLD.depth/100, oct=CLD.oct;
+  var warp=CLD.warp/100*1.6, light=CLD.light/100, bed=CLD.bed/100;
+  if(!reduced)cldT+=(CLD.drift/100)*0.0022*Math.min(60,ms-cldLast);
+  cldLast=ms;
+  var T=cldT,x,y,i;
+
+  for(y=0;y<cldBH;y++){
+    for(x=0;x<cldBW;x++){
+      var px=(x/cldBH)*units, py=(y/cldBH)*units;
+      var m1=fbm(px,py,T*0.09,oct);
+      var m2=fbm(px*1.87+m1*warp*6, py*1.87-m1*warp*6, T*0.14+37.4, oct);
+      var m=m1*(0.42+0.58*m2)*1.62;
+      if(bed>0){
+        var ux=(x/(cldBW-1)-0.5)*2, uy=(y/(cldBH-1)-0.5)*2.1;
+        var q=Math.sqrt(ux*ux+uy*uy*0.8);
+        m*=1-bed*Math.max(0,Math.min(1,(q-0.45)/0.85));
+      }
+      var e=(m-(1-cover))*(1.1+depth*2.4);
+      cldDen[y*cldBW+x]=e<0?0:(e>1?1:e);
+    }
+  }
+  var d=cldImg.data;
+  for(y=0;y<cldBH;y++){
+    var yb=y/(cldBH-1);
+    for(x=0;x<cldBW;x++){
+      i=y*cldBW+x;
+      var c=cldDen[i];
+      var sx=x>1?2:0, ex=x<cldBW-2?2:0, sy=y>1?2:0, ey=y<cldBH-2?2:0;
+      var slope=((cldDen[i-sx]-cldDen[i+ex])+(cldDen[i-sy*cldBW]-cldDen[i+ey*cldBW]))*0.5;
+      var sh=1+slope*light*1.7; if(sh<0.68)sh=0.68; if(sh>1.34)sh=1.34;
+      var lp=Math.max(0,slope)*light*1.3; if(lp>0.85)lp=0.85;
+      var sr=P.skyTop[0]+(P.skyBot[0]-P.skyTop[0])*yb;
+      var sg=P.skyTop[1]+(P.skyBot[1]-P.skyTop[1])*yb;
+      var sb=P.skyTop[2]+(P.skyBot[2]-P.skyTop[2])*yb;
+      var cr=P.cloud[0]*sh+(P.lit[0]-P.cloud[0])*lp;
+      var cg=P.cloud[1]*sh+(P.lit[1]-P.cloud[1])*lp;
+      var cb=P.cloud[2]*sh+(P.lit[2]-P.cloud[2])*lp;
+      var k=c*c*(3-2*c)*0.88, o=i*4;
+      d[o]=sr+(cr-sr)*k; d[o+1]=sg+(cg-sg)*k; d[o+2]=sb+(cb-sb)*k; d[o+3]=255;
+    }
+  }
+  cldBx.putImageData(cldImg,0,0);
+  cldCx.drawImage(cldBuf,0,0,cldBW,cldBH,0,0,cldCv.width,cldCv.height);
+  cldPainted=true;
+  cldCost=performance.now()-t0;
+  /* IF THE DEVICE CANNOT AFFORD IT, IT ASKS FOR LESS rather than stuttering */
+  if(cldCost>30&&CLD.res>90){ CLD.res=Math.max(90,Math.round(CLD.res*0.85)); cldBufSize(); }
+}
+var cldNext=0;
+function cldLoop(ts){
+  /* twenty times a second is plenty for something drifting this slowly, and
+     half that while a hold is running, so the quickening gets the frames.
+     If the browser is asked for less motion, it is painted once and left. */
+  var gap = qOn ? 84 : 50;
+  if(!reduced || !cldPainted){
+    if(ts>=cldNext){ cldNext=ts+gap; try{ cldPaint(ts); }catch(e){} }
+  }
+  requestAnimationFrame(cldLoop);
+}
+function cldStart(){
+  cldCv=$('skyCloud'); if(!cldCv)return;
+  cldBuf=document.createElement('canvas'); cldBx=cldBuf.getContext('2d');
+  cldSize();
+  document.body.classList.add('cloud');
+  setTimeout(function(){ cldCv.classList.add('on'); },120);
+  addEventListener('resize',cldSize);
+  requestAnimationFrame(cldLoop);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
    THE LIVING COUNTDOWN  ·  public name: the quickening
    ───────────────────────────────────────────────────────────────────────────
    What the band used to do with a closing line, this does by waking the aura
@@ -948,11 +1191,101 @@ var QSIG={
   'Jadedness':          {breath:7.8,ether:2.60,dir:-1,mental:5600,shimmer:0.50,soft:1.00,particle:false,vortex:-0.30,c2:'#d6cdea'},
   'World-weariness':    {breath:8.8,ether:3.00,dir:-1,mental:6800,shimmer:0.40,soft:1.65,particle:false,vortex:-0.20,c2:'#d6cdea'},
   'Ennui':              {breath:8.2,ether:2.90,dir:1,mental:7400,shimmer:0.35,soft:1.45,particle:true, vortex:0,     c2:'#d6cdea'},
-  'Listlessness':       {breath:8.6,ether:3.10,dir:1,mental:7800,shimmer:0.25,soft:1.50,particle:true, vortex:0,     c2:'#d6cdea'}
+  'Listlessness':       {breath:8.6,ether:3.10,dir:1,mental:7800,shimmer:0.25,soft:1.50,particle:true, vortex:0,     c2:'#d6cdea'},
+  /* ── ANOMALY AND ITS TWELVE ──────────────────────────────────────────────
+     The signature is the one from the living motion study, unchanged:
+     irregular, quick, grainy, and turning the other way. VISIT marks the ones
+     that carry a visitation — a thing that crosses the field while it wakes,
+     never the same twice. The behaviours are Karl's own sightings, written
+     down in July, not invented here. */
+  'Anomaly':                     {breath:5.2,ether:0.75,dir:-1,mental:1100,shimmer:1.90,soft:0.80,particle:true,vortex:0,c2:'#fff0c9',visit:true},
+  'UFO':                         {breath:5.0,ether:0.70,dir:-1,mental:1000,shimmer:1.95,soft:0.78,particle:true,vortex:0,c2:'#fff0c9',visit:true},
+  'Apparition':                  {breath:6.4,ether:1.30,dir:-1,mental:2400,shimmer:1.40,soft:1.10,particle:true,vortex:0,c2:'#fff0c9',visit:true},
+  'Manifested something here':   {breath:5.6,ether:0.95,dir:1, mental:1600,shimmer:1.60,soft:0.95,particle:true,vortex:0.35,c2:'#fff0c9',visit:true},
+  'Dream connection':            {breath:7.0,ether:1.70,dir:-1,mental:3200,shimmer:1.20,soft:1.30,particle:false,vortex:0.45,c2:'#fff0c9',visit:true},
+  'Discovery of something new':  {breath:5.4,ether:0.90,dir:1, mental:1400,shimmer:1.70,soft:1.05,particle:true,vortex:0.55,c2:'#fff0c9',visit:true},
+  'Synchronicity':               {breath:6.0,ether:1.10,dir:1, mental:1900,shimmer:1.55,soft:1.00,particle:true,vortex:0.70,c2:'#fff0c9',visit:true},
+  'Clairaudience':               {breath:5.8,ether:1.00,dir:-1,mental:1500,shimmer:1.75,soft:0.90,particle:true,vortex:0,c2:'#fff0c9',visit:true},
+  'Clairvoyance':                {breath:6.2,ether:1.20,dir:-1,mental:2000,shimmer:1.65,soft:0.95,particle:true,vortex:0,c2:'#fff0c9',visit:true},
+  'D\u00e9j\u00e0 Vu':                {breath:6.6,ether:1.45,dir:-1,mental:2800,shimmer:1.30,soft:1.15,particle:true,vortex:-0.40,c2:'#fff0c9',visit:true},
+  'Remote-viewed':               {breath:7.2,ether:1.85,dir:-1,mental:3600,shimmer:1.10,soft:1.35,particle:false,vortex:0,c2:'#fff0c9',visit:true},
+  'Prediction Dream':            {breath:7.4,ether:1.95,dir:-1,mental:3800,shimmer:1.05,soft:1.40,particle:false,vortex:0.30,c2:'#fff0c9',visit:true},
+  'Premonition':                 {breath:5.2,ether:0.80,dir:-1,mental:1200,shimmer:1.85,soft:0.85,particle:true,vortex:0,c2:'#fff0c9',visit:true}
 };
+
+/* ═══ THE VISITATIONS ═══ Karl's sightings, written down 14 July 2026:
+   a dart at any angle · back-and-forth · zigzag · cross halfway and hesitate ·
+   a large slow red ember · approach, sidestep, closer, repeat, blink out ·
+   hover then zip almost faster than the eye — and, rarely, a tumbling facet.
+   One is chosen fresh each time. It is never the same twice, which is the
+   whole of what the sense means. */
+var VISITS=[
+  {n:'dart',     dur:900,  w:26},
+  {n:'backforth',dur:1500, w:16},
+  {n:'zigzag',   dur:1300, w:16},
+  {n:'hesitate', dur:1700, w:14},
+  {n:'ember',    dur:2400, w:10},
+  {n:'approach', dur:2100, w:10},
+  {n:'hoverzip', dur:1800, w:6},
+  {n:'facet',    dur:1600, w:2}          /* rarely */
+];
+var vsOn=false,vsBeh=null,vsT0=0,vsNext=0,vsP=null;
+function vsPick(){
+  var tot=0,i; for(i=0;i<VISITS.length;i++)tot+=VISITS[i].w;
+  var r=Math.random()*tot;
+  for(i=0;i<VISITS.length;i++){ r-=VISITS[i].w; if(r<=0)return VISITS[i]; }
+  return VISITS[0];
+}
+function vsArm(){ vsOn=false; vsBeh=null; vsNext=1.1+Math.random()*0.9; }
+function vsDraw(T,r,cx,cy,v){
+  if(!vsOn){
+    if(T<vsNext)return;
+    vsOn=true; vsT0=T; vsBeh=vsPick();
+    vsP={ang:Math.random()*Math.PI*2, zig:3+((Math.random()*2)|0),
+         hx:cx+(Math.random()-0.5)*r*0.9, hy:cy+(Math.random()-0.5)*r*0.7,
+         exit:Math.random()*Math.PI*2, emberY:cy+r*(0.15+Math.random()*0.45),
+         rot:Math.random()*Math.PI};
+  }
+  var k=(T-vsT0)/(vsBeh.dur/1000);
+  if(k>=1){ vsOn=false; vsNext=T+1.4+Math.random()*1.6; return; }
+  var x=cx,y=cy,al=Math.sin(k*Math.PI),sz=0.045,tint=qT2,glow=0,facet=false;
+  var span=r*1.5, P=vsP;
+  function along(u){ x=cx+(u*2-1)*span*Math.cos(P.ang); y=cy+(u*2-1)*span*0.6*Math.sin(P.ang); }
+  var n=vsBeh.n,u,step,g,q;
+  if(n==='dart'){ along(k); sz=0.05; }
+  else if(n==='backforth'){ u=k<0.4?(k/0.4)*0.72:(k<0.62?0.72-((k-0.4)/0.22)*0.5:0.22+((k-0.62)/0.38)*0.78); along(u); }
+  else if(n==='zigzag'){ along(k); y+=Math.sin(k*Math.PI*P.zig)*r*0.22; }
+  else if(n==='hesitate'){ u=k<0.35?(k/0.35)*0.5:(k<0.6?0.5+Math.sin((k-0.35)*40)*0.006:0.5+((k-0.6)/0.4)*0.5); along(u); }
+  else if(n==='ember'){ along(k); y=P.emberY+Math.sin(k*Math.PI*2.3)*r*0.05; tint=[236,96,64]; sz=0.075; glow=1; al*=0.9; }
+  else if(n==='approach'){ step=Math.min(2,(k*3)|0); g=(k*3)%1;
+    x=P.hx+((step%2)?1:-1)*r*0.10*Math.sin(g*Math.PI); y=P.hy-step*r*0.06;
+    sz=0.04+step*0.02+g*0.012; al=k>0.965?0:(0.55+step*0.2); }
+  else if(n==='hoverzip'){ if(k<0.8){ x=P.hx+Math.sin(k*22)*r*0.012; y=P.hy+Math.cos(k*17)*r*0.012; sz=0.042; }
+    else { q=(k-0.8)/0.2; x=P.hx+Math.cos(P.exit)*span*1.3*q; y=P.hy+Math.sin(P.exit)*span*1.3*q; sz=0.036; al=1-q*0.9; } }
+  else { along(k); facet=true; sz=0.055; }
+  var R=r*sz*(0.7+v*0.5), a2=al*(0.35+v*0.65);
+  if(a2<=0.01)return;
+  if(glow){
+    var eg=qCtx.createRadialGradient(x,y,0,x,y,R*3.4);
+    eg.addColorStop(0,qA(tint,a2*0.9)); eg.addColorStop(1,qA(tint,0));
+    qCtx.fillStyle=eg; qCtx.beginPath(); qCtx.arc(x,y,R*3.4,0,7); qCtx.fill();
+  }
+  if(facet){
+    qCtx.save(); qCtx.translate(x,y); qCtx.rotate(P.rot+T*2.4);
+    qCtx.fillStyle=qA(tint,a2);
+    qCtx.beginPath();
+    qCtx.moveTo(0,-R*1.5); qCtx.lineTo(R*1.1,0); qCtx.lineTo(0,R*1.5); qCtx.lineTo(-R*1.1,0);
+    qCtx.closePath(); qCtx.fill(); qCtx.restore();
+  } else {
+    var vg=qCtx.createRadialGradient(x,y,0,x,y,R*2.1);
+    vg.addColorStop(0,qA(tint,a2)); vg.addColorStop(0.4,qA(tint,a2*0.5)); vg.addColorStop(1,qA(tint,0));
+    qCtx.fillStyle=vg; qCtx.beginPath(); qCtx.arc(x,y,R*2.1,0,7); qCtx.fill();
+  }
+}
 var QDEF={breath:6.4,ether:1.80,dir:1,mental:3600,shimmer:1.00,soft:1.25,particle:false,vortex:0,c2:'#e8dcff'};
 
 var qCv=null,qCtx=null,qRaf=null,qT0=0,qDur=3000,qSig=null,qCol='#c4b5fd',qOn=false,qFade=0,qGen=0;
+var qPhase=0,qPrev=0;   /* the accumulating clock: it starts when the hold does */
 var qBlobs=[],qRips=[],qLastRip=0,qW=0,qH=0;
 for(var _qb=0;_qb<6;_qb++)qBlobs.push({a:Math.random()*Math.PI*2,r:0.5+Math.random()*0.33,
   vr:0.25+Math.random()*0.5,ph:Math.random()*Math.PI*2});
@@ -967,8 +1300,16 @@ function qTriple(hex,night){
   if(!hex||hex.charAt(0)!=='#')return [196,181,253];
   var r=parseInt(hex.substr(1,2),16),g=parseInt(hex.substr(3,2),16),b=parseInt(hex.substr(5,2),16);
   if(night)return [r,g,b];
+  /* THIS IS WHY THEY ALL LOOKED THE SAME. Darkening every colour until it hit
+     one fixed darkness turned Joy, Love, Anxiety and Rest into the same mud.
+     Hue is what tells them apart, so hue is what is kept: saturation is pushed
+     UP, and it is deepened only far enough to read on the cloud. */
+  var mid=(Math.max(r,g,b)+Math.min(r,g,b))/2;
+  r=Math.min(255,Math.max(0,mid+(r-mid)*1.55));
+  g=Math.min(255,Math.max(0,mid+(g-mid)*1.55));
+  b=Math.min(255,Math.max(0,mid+(b-mid)*1.55));
   var k=1;
-  try{ while(k>0.10&&relLum(r*k,g*k,b*k)>0.13)k-=0.03; }catch(e){ k=0.34; }
+  try{ while(k>0.34&&relLum(r*k,g*k,b*k)>0.30)k-=0.03; }catch(e){ k=0.62; }
   return [Math.round(r*k),Math.round(g*k),Math.round(b*k)];
 }
 function qA(t,a){ return 'rgba('+t[0]+','+t[1]+','+t[2]+','+Math.min(1,a*qAB).toFixed(3)+')'; }
@@ -988,18 +1329,60 @@ function qSize(){
 }
 
 /* the field itself — the study's four layers, riding one breath */
-function qDraw(ms,v,pace,strength){
+function qDraw(ph,v,pace,strength){
   if(!qCtx)return;
-  var S=qSig||QDEF, T=ms/1000, cx=qW/2, cy=qH/2, C=Math.min(qW,qH), R=C*0.32;
-  var slow=0.28+pace*0.56;
-  var br=0.5-0.5*Math.cos(2*Math.PI*T/(S.breath*1.45));   /* the whole field breathes longer */
+  var S=qSig||QDEF, T=ph, cx=qW/2, cy=qH/2, C=Math.min(qW,qH), R=C*0.32;
+  /* PACE NO LONGER STRETCHES TIME. It used to multiply the clock, and the clock
+     was counted from when the PAGE opened — so a field waking after a minute on
+     screen had its spiral thrown a quarter turn in the first instant. That was
+     the wild spin. Pace now sets how fast the clock TICKS, and the clock starts
+     at nought when the hold does, so speeding up can never move anything. */
+  var slow=1;
+  var bp=S.breath*1.45;
+  var br=0.5-0.5*Math.cos(2*Math.PI*(T+bp*0.25)/bp);   /* begins already rising */
   var r=R*(0.93+br*0.20)*(0.88+v*0.34)*strength;
   /* NOTHING MAY REACH THE EDGE. The widest thing drawn is either the shimmer at
      1.30x soft, or a blob at about 1.45x. Whichever is wider decides the limit,
      so no sense can ever meet a straight line. */
   r=Math.min(r, C*0.47/Math.max(1.45, 1.30*S.soft));
   qCtx.clearRect(0,0,qW,qH);
+
+  /* ═══ THE AURA'S OWN GROUND ═══ 25 Aug 2026
+     The drawn symbols are laid down TWICE — a thick white pass beneath, the
+     colour on top — which is why they hold their shape over anything. The aura
+     was a single pass straight onto the cloud, so a dark gap drifting behind it
+     swallowed it and a bright bank washed it out. Two auras could look alike
+     purely by what happened to be passing.
+     It now carries its own light beneath it: pale by day, so dark ink always
+     sits on paper; dark by night, so a glow always sits on darkness. It breathes
+     and grows with the field, and fades out with a long tail so there is no edge
+     anywhere. Nothing else about the aura changes. */
+  var bedR=Math.min(r*1.58*S.soft, C*0.499);
+  var bedRGB=qNight?'10,7,14':'255,251,246';
+  var bedA=(qNight?0.60:0.30)*v*(0.82+br*0.18);
+  var bd=qCtx.createRadialGradient(cx,cy,0,cx,cy,bedR);
+  bd.addColorStop(0,   'rgba('+bedRGB+','+bedA.toFixed(3)+')');
+  bd.addColorStop(0.42,'rgba('+bedRGB+','+(bedA*0.80).toFixed(3)+')');
+  bd.addColorStop(0.68,'rgba('+bedRGB+','+(bedA*0.44).toFixed(3)+')');
+  bd.addColorStop(0.86,'rgba('+bedRGB+','+(bedA*0.16).toFixed(3)+')');
+  bd.addColorStop(1,   'rgba('+bedRGB+',0)');
+  qCtx.globalCompositeOperation='source-over';
+  qCtx.fillStyle=bd; qCtx.beginPath(); qCtx.arc(cx,cy,bedR,0,7); qCtx.fill();
+
   qCtx.globalCompositeOperation=qNight?'lighter':'source-over';
+
+  /* ═══ THE RIM ═══ 25 Aug 2026
+     This is what the drawn symbols actually do, and what I should have given the
+     aura the first time: not a wash behind it, but a thick pale pass laid at the
+     very edge of every stroke. A rim works on any ground because the contrast
+     sits ON the shape rather than around it — which is why the symbols hold
+     over light haze and dark gaps alike, and why a wash behind them would not.
+     By day it is pale, so dark ink always has its own edge. By night the field
+     is already light on darkness and needs no help, so it is left alone. */
+  if(!qNight){
+    qCtx.shadowColor='rgba(255,252,247,0.95)';
+    qCtx.shadowBlur=Math.max(3,r*0.030);
+  }
 
   /* SPIRITUAL — the outer cocoon, finest grain, highest frequency */
   var outer=Math.min(r*1.62*S.soft, C*0.499);                 /* never a straight edge */
@@ -1014,7 +1397,7 @@ function qDraw(ms,v,pace,strength){
      its old speed, with fewer and softer points — an edge that moves, not a
      strobe. What tells the senses apart is meant to be the slow things: how
      the field breathes, which way it turns, whether it spirals. */
-  var n=34, sh=S.shimmer*(0.4+pace*0.5);
+  var n=34, sh=S.shimmer*0.9;
   for(var i=0;i<n;i++){
     var a=(i/n)*Math.PI*2;
     var f=Math.sin(T*0.95*sh+i*2.13)*0.5+Math.sin(T*1.5*sh+i*0.77)*0.3+Math.sin(T*0.55*sh+i*4.9)*0.2;
@@ -1037,7 +1420,7 @@ function qDraw(ms,v,pace,strength){
   if(S.particle){
     var gr=52, ga=(0.5+v*0.7);
     for(var j=0;j<gr;j++){
-      var ang=(j/gr)*Math.PI*2 + T*0.05*slow*S.dir;
+      var ang=(j/gr)*Math.PI*2 + T*0.22*slow*S.dir;
       var wv=Math.sin(ang*3 - T*1.4*slow)*0.5 + Math.sin(ang*5 + T*0.9*slow)*0.3;
       var rad=r*(0.66 + 0.30*(0.5+0.5*wv));
       var gv=Math.max(0,wv)*ga*(0.4+br*0.6)*v;
@@ -1049,7 +1432,7 @@ function qDraw(ms,v,pace,strength){
     for(var b=0;b<qBlobs.length;b++){
       var B=qBlobs[b];
       var brad=r*(B.r*(0.72+0.28*Math.sin(T*B.vr*slow+B.ph)));
-      var bx=cx+Math.cos(B.a+T*0.06*slow*S.dir)*brad, by=cy+Math.sin(B.a+T*0.06*slow*S.dir)*brad;
+      var bx=cx+Math.cos(B.a+T*0.28*slow*S.dir)*brad, by=cy+Math.sin(B.a+T*0.28*slow*S.dir)*brad;
       var size=r*(0.30+0.12*Math.sin(T*0.7*slow+B.ph*1.7))*(0.7+v*0.5);
       var bg=qCtx.createRadialGradient(bx,by,0,bx,by,size);
       bg.addColorStop(0,qA(b%2?qT2:qT1,(0.17+br*0.13)*(0.5+v*0.7)));
@@ -1060,7 +1443,7 @@ function qDraw(ms,v,pace,strength){
 
   /* VORTEX — for the signatures that carry one */
   if(S.vortex){
-    var per=110, spin=T*0.15*slow*(S.vortex<0?-1:1);
+    var per=110, spin=T*0.55*slow*(S.vortex<0?-1:1);
     for(var q=0;q<per;q++){
       var tt=q/per, va=tt*Math.PI*4 + spin, vrad=r*(0.14+tt*1.05);
       var val=Math.abs(S.vortex)*(1-tt)*0.5*(0.4+br*0.6)*v;
@@ -1071,10 +1454,15 @@ function qDraw(ms,v,pace,strength){
   }
 
   /* ETHERIC — the fast throb held close to the body */
-  var th=0.5-0.5*Math.cos(2*Math.PI*T/(S.ether*3.2/(0.6+pace*0.7)));
+  var th=0.5-0.5*Math.cos(2*Math.PI*T/(S.ether*2.2));
   qCtx.strokeStyle=qA(qT2,(0.13+th*0.30)*(0.45+br*0.55)*v);
   qCtx.lineWidth=Math.max(0.8,r*0.030*(0.5+th*0.7));
   qCtx.beginPath();qCtx.arc(cx,cy,r*(0.44+0.055*th),0,7);qCtx.stroke();
+
+  qCtx.shadowBlur=0; qCtx.shadowColor='transparent';   /* the rim ends here */
+
+  /* and if this is one of Anomaly's, something crosses it */
+  if(S.visit){ try{ vsDraw(T,r,cx,cy,v); }catch(e){} }
 
   qCtx.globalCompositeOperation='source-over';
 }
@@ -1084,7 +1472,12 @@ function qFrame(ts){
   /* THE COUNT IS UPDATED BEFORE THE FIELD IS PAINTED, and the painting is wrapped.
      If a frame ever fails to draw, the countdown still counts — it must never
      freeze on a number while the hold underneath it runs on to commit. */
-  var el=ts-qT0, k=Math.min(1,el/qDur);
+  /* K IS PENNED IN AT BOTH ENDS. A frame can carry a timestamp from a hair
+     BEFORE the hold was started, which made this negative — and a negative
+     number raised to a fractional power is not a number at all. One NaN here
+     poisoned every measurement after it, and the field simply never appeared.
+     That is the second reason some senses showed nothing. */
+  var el=Math.max(0,ts-qT0), k=Math.max(0,Math.min(1,el/qDur));
   /* VITALITY IS THE COUNTDOWN, but it was doing two jobs at once — how present
      the field looks and how fast it moves — so raising one raised the other.
      They are parted now. PRESENCE starts already there and swells. PACE starts
@@ -1092,12 +1485,24 @@ function qFrame(ts){
   var vLook=qFade*(0.56+0.44*Math.pow(k,0.70));    /* opacity and reach */
   var vPace=qFade*(0.06+0.94*Math.pow(k,1.45));    /* speed of everything */
   var strength=0.78+0.22*k;                        /* wide from the first frame */
+  /* THE CLOCK MUST NOT LOSE TIME ON A SLOW FRAME. This was capped at a
+     twentieth of a second, so on any device painting below twenty frames a
+     second — which, with the cloud running, is most of them — every frame
+     quietly threw away the difference and the aura ran in slow motion. The cap
+     is now loose enough to catch only a real gap, such as leaving the tab. */
+  var dt=qPrev?Math.min(0.2,(ts-qPrev)/1000):0; qPrev=ts;
+  /* THE RATE, AND WHY IT MATTERS. Stopping the wild spin was right; the rate I
+     chose was far too slow. Over four seconds the clock reached 2.2 — a third
+     of a breath, and nineteen degrees of turn for EVERY sense alike. That is
+     what flattened them: all the character lives in rates of motion, and at
+     that speed no rate had room to show itself. It now reaches about nine. */
+  qPhase+=dt*(0.80+vPace*3.20); if(!isFinite(qPhase))qPhase=0;                    /* ticks faster, never jumps */
   var S=qSig||QDEF, iv=S.mental/(0.55+vPace*0.9);
   if(ts-qLastRip>iv){ qLastRip=ts; qRips.push({age:0}); }
   for(var i=qRips.length-1;i>=0;i--){ qRips[i].age+=0.0072*(0.5+vPace*0.8); if(qRips[i].age>=1)qRips.splice(i,1); }
   var num=$('qNum');
   if(num){ var d=Math.max(1,Math.ceil((qDur-el)/1000)); if(num.textContent!==String(d))num.textContent=d; }
-  try{ qDraw(ts,vLook,vPace,strength); }catch(e){}
+  try{ qDraw(qPhase,vLook,vPace,strength); }catch(e){}
   qRaf=requestAnimationFrame(qFrame);
 }
 
@@ -1110,7 +1515,7 @@ function quickenStart(col,word,ms){
   qAB=qNight?1.25:2.7;                    /* ink needs more weight than glow */
   qT1=qTriple(qCol,qNight);
   qT2=qTriple(qSig.c2||qCol,qNight);
-  qDur=ms||3000; qFade=1; qOn=true; qRips=[]; qLastRip=0;
+  qDur=ms||3000; qFade=1; qOn=true; qRips=[]; qLastRip=0; qPhase=0; qPrev=0; vsArm();
   qT0=performance.now();
   qGen++;                                   /* any stop still pending is now stale */
   qCv.classList.add('on');
@@ -1381,6 +1786,7 @@ function born(next,head,sub,set,arc){
 function toNaming(line){
   $('typed').classList.add('naming');
   if(line)$('tHead').innerHTML=line;
+  openTheWorld();
   setTimeout(function(){$('whereBox').focus();},400);
 }
 $('orName').addEventListener('click',function(){toNaming();});
@@ -1439,8 +1845,18 @@ $('typedGo').addEventListener('click',function(){
 });
 
 /* ═══ the map ═══ where the light lands, and only now are words invited ═══ */
+/* the world is asked for as the place is asked for, so it has time to arrive */
+function openTheWorld(){
+  if(!document.body.classList.contains('embedded'))return;
+  if(document.body.classList.contains('opening'))return;
+  document.body.classList.add('opening');
+  try{ window.parent.postMessage({aurasense:'seeking-place'},'*'); }catch(e){}
+}
 function land(){
-  known=true;                        /* it is known now — the next one is lighter */
+  known=true;
+  /* and now the cloud parts altogether */
+  if(document.body.classList.contains('embedded'))
+    document.body.classList.add('parting');                        /* it is known now — the next one is lighter */
   /* Carried inside Aurasense, the place is the last thing asked here. The light
      lands on the real map, and words are invited there — the witness moment is
      not rehearsed in the cloud first. */
@@ -1570,10 +1986,17 @@ function openList(){
     });
     box.appendChild(b);
   });
+  /* ANOMALY IS A DOOR, NOT ONE OF THE NINETEEN — but someone who opens the list
+     looking for a sense should find it where senses are found. It sits at the
+     end, apart, and leads into its twelve rather than committing anything. */
   $('listPanel').classList.add('on');
   var f=box.querySelector('.litem'); if(f)f.focus();
 }
 $('listBtn').addEventListener('click',openList);
+/* THE DOOR OPENS THE FAMILY, by the same circle that Weariness opens — drawing
+   inward rather than onward. Anomaly is the door, never a bead on the arc. */
+var ANOMALY={w:'Anomaly',k:'Anomaly',c:'#f0c76a'};
+
 $('listClose').addEventListener('click',function(){$('listPanel').classList.remove('on');});
 
 /* ═══ a weaker device drops the heaviest layers rather than stuttering.
@@ -1592,6 +2015,21 @@ $('listClose').addEventListener('click',function(){$('listPanel').classList.remo
   }
   requestAnimationFrame(tick);
 })();
+
+/* THE CLOUD BEGINS. It fades over the plain sky rather than being there from the
+   first frame, so the opening still begins on nothing. A device already judged
+   weak gets a coarser grain from the outset rather than being eased down later. */
+if(document.documentElement.classList.contains('lite'))CLD.res=Math.min(CLD.res,150);
+cldStart();
+
+/* carried inside Aurasense, this page is see-through from the first frame */
+try{
+  if(window.parent&&window.parent!==window){
+    document.body.classList.add('embedded');
+    document.documentElement.style.background='transparent';
+    document.body.style.background='transparent';
+  }
+}catch(e){}
 
 </script>
 </body>
