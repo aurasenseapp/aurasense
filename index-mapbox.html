@@ -95,6 +95,20 @@ body.seeking #map{opacity:.45}
 body.seeking #ui,body.seeking #left-stack,body.seeking #panel,
 body.seeking #build-stamp{opacity:0!important;pointer-events:none!important;
   transition:opacity 1.6s ease}
+/* THE WHOLE ARRIVAL, UNDISTURBED. 29 Aug 2026.
+   Karl saw this page's own furniture flash for an instant before the Seeking
+   appeared, and stand in view again all through the descent. The rule above
+   only takes hold once a script has run, which is already too late for the
+   first paint, and it lets go the moment the Seeking withdraws — which is
+   exactly when the falling begins.
+   This one is set in the head, BEFORE the page first draws, and is let go only
+   once the light has landed. So the arrival is one unbroken thing.
+   .as-arrived carries the fade back in, and exists only for those two seconds,
+   so nothing here changes how the page behaves at any other time. */
+html.as-arriving #ui,html.as-arriving #left-stack,html.as-arriving #panel,
+html.as-arriving #build-stamp{opacity:0!important;pointer-events:none!important}
+html.as-arrived #ui,html.as-arrived #left-stack,html.as-arrived #panel,
+html.as-arrived #build-stamp{transition:opacity 1.8s ease}
 /* THE BUILD STAMP — one number, one place, bottom-left. Read it here and nowhere else. */
 #build-stamp{position:fixed;left:9px;bottom:6px;z-index:2200;pointer-events:none;font-family:var(--sans),system-ui,sans-serif;font-size:10px;letter-spacing:.04em;color:rgba(196,181,253,.42);text-shadow:0 0 8px rgba(6,5,16,.9)}
 /* THE ASCENT (build name: location lighting sequence) — the light climbing the scales after an
@@ -1499,6 +1513,21 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
 </style>
 <script src="gate-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* THE ARRIVAL BEGINS BEFORE THE PAGE DOES. 29 Aug 2026.
+   This runs before a single thing is drawn, and decides the same way the
+   merge does at the foot of the page: unless the plain map was asked for, or
+   this device has already been through the arrival, the page holds itself
+   back. If this script never runs at all, nothing is hidden and the map is
+   simply the map — which is the right way round for it to fail. */
+(function(){try{
+  var q=location.search;
+  if(/[?&]map=1/.test(q))return;
+  var seen=false; try{seen=localStorage.getItem('as_seeking_seen')==='1';}catch(e){}
+  if(seen&&!/[?&]seek=1/.test(q))return;
+  document.documentElement.classList.add('as-arriving');
+}catch(e){}})();
+</script>
 </head>
 <body>
 <div id="map"></div>
@@ -7329,7 +7358,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 28</div>
+<div id="build-stamp">Build 29 Aug 2026 · 29</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
@@ -7365,6 +7394,23 @@ try{
     try{ map.jumpTo({center:[8,26],zoom:1.35,pitch:0,bearing:0}); }catch(e){}
   }
   try{ map.on('load',worldWaiting); worldWaiting(); }catch(e){}
+
+  /* THE PAGE COMES BACK. Called once the offering has landed, or the moment
+     anything goes wrong — the page must never be left hidden. */
+  function arrived(){
+    try{
+      var h=document.documentElement;
+      if(!h.classList.contains('as-arriving'))return;
+      h.classList.add('as-arrived');
+      setTimeout(function(){ h.classList.remove('as-arriving'); },20);
+      setTimeout(function(){ h.classList.remove('as-arrived'); },2600);
+    }catch(e){}
+  }
+  /* if the Seeking never loads at all, the page must not sit hidden waiting */
+  fr.addEventListener('error',function(){ try{arrived();}catch(e){} });
+  setTimeout(function(){
+    try{ if(!document.body.classList.contains('seeking')) arrived(); }catch(e){}
+  },12000);
 
   function leave(){
     fr.classList.add('leaving');
@@ -7425,9 +7471,11 @@ try{
     const id=senseIdFor(d.senseKey,d.sense);
     if(id)selSense=id;
     leave();
-    if(!spot||!id){ try{showMsg('Your light is here — choose where to place it ✧');}catch(e){} return; }
+    if(!spot||!id){ arrived(); try{showMsg('Your light is here — choose where to place it ✧');}catch(e){} return; }
     descend(spot.lat,spot.lng,function(){
       try{ materializeAndSubmit(spot.lat,spot.lng,''); }catch(e){}
+      /* the page returns a breath after the light lands, not before */
+      setTimeout(arrived,900);
     });
   });
 })();
