@@ -7061,6 +7061,15 @@ document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&
 })();
 (function threshold(){
   try{
+    /* THE SEEKING BRINGS ITS OWN THRESHOLD. 29 Aug 2026.
+       This curtain hides the map while it draws, and lifts when the map
+       settles. But it stands above the arrival, so it covered the two lights
+       meeting and merging \u2014 they happened underneath it and were never seen.
+       While the Seeking is in front there is nothing to hide: its own cloud
+       is already the whole screen. So this stands down, and the crossing
+       from light to dark is the only threshold there is. Nothing removed \u2014
+       it returns in full for anyone arriving straight at the map. */
+    if(document.body.classList.contains('seeking'))return;
     var REDUCED=false;try{REDUCED=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
     var th=document.createElement('div');th.id='threshold';
     th.innerHTML='<div id="th-glow"></div>';
@@ -7320,7 +7329,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 27</div>
+<div id="build-stamp">Build 29 Aug 2026 · 28</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
