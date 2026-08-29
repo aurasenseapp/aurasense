@@ -2086,9 +2086,38 @@ const SENSES=[
   {id:"clairsentience",realm:"internal",label:"Clairsentience",icon:"❋",color:"#f0a8c0",freqs:[[528,.0,.08,.09,3.2],[792,.3,.05,.07,2.4],[1056,.65,.03,.06,1.9]],examples:["I feel what this room has been holding","The emotion of this place enters me whole"]},
   {id:"claircognizance",realm:"internal",label:"Claircognizance",icon:"✶",color:"#ffd9a0",freqs:[[594,.0,.08,.08,3.0],[891,.3,.05,.06,2.2],[1188,.6,.03,.05,1.8]],examples:["I simply knew, here, without knowing how","An undeniable certainty arrived at this spot"]},
   {id:"synchronicity",realm:"internal",label:"Synchronicity",icon:"∞",color:"#c9b8f0",freqs:[[528,.0,.07,.09,3.2],[792,.4,.045,.07,2.4]],examples:["The same symbol reached me twice today, from strangers","This place answered a thought I hadn\u2019t spoken","Two moments rhymed here — I felt the pattern wink"]},
+  /* ── THE FELT ARC ─────────────────────────────────────────────────────────
+     Eleven senses the Seeking offers that this page could not receive. Their
+     colours are the Seeking's own, so the aura that woke under the finger is
+     the aura that lands. Constricted senses are written to be recognisable as
+     themselves and never to deepen what is already heavy. ── 29 Aug 2026 ── */
+  {id:"joy",realm:"internal",label:"Joy",icon:"\u2600",color:"#ffcf6e",freqs:[[528,.0,.16,.06,2.0],[660,.10,.12,.06,1.8],[792,.22,.09,.06,1.6]],examples:["Something lifted in me the moment I turned this corner","I laughed out loud here and could not have said why","The light came off the water and my whole day changed"]},
+  {id:"love",realm:"internal",label:"Love",icon:"\u2765",color:"#ff9db4",freqs:[[528,.0,.17,.07,2.4],[639,.15,.12,.07,2.0]],examples:["This is where we met, and the air still knows it","I think of someone every time I pass this bench","A warmth toward everyone here, strangers included"]},
+  {id:"wonder",realm:"internal",label:"Wonder",icon:"\u2735",color:"#d8b8ff",freqs:[[741,.0,.13,.09,3.0],[988,.25,.08,.08,2.4]],examples:["I stood still far longer than I meant to","The sky opened over this field and I forgot myself","Something here is larger than I can account for"]},
+  {id:"gratitude",realm:"internal",label:"Gratitude",icon:"\u273f",color:"#f2ce8e",freqs:[[528,.0,.15,.08,2.6],[660,.20,.10,.07,2.0]],examples:["A quiet thank-you rises in me at this spot","Someone was kind to me here and I never forgot it","I am glad this place exists and that I found it"]},
+  {id:"hope",realm:"internal",label:"Hope",icon:"\u2039",color:"#ffe0a0",freqs:[[396,.0,.14,.08,2.6],[528,.22,.11,.07,2.2],[660,.45,.08,.06,1.8]],examples:["Something might yet come right \u2014 I felt it here","First green on this verge after a long winter","I make plans on this walk that I believe in"]},
+  {id:"peace",realm:"internal",label:"Peace",icon:"\u2296",color:"#aee0d8",freqs:[[174,.0,.16,.12,3.4],[261,.25,.10,.10,2.8]],examples:["Nothing in me is arguing while I stand here","The noise drops away at this bend in the path","An evenness settles over me on this bench"]},
+  {id:"rest",realm:"internal",label:"Rest",icon:"\u203f",color:"#8fd8b0",freqs:[[174,.0,.15,.14,3.6],[220,.30,.09,.12,3.0]],examples:["My shoulders come down when I reach this place","I sleep well on this side of town","Somewhere I can stop without explaining myself"]},
+  {id:"relief",realm:"internal",label:"Relief",icon:"\u2323",color:"#ffd9a0",freqs:[[432,.0,.15,.09,2.6],[324,.20,.10,.08,2.2]],examples:["A held breath let go as I came through the gate","The worry loosened its grip somewhere along here","Getting back to this street means it is over"]},
+  {id:"numbness",realm:"internal",label:"Numbness",icon:"\u25cb",color:"#9aa3ad",freqs:[[210,.0,.09,.10,2.6]],examples:["I feel very little here, and I notice that I do not","The world goes flat and quiet around this junction","I pass through and nothing reaches me"]},
+  {id:"weariness",realm:"internal",label:"Weariness",icon:"\u2312",color:"#a99cc9",freqs:[[196,.0,.11,.09,2.8],[147,.30,.07,.08,2.2]],examples:["This hill is heavier every time I climb it","I arrive here already spent, most days","A tiredness that sleep has not reached"]},
+  {id:"heaviness",realm:"internal",label:"Heaviness",icon:"\u2304",color:"#8f86b8",freqs:[[147,.0,.12,.10,3.0],[110,.35,.07,.09,2.4]],examples:["Something presses down on me along this stretch","The air sits close and low around this building","I carry more than I did before I got here"]},
   {id:"memory",realm:"memory",label:"Memory",icon:"\u2756",color:"#e8b76b",hidden:true,freqs:[[432,.0,.16,.08,2.6],[540,.3,.08,.08,1.4]],examples:["The summer we spent here as kids","Where we said goodbye, and meant it","The night everything changed for us"]},
 ];
 const SENSE_SYMBOLS={
+/* THE FELT ARC — the eleven marks carried across from the Seeking, drawn by Karl,
+   unchanged. Scaled, not redrawn. — 29 Aug 2026 */
+joy:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,207,110,0.55))"><defs><radialGradient id="as-joyHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffcf6e" stop-opacity="0.30"/><stop offset="100%" stop-color="#ffcf6e" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-joyHalo)"/><g transform="scale(2)" fill="none" stroke="#ffcf6e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><circle cx="24" cy="30" r="3" fill="#ffcf6e" stroke="none"/><path d="M24 26 C 23 20, 20 16, 15 11"/><path d="M24 26 C 24 19, 24 14, 24 8"/><path d="M24 26 C 25 20, 28 16, 33 11"/></g></svg>',
+love:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,157,180,0.55))"><defs><radialGradient id="as-loveHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff9db4" stop-opacity="0.30"/><stop offset="100%" stop-color="#ff9db4" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-loveHalo)"/><g transform="scale(2)" fill="none" stroke="#ff9db4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><circle cx="19" cy="24" r="8"/><circle cx="29" cy="24" r="8"/><circle cx="24" cy="24" r="2.6" fill="#ff9db4" stroke="none"/></g></svg>',
+wonder:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(216,184,255,0.55))"><defs><radialGradient id="as-wonderHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#d8b8ff" stop-opacity="0.30"/><stop offset="100%" stop-color="#d8b8ff" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-wonderHalo)"/><g transform="scale(2)" fill="none" stroke="#d8b8ff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><circle cx="22" cy="26" r="3" fill="#d8b8ff" stroke="none"/><ellipse cx="26" cy="22" rx="12" ry="7" transform="rotate(-24 26 22)"/></g></svg>',
+gratitude:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(242,206,142,0.55))"><defs><radialGradient id="as-gratitudeHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#f2ce8e" stop-opacity="0.30"/><stop offset="100%" stop-color="#f2ce8e" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-gratitudeHalo)"/><g transform="scale(2)" fill="none" stroke="#f2ce8e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><path d="M14 26a10 10 0 0 0 20 0"/><circle cx="24" cy="16" r="3" fill="#f2ce8e" stroke="none"/></g></svg>',
+hope:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,224,160,0.55))"><defs><radialGradient id="as-hopeHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe0a0" stop-opacity="0.30"/><stop offset="100%" stop-color="#ffe0a0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-hopeHalo)"/><g transform="scale(2)" fill="none" stroke="#ffe0a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><path d="M10 32h28"/><circle cx="24" cy="24" r="3.4" fill="#ffe0a0" stroke="none"/><path d="M24 17v-4M17 19l-3-3M31 19l3-3" opacity="0.8"/></g></svg>',
+peace:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(174,224,216,0.55))"><defs><radialGradient id="as-peaceHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#aee0d8" stop-opacity="0.30"/><stop offset="100%" stop-color="#aee0d8" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-peaceHalo)"/><g transform="scale(2)" fill="none" stroke="#aee0d8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><circle cx="24" cy="24" r="11"/><path d="M17 24h14"/></g></svg>',
+rest:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(143,216,176,0.55))"><defs><radialGradient id="as-restHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#8fd8b0" stop-opacity="0.30"/><stop offset="100%" stop-color="#8fd8b0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-restHalo)"/><g transform="scale(2)" fill="none" stroke="#8fd8b0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><path d="M12 26q12 12 24 0"/><circle cx="24" cy="24" r="3.4" fill="#8fd8b0" stroke="none"/></g></svg>',
+relief:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(255,217,160,0.55))"><defs><radialGradient id="as-reliefHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd9a0" stop-opacity="0.30"/><stop offset="100%" stop-color="#ffd9a0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-reliefHalo)"/><g transform="scale(2)" fill="none" stroke="#ffd9a0" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><path d="M13 31q11 10 22 0"/><circle cx="24" cy="22" r="3.2" fill="#ffd9a0" stroke="none"/><path d="M24 13v-4"/></g></svg>',
+numbness:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(154,163,173,0.55))"><defs><radialGradient id="as-numbnessHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9aa3ad" stop-opacity="0.30"/><stop offset="100%" stop-color="#9aa3ad" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-numbnessHalo)"/><g transform="scale(2)" fill="none" stroke="#9aa3ad" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><circle cx="24" cy="24" r="3" fill="#9aa3ad" stroke="none"/><path d="M11 24a13 13 0 0 1 8-12"/><path d="M37 24a13 13 0 0 1-8 12"/></g></svg>',
+weariness:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(169,156,201,0.55))"><defs><radialGradient id="as-wearinessHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a99cc9" stop-opacity="0.30"/><stop offset="100%" stop-color="#a99cc9" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-wearinessHalo)"/><g transform="scale(2)" fill="none" stroke="#a99cc9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><path d="M11 21 A15 15 0 0 1 37 21"/><circle cx="24" cy="32" r="3.2" fill="#a99cc9" stroke="none"/></g></svg>',
+heaviness:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(143,134,184,0.55))"><defs><radialGradient id="as-heavinessHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#8f86b8" stop-opacity="0.30"/><stop offset="100%" stop-color="#8f86b8" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-heavinessHalo)"/><g transform="scale(2)" fill="none" stroke="#8f86b8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" class="as-breathe"><path d="M12 17 Q24 26 36 17"/><circle cx="24" cy="31" r="3.2" fill="#8f86b8" stroke="none"/></g></svg>',
 memory:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(232,183,107,0.55))"><defs><radialGradient id="as-memHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe6b0" stop-opacity="0.34"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient><radialGradient id="as-memCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fffaf0" stop-opacity="1"/><stop offset="100%" stop-color="#e8b76b" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-memHalo)"/><path d="M48 54 a6 6 0 1 1 6 -6 a12 12 0 1 0 -12 12 a18 18 0 1 1 18 -18 a24 24 0 1 0 -24 24" fill="none" stroke="#f0cd8a" stroke-width="2.4" stroke-linecap="round" opacity="0.9" class="as-slowShimmer"/><circle cx="48" cy="48" r="7" fill="url(#as-memCore)" class="as-breathe"/></svg>',
 sound:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(180,200,255,0.42))"><defs><radialGradient id="as-sndCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient><radialGradient id="as-sndHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#a8c8ff" stop-opacity="0.30"/><stop offset="100%" stop-color="#6d9eeb" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-sndHalo)"/><g class="as-wave"><path d="M6 48 Q 20 28, 34 48 T 62 48 T 90 48" fill="none" stroke="#a8c8ff" stroke-width="2.3" stroke-linecap="round" opacity="0.82" class="as-shimmer"/><path d="M24 64 Q 32 56, 40 64 T 56 64 T 72 64" fill="none" stroke="#a8c8ff" stroke-width="2" stroke-linecap="round" opacity="0.7"/></g><circle cx="48" cy="48" r="14" fill="url(#as-sndCore)" class="as-breathe"/></svg>',
 smell:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(190,235,170,0.5))"><defs><radialGradient id="as-smlCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient><radialGradient id="as-smlHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#beeba9" stop-opacity="0.32"/><stop offset="100%" stop-color="#93c47d" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-smlHalo)"/><g class="as-drift"><path d="M40 78 C 36 60, 50 52, 42 36 C 36 24, 48 18, 44 8" fill="none" stroke="#beeba9" stroke-width="3" stroke-linecap="round" opacity="0.95" class="as-shimmer"/><path d="M55 78 C 59 58, 47 50, 57 34 C 63 22, 51 16, 57 6" fill="none" stroke="#beeba9" stroke-width="2.4" stroke-linecap="round" opacity="0.7"/><g class="as-wiggle"><path d="M47 74 C 52 60, 43 52, 50 38 C 54 30, 45 26, 49 20" fill="none" stroke="#beeba9" stroke-width="2" stroke-linecap="round" opacity="0.6"/></g></g><ellipse cx="48" cy="80" rx="16" ry="7" fill="url(#as-smlCore)" class="as-breathe"/></svg>',
@@ -7220,6 +7249,52 @@ async function gateLoadOfferings(){
   }catch(e){console.warn('[gate] init',e);}
 })();
 
+/* ═══ THE BRIDGE ═══ 29 Aug 2026
+   Everything above lives inside one block that opens when the page loads. The
+   Seeking's host code at the foot of this file stands OUTSIDE it, on purpose,
+   so the way back to the plain map survives anything. The cost of that was
+   that it could not see the map, the senses, or the offering — so the world
+   never rose and nothing ever landed.
+   These few are lent outward by name. Nothing here is altered. — K.H. / Fable */
+try{
+  window.map = map;
+  window.SENSES = SENSES;
+  window.showMsg = showMsg;
+  window.materializeAndSubmit = materializeAndSubmit;
+  /* selSense is a value, not a function, so it is lent as a window through to
+     the real one rather than a copy that would go stale. */
+  try{ Object.defineProperty(window,'selSense',{
+    get:function(){ return selSense; },
+    set:function(v){ selSense = v; },
+    configurable:true });
+  }catch(e){}
+
+  /* THE WORLD, HELD.
+     The host code asked for world view before the map existed, so the ask fell
+     on nothing and the map stayed where it was born — London, street level.
+     Asking once is not enough: the map is asked now, again when it finishes
+     loading, and again if anything nudges it while the Seeking is still in
+     front. The hold lets go by itself the moment the Seeking withdraws. */
+  if(document.body.classList.contains('seeking')){
+    var asHoldWorld = function(){
+      try{ map.jumpTo({center:[8,26],zoom:1.35,pitch:0,bearing:0}); }catch(e){}
+    };
+    asHoldWorld();
+    try{ map.on('load', function(){
+      if(document.body.classList.contains('seeking')) asHoldWorld();
+    }); }catch(e){}
+    try{ map.on('moveend', function(){
+      if(!document.body.classList.contains('seeking')) return;
+      var z, c; try{ z = map.getZoom(); c = map.getCenter(); }catch(e){ return; }
+      /* only re-assert if something has genuinely moved it, or this would
+         chase its own tail */
+      if(Math.abs(z-1.35)>0.06 || Math.abs(c.lng-8)>0.6 || Math.abs(c.lat-26)>0.6)
+        asHoldWorld();
+    }); }catch(e){}
+  }
+}catch(e){ try{console.warn('[bridge]',e);}catch(_){ } }
+
+
 });
 </script>
 <!-- ═══ THE SEEKING, CARRIED IN FRONT ═══ 25 Aug 2026
@@ -7230,7 +7305,7 @@ async function gateLoadOfferings(){
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation"></iframe>
-<div id="build-stamp">Build 25 Aug 2026 · 25</div>
+<div id="build-stamp">Build 29 Aug 2026 · 26</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
@@ -7291,8 +7366,8 @@ async function gateLoadOfferings(){
     try{
       const want=String(key||word||'').toLowerCase();
       let f=SENSES.find(x=>String(x.id).toLowerCase()===want);
-      if(!f)f=SENSES.find(x=>String(x.name||x.w||'').toLowerCase()===want);
-      if(!f)f=SENSES.find(x=>String(x.name||x.w||'').toLowerCase()===String(word||'').toLowerCase());
+      if(!f)f=SENSES.find(x=>String(x.label||x.name||x.w||'').toLowerCase()===want);
+      if(!f)f=SENSES.find(x=>String(x.label||x.name||x.w||'').toLowerCase()===String(word||'').toLowerCase());
       return f?f.id:null;
     }catch(e){ return null; }
   }
