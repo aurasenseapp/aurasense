@@ -471,6 +471,37 @@ body.night .tiny{color:var(--far)}
 #back:hover{background:#fff;color:var(--ink)}
 
 </style>
+<script>
+/* ═══ THE HEIGHT A PHONE CAN ACTUALLY SEE ═══ 29 Aug 2026 ═══
+   Four attempts at this failed because I kept asking CSS for the height, and
+   on an iPhone every CSS answer is a guess: 100vh is the height WITHOUT the
+   address bar, and 100dvh is meant to be the height with it but is not
+   reliable once viewport-fit=cover is in play.
+   So this stops asking and MEASURES it. window.innerHeight is what the phone
+   is actually showing, right now. It is re-measured whenever the address bar
+   slides, the keyboard opens, or the phone is turned.
+   If this script never runs, the old CSS answer is still used, so the worst
+   case is exactly where we already were. */
+(function(){
+  function measure(){
+    try{
+      var v=(window.visualViewport&&window.visualViewport.height)||window.innerHeight;
+      if(v>0)document.documentElement.style.setProperty('--as-h',v+'px');
+    }catch(e){}
+  }
+  measure();
+  window.addEventListener('resize',measure);
+  window.addEventListener('orientationchange',function(){setTimeout(measure,320);});
+  window.addEventListener('pageshow',measure);
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',measure);
+    window.visualViewport.addEventListener('scroll',measure);
+  }
+  document.addEventListener('DOMContentLoaded',measure);
+  window.addEventListener('load',measure);
+  setInterval(measure,1000);
+})();
+</script>
 <style>
 /* ═══ THE PHONE, FIXED AT SOURCE ═══ 29 Aug 2026 ═══
    Karl, on an iPhone: the page was never quite full screen, and a finger placed
@@ -490,10 +521,22 @@ body.night .tiny{color:var(--far)}
 
    #map and #listPanel are left out on purpose: those two must keep scrolling.
    Added, never replacing. Every rule above this line still stands. */
-html,body{height:100dvh;max-height:100dvh;overscroll-behavior:none}
-#stage{height:100dvh}
-#ringWrap,#ringWrap *{touch-action:none;-webkit-user-select:none;user-select:none}
-#sky,#skyCloud,#flyer{touch-action:none}
+/* replaced 29 Aug, later the same day: the rules below were right in spirit and
+   wrong in two ways. They trusted CSS for the height, and they refused the
+   finger only around the circle when Karl reports it slides from anywhere.
+   Now: a measured height, and the finger refused everywhere EXCEPT the two
+   places that genuinely need to scroll. */
+html,body{height:var(--as-h,100dvh)!important;max-height:var(--as-h,100dvh)!important;
+  overflow:hidden!important;overscroll-behavior:none!important;
+  touch-action:none!important;margin:0!important}
+body{position:fixed!important;top:0!important;left:0!important;right:0!important;
+  width:100%!important}
+#stage,#sky,#skyCloud{height:var(--as-h,100dvh)!important}
+#ringWrap,#ringWrap *,#flyer{touch-action:none!important;
+  -webkit-user-select:none!important;user-select:none!important}
+/* these two must keep scrolling, and only these two */
+#map,#listPanel{touch-action:pan-y!important;height:var(--as-h,100dvh)!important;
+  overscroll-behavior:contain!important}
 </style>
 <script>
 /* ═══ THE NOTE THIS PAGE CARRIES FOR THE MAP ═══ 29 Aug 2026 ═══
@@ -582,7 +625,7 @@ html,body{height:100dvh;max-height:100dvh;overscroll-behavior:none}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 35</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 38</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>

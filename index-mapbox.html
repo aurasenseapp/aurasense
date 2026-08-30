@@ -1180,7 +1180,8 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
      input is smaller than 16px (and ignores user-scalable=no while doing it). 16px stops it. */
   input,textarea{font-size:16px!important}
   /* lock the app to the visible viewport — no page behind the page, no rubber-band drift */
-  body{position:fixed;inset:0;width:100%;height:100vh;height:100dvh}
+  body{position:fixed;inset:0;width:100%;height:100vh;height:100dvh;
+    height:var(--as-h,100dvh);max-height:var(--as-h,100dvh)}
   /* the way home from the feed must be unmissable */
   #lf-back{position:fixed;top:calc(env(safe-area-inset-top) + 8px);left:10px;right:10px;z-index:12;font-size:15px;padding:13px 18px;display:block;text-align:center;border-radius:14px;backdrop-filter:blur(6px)}
   #lf-inner{padding-top:64px}
@@ -1251,7 +1252,7 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
    arrival lasts, and returns with everything else. */
 html.as-arriving,html.as-arriving body{touch-action:none!important;
   overscroll-behavior:none!important}
-#seekFrame{touch-action:none;height:100dvh}
+#seekFrame{touch-action:none;height:var(--as-h,100dvh)}
 /* THE FIRST INSTANT IS NOT BLACK. 29 Aug 2026.
    Karl, on the MacBook: the screen begins black, then an empty circle, then it
    proceeds properly. The black is THIS page — dark by nature — showing for the
@@ -1539,6 +1540,37 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
 </style>
 <script src="gate-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+/* ═══ THE HEIGHT A PHONE CAN ACTUALLY SEE ═══ 29 Aug 2026 ═══
+   Four attempts at this failed because I kept asking CSS for the height, and
+   on an iPhone every CSS answer is a guess: 100vh is the height WITHOUT the
+   address bar, and 100dvh is meant to be the height with it but is not
+   reliable once viewport-fit=cover is in play.
+   So this stops asking and MEASURES it. window.innerHeight is what the phone
+   is actually showing, right now. It is re-measured whenever the address bar
+   slides, the keyboard opens, or the phone is turned.
+   If this script never runs, the old CSS answer is still used, so the worst
+   case is exactly where we already were. */
+(function(){
+  function measure(){
+    try{
+      var v=(window.visualViewport&&window.visualViewport.height)||window.innerHeight;
+      if(v>0)document.documentElement.style.setProperty('--as-h',v+'px');
+    }catch(e){}
+  }
+  measure();
+  window.addEventListener('resize',measure);
+  window.addEventListener('orientationchange',function(){setTimeout(measure,320);});
+  window.addEventListener('pageshow',measure);
+  if(window.visualViewport){
+    window.visualViewport.addEventListener('resize',measure);
+    window.visualViewport.addEventListener('scroll',measure);
+  }
+  document.addEventListener('DOMContentLoaded',measure);
+  window.addEventListener('load',measure);
+  setInterval(measure,1000);
+})();
+</script>
 <script>
 /* THE ARRIVAL BEGINS BEFORE THE PAGE DOES. 29 Aug 2026.
    This runs before a single thing is drawn, and decides the same way the
@@ -7439,7 +7471,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 37</div>
+<div id="build-stamp">Build 29 Aug 2026 · 38</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
@@ -7512,9 +7544,9 @@ try{
         /* the height a phone can actually SEE, not the taller one it is built
            for when the address bar is hidden. That difference is the tenth of
            a page Karl could drag into view. */
-        'html,body{height:100vh!important;height:100dvh!important;'+
-        'max-height:100dvh!important;overflow:hidden!important;'+
-        'overscroll-behavior:none!important}'+
+        'html,body{height:var(--as-h,100dvh)!important;'+
+        'max-height:var(--as-h,100dvh)!important;overflow:hidden!important;'+
+        'overscroll-behavior:none!important;touch-action:none!important}'+
         /* the ring drawing already refuses the finger, but it is see-through to
            touch \u2014 the wrap around it is what the finger actually lands on, and
            nothing was refusing there. This is the drag. */
