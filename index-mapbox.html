@@ -1251,7 +1251,17 @@ html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
    arrival lasts, and returns with everything else. */
 html.as-arriving,html.as-arriving body{touch-action:none!important;
   overscroll-behavior:none!important}
-#seekFrame{touch-action:none}
+#seekFrame{touch-action:none;height:100dvh}
+/* THE FIRST INSTANT IS NOT BLACK. 29 Aug 2026.
+   Karl, on the MacBook: the screen begins black, then an empty circle, then it
+   proceeds properly. The black is THIS page — dark by nature — showing for the
+   moment before the Seeking has drawn its first light. The curtain used to
+   cover that gap, and I took the curtain away.
+   So the frame simply begins in the Seeking's own daylight instead. It is
+   cleared to see-through well before the cloud thins, so the world is still
+   revealed rather than swapped in. */
+#seekFrame{background:#fbfaff}
+#seekFrame.opened{background:transparent}
 @media (max-width:600px){
   #locality-btn{top:90px;right:12px;padding:7px 9px;font-size:0}
   #locality-btn::before{font-size:17px}
@@ -2337,7 +2347,18 @@ function playBond(fa,fb){try{if(!actx)actx=new(window.AudioContext||window.webki
 }catch(e){}}
 function maMote(c,dur){try{const cv=document.getElementById('ma-canvas');if(!cv)return;const r=cv.getBoundingClientRect(),tx=r.left+r.width/2,ty=r.top+r.height*0.42;const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:18px;height:18px;border-radius:50%;pointer-events:none;left:'+(Math.random()*innerWidth*0.7+innerWidth*0.15)+'px;top:-20px;background:radial-gradient(circle,#fff,'+c+' 60%,transparent);box-shadow:0 0 20px '+c+';';document.body.appendChild(d);d.animate([{opacity:1},{left:(tx-9)+'px',top:(ty-9)+'px',opacity:0,transform:'scale(.4)'}],{duration:dur||1500,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
 function flyToMyAura(color){try{const t=document.querySelector('.tab-myaura')||document.querySelector('#tabs .tab');const r=t?t.getBoundingClientRect():{left:innerWidth/2,top:20,width:0,height:0};const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:16px;height:16px;border-radius:50%;pointer-events:none;left:'+(innerWidth/2-8)+'px;top:'+(innerHeight/2-8)+'px;background:radial-gradient(circle,#fff,'+color+' 60%,transparent);box-shadow:0 0 18px '+color+';';document.body.appendChild(d);d.animate([{left:(innerWidth/2-8)+'px',top:(innerHeight/2-8)+'px',opacity:1,transform:'scale(1)'},{left:(r.left+r.width/2-8)+'px',top:(r.top+r.height/2-8)+'px',opacity:0,transform:'scale(.4)'}],{duration:950,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
-function playChime(fs){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}fs.forEach(([freq,delay,vol,at,dur])=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,actx.currentTime+delay);g.gain.linearRampToValueAtTime(vol,actx.currentTime+delay+at);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);});}catch(e){}}
+function playChime(fs){
+  /* AN IPHONE ONLY WAKES SOUND FOR THE PAGE IT WAS TOUCHED ON. 29 Aug 2026.
+     Every touch of the arrival lands on the Seeking, which is its own page, so
+     this page's sound stays asleep and the sense's note plays into silence.
+     The Seeking is awake, because it is what was touched. So it is asked first,
+     and only if it cannot — or is no longer there — does this page sing. */
+  try{
+    var _f=document.getElementById('seekFrame');
+    if(_f&&_f.contentWindow&&typeof _f.contentWindow.asPlayChime==='function'
+       &&_f.contentWindow.asPlayChime(fs))return;
+  }catch(e){}
+  try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}fs.forEach(([freq,delay,vol,at,dur])=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,actx.currentTime+delay);g.gain.linearRampToValueAtTime(vol,actx.currentTime+delay+at);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);});}catch(e){}}
 // Main draw
 let T=0;
 // AURATOUR state, declared above the paint loop because the loop reads it on its very first
@@ -3679,7 +3700,10 @@ function materializeAndSubmit(lat,lng,text){
   const svg=symEl.querySelector('svg');
   if(svg){svg.setAttribute('width','100%');svg.setAttribute('height','100%');}
   // a thin dark outline hugging the symbol itself, then a massive bright glow in the sense's colour — the symbol pops
-  if(backdrop)backdrop.style.background='radial-gradient(circle at 50% 50%, '+s.color+' 0%, '+hexA(s.color,0.62)+' 30%, '+hexA(s.color,0.2)+' 55%, rgba(6,5,16,0) 82%)';
+  /* the sheet behind is now only a veil — a wide, even breath of the sense's
+     colour over the darkened map, with no edge of its own to be mistaken for
+     the aura. The aura is on the mark. Kept here, softened, not removed. */
+  if(backdrop)backdrop.style.background='radial-gradient(circle at 50% 50%, '+hexA(s.color,0.22)+' 0%, '+hexA(s.color,0.13)+' 45%, '+hexA(s.color,0.05)+' 70%, rgba(6,5,16,0) 100%)';
   symEl.style.filter='drop-shadow(0 0 2px rgba(2,1,8,0.98)) drop-shadow(0 0 2px rgba(2,1,8,0.98)) drop-shadow(0 0 3px rgba(2,1,8,0.9)) drop-shadow(0 0 60px rgba(255,255,255,0.5)) drop-shadow(0 0 90px '+s.color+')';
   overlay.classList.add('show');
   /* THE AURA FINDS ITS MARK. 29 Aug 2026.
@@ -3688,17 +3712,26 @@ function materializeAndSubmit(lat,lng,text){
      the glow was being painted AT the middle. That gap is what Karl saw: the
      symbol outside its own aura. The glow is now painted wherever the mark
      actually is, measured rather than assumed, so it can never drift again. */
+  /* 29 Aug, third pass — and the two before it were both wrong, because I kept
+     trying to aim the glow at the mark instead of asking why they were two
+     things at all.
+     The glow was painted on a full-screen sheet of its own. The mark lives in a
+     centred column, fades in, then FLIES to the point on the map. The sheet
+     cannot follow it. So for most of that flight the mark is travelling and its
+     aura is standing still — which is the moment Karl photographed.
+     No aiming can fix that. So the aura is no longer a separate thing: it is
+     painted onto the mark itself. Wherever the mark goes, at whatever size, its
+     light goes with it, because they are now one object. They cannot come apart
+     again. The sheet behind stays as it was born — a quiet dark veil over the
+     map — and stops competing for the eye. */
   try{
-    if(backdrop){
-      const rs=symEl.getBoundingClientRect(), ro=overlay.getBoundingClientRect();
-      if(ro.width&&ro.height){
-        const px=(((rs.left+rs.width/2)-ro.left)/ro.width*100).toFixed(1);
-        const py=(((rs.top+rs.height/2)-ro.top)/ro.height*100).toFixed(1);
-        backdrop.style.background='radial-gradient(circle at '+px+'% '+py+'%, '
-          +s.color+' 0%, '+hexA(s.color,0.62)+' 30%, '+hexA(s.color,0.2)
-          +' 55%, rgba(6,5,16,0) 82%)';
-      }
-    }
+    symEl.style.borderRadius='50%';
+    symEl.style.background='radial-gradient(circle at 50% 50%, '
+      +hexA(s.color,0.60)+' 0%, '+hexA(s.color,0.34)+' 32%, '
+      +hexA(s.color,0.12)+' 56%, rgba(6,5,16,0) 76%)';
+    symEl.style.filter='drop-shadow(0 0 2px rgba(2,1,8,0.98)) '
+      +'drop-shadow(0 0 26px '+hexA(s.color,0.75)+') '
+      +'drop-shadow(0 0 68px '+hexA(s.color,0.45)+')';
   }catch(e){}
   if(backdrop)backdrop.style.opacity='0';
   symEl.style.transition='none';
@@ -7406,7 +7439,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 33</div>
+<div id="build-stamp">Build 29 Aug 2026 · 35</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
@@ -7498,6 +7531,11 @@ try{
       },true);
     }catch(e){}
   }
+  /* the daylight is handed back well before the cloud thins */
+  fr.addEventListener('load',function(){
+    setTimeout(function(){ try{ fr.classList.add('opened'); }catch(e){} },1200);
+  });
+  setTimeout(function(){ try{ fr.classList.add('opened'); }catch(e){} },2600);
   fr.addEventListener('load',steadyTheSeeking);
   setTimeout(steadyTheSeeking,300);
   setTimeout(steadyTheSeeking,1400);
@@ -7506,7 +7544,12 @@ try{
     fr.classList.add('leaving');
     document.body.classList.remove('seeking');
     try{localStorage.setItem('as_seeking_seen','1');}catch(e){}
-    setTimeout(function(){ if(fr.parentNode)fr.parentNode.removeChild(fr); },2400);
+    /* it is hidden rather than taken away, because its sound is the only sound
+       a phone will play, and the note is not due until the light lands. Hidden
+       means its cloud stops painting, so the descent is not slowed. It is taken
+       away for real once the note has been heard. */
+    setTimeout(function(){ try{ fr.style.display='none'; }catch(e){} },2400);
+    setTimeout(function(){ try{ if(fr.parentNode)fr.parentNode.removeChild(fr); }catch(e){} },45000);
   }
 
   /* THE FIVE HELD STEPS. Fixed zooms, chosen and never computed from a bounding

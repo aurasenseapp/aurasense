@@ -471,6 +471,70 @@ body.night .tiny{color:var(--far)}
 #back:hover{background:#fff;color:var(--ink)}
 
 </style>
+<style>
+/* ═══ THE PHONE, FIXED AT SOURCE ═══ 29 Aug 2026 ═══
+   Karl, on an iPhone: the page was never quite full screen, and a finger placed
+   anywhere — inside the circle or not — slid the whole thing up and down.
+
+   TWO CAUSES, both here rather than in the map.
+
+   1. HEIGHT. A phone has two heights: the one with the address bar showing, and
+      the taller one without. Asking for 100% gives the taller one, so the page
+      is always about a tenth bigger than what can be seen, and a finger drags
+      the difference. 100dvh is the height that can actually be seen. The plain
+      100% stays first, for anything that has never heard of dvh.
+
+   2. THE FINGER. touch-action:none was already on the ring drawing — but that
+      drawing is see-through to touch (pointer-events:none), so the finger never
+      lands on it. It lands on the wrap around it, where nothing was refusing.
+
+   #map and #listPanel are left out on purpose: those two must keep scrolling.
+   Added, never replacing. Every rule above this line still stands. */
+html,body{height:100dvh;max-height:100dvh;overscroll-behavior:none}
+#stage{height:100dvh}
+#ringWrap,#ringWrap *{touch-action:none;-webkit-user-select:none;user-select:none}
+#sky,#skyCloud,#flyer{touch-action:none}
+</style>
+<script>
+/* ═══ THE NOTE THIS PAGE CARRIES FOR THE MAP ═══ 29 Aug 2026 ═══
+   A phone keeps sound asleep until a finger touches the page that owns it.
+   Every touch of the arrival lands HERE, and none on the map — so the map's
+   sound never woke, and the sense's own note at the landing was silent.
+   This page is awake, because this page is what was touched. So it holds the
+   sound open and sings on the map's behalf when the light comes down.
+   It makes no sound of its own and starts nothing: the ear is only opened by a
+   real touch, and the note is only ever the one the map asks for. */
+(function(){
+  var ctx=null;
+  function wake(){
+    try{
+      if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
+      if(ctx.state==='suspended') ctx.resume();
+    }catch(e){}
+  }
+  window.addEventListener('pointerdown',wake,true);
+  window.addEventListener('touchstart',wake,true);
+  window.addEventListener('mousedown',wake,true);
+  window.asPlayChime=function(fs){
+    try{
+      wake();
+      if(!ctx||ctx.state!=='running'||!fs||!fs.length) return false;
+      var t0=ctx.currentTime;
+      fs.forEach(function(a){
+        var freq=a[0],delay=a[1]||0,vol=a[2]||0.1,at=a[3]||0.05,dur=a[4]||1.4;
+        var o=ctx.createOscillator(), g=ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.type='sine'; o.frequency.value=freq;
+        g.gain.setValueAtTime(0.0001,t0+delay);
+        g.gain.linearRampToValueAtTime(vol,t0+delay+at);
+        g.gain.exponentialRampToValueAtTime(0.0001,t0+delay+dur);
+        o.start(t0+delay); o.stop(t0+delay+dur+0.1);
+      });
+      return true;
+    }catch(e){ return false; }
+  };
+})();
+</script>
 </head>
 <body>
 <div id="stage"></div>
@@ -518,7 +582,7 @@ body.night .tiny{color:var(--far)}
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 25 Aug 2026 &middot; 24</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 35</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
