@@ -1552,15 +1552,31 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
    If this script never runs, the old CSS answer is still used, so the worst
    case is exactly where we already were. */
 (function(){
+  /* corrected the same day. The first version followed visualViewport, which is
+     the strip you can SEE — and a keyboard shrinks that by half. So the moment
+     Karl tapped the place box, the page obediently shrank to the size of the
+     gap above the keyboard and the dark page behind showed through beneath it.
+     A keyboard does not make the page smaller. It covers part of it.
+     So the tallest height seen is remembered, and a sudden large drop is read
+     as a keyboard and ignored. The address bar sliding is only about a tenth,
+     which passes; a keyboard is closer to a half, which does not. Turning the
+     phone forgets everything and measures afresh. */
+  var tallest=0;
   function measure(){
     try{
-      var v=(window.visualViewport&&window.visualViewport.height)||window.innerHeight;
-      if(v>0)document.documentElement.style.setProperty('--as-h',v+'px');
+      var inner=window.innerHeight||0;
+      var vis=(window.visualViewport&&window.visualViewport.height)||0;
+      var v=Math.max(inner,vis);
+      if(v<=0)return;
+      if(tallest&&v<tallest*0.75)return;          /* a keyboard. do not follow it */
+      if(v>tallest)tallest=v;
+      document.documentElement.style.setProperty('--as-h',v+'px');
     }catch(e){}
   }
+  function forget(){ tallest=0; measure(); }
   measure();
   window.addEventListener('resize',measure);
-  window.addEventListener('orientationchange',function(){setTimeout(measure,320);});
+  window.addEventListener('orientationchange',function(){setTimeout(forget,320);});
   window.addEventListener('pageshow',measure);
   if(window.visualViewport){
     window.visualViewport.addEventListener('resize',measure);
@@ -7471,7 +7487,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 38</div>
+<div id="build-stamp">Build 29 Aug 2026 · 39</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
@@ -7580,7 +7596,15 @@ try{
        a phone will play, and the note is not due until the light lands. Hidden
        means its cloud stops painting, so the descent is not slowed. It is taken
        away for real once the note has been heard. */
-    setTimeout(function(){ try{ fr.style.display='none'; }catch(e){} },2400);
+    /* corrected the same day: hiding it with display:none very likely put its
+       sound to sleep along with it, which would be why the phone still landed
+       in silence. It is instead left in place and invisible — already at zero
+       opacity and untouchable — so it can still sing when the light lands.
+       It goes for real once the note has been heard. */
+    setTimeout(function(){ try{
+      fr.style.pointerEvents='none'; fr.style.opacity='0';
+      fr.setAttribute('aria-hidden','true');
+    }catch(e){} },2400);
     setTimeout(function(){ try{ if(fr.parentNode)fr.parentNode.removeChild(fr); }catch(e){} },45000);
   }
 

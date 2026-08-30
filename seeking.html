@@ -483,15 +483,31 @@ body.night .tiny{color:var(--far)}
    If this script never runs, the old CSS answer is still used, so the worst
    case is exactly where we already were. */
 (function(){
+  /* corrected the same day. The first version followed visualViewport, which is
+     the strip you can SEE — and a keyboard shrinks that by half. So the moment
+     Karl tapped the place box, the page obediently shrank to the size of the
+     gap above the keyboard and the dark page behind showed through beneath it.
+     A keyboard does not make the page smaller. It covers part of it.
+     So the tallest height seen is remembered, and a sudden large drop is read
+     as a keyboard and ignored. The address bar sliding is only about a tenth,
+     which passes; a keyboard is closer to a half, which does not. Turning the
+     phone forgets everything and measures afresh. */
+  var tallest=0;
   function measure(){
     try{
-      var v=(window.visualViewport&&window.visualViewport.height)||window.innerHeight;
-      if(v>0)document.documentElement.style.setProperty('--as-h',v+'px');
+      var inner=window.innerHeight||0;
+      var vis=(window.visualViewport&&window.visualViewport.height)||0;
+      var v=Math.max(inner,vis);
+      if(v<=0)return;
+      if(tallest&&v<tallest*0.75)return;          /* a keyboard. do not follow it */
+      if(v>tallest)tallest=v;
+      document.documentElement.style.setProperty('--as-h',v+'px');
     }catch(e){}
   }
+  function forget(){ tallest=0; measure(); }
   measure();
   window.addEventListener('resize',measure);
-  window.addEventListener('orientationchange',function(){setTimeout(measure,320);});
+  window.addEventListener('orientationchange',function(){setTimeout(forget,320);});
   window.addEventListener('pageshow',measure);
   if(window.visualViewport){
     window.visualViewport.addEventListener('resize',measure);
@@ -625,7 +641,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 38</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 39</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
