@@ -106,9 +106,16 @@ body.seeking #build-stamp{opacity:0!important;pointer-events:none!important;
    .as-arrived carries the fade back in, and exists only for those two seconds,
    so nothing here changes how the page behaves at any other time. */
 html.as-arriving #ui,html.as-arriving #left-stack,html.as-arriving #panel,
-html.as-arriving #build-stamp{opacity:0!important;pointer-events:none!important}
+html.as-arriving #build-stamp,html.as-arriving #mv-orb,html.as-arriving #mv-hint,
+body.seeking #mv-orb,body.seeking #mv-hint
+  {opacity:0!important;pointer-events:none!important}
 html.as-arrived #ui,html.as-arrived #left-stack,html.as-arrived #panel,
-html.as-arrived #build-stamp{transition:opacity 1.8s ease}
+html.as-arrived #build-stamp,html.as-arrived #mv-orb
+  {transition:opacity 1.8s ease}
+/* The Mirror's Voice stands at the very top of the page, outside the frame
+   that holds the rest of the furniture, so nothing was holding it back and it
+   sat in the corner through the entire arrival. It is not offered at the
+   landing — it waits, and returns with everything else. 29 Aug 2026. */
 /* THE BUILD STAMP — one number, one place, bottom-left. Read it here and nowhere else. */
 #build-stamp{position:fixed;left:9px;bottom:6px;z-index:2200;pointer-events:none;font-family:var(--sans),system-ui,sans-serif;font-size:10px;letter-spacing:.04em;color:rgba(196,181,253,.42);text-shadow:0 0 8px rgba(6,5,16,.9)}
 /* THE ASCENT (build name: location lighting sequence) — the light climbing the scales after an
@@ -1236,6 +1243,15 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #lf-back{position:sticky;top:0}
 /* Steady on touch — no rubber-band / pinch drift */
 html,body{overscroll-behavior:none;touch-action:pan-x pan-y}
+/* THE FINGER BELONGS TO THE CIRCLE. 29 Aug 2026.
+   The rule above lets a finger pan the page, which a map needs. But during the
+   arrival there is no map to pan — there is a circle being held. On a phone
+   that pan was carrying the whole browser up and down under the finger while
+   the quickening was still waking. So panning is refused for as long as the
+   arrival lasts, and returns with everything else. */
+html.as-arriving,html.as-arriving body{touch-action:none!important;
+  overscroll-behavior:none!important}
+#seekFrame{touch-action:none}
 @media (max-width:600px){
   #locality-btn{top:90px;right:12px;padding:7px 9px;font-size:0}
   #locality-btn::before{font-size:17px}
@@ -7358,7 +7374,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 29</div>
+<div id="build-stamp">Build 29 Aug 2026 · 31</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
