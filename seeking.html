@@ -564,16 +564,25 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
    It makes no sound of its own and starts nothing: the ear is only opened by a
    real touch, and the note is only ever the one the map asks for. */
 (function(){
-  var ctx=null;
+  var ctx=null, primed=false;
   function wake(){
     try{
       if(!ctx) ctx=new (window.AudioContext||window.webkitAudioContext)();
       if(ctx.state==='suspended') ctx.resume();
+      /* corrected 29 Aug: asking an iPhone to wake is not enough. It only counts
+         the ear as open once a sound has ACTUALLY been played while the finger
+         is still down. So one silent moment is played here — nothing audible,
+         and only ever once. This is the piece that was missing.
+         Every kind of touch is listened for, because older iPhones only accept
+         the lifting of the finger, not the placing of it. */
+      if(!primed&&ctx.state==='running'){
+        var b=ctx.createBuffer(1,1,22050), src=ctx.createBufferSource();
+        src.buffer=b; src.connect(ctx.destination); src.start(0); primed=true;
+      }
     }catch(e){}
   }
-  window.addEventListener('pointerdown',wake,true);
-  window.addEventListener('touchstart',wake,true);
-  window.addEventListener('mousedown',wake,true);
+  ['pointerdown','pointerup','touchstart','touchend','mousedown','click']
+    .forEach(function(t){ window.addEventListener(t,wake,true); });
   window.asPlayChime=function(fs){
     try{
       wake();
@@ -641,7 +650,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 39</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 41</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
