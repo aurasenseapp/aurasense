@@ -7568,7 +7568,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 42</div>
+<div id="build-stamp">Build 29 Aug 2026 · 44</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
@@ -7694,12 +7694,19 @@ try{
      bug that made search framing unreliable. */
   const RUNGS=[{z:1.35,ms:0},{z:4.2,ms:1500},{z:6.6,ms:1400},
                {z:10.4,ms:1400},{z:15.2,ms:1700}];
-  function descend(lat,lng,then){
+  /* the fall stops at the height the place deserves. A street is arrived at from
+     above the street; a town from above the town; a country from above the
+     country. Falling to street height onto a town centre is still landing in a
+     street, which is what Karl reported. 29 Aug 2026. */
+  const RESTS={country:4.6,region:7.4,district:9.6,place:12.2,locality:13.4};
+  function descend(lat,lng,then,kind){
+    const floor=RESTS[kind]||null;
     let t=0;
     RUNGS.forEach(function(r,i){
       t+=r.ms;
+      const z=(floor!=null&&r.z>floor)?floor:r.z;
       setTimeout(function(){
-        try{ map.flyTo({center:[lng,lat],zoom:r.z,essential:true,
+        try{ map.flyTo({center:[lng,lat],zoom:z,essential:true,
               duration:Math.max(900,r.ms-120),curve:1.25}); }catch(e){}
       },t);
     });
@@ -7717,17 +7724,56 @@ try{
     }catch(e){ return null; }
   }
 
+  /* A NAMED TOWN MUST LAND ON THE TOWN. 29 Aug 2026.
+     This asked for one answer and took whatever came back first — which for
+     "Barry" is a street in Barry, and for "Waterton, Alberta" was an estate
+     near Edmonton. The lookup was never told that a town was wanted.
+     Now it asks for towns, districts, regions and countries FIRST, gathers
+     several answers rather than one, and chooses between them:
+       — a town outranks a district outranks a region outranks a country
+       — anything inside the region named after the comma is strongly preferred,
+         so "Waterton, Alberta" cannot answer with somewhere in Montana
+       — an exact match of the name beats a partial one
+     Only if the words name no settlement at all does it fall back to asking for
+     anything, so a real street address still works. */
   async function place(where){
-    const m=String(where||'').match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
-    if(m)return {lat:parseFloat(m[1]),lng:parseFloat(m[2])};
-    try{
-      const r=await fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/'+
-        encodeURIComponent(where)+'.json?access_token='+MAPBOX_TOKEN+'&limit=1');
-      const d=await r.json();
-      if(d&&d.features&&d.features.length)
-        return {lat:d.features[0].center[1],lng:d.features[0].center[0]};
-    }catch(e){}
-    return null;
+    const raw=String(where||'').trim();
+    const m=raw.match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
+    if(m)return {lat:parseFloat(m[1]),lng:parseFloat(m[2]),kind:'point',name:raw};
+
+    const parts=raw.split(',').map(function(x){return x.trim();}).filter(Boolean);
+    const first=(parts[0]||'').toLowerCase();
+    const hint=parts.length>1?parts[parts.length-1].toLowerCase():'';
+
+    async function ask(types){
+      var u='https://api.mapbox.com/geocoding/v5/mapbox.places/'+
+            encodeURIComponent(raw)+'.json?access_token='+MAPBOX_TOKEN+'&limit=8';
+      if(types)u+='&types='+types;
+      try{ const r=await fetch(u); const d=await r.json();
+           return (d&&d.features)?d.features:[]; }catch(e){ return []; }
+    }
+    const RANK={place:5,locality:4,district:3,region:2,country:1};
+    function choose(fs){
+      var best=null,top=-1;
+      (fs||[]).forEach(function(f){
+        if(!f||!f.center)return;
+        var kind=(f.place_type&&f.place_type[0])||'';
+        var sc=(RANK[kind]||0)*10;
+        var full=String(f.place_name||'').toLowerCase();
+        var text=String(f.text||'').toLowerCase();
+        if(hint&&full.indexOf(hint)>=0)sc+=25;   /* really is in the named region */
+        if(text===first)sc+=15;                   /* the name matches exactly */
+        if(typeof f.relevance==='number')sc+=f.relevance*5;
+        if(sc>top){top=sc;best=f;}
+      });
+      return best;
+    }
+    var f=choose(await ask('place,locality,district,region,country'));
+    if(!f)f=choose(await ask(null));
+    if(!f||!f.center)return null;
+    return {lat:f.center[1],lng:f.center[0],
+            kind:(f.place_type&&f.place_type[0])||'place',
+            name:f.text||raw, full:f.place_name||raw};
   }
 
   window.addEventListener('message',async function(ev){
@@ -7746,7 +7792,7 @@ try{
       try{ materializeAndSubmit(spot.lat,spot.lng,''); }catch(e){}
       /* the page returns a breath after the light lands, not before */
       setTimeout(arrived,900);
-    });
+    },spot.kind);
   });
 })();
 
