@@ -2436,7 +2436,7 @@ function playSound(id){
       const o=actx.createOscillator(),g=actx.createGain();
       o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;
       g.gain.setValueAtTime(0,actx.currentTime+delay);
-      g.gain.linearRampToValueAtTime(vol,actx.currentTime+delay+at);
+      g.gain.linearRampToValueAtTime(asLoud(freq,vol),actx.currentTime+delay+at);
       g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);
       o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);
     });
@@ -2466,6 +2466,16 @@ function playBond(fa,fb){try{if(!actx)actx=new(window.AudioContext||window.webki
 function maMote(c,dur){try{const cv=document.getElementById('ma-canvas');if(!cv)return;const r=cv.getBoundingClientRect(),tx=r.left+r.width/2,ty=r.top+r.height*0.42;const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:18px;height:18px;border-radius:50%;pointer-events:none;left:'+(Math.random()*innerWidth*0.7+innerWidth*0.15)+'px;top:-20px;background:radial-gradient(circle,#fff,'+c+' 60%,transparent);box-shadow:0 0 20px '+c+';';document.body.appendChild(d);d.animate([{opacity:1},{left:(tx-9)+'px',top:(ty-9)+'px',opacity:0,transform:'scale(.4)'}],{duration:dur||1500,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
 function flyToMyAura(color){try{const t=document.querySelector('.tab-myaura')||document.querySelector('#tabs .tab');const r=t?t.getBoundingClientRect():{left:innerWidth/2,top:20,width:0,height:0};const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:16px;height:16px;border-radius:50%;pointer-events:none;left:'+(innerWidth/2-8)+'px;top:'+(innerHeight/2-8)+'px;background:radial-gradient(circle,#fff,'+color+' 60%,transparent);box-shadow:0 0 18px '+color+';';document.body.appendChild(d);d.animate([{left:(innerWidth/2-8)+'px',top:(innerHeight/2-8)+'px',opacity:1,transform:'scale(1)'},{left:(r.left+r.width/2-8)+'px',top:(r.top+r.height/2-8)+'px',opacity:0,transform:'scale(.4)'}],{duration:950,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
 function playChime(fs){
+  /* LOUD ENOUGH TO HEAR. 29 Aug 2026. Karl turned his MacBook to maximum and
+     heard only a faint dull sound. The notes were always playing — they were
+     simply too quiet, and Weariness worst of all, because its tones are very
+     low and the ear hears low tones as far quieter than middle ones at the
+     same level. Every note is lifted, and the lowest lifted most. Capped, so
+     nothing can ever come out harsh. */
+  function asLoud(freq,vol){
+    var lift = freq<200 ? 2.0 : freq<300 ? 1.7 : freq<420 ? 1.3 : 1.0;
+    return Math.min(0.46,(vol||0.12)*2.6*lift);
+  }
   /* AN IPHONE ONLY WAKES SOUND FOR THE PAGE IT WAS TOUCHED ON. 29 Aug 2026.
      Every touch of the arrival lands on the Seeking, which is its own page, so
      this page's sound stays asleep and the sense's note plays into silence.
@@ -2487,7 +2497,7 @@ function playChime(fs){
          &&_f.contentWindow.asPlayChime(fs))return;
     }
   }catch(e){}
-  try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}fs.forEach(([freq,delay,vol,at,dur])=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,actx.currentTime+delay);g.gain.linearRampToValueAtTime(vol,actx.currentTime+delay+at);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);});}catch(e){}}
+  try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}fs.forEach(([freq,delay,vol,at,dur])=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,actx.currentTime+delay);g.gain.linearRampToValueAtTime(asLoud(freq,vol),actx.currentTime+delay+at);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);});}catch(e){}}
 // Main draw
 let T=0;
 // AURATOUR state, declared above the paint loop because the loop reads it on its very first
@@ -7568,7 +7578,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 44</div>
+<div id="build-stamp">Build 29 Aug 2026 · 45</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back

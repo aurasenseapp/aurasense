@@ -611,7 +611,10 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
         o.connect(g); g.connect(ctx.destination);
         o.type='sine'; o.frequency.value=freq;
         g.gain.setValueAtTime(0.0001,t0+delay);
-        g.gain.linearRampToValueAtTime(vol,t0+delay+at);
+        /* lifted to match the map, lowest lifted most — the ear hears low tones
+           as far quieter. Capped so nothing is ever harsh. */
+        var lift = freq<200 ? 2.0 : freq<300 ? 1.7 : freq<420 ? 1.3 : 1.0;
+        g.gain.linearRampToValueAtTime(Math.min(0.46,(vol||0.12)*2.6*lift),t0+delay+at);
         g.gain.exponentialRampToValueAtTime(0.0001,t0+delay+dur);
         o.start(t0+delay); o.stop(t0+delay+dur+0.1); sang++;
       });
@@ -667,7 +670,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 44</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 45</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -681,8 +684,8 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
 <!-- ══ 2 · THE SEEKING ══ one unmarked circle, three times over ══ -->
 <section class="scene" id="seek">
   <div id="topText">
-    <div class="head" id="sHead">What are you sensing right now?</div>
-    <div class="sub" id="sSub">Touch inside the circle and move your finger to find it. Hold until it wakes.</div>
+    <div class="head" id="sHead">Seek inside the circle for what you are sensing.</div>
+    <div class="sub" id="sSub">Hold it until it awakens.</div>
   </div>
   <div id="listDoor"><button class="ghost" id="listBtn" type="button">See them as a list</button></div>
 </section>
@@ -1799,8 +1802,8 @@ function dropBeadsFrom(which){
 function goBackTo(which){
   if(which==='sense'){
     dropBeadsFrom('sense');
-    born('sense','What are you sensing right now?',
-      'Touch inside the circle and move your finger to find it. Hold until it wakes.',SENSES,null);
+    born('sense','Seek inside the circle for what you are sensing.',
+      'Hold it until it awakens.',SENSES,null);
     setTimeout(function(){$('back').classList.remove('on');},1200);
   }else if(which==='strength'){
     dropBeadsFrom('strength');
@@ -1811,7 +1814,9 @@ function goBackTo(which){
 $('back').addEventListener('click',function(){
   if($('typed').classList.contains('on')){
     $('typed').classList.remove('on');
-    setTimeout(function(){ $('seek').classList.add('on'); goBackTo('strength'); },900);
+    /* the arc is gone, so back from the where page returns to the senses — not to
+         the question that no longer gets asked. 29 Aug 2026. */
+      setTimeout(function(){ $('seek').classList.add('on'); goBackTo('sense'); },900);
     return;
   }
   if(stage==='family'){closeFamily();return;}
@@ -1910,8 +1915,8 @@ function openFamily(o){
 }
 function closeFamily(){
   familyOf=null;
-  born('sense','What are you sensing right now?',
-    'Touch inside the circle and move your finger to find it. Hold until it wakes.',SENSES,null);
+  born('sense','Seek inside the circle for what you are sensing.',
+    'Hold it until it awakens.',SENSES,null);
   setTimeout(function(){ if(!beadList.length)$('back').classList.remove('on'); },1200);
 }
 function born(next,head,sub,set,arc){
