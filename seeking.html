@@ -586,7 +586,12 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   window.asPlayChime=function(fs){
     try{
       wake();
+      /* say no honestly. If this returns true without a sound actually being
+         made, the map stays silent believing it was covered — which is worse
+         than never having been asked. */
       if(!ctx||ctx.state!=='running'||!fs||!fs.length) return false;
+      if(typeof fs[0]==='number') return false;   /* not a shape this can sing */
+      var sang=0;
       var t0=ctx.currentTime;
       fs.forEach(function(a){
         var freq=a[0],delay=a[1]||0,vol=a[2]||0.1,at=a[3]||0.05,dur=a[4]||1.4;
@@ -596,9 +601,9 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
         g.gain.setValueAtTime(0.0001,t0+delay);
         g.gain.linearRampToValueAtTime(vol,t0+delay+at);
         g.gain.exponentialRampToValueAtTime(0.0001,t0+delay+dur);
-        o.start(t0+delay); o.stop(t0+delay+dur+0.1);
+        o.start(t0+delay); o.stop(t0+delay+dur+0.1); sang++;
       });
-      return true;
+      return sang>0;
     }catch(e){ return false; }
   };
 })();
@@ -650,7 +655,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 41</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 29 Aug 2026 &middot; 42</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>

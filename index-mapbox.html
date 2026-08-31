@@ -2472,9 +2472,20 @@ function playChime(fs){
      The Seeking is awake, because it is what was touched. So it is asked first,
      and only if it cannot — or is no longer there — does this page sing. */
   try{
-    var _f=document.getElementById('seekFrame');
-    if(_f&&_f.contentWindow&&typeof _f.contentWindow.asPlayChime==='function'
-       &&_f.contentWindow.asPlayChime(fs))return;
+    /* corrected 29 Aug: the first version asked the Seeking FIRST, always. On a
+       MacBook this page's own sound was wide awake and perfectly able to sing,
+       and it was being told to stand aside for a page that then didn't. That is
+       how a phone-only problem became a silence everywhere.
+       So the order is reversed: this page sings whenever it can, and the Seeking
+       is asked ONLY when this page's own sound is still asleep — which is the
+       iPhone case, and only the iPhone case. */
+    var mineAwake=false;
+    try{ mineAwake = !!(actx && actx.state==='running'); }catch(_){}
+    if(!mineAwake){
+      var _f=document.getElementById('seekFrame');
+      if(_f&&_f.contentWindow&&typeof _f.contentWindow.asPlayChime==='function'
+         &&_f.contentWindow.asPlayChime(fs))return;
+    }
   }catch(e){}
   try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}fs.forEach(([freq,delay,vol,at,dur])=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,actx.currentTime+delay);g.gain.linearRampToValueAtTime(vol,actx.currentTime+delay+at);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);});}catch(e){}}
 // Main draw
@@ -7557,7 +7568,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 41</div>
+<div id="build-stamp">Build 29 Aug 2026 · 42</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
