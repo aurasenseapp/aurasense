@@ -7578,7 +7578,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 45</div>
+<div id="build-stamp">Build 29 Aug 2026 · 46</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
@@ -7762,23 +7762,52 @@ try{
       try{ const r=await fetch(u); const d=await r.json();
            return (d&&d.features)?d.features:[]; }catch(e){ return []; }
     }
-    const RANK={place:5,locality:4,district:3,region:2,country:1};
+    /* corrected 29 Aug: the first version looked for the region hint anywhere
+       inside the answer's name. So "Waterton, Ab" found "ab" sitting inside
+       "Abu Dhabi" and went to the Gulf, while "Alberta" does not contain the
+       letters a-b at all. A hint must be matched as a WHOLE name or as a real
+       postal code — AB for Alberta — never as loose letters.
+       And a hint that is given and not matched is now a strong mark against an
+       answer, not merely the absence of a mark for it. If the senser says
+       Alberta, everywhere that is not Alberta is wrong. */
+    const RANK={place:5,locality:4,neighborhood:3,district:3,region:2,country:1};
+    function tokensOf(f){
+      var t=[];
+      function add(v){ if(v)t.push(String(v).toLowerCase()); }
+      (f.context||[]).forEach(function(c){
+        add(c.text);
+        if(c.short_code) String(c.short_code).toLowerCase().split('-').forEach(add);
+      });
+      add(f.text);
+      if(f.properties&&f.properties.short_code)
+        String(f.properties.short_code).toLowerCase().split('-').forEach(add);
+      return t;
+    }
+    function matchesHint(f){
+      if(!hint)return true;
+      var t=tokensOf(f);
+      for(var i=0;i<t.length;i++){
+        if(t[i]===hint)return true;                      /* Alberta, Wales, AB */
+        if(hint.length>=4&&t[i].indexOf(hint)===0)return true;  /* Albert(a) */
+      }
+      return false;
+    }
     function choose(fs){
-      var best=null,top=-1;
+      var best=null,top=-1e9;
       (fs||[]).forEach(function(f){
         if(!f||!f.center)return;
         var kind=(f.place_type&&f.place_type[0])||'';
-        var sc=(RANK[kind]||0)*10;
-        var full=String(f.place_name||'').toLowerCase();
+        var sc=(RANK[kind]||0)*8;
         var text=String(f.text||'').toLowerCase();
-        if(hint&&full.indexOf(hint)>=0)sc+=25;   /* really is in the named region */
-        if(text===first)sc+=15;                   /* the name matches exactly */
+        if(text===first)sc+=50;              /* the name is exactly what was typed */
+        else if(text.indexOf(first)===0)sc+=18;
+        if(hint){ sc += matchesHint(f) ? 30 : -60; }
         if(typeof f.relevance==='number')sc+=f.relevance*5;
         if(sc>top){top=sc;best=f;}
       });
       return best;
     }
-    var f=choose(await ask('place,locality,district,region,country'));
+    var f=choose(await ask('place,locality,neighborhood,district,region,country'));
     if(!f)f=choose(await ask(null));
     if(!f||!f.center)return null;
     return {lat:f.center[1],lng:f.center[0],
