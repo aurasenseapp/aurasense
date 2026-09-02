@@ -881,6 +881,61 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 /* My Aura — the full page */
 #myaura-page{position:fixed;inset:0;z-index:1600;background:radial-gradient(ellipse at 50% 118%,#0d0b24 0%,#070611 58%,#040409 100%);display:none;flex-direction:column;color:#e8e2ff;overflow:hidden}
 #myaura-page.show{display:flex}
+/* ═══ THE CLOUD OF MY AURA · the Internal territory's first room · 31 Aug 2026
+   Karl, sitting outside on 31 August: "the My Aura in more details, in the same
+   cloud as the seeking... Interactive inviting, self revealing, to oneself."
+
+   Two things are being tried here at once, both in a place that cannot break
+   the map:
+     1. My Aura opens in the LIGHT — the Seeking's own cloud, held at day.
+     2. The aura in it has NO HARD RIM. Hard colour at the core, soft bleed
+        outward until it is simply part of the air. This is the correction
+        Karl's three sightings asked for, tried here first.
+   Nothing existing is removed. The detailed page is one quiet move away and
+   is untouched. Remove the class "cloudfirst" in openMyAuraPage to return to
+   the old behaviour exactly.                                                 */
+#ma-cloud-view{position:absolute;inset:0;z-index:40;display:none;overflow:hidden}
+#myaura-page.cloudfirst #ma-cloud-view{display:block}
+#myaura-page.cloudfirst #ma-layout,
+#myaura-page.cloudfirst #ma-title,
+#myaura-page.cloudfirst #ma-journey,
+#myaura-page.cloudfirst #ma-handle{visibility:hidden;pointer-events:none}
+#ma-cloud,#ma-cloud-aura{position:absolute;inset:0;width:100%;height:100%;display:block}
+#ma-cloud{opacity:0;transition:opacity 1.8s ease}
+#ma-cloud.on{opacity:1}
+#ma-cloud-aura{opacity:0;transition:opacity 2.6s ease .6s}
+#ma-cloud-aura.on{opacity:1}
+/* the words sit low and quiet; warm dark on warm light, never a panel */
+#ma-cloud-words{position:absolute;left:0;right:0;bottom:15%;text-align:center;
+  z-index:3;pointer-events:none;opacity:0;transition:opacity 2.2s ease 1.4s;
+  font-family:var(--serif);color:#5a3524;padding:0 26px}
+#ma-cloud-words.on{opacity:1}
+#ma-cloud-words b{display:block;font-size:19px;font-weight:400;letter-spacing:.02em;
+  text-shadow:0 1px 14px rgba(255,244,228,.85)}
+#ma-cloud-words span{display:block;font-size:13.5px;margin-top:9px;color:#7a5540;
+  text-shadow:0 1px 12px rgba(255,244,228,.8)}
+/* the one way through — visible, never explained */
+#ma-cloud-through{position:absolute;left:50%;transform:translateX(-50%);bottom:7%;
+  z-index:4;padding:12px 26px;border-radius:16px;cursor:pointer;font-family:inherit;
+  font-size:13.5px;letter-spacing:.03em;color:#4a2a1a;
+  border:1px solid rgba(120,74,50,.34);background:rgba(255,246,232,.5);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  opacity:0;transition:opacity 2s ease 2s,background .25s,border-color .25s}
+#ma-cloud-through.on{opacity:1}
+#ma-cloud-through:hover{background:rgba(255,250,242,.74);border-color:rgba(120,74,50,.6)}
+/* the map door has to be readable on light ground while the cloud is up */
+#myaura-page.cloudfirst #ma-back{z-index:50;background:rgba(255,246,232,.52);
+  color:#4a2a1a;border-color:rgba(120,74,50,.34);box-shadow:0 2px 18px rgba(140,90,60,.16);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#myaura-page.cloudfirst #ma-back:hover{background:rgba(255,250,242,.76)}
+@media (max-width:820px){
+  #ma-cloud-words b{font-size:16.5px}
+  #ma-cloud-words span{font-size:12.5px}
+  #ma-cloud-words{bottom:18%}
+}
+@media (prefers-reduced-motion:reduce){
+  #ma-cloud,#ma-cloud-aura,#ma-cloud-words,#ma-cloud-through{transition-duration:.5s}
+}
 #ma-back{position:absolute;top:16px;left:18px;z-index:8;padding:11px 20px;border-radius:14px;border:1px solid rgba(196,181,253,.8);background:#3a2c78;color:#f2ecff;font-size:13.5px;cursor:pointer;font-family:inherit;transition:all .2s;box-shadow:0 0 20px rgba(124,92,255,.5),0 0 6px rgba(196,181,253,.35)}
 #ma-back:hover{background:rgba(124,92,255,.38)}
 #ma-back:hover{background:rgba(167,139,250,.22)}
@@ -1943,6 +1998,12 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
   <div id="junc-sync"><span>And when the fused meanings begin echoing back from the world…</span><button type="button" id="junc-open-sync">∞ Begin your Synchronicity Weave →</button></div>
 </div>
 <div id="myaura-page">
+  <div id="ma-cloud-view">
+    <canvas id="ma-cloud"></canvas>
+    <canvas id="ma-cloud-aura"></canvas>
+    <div id="ma-cloud-words"><b>This is your aura.</b><span>Every sense you have offered is living in here.</span></div>
+    <button id="ma-cloud-through" type="button">Look closer</button>
+  </div>
   <button id="ma-back">← Return to the map</button>
   <div id="ma-journey">
     <button id="mj-btn">✦ Your journey <span class="mj-caret">▾</span></button>
@@ -4631,6 +4692,227 @@ function openMyAuraPage(){
   if(!maRaf)maRaf=requestAnimationFrame(maDraw);
 }
 function closeMyAuraPage(){const page=document.getElementById('myaura-page');if(page)page.classList.remove('show');const mt=document.querySelector('.tab-myaura');if(mt)mt.classList.remove('mypage-open');if(maRaf){cancelAnimationFrame(maRaf);maRaf=null;}maStopStream();const v=document.getElementById('ma-video');if(v)v.style.display='none';}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   THE CLOUD OF MY AURA · 31 August 2026
+   ───────────────────────────────────────────────────────────────────────
+   The Seeking's cloud engine, unchanged in its mathematics, held at its light
+   ground and given a smaller, cheaper buffer because it sits behind a single
+   figure rather than a whole sky.
+
+   THE AURA IN IT HAS NO RIM. It is painted as many overlapping fills of very
+   low opacity, tightest and most saturated at the core and thinning outward
+   with no last edge — so where two colours overlap they deepen, and where the
+   whole thing meets the cloud it simply stops being separate from it.
+   ══════════════════════════════════════════════════════════════════════════ */
+var MAC = { size:48, cover:90, depth:6, oct:4, warp:21, light:5, bed:4, drift:92, res:150 };
+if(Math.min(innerWidth,innerHeight)<560){ MAC={size:34,cover:75,depth:29,oct:4,warp:22,light:31,bed:4,drift:41,res:130}; }
+
+var macPERM=new Uint8Array(512);
+(function(){var p=new Uint8Array(256),i,j,t;
+  for(i=0;i<256;i++)p[i]=i;
+  for(i=255;i>0;i--){ j=(Math.random()*(i+1))|0; t=p[i];p[i]=p[j];p[j]=t; }
+  for(i=0;i<512;i++)macPERM[i]=p[i&255];})();
+function macH3(x,y,z){ return macPERM[(macPERM[(macPERM[x&255]+y)&255]+z)&255]*0.00392156862745098; }
+function macEase(t){ return t*t*t*(t*(t*6-15)+10); }
+function macVN(x,y,z){
+  var xi=Math.floor(x),yi=Math.floor(y),zi=Math.floor(z);
+  var u=macEase(x-xi),v=macEase(y-yi),w=macEase(z-zi);
+  var a0=macH3(xi,yi,zi),a1=macH3(xi+1,yi,zi),b0=macH3(xi,yi+1,zi),b1=macH3(xi+1,yi+1,zi),
+      c0=macH3(xi,yi,zi+1),c1=macH3(xi+1,yi,zi+1),d0=macH3(xi,yi+1,zi+1),d1=macH3(xi+1,yi+1,zi+1);
+  var x0=a0+(a1-a0)*u,x1=b0+(b1-b0)*u,x2=c0+(c1-c0)*u,x3=d0+(d1-d0)*u;
+  var y0=x0+(x1-x0)*v,y1=x2+(x3-x2)*v;
+  return y0+(y1-y0)*w;
+}
+function macFBM(x,y,z,oct){
+  var a=0.5,f=1,sm=0,n=0;
+  for(var i=0;i<oct;i++){ sm+=a*macVN(x*f,y*f,z*f); n+=a; a*=0.5; f*=2.03; }
+  return sm/n;
+}
+/* the light ground — the Seeking's day palette, Karl's own settled values */
+var MAC_PAL={ skyTop:[255,248,238], skyBot:[252,220,190], cloud:[214,150,112], lit:[255,246,228] };
+
+var macCv=null,macCx=null,macBuf=null,macBx=null,macImg=null,macDen=null;
+var macBW=0,macBH=0,macT=0,macLast=0,macNext=0,macRaf=null,macPainted=false,macCost=0;
+var macAur=null,macAx=null,macAraf=null,macAt=0;
+
+function macReduced(){ try{ return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches); }catch(e){ return false; } }
+
+function macSize(){
+  if(!macCv)return;
+  var d=Math.min(window.devicePixelRatio||1,2);
+  var W=innerWidth,H=innerHeight;
+  macCv.width=Math.round(W*d); macCv.height=Math.round(H*d);
+  macCx=macCv.getContext('2d');
+  macCx.imageSmoothingEnabled=true;
+  if(macCx.imageSmoothingQuality)macCx.imageSmoothingQuality='high';
+  var ar=W/H;
+  macBW=Math.max(40,Math.round(MAC.res*Math.sqrt(ar)));
+  macBH=Math.max(40,Math.round(MAC.res/Math.sqrt(ar)));
+  macBuf.width=macBW; macBuf.height=macBH;
+  macImg=macBx.createImageData(macBW,macBH);
+  macDen=new Float32Array(macBW*macBH);
+  if(macAur){ macAur.width=Math.round(W*d); macAur.height=Math.round(H*d);
+    macAx=macAur.getContext('2d'); macAx.scale(d,d); }
+}
+
+function macPaint(ms){
+  var t0=performance.now();
+  var P=MAC_PAL;
+  var units=90/MAC.size, cover=MAC.cover/100, depth=MAC.depth/100, oct=MAC.oct;
+  var warp=MAC.warp/100*1.6, light=MAC.light/100, bed=MAC.bed/100;
+  if(!macReduced())macT+=(MAC.drift/100)*0.0022*Math.min(60,ms-macLast);
+  macLast=ms;
+  var T=macT,x,y,i;
+  for(y=0;y<macBH;y++){
+    for(x=0;x<macBW;x++){
+      var px=(x/macBH)*units, py=(y/macBH)*units;
+      var m1=macFBM(px,py,T*0.09,oct);
+      var m2=macFBM(px*1.87+m1*warp*6, py*1.87-m1*warp*6, T*0.14+37.4, oct);
+      var m=m1*(0.42+0.58*m2)*1.62;
+      if(bed>0){
+        var ux=(x/(macBW-1)-0.5)*2, uy=(y/(macBH-1)-0.5)*2.1;
+        var q=Math.sqrt(ux*ux+uy*uy*0.8);
+        m*=1-bed*Math.max(0,Math.min(1,(q-0.45)/0.85));
+      }
+      var e=(m-(1-cover))*(1.1+depth*2.4);
+      macDen[y*macBW+x]=e<0?0:(e>1?1:e);
+    }
+  }
+  var d=macImg.data;
+  for(y=0;y<macBH;y++){
+    var yb=y/(macBH-1);
+    for(x=0;x<macBW;x++){
+      i=y*macBW+x;
+      var c=macDen[i];
+      var sx=x>1?2:0, ex=x<macBW-2?2:0, sy=y>1?2:0, ey=y<macBH-2?2:0;
+      var slope=((macDen[i-sx]-macDen[i+ex])+(macDen[i-sy*macBW]-macDen[i+ey*macBW]))*0.5;
+      var sh=1+slope*light*1.7; if(sh<0.68)sh=0.68; if(sh>1.34)sh=1.34;
+      var lp=Math.max(0,slope)*light*1.3; if(lp>0.85)lp=0.85;
+      var sr=P.skyTop[0]+(P.skyBot[0]-P.skyTop[0])*yb;
+      var sg=P.skyTop[1]+(P.skyBot[1]-P.skyTop[1])*yb;
+      var sb=P.skyTop[2]+(P.skyBot[2]-P.skyTop[2])*yb;
+      var cr=P.cloud[0]*sh+(P.lit[0]-P.cloud[0])*lp;
+      var cg=P.cloud[1]*sh+(P.lit[1]-P.cloud[1])*lp;
+      var cb=P.cloud[2]*sh+(P.lit[2]-P.cloud[2])*lp;
+      var k=c*c*(3-2*c)*0.88, o=i*4;
+      d[o]=sr+(cr-sr)*k; d[o+1]=sg+(cg-sg)*k; d[o+2]=sb+(cb-sb)*k; d[o+3]=255;
+    }
+  }
+  macBx.putImageData(macImg,0,0);
+  macCx.drawImage(macBuf,0,0,macBW,macBH,0,0,macCv.width,macCv.height);
+  macPainted=true;
+  macCost=performance.now()-t0;
+  if(macCost>34&&MAC.res>84){ MAC.res=Math.max(84,Math.round(MAC.res*0.85)); macSize(); }
+}
+
+function macLoop(ts){
+  if(!macReduced()||!macPainted){
+    if(ts>=macNext){ macNext=ts+58; try{ macPaint(ts); }catch(e){} }
+  }
+  macRaf=requestAnimationFrame(macLoop);
+}
+
+/* ── the aura itself · NO RIM ─────────────────────────────────────────────
+   Each colour the person carries is laid down as a stack of very soft fills.
+   The core is small and near-opaque so the sense stays unmistakably itself;
+   each ring outward is wider and fainter, so there is never a last edge — it
+   thins into the cloud instead of stopping against it. Where two colours
+   overlap in the thin part, they deepen together.
+   The breath is the same slow swell already on the map, untouched.          */
+function macHex(h){
+  h=(h||'#a78bfa').replace('#','');
+  if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
+  var n=parseInt(h,16);
+  return [(n>>16)&255,(n>>8)&255,n&255];
+}
+function macDrawAura(ts){
+  if(!macAx)return;
+  var W=innerWidth,H=innerHeight;
+  macAx.clearRect(0,0,W,H);
+  var cx=W/2, cy=H*0.44;
+  var base=Math.min(W,H)*0.30;
+  var still=(typeof window.AS_CALM!=='undefined'&&window.AS_CALM)||macReduced();
+  /* the slow resonant breath — about six seconds, brightness rises on the swell */
+  var br=still?0:Math.sin(ts/6000*Math.PI*2);
+  var swell=1+br*0.045, glow=1+br*0.11;
+  var L=(typeof maLayers!=='undefined'&&maLayers&&maLayers.length)?maLayers:[];
+  if(!L.length)L=[{color:'#e8c9a0'}];
+  var n=Math.min(L.length,7);
+  macAx.globalCompositeOperation='source-over';
+  /* outermost first so the core lands on top and keeps its identity */
+  for(var li=n-1;li>=0;li--){
+    var rgb=macHex(L[li].color);
+    /* each layer sits at its own distance from centre; the first is innermost */
+    var spread=base*(0.55+li*0.20)*swell;
+    /* 26 fills from wide-and-faint to small-and-strong: no boundary anywhere */
+    for(var k=26;k>=1;k--){
+      var f=k/26;
+      var r=spread*(0.18+f*1.30);
+      var a=(1-f)*(1-f)*0.052*glow;
+      if(li>0)a*=0.72;
+      macAx.beginPath();
+      macAx.arc(cx,cy,r,0,Math.PI*2);
+      macAx.fillStyle='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+a.toFixed(4)+')';
+      macAx.fill();
+    }
+  }
+  /* the core — hard colour identity, still with no drawn edge */
+  var c0=macHex(L[0].color);
+  for(var k2=9;k2>=1;k2--){
+    var f2=k2/9, r2=base*0.30*swell*f2;
+    macAx.beginPath(); macAx.arc(cx,cy,r2,0,Math.PI*2);
+    macAx.fillStyle='rgba('+c0[0]+','+c0[1]+','+c0[2]+','+((1-f2)*0.16*glow).toFixed(4)+')';
+    macAx.fill();
+  }
+}
+function macAuraLoop(ts){
+  try{ macDrawAura(ts); }catch(e){}
+  macAraf=requestAnimationFrame(macAuraLoop);
+}
+
+function macEnter(){
+  var page=document.getElementById('myaura-page'); if(!page)return;
+  macCv=document.getElementById('ma-cloud');
+  macAur=document.getElementById('ma-cloud-aura');
+  if(!macCv||!macAur)return;
+  page.classList.add('cloudfirst');
+  if(!macBuf){ macBuf=document.createElement('canvas'); macBx=macBuf.getContext('2d'); }
+  macSize();
+  macPainted=false; macLast=performance.now(); macNext=0;
+  if(macRaf)cancelAnimationFrame(macRaf);
+  macRaf=requestAnimationFrame(macLoop);
+  if(macAraf)cancelAnimationFrame(macAraf);
+  macAraf=requestAnimationFrame(macAuraLoop);
+  setTimeout(function(){
+    macCv.classList.add('on'); macAur.classList.add('on');
+    var w=document.getElementById('ma-cloud-words'); if(w)w.classList.add('on');
+    var b=document.getElementById('ma-cloud-through'); if(b)b.classList.add('on');
+  },90);
+}
+function macLeave(keepPage){
+  var page=document.getElementById('myaura-page');
+  if(page)page.classList.remove('cloudfirst');
+  if(macRaf){cancelAnimationFrame(macRaf);macRaf=null;}
+  if(macAraf){cancelAnimationFrame(macAraf);macAraf=null;}
+  if(macCv)macCv.classList.remove('on');
+  if(macAur)macAur.classList.remove('on');
+  var w=document.getElementById('ma-cloud-words'); if(w)w.classList.remove('on');
+  var b=document.getElementById('ma-cloud-through'); if(b)b.classList.remove('on');
+}
+addEventListener('resize',function(){
+  var p=document.getElementById('myaura-page');
+  if(p&&p.classList.contains('cloudfirst')){ try{ macSize(); }catch(e){} }
+});
+(function(){
+  var thr=document.getElementById('ma-cloud-through');
+  if(thr)thr.addEventListener('click',function(){ macLeave(); });
+})();
+
+/* wiring — the two existing functions are wrapped, never rewritten */
+var _macOpenOrig=openMyAuraPage, _macCloseOrig=closeMyAuraPage;
+openMyAuraPage=function(){ _macOpenOrig.apply(this,arguments); try{ macEnter(); }catch(e){} };
+closeMyAuraPage=function(){ try{ macLeave(); }catch(e){} _macCloseOrig.apply(this,arguments); };
 function maOfferingAction(act,i,btn){
   const o=myOfferings[i];if(!o)return;
   const tip=btn&&btn.querySelector?btn.querySelector('.ma-tip'):null;
@@ -7578,7 +7860,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 29 Aug 2026 · 46</div>
+<div id="build-stamp">Build 31 Aug 2026 · 47</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
