@@ -902,6 +902,27 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #myaura-page.cloudfirst > #ma-cloud-view,
 #myaura-page.cloudfirst > #ma-back{visibility:visible;pointer-events:auto}
 #myaura-page.cloudfirst{overflow:hidden}
+/* the rail is fixed and sits above the page, so hiding the page's children
+   never touched it. That is the band down the side.  */
+body.ma-incloud .as-rail{display:none!important}
+/* the face stays reachable: a descendant may become visible again inside a
+   hidden ancestor, which is how it returns without the old page returning */
+#myaura-page.cloudfirst.faceon #ma-video,
+#myaura-page.cloudfirst.faceon #ma-selfie-wrap{visibility:visible!important;pointer-events:auto;z-index:60}
+/* a sense, opened — what it is, and what it is doing to the whole */
+#ma-sense-card{position:absolute;left:50%;transform:translateX(-50%);top:12%;z-index:7;
+  width:min(340px,86vw);display:none;padding:15px 18px;border-radius:16px;
+  border:1px solid rgba(120,74,50,.3);background:rgba(255,248,238,.82);
+  -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);font-family:var(--serif);
+  color:#3b1f0d;opacity:0;transition:opacity .4s ease}
+#ma-sense-card.on{display:block;opacity:1}
+#ma-sense-card h4{margin:0 0 4px;font-size:17px;font-weight:400;letter-spacing:.02em}
+#ma-sense-card p{margin:6px 0 0;font-size:12.5px;line-height:1.55;color:#6b452c}
+#ma-sense-card .soon{margin-top:10px;padding-top:9px;border-top:1px solid rgba(120,74,50,.18);
+  font-size:11.5px;color:#8a6244;font-style:italic}
+#ma-sense-card button{margin-top:11px;padding:7px 14px;border-radius:12px;cursor:pointer;
+  font-family:inherit;font-size:12px;color:#4a2a1a;border:1px solid rgba(120,74,50,.32);
+  background:rgba(255,252,246,.7)}
 #ma-cloud,#ma-cloud-aura{position:absolute;inset:0;width:100%;height:100%;display:block}
 #ma-cloud{opacity:0;transition:opacity 1.8s ease}
 #ma-cloud.on{opacity:1}
@@ -2046,6 +2067,7 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
     <canvas id="ma-cloud"></canvas>
     <canvas id="ma-cloud-aura"></canvas>
     <div id="ma-cloud-name"></div>
+    <div id="ma-sense-card"></div>
     <div id="ma-cloud-words"><b>This is your aura.</b><span>Every sense you have offered is living in here.</span></div>
     <div id="ma-cloud-items"></div>
     <div id="ma-cloud-doors"></div>
@@ -4077,17 +4099,28 @@ document.getElementById('sg').onclick=async()=>{
       const res=await fetch(gBase);const d=await res.json();
       feats=(d&&d.features)?d.features:[];
     }
+    /* A HARD RULE, not a preference: a result that shares none of the typed
+       words is the wrong place, however confidently it is ranked. Dinas
+       Mawddwy shares only "dinas" with Dinas Powys, and "dinas" is common.
+       Anything failing this is discarded rather than flown to. */
+    const want=q.toLowerCase().split(/[\s,]+/).filter(w=>w.length>3);
+    const scoreOf=c=>{
+      const pn=(c.place_name||'').toLowerCase();
+      let sc=want.reduce((n,w)=>n+(pn.indexOf(w)>=0?2:0),0);
+      const ty=(c.place_type&&c.place_type[0])||'';
+      if(looksLikeAddress&&ty==='address')sc+=3;
+      if(looksLikeAddress&&ty==='poi')sc+=1;
+      return sc;
+    };
+    if(want.length){
+      const keep=feats.filter(c=>scoreOf(c)>0&&want.filter(w=>(c.place_name||'').toLowerCase().indexOf(w)>=0).length>=Math.min(2,want.length));
+      if(keep.length)feats=keep;
+      else feats=feats.filter(c=>scoreOf(c)>0);
+    }
     let f=feats[0];
     if(feats.length>1){
-      const want=q.toLowerCase().split(/[\s,]+/).filter(w=>w.length>2);
       let best=-1;
-      feats.forEach(c=>{
-        const pn=(c.place_name||'').toLowerCase();
-        let sc=want.reduce((n,w)=>n+(pn.indexOf(w)>=0?1:0),0);
-        const ty=(c.place_type&&c.place_type[0])||'';
-        if(looksLikeAddress&&(ty==='address'||ty==='poi'))sc+=1.5;
-        if(sc>best){best=sc;f=c;}
-      });
+      feats.forEach(c=>{const sc=scoreOf(c); if(sc>best){best=sc;f=c;}});
     }
     if(f){
       const t=(f.place_type&&f.place_type[0])||'';
@@ -4915,9 +4948,15 @@ function macHex(h){
      wash out to nothing — which is why the first build was barely visible.
      The hue is kept exactly; only the value is dropped, so a Weariness is
      still unmistakably a Weariness, but it can be seen. */
-  return [Math.round(((n>>16)&255)*0.56),Math.round(((n>>8)&255)*0.52),Math.round((n&255)*0.58)];
+  var r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  /* Scaling every channel down together turns a colour to mud. Saturating
+     first and only then lowering the value keeps it vivid while still
+     reading against a pale ground. */
+  var mid=(Math.max(r,g,b)+Math.min(r,g,b))/2, S=1.75, V=0.80;
+  function ch(v){ v=mid+(v-mid)*S; v*=V; return Math.max(0,Math.min(255,Math.round(v))); }
+  return [ch(r),ch(g),ch(b)];
 }
-var macSpread=0, macWantSpread=0, macPts=[], macHover=-1;
+var macSpread=0, macWantSpread=0, macPts=[], macHover=-1, macWhole=false;
 function macDrawAura(ts){
   if(!macAx)return;
   var W=innerWidth,H=innerHeight;
@@ -4950,11 +4989,11 @@ function macDrawAura(ts){
     /* whole: layers nested at the centre.  opened: each takes its own place and
        tightens, so the colour reads as one sense rather than part of a blend. */
     var spread=base*(0.55+li*0.20)*swell*(1-macSpread*0.66);
-    var lift=(macHover===li)?1.22:1;
+    var lift=(macHover===li)?1.42:(macWhole?1.28:1);
     for(var k=26;k>=1;k--){
       var f=k/26;
       var r=spread*(0.18+f*1.30);
-      var a=(1-f)*(1-f)*0.118*glow*lift;
+      var a=(1-f)*(1-f)*0.155*glow*lift;
       if(li>0&&macSpread<0.5)a*=0.72;
       macAx.beginPath();
       macAx.arc(px,py,r,0,Math.PI*2);
@@ -5005,7 +5044,7 @@ function macEnter(){
   macCv=document.getElementById('ma-cloud');
   macAur=document.getElementById('ma-cloud-aura');
   if(!macCv||!macAur)return;
-  page.classList.add('cloudfirst');
+  page.classList.add('cloudfirst'); document.body.classList.add('ma-incloud');
   if(!macBuf){ macBuf=document.createElement('canvas'); macBx=macBuf.getContext('2d'); }
   macSize();
   macPainted=false; macLast=performance.now(); macNext=0;
@@ -5026,7 +5065,9 @@ function macEnter(){
 }
 function macLeave(keepPage){
   var page=document.getElementById('myaura-page');
-  if(page)page.classList.remove('cloudfirst');
+  if(page)page.classList.remove('cloudfirst','faceon');
+  document.body.classList.remove('ma-incloud');
+  var sc=document.getElementById('ma-sense-card'); if(sc)sc.classList.remove('on');
   if(macRaf){cancelAnimationFrame(macRaf);macRaf=null;}
   if(macAraf){cancelAnimationFrame(macAraf);macAraf=null;}
   if(macCv)macCv.classList.remove('on');
@@ -5050,10 +5091,11 @@ addEventListener('resize',function(){
    did. The old page is no longer travelled to; it is only borrowed from.    */
 var MAC_DOORS=[
  {t:'Add to your aura',s:'more colour, from you',items:[
+   {l:'Set up your profile',p:'Your name-of-light and your ground',sel:'.mj-i[data-mj="profile"]'},
+   {l:'Add your face',p:'Your own likeness, held privately',sel:'#ma-selfie-btn',face:1},
    {l:'Answer gentle questions',p:'Shape your aura',sel:'.mj-i[data-mj="quest"]'},
    {l:'Go deeper — five gates',p:'Soul Search',sel:'.mj-i[data-mj="soul"]'},
-   {l:'Tell your story',p:'Your life story',sel:'.mj-i[data-mj="life"]'},
-   {l:'Set up your profile',p:'Your name-of-light and your ground',sel:'.mj-i[data-mj="profile"]'}]},
+   {l:'Tell your story',p:'Your life story',sel:'.mj-i[data-mj="life"]'}]},
  {t:'Read your aura',s:'what it is telling you',items:[
    {l:'See yourself reflected',p:'The Mirror',sel:'#mr-open'},
    {l:'Learn to read it',p:'How to read My Aura',sel:'#ra-open'},
@@ -5121,6 +5163,7 @@ function macOpenDoor(i){
       }
       var t=document.querySelector(it.sel);
       macOpenDoor(-1);
+      if(it.face){ var pg=document.getElementById('myaura-page'); if(pg)pg.classList.add('faceon'); }
       if(t){ try{ t.click(); }catch(e){} }
       else { try{ showMsg('That room is still being built ✧',4200); }catch(e){} }
     });
@@ -5160,7 +5203,47 @@ function macOpenDoor(i){
       if(!macWantSpread){ if(thr)thr.click(); return; }
       macShowName(macNameAt(e.clientX-r.left,e.clientY-r.top));
     });
-    aur.addEventListener('pointerleave',function(){ macShowName(-1); });
+    aur.addEventListener('pointerleave',function(){ macShowName(-1); macWhole=false; });
+    aur.addEventListener('pointerenter',function(){ if(!macWantSpread)macWhole=true; });
+    /* DEPTH TWO AND A HALF — a sense, opened. What it is, how often it has
+       come, where it was left, and what it is doing to the whole. */
+    aur.addEventListener('click',function(e){
+      if(!macWantSpread)return;
+      var r=aur.getBoundingClientRect();
+      var i=macNameAt(e.clientX-r.left,e.clientY-r.top);
+      if(i<0){ macCloseSense(); return; }
+      macOpenSense(i);
+    });
+  }
+  function macCloseSense(){
+    var c=document.getElementById('ma-sense-card'); if(c)c.classList.remove('on');
+  }
+  function macOpenSense(i){
+    var c=document.getElementById('ma-sense-card'); if(!c)return;
+    var L=(typeof maLayers!=='undefined'&&maLayers)?maLayers:[];
+    var la=L[i]; if(!la)return;
+    var places=[];
+    try{
+      (myOfferings||[]).forEach(function(o){
+        if(o&&o.sense===la.sid&&o.place&&places.indexOf(o.place)<0)places.push(o.place);
+      });
+    }catch(e){}
+    var total=0; try{ total=(maLayers||[]).reduce(function(a,x){return a+(x.count||1);},0); }catch(e){}
+    var share=total?Math.round((la.count/total)*100):0;
+    var safe=function(t){ return String(t==null?'':t).replace(/[<>]/g,''); };
+    var where=places.length
+      ? 'You left it at '+safe(places.slice(0,3).join(', '))+(places.length>3?' and elsewhere':'')+'.'
+      : 'This one came from your own reflection rather than a place.';
+    c.innerHTML='<h4>'+safe(la.label)+'</h4>'+
+      '<p>Offered '+(la.count>1?(la.count+' times'):'once')+'. '+
+      'It is about '+share+' per cent of the light you carry, which is why it sits '+
+      (share>=34?'near the centre of':'at the edge of')+' your aura.</p>'+
+      '<p>'+where+'</p>'+
+      '<div class="soon">Auras that answer this one will be findable here — there are '+
+      'too few sensers yet for that to be honest, so it waits.</div>'+
+      '<button type="button">Close</button>';
+    c.querySelector('button').addEventListener('click',macCloseSense);
+    c.classList.add('on');
   }
 })();
 
@@ -8115,7 +8198,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 2 Sep 2026 · 50</div>
+<div id="build-stamp">Build 2 Sep 2026 · 51</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
