@@ -896,20 +896,23 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
    the old behaviour exactly.                                                 */
 #ma-cloud-view{position:absolute;inset:0;z-index:40;display:none;overflow:hidden}
 #myaura-page.cloudfirst #ma-cloud-view{display:block}
-#myaura-page.cloudfirst #ma-layout,
-#myaura-page.cloudfirst #ma-title,
-#myaura-page.cloudfirst #ma-journey,
-#myaura-page.cloudfirst #ma-handle{visibility:hidden;pointer-events:none}
+/* everything of the old page is put away while the cloud is up — named
+   elements were not enough, a stray band still showed down the left */
+#myaura-page.cloudfirst > *{visibility:hidden;pointer-events:none}
+#myaura-page.cloudfirst > #ma-cloud-view,
+#myaura-page.cloudfirst > #ma-back{visibility:visible;pointer-events:auto}
+#myaura-page.cloudfirst{overflow:hidden}
 #ma-cloud,#ma-cloud-aura{position:absolute;inset:0;width:100%;height:100%;display:block}
 #ma-cloud{opacity:0;transition:opacity 1.8s ease}
 #ma-cloud.on{opacity:1}
 #ma-cloud-aura{opacity:0;transition:opacity 2.6s ease .6s}
 #ma-cloud-aura.on{opacity:1}
 /* the words sit low and quiet; warm dark on warm light, never a panel */
-#ma-cloud-words{position:absolute;left:0;right:0;bottom:15%;text-align:center;
+#ma-cloud-words{position:absolute;left:0;right:0;bottom:23%;text-align:center;
   z-index:3;pointer-events:none;opacity:0;transition:opacity 2.2s ease 1.4s;
   font-family:var(--serif);color:#5a3524;padding:0 26px}
 #ma-cloud-words.on{opacity:1}
+#ma-cloud-words.hushed{opacity:0!important}
 #ma-cloud-words b{display:block;font-size:19px;font-weight:400;letter-spacing:.02em;
   text-shadow:0 1px 14px rgba(255,244,228,.85)}
 #ma-cloud-words span{display:block;font-size:13.5px;margin-top:9px;color:#7a5540;
@@ -930,8 +933,8 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 #ma-cloud-name b{display:block;font-size:15.5px;font-weight:400;letter-spacing:.02em}
 #ma-cloud-name span{display:block;font-size:11.5px;margin-top:3px;color:#7a5540}
 /* THE FIVE DOORS — five verbs, in the same light. Never a sixth. */
-#ma-cloud-doors{position:absolute;left:0;right:0;bottom:5.5%;z-index:5;display:none;
-  justify-content:center;flex-wrap:wrap;gap:8px;padding:0 18px}
+#ma-cloud-doors{position:absolute;left:0;right:0;bottom:6%;z-index:5;display:none;
+  justify-content:center;flex-wrap:wrap;gap:11px;padding:0 18px}
 #ma-cloud-doors.on{display:flex}
 .macd{padding:9px 15px;border-radius:15px;cursor:pointer;font-family:inherit;text-align:left;
   border:1px solid rgba(120,74,50,.3);background:rgba(255,246,232,.5);
@@ -942,7 +945,7 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 .macd:hover{background:rgba(255,251,244,.78);border-color:rgba(120,74,50,.55)}
 .macd.sel{background:rgba(255,252,246,.9);border-color:rgba(120,74,50,.7)}
 /* what is behind a door rises in the same cloud — it does not replace it */
-#ma-cloud-items{position:absolute;left:50%;transform:translateX(-50%);bottom:19%;z-index:5;
+#ma-cloud-items{position:absolute;left:50%;transform:translateX(-50%);bottom:20%;z-index:5;
   display:none;flex-direction:column;gap:7px;width:min(360px,86vw);
   opacity:0;transition:opacity .4s ease}
 #ma-cloud-items.on{display:flex;opacity:1}
@@ -952,6 +955,12 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 .maci b{display:block;font-size:13.5px;font-weight:400;color:#3b1f0d;letter-spacing:.015em}
 .maci i{display:block;font-style:normal;font-size:11px;color:#8a6244;margin-top:2px}
 .maci:hover{background:rgba(255,253,249,.9);border-color:rgba(120,74,50,.55)}
+/* A DOOR THAT DOES NOTHING WHEN PRESSED IS THE WORST POSSIBLE SIGNAL.
+   Resting doors now say they are resting, before they are pressed. */
+.maci.resting{opacity:.62}
+.maci.resting b{color:#6d5340}
+.maci .why{display:none;font-size:11px;color:#93603c;margin-top:5px;line-height:1.45}
+.maci.saywhy .why{display:block}
 @media (max-width:820px){
   #ma-cloud-doors{bottom:3.5%;gap:6px}
   .macd{padding:8px 12px}.macd b{font-size:12px}.macd i{display:none}
@@ -4051,8 +4060,14 @@ document.getElementById('sg').onclick=async()=>{
        for first when the query starts with a house number, and the candidate
        that actually carries the typed words wins rather than the top rank.  */
     const looksLikeAddress=/^\s*\d/.test(q);
+    /* An explicit place — several words, or a comma — is a person naming
+       somewhere, not browsing near here. Bias to the current map centre is
+       what dragged a Welsh street to the nearest Welsh-sounding town, so for
+       those queries it is dropped entirely. */
+    const explicit=(q.indexOf(',')>=0)||(q.trim().split(/\s+/).length>=3);
     const gBase=`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json`+
-                `?access_token=${MAPBOX_TOKEN}&autocomplete=false&limit=5&proximity=${cc.lng},${cc.lat}`;
+                `?access_token=${MAPBOX_TOKEN}&autocomplete=false&limit=6`+
+                (explicit?``:`&proximity=${cc.lng},${cc.lat}`);
     let feats=[];
     if(looksLikeAddress){
       try{const r0=await fetch(gBase+'&types=address,poi');const d0=await r0.json();
@@ -4896,7 +4911,11 @@ function macHex(h){
   h=(h||'#a78bfa').replace('#','');
   if(h.length===3)h=h[0]+h[0]+h[1]+h[1]+h[2]+h[2];
   var n=parseInt(h,16);
-  return [(n>>16)&255,(n>>8)&255,n&255];
+  /* THE SENSE COLOURS WERE CHOSEN FOR A DARK MAP. On a warm pale cloud they
+     wash out to nothing — which is why the first build was barely visible.
+     The hue is kept exactly; only the value is dropped, so a Weariness is
+     still unmistakably a Weariness, but it can be seen. */
+  return [Math.round(((n>>16)&255)*0.56),Math.round(((n>>8)&255)*0.52),Math.round((n&255)*0.58)];
 }
 var macSpread=0, macWantSpread=0, macPts=[], macHover=-1;
 function macDrawAura(ts){
@@ -4920,33 +4939,36 @@ function macDrawAura(ts){
   var n=Math.min(L.length,7);
   macAx.globalCompositeOperation='source-over';
   macPts=[];
-  var ring=base*(n>1?0.66:0)*macSpread;
+  /* further apart and smaller when opened, so each sense is its own light
+     rather than a blur of neighbours — that overlap is why a name appeared
+     where nothing seemed to be. */
+  var ring=base*(n>1?1.05:0)*macSpread;
   for(var li=n-1;li>=0;li--){
     var rgb=macHex(L[li].color);
     var ang=-Math.PI/2+li*(Math.PI*2/Math.max(1,n));
     var px=cx+Math.cos(ang)*ring, py=cy+Math.sin(ang)*ring*0.88;
     /* whole: layers nested at the centre.  opened: each takes its own place and
        tightens, so the colour reads as one sense rather than part of a blend. */
-    var spread=base*(0.55+li*0.20)*swell*(1-macSpread*0.52);
+    var spread=base*(0.55+li*0.20)*swell*(1-macSpread*0.66);
     var lift=(macHover===li)?1.22:1;
     for(var k=26;k>=1;k--){
       var f=k/26;
       var r=spread*(0.18+f*1.30);
-      var a=(1-f)*(1-f)*0.052*glow*lift;
+      var a=(1-f)*(1-f)*0.118*glow*lift;
       if(li>0&&macSpread<0.5)a*=0.72;
       macAx.beginPath();
       macAx.arc(px,py,r,0,Math.PI*2);
       macAx.fillStyle='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+a.toFixed(4)+')';
       macAx.fill();
     }
-    macPts[li]={x:px,y:py,r:spread*0.9,i:li};
+    macPts[li]={x:px,y:py,r:spread*0.62,i:li};
   }
   var c0=macHex(L[0].color);
   var p0=macPts[0]||{x:cx,y:cy};
   for(var k2=9;k2>=1;k2--){
     var f2=k2/9, r2=base*0.30*swell*(1-macSpread*0.52)*f2;
     macAx.beginPath(); macAx.arc(p0.x,p0.y,r2,0,Math.PI*2);
-    macAx.fillStyle='rgba('+c0[0]+','+c0[1]+','+c0[2]+','+((1-f2)*0.16*glow).toFixed(4)+')';
+    macAx.fillStyle='rgba('+c0[0]+','+c0[1]+','+c0[2]+','+((1-f2)*0.30*glow).toFixed(4)+')';
     macAx.fill();
   }
 }
@@ -5069,20 +5091,38 @@ function macOpenDoor(i){
   var d=document.getElementById('ma-cloud-doors'),box=document.getElementById('ma-cloud-items');
   if(!d||!box)return;
   Array.prototype.forEach.call(d.children,function(c,k){ c.classList.toggle('sel',k===i); });
+  var wq=document.getElementById('ma-cloud-words');
+  if(wq)wq.classList.toggle('hushed',i>=0);
   if(i<0){ box.classList.remove('on'); box.innerHTML=''; return; }
   box.innerHTML='';
   MAC_DOORS[i].items.forEach(function(it){
     var b=document.createElement('button');
     b.type='button'; b.className='maci';
-    b.innerHTML='<b></b><i></i>';
+    b.innerHTML='<b></b><i></i><span class="why"></span>';
     b.querySelector('b').textContent=it.l;
     b.querySelector('i').textContent=it.p;
+    /* is this one still resting?  ask the existing lock, never a second copy */
+    var mk=(it.sel.indexOf('data-mj=')>=0)?it.sel.split('data-mj="')[1].split('"')[0]:null;
+    var rest=false;
+    if(mk){ try{ rest=!!mjLocked(mk); }catch(e){ rest=false; } }
+    if(rest)b.classList.add('resting');
     b.addEventListener('click',function(){
-      /* borrow the control that already exists — all its guards still apply */
+      if(rest){
+        /* say why, here, in the light — the old message flew past behind the cloud */
+        var w=b.querySelector('.why');
+        var reason='This one wakes once the door before it has been walked through.';
+        try{
+          var reg=!!(myProfile&&myProfile.handle);
+          if(!reg)reason='This wakes once you have set up your profile — look under “Add to your aura”.';
+          else{ var pv=mjPrev(mk); if(pv&&pv[1])reason='This wakes after “'+pv[1]+'”.'; }
+        }catch(e){}
+        if(w){ w.textContent=reason; b.classList.add('saywhy'); }
+        return;
+      }
       var t=document.querySelector(it.sel);
       macOpenDoor(-1);
       if(t){ try{ t.click(); }catch(e){} }
-      else { try{ showMsg('That door is resting just now ✧'); }catch(e){} }
+      else { try{ showMsg('That room is still being built ✧',4200); }catch(e){} }
     });
     box.appendChild(b);
   });
@@ -8075,7 +8115,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 2 Sep 2026 · 49</div>
+<div id="build-stamp">Build 2 Sep 2026 · 50</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
