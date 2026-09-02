@@ -3997,12 +3997,46 @@ document.getElementById('sg').onclick=async()=>{
   showMsg('Sensing the aura of '+q+'...');
   try{
     const cc=map.getCenter();
-    const url=`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json`+
-              `?access_token=${MAPBOX_TOKEN}&limit=1&proximity=${cc.lng},${cc.lat}`;
-    const res=await fetch(url);
-    const d=await res.json();
-    if(d&&d.features&&d.features.length){
-      const f=d.features[0];
+    /* ── SEARCH FAULT FIXED · 2 September 2026 ───────────────────────────────
+       Karl, 2 Sept: "22 Murch Crescent Dinas Powys used to land beautifully at
+       the correct address... now just lands a generic Dinas Powys town", and on
+       a second try landed at Dinas Mawddwy — a different town entirely.
+
+       Two faults, both in the old single line:
+         1. autocomplete defaults to TRUE. A submitted search is not a
+            typeahead, and prefix matching is exactly how "Dinas Powys" gets
+            answered with "Dinas Mawddwy".
+         2. limit=1 took whatever Mapbox ranked first, and proximity to a far
+            map centre was pulling a nearby-ish town above the real address.
+
+       Now: autocomplete off, five candidates asked for, address types asked
+       for first when the query starts with a house number, and the candidate
+       that actually carries the typed words wins rather than the top rank.  */
+    const looksLikeAddress=/^\s*\d/.test(q);
+    const gBase=`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json`+
+                `?access_token=${MAPBOX_TOKEN}&autocomplete=false&limit=5&proximity=${cc.lng},${cc.lat}`;
+    let feats=[];
+    if(looksLikeAddress){
+      try{const r0=await fetch(gBase+'&types=address,poi');const d0=await r0.json();
+          if(d0&&d0.features)feats=d0.features;}catch(e){}
+    }
+    if(!feats.length){
+      const res=await fetch(gBase);const d=await res.json();
+      feats=(d&&d.features)?d.features:[];
+    }
+    let f=feats[0];
+    if(feats.length>1){
+      const want=q.toLowerCase().split(/[\s,]+/).filter(w=>w.length>2);
+      let best=-1;
+      feats.forEach(c=>{
+        const pn=(c.place_name||'').toLowerCase();
+        let sc=want.reduce((n,w)=>n+(pn.indexOf(w)>=0?1:0),0);
+        const ty=(c.place_type&&c.place_type[0])||'';
+        if(looksLikeAddress&&(ty==='address'||ty==='poi'))sc+=1.5;
+        if(sc>best){best=sc;f=c;}
+      });
+    }
+    if(f){
       const t=(f.place_type&&f.place_type[0])||'';
       let name=f.text||f.place_name.split(',')[0];
       if(t==='address'&&f.address)name=f.address+' '+name;
@@ -7860,7 +7894,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 31 Aug 2026 · 47</div>
+<div id="build-stamp">Build 2 Sep 2026 · 48</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
