@@ -922,6 +922,41 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   opacity:0;transition:opacity 2s ease 2s,background .25s,border-color .25s}
 #ma-cloud-through.on{opacity:1}
+/* the touched sense names itself where it sits — never in a corner, never a panel */
+#ma-cloud-name{position:absolute;z-index:6;pointer-events:none;transform:translate(-50%,-50%);
+  font-family:var(--serif);text-align:center;opacity:0;transition:opacity .35s ease;
+  color:#4a2a1a;text-shadow:0 1px 12px rgba(255,246,232,.92)}
+#ma-cloud-name.on{opacity:1}
+#ma-cloud-name b{display:block;font-size:15.5px;font-weight:400;letter-spacing:.02em}
+#ma-cloud-name span{display:block;font-size:11.5px;margin-top:3px;color:#7a5540}
+/* THE FIVE DOORS — five verbs, in the same light. Never a sixth. */
+#ma-cloud-doors{position:absolute;left:0;right:0;bottom:5.5%;z-index:5;display:none;
+  justify-content:center;flex-wrap:wrap;gap:8px;padding:0 18px}
+#ma-cloud-doors.on{display:flex}
+.macd{padding:9px 15px;border-radius:15px;cursor:pointer;font-family:inherit;text-align:left;
+  border:1px solid rgba(120,74,50,.3);background:rgba(255,246,232,.5);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  transition:background .22s,border-color .22s,transform .22s}
+.macd b{display:block;font-size:13px;font-weight:400;color:#40230f;letter-spacing:.02em}
+.macd i{display:block;font-style:normal;font-size:10.5px;color:#8a6244;margin-top:2px}
+.macd:hover{background:rgba(255,251,244,.78);border-color:rgba(120,74,50,.55)}
+.macd.sel{background:rgba(255,252,246,.9);border-color:rgba(120,74,50,.7)}
+/* what is behind a door rises in the same cloud — it does not replace it */
+#ma-cloud-items{position:absolute;left:50%;transform:translateX(-50%);bottom:19%;z-index:5;
+  display:none;flex-direction:column;gap:7px;width:min(360px,86vw);
+  opacity:0;transition:opacity .4s ease}
+#ma-cloud-items.on{display:flex;opacity:1}
+.maci{padding:11px 16px;border-radius:14px;cursor:pointer;font-family:inherit;text-align:left;
+  border:1px solid rgba(120,74,50,.26);background:rgba(255,248,238,.66);
+  -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);transition:background .2s,border-color .2s}
+.maci b{display:block;font-size:13.5px;font-weight:400;color:#3b1f0d;letter-spacing:.015em}
+.maci i{display:block;font-style:normal;font-size:11px;color:#8a6244;margin-top:2px}
+.maci:hover{background:rgba(255,253,249,.9);border-color:rgba(120,74,50,.55)}
+@media (max-width:820px){
+  #ma-cloud-doors{bottom:3.5%;gap:6px}
+  .macd{padding:8px 12px}.macd b{font-size:12px}.macd i{display:none}
+  #ma-cloud-items{bottom:16%}
+}
 #ma-cloud-through:hover{background:rgba(255,250,242,.74);border-color:rgba(120,74,50,.6)}
 /* the map door has to be readable on light ground while the cloud is up */
 #myaura-page.cloudfirst #ma-back{z-index:50;background:rgba(255,246,232,.52);
@@ -2001,7 +2036,10 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
   <div id="ma-cloud-view">
     <canvas id="ma-cloud"></canvas>
     <canvas id="ma-cloud-aura"></canvas>
+    <div id="ma-cloud-name"></div>
     <div id="ma-cloud-words"><b>This is your aura.</b><span>Every sense you have offered is living in here.</span></div>
+    <div id="ma-cloud-items"></div>
+    <div id="ma-cloud-doors"></div>
     <button id="ma-cloud-through" type="button">Look closer</button>
   </div>
   <button id="ma-back">← Return to the map</button>
@@ -4860,12 +4898,19 @@ function macHex(h){
   var n=parseInt(h,16);
   return [(n>>16)&255,(n>>8)&255,n&255];
 }
+var macSpread=0, macWantSpread=0, macPts=[], macHover=-1;
 function macDrawAura(ts){
   if(!macAx)return;
   var W=innerWidth,H=innerHeight;
   macAx.clearRect(0,0,W,H);
   var cx=W/2, cy=H*0.44;
   var base=Math.min(W,H)*0.30;
+  /* THE OPENING — the senses drift apart from where they already are. They never
+     jump and the whole is never off screen, which is the one rule that keeps a
+     cloud from becoming a place to get lost in. */
+  macSpread+=(macWantSpread-macSpread)*0.055;
+  if(macWantSpread&&macSpread>0.985)macSpread=1;
+  if(!macWantSpread&&macSpread<0.004)macSpread=0;
   var still=(typeof window.AS_CALM!=='undefined'&&window.AS_CALM)||macReduced();
   /* the slow resonant breath — about six seconds, brightness rises on the swell */
   var br=still?0:Math.sin(ts/6000*Math.PI*2);
@@ -4874,31 +4919,59 @@ function macDrawAura(ts){
   if(!L.length)L=[{color:'#e8c9a0'}];
   var n=Math.min(L.length,7);
   macAx.globalCompositeOperation='source-over';
-  /* outermost first so the core lands on top and keeps its identity */
+  macPts=[];
+  var ring=base*(n>1?0.66:0)*macSpread;
   for(var li=n-1;li>=0;li--){
     var rgb=macHex(L[li].color);
-    /* each layer sits at its own distance from centre; the first is innermost */
-    var spread=base*(0.55+li*0.20)*swell;
-    /* 26 fills from wide-and-faint to small-and-strong: no boundary anywhere */
+    var ang=-Math.PI/2+li*(Math.PI*2/Math.max(1,n));
+    var px=cx+Math.cos(ang)*ring, py=cy+Math.sin(ang)*ring*0.88;
+    /* whole: layers nested at the centre.  opened: each takes its own place and
+       tightens, so the colour reads as one sense rather than part of a blend. */
+    var spread=base*(0.55+li*0.20)*swell*(1-macSpread*0.52);
+    var lift=(macHover===li)?1.22:1;
     for(var k=26;k>=1;k--){
       var f=k/26;
       var r=spread*(0.18+f*1.30);
-      var a=(1-f)*(1-f)*0.052*glow;
-      if(li>0)a*=0.72;
+      var a=(1-f)*(1-f)*0.052*glow*lift;
+      if(li>0&&macSpread<0.5)a*=0.72;
       macAx.beginPath();
-      macAx.arc(cx,cy,r,0,Math.PI*2);
+      macAx.arc(px,py,r,0,Math.PI*2);
       macAx.fillStyle='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+a.toFixed(4)+')';
       macAx.fill();
     }
+    macPts[li]={x:px,y:py,r:spread*0.9,i:li};
   }
-  /* the core — hard colour identity, still with no drawn edge */
   var c0=macHex(L[0].color);
+  var p0=macPts[0]||{x:cx,y:cy};
   for(var k2=9;k2>=1;k2--){
-    var f2=k2/9, r2=base*0.30*swell*f2;
-    macAx.beginPath(); macAx.arc(cx,cy,r2,0,Math.PI*2);
+    var f2=k2/9, r2=base*0.30*swell*(1-macSpread*0.52)*f2;
+    macAx.beginPath(); macAx.arc(p0.x,p0.y,r2,0,Math.PI*2);
     macAx.fillStyle='rgba('+c0[0]+','+c0[1]+','+c0[2]+','+((1-f2)*0.16*glow).toFixed(4)+')';
     macAx.fill();
   }
+}
+/* ── naming a sense, where it sits ────────────────────────────────────── */
+function macNameAt(cxp,cyp){
+  if(!macSpread)return -1;
+  var best=-1,bd=1e9;
+  for(var i=0;i<macPts.length;i++){
+    var p=macPts[i],dx=cxp-p.x,dy=cyp-p.y,d=Math.sqrt(dx*dx+dy*dy);
+    if(d<p.r&&d<bd){bd=d;best=i;}
+  }
+  return best;
+}
+function macShowName(i){
+  var el=document.getElementById('ma-cloud-name');if(!el)return;
+  macHover=i;
+  if(i<0){el.classList.remove('on');return;}
+  var L=(typeof maLayers!=='undefined'&&maLayers&&maLayers.length)?maLayers:[];
+  var la=L[i];if(!la){el.classList.remove('on');return;}
+  var p=macPts[i];if(!p)return;
+  var cnt=la.count>1?(la.count+' times'):'once';
+  el.innerHTML='<b>'+String(la.label||'').replace(/[<>]/g,'')+'</b><span>offered '+cnt+'</span>';
+  el.style.left=Math.round(p.x)+'px';
+  el.style.top=Math.round(p.y-p.r-16)+'px';
+  el.classList.add('on');
 }
 function macAuraLoop(ts){
   try{ macDrawAura(ts); }catch(e){}
@@ -4914,6 +4987,11 @@ function macEnter(){
   if(!macBuf){ macBuf=document.createElement('canvas'); macBx=macBuf.getContext('2d'); }
   macSize();
   macPainted=false; macLast=performance.now(); macNext=0;
+  macSpread=0; macWantSpread=0; macHover=-1; macOpenDoor(-1); macShowName(-1);
+  var _t=document.getElementById('ma-cloud-through'); if(_t)_t.textContent='Look closer';
+  var _w=document.getElementById('ma-cloud-words');
+  if(_w)_w.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here.</span>';
+  var _d=document.getElementById('ma-cloud-doors'); if(_d)_d.classList.remove('on');
   if(macRaf)cancelAnimationFrame(macRaf);
   macRaf=requestAnimationFrame(macLoop);
   if(macAraf)cancelAnimationFrame(macAraf);
@@ -4933,14 +5011,117 @@ function macLeave(keepPage){
   if(macAur)macAur.classList.remove('on');
   var w=document.getElementById('ma-cloud-words'); if(w)w.classList.remove('on');
   var b=document.getElementById('ma-cloud-through'); if(b)b.classList.remove('on');
+  var dz=document.getElementById('ma-cloud-doors'); if(dz)dz.classList.remove('on');
+  var nz=document.getElementById('ma-cloud-name'); if(nz)nz.classList.remove('on');
+  macOpenDoor(-1);
 }
 addEventListener('resize',function(){
   var p=document.getElementById('myaura-page');
   if(p&&p.classList.contains('cloudfirst')){ try{ macSize(); }catch(e){} }
 });
+/* ══ THE FIVE DOORS · 2 September 2026 ═══════════════════════════════════
+   Five verbs, never a sixth. Every label leads with what it DOES — the first two
+   words carry the whole scent, which is all a person reads before deciding.
+   The beautiful name sits underneath, kept whole.
+   Nothing here is a new feature: each door reaches the control that already
+   exists, so every lock, every guard and every message behaves exactly as it
+   did. The old page is no longer travelled to; it is only borrowed from.    */
+var MAC_DOORS=[
+ {t:'Add to your aura',s:'more colour, from you',items:[
+   {l:'Answer gentle questions',p:'Shape your aura',sel:'.mj-i[data-mj="quest"]'},
+   {l:'Go deeper — five gates',p:'Soul Search',sel:'.mj-i[data-mj="soul"]'},
+   {l:'Tell your story',p:'Your life story',sel:'.mj-i[data-mj="life"]'},
+   {l:'Set up your profile',p:'Your name-of-light and your ground',sel:'.mj-i[data-mj="profile"]'}]},
+ {t:'Read your aura',s:'what it is telling you',items:[
+   {l:'See yourself reflected',p:'The Mirror',sel:'#mr-open'},
+   {l:'Learn to read it',p:'How to read My Aura',sel:'#ra-open'},
+   {l:'See where this path leads',p:'Conscious Trajectory',sel:'.mj-i[data-mj="traj"]'}]},
+ {t:'Send from your aura',s:'outward, on your terms',items:[
+   {l:'Send someone a card',p:'SenseShare',sel:'#ss-open'},
+   {l:'Read what a message carries',p:'The Felt-Context Lantern',sel:'#fc-open'},
+   {l:'Choose what reaches you',p:'What reaches you',sel:'.mj-i[data-mj="notify"]'},
+   {l:'Save your aura',p:'Keep my light',sel:'#gp-open'}]},
+ {t:'Learn the symbols',s:'words made of light',items:[
+   {l:'Meet the symbols',p:'Alphasense',sel:'.mj-i[data-mj="alpha"]'},
+   {l:'Join two symbols',p:'Alphabonds',sel:'.mj-i[data-mj="bonds"]'},
+   {l:'Practise speaking',p:'Alphasense workshop',sel:'.mj-i[data-mj="work"]'}]},
+ {t:'Practise noticing',s:'attention, as a skill',items:[
+   {l:'Notice what repeats',p:'Synchronicity Weave',sel:'.mj-i[data-mj="sync"]'},
+   {l:'Sit with open questions',p:'The Openings',sel:'.mj-i[data-mj="openings"]'},
+   {l:'Still the motion',p:'Calm mode',sel:'#calm-toggle'}]}
+];
+var macDoorOpen=-1;
+function macBuildDoors(){
+  var d=document.getElementById('ma-cloud-doors');if(!d||d.dataset.built)return;
+  d.dataset.built='1';
+  MAC_DOORS.forEach(function(dr,i){
+    var b=document.createElement('button');
+    b.type='button'; b.className='macd';
+    b.innerHTML='<b></b><i></i>';
+    b.querySelector('b').textContent=dr.t;
+    b.querySelector('i').textContent=dr.s;
+    b.addEventListener('click',function(){ macOpenDoor(i===macDoorOpen?-1:i); });
+    d.appendChild(b);
+  });
+}
+function macOpenDoor(i){
+  macDoorOpen=i;
+  var d=document.getElementById('ma-cloud-doors'),box=document.getElementById('ma-cloud-items');
+  if(!d||!box)return;
+  Array.prototype.forEach.call(d.children,function(c,k){ c.classList.toggle('sel',k===i); });
+  if(i<0){ box.classList.remove('on'); box.innerHTML=''; return; }
+  box.innerHTML='';
+  MAC_DOORS[i].items.forEach(function(it){
+    var b=document.createElement('button');
+    b.type='button'; b.className='maci';
+    b.innerHTML='<b></b><i></i>';
+    b.querySelector('b').textContent=it.l;
+    b.querySelector('i').textContent=it.p;
+    b.addEventListener('click',function(){
+      /* borrow the control that already exists — all its guards still apply */
+      var t=document.querySelector(it.sel);
+      macOpenDoor(-1);
+      if(t){ try{ t.click(); }catch(e){} }
+      else { try{ showMsg('That door is resting just now ✧'); }catch(e){} }
+    });
+    box.appendChild(b);
+  });
+  box.classList.add('on');
+}
 (function(){
   var thr=document.getElementById('ma-cloud-through');
-  if(thr)thr.addEventListener('click',function(){ macLeave(); });
+  var aur=document.getElementById('ma-cloud-aura');
+  if(thr)thr.addEventListener('click',function(){
+    if(!macWantSpread){
+      /* DEPTH TWO — the aura opens into the senses that made it */
+      macWantSpread=1;
+      macBuildDoors();
+      var d=document.getElementById('ma-cloud-doors');if(d)d.classList.add('on');
+      var w=document.getElementById('ma-cloud-words');
+      if(w)w.innerHTML='<b>This is what made it.</b><span>Touch any light to hear its name.</span>';
+      thr.textContent='Let it close';
+    }else{
+      macWantSpread=0; macShowName(-1); macOpenDoor(-1);
+      var d2=document.getElementById('ma-cloud-doors');if(d2)d2.classList.remove('on');
+      var w2=document.getElementById('ma-cloud-words');
+      if(w2)w2.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here.</span>';
+      thr.textContent='Look closer';
+    }
+  });
+  if(aur){
+    aur.style.pointerEvents='auto';
+    aur.addEventListener('pointermove',function(e){
+      if(!macWantSpread)return;
+      var r=aur.getBoundingClientRect();
+      macShowName(macNameAt(e.clientX-r.left,e.clientY-r.top));
+    });
+    aur.addEventListener('pointerdown',function(e){
+      var r=aur.getBoundingClientRect();
+      if(!macWantSpread){ if(thr)thr.click(); return; }
+      macShowName(macNameAt(e.clientX-r.left,e.clientY-r.top));
+    });
+    aur.addEventListener('pointerleave',function(){ macShowName(-1); });
+  }
 })();
 
 /* wiring — the two existing functions are wrapped, never rewritten */
@@ -7894,7 +8075,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 2 Sep 2026 · 48</div>
+<div id="build-stamp">Build 2 Sep 2026 · 49</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
