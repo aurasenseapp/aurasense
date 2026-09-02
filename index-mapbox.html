@@ -907,8 +907,14 @@ body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
 body.ma-incloud .as-rail{display:none!important}
 /* the face stays reachable: a descendant may become visible again inside a
    hidden ancestor, which is how it returns without the old page returning */
-#myaura-page.cloudfirst.faceon #ma-video,
-#myaura-page.cloudfirst.faceon #ma-selfie-wrap{visibility:visible!important;pointer-events:auto;z-index:60}
+#myaura-page.cloudfirst.faceon #ma-cloud-view #ma-video,
+#myaura-page.cloudfirst.faceon #ma-cloud-view #ma-selfie-wrap{visibility:visible!important;
+  pointer-events:auto;z-index:60;display:flex}
+#myaura-page.cloudfirst.faceon #ma-cloud-view #ma-video{display:block;top:42%}
+#myaura-page.cloudfirst.faceon #ma-cloud-view #ma-selfie-wrap{top:auto;bottom:36%}
+#myaura-page.cloudfirst.faceon #ma-cloud-view #ma-selfie-note{color:#7a5540;text-shadow:none}
+#myaura-page.cloudfirst.faceon #ma-cloud-view #ma-selfie-btn{background:rgba(255,248,238,.72);
+  color:#4a2a1a;border-color:rgba(120,74,50,.34)}
 /* a sense, opened — what it is, and what it is doing to the whole */
 #ma-sense-card{position:absolute;left:50%;transform:translateX(-50%);top:12%;z-index:7;
   width:min(340px,86vw);display:none;padding:15px 18px;border-radius:16px;
@@ -926,7 +932,7 @@ body.ma-incloud .as-rail{display:none!important}
 #ma-cloud,#ma-cloud-aura{position:absolute;inset:0;width:100%;height:100%;display:block}
 #ma-cloud{opacity:0;transition:opacity 1.8s ease}
 #ma-cloud.on{opacity:1}
-#ma-cloud-aura{opacity:0;transition:opacity 2.6s ease .6s}
+#ma-cloud-aura{opacity:0;transition:opacity 2.6s ease .6s;mix-blend-mode:multiply}
 #ma-cloud-aura.on{opacity:1}
 /* the words sit low and quiet; warm dark on warm light, never a panel */
 #ma-cloud-words{position:absolute;left:0;right:0;bottom:23%;text-align:center;
@@ -983,9 +989,14 @@ body.ma-incloud .as-rail{display:none!important}
 .maci .why{display:none;font-size:11px;color:#93603c;margin-top:5px;line-height:1.45}
 .maci.saywhy .why{display:block}
 @media (max-width:820px){
-  #ma-cloud-doors{bottom:3.5%;gap:6px}
-  .macd{padding:8px 12px}.macd b{font-size:12px}.macd i{display:none}
-  #ma-cloud-items{bottom:16%}
+  /* ONE ROW, ALWAYS. Wrapping to three rows is what climbed into the words. */
+  #ma-cloud-doors{bottom:3%;gap:7px;flex-wrap:nowrap;overflow-x:auto;
+    justify-content:flex-start;padding:0 14px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  #ma-cloud-doors::-webkit-scrollbar{display:none}
+  .macd{padding:8px 13px;flex:0 0 auto}.macd b{font-size:12px;white-space:nowrap}.macd i{display:none}
+  #ma-cloud-items{bottom:13%}
+  #ma-cloud-words{bottom:31%}
+  #ma-sense-card{top:8%}
 }
 #ma-cloud-through:hover{background:rgba(255,250,242,.74);border-color:rgba(120,74,50,.6)}
 /* the map door has to be readable on light ground while the cloud is up */
@@ -2068,7 +2079,7 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
     <canvas id="ma-cloud-aura"></canvas>
     <div id="ma-cloud-name"></div>
     <div id="ma-sense-card"></div>
-    <div id="ma-cloud-words"><b>This is your aura.</b><span>Every sense you have offered is living in here.</span></div>
+    <div id="ma-cloud-words"><b>This is your aura.</b><span>Every sense you have offered is living in here. Touch it.</span></div>
     <div id="ma-cloud-items"></div>
     <div id="ma-cloud-doors"></div>
     <button id="ma-cloud-through" type="button">Look closer</button>
@@ -4090,15 +4101,22 @@ document.getElementById('sg').onclick=async()=>{
     const gBase=`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json`+
                 `?access_token=${MAPBOX_TOKEN}&autocomplete=false&limit=6`+
                 (explicit?``:`&proximity=${cc.lng},${cc.lat}`);
+    /* BOTH passes always run and their results are pooled. The first pass keeps
+       partial matching on, which is what finds a street by name; the hard word
+       filter below is now what stops a wrong town winning, so it is safe.  */
     let feats=[];
     if(looksLikeAddress){
-      try{const r0=await fetch(gBase+'&types=address,poi');const d0=await r0.json();
-          if(d0&&d0.features)feats=d0.features;}catch(e){}
+      try{
+        const r0=await fetch(gBase.replace('autocomplete=false','autocomplete=true')+'&types=address');
+        const d0=await r0.json();
+        if(d0&&d0.features)feats=feats.concat(d0.features);
+      }catch(e){}
     }
-    if(!feats.length){
+    try{
       const res=await fetch(gBase);const d=await res.json();
-      feats=(d&&d.features)?d.features:[];
-    }
+      if(d&&d.features)feats=feats.concat(d.features);
+    }catch(e){}
+    {const seen={};feats=feats.filter(c=>{const k=(c.id||c.place_name);if(seen[k])return false;seen[k]=1;return true;});}
     /* A HARD RULE, not a preference: a result that shares none of the typed
        words is the wrong place, however confidently it is ranked. Dinas
        Mawddwy shares only "dinas" with Dinas Powys, and "dinas" is common.
@@ -4952,7 +4970,9 @@ function macHex(h){
   /* Scaling every channel down together turns a colour to mud. Saturating
      first and only then lowering the value keeps it vivid while still
      reading against a pale ground. */
-  var mid=(Math.max(r,g,b)+Math.min(r,g,b))/2, S=1.75, V=0.80;
+  /* multiply does the darkening now, so the colour itself is left near its
+     true self and only lifted in saturation */
+  var mid=(Math.max(r,g,b)+Math.min(r,g,b))/2, S=1.42, V=1.0;
   function ch(v){ v=mid+(v-mid)*S; v*=V; return Math.max(0,Math.min(255,Math.round(v))); }
   return [ch(r),ch(g),ch(b)];
 }
@@ -4989,11 +5009,11 @@ function macDrawAura(ts){
     /* whole: layers nested at the centre.  opened: each takes its own place and
        tightens, so the colour reads as one sense rather than part of a blend. */
     var spread=base*(0.55+li*0.20)*swell*(1-macSpread*0.66);
-    var lift=(macHover===li)?1.42:(macWhole?1.28:1);
+    var lift=(macHover===li)?1.75:(macWhole?1.5:1);
     for(var k=26;k>=1;k--){
       var f=k/26;
       var r=spread*(0.18+f*1.30);
-      var a=(1-f)*(1-f)*0.155*glow*lift;
+      var a=(1-f)*(1-f)*0.135*glow*lift;
       if(li>0&&macSpread<0.5)a*=0.72;
       macAx.beginPath();
       macAx.arc(px,py,r,0,Math.PI*2);
@@ -5007,7 +5027,7 @@ function macDrawAura(ts){
   for(var k2=9;k2>=1;k2--){
     var f2=k2/9, r2=base*0.30*swell*(1-macSpread*0.52)*f2;
     macAx.beginPath(); macAx.arc(p0.x,p0.y,r2,0,Math.PI*2);
-    macAx.fillStyle='rgba('+c0[0]+','+c0[1]+','+c0[2]+','+((1-f2)*0.30*glow).toFixed(4)+')';
+    macAx.fillStyle='rgba('+c0[0]+','+c0[1]+','+c0[2]+','+((1-f2)*0.26*glow).toFixed(4)+')';
     macAx.fill();
   }
 }
@@ -5051,7 +5071,7 @@ function macEnter(){
   macSpread=0; macWantSpread=0; macHover=-1; macOpenDoor(-1); macShowName(-1);
   var _t=document.getElementById('ma-cloud-through'); if(_t)_t.textContent='Look closer';
   var _w=document.getElementById('ma-cloud-words');
-  if(_w)_w.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here.</span>';
+  if(_w)_w.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here. Touch it.</span>';
   var _d=document.getElementById('ma-cloud-doors'); if(_d)_d.classList.remove('on');
   if(macRaf)cancelAnimationFrame(macRaf);
   macRaf=requestAnimationFrame(macLoop);
@@ -5066,6 +5086,9 @@ function macEnter(){
 function macLeave(keepPage){
   var page=document.getElementById('myaura-page');
   if(page)page.classList.remove('cloudfirst','faceon');
+  try{ if(macFaceHome){ var v=document.getElementById('ma-video'),w=document.getElementById('ma-selfie-wrap');
+    if(w&&macFaceHome.p)macFaceHome.p.appendChild(w);
+    if(v&&macFaceHome.vp)macFaceHome.vp.appendChild(v); macFaceHome=null; } }catch(e){}
   document.body.classList.remove('ma-incloud');
   var sc=document.getElementById('ma-sense-card'); if(sc)sc.classList.remove('on');
   if(macRaf){cancelAnimationFrame(macRaf);macRaf=null;}
@@ -5114,7 +5137,7 @@ var MAC_DOORS=[
    {l:'Sit with open questions',p:'The Openings',sel:'.mj-i[data-mj="openings"]'},
    {l:'Still the motion',p:'Calm mode',sel:'#calm-toggle'}]}
 ];
-var macDoorOpen=-1;
+var macDoorOpen=-1, macFaceHome=null;
 function macBuildDoors(){
   var d=document.getElementById('ma-cloud-doors');if(!d||d.dataset.built)return;
   d.dataset.built='1';
@@ -5163,7 +5186,19 @@ function macOpenDoor(i){
       }
       var t=document.querySelector(it.sel);
       macOpenDoor(-1);
-      if(it.face){ var pg=document.getElementById('myaura-page'); if(pg)pg.classList.add('faceon'); }
+      if(it.face){
+        /* the controls are MOVED into the cloud, not merely un-hidden — they sit
+           inside a flex column that is no longer laid out, so revealing them in
+           place put them nowhere. They go home again when the cloud closes. */
+        var pg=document.getElementById('myaura-page'),cv=document.getElementById('ma-cloud-view');
+        var vid=document.getElementById('ma-video'),wrp=document.getElementById('ma-selfie-wrap');
+        if(pg&&cv&&wrp){
+          if(!macFaceHome){ macFaceHome={p:wrp.parentNode,vp:vid?vid.parentNode:null}; }
+          if(vid)cv.appendChild(vid);
+          cv.appendChild(wrp);
+          pg.classList.add('faceon');
+        }
+      }
       if(t){ try{ t.click(); }catch(e){} }
       else { try{ showMsg('That room is still being built ✧',4200); }catch(e){} }
     });
@@ -5187,14 +5222,14 @@ function macOpenDoor(i){
       macWantSpread=0; macShowName(-1); macOpenDoor(-1);
       var d2=document.getElementById('ma-cloud-doors');if(d2)d2.classList.remove('on');
       var w2=document.getElementById('ma-cloud-words');
-      if(w2)w2.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here.</span>';
+      if(w2)w2.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here. Touch it.</span>';
       thr.textContent='Look closer';
     }
   });
   if(aur){
     aur.style.pointerEvents='auto';
     aur.addEventListener('pointermove',function(e){
-      if(!macWantSpread)return;
+      if(!macWantSpread){ if(fine)macWhole=true; return; }
       var r=aur.getBoundingClientRect();
       macShowName(macNameAt(e.clientX-r.left,e.clientY-r.top));
     });
@@ -5204,7 +5239,10 @@ function macOpenDoor(i){
       macShowName(macNameAt(e.clientX-r.left,e.clientY-r.top));
     });
     aur.addEventListener('pointerleave',function(){ macShowName(-1); macWhole=false; });
-    aur.addEventListener('pointerenter',function(){ if(!macWantSpread)macWhole=true; });
+    var fine=false; try{ fine=!!(window.matchMedia&&window.matchMedia('(hover:hover) and (pointer:fine)').matches); }catch(e){}
+    if(fine){
+      aur.addEventListener('pointerenter',function(){ if(!macWantSpread)macWhole=true; });
+    }
     /* DEPTH TWO AND A HALF — a sense, opened. What it is, how often it has
        come, where it was left, and what it is doing to the whole. */
     aur.addEventListener('click',function(e){
@@ -8198,7 +8236,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 2 Sep 2026 · 51</div>
+<div id="build-stamp">Build 2 Sep 2026 · 52</div>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
