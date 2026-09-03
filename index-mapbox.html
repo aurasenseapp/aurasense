@@ -390,6 +390,8 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #gp-modal button{font-family:inherit;cursor:pointer;border-radius:13px;font-size:12.5px;padding:10px 14px;border:0.5px solid rgba(150,215,190,.55);background:rgba(150,215,190,.16);color:#e9fff6;margin-right:8px;margin-bottom:8px}
 #gp-modal .gp-note{font-size:11.5px;color:#9bd8c0;min-height:16px;margin:2px 0 6px}
 #gp-modal .gp-x{display:block;width:100%;margin-top:8px;background:none;border:none;color:#8a80b4;font-size:11.5px}
+/* 3 Sep 2026 - inside My Aura the orb lifts clear of the door row. */
+#myaura-page.cloudfirst ~ #mv-orb,body.ma-open #mv-orb{bottom:auto;top:76px}
 #mv-orb{position:fixed;right:16px;bottom:18px;z-index:99990;width:46px;height:46px;border-radius:50%;border:0.5px solid rgba(196,181,253,.55);background:radial-gradient(circle at 38% 34%,rgba(233,221,255,.9),rgba(167,139,250,.5) 46%,rgba(20,16,42,.9) 78%);box-shadow:0 0 18px rgba(167,139,250,.5),0 6px 20px rgba(0,0,0,.5);cursor:pointer;animation:mvBreath 6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-size:19px;color:#0c0a1c}
 @keyframes mvBreath{0%,100%{transform:scale(1);box-shadow:0 0 16px rgba(167,139,250,.42),0 6px 20px rgba(0,0,0,.5)}50%{transform:scale(1.07);box-shadow:0 0 30px rgba(196,181,253,.75),0 6px 20px rgba(0,0,0,.5)}}
 body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
@@ -932,7 +934,10 @@ body.ma-incloud .as-rail{display:none!important}
 #ma-cloud,#ma-cloud-aura{position:absolute;inset:0;width:100%;height:100%;display:block}
 #ma-cloud{opacity:0;transition:opacity 1.8s ease}
 #ma-cloud.on{opacity:1}
-#ma-cloud-aura{opacity:0;transition:opacity 2.6s ease .6s;mix-blend-mode:multiply}
+#ma-cloud-aura{opacity:0;transition:opacity 2.6s ease .6s}
+/* 3 Sep 2026 - multiply removed. Multiply darkens INTO its ground; over a warm
+   cloud that makes a stain, never a light. The way back if ever wanted: add
+   mix-blend-mode:multiply to the line above. */
 #ma-cloud-aura.on{opacity:1}
 /* the words sit low and quiet; warm dark on warm light, never a panel */
 #ma-cloud-words{position:absolute;left:0;right:0;bottom:23%;text-align:center;
@@ -952,6 +957,10 @@ body.ma-incloud .as-rail{display:none!important}
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   opacity:0;transition:opacity 2s ease 2s,background .25s,border-color .25s}
 #ma-cloud-through.on{opacity:1}
+/* 3 Sep 2026 - when the doors are open the way through stands above them
+   rather than in among them. */
+#ma-cloud-doors.on ~ #ma-cloud-through{bottom:calc(6% + 64px)}
+@media (max-width:820px){ #ma-cloud-doors.on ~ #ma-cloud-through{bottom:calc(3% + 104px)} }
 /* the touched sense names itself where it sits — never in a corner, never a panel */
 #ma-cloud-name{position:absolute;z-index:6;pointer-events:none;transform:translate(-50%,-50%);
   font-family:var(--serif);text-align:center;opacity:0;transition:opacity .35s ease;
@@ -989,10 +998,12 @@ body.ma-incloud .as-rail{display:none!important}
 .maci .why{display:none;font-size:11px;color:#93603c;margin-top:5px;line-height:1.45}
 .maci.saywhy .why{display:block}
 @media (max-width:820px){
-  /* ONE ROW, ALWAYS. Wrapping to three rows is what climbed into the words. */
-  #ma-cloud-doors{bottom:3%;gap:7px;flex-wrap:nowrap;overflow-x:auto;
-    justify-content:flex-start;padding:0 14px 2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
-  #ma-cloud-doors::-webkit-scrollbar{display:none}
+  /* 3 Sep 2026 - SIDEWAYS SCROLLING IS GONE. A door a person cannot see is a
+     door that does not exist; hiding two of five past the right edge was
+     costing more than three rows ever did. They wrap and are all shown, and
+     everything above them moves up to make the room. */
+  #ma-cloud-doors{bottom:3%;gap:7px;flex-wrap:wrap;overflow:visible;
+    justify-content:center;padding:0 14px 2px}
   .macd{padding:8px 13px;flex:0 0 auto}.macd b{font-size:12px;white-space:nowrap}.macd i{display:none}
   #ma-cloud-items{bottom:13%}
   #ma-cloud-words{bottom:31%}
@@ -3024,7 +3035,7 @@ function goToLevel(i){
   if(i===0){
     flyProgrammatic({center:[aLng,aLat],zoom:anchorPoint.zoom||15,duration:1800});
   }else{
-    /* THE SCALE LAW — a scale tab always works on WHAT YOU ARE LOOKING AT.
+    /* THE SCALE PRINCIPLE — a scale tab always works on WHAT YOU ARE LOOKING AT.
        It used to fly to a remembered anchor instead, which is why pressing Region while
        looking at China landed on Cardiff: Cardiff was the anchor, not the view. The centre
        of the view now decides, always, at every scale, from every starting height. */
@@ -3068,7 +3079,7 @@ document.querySelectorAll('.tab-mi[data-i]').forEach(mi=>{ mi.onclick=()=>goToLe
   document.addEventListener('click',(e)=>{ if(!e.target.closest('.tab-group'))closeTabMenus(); });
 })();
 
-// ---- Framing law: never fitBounds a returned bbox (it oscillates and ignores maxZoom on big areas). ----
+// ---- Framing principle: never fitBounds a returned bbox (it oscillates and ignores maxZoom on big areas). ----
 // Fly to the feature's own centre at a zoom derived from its bbox span (log2), clamped per kind. Every number below is tunable.
 const ZOOM_CLAMP={place:[10.6,13.6,0.6],locality:[11.4,14.2,0.7],district:[7.4,11.5,0.5],postcode:[13.5,16,0.8],neighborhood:[13,16,0.8],region:[4.6,9.6,0.45],country:[1.55,6.2,0.45]};
 function zoomForFeature(f,kind){
@@ -4105,19 +4116,31 @@ document.getElementById('sg').onclick=async()=>{
        partial matching on, which is what finds a street by name; the hard word
        filter below is now what stops a wrong town winning, so it is safe.  */
     let feats=[];
+    /* ═══ THE HOUSE NUMBER DECIDES - 3 Sep 2026 ═══════════════════════════
+       22 Murch Crescent landed exactly right for months and then stopped, so
+       this is a restoration, not a redesign. Three things:
+         1. The plain request that used to work is asked again, alongside the
+            newer ones, and every answer is pooled rather than replaced.
+         2. The street is also asked for on its own. A full string with commas
+            is the hardest shape for the lookup to match; the street alone is
+            the easiest, and the town is already carried by the word guard.
+         3. If ANY answer comes back carrying the house number that was typed,
+            only those answers are allowed to win. Nothing merely nearby can
+            take the place of the door someone actually named.               */
+    const houseNo=(q.match(/^\s*(\d+[a-zA-Z]?)\b/)||[])[1]||'';
+    const gAt=(text,extra)=>`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(text)}.json`
+      +`?access_token=${MAPBOX_TOKEN}&limit=6`+(extra||'');
+    const pull=async u=>{ try{ const r=await fetch(u); const d=await r.json();
+      if(d&&d.features)feats=feats.concat(d.features); }catch(e){} };
     if(looksLikeAddress){
-      try{
-        const r0=await fetch(gBase.replace('autocomplete=false','autocomplete=true')+'&types=address');
-        const d0=await r0.json();
-        if(d0&&d0.features)feats=feats.concat(d0.features);
-      }catch(e){}
+      await pull(gAt(q,'&autocomplete=true&types=address'));
+      const streetOnly=q.split(',')[0].trim();
+      if(streetOnly&&streetOnly!==q)await pull(gAt(streetOnly,'&autocomplete=true&types=address'));
     }
-    try{
-      const res=await fetch(gBase);const d=await res.json();
-      if(d&&d.features)feats=feats.concat(d.features);
-    }catch(e){}
+    await pull(gBase);
+    await pull(gAt(q,'&autocomplete=true'+(explicit?'':`&proximity=${cc.lng},${cc.lat}`)));
     {const seen={};feats=feats.filter(c=>{const k=(c.id||c.place_name);if(seen[k])return false;seen[k]=1;return true;});}
-    /* A HARD RULE, not a preference: a result that shares none of the typed
+    /* A HARD GUIDING PRINCIPLE, not a preference: a result that shares none of the typed
        words is the wrong place, however confidently it is ranked. Dinas
        Mawddwy shares only "dinas" with Dinas Powys, and "dinas" is common.
        Anything failing this is discarded rather than flown to. */
@@ -4128,8 +4151,15 @@ document.getElementById('sg').onclick=async()=>{
       const ty=(c.place_type&&c.place_type[0])||'';
       if(looksLikeAddress&&ty==='address')sc+=3;
       if(looksLikeAddress&&ty==='poi')sc+=1;
+      if(houseNo&&String(c.address||'').toLowerCase()===houseNo.toLowerCase())sc+=12;
       return sc;
     };
+    /* The gate. If the exact number is among the answers, nothing else may win. */
+    if(houseNo){
+      const exact=feats.filter(c=>String(c.address||'').toLowerCase()===houseNo.toLowerCase()
+        &&want.filter(w=>(c.place_name||'').toLowerCase().indexOf(w)>=0).length>=Math.min(2,want.length));
+      if(exact.length)feats=exact;
+    }
     if(want.length){
       const keep=feats.filter(c=>scoreOf(c)>0&&want.filter(w=>(c.place_name||'').toLowerCase().indexOf(w)>=0).length>=Math.min(2,want.length));
       if(keep.length)feats=keep;
@@ -4151,7 +4181,7 @@ document.getElementById('sg').onclick=async()=>{
       if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
-        // Framing law: fly to the feature's centre at a span-derived, clamped zoom — never fitBounds a returned bbox.
+        // Framing principle: fly to the feature's centre at a span-derived, clamped zoom — never fitBounds a returned bbox.
         flyToPlaceFeature(f,t,2000);
       }else{
         const z=(t==='address')?17.5:(t==='poi')?16.5:15;
@@ -4159,7 +4189,11 @@ document.getElementById('sg').onclick=async()=>{
         flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:mob?[0,Math.round(window.innerHeight*0.17)]:[-60,-80]});
       }
       if(t==='address'||t==='poi') dropSearchMarker(f.center,name);
-      showMsg('Sensing the aura of '+name+'...');
+      /* A net, not a plan. If a number was typed and nothing carrying it came
+         back, the map says so rather than quietly landing somewhere near. */
+      if(houseNo&&t!=='address'&&t!=='poi')
+        showMsg('That exact address is not answering \u2014 this is '+name+', the nearest the map can honestly place you');
+      else showMsg('Sensing the aura of '+name+'...');
     } else showMsg('Location not found — try a postcode, town, or full address');
   }catch(e){showMsg('Search unavailable — try again shortly');}
 };
@@ -4970,9 +5004,11 @@ function macHex(h){
   /* Scaling every channel down together turns a colour to mud. Saturating
      first and only then lowering the value keeps it vivid while still
      reading against a pale ground. */
-  /* multiply does the darkening now, so the colour itself is left near its
-     true self and only lifted in saturation */
-  var mid=(Math.max(r,g,b)+Math.min(r,g,b))/2, S=1.42, V=1.0;
+  /* 3 Sep 2026 - nothing darkens it for us now, so the colour must hold its
+     own. On a light ground a slightly deeper, more saturated colour reads far
+     stronger than a brighter one: saturation carries identity, brightness only
+     washes toward the cloud. */
+  var mid=(Math.max(r,g,b)+Math.min(r,g,b))/2, S=1.58, V=0.90;
   function ch(v){ v=mid+(v-mid)*S; v*=V; return Math.max(0,Math.min(255,Math.round(v))); }
   return [ch(r),ch(g),ch(b)];
 }
@@ -4982,7 +5018,7 @@ function macDrawAura(ts){
   var W=innerWidth,H=innerHeight;
   macAx.clearRect(0,0,W,H);
   var cx=W/2, cy=H*0.44;
-  var base=Math.min(W,H)*0.30;
+  var base=Math.min(W,H)*0.27;   /* 3 Sep - was 0.30. Edge-to-edge left nothing to be seen against. */
   /* THE OPENING — the senses drift apart from where they already are. They never
      jump and the whole is never off screen, which is the one rule that keeps a
      cloud from becoming a place to get lost in. */
@@ -5008,12 +5044,31 @@ function macDrawAura(ts){
     var px=cx+Math.cos(ang)*ring, py=cy+Math.sin(ang)*ring*0.88;
     /* whole: layers nested at the centre.  opened: each takes its own place and
        tightens, so the colour reads as one sense rather than part of a blend. */
-    var spread=base*(0.55+li*0.20)*swell*(1-macSpread*0.66);
+    /* 3 Sep - with a single sense there is nothing to move apart from, so it
+       must not tighten when opened. It stays an aura around the centre. */
+    var spread=base*(0.52+li*0.15)*swell*(1-macSpread*(n>1?0.66:0));
     var lift=(macHover===li)?1.75:(macWhole?1.5:1);
+    /* THE CLEARING AND THE RIM - 3 Sep 2026.
+       The Seeking already found this on 25 August and it is written in its own
+       margin: "not a wash behind it, but a thick pale pass laid at the very edge
+       of every stroke. A rim works on any ground because the contrast sits ON
+       the shape rather than around it." The same answer, brought to the aura at
+       last. A pale bed is laid first and the colour painted onto it, so what
+       shows at the rim is the pale itself - an edge belonging to the shape,
+       with no boundary of its own anywhere. No blend mode is used. */
+    var bedR=spread*1.66;
+    var bg=macAx.createRadialGradient(px,py,0,px,py,bedR);
+    bg.addColorStop(0,   'rgba(255,251,246,'+(0.52*glow*lift).toFixed(3)+')');
+    bg.addColorStop(0.34,'rgba(255,251,246,'+(0.41*glow*lift).toFixed(3)+')');
+    bg.addColorStop(0.62,'rgba(255,251,246,'+(0.21*glow).toFixed(3)+')');
+    bg.addColorStop(0.84,'rgba(255,251,246,0.062)');
+    bg.addColorStop(1,   'rgba(255,251,246,0)');
+    macAx.fillStyle=bg;
+    macAx.beginPath(); macAx.arc(px,py,bedR,0,Math.PI*2); macAx.fill();
     for(var k=26;k>=1;k--){
       var f=k/26;
       var r=spread*(0.18+f*1.30);
-      var a=(1-f)*(1-f)*0.135*glow*lift;
+      var a=(1-f)*(1-f)*0.152*glow*lift;
       if(li>0&&macSpread<0.5)a*=0.72;
       macAx.beginPath();
       macAx.arc(px,py,r,0,Math.PI*2);
@@ -5021,14 +5076,43 @@ function macDrawAura(ts){
       macAx.fill();
     }
     macPts[li]={x:px,y:py,r:spread*0.62,i:li};
+    /* 3 Sep 2026 - A LIGHT WITH NO NAME IS NOT AN INVITATION.
+       Opened, each sense says what it is where it sits. The pale pass behind
+       the letters is the same rim the shapes use, so the words hold over any
+       part of the cloud without a panel or a box around them. */
+    if(macSpread>0.34&&L[li]&&L[li].label){
+      var nm=String(L[li].label).split(' \u2014 ')[0];
+      if(nm.length>22)nm=nm.slice(0,21)+'\u2026';
+      macAx.save();
+      macAx.globalAlpha=Math.min(1,(macSpread-0.34)/0.42);
+      macAx.textAlign='center'; macAx.textBaseline='middle';
+      macAx.font='13px Georgia, "Times New Roman", serif';
+      macAx.shadowColor='rgba(255,251,246,0.95)'; macAx.shadowBlur=7;
+      macAx.fillStyle='rgba(74,42,26,0.94)';
+      var ny=py+spread*0.92+15;
+      macAx.fillText(nm,px,ny);
+      macAx.fillText(nm,px,ny);
+      macAx.shadowBlur=0;
+      macAx.restore();
+    }
   }
-  var c0=macHex(L[0].color);
+  /* HARD COLOUR AT THE CORE - 3 Sep 2026. The guiding principle obeyed at last:
+     a sense is unmistakably itself at its centre, and has no edge anywhere.
+     One gradient rather than nine stacked discs, because stacked discs each
+     carry a faint step at their own rim and nine of them make nine rings. */
+  var c0=macHex(L[0].color), cRGB=c0[0]+','+c0[1]+','+c0[2];
   var p0=macPts[0]||{x:cx,y:cy};
-  for(var k2=9;k2>=1;k2--){
-    var f2=k2/9, r2=base*0.30*swell*(1-macSpread*0.52)*f2;
-    macAx.beginPath(); macAx.arc(p0.x,p0.y,r2,0,Math.PI*2);
-    macAx.fillStyle='rgba('+c0[0]+','+c0[1]+','+c0[2]+','+((1-f2)*0.26*glow).toFixed(4)+')';
-    macAx.fill();
+  var coreR=base*0.46*swell*(1-macSpread*(n>1?0.52:0));
+  if(coreR>0.5){
+    var cg=macAx.createRadialGradient(p0.x,p0.y,0,p0.x,p0.y,coreR);
+    cg.addColorStop(0,   'rgba('+cRGB+','+(0.90*glow).toFixed(3)+')');
+    cg.addColorStop(0.22,'rgba('+cRGB+','+(0.72*glow).toFixed(3)+')');
+    cg.addColorStop(0.46,'rgba('+cRGB+','+(0.38*glow).toFixed(3)+')');
+    cg.addColorStop(0.70,'rgba('+cRGB+','+(0.15*glow).toFixed(3)+')');
+    cg.addColorStop(0.88,'rgba('+cRGB+',0.045)');
+    cg.addColorStop(1,   'rgba('+cRGB+',0)');
+    macAx.fillStyle=cg;
+    macAx.beginPath(); macAx.arc(p0.x,p0.y,coreR,0,Math.PI*2); macAx.fill();
   }
 }
 /* ── naming a sense, where it sits ────────────────────────────────────── */
@@ -5067,6 +5151,7 @@ function macEnter(){
   page.classList.add('cloudfirst'); document.body.classList.add('ma-incloud');
   if(!macBuf){ macBuf=document.createElement('canvas'); macBx=macBuf.getContext('2d'); }
   macSize();
+  try{ document.body.classList.add('ma-open'); }catch(e){}   /* 3 Sep - lifts the orb clear */
   macPainted=false; macLast=performance.now(); macNext=0;
   macSpread=0; macWantSpread=0; macHover=-1; macOpenDoor(-1); macShowName(-1);
   var _t=document.getElementById('ma-cloud-through'); if(_t)_t.textContent='Look closer';
@@ -5094,6 +5179,7 @@ function macLeave(keepPage){
   if(macRaf){cancelAnimationFrame(macRaf);macRaf=null;}
   if(macAraf){cancelAnimationFrame(macAraf);macAraf=null;}
   if(macCv)macCv.classList.remove('on');
+  try{ document.body.classList.remove('ma-open'); }catch(e){}
   if(macAur)macAur.classList.remove('on');
   var w=document.getElementById('ma-cloud-words'); if(w)w.classList.remove('on');
   var b=document.getElementById('ma-cloud-through'); if(b)b.classList.remove('on');
@@ -5361,7 +5447,15 @@ if(maSelfieBtn)maSelfieBtn.addEventListener('click',async()=>{
     if(maVideo){maVideo.srcObject=maStream;maVideo.style.display='block';try{await maVideo.play();}catch(e){}}
     if(maSelfieActions)maSelfieActions.style.display='flex';
     maSelfieBtn.style.display='none';
-  }catch(e){maSelfieBtn.textContent='Camera unavailable';}
+  }catch(e){
+    /* 3 Sep 2026 - it used to say this forever, so a person who fixed the
+       permission had no way of knowing they could try again. It says it,
+       then gives the invitation back. */
+    const _was=maSelfieBtn.dataset.was||maSelfieBtn.textContent;
+    maSelfieBtn.dataset.was=_was;
+    maSelfieBtn.textContent='Camera unavailable \u2014 tap to try again';
+    setTimeout(()=>{ try{ maSelfieBtn.textContent=maSelfieBtn.dataset.was; }catch(_){} },4200);
+  }
 });
 const maCapture=document.getElementById('ma-capture');
 if(maCapture)maCapture.addEventListener('click',()=>{
@@ -6502,7 +6596,7 @@ function lsPrev(){lsSaveCurrent();if(lsState.idx>0){lsState.idx--;lsShowQuestion
   });
 })();
 // ---- World Auras: real events as living glows on the living map itself ----
-// Data honesty, standing law: illustrative kinds only until the Gate's live source is wired.
+// Data honesty, standing guiding principle: illustrative kinds only until the Gate's live source is wired.
 // Never simulated specifics, never invented tragedies. Every constriction paired with a doorway.
 const WORLD_EVENTS=[
   {lat:34.5,lng:69.2,type:'need',fam:'conflict',title:'Communities facing hunger',note:'Families in this region need food and clean water. Held in thought \u2014 and awareness is a beginning.',doorway:'Aid reaches further when the world keeps looking \u2014 steady attention keeps hands, food and water moving here.',compassion:0},
@@ -6609,7 +6703,8 @@ function wevOpenPanel(i){
   const k=document.getElementById('wev-k');if(k){const _aw=ALPHA_WORDS.find(x=>x.w===({suffering:'Compassion',need:'Hope',disaster:'Renewal',joy:'Joy',sport:'Together'}[ev.type]||'Presence'));k.innerHTML=(_aw?alphaGlyph(_aw,18)+' ':'')+escT((WEV_FAMS[ev.fam]||'')+' \u00b7 '+(WA_LABEL[ev.type]||ev.type));k.style.color=WA_HEX[ev.type]||'#c4b5fd';k.style.display='inline-flex';k.style.alignItems='center';k.style.gap='6px';}
   const n=document.getElementById('wev-n');if(n)n.textContent=ev.note;
   try{accRender(ev);}catch(e){}
-  const d=document.getElementById('wev-d');if(d)d.textContent=(ev._db&&ev._status==='unverified'?'\u2691 Raised by a senser \u2014 unverified. It stands here fully once three sensers witness it is real.\n':'')+(ev.doorway||'');
+  const d=document.getElementById('wev-d');if(d)d.textContent=(ev._db&&ev._status==='unverified'?'\u2691 Raised by a senser \u2014 unverified. It stands here fully once three sensers witness it is real.\n':'')
+    +(ev.doorway||'The way through this is not yet known. That is said plainly rather than answered falsely \u2014 an Aura Accord stands open on it below, where what people know can be brought as empathy toward one. A Conscious Trajectory is offered alongside.');
   try{
     let wb=document.getElementById('wev-wit');
     if(!wb){const sb=document.getElementById('wev-send');if(sb&&sb.parentNode){wb=document.createElement('button');wb.id='wev-wit';wb.type='button';sb.parentNode.insertBefore(wb,sb.nextSibling);wb.addEventListener('click',wevWitness);}}
@@ -6725,7 +6820,7 @@ function wevZoomUI(){
 /* ─────────────────────────────────────────────────────────────────────────────
    SEED WORLD AURAS — the founder's tool. Open with  aurasense.app/#seed
 
-   Only what is true. Every event needs a doorway, because the standing law is that a
+   Only what is true. Every event needs a doorway, because the standing guiding principle is that a
    constriction is never shown without a way through it. Places are found by name, so a
    whole evening of seeding never requires flying the map by hand.
 
@@ -6776,7 +6871,7 @@ function openSeed(){
   const d=document.createElement('div');d.id='sd-page';
   d.innerHTML='<div class="sd-in">'
     +'<div class="sd-head"><div class="sd-h1">\u25c6 Seed World Auras</div><button type="button" id="sd-x">\u2715</button></div>'
-    +'<div class="sd-note">Only what is true. Nothing invented, nothing simulated \u2014 a real person\u2019s circumstance placed wrongly is the worst error this map can make.<br><br>Every event needs a <b>doorway</b>: the way through. That is a standing law, not a field to fill.</div>'
+    +'<div class="sd-note">Only what is true. Nothing invented, nothing simulated \u2014 a real person\u2019s circumstance placed wrongly is the worst error this map can make.<br><br>Every event needs a <b>doorway</b>: the way through.<br><br>Where no way through can honestly be given yet, <b>leave it empty</b>. An Aura Accord opens in its place and the way through is sought together \u2014 with a Conscious Trajectory offered alongside it. That is a guiding principle, not a field to fill.</div>'
     +'<div class="sd-sec">Where</div>'
     +'<div class="sd-find"><input id="sd-place" maxlength="80" placeholder="a city, region or country\u2026" autocomplete="off"><button type="button" id="sd-go">Find</button></div>'
     +'<div id="sd-found" class="sd-found"></div>'
@@ -6784,7 +6879,7 @@ function openSeed(){
     +'<div class="sd-sec">What is happening</div>'
     +'<input id="sd-title" maxlength="80" placeholder="in a few true words">'
     +'<textarea id="sd-note" maxlength="240" placeholder="what a senser arriving here should know"></textarea>'
-    +'<div class="sd-sec">The doorway \u2014 required</div>'
+    +'<div class="sd-sec">The doorway \u2014 or leave it empty to open an Accord</div>'
     +'<textarea id="sd-door" maxlength="200" placeholder="how compassion, hope or joining actually helps here"></textarea>'
     +'<div class="sd-sec">Kind</div>'
     +'<div class="sd-two"><select id="sd-type">'+SEED_TYPES.map(t=>'<option value="'+t[0]+'">'+t[1]+'</option>').join('')+'</select>'
@@ -6812,9 +6907,24 @@ function openSeed(){
     const ti=g('sd-title'),no=g('sd-note'),dw=g('sd-door');
     if(!seedPt){msg('Find the place first \u2014 nothing may stand nowhere.');return;}
     if(ti.length<6){msg('A few true words for the title.');return;}
-    if(dw.length<12){msg('The doorway is required. A constriction is never shown without a way through it \u2014 that is the law this map is built on.');return;}
+    /* ═══ 3 Sep 2026 · THE DOORWAY THAT IS NOT YET KNOWN ═══════════════════
+       Karl's decision, and it corrects something that was quietly wrong.
+       Demanding a doorway every time asserts that every difficulty has a
+       settled, definable answer. Many do not, and forcing one invents it -
+       which this map may never do. So: a way through is still asked for, and
+       where none can honestly be given the event is raised anyway with an
+       Aura Accord opened on it AS the doorway. The seeking becomes the way
+       through. Anyone who meets the event can bring what they know as
+       empathy toward one, and a Conscious Trajectory is offered alongside so
+       the reaching has somewhere to go.
+       The constriction still never stands alone. What has changed is that the
+       doorway may now be a question held open rather than an answer given. */
+    const seekingWay=(dw.length===0);
+    if(!seekingWay&&dw.length<12){
+      msg('Either give the way through as a full sentence, or leave it completely empty \u2014 an Accord will open to seek one.');return;}
     if(typeof guardOK==='function'&&!guardOK(ti+' '+no+' '+dw))return;
-    seedQueue.push({title:ti,note:no,doorway:dw,type:g('sd-type'),fam:g('sd-fam'),lat:seedPt.lat,lng:seedPt.lng,place:seedPt.place});
+    seedQueue.push({title:ti,note:no,doorway:dw,seekingWay:seekingWay,type:g('sd-type'),fam:g('sd-fam'),lat:seedPt.lat,lng:seedPt.lng,place:seedPt.place});
+    if(seekingWay)msg('Raised with its way through unknown \u2014 an Aura Accord opens on it.');
     ['sd-title','sd-note','sd-door'].forEach(id=>document.getElementById(id).value='');
     msg('\u2713 Queued. The place is still held \u2014 add another here, or find a new one.');
     seedRender();
@@ -8236,7 +8346,70 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 2 Sep 2026 · 52</div>
+<div id="build-stamp">Build 3 Sep 2026 · 56</div>
+<!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
+     Agreed and not built until now: land, be watched in silence, and then one
+     clearly named door. Nothing is asked here. No sign-up, no sharing, no
+     second door - both of those come later, and only after a person has seen
+     their own aura change. The silence is not empty time. It is the part
+     where someone is met rather than processed, and it is the only thing on
+     this screen that cannot be hurried. -->
+<style>
+#as-land{position:fixed;left:50%;transform:translateX(-50%) translateY(14px);
+  bottom:9%;z-index:99988;display:none;text-align:center;font-family:var(--serif);
+  padding:15px 26px;border-radius:19px;cursor:pointer;max-width:min(340px,86vw);
+  color:#efe8ff;border:0.5px solid rgba(196,181,253,.5);
+  background:linear-gradient(135deg,rgba(30,22,60,.86),rgba(20,15,44,.9));
+  -webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);
+  box-shadow:0 0 34px rgba(124,92,255,.24);
+  opacity:0;transition:opacity 2.4s ease,transform 2.4s ease}
+#as-land.on{display:block}
+#as-land.lit{opacity:1;transform:translateX(-50%) translateY(0)}
+#as-land b{display:block;font-size:15.5px;font-weight:400;letter-spacing:.02em}
+#as-land span{display:block;font-size:11.5px;margin-top:5px;color:#b9aee0;line-height:1.45}
+#as-land i{display:block;font-style:normal;font-size:10.5px;margin-top:9px;color:#8a80b4;
+  text-decoration:underline;text-underline-offset:3px}
+@media (max-width:820px){#as-land{bottom:14%}}
+</style>
+<div id="as-land"><b>◇ Open My Aura</b><span>The light you have carried here, gathered in one place.</span><i>not yet</i></div>
+<script>
+(function(){
+  var KEY='as_landing_done';
+  /* ?seek=1 replays the arrival, so it must replay this too - otherwise the
+     landing could only ever be judged once per device. */
+  var replay=/[?&]seek=1/.test(location.search);
+  try{ if(!replay&&localStorage.getItem(KEY)==='1')return; }catch(e){}
+  var armed=false,fired=false;
+  function door(){
+    var el=document.getElementById('as-land'); if(!el)return;
+    el.classList.add('on');
+    requestAnimationFrame(function(){ setTimeout(function(){ el.classList.add('lit'); },40); });
+    el.addEventListener('click',function(e){
+      var quiet=e.target&&e.target.tagName==='I';
+      el.classList.remove('lit');
+      setTimeout(function(){ try{el.classList.remove('on');}catch(_){ } },2400);
+      if(quiet)return;
+      var b=document.getElementById('my-aura-btn');
+      if(b){ try{ b.click(); return; }catch(_){ } }
+      try{ if(typeof openMyAuraPage==='function')openMyAuraPage(); }catch(_){ }
+    });
+  }
+  function land(){
+    if(fired)return; fired=true;
+    try{ localStorage.setItem(KEY,'1'); }catch(e){}
+    /* THE SILENCE. Seven seconds in which nothing at all is offered. */
+    setTimeout(door,7000);
+  }
+  try{
+    if(document.body.classList.contains('seeking'))armed=true;
+    var obs=new MutationObserver(function(){
+      if(document.body.classList.contains('seeking')){ armed=true; return; }
+      if(armed){ try{obs.disconnect();}catch(_){ } land(); }
+    });
+    obs.observe(document.body,{attributes:true,attributeFilter:['class']});
+  }catch(e){}
+})();
+</script>
 <script>
 /* THIS STANDS ON ITS OWN, LAST, AND DELIBERATELY SO. Inside the main script it
    would die with it — and the one thing that must never fail is the way back
