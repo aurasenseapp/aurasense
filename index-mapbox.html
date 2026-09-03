@@ -4135,14 +4135,53 @@ document.getElementById('sg').onclick=async()=>{
       +`?access_token=${MAPBOX_TOKEN}&limit=6`+(extra||'');
     const pull=async u=>{ try{ const r=await fetch(u); const d=await r.json();
       if(d&&d.features)feats=feats.concat(d.features); }catch(e){} };
+    /* ═══ 3 Sep 2026 · THE FENCE ═══════════════════════════════════════════
+       Four attempts at ranking have now failed, so this stops ranking and
+       starts fencing. The fault was the same in every one of them: with a
+       comma in the query, EVERY request went out with no geographic anchor at
+       all. "22 Murch Crescent" was being searched for across the whole planet.
+       Now the town is found FIRST, and only a settlement whose OWN name
+       matches what was typed is accepted. Dinas Mawddwy can never pass that -
+       its name is not Dinas Powys, however much of Powys it sits beside.
+       A box is then drawn around that town and the street is searched INSIDE
+       it. The wrong town is no longer outranked. It cannot be returned.    */
+    let fence=null, town=null;
+    const parts=q.split(',').map(x=>x.trim()).filter(Boolean);
+    if(parts.length>=2){
+      const townTxt=parts[parts.length-1].toLowerCase();
+      const townRaw=parts[parts.length-1];
+      try{
+        const tr=await fetch(gAt(townRaw,'&autocomplete=false&types=place,locality,neighborhood,district'));
+        const td=await tr.json();
+        const fs=(td&&td.features)||[];
+        town=fs.find(c=>String(c.text||'').toLowerCase()===townTxt)
+          || fs.find(c=>String(c.text||'').toLowerCase().indexOf(townTxt)>=0);
+      }catch(e){}
+      if(town&&town.center){
+        const dLat=0.13, dLng=0.13/Math.max(0.25,Math.cos(town.center[1]*Math.PI/180));
+        fence=[town.center[0]-dLng,town.center[1]-dLat,town.center[0]+dLng,town.center[1]+dLat];
+      }
+    }
+    const box =fence?('&bbox='+fence.map(v=>v.toFixed(5)).join(',')):'';
+    const near=town ?('&proximity='+town.center[0]+','+town.center[1]):'';
     if(looksLikeAddress){
-      await pull(gAt(q,'&autocomplete=true&types=address'));
-      const streetOnly=q.split(',')[0].trim();
-      if(streetOnly&&streetOnly!==q)await pull(gAt(streetOnly,'&autocomplete=true&types=address'));
+      const streetOnly=parts[0]||q;
+      await pull(gAt(streetOnly,'&autocomplete=true&types=address'+box));
+      await pull(gAt(q,'&autocomplete=true&types=address'+near));
+      if(!box&&streetOnly!==q)await pull(gAt(streetOnly,'&autocomplete=true&types=address'));
     }
     await pull(gBase);
-    await pull(gAt(q,'&autocomplete=true'+(explicit?'':`&proximity=${cc.lng},${cc.lat}`)));
+    await pull(gAt(q,'&autocomplete=true'+(near||(explicit?'':`&proximity=${cc.lng},${cc.lat}`))));
     {const seen={};feats=feats.filter(c=>{const k=(c.id||c.place_name);if(seen[k])return false;seen[k]=1;return true;});}
+    /* Nothing outside the fence may be returned at all. If the number itself
+       is not in the map data, the town it belongs to is the honest answer -
+       never a different town with a similar name. */
+    if(fence){
+      const inside=c=>c&&c.center&&c.center[0]>=fence[0]&&c.center[0]<=fence[2]
+                   &&c.center[1]>=fence[1]&&c.center[1]<=fence[3];
+      const kept=feats.filter(inside);
+      feats=kept.length?kept:(town?[town]:feats);
+    }
     /* A HARD GUIDING PRINCIPLE, not a preference: a result that shares none of the typed
        words is the wrong place, however confidently it is ranked. Dinas
        Mawddwy shares only "dinas" with Dinas Powys, and "dinas" is common.
@@ -8369,7 +8408,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 3 Sep 2026 · 59</div>
+<div id="build-stamp">Build 3 Sep 2026 · 60</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
