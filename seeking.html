@@ -670,7 +670,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 3 Sep 2026 &middot; 51</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 3 Sep 2026 &middot; 52</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -684,8 +684,8 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
 <!-- ══ 2 · THE SEEKING ══ one unmarked circle, three times over ══ -->
 <section class="scene" id="seek">
   <div id="topText">
-    <div class="head" id="sHead">Seek inside the circle for what you are sensing.</div>
-    <div class="sub" id="sSub">Hold it until it awakens.</div>
+    <div class="head" id="sHead">Touch inside the circle to seek how you are feeling, and hold it until it awakens.</div>
+    <div class="sub" id="sSub"></div>
   </div>
   <div id="listDoor"><button class="ghost" id="listBtn" type="button">See them as a list</button></div>
 </section>
@@ -1804,8 +1804,8 @@ function dropBeadsFrom(which){
 function goBackTo(which){
   if(which==='sense'){
     dropBeadsFrom('sense');
-    born('sense','Seek inside the circle for what you are sensing.',
-      'Hold it until it awakens.',SENSES,null);
+    born('sense','Touch inside the circle to seek how you are feeling, and hold it until it awakens.',
+      '',SENSES,null);
     setTimeout(function(){$('back').classList.remove('on');},1200);
   }else if(which==='strength'){
     dropBeadsFrom('strength');
@@ -1917,8 +1917,8 @@ function openFamily(o){
 }
 function closeFamily(){
   familyOf=null;
-  born('sense','Seek inside the circle for what you are sensing.',
-    'Hold it until it awakens.',SENSES,null);
+  born('sense','Touch inside the circle to seek how you are feeling, and hold it until it awakens.',
+    '',SENSES,null);
   setTimeout(function(){ if(!beadList.length)$('back').classList.remove('on'); },1200);
 }
 function born(next,head,sub,set,arc){

@@ -8303,6 +8303,9 @@ try{
   window.map = map;
   window.SENSES = SENSES;
   window.showMsg = showMsg;
+  /* 3 Sep 2026 - the landing's one door needs a way in. #my-aura-btn does not
+     exist, which is why the door did nothing at all. */
+  window.openMyAuraPage = openMyAuraPage;
   window.materializeAndSubmit = materializeAndSubmit;
   /* 29 Aug, second pass: the host code looks up the named place with this key,
      and the key lives in here too. Without it the lookup threw, the place came
@@ -8366,7 +8369,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 3 Sep 2026 · 58</div>
+<div id="build-stamp">Build 3 Sep 2026 · 59</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -8409,9 +8412,9 @@ try{
       el.classList.remove('lit');
       setTimeout(function(){ try{el.classList.remove('on');}catch(_){ } },2400);
       if(quiet)return;
-      var b=document.getElementById('my-aura-btn');
-      if(b){ try{ b.click(); return; }catch(_){ } }
-      try{ if(typeof openMyAuraPage==='function')openMyAuraPage(); }catch(_){ }
+      try{ if(typeof window.openMyAuraPage==='function'){ window.openMyAuraPage(); return; } }catch(_){ }
+      var b=document.getElementById('my-aura-btn')||document.getElementById('tab-my');
+      if(b){ try{ b.click(); }catch(_){ } }
     });
   }
   function land(){
