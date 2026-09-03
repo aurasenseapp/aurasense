@@ -4207,23 +4207,25 @@ document.getElementById('sg').onclick=async()=>{
       if(keep.length)feats=keep;
       else feats=feats.filter(c=>scoreOf(c)>0);
     }
-    let f=feats[0];
-    if(feats.length>1){
-      let best=-1;
-      feats.forEach(c=>{const sc=scoreOf(c); if(sc>best){best=sc;f=c;}});
-    }
-    if(f){
+    /* ═══ 3 Sep 2026 · THE PERSON CHOOSES; THE MAP DOES NOT GUESS ══════════
+       Five attempts at guessing the right answer have failed. So it stops
+       guessing. Where more than one place could be meant, every one of them is
+       shown and the person taps their own. It is the same single lookup as
+       before, so nothing costs a penny more - the only thing that changed is
+       who decides.
+       A senser can no longer be sent somewhere they did not choose, which is
+       the error this map has always said is the worst one it can make. */
+    const landOn=(f)=>{
+      if(!f){showMsg('Location not found \u2014 try a postcode, town, or full address');return;}
       const t=(f.place_type&&f.place_type[0])||'';
       let name=f.text||f.place_name.split(',')[0];
       if(t==='address'&&f.address)name=f.address+' '+name;
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
       searching=true;
-      // Searching a place makes it the spot the tabs and the World view return to.
       if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
-        // Framing principle: fly to the feature's centre at a span-derived, clamped zoom — never fitBounds a returned bbox.
         flyToPlaceFeature(f,t,2000);
       }else{
         const z=(t==='address')?17.5:(t==='poi')?16.5:15;
@@ -4231,12 +4233,26 @@ document.getElementById('sg').onclick=async()=>{
         flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:mob?[0,Math.round(window.innerHeight*0.17)]:[-60,-80]});
       }
       if(t==='address'||t==='poi') dropSearchMarker(f.center,name);
-      /* A net, not a plan. If a number was typed and nothing carrying it came
-         back, the map says so rather than quietly landing somewhere near. */
       if(houseNo&&t!=='address'&&t!=='poi')
-        showMsg('That exact address is not answering \u2014 this is '+name+', the nearest the map can honestly place you');
+        showMsg('That exact address is not in the map \u2014 this is '+name+', which is as close as it can honestly place you');
       else showMsg('Sensing the aura of '+name+'...');
-    } else showMsg('Location not found — try a postcode, town, or full address');
+    };
+    const showChoices=(list,go)=>{
+      let el=document.getElementById('as-pick');
+      if(!el){el=document.createElement('div');el.id='as-pick';document.body.appendChild(el);}
+      const esc=x=>String(x||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+      el.innerHTML='<div class="ap-h">Which one is yours?</div>'
+        +list.map((c,i)=>'<button class="ap-r" data-i="'+i+'">'+esc(c.place_name||c.text)+'</button>').join('')
+        +'<button class="ap-x">none of these</button>';
+      el.style.display='block';
+      const hide=()=>{el.classList.remove('lit');setTimeout(()=>{el.style.display='none';},420);};
+      requestAnimationFrame(()=>el.classList.add('lit'));
+      el.querySelectorAll('.ap-r').forEach(b=>{b.onclick=()=>{hide();go(list[+b.dataset.i]);};});
+      el.querySelector('.ap-x').onclick=hide;
+    };
+    feats.sort((a,b)=>scoreOf(b)-scoreOf(a));
+    if(feats.length<=1)landOn(feats[0]);
+    else showChoices(feats.slice(0,6),landOn);
   }catch(e){showMsg('Search unavailable — try again shortly');}
 };
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
@@ -8408,7 +8424,26 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 3 Sep 2026 · 60</div>
+<style>
+/* 3 Sep 2026 - the small list a person taps their own place from. */
+#as-pick{position:fixed;left:50%;transform:translateX(-50%) translateY(-8px);top:84px;
+  z-index:99992;display:none;width:min(430px,92vw);padding:9px;border-radius:16px;
+  font-family:var(--serif);opacity:0;transition:opacity .42s ease,transform .42s ease;
+  background:linear-gradient(135deg,rgba(28,20,56,.94),rgba(18,13,40,.96));
+  border:0.5px solid rgba(196,181,253,.45);box-shadow:0 10px 40px rgba(0,0,0,.5);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+#as-pick.lit{opacity:1;transform:translateX(-50%) translateY(0)}
+#as-pick .ap-h{font-size:12px;color:#b9aee0;text-align:center;padding:4px 0 8px;letter-spacing:.03em}
+#as-pick .ap-r{display:block;width:100%;text-align:left;font-family:var(--serif);
+  font-size:13.5px;line-height:1.4;color:#efe8ff;background:rgba(255,255,255,.045);
+  border:0.5px solid rgba(196,181,253,.18);border-radius:11px;padding:10px 12px;
+  margin-bottom:6px;cursor:pointer;transition:background .2s ease,border-color .2s ease}
+#as-pick .ap-r:hover{background:rgba(124,92,255,.22);border-color:rgba(196,181,253,.5)}
+#as-pick .ap-x{display:block;width:100%;text-align:center;font-family:var(--serif);
+  font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
+#as-pick .ap-x:hover{color:#c4b5fd}
+</style>
+<div id="build-stamp">Build 3 Sep 2026 · 61</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
