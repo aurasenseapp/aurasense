@@ -390,8 +390,10 @@ body.calm .glow,body.calm .inp-glow{animation:none!important}
 #gp-modal button{font-family:inherit;cursor:pointer;border-radius:13px;font-size:12.5px;padding:10px 14px;border:0.5px solid rgba(150,215,190,.55);background:rgba(150,215,190,.16);color:#e9fff6;margin-right:8px;margin-bottom:8px}
 #gp-modal .gp-note{font-size:11.5px;color:#9bd8c0;min-height:16px;margin:2px 0 6px}
 #gp-modal .gp-x{display:block;width:100%;margin-top:8px;background:none;border:none;color:#8a80b4;font-size:11.5px}
-/* 3 Sep 2026 - inside My Aura the orb lifts clear of the door row. */
-#myaura-page.cloudfirst ~ #mv-orb,body.ma-open #mv-orb{bottom:auto;top:76px}
+/* 3 Sep 2026 - inside My Aura the orb is hidden entirely. The Mirror already
+   has its own named door in the list on that page, so the floating one was a
+   duplicate control sitting on top of a real one. */
+body.ma-open #mv-orb,body.ma-open #mv-hint{display:none!important}
 #mv-orb{position:fixed;right:16px;bottom:18px;z-index:99990;width:46px;height:46px;border-radius:50%;border:0.5px solid rgba(196,181,253,.55);background:radial-gradient(circle at 38% 34%,rgba(233,221,255,.9),rgba(167,139,250,.5) 46%,rgba(20,16,42,.9) 78%);box-shadow:0 0 18px rgba(167,139,250,.5),0 6px 20px rgba(0,0,0,.5);cursor:pointer;animation:mvBreath 6s ease-in-out infinite;display:flex;align-items:center;justify-content:center;font-size:19px;color:#0c0a1c}
 @keyframes mvBreath{0%,100%{transform:scale(1);box-shadow:0 0 16px rgba(167,139,250,.42),0 6px 20px rgba(0,0,0,.5)}50%{transform:scale(1.07);box-shadow:0 0 30px rgba(196,181,253,.75),0 6px 20px rgba(0,0,0,.5)}}
 body.panel-live #mv-orb,body:has(#livefeed-page.show) #mv-orb{opacity:.62}
@@ -959,8 +961,8 @@ body.ma-incloud .as-rail{display:none!important}
 #ma-cloud-through.on{opacity:1}
 /* 3 Sep 2026 - when the doors are open the way through stands above them
    rather than in among them. */
-#ma-cloud-doors.on ~ #ma-cloud-through{bottom:calc(6% + 64px)}
-@media (max-width:820px){ #ma-cloud-doors.on ~ #ma-cloud-through{bottom:calc(3% + 104px)} }
+#ma-cloud-doors.on ~ #ma-cloud-through{bottom:calc(6% + 58px)}
+@media (max-width:820px){ #ma-cloud-doors.on ~ #ma-cloud-through{bottom:calc(3% + 92px)} }
 /* the touched sense names itself where it sits — never in a corner, never a panel */
 #ma-cloud-name{position:absolute;z-index:6;pointer-events:none;transform:translate(-50%,-50%);
   font-family:var(--serif);text-align:center;opacity:0;transition:opacity .35s ease;
@@ -5017,7 +5019,7 @@ function macDrawAura(ts){
   if(!macAx)return;
   var W=innerWidth,H=innerHeight;
   macAx.clearRect(0,0,W,H);
-  var cx=W/2, cy=H*0.44;
+  var cx=W/2, cy=H*0.40;   /* 3 Sep - lifted; the lights were reaching the buttons */
   var base=Math.min(W,H)*0.27;   /* 3 Sep - was 0.30. Edge-to-edge left nothing to be seen against. */
   /* THE OPENING — the senses drift apart from where they already are. They never
      jump and the whole is never off screen, which is the one rule that keeps a
@@ -5037,49 +5039,59 @@ function macDrawAura(ts){
   /* further apart and smaller when opened, so each sense is its own light
      rather than a blur of neighbours — that overlap is why a name appeared
      where nothing seemed to be. */
-  var ring=base*(n>1?1.05:0)*macSpread;
+  var ring=base*(n>1?0.86:0)*macSpread;
+  /* ═══ 3 Sep 2026 · SECOND PASS ═══════════════════════════════════════════
+     THE FAULT, and it was mine: the pale clearing was laid inside the same
+     loop that painted the colour. So the fifth sense's clearing went straight
+     over the sixth sense's colour, and with seven of them stacked at the
+     centre the whole middle turned to cream with one thin colour left on top.
+     That is why it came back fainter rather than stronger.
+     THE FIX: two passes. EVERY clearing is laid first. EVERY colour is then
+     painted on top of all of them. Nothing pale is ever painted over a colour
+     again, anywhere. */
+  var geo=[];
   for(var li=n-1;li>=0;li--){
-    var rgb=macHex(L[li].color);
     var ang=-Math.PI/2+li*(Math.PI*2/Math.max(1,n));
-    var px=cx+Math.cos(ang)*ring, py=cy+Math.sin(ang)*ring*0.88;
-    /* whole: layers nested at the centre.  opened: each takes its own place and
-       tightens, so the colour reads as one sense rather than part of a blend. */
-    /* 3 Sep - with a single sense there is nothing to move apart from, so it
-       must not tighten when opened. It stays an aura around the centre. */
-    var spread=base*(0.52+li*0.15)*swell*(1-macSpread*(n>1?0.66:0));
-    var lift=(macHover===li)?1.75:(macWhole?1.5:1);
-    /* THE CLEARING AND THE RIM - 3 Sep 2026.
-       The Seeking already found this on 25 August and it is written in its own
-       margin: "not a wash behind it, but a thick pale pass laid at the very edge
-       of every stroke. A rim works on any ground because the contrast sits ON
-       the shape rather than around it." The same answer, brought to the aura at
-       last. A pale bed is laid first and the colour painted onto it, so what
-       shows at the rim is the pale itself - an edge belonging to the shape,
-       with no boundary of its own anywhere. No blend mode is used. */
-    var bedR=spread*1.66;
-    var bg=macAx.createRadialGradient(px,py,0,px,py,bedR);
-    bg.addColorStop(0,   'rgba(255,251,246,'+(0.52*glow*lift).toFixed(3)+')');
-    bg.addColorStop(0.34,'rgba(255,251,246,'+(0.41*glow*lift).toFixed(3)+')');
-    bg.addColorStop(0.62,'rgba(255,251,246,'+(0.21*glow).toFixed(3)+')');
-    bg.addColorStop(0.84,'rgba(255,251,246,0.062)');
+    geo.push({li:li,
+      px:cx+Math.cos(ang)*ring,
+      py:cy+Math.sin(ang)*ring*0.88,
+      /* with a single sense there is nothing to move apart from, so it must
+         not tighten when opened - it stays an aura around the centre */
+      spread:base*(0.52+li*0.15)*swell*(1-macSpread*(n>1?0.66:0)),
+      lift:(macHover===li)?1.8:(macWhole?1.55:1),
+      rgb:macHex(L[li].color)});
+  }
+  /* PASS ONE - the clearings. The Seeking found this on 25 August: a rim works
+     on any ground because the contrast sits ON the shape rather than around
+     it. Pale laid down, colour painted onto it, so what shows at the rim is
+     the pale itself - an edge belonging to the shape with no boundary of its
+     own. No blend mode is used anywhere. */
+  geo.forEach(function(G){
+    var bedR=G.spread*1.72;
+    var bg=macAx.createRadialGradient(G.px,G.py,0,G.px,G.py,bedR);
+    bg.addColorStop(0,   'rgba(255,251,246,'+(0.46*glow).toFixed(3)+')');
+    bg.addColorStop(0.36,'rgba(255,251,246,'+(0.34*glow).toFixed(3)+')');
+    bg.addColorStop(0.64,'rgba(255,251,246,'+(0.16*glow).toFixed(3)+')');
+    bg.addColorStop(0.86,'rgba(255,251,246,0.05)');
     bg.addColorStop(1,   'rgba(255,251,246,0)');
     macAx.fillStyle=bg;
-    macAx.beginPath(); macAx.arc(px,py,bedR,0,Math.PI*2); macAx.fill();
+    macAx.beginPath(); macAx.arc(G.px,G.py,bedR,0,Math.PI*2); macAx.fill();
+  });
+  /* PASS TWO - the colour, then the name. */
+  geo.forEach(function(G){
+    var li=G.li,rgb=G.rgb,px=G.px,py=G.py,spread=G.spread,lift=G.lift;
     for(var k=26;k>=1;k--){
       var f=k/26;
       var r=spread*(0.18+f*1.30);
-      var a=(1-f)*(1-f)*0.152*glow*lift;
-      if(li>0&&macSpread<0.5)a*=0.72;
+      var a=(1-f)*(1-f)*0.205*glow*lift;
+      if(li>0&&macSpread<0.5)a*=0.80;
       macAx.beginPath();
       macAx.arc(px,py,r,0,Math.PI*2);
       macAx.fillStyle='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+a.toFixed(4)+')';
       macAx.fill();
     }
-    macPts[li]={x:px,y:py,r:spread*0.62,i:li};
-    /* 3 Sep 2026 - A LIGHT WITH NO NAME IS NOT AN INVITATION.
-       Opened, each sense says what it is where it sits. The pale pass behind
-       the letters is the same rim the shapes use, so the words hold over any
-       part of the cloud without a panel or a box around them. */
+    /* the hit area reaches the name below it, so touching either one answers */
+    macPts[li]={x:px,y:py,r:spread*0.98,i:li};
     if(macSpread>0.34&&L[li]&&L[li].label){
       var nm=String(L[li].label).split(' \u2014 ')[0];
       if(nm.length>22)nm=nm.slice(0,21)+'\u2026';
@@ -5095,7 +5107,7 @@ function macDrawAura(ts){
       macAx.shadowBlur=0;
       macAx.restore();
     }
-  }
+  });
   /* HARD COLOUR AT THE CORE - 3 Sep 2026. The guiding principle obeyed at last:
      a sense is unmistakably itself at its centre, and has no edge anywhere.
      One gradient rather than nine stacked discs, because stacked discs each
@@ -8346,7 +8358,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 3 Sep 2026 · 56</div>
+<div id="build-stamp">Build 3 Sep 2026 · 57</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
