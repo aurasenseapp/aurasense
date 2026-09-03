@@ -942,7 +942,8 @@ body.ma-incloud .as-rail{display:none!important}
    mix-blend-mode:multiply to the line above. */
 #ma-cloud-aura.on{opacity:1}
 /* the words sit low and quiet; warm dark on warm light, never a panel */
-#ma-cloud-words{position:absolute;left:0;right:0;bottom:23%;text-align:center;
+/* 3 Sep 2026 - dropped clear of the opened lights, which were reaching it. */
+#ma-cloud-words{position:absolute;left:0;right:0;bottom:19%;text-align:center;
   z-index:3;pointer-events:none;opacity:0;transition:opacity 2.2s ease 1.4s;
   font-family:var(--serif);color:#5a3524;padding:0 26px}
 #ma-cloud-words.on{opacity:1}
@@ -2139,7 +2140,7 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
       <div id="ma-branch-tip"></div>
       <div id="ma-explain">This is to help you visualise what your personal aura is like — how your emotional and psychological state influences the energy from your physical body. Everyday decisions. <span class="mae-hint">Tap any layer of light to see where that energy came from.</span></div>
       <div id="ma-selfie-wrap">
-        <button id="ma-selfie-btn">📷 Take a selfie</button>
+        <button id="ma-selfie-btn">📷 Upload a selfie here</button>
         <div id="ma-selfie-actions"><button id="ma-capture">Capture</button><button id="ma-cancel-selfie">Cancel</button></div>
         <div id="ma-selfie-note">(Only you will see this, unless you choose otherwise)</div>
       </div>
@@ -5129,7 +5130,10 @@ function macDrawAura(ts){
 }
 /* ── naming a sense, where it sits ────────────────────────────────────── */
 function macNameAt(cxp,cyp){
-  if(!macSpread)return -1;
+  /* 3 Sep 2026 - a name appearing while the aura is still opening lands on top
+     of the movement and stops it. Nothing is named until the opening has
+     finished, and the whole aura is never named at all. */
+  if(macSpread<0.92)return -1;
   var best=-1,bd=1e9;
   for(var i=0;i<macPts.length;i++){
     var p=macPts[i],dx=cxp-p.x,dy=cyp-p.y,d=Math.sqrt(dx*dx+dy*dy);
@@ -5163,7 +5167,10 @@ function macEnter(){
   page.classList.add('cloudfirst'); document.body.classList.add('ma-incloud');
   if(!macBuf){ macBuf=document.createElement('canvas'); macBx=macBuf.getContext('2d'); }
   macSize();
-  try{ document.body.classList.add('ma-open'); }catch(e){}   /* 3 Sep - lifts the orb clear */
+  try{ document.body.classList.add('ma-open'); }catch(e){}   /* 3 Sep - hides the duplicate orb */
+  /* 3 Sep 2026 - the selfie was Karl's centrepiece and had drifted into a menu.
+     It stands in the middle of My Aura from the moment the page opens. */
+  try{ var _p=document.getElementById('myaura-page'); if(_p)_p.classList.add('faceon'); }catch(e){}
   macPainted=false; macLast=performance.now(); macNext=0;
   macSpread=0; macWantSpread=0; macHover=-1; macOpenDoor(-1); macShowName(-1);
   var _t=document.getElementById('ma-cloud-through'); if(_t)_t.textContent='Look closer';
@@ -5213,7 +5220,7 @@ addEventListener('resize',function(){
 var MAC_DOORS=[
  {t:'Add to your aura',s:'more colour, from you',items:[
    {l:'Set up your profile',p:'Your name-of-light and your ground',sel:'.mj-i[data-mj="profile"]'},
-   {l:'Add your face',p:'Your own likeness, held privately',sel:'#ma-selfie-btn',face:1},
+   {l:'Upload a selfie here',p:'It belongs in the middle of your aura, not in a list',sel:'#ma-selfie-btn',face:1},
    {l:'Answer gentle questions',p:'Shape your aura',sel:'.mj-i[data-mj="quest"]'},
    {l:'Go deeper — five gates',p:'Soul Search',sel:'.mj-i[data-mj="soul"]'},
    {l:'Tell your story',p:'Your life story',sel:'.mj-i[data-mj="life"]'}]},
@@ -5314,13 +5321,14 @@ function macOpenDoor(i){
       macBuildDoors();
       var d=document.getElementById('ma-cloud-doors');if(d)d.classList.add('on');
       var w=document.getElementById('ma-cloud-words');
-      if(w)w.innerHTML='<b>This is what made it.</b><span>Touch any light to hear its name.</span>';
+      if(w)w.innerHTML='<b>Each light, on its own.</b><span>Touch one to see where and when you offered it.</span>';
       thr.textContent='Let it close';
     }else{
       macWantSpread=0; macShowName(-1); macOpenDoor(-1);
       var d2=document.getElementById('ma-cloud-doors');if(d2)d2.classList.remove('on');
       var w2=document.getElementById('ma-cloud-words');
       if(w2)w2.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here. Touch it.</span>';
+      var _f=document.getElementById('myaura-page'); if(_f)_f.classList.add('faceon');
       thr.textContent='Look closer';
     }
   });
@@ -8358,7 +8366,7 @@ try{
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
-<div id="build-stamp">Build 3 Sep 2026 · 57</div>
+<div id="build-stamp">Build 3 Sep 2026 · 58</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
