@@ -4226,11 +4226,14 @@ document.getElementById('sg').onclick=async()=>{
       if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
-        flyToPlaceFeature(f,t,2000);
+        /* 3 Sep 2026 - 2 seconds from a world view to a doorstep is a fall,
+           not a flight. Nothing in Aurasense snaps, and arriving somewhere is
+           the moment that most needs its own time. */
+        flyToPlaceFeature(f,t,4200);
       }else{
         const z=(t==='address')?17.5:(t==='poi')?16.5:15;
         const mob=window.innerWidth<=600;
-        flyProgrammatic({center:f.center,zoom:z,duration:2000,offset:mob?[0,Math.round(window.innerHeight*0.17)]:[-60,-80]});
+        flyProgrammatic({center:f.center,zoom:z,duration:4200,offset:mob?[0,Math.round(window.innerHeight*0.17)]:[-60,-80]});
       }
       if(t==='address'||t==='poi') dropSearchMarker(f.center,name);
       if(houseNo&&t!=='address'&&t!=='poi')
@@ -4259,6 +4262,11 @@ document.getElementById('sg').onclick=async()=>{
       if(!f)return false;
       const pn=(f.place_name||'').toLowerCase();
       if(!want.every(w=>pn.indexOf(w)>=0))return false;
+      /* "Barry" on its own could be Wales, Ontario, or Mars - so it asks.
+         "Barry, Wales" or "Barry, Ontario" has already said which, so it
+         does not. One bare word with several real answers is the only case
+         where a person genuinely has not yet chosen. */
+      if(want.length<2&&!houseNo&&feats.length>1)return false;
       if(houseNo)return String(f.address||'').toLowerCase()===houseNo.toLowerCase();
       return true;
     };
@@ -5991,6 +5999,15 @@ const lfBackBtn=document.getElementById('lf-back');if(lfBackBtn)lfBackBtn.addEve
 // ---- First-visit guidance ----
 let obShown=false;
 function obShow(){
+  /* ═══ 3 Sep 2026 · THE OLD BREATH ═════════════════════════════════════
+     This is it - the three-step "Welcome to Aurasense" walkthrough. It kept
+     arriving on every visit and I had been closing the wrong doors. It is
+     also the last place a sign-up was being pushed at the landing, which the
+     agreed sequence forbids outright.
+     The Seeking is the opening. The landing follows it: land, be watched in
+     silence, then one named door. Nothing else may greet a person.
+     The way back, if ever wanted: delete the single return below.          */
+  return;
   if(obShown)return;obShown=true;
   const ob=document.getElementById('onboard');if(!ob)return;
   const steps=[
@@ -8460,7 +8477,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp">Build 3 Sep 2026 · 62</div>
+<div id="build-stamp">Build 3 Sep 2026 · 63</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
