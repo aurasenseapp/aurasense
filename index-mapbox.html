@@ -5137,11 +5137,34 @@ function macHex(h){
      own. On a light ground a slightly deeper, more saturated colour reads far
      stronger than a brighter one: saturation carries identity, brightness only
      washes toward the cloud. */
-  var mid=(Math.max(r,g,b)+Math.min(r,g,b))/2, S=1.58, V=0.90;
+  var mid=(Math.max(r,g,b)+Math.min(r,g,b))/2, S=1.82, V=0.855;
   function ch(v){ v=mid+(v-mid)*S; v*=V; return Math.max(0,Math.min(255,Math.round(v))); }
   return [ch(r),ch(g),ch(b)];
 }
 var macSpread=0, macWantSpread=0, macPts=[], macHover=-1, macWhole=false;
+/* ═══ 4 Sep 2026 · THE LIVING RIM ════════════════════════════════════════════
+   Karl has seen this three times and not once did it have an edge. Everything
+   built so far has been a circle - and a circle drawn softly is still a circle,
+   which is why it kept reading as a printed target rather than a field.
+   So the outline is no longer an arc. It is walked as a ring of points whose
+   distance from the centre is moved by three slow waves running at different
+   speeds and in different directions. The shape drifts, never repeats, and has
+   no boundary of its own anywhere. */
+function macBlob(ax,px,py,r,t,seed,wob){
+  var N=(innerWidth<=600)?54:84;
+  ax.beginPath();
+  for(var i=0;i<=N;i++){
+    var a=i/N*Math.PI*2;
+    var w=1
+      + Math.sin(a*2+t*0.00042+seed      )*0.062*wob
+      + Math.sin(a*3-t*0.00061+seed*1.7  )*0.041*wob
+      + Math.sin(a*5+t*0.00029+seed*2.3  )*0.024*wob;
+    var rr=r*w;
+    var x=px+Math.cos(a)*rr, y=py+Math.sin(a)*rr*0.94;
+    if(i===0)ax.moveTo(x,y); else ax.lineTo(x,y);
+  }
+  ax.closePath();
+}
 function macDrawAura(ts){
   if(!macAx)return;
   var W=innerWidth,H=innerHeight;
@@ -5158,6 +5181,14 @@ function macDrawAura(ts){
   /* the slow resonant breath — about six seconds, brightness rises on the swell */
   var br=still?0:Math.sin(ts/6000*Math.PI*2);
   var swell=1+br*0.045, glow=1+br*0.11;
+  /* Karl's own framework: layers moving at different speeds. The slow resonant
+     breath above is the whole field. This faster one is the etheric throb and
+     it belongs to the core alone, so the middle is alive even while the outside
+     is barely moving. */
+  var eth=still?0:Math.sin(ts/1750*Math.PI*2);
+  /* frozen, not flattened, in calm mode - the shape keeps its wandering rim,
+     it simply stops wandering */
+  var tt=still?12345:ts;
   var L=(typeof maLayers!=='undefined'&&maLayers&&maLayers.length)?maLayers:[];
   if(!L.length)L=[{color:'#e8c9a0'}];
   var n=Math.min(L.length,7);
@@ -5195,28 +5226,48 @@ function macDrawAura(ts){
      own. No blend mode is used anywhere. */
   geo.forEach(function(G){
     var bedR=G.spread*1.72;
-    var bg=macAx.createRadialGradient(G.px,G.py,0,G.px,G.py,bedR);
-    bg.addColorStop(0,   'rgba(255,251,246,'+(0.46*glow).toFixed(3)+')');
-    bg.addColorStop(0.36,'rgba(255,251,246,'+(0.34*glow).toFixed(3)+')');
-    bg.addColorStop(0.64,'rgba(255,251,246,'+(0.16*glow).toFixed(3)+')');
-    bg.addColorStop(0.86,'rgba(255,251,246,0.05)');
-    bg.addColorStop(1,   'rgba(255,251,246,0)');
+    /* A pale clearing on a pale cloud can only ever do so much, which is why
+       five attempts at brightening this ended in cream. So the ground is drawn
+       DOWN a little at the rim first - a soft well of shade the colour then
+       rises out of. Nothing is blended; it is one more soft fill. */
+    var sg=macAx.createRadialGradient(G.px,G.py,bedR*0.26,G.px,G.py,bedR);
+    sg.addColorStop(0,   'rgba(118,94,142,0)');
+    sg.addColorStop(0.52,'rgba(118,94,142,'+(0.075*glow).toFixed(3)+')');
+    sg.addColorStop(0.80,'rgba(118,94,142,'+(0.052*glow).toFixed(3)+')');
+    sg.addColorStop(1,   'rgba(118,94,142,0)');
+    macAx.fillStyle=sg;
+    macBlob(macAx,G.px,G.py,bedR,tt,G.li*1.9,1); macAx.fill();
+    /* then the clearing - brighter than before, and smaller, so it sits
+       directly under the colour instead of spreading into the cloud */
+    var bR=bedR*0.74;
+    var bg=macAx.createRadialGradient(G.px,G.py,0,G.px,G.py,bR);
+    bg.addColorStop(0,   'rgba(255,252,247,'+(0.56*glow).toFixed(3)+')');
+    bg.addColorStop(0.44,'rgba(255,252,247,'+(0.34*glow).toFixed(3)+')');
+    bg.addColorStop(0.76,'rgba(255,252,247,'+(0.12*glow).toFixed(3)+')');
+    bg.addColorStop(1,   'rgba(255,252,247,0)');
     macAx.fillStyle=bg;
-    macAx.beginPath(); macAx.arc(G.px,G.py,bedR,0,Math.PI*2); macAx.fill();
+    macBlob(macAx,G.px,G.py,bR,tt,G.li*1.9+0.6,0.8); macAx.fill();
   });
   /* PASS TWO - the colour, then the name. */
   geo.forEach(function(G){
     var li=G.li,rgb=G.rgb,px=G.px,py=G.py,spread=G.spread,lift=G.lift;
-    for(var k=26;k>=1;k--){
-      var f=k/26;
-      var r=spread*(0.18+f*1.30);
-      var a=(1-f)*(1-f)*0.205*glow*lift;
-      if(li>0&&macSpread<0.5)a*=0.80;
-      macAx.beginPath();
-      macAx.arc(px,py,r,0,Math.PI*2);
-      macAx.fillStyle='rgba('+rgb[0]+','+rgb[1]+','+rgb[2]+','+a.toFixed(4)+')';
-      macAx.fill();
-    }
+    /* THE RINGS. Twenty-six discs were stacked here, and every one of them
+       carried a faint step at its own rim - so twenty-six rings were being
+       painted into every sense. That is the bullseye in Karl's photograph.
+       The core was corrected on 3 September for exactly this reason and this
+       half was missed. One gradient now. No steps anywhere. */
+    var R=spread*1.46;
+    var A=0.74*glow*lift; if(li>0&&macSpread<0.5)A*=0.82;
+    var cs=rgb[0]+','+rgb[1]+','+rgb[2];
+    var g2=macAx.createRadialGradient(px,py,0,px,py,R);
+    g2.addColorStop(0,   'rgba('+cs+','+Math.min(0.96,A       ).toFixed(3)+')');
+    g2.addColorStop(0.15,'rgba('+cs+','+Math.min(0.94,A*0.88  ).toFixed(3)+')');
+    g2.addColorStop(0.36,'rgba('+cs+','+          (A*0.50     ).toFixed(3)+')');
+    g2.addColorStop(0.60,'rgba('+cs+','+          (A*0.23     ).toFixed(3)+')');
+    g2.addColorStop(0.82,'rgba('+cs+','+          (A*0.08     ).toFixed(3)+')');
+    g2.addColorStop(1,   'rgba('+cs+',0)');
+    macAx.fillStyle=g2;
+    macBlob(macAx,px,py,R,tt,li*2.7+1.3,1); macAx.fill();
     /* the hit area reaches the name below it, so touching either one answers */
     macPts[li]={x:px,y:py,r:spread*0.98,i:li};
     if(macSpread>0.34&&L[li]&&L[li].label){
@@ -5241,17 +5292,46 @@ function macDrawAura(ts){
      carry a faint step at their own rim and nine of them make nine rings. */
   var c0=macHex(L[0].color), cRGB=c0[0]+','+c0[1]+','+c0[2];
   var p0=macPts[0]||{x:cx,y:cy};
-  var coreR=base*0.46*swell*(1-macSpread*(n>1?0.52:0));
+  /* 4 Sep - the core was nearly half the whole aura, so the strongest colour
+     was also the widest and it read as one soft wash. A light source is small.
+     It is tightened, deepened, and given the faster breath of its own. */
+  var cGlow=glow*(1+eth*0.11);
+  var coreR=base*0.33*swell*(1+eth*0.032)*(1-macSpread*(n>1?0.52:0));
   if(coreR>0.5){
     var cg=macAx.createRadialGradient(p0.x,p0.y,0,p0.x,p0.y,coreR);
-    cg.addColorStop(0,   'rgba('+cRGB+','+(0.90*glow).toFixed(3)+')');
-    cg.addColorStop(0.22,'rgba('+cRGB+','+(0.72*glow).toFixed(3)+')');
-    cg.addColorStop(0.46,'rgba('+cRGB+','+(0.38*glow).toFixed(3)+')');
-    cg.addColorStop(0.70,'rgba('+cRGB+','+(0.15*glow).toFixed(3)+')');
-    cg.addColorStop(0.88,'rgba('+cRGB+',0.045)');
+    cg.addColorStop(0,   'rgba('+cRGB+','+Math.min(0.99,0.97*cGlow).toFixed(3)+')');
+    cg.addColorStop(0.20,'rgba('+cRGB+','+Math.min(0.97,0.85*cGlow).toFixed(3)+')');
+    cg.addColorStop(0.44,'rgba('+cRGB+','+(0.44*cGlow).toFixed(3)+')');
+    cg.addColorStop(0.68,'rgba('+cRGB+','+(0.17*cGlow).toFixed(3)+')');
+    cg.addColorStop(0.88,'rgba('+cRGB+',0.05)');
     cg.addColorStop(1,   'rgba('+cRGB+',0)');
     macAx.fillStyle=cg;
-    macAx.beginPath(); macAx.arc(p0.x,p0.y,coreR,0,Math.PI*2); macAx.fill();
+    macBlob(macAx,p0.x,p0.y,coreR,tt,0.4,0.55); macAx.fill();
+    /* the heart. Not white - a lifted version of the sense's OWN colour, so
+       the middle reads as a light being given off rather than a lamp behind a
+       colour, and the sense stays unmistakably itself at its centre. */
+    var hr=Math.round(c0[0]+(255-c0[0])*0.52),
+        hg2=Math.round(c0[1]+(255-c0[1])*0.52),
+        hb=Math.round(c0[2]+(255-c0[2])*0.52);
+    var hgd=macAx.createRadialGradient(p0.x,p0.y,0,p0.x,p0.y,coreR*0.40);
+    hgd.addColorStop(0,  'rgba('+hr+','+hg2+','+hb+','+Math.min(0.95,0.80*cGlow).toFixed(3)+')');
+    hgd.addColorStop(0.5,'rgba('+hr+','+hg2+','+hb+','+(0.34*cGlow).toFixed(3)+')');
+    hgd.addColorStop(1,  'rgba('+hr+','+hg2+','+hb+',0)');
+    macAx.fillStyle=hgd;
+    macBlob(macAx,p0.x,p0.y,coreR*0.40,tt,2.1,0.45); macAx.fill();
+  }
+  /* THE OUTERMOST EDGE - the layer that moves quickest and shows least. A
+     high, faint shimmer at the very outside, so the field never quite settles
+     even when the breath is at rest. */
+  if(!still){
+    var shR=base*1.30*swell;
+    var shA=0.050*glow*(1+Math.sin(ts/900*Math.PI*2)*0.30);
+    var sh=macAx.createRadialGradient(cx,cy,shR*0.62,cx,cy,shR);
+    sh.addColorStop(0,   'rgba('+cRGB+',0)');
+    sh.addColorStop(0.72,'rgba('+cRGB+','+shA.toFixed(3)+')');
+    sh.addColorStop(1,   'rgba('+cRGB+',0)');
+    macAx.fillStyle=sh;
+    macBlob(macAx,cx,cy,shR,ts*1.9,4.7,1); macAx.fill();
   }
 }
 /* ── naming a sense, where it sits ────────────────────────────────────── */
