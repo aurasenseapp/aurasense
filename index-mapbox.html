@@ -8863,6 +8863,16 @@ try{
      country. Falling to street height onto a town centre is still landing in a
      street, which is what Karl reported. 29 Aug 2026. */
   const RESTS={country:4.6,region:7.4,district:9.6,place:12.2,locality:13.4};
+  /* ═══ THE LAST STEP · 4 Sep 2026 ═══════════════════════════════════════
+     Karl: "its not as close to the house as it was."
+     The ladder ends at 15.2, which is above the street rather than at the
+     door. The search box has always gone to 17.5 for a named house, so the
+     Seeking was stopping two rungs short of where the box arrives — the same
+     place, seen from further away.
+     A named door now gets one more step down, taken slowly and on its own so
+     it reads as an arrival rather than a lurch. Nothing else changes: a town
+     still rests above the town, a country above the country.             */
+  const DOORSTEP={address:17.5,street:17.0,poi:16.6};
   function descend(lat,lng,then,kind){
     const floor=RESTS[kind]||null;
     let t=0;
@@ -8874,6 +8884,16 @@ try{
               duration:Math.max(900,r.ms-120),curve:1.25}); }catch(e){}
       },t);
     });
+    const door=DOORSTEP[kind]||null;
+    if(door!=null){
+      t+=1750;
+      setTimeout(function(){
+        try{ map.flyTo({center:[lng,lat],zoom:door,essential:true,
+              duration:2200,curve:1.15}); }catch(e){}
+      },t);
+      setTimeout(then,t+2400);
+      return;
+    }
     setTimeout(then,t+1900);
   }
 
