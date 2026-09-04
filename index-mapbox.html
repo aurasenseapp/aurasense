@@ -4091,159 +4091,175 @@ document.getElementById('sg').onclick=async()=>{
   showMsg('Sensing the aura of '+q+'...');
   try{
     const cc=map.getCenter();
-    /* ── SEARCH FAULT FIXED · 2 September 2026 ───────────────────────────────
-       Karl, 2 Sept: "22 Murch Crescent Dinas Powys used to land beautifully at
-       the correct address... now just lands a generic Dinas Powys town", and on
-       a second try landed at Dinas Mawddwy — a different town entirely.
+    /* ═══════════════════════════════════════════════════════════════════════
+       THE SEARCH · rebuilt 3 September 2026
+       ─────────────────────────────────────────────────────────────────────
+       Seven earlier attempts all did the same thing in different clothes:
+       they added another layer that THREW ANSWERS AWAY. Fence, word-gate,
+       number-gate, score-gate, certainty-gate — five places in a row where a
+       correct answer could be deleted before anyone saw it.
 
-       Two faults, both in the old single line:
-         1. autocomplete defaults to TRUE. A submitted search is not a
-            typeahead, and prefix matching is exactly how "Dinas Powys" gets
-            answered with "Dinas Mawddwy".
-         2. limit=1 took whatever Mapbox ranked first, and proximity to a far
-            map centre was pulling a nearby-ish town above the real address.
+       Two things are different now.
 
-       Now: autocomplete off, five candidates asked for, address types asked
-       for first when the query starts with a house number, and the candidate
-       that actually carries the typed words wins rather than the top rank.  */
+       ONE — every lookup goes out AT THE SAME TIME instead of one after
+       another. The old code made up to nine requests in a queue. On a phone,
+       the slow ones silently gave up and contributed nothing, so the phone
+       decided from a smaller pool than the MacBook. That is a complete
+       explanation of "it lands differently on my phone", and of "it lands
+       differently on the same device twice", and neither had one before.
+
+       TWO — nothing is deleted any more. Wrong-looking answers are pushed
+       DOWN, not removed. The only hard rule kept is the one that protects
+       against Dinas Mawddwy: a place is never flown to unless it carries
+       every word that was typed. Mawddwy can borrow "dinas" and "powys" from
+       its postal address. It can never carry "murch" or "crescent".
+
+       Also: the address is now asked for from Mapbox's current address
+       service as well as the old one, and the map's own position is always
+       carried as a hint. Dropping that hint was fault one of the rebuild
+       that broke this. It is never dropped again.                        */
+
     const looksLikeAddress=/^\s*\d/.test(q);
-    /* An explicit place — several words, or a comma — is a person naming
-       somewhere, not browsing near here. Bias to the current map centre is
-       what dragged a Welsh street to the nearest Welsh-sounding town, so for
-       those queries it is dropped entirely. */
-    const explicit=(q.indexOf(',')>=0)||(q.trim().split(/\s+/).length>=3);
-    const gBase=`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(q)}.json`+
-                `?access_token=${MAPBOX_TOKEN}&autocomplete=false&limit=6`+
-                (explicit?``:`&proximity=${cc.lng},${cc.lat}`);
-    /* BOTH passes always run and their results are pooled. The first pass keeps
-       partial matching on, which is what finds a street by name; the hard word
-       filter below is now what stops a wrong town winning, so it is safe.  */
-    let feats=[];
-    /* ═══ THE HOUSE NUMBER DECIDES - 3 Sep 2026 ═══════════════════════════
-       22 Murch Crescent landed exactly right for months and then stopped, so
-       this is a restoration, not a redesign. Three things:
-         1. The plain request that used to work is asked again, alongside the
-            newer ones, and every answer is pooled rather than replaced.
-         2. The street is also asked for on its own. A full string with commas
-            is the hardest shape for the lookup to match; the street alone is
-            the easiest, and the town is already carried by the word guard.
-         3. If ANY answer comes back carrying the house number that was typed,
-            only those answers are allowed to win. Nothing merely nearby can
-            take the place of the door someone actually named.               */
     const houseNo=(q.match(/^\s*(\d+[a-zA-Z]?)\b/)||[])[1]||'';
-    const gAt=(text,extra)=>`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(text)}.json`
-      +`?access_token=${MAPBOX_TOKEN}&limit=6`+(extra||'');
-    const pull=async u=>{ try{ const r=await fetch(u); const d=await r.json();
-      if(d&&d.features)feats=feats.concat(d.features); }catch(e){} };
-    /* ═══ 3 Sep 2026 · THE FENCE ═══════════════════════════════════════════
-       Four attempts at ranking have now failed, so this stops ranking and
-       starts fencing. The fault was the same in every one of them: with a
-       comma in the query, EVERY request went out with no geographic anchor at
-       all. "22 Murch Crescent" was being searched for across the whole planet.
-       Now the town is found FIRST, and only a settlement whose OWN name
-       matches what was typed is accepted. Dinas Mawddwy can never pass that -
-       its name is not Dinas Powys, however much of Powys it sits beside.
-       A box is then drawn around that town and the street is searched INSIDE
-       it. The wrong town is no longer outranked. It cannot be returned.    */
-    let fence=null, town=null, townWords=0;
     const toks=q.replace(/,/g,' ').trim().split(/\s+/).filter(Boolean);
+    const want=q.toLowerCase().split(/[\s,]+/).filter(w=>w.length>3);
+
+    const uOld=(text,extra)=>'https://api.mapbox.com/geocoding/v5/mapbox.places/'
+      +encodeURIComponent(text)+'.json?access_token='+MAPBOX_TOKEN+'&limit=8'+(extra||'');
+    const uNew=(text,extra)=>'https://api.mapbox.com/search/geocode/v6/forward?q='
+      +encodeURIComponent(text)+'&access_token='+MAPBOX_TOKEN+'&limit=8'+(extra||'');
+
+    /* The current service answers in a different shape. It is translated into
+       the shape the rest of the map already understands, so nothing else in
+       Aurasense has to change or can break. */
+    const asOld=p=>{
+      if(!p)return null;
+      const pr=p.properties||{};
+      const cx=pr.context||{};
+      const co=pr.coordinates||{};
+      const g=(p.geometry&&p.geometry.coordinates)||[];
+      const lng=(typeof co.longitude==='number')?co.longitude:g[0];
+      const lat=(typeof co.latitude==='number')?co.latitude:g[1];
+      if(typeof lng!=='number'||typeof lat!=='number')return null;
+      const kind=pr.feature_type||'place';
+      const nm=pr.name||pr.name_preferred||'';
+      const full=pr.full_address||(nm+(pr.place_formatted?(', '+pr.place_formatted):''));
+      const num=(cx.address&&(cx.address.address_number||cx.address.street_number))||'';
+      const st=(cx.street&&cx.street.name)||'';
+      return {id:pr.mapbox_id||('new:'+full),
+              text:(kind==='address'&&st)?st:nm,
+              place_name:full||nm,
+              place_type:[kind],
+              address:num||undefined,
+              center:[lng,lat],
+              bbox:pr.bbox||undefined,
+              relevance:(typeof p.relevance==='number')?p.relevance:1,
+              context:[]};
+    };
+    const grab=async(url,isNew)=>{
+      try{ const r=await fetch(url); if(!r.ok)return [];
+           const d=await r.json(); const fs=(d&&d.features)||[];
+           return isNew?fs.map(asOld).filter(Boolean):fs;
+      }catch(e){ return []; }
+    };
+
+    /* ── The town, found first and found on its own name only ─────────────
+       Only a settlement whose OWN name is exactly what was typed is accepted.
+       "Dinas Mawddwy" can never answer to "Dinas Powys", however much of
+       Powys it sits beside. All the candidate spellings are asked at once. */
     const tries=[];
     if(q.indexOf(',')>=0){const a=q.split(',').slice(1).join(' ').trim();if(a)tries.push(a);}
     if(toks.length>=3)tries.push(toks.slice(-3).join(' '));
     if(toks.length>=2)tries.push(toks.slice(-2).join(' '));
     if(toks.length>=1)tries.push(toks.slice(-1).join(' '));
-    for(const cand of tries){
-      if(town)break;
-      const ct=cand.toLowerCase();
-      try{
-        const tr=await fetch(gAt(cand,'&autocomplete=false&types=place,locality,neighborhood,district,postcode'));
-        const td=await tr.json();
-        const fs=(td&&td.features)||[];
-        const hit=fs.find(c=>String(c.text||'').toLowerCase()===ct);
-        if(hit){town=hit;townWords=cand.split(/\s+/).length;}
-      }catch(e){}
+    const cands=tries.filter((v,i)=>v&&tries.indexOf(v)===i);
+    const townSets=await Promise.all(cands.map(c=>
+      grab(uOld(c,'&autocomplete=false&types=place,locality,neighborhood,district,postcode'))));
+    let town=null,townWords=0;
+    for(let i=0;i<cands.length&&!town;i++){
+      const ct=cands[i].toLowerCase();
+      const hit=(townSets[i]||[]).find(c=>String(c.text||'').toLowerCase()===ct);
+      if(hit&&hit.center){town=hit;townWords=cands[i].split(/\s+/).length;}
     }
+
+    let fence=null;
     if(town&&town.center){
       const dLat=0.13, dLng=0.13/Math.max(0.25,Math.cos(town.center[1]*Math.PI/180));
       fence=[town.center[0]-dLng,town.center[1]-dLat,town.center[0]+dLng,town.center[1]+dLat];
     }
-    const box =fence?('&bbox='+fence.map(v=>v.toFixed(5)).join(',')):'';
-    const near=town ?('&proximity='+town.center[0]+','+town.center[1]):'';
+    const box  = fence?('&bbox='+fence.map(v=>v.toFixed(5)).join(',')):'';
+    /* Always carried. Never dropped. This is the thing whose absence broke it. */
+    const near = '&proximity='+(town&&town.center?(town.center[0]+','+town.center[1]):(cc.lng+','+cc.lat));
+
+    const streetOnly=(q.indexOf(',')>=0)?q.split(',')[0].trim()
+      :(townWords&&toks.length>townWords?toks.slice(0,toks.length-townWords).join(' '):q);
+
+    /* ── Everything asked at once ─────────────────────────────────────── */
+    const jobs=[
+      grab(uNew(q,near+box),true),
+      grab(uNew(q,near),true),
+      grab(uOld(q,'&autocomplete=true'+near)),
+      grab(uOld(q,'&autocomplete=false'+near))
+    ];
     if(looksLikeAddress){
-      const streetOnly=(q.indexOf(',')>=0)?q.split(',')[0].trim()
-        :(townWords&&toks.length>townWords?toks.slice(0,toks.length-townWords).join(' '):q);
-      await pull(gAt(streetOnly,'&autocomplete=true&types=address'+box));
-      await pull(gAt(q,'&autocomplete=true&types=address'+near));
-      if(!box&&streetOnly!==q)await pull(gAt(streetOnly,'&autocomplete=true&types=address'));
+      jobs.push(grab(uNew(q,'&types=address,street'+near+box),true));
+      jobs.push(grab(uNew(streetOnly,'&types=address,street'+near),true));
+      jobs.push(grab(uOld(q,'&autocomplete=true&types=address'+near)));
+      jobs.push(grab(uOld(streetOnly,'&autocomplete=true&types=address'+near+box)));
+      if(streetOnly!==q)jobs.push(grab(uOld(streetOnly,'&autocomplete=true&types=address'+near)));
     }
-    await pull(gBase);
-    await pull(gAt(q,'&autocomplete=true'+(near||(explicit?'':`&proximity=${cc.lng},${cc.lat}`))));
-    {const seen={};feats=feats.filter(c=>{const k=(c.id||c.place_name);if(seen[k])return false;seen[k]=1;return true;});}
-    /* Nothing outside the fence may be returned at all. If the number itself
-       is not in the map data, the town it belongs to is the honest answer -
-       never a different town with a similar name. */
-    if(fence){
-      const inside=c=>c&&c.center&&c.center[0]>=fence[0]&&c.center[0]<=fence[2]
-                   &&c.center[1]>=fence[1]&&c.center[1]<=fence[3];
-      const kept=feats.filter(inside);
-      feats=kept.length?kept:(town?[town]:feats);
-    }
-    /* A HARD GUIDING PRINCIPLE, not a preference: a result that shares none of the typed
-       words is the wrong place, however confidently it is ranked. Dinas
-       Mawddwy shares only "dinas" with Dinas Powys, and "dinas" is common.
-       Anything failing this is discarded rather than flown to. */
-    const want=q.toLowerCase().split(/[\s,]+/).filter(w=>w.length>3);
+    const sets=await Promise.all(jobs);
+    let feats=[];
+    sets.forEach(s=>{ if(s&&s.length)feats=feats.concat(s); });
+    if(town&&!feats.length)feats=[town];
+    {const seen={};feats=feats.filter(c=>{ if(!c||!c.center)return false;
+      const k=(c.id||'')+'|'+(c.place_name||''); if(seen[k])return false; seen[k]=1; return true;});}
+
+    /* ── Ordering, not deleting ────────────────────────────────────────
+       Everything that came back is kept. Being outside the town is a heavy
+       mark against an answer, not an execution. Nothing correct can be lost
+       here any more, which is where the last five attempts lost it.      */
+    const inFence=c=>!!(fence&&c.center&&c.center[0]>=fence[0]&&c.center[0]<=fence[2]
+                                      &&c.center[1]>=fence[1]&&c.center[1]<=fence[3]);
+    const hitWords=c=>{const pn=(c.place_name||'').toLowerCase();
+      return want.filter(w=>pn.indexOf(w)>=0).length;};
+    const hasNo=c=>!!(houseNo&&String(c.address||'').toLowerCase()===houseNo.toLowerCase());
     const scoreOf=c=>{
-      const pn=(c.place_name||'').toLowerCase();
-      let sc=want.reduce((n,w)=>n+(pn.indexOf(w)>=0?2:0),0);
       const ty=(c.place_type&&c.place_type[0])||'';
-      if(looksLikeAddress&&ty==='address')sc+=3;
-      if(looksLikeAddress&&ty==='poi')sc+=1;
-      if(houseNo&&String(c.address||'').toLowerCase()===houseNo.toLowerCase())sc+=12;
+      let sc=hitWords(c)*6;
+      if(want.length&&hitWords(c)===want.length)sc+=40;
+      if(hasNo(c))sc+=30;
+      if(looksLikeAddress&&ty==='address')sc+=8;
+      if(looksLikeAddress&&ty==='street')sc+=4;
+      if(looksLikeAddress&&ty==='poi')sc+=2;
+      if(fence)sc+=inFence(c)?25:-25;
+      if(typeof c.relevance==='number')sc+=c.relevance*4;
       return sc;
     };
-    /* The gate. If the exact number is among the answers, nothing else may win. */
-    if(houseNo){
-      const exact=feats.filter(c=>String(c.address||'').toLowerCase()===houseNo.toLowerCase()
-        &&want.filter(w=>(c.place_name||'').toLowerCase().indexOf(w)>=0).length>=Math.min(2,want.length));
-      if(exact.length)feats=exact;
-    }
-    if(want.length){
-      const keep=feats.filter(c=>scoreOf(c)>0&&want.filter(w=>(c.place_name||'').toLowerCase().indexOf(w)>=0).length>=Math.min(2,want.length));
-      if(keep.length)feats=keep;
-      else feats=feats.filter(c=>scoreOf(c)>0);
-    }
-    /* ═══ 3 Sep 2026 · THE PERSON CHOOSES; THE MAP DOES NOT GUESS ══════════
-       Five attempts at guessing the right answer have failed. So it stops
-       guessing. Where more than one place could be meant, every one of them is
-       shown and the person taps their own. It is the same single lookup as
-       before, so nothing costs a penny more - the only thing that changed is
-       who decides.
-       A senser can no longer be sent somewhere they did not choose, which is
-       the error this map has always said is the worst one it can make. */
+
     const landOn=(f)=>{
       if(!f){showMsg('Location not found \u2014 try a postcode, town, or full address');return;}
       const t=(f.place_type&&f.place_type[0])||'';
-      let name=f.text||f.place_name.split(',')[0];
-      if(t==='address'&&f.address)name=f.address+' '+name;
+      let name=f.text||String(f.place_name||'').split(',')[0];
+      if((t==='address')&&f.address&&String(name).toLowerCase().indexOf(String(f.address).toLowerCase()+' ')!==0)
+        name=f.address+' '+name;
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
       searching=true;
       if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
-        /* 3 Sep 2026 - 2 seconds from a world view to a doorstep is a fall,
-           not a flight. Nothing in Aurasense snaps, and arriving somewhere is
-           the moment that most needs its own time. */
+        /* Nothing in Aurasense snaps. Arriving somewhere is the moment that
+           most needs its own time. */
         flyToPlaceFeature(f,t,4200);
       }else{
-        const z=(t==='address')?17.5:(t==='poi')?16.5:15;
+        const z=(t==='address')?17.5:(t==='street')?17:(t==='poi')?16.5:15;
         const mob=window.innerWidth<=600;
         flyProgrammatic({center:f.center,zoom:z,duration:4200,offset:mob?[0,Math.round(window.innerHeight*0.17)]:[-60,-80]});
       }
-      if(t==='address'||t==='poi') dropSearchMarker(f.center,name);
-      if(houseNo&&t!=='address'&&t!=='poi')
-        showMsg('That exact address is not in the map \u2014 this is '+name+', which is as close as it can honestly place you');
+      if(t==='address'||t==='poi'||t==='street') dropSearchMarker(f.center,name);
+      if(houseNo&&!hasNo(f))
+        showMsg('That exact number is not in the map \u2014 this is '+name+', which is as close as it can honestly place you');
       else showMsg('Sensing the aura of '+name+'...');
     };
     const showChoices=(list,go,unsure)=>{
@@ -4261,40 +4277,29 @@ document.getElementById('sg').onclick=async()=>{
       el.querySelectorAll('.ap-r').forEach(b=>{b.onclick=()=>{hide();go(list[+b.dataset.i]);};});
       el.querySelector('.ap-x').onclick=hide;
     };
-    /* 3 Sep 2026 - and it only ever ASKS when there is real doubt. If what came
-       back carries every word that was typed, and the house number too, then
-       nothing is ambiguous and nothing should be asked: it goes straight
-       there, exactly as it did for months. Murch Road cannot qualify, because
-       "crescent" is not in it. The list is for genuine ties only. */
-    const certain=f=>{
-      if(!f)return false;
-      const pn=(f.place_name||'').toLowerCase();
-      if(!want.every(w=>pn.indexOf(w)>=0))return false;
-      /* "Barry" on its own could be Wales, Ontario, or Mars - so it asks.
-         "Barry, Wales" or "Barry, Ontario" has already said which, so it
-         does not. One bare word with several real answers is the only case
-         where a person genuinely has not yet chosen. */
-      if(want.length<2&&!houseNo&&feats.length>1)return false;
-      if(houseNo)return String(f.address||'').toLowerCase()===houseNo.toLowerCase();
-      return true;
-    };
-    /* ═══ 3 Sep 2026 · NOTHING FLIES UNLESS IT CARRIES EVERY WORD ══════════
-       Dinas Mawddwy borrows "dinas" and "powys" from its own postal address,
-       so counting matched words will always let it through - and when it was
-       the only survivor of the filters it was flown to with no list and no
-       question. That is the exact path it kept taking.
-       What it can never have is "murch", or "crescent". So: a result is only
-       flown to when it carries EVERY word typed. If none does, the map shows
-       what it found and says plainly that nothing matched. It no longer picks
-       a wrong town by default, ever. */
+
+    /* ── Who decides ──────────────────────────────────────────────────
+       It only ever ASKS where there is real doubt. A door whose number and
+       every word match is not doubt, and is never made into a question.  */
     const carriesAll=c=>{const pn=(c.place_name||'').toLowerCase();
       return want.every(w=>pn.indexOf(w)>=0);};
+    const certain=f=>{
+      if(!f)return false;
+      if(!carriesAll(f))return false;
+      if(want.length<2&&!houseNo&&feats.length>1)return false;
+      return true;
+    };
     feats.sort((a,b)=>scoreOf(b)-scoreOf(a));
     const solid=feats.filter(carriesAll);
-    if(!want.length){ if(feats.length<=1)landOn(feats[0]); else showChoices(feats.slice(0,6),landOn); }
-    else if(solid.length===1)landOn(solid[0]);
+    /* The door itself, named exactly. Nothing outranks it and nothing asks
+       about it — this is the path that worked for months. */
+    const exact=solid.filter(hasNo);
+
+    if(exact.length)                 landOn(exact[0]);
+    else if(!want.length){ if(feats.length<=1)landOn(feats[0]); else showChoices(feats.slice(0,6),landOn); }
+    else if(solid.length===1)        landOn(solid[0]);
     else if(solid.length>1){ if(certain(solid[0]))landOn(solid[0]); else showChoices(solid.slice(0,6),landOn); }
-    else if(feats.length)showChoices(feats.slice(0,6),landOn,true);
+    else if(feats.length)            showChoices(feats.slice(0,6),landOn,true);
     else showMsg('Location not found \u2014 try a postcode, town, or full address');
   }catch(e){showMsg('Search unavailable — try again shortly');}
 };
