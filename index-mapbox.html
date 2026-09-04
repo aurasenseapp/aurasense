@@ -4246,11 +4246,13 @@ document.getElementById('sg').onclick=async()=>{
         showMsg('That exact address is not in the map \u2014 this is '+name+', which is as close as it can honestly place you');
       else showMsg('Sensing the aura of '+name+'...');
     };
-    const showChoices=(list,go)=>{
+    const showChoices=(list,go,unsure)=>{
       let el=document.getElementById('as-pick');
       if(!el){el=document.createElement('div');el.id='as-pick';document.body.appendChild(el);}
       const esc=x=>String(x||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
-      el.innerHTML='<div class="ap-h">Which one is yours?</div>'
+      el.innerHTML='<div class="ap-h">'+(unsure
+        ?'Nothing carried every word you typed. These are the nearest \u2014 or search again.'
+        :'Which one is yours?')+'</div>'
         +list.map((c,i)=>'<button class="ap-r" data-i="'+i+'">'+esc(c.place_name||c.text)+'</button>').join('')
         +'<button class="ap-x">none of these</button>';
       el.style.display='block';
@@ -4276,9 +4278,24 @@ document.getElementById('sg').onclick=async()=>{
       if(houseNo)return String(f.address||'').toLowerCase()===houseNo.toLowerCase();
       return true;
     };
+    /* ═══ 3 Sep 2026 · NOTHING FLIES UNLESS IT CARRIES EVERY WORD ══════════
+       Dinas Mawddwy borrows "dinas" and "powys" from its own postal address,
+       so counting matched words will always let it through - and when it was
+       the only survivor of the filters it was flown to with no list and no
+       question. That is the exact path it kept taking.
+       What it can never have is "murch", or "crescent". So: a result is only
+       flown to when it carries EVERY word typed. If none does, the map shows
+       what it found and says plainly that nothing matched. It no longer picks
+       a wrong town by default, ever. */
+    const carriesAll=c=>{const pn=(c.place_name||'').toLowerCase();
+      return want.every(w=>pn.indexOf(w)>=0);};
     feats.sort((a,b)=>scoreOf(b)-scoreOf(a));
-    if(feats.length<=1||certain(feats[0]))landOn(feats[0]);
-    else showChoices(feats.slice(0,6),landOn);
+    const solid=feats.filter(carriesAll);
+    if(!want.length){ if(feats.length<=1)landOn(feats[0]); else showChoices(feats.slice(0,6),landOn); }
+    else if(solid.length===1)landOn(solid[0]);
+    else if(solid.length>1){ if(certain(solid[0]))landOn(solid[0]); else showChoices(solid.slice(0,6),landOn); }
+    else if(feats.length)showChoices(feats.slice(0,6),landOn,true);
+    else showMsg('Location not found \u2014 try a postcode, town, or full address');
   }catch(e){showMsg('Search unavailable — try again shortly');}
 };
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
@@ -8483,7 +8500,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp">Build 3 Sep 2026 · 65</div>
+<div id="build-stamp">Build 3 Sep 2026 · 66</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
