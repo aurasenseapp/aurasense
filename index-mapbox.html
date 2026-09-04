@@ -69,7 +69,14 @@
     +'</div></body></html>');
     document.close();
     try{ window.stop(); }catch(e){}
-  }catch(e){}
+  }catch(e){
+    /* 4 Sep 2026 - Karl, in Safari's private window: "looks like its going to
+       load but doesnt". Rewriting a page while the browser is still reading it
+       is the one thing here that can leave a blank screen instead of a page.
+       If it ever fails, the person is simply sent to the holding page, which
+       is a plain move no browser can stall on. Nobody is left at nothing. */
+    try{ location.replace('/'); }catch(e2){}
+  }
 })();
 </script>
 
@@ -1809,10 +1816,19 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
    this device has already been through the arrival, the page holds itself
    back. If this script never runs at all, nothing is hidden and the map is
    simply the map — which is the right way round for it to fail. */
+/* ═══ KARL'S DECISION · 4 September 2026 ══════════════════════════════════
+   The Seeking is not a threshold crossed once. It is the FRONT of Aurasense,
+   and it plays on every single arrival, for everyone, forever.
+
+   TO PUT IT BACK TO ONCE PER DEVICE: change the word true below to false.
+   That is the only edit needed - all three places that ask read this one
+   switch, so they can never again disagree with one another.               */
+window.AS_SEEK_ALWAYS=true;
 (function(){try{
   var q=location.search;
   if(/[?&]map=1/.test(q))return;
   var seen=false; try{seen=localStorage.getItem('as_seeking_seen')==='1';}catch(e){}
+  if(window.AS_SEEK_ALWAYS)seen=false;
   if(seen&&!/[?&]seek=1/.test(q))return;
   document.documentElement.classList.add('as-arriving');
 }catch(e){}})();
@@ -8649,7 +8665,7 @@ try{
      the one named door never appeared at all. It now starts on its own when
      the Seeking is not going to play. */
   var willSeek=true;
-  try{ willSeek=(localStorage.getItem('as_seeking_seen')!=='1')||replay; }catch(e){}
+  try{ willSeek=(localStorage.getItem('as_seeking_seen')!=='1')||replay||!!window.AS_SEEK_ALWAYS; }catch(e){}
   function door(){
     var el=document.getElementById('as-land'); if(!el)return;
     el.classList.add('on');
@@ -8701,6 +8717,7 @@ try{
 (function(){
   const fr=document.getElementById('seekFrame'); if(!fr)return;
   let seen=false; try{seen=localStorage.getItem('as_seeking_seen')==='1';}catch(e){}
+  if(window.AS_SEEK_ALWAYS)seen=false;
   /* ?map=1 always reaches the plain map, whatever else is broken */
   const skip=/[?&]map=1/.test(location.search);
   /* ?seek=1 always plays the arrival again, however many times it has been
