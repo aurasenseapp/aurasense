@@ -4156,11 +4156,21 @@ document.getElementById('sg').onclick=async()=>{
               relevance:(typeof p.relevance==='number')?p.relevance:1,
               context:[]};
     };
+    /* Each lookup is given seven seconds and no more. One request hanging on a
+       mobile connection used to hold the whole search still; now it simply
+       drops out and the others answer without it. Answers are also asked for
+       fresh, never from a store, so a phone can never decide from yesterday. */
     const grab=async(url,isNew)=>{
-      try{ const r=await fetch(url); if(!r.ok)return [];
-           const d=await r.json(); const fs=(d&&d.features)||[];
-           return isNew?fs.map(asOld).filter(Boolean):fs;
-      }catch(e){ return []; }
+      let ctl=null,timer=null;
+      try{
+        try{ ctl=new AbortController(); timer=setTimeout(()=>{try{ctl.abort();}catch(e){}},7000); }catch(e){ ctl=null; }
+        const opt={cache:'no-store'}; if(ctl)opt.signal=ctl.signal;
+        const r=await fetch(url,opt);
+        if(timer)clearTimeout(timer);
+        if(!r.ok)return [];
+        const d=await r.json(); const fs=(d&&d.features)||[];
+        return isNew?fs.map(asOld).filter(Boolean):fs;
+      }catch(e){ if(timer)clearTimeout(timer); return []; }
     };
 
     /* ── The town, found first and found on its own name only ─────────────
@@ -4289,8 +4299,21 @@ document.getElementById('sg').onclick=async()=>{
       if(want.length<2&&!houseNo&&feats.length>1)return false;
       return true;
     };
-    feats.sort((a,b)=>scoreOf(b)-scoreOf(a));
-    const solid=feats.filter(carriesAll);
+    /* ── Belt and braces on the wrong Dinas ────────────────────────────
+       Once the town has been found by its own exact name, ANY other town,
+       village or district is disqualified from being flown to outright. It
+       may still appear in a list a person taps, but the map can never choose
+       it. This sits on top of the every-word rule, not instead of it, so two
+       independent things now have to fail before a wrong town can be reached
+       — and neither of them can fail quietly.                            */
+    const wrongTown=c=>{
+      if(!town)return false;
+      const ty=(c.place_type&&c.place_type[0])||'';
+      if(['place','locality','district','region','country','neighborhood'].indexOf(ty)<0)return false;
+      return String(c.text||'').toLowerCase()!==String(town.text||'').toLowerCase();
+    };
+    feats.sort((a,b)=>(scoreOf(b)-(wrongTown(b)?200:0))-(scoreOf(a)-(wrongTown(a)?200:0)));
+    const solid=feats.filter(c=>carriesAll(c)&&!wrongTown(c));
     /* The door itself, named exactly. Nothing outranks it and nothing asks
        about it — this is the path that worked for months. */
     const exact=solid.filter(hasNo);
