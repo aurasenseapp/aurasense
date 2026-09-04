@@ -4250,8 +4250,20 @@ document.getElementById('sg').onclick=async()=>{
       el.querySelectorAll('.ap-r').forEach(b=>{b.onclick=()=>{hide();go(list[+b.dataset.i]);};});
       el.querySelector('.ap-x').onclick=hide;
     };
+    /* 3 Sep 2026 - and it only ever ASKS when there is real doubt. If what came
+       back carries every word that was typed, and the house number too, then
+       nothing is ambiguous and nothing should be asked: it goes straight
+       there, exactly as it did for months. Murch Road cannot qualify, because
+       "crescent" is not in it. The list is for genuine ties only. */
+    const certain=f=>{
+      if(!f)return false;
+      const pn=(f.place_name||'').toLowerCase();
+      if(!want.every(w=>pn.indexOf(w)>=0))return false;
+      if(houseNo)return String(f.address||'').toLowerCase()===houseNo.toLowerCase();
+      return true;
+    };
     feats.sort((a,b)=>scoreOf(b)-scoreOf(a));
-    if(feats.length<=1)landOn(feats[0]);
+    if(feats.length<=1||certain(feats[0]))landOn(feats[0]);
     else showChoices(feats.slice(0,6),landOn);
   }catch(e){showMsg('Search unavailable — try again shortly');}
 };
@@ -5986,7 +5998,12 @@ function obShow(){
     {sel:'.tab-myaura',t:'This is your aura — in the menu',s:'The glowing orb beside My Aura is your living aura. It grows and shifts colour with every sense you offer. Tap it any time to see your aura up close.'},
     {sel:'#register-btn',t:'Become an Aurasenser',s:'Create your aura so the senses you share become your own.'}
   ];
-  function finish(){ob.classList.remove('show');ob.innerHTML='';if(typeof twoDoors==='function'&&(!myOfferings||myOfferings.length===0)){twoDoors();}else if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}if(typeof showMsg==='function')showMsg('The world is breathing \u2014 and it senses you here. \u2727 Every glow on this map was a real person, standing still long enough to feel something. Touch the map where you stand, or find a place you love, and offer what it makes you feel.',11500,'witness','#c4b5fd');}else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}}
+  /* 3 Sep 2026 - the old breath no longer opens the map. The Seeking is the
+     opening now, and after it the landing takes over: land, be watched in
+     silence, then one named door. Two openings were competing and the older
+     one kept winning. twoDoors stays as a function because it is still opened
+     deliberately from elsewhere - it just no longer arrives uninvited. */
+  function finish(){ob.classList.remove('show');ob.innerHTML='';if(false){twoDoors();}else if(window.matchMedia&&window.matchMedia('(max-width:600px)').matches){const si=document.getElementById('si');if(si){si.classList.add('inp-glow');setTimeout(()=>si.classList.remove('inp-glow'),3200);}if(typeof showMsg==='function')showMsg('The world is breathing \u2014 and it senses you here. \u2727 Every glow on this map was a real person, standing still long enough to feel something. Touch the map where you stand, or find a place you love, and offer what it makes you feel.',11500,'witness','#c4b5fd');}else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}}
   let idx=0;
   function visible(el){if(!el)return false;const r=el.getBoundingClientRect();return r.width>2&&r.height>2;}
   function draw(){
@@ -6014,7 +6031,7 @@ function obShow(){
 // Its code above is left untouched and unreachable, deliberately: cutting it out is how the
 // app was broken before. It will be removed properly once the living walkthrough replaces it.
 // The door it used to open at the end still opens, so a first visitor is not left with nothing.
-setTimeout(()=>{try{ if(typeof twoDoors==='function' && (!myOfferings || myOfferings.length===0)) twoDoors(); }catch(e){}},1600);
+/* 3 Sep 2026 - the second place the old breath let itself in. Closed. */
 // ---- Place-an-aurasense prompt ----
 function openPlacePrompt(heading){const p=document.getElementById('place-prompt');if(!p)return;if(typeof currentPopup!=='undefined'&&currentPopup){currentPopup.remove();currentPopup=null;}const t=document.getElementById('pp-title');if(t&&heading)t.textContent=heading;p.classList.add('show');const m=document.getElementById('place-mini');if(m)m.classList.remove('show');const inp=document.getElementById('pp-input');if(inp)setTimeout(()=>{try{inp.focus();}catch(e){}},60);}
 function collapsePlacePrompt(){const p=document.getElementById('place-prompt');if(p)p.classList.remove('show');const m=document.getElementById('place-mini');if(m)m.classList.add('show');}
@@ -8443,7 +8460,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp">Build 3 Sep 2026 · 61</div>
+<div id="build-stamp">Build 3 Sep 2026 · 62</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
