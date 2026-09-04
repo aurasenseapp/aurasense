@@ -4102,9 +4102,33 @@ document.getElementById('sbtn').addEventListener('touchstart',e=>{e.preventDefau
 document.getElementById('inp').addEventListener('input',()=>{emptyPrompted=false;const i=document.getElementById('inp');if(i&&i.value.trim())i.classList.remove('inp-glow');});
 document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sbtn').click()});
 
-document.getElementById('sg').onclick=async()=>{
-  const q=document.getElementById('si').value.trim();if(!q)return;
-  showMsg('Sensing the aura of '+q+'...');
+/* ═══════════════════════════════════════════════════════════════════════════
+   4 September 2026 · ONE SEARCH, ONE TRUTH
+   ───────────────────────────────────────────────────────────────────────────
+   Karl, 4 Sept: "every time you marry it up with the seeking, it goes to
+   Dinas Mawddwy!!!"
+
+   That is the whole answer, and it was in plain sight for two sessions.
+
+   THERE ARE TWO ADDRESS LOOKUPS IN AURASENSE, NOT ONE.
+   The search box uses this one. The Seeking uses a completely separate one at
+   the foot of the page — and that one asks only for towns, cities and
+   regions, and never asks for a house number at all. It cannot land on a
+   door. It was never able to.
+
+   So seven attempts were spent perfecting the lookup that was already
+   working, while the one that was actually failing was never opened. Every
+   single observation across both sessions fits this and nothing else: with
+   the Seeking, wrong. Without it, right.
+
+   THE FIX IS NOT A BETTER FILTER. The finding is lifted out of the button and
+   given a name, and the Seeking is made to call the very same thing. There is
+   one search in Aurasense from here on. Anything ever fixed in it is fixed
+   everywhere at once, and the two can never drift apart again.
+   ═══════════════════════════════════════════════════════════════════════════ */
+async function asFind(q){
+  const out={best:null,list:[],ask:false,houseNo:''};
+  q=String(q||'').trim(); if(!q)return out;
   try{
     const cc=map.getCenter();
     /* ═══════════════════════════════════════════════════════════════════════
@@ -4263,7 +4287,46 @@ document.getElementById('sg').onclick=async()=>{
       return sc;
     };
 
-    const landOn=(f)=>{
+    const carriesAll=c=>{const pn=(c.place_name||'').toLowerCase();
+      return want.every(w=>pn.indexOf(w)>=0);};
+    const certain=f=>{
+      if(!f)return false;
+      if(!carriesAll(f))return false;
+      if(want.length<2&&!houseNo&&feats.length>1)return false;
+      return true;
+    };
+    /* Once the town has been found by its own exact name, ANY other town,
+       village or district is disqualified from being chosen outright. It may
+       still appear in a list a person taps, but neither the map nor the
+       Seeking can ever choose it. */
+    const wrongTown=c=>{
+      if(!town)return false;
+      const ty=(c.place_type&&c.place_type[0])||'';
+      if(['place','locality','district','region','country','neighborhood'].indexOf(ty)<0)return false;
+      return String(c.text||'').toLowerCase()!==String(town.text||'').toLowerCase();
+    };
+    feats.sort((a,b)=>(scoreOf(b)-(wrongTown(b)?200:0))-(scoreOf(a)-(wrongTown(a)?200:0)));
+    const solid=feats.filter(c=>carriesAll(c)&&!wrongTown(c));
+    /* The door itself, named exactly. Nothing outranks it and nothing asks
+       about it — this is the path that worked for months. */
+    const exact=solid.filter(hasNo);
+
+    out.houseNo=houseNo;
+    out.list=feats.slice(0,6);
+    if(exact.length)              out.best=exact[0];
+    else if(!want.length){ if(feats.length<=1)out.best=feats[0]||null; else out.ask=true; }
+    else if(solid.length===1)     out.best=solid[0];
+    else if(solid.length>1){ if(certain(solid[0]))out.best=solid[0];
+                             else { out.ask=true; out.list=solid.slice(0,6); } }
+    else if(feats.length)         out.ask=true;
+  }catch(e){}
+  return out;
+}
+/* lent outward so the Seeking, which lives outside this sealed block, finds
+   the same doors the search box does */
+try{ window.AS_FIND=asFind; }catch(e){}
+
+function asLandOn(f,houseNo){
       if(!f){showMsg('Location not found \u2014 try a postcode, town, or full address');return;}
       const t=(f.place_type&&f.place_type[0])||'';
       let name=f.text||String(f.place_name||'').split(',')[0];
@@ -4284,11 +4347,11 @@ document.getElementById('sg').onclick=async()=>{
         flyProgrammatic({center:f.center,zoom:z,duration:4200,offset:mob?[0,Math.round(window.innerHeight*0.17)]:[-60,-80]});
       }
       if(t==='address'||t==='poi'||t==='street') dropSearchMarker(f.center,name);
-      if(houseNo&&!hasNo(f))
+      if(houseNo&&String(f.address||'').toLowerCase()!==String(houseNo).toLowerCase())
         showMsg('That exact number is not in the map \u2014 this is '+name+', which is as close as it can honestly place you');
       else showMsg('Sensing the aura of '+name+'...');
     };
-    const showChoices=(list,go,unsure)=>{
+function asShowChoices(list,go,unsure){
       let el=document.getElementById('as-pick');
       if(!el){el=document.createElement('div');el.id='as-pick';document.body.appendChild(el);}
       const esc=x=>String(x||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
@@ -4302,45 +4365,17 @@ document.getElementById('sg').onclick=async()=>{
       requestAnimationFrame(()=>el.classList.add('lit'));
       el.querySelectorAll('.ap-r').forEach(b=>{b.onclick=()=>{hide();go(list[+b.dataset.i]);};});
       el.querySelector('.ap-x').onclick=hide;
-    };
+    }
 
-    /* ── Who decides ──────────────────────────────────────────────────
-       It only ever ASKS where there is real doubt. A door whose number and
-       every word match is not doubt, and is never made into a question.  */
-    const carriesAll=c=>{const pn=(c.place_name||'').toLowerCase();
-      return want.every(w=>pn.indexOf(w)>=0);};
-    const certain=f=>{
-      if(!f)return false;
-      if(!carriesAll(f))return false;
-      if(want.length<2&&!houseNo&&feats.length>1)return false;
-      return true;
-    };
-    /* ── Belt and braces on the wrong Dinas ────────────────────────────
-       Once the town has been found by its own exact name, ANY other town,
-       village or district is disqualified from being flown to outright. It
-       may still appear in a list a person taps, but the map can never choose
-       it. This sits on top of the every-word rule, not instead of it, so two
-       independent things now have to fail before a wrong town can be reached
-       — and neither of them can fail quietly.                            */
-    const wrongTown=c=>{
-      if(!town)return false;
-      const ty=(c.place_type&&c.place_type[0])||'';
-      if(['place','locality','district','region','country','neighborhood'].indexOf(ty)<0)return false;
-      return String(c.text||'').toLowerCase()!==String(town.text||'').toLowerCase();
-    };
-    feats.sort((a,b)=>(scoreOf(b)-(wrongTown(b)?200:0))-(scoreOf(a)-(wrongTown(a)?200:0)));
-    const solid=feats.filter(c=>carriesAll(c)&&!wrongTown(c));
-    /* The door itself, named exactly. Nothing outranks it and nothing asks
-       about it — this is the path that worked for months. */
-    const exact=solid.filter(hasNo);
-
-    if(exact.length)                 landOn(exact[0]);
-    else if(!want.length){ if(feats.length<=1)landOn(feats[0]); else showChoices(feats.slice(0,6),landOn); }
-    else if(solid.length===1)        landOn(solid[0]);
-    else if(solid.length>1){ if(certain(solid[0]))landOn(solid[0]); else showChoices(solid.slice(0,6),landOn); }
-    else if(feats.length)            showChoices(feats.slice(0,6),landOn,true);
+document.getElementById('sg').onclick=async()=>{
+  const q=document.getElementById('si').value.trim();if(!q)return;
+  showMsg('Sensing the aura of '+q+'...');
+  try{
+    const r=await asFind(q);
+    if(r.best)            asLandOn(r.best,r.houseNo);
+    else if(r.list.length)asShowChoices(r.list,f=>asLandOn(f,r.houseNo),!r.best&&r.ask);
     else showMsg('Location not found \u2014 try a postcode, town, or full address');
-  }catch(e){showMsg('Search unavailable — try again shortly');}
+  }catch(e){showMsg('Search unavailable \u2014 try again shortly');}
 };
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
 
@@ -8869,6 +8904,22 @@ try{
     const raw=String(where||'').trim();
     const m=raw.match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
     if(m)return {lat:parseFloat(m[1]),lng:parseFloat(m[2]),kind:'point',name:raw};
+
+    /* ═══ 4 Sep 2026 · THE SEEKING NOW ASKS THE SAME QUESTION ═══════════
+       This lookup only ever asked for towns, cities and regions. It could not
+       land on a door because it never asked for one — which is why naming a
+       house through the Seeking always arrived at a town, and often the wrong
+       town. It now asks the search box's own question first, and only falls
+       back to what follows if that finds nothing at all.                  */
+    try{
+      if(typeof window.AS_FIND==='function'){
+        const r=await window.AS_FIND(raw);
+        const f0=(r&&(r.best||(r.list&&r.list[0])))||null;
+        if(f0&&f0.center)return {lat:f0.center[1],lng:f0.center[0],
+          kind:(f0.place_type&&f0.place_type[0])||'place',
+          name:f0.text||raw, full:f0.place_name||raw};
+      }
+    }catch(e){}
 
     const parts=raw.split(',').map(function(x){return x.trim();}).filter(Boolean);
     const first=(parts[0]||'').toLowerCase();
