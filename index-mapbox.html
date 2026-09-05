@@ -983,7 +983,7 @@ body.ma-incloud .as-rail{display:none!important}
   justify-content:center;flex-wrap:wrap;gap:11px;padding:0 18px}
 #ma-cloud-doors.on{display:flex}
 .macd{padding:9px 15px;border-radius:15px;cursor:pointer;font-family:inherit;text-align:left;
-  border:1px solid rgba(120,74,50,.3);background:rgba(255,246,232,.5);
+  border:1px solid rgba(120,74,50,.36);background:rgba(255,247,235,.88);
   -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
   transition:background .22s,border-color .22s,transform .22s}
 .macd b{display:block;font-size:13px;font-weight:400;color:#40230f;letter-spacing:.02em}
@@ -995,8 +995,11 @@ body.ma-incloud .as-rail{display:none!important}
   display:none;flex-direction:column;gap:7px;width:min(360px,86vw);
   opacity:0;transition:opacity .4s ease}
 #ma-cloud-items.on{display:flex;opacity:1}
+/* 4 Sep - at two-thirds opacity the aura and the sense names read straight
+   through the cards and neither could be read. Words a person must act on are
+   never decoration. */
 .maci{padding:11px 16px;border-radius:14px;cursor:pointer;font-family:inherit;text-align:left;
-  border:1px solid rgba(120,74,50,.26);background:rgba(255,248,238,.66);
+  border:1px solid rgba(120,74,50,.34);background:rgba(255,249,240,.93);
   -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);transition:background .2s,border-color .2s}
 .maci b{display:block;font-size:13.5px;font-weight:400;color:#3b1f0d;letter-spacing:.015em}
 .maci i{display:block;font-style:normal;font-size:11px;color:#8a6244;margin-top:2px}
@@ -1865,7 +1868,7 @@ window.AS_SEEK_ALWAYS=true;
       <button class="tab" data-i="4"><span class="tab-orb" id="orb4"></span>World</button>
     </div>
     <div id="search-box">
-      <input id="si" maxlength="120" placeholder="Find a place to sense…"/>
+      <input id="si" maxlength="120" placeholder="Street, town, postcode, or a place by name"/>
       <button id="sg">Go</button>
     </div>
   </div>
@@ -1920,10 +1923,10 @@ window.AS_SEEK_ALWAYS=true;
   <button id="mobile-offer">✦ Offer an aurasense</button>
   <div id="place-prompt">
     <div id="pp-title">Search for a location to place an aurasense</div>
-    <div id="pp-row"><input id="pp-input" maxlength="120" placeholder="Street, town, postcode, country..."/><button id="pp-go">Go</button></div>
+    <div id="pp-row"><input id="pp-input" maxlength="120" placeholder="Street, town, postcode, or a place by name"/><button id="pp-go">Go</button></div>
     <button id="pp-select">…or select a spot on the map</button>
   </div>
-  <div id="place-mini"><input id="pm-input" placeholder="Search a location..."/><button id="pm-go">🔍</button></div>
+  <div id="place-mini"><input id="pm-input" placeholder="Street, town, postcode, or a place by name"/><button id="pm-go">🔍</button></div>
   <div id="explore-btn"><button id="ebtn">✦ Read the aura of this place</button></div>
   <div id="explore-panel">
     <div class="ep-title">How would you like to read this aura?</div>
@@ -1979,7 +1982,7 @@ window.AS_SEEK_ALWAYS=true;
         <div id="pi">
       <div id="offer-locate">
         <div class="ol-label">Where would you like to offer your aurasense?</div>
-        <div class="ol-row"><input id="ol-input" type="text" maxlength="120" placeholder="Search a place…" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
+        <div class="ol-row"><input id="ol-input" type="text" maxlength="120" placeholder="Street, town, postcode, or a place by name" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
         <div class="ol-hint" id="ol-hint">…or tap a spot on the map</div>
       </div>
       <div id="offer-confirm"></div>
@@ -2123,7 +2126,7 @@ window.AS_SEEK_ALWAYS=true;
       <button class="mj-i" data-mj="soul" title="Five gates, deeper questions — the strongest colours come from here">Soul Search</button>
       <button class="mj-i" data-mj="life" title="Tell your story in your own words; it becomes lasting light">Begin your life story</button>
       <button class="mj-i" data-mj="traj" title="Where your current path leads — and what shifts it. Readings, never predictions">Conscious Trajectory</button>
-      <button class="mj-i" data-mj="notify" title="Choose exactly what may reach you, and what may not">◉ What reaches you</button>
+      <button class="mj-i" data-mj="notify" title="Choose exactly what Aurasense may tell you, and what it may not">◉ What Aurasense tells you</button>
       <div class="mj-sep"></div>
       <button class="mj-i" data-mj="alpha" title="The living symbols — words made of light">✧ Alphasense symbols</button>
       <button class="mj-i" data-mj="bonds" title="Two symbols meet; a third meaning is born at the junction">✧ Alphabonds</button>
@@ -2201,11 +2204,11 @@ window.AS_SEEK_ALWAYS=true;
   <button id="rg-back">← Return to the map</button>
   <div id="rg-inner">
     <div id="rg-title">Become an Aurasenser</div>
-    <div id="rg-intro">Your aura is yours. Share only what you wish — every field below is a gift, never a requirement, and Aurasense holds whatever you give in confidence.</div>
+    <div id="rg-intro">A name and an email are all that is asked. Everything else on this page is yours to give or to keep — and whatever you give is held in confidence, shown to no one unless you choose it.</div>
 
     <div class="rg-card">
-      <div class="rg-h">Your Aurasenser name <span class="rg-req">the one thing we ask</span></div>
-      <div class="rg-sub">This handle is the only name ever shown on Aurasense. Choose something that feels like you.</div>
+      <div class="rg-h">Your Aurasenser name <span class="rg-req">needed · the name others see</span></div>
+      <div class="rg-sub">This is the only name ever shown on Aurasense. Choose something that feels like you.</div>
       <div class="rg-row">
         <input id="rg-handle" class="rg-in" type="text" placeholder="e.g. QuietTide" maxlength="24" autocomplete="off">
         <button id="rg-suggest" class="rg-mini">Suggest a name</button>
@@ -2215,7 +2218,7 @@ window.AS_SEEK_ALWAYS=true;
 
     <div class="rg-card">
       <div class="rg-h">Your real name <span class="rg-opt">optional</span></div>
-      <div class="rg-sub">Appreciated — it helps us care for you — but Aurasense will never reveal it to anyone. It stays with us, never shown beside your auras.</div>
+      <div class="rg-sub">Never shown beside your auras and never revealed to anyone. It does one thing only: it lets us address you properly if we ever write to you.</div>
       <input id="rg-realname" class="rg-in" type="text" placeholder="Only if you would like to" maxlength="60" autocomplete="off">
     </div>
 
@@ -2223,11 +2226,11 @@ window.AS_SEEK_ALWAYS=true;
       <div class="rg-h">Your street or address <span class="rg-opt">optional · recommended</span> <span class="rg-info" id="rg-addr-info">&#9432;<span class="rg-tip">Sharing your street lets your own auras settle exactly where you feel them. It only ever places auras — never your name. No one learns who you are through Aurasense unless you tell them in a message, or you already share your name publicly and choose to post an aura.</span></span></div>
       <div class="rg-sub">The more precisely you share, the more precisely your aura can rest on the map. Your street alone is plenty.</div>
       <input id="rg-address" class="rg-in" type="text" placeholder="e.g. Maple Street, your town" maxlength="120" autocomplete="off">
-      <div class="rg-note" style="margin-top:6px;color:#a99bd6">The Aurasense map will reset to this position when you select “My Locality” under the input box.</div>
+      <div class="rg-note" style="margin-top:6px;color:#a99bd6">On the map, “My Locality” will always bring you back here.</div>
     </div>
 
     <div class="rg-card">
-      <div class="rg-h">Keep this light beyond today <span class="rg-req">asked, so your aura endures</span></div>
+      <div class="rg-h">Keep this light beyond today <span class="rg-req">needed · an email, no password</span></div>
       <div class="rg-sub">Wander as long as you like without any of this. But to <i>become</i> an Aurasenser — to have an aura that endures — we ask for an email. A six-digit code follows; no password, ever. Your email is never shown anywhere and never joins your auras; it only lets this same light return to you on any device.</div>
       <div class="rg-row">
         <input id="rg-email" class="rg-in" type="email" placeholder="you@somewhere" maxlength="120" autocomplete="email">
@@ -4245,11 +4248,19 @@ async function asFind(q){
       :(townWords&&toks.length>townWords?toks.slice(0,toks.length-townWords).join(' '):q);
 
     /* ── Everything asked at once ─────────────────────────────────────── */
+    /* 4 Sep 2026 - Karl named "Foothills Hospital, Calgary" in the Seeking and
+       landed at a school nearby. Nothing here had ever asked for a NAMED PLACE
+       - only for towns and for house numbers. A hospital, a school, a park, a
+       station: these are the things a person is most likely to be standing in
+       when they have something to offer, and none of them were being looked
+       for. They are now asked for first. */
     const jobs=[
       grab(uNew(q,near+box),true),
       grab(uNew(q,near),true),
       grab(uOld(q,'&autocomplete=true'+near)),
-      grab(uOld(q,'&autocomplete=false'+near))
+      grab(uOld(q,'&autocomplete=false'+near)),
+      grab(uOld(q,'&autocomplete=true&types=poi'+near+box)),
+      grab(uNew(q,'&types=poi,street,address'+near+box),true)
     ];
     if(looksLikeAddress){
       jobs.push(grab(uNew(q,'&types=address,street'+near+box),true));
@@ -4271,8 +4282,28 @@ async function asFind(q){
        here any more, which is where the last five attempts lost it.      */
     const inFence=c=>!!(fence&&c.center&&c.center[0]>=fence[0]&&c.center[0]<=fence[2]
                                       &&c.center[1]>=fence[1]&&c.center[1]<=fence[3]);
-    const hitWords=c=>{const pn=(c.place_name||'').toLowerCase();
-      return want.filter(w=>pn.indexOf(w)>=0).length;};
+    /* Mapbox knows the hospital as "Foothills Medical Centre". A person knows
+       it as a hospital. So a word naming a KIND of place is allowed to be
+       answered by the place actually being one of those, rather than only by
+       the letters appearing in its name. Nothing is invented - the kind comes
+       from the place's own record. */
+    const KINDW=['hospital','school','park','station','church','library','clinic',
+                 'college','university','museum','centre','center','airport','hall',
+                 'cathedral','mosque','temple','stadium','market','gallery','theatre',
+                 'theater','cemetery','beach','bridge','lake','river','mountain'];
+    const kindOf=c=>{
+      var k='';
+      try{ k=((c.properties&&(c.properties.category||c.properties.poi_category))||'')+''; }catch(e){}
+      try{ if(c.poi_category)k+=' '+[].concat(c.poi_category).join(' '); }catch(e){}
+      return (k+' '+((c.place_type&&c.place_type[0])||'')).toLowerCase();
+    };
+    const carriedBy=(c,w)=>{
+      const pn=(c.place_name||'').toLowerCase();
+      if(pn.indexOf(w)>=0)return true;
+      if(KINDW.indexOf(w)>=0&&kindOf(c).indexOf(w)>=0)return true;
+      return false;
+    };
+    const hitWords=c=>want.filter(w=>carriedBy(c,w)).length;
     const hasNo=c=>!!(houseNo&&String(c.address||'').toLowerCase()===houseNo.toLowerCase());
     const scoreOf=c=>{
       const ty=(c.place_type&&c.place_type[0])||'';
@@ -4282,13 +4313,16 @@ async function asFind(q){
       if(looksLikeAddress&&ty==='address')sc+=8;
       if(looksLikeAddress&&ty==='street')sc+=4;
       if(looksLikeAddress&&ty==='poi')sc+=2;
+      /* a named place, named exactly - the strongest thing there is when no
+         house number was given */
+      if(!houseNo&&ty==='poi')sc+=10;
+      if(!houseNo&&String(c.text||'').toLowerCase()===String(q).toLowerCase().split(',')[0].trim())sc+=45;
       if(fence)sc+=inFence(c)?25:-25;
       if(typeof c.relevance==='number')sc+=c.relevance*4;
       return sc;
     };
 
-    const carriesAll=c=>{const pn=(c.place_name||'').toLowerCase();
-      return want.every(w=>pn.indexOf(w)>=0);};
+    const carriesAll=c=>want.every(w=>carriedBy(c,w));
     const certain=f=>{
       if(!f)return false;
       if(!carriesAll(f))return false;
@@ -5221,7 +5255,7 @@ function macDrawAura(ts){
   var W=innerWidth,H=innerHeight;
   macAx.clearRect(0,0,W,H);
   var cx=W/2, cy=H*0.40;   /* 3 Sep - lifted; the lights were reaching the buttons */
-  var base=Math.min(W,H)*0.27;   /* 3 Sep - was 0.30. Edge-to-edge left nothing to be seen against. */
+  var base=Math.min(W,H)*0.315;  /* 4 Sep - 0.27 left it small and lost in a very large cloud. */
   /* THE OPENING — the senses drift apart from where they already are. They never
      jump and the whole is never off screen, which is the one rule that keeps a
      cloud from becoming a place to get lost in. */
@@ -5281,13 +5315,20 @@ function macDrawAura(ts){
        five attempts at brightening this ended in cream. So the ground is drawn
        DOWN a little at the rim first - a soft well of shade the colour then
        rises out of. Nothing is blended; it is one more soft fill. */
-    var sg=macAx.createRadialGradient(G.px,G.py,bedR*0.26,G.px,G.py,bedR);
-    sg.addColorStop(0,   'rgba(118,94,142,0)');
-    sg.addColorStop(0.52,'rgba(118,94,142,'+(0.075*glow).toFixed(3)+')');
-    sg.addColorStop(0.80,'rgba(118,94,142,'+(0.052*glow).toFixed(3)+')');
-    sg.addColorStop(1,   'rgba(118,94,142,0)');
+    /* 4 Sep - this was set at 0.075 and might as well not have been there. The
+       agreed answer was always that THE CLOUD GIVES WAY BENEATH THE AURA, and
+       it was applied so timidly that nothing gave way at all. A real dusk now
+       opens under the light, wide and edgeless, and the colour rises out of
+       it. Nothing is blended and nothing snaps; it is one more soft fill. */
+    var wellR=bedR*1.55;
+    var sg=macAx.createRadialGradient(G.px,G.py,wellR*0.06,G.px,G.py,wellR);
+    sg.addColorStop(0,   'rgba(96,76,124,'+(0.235*glow).toFixed(3)+')');
+    sg.addColorStop(0.34,'rgba(96,76,124,'+(0.205*glow).toFixed(3)+')');
+    sg.addColorStop(0.62,'rgba(101,82,126,'+(0.120*glow).toFixed(3)+')');
+    sg.addColorStop(0.84,'rgba(106,88,128,'+(0.042*glow).toFixed(3)+')');
+    sg.addColorStop(1,   'rgba(110,92,130,0)');
     macAx.fillStyle=sg;
-    macBlob(macAx,G.px,G.py,bedR,tt,G.li*1.9,1); macAx.fill();
+    macBlob(macAx,G.px,G.py,wellR,tt,G.li*1.9,1); macAx.fill();
     /* then the clearing - brighter than before, and smaller, so it sits
        directly under the colour instead of spreading into the cloud */
     var bR=bedR*0.74;
@@ -5308,7 +5349,7 @@ function macDrawAura(ts){
        The core was corrected on 3 September for exactly this reason and this
        half was missed. One gradient now. No steps anywhere. */
     var R=spread*1.46;
-    var A=0.74*glow*lift; if(li>0&&macSpread<0.5)A*=0.82;
+    var A=0.92*glow*lift; if(li>0&&macSpread<0.5)A*=0.82;
     var cs=rgb[0]+','+rgb[1]+','+rgb[2];
     var g2=macAx.createRadialGradient(px,py,0,px,py,R);
     g2.addColorStop(0,   'rgba('+cs+','+Math.min(0.96,A       ).toFixed(3)+')');
@@ -5476,27 +5517,27 @@ addEventListener('resize',function(){
    did. The old page is no longer travelled to; it is only borrowed from.    */
 var MAC_DOORS=[
  {t:'Add to your aura',s:'more colour, from you',items:[
-   {l:'Set up your profile',p:'Your name-of-light and your ground',sel:'.mj-i[data-mj="profile"]'},
+   {l:'Set up your profile',p:'The name you go by here, and where you are',sel:'.mj-i[data-mj="profile"]'},
    {l:'Upload a selfie here',p:'It belongs in the middle of your aura, not in a list',sel:'#ma-selfie-btn',face:1},
    {l:'Answer gentle questions',p:'Shape your aura',sel:'.mj-i[data-mj="quest"]'},
-   {l:'Go deeper — five gates',p:'Soul Search',sel:'.mj-i[data-mj="soul"]'},
+   {l:'Go deeper, in five steps',p:'Soul Search',sel:'.mj-i[data-mj="soul"]'},
    {l:'Tell your story',p:'Your life story',sel:'.mj-i[data-mj="life"]'}]},
  {t:'Read your aura',s:'what it is telling you',items:[
    {l:'See yourself reflected',p:'The Mirror',sel:'#mr-open'},
    {l:'Learn to read it',p:'How to read My Aura',sel:'#ra-open'},
    {l:'See where this path leads',p:'Conscious Trajectory',sel:'.mj-i[data-mj="traj"]'}]},
- {t:'Send from your aura',s:'outward, on your terms',items:[
+ {t:'Send from your aura',s:'what leaves, and what may arrive',items:[
    {l:'Send someone a card',p:'SenseShare',sel:'#ss-open'},
    {l:'Read what a message carries',p:'The Felt-Context Lantern',sel:'#fc-open'},
-   {l:'Choose what reaches you',p:'What reaches you',sel:'.mj-i[data-mj="notify"]'},
-   {l:'Save your aura',p:'Keep my light',sel:'#gp-open'}]},
+   {l:'Choose what Aurasense tells you',p:'Turn any of it off, any time',sel:'.mj-i[data-mj="notify"]'},
+   {l:'Save your aura',p:'Download a copy to keep',sel:'#gp-open'}]},
  {t:'Learn the symbols',s:'words made of light',items:[
    {l:'Meet the symbols',p:'Alphasense',sel:'.mj-i[data-mj="alpha"]'},
    {l:'Join two symbols',p:'Alphabonds',sel:'.mj-i[data-mj="bonds"]'},
    {l:'Practise speaking',p:'Alphasense workshop',sel:'.mj-i[data-mj="work"]'}]},
  {t:'Practise noticing',s:'attention, as a skill',items:[
    {l:'Notice what repeats',p:'Synchronicity Weave',sel:'.mj-i[data-mj="sync"]'},
-   {l:'Sit with open questions',p:'The Openings',sel:'.mj-i[data-mj="openings"]'},
+   {l:'Take an open question',p:'The Openings',sel:'.mj-i[data-mj="openings"]'},
    {l:'Still the motion',p:'Calm mode',sel:'#calm-toggle'}]}
 ];
 var macDoorOpen=-1, macFaceHome=null;
@@ -5513,6 +5554,37 @@ function macBuildDoors(){
     d.appendChild(b);
   });
 }
+/* ═══ 4 Sep 2026 · THE DOORS AND THE LIST STOP GUESSING AT EACH OTHER ══════
+   Karl's photographs: the five doors sitting on top of the list, both readable
+   only in pieces.
+   The doors are pinned a fixed distance from the bottom AND they wrap onto
+   however many rows a given phone needs. The list is pinned a fixed PERCENTAGE
+   from the bottom, decided once, with no idea how tall the doors turned out to
+   be. So on a narrow screen the doors grow upward into a space the list already
+   believes is its own.
+   The same shape as every other fault this week: two things deciding one thing,
+   neither aware of the other. The list is now MEASURED against where the doors
+   really are, so they cannot overlap on any screen that exists. */
+function macFitItems(){
+  try{
+    var d=document.getElementById('ma-cloud-doors');
+    var it=document.getElementById('ma-cloud-items');
+    if(!d||!it)return;
+    if(!d.classList.contains('on')||!it.classList.contains('on')){
+      it.style.bottom=''; it.style.maxHeight=''; return; }
+    var host=d.offsetParent||document.getElementById('myaura-page')||document.body;
+    var hr=host.getBoundingClientRect(), dr=d.getBoundingClientRect();
+    var clear=Math.round(hr.bottom-dr.top)+16;      /* the doors' true top edge */
+    it.style.bottom=clear+'px';
+    /* and it must never run off the top either - the aura has to stay visible */
+    var room=Math.round(dr.top-hr.top-Math.max(150,hr.height*0.30));
+    it.style.maxHeight=Math.max(140,room)+'px';
+    it.style.overflowY='auto';
+    it.style.webkitOverflowScrolling='touch';
+  }catch(e){}
+}
+addEventListener('resize',function(){ try{macFitItems();}catch(e){} });
+addEventListener('orientationchange',function(){ setTimeout(function(){try{macFitItems();}catch(e){}},260); });
 function macOpenDoor(i){
   macDoorOpen=i;
   var d=document.getElementById('ma-cloud-doors'),box=document.getElementById('ma-cloud-items');
@@ -5520,7 +5592,7 @@ function macOpenDoor(i){
   Array.prototype.forEach.call(d.children,function(c,k){ c.classList.toggle('sel',k===i); });
   var wq=document.getElementById('ma-cloud-words');
   if(wq)wq.classList.toggle('hushed',i>=0);
-  if(i<0){ box.classList.remove('on'); box.innerHTML=''; return; }
+  if(i<0){ box.classList.remove('on'); box.innerHTML=''; try{macFitItems();}catch(e){} return; }
   box.innerHTML='';
   MAC_DOORS[i].items.forEach(function(it){
     var b=document.createElement('button');
@@ -5537,11 +5609,11 @@ function macOpenDoor(i){
       if(rest){
         /* say why, here, in the light — the old message flew past behind the cloud */
         var w=b.querySelector('.why');
-        var reason='This one wakes once the door before it has been walked through.';
+        var reason='This opens after the step before it. Take that one first and come back.';
         try{
           var reg=!!(myProfile&&myProfile.handle);
-          if(!reg)reason='This wakes once you have set up your profile — look under “Add to your aura”.';
-          else{ var pv=mjPrev(mk); if(pv&&pv[1])reason='This wakes after “'+pv[1]+'”.'; }
+          if(!reg)reason='Set up your profile first — it is the first item under “Add to your aura”.';
+          else{ var pv=mjPrev(mk); if(pv&&pv[1])reason='Do “'+pv[1]+'” first, then this one opens.'; }
         }catch(e){}
         if(w){ w.textContent=reason; b.classList.add('saywhy'); }
         return;
@@ -5567,6 +5639,8 @@ function macOpenDoor(i){
     box.appendChild(b);
   });
   box.classList.add('on');
+  try{macFitItems();}catch(e){}
+  requestAnimationFrame(function(){ try{macFitItems();}catch(e){} });
 }
 (function(){
   var thr=document.getElementById('ma-cloud-through');
@@ -8659,7 +8733,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp">Build 3 Sep 2026 · 66</div>
+<div id="build-stamp">Build 4 Sep 2026 · 79</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -8703,6 +8777,32 @@ try{
   try{ willSeek=(localStorage.getItem('as_seeking_seen')!=='1')||replay||!!window.AS_SEEK_ALWAYS; }catch(e){}
   function door(){
     var el=document.getElementById('as-land'); if(!el)return;
+    /* ═══ 4 Sep 2026 · NOTHING SPEAKS OVER SOMETHING ALREADY SPEAKING ═══════
+       Karl: "at one point there's three clashing over one another."
+       The witness line, the offering sheet and this door were each set on a
+       timer of its own, and not one of them knew the other two existed. The
+       same shape of fault as the two lookups and the two heights: a thing
+       decided in more than one place.
+       The door no longer counts seconds. It waits until the room is empty,
+       looks again every three-quarters of a second, and gives up quietly
+       after half a minute rather than ever forcing its way in.            */
+    var waited=0;
+    (function whenClear(){
+      var busy=false;
+      try{
+        var m=document.getElementById('pmsg');
+        if(m&&m.classList.contains('show'))busy=true;
+        var pn=document.getElementById('panel');
+        if(pn&&(pn.classList.contains('show-mobile')||pn.classList.contains('show')))busy=true;
+        var mp=document.getElementById('myaura-page');
+        if(mp&&mp.classList.contains('show'))busy=true;
+        var ov=document.getElementById('materialize');
+        if(ov&&ov.classList.contains('show'))busy=true;
+      }catch(e){}
+      if(busy&&waited<30000){ waited+=750; setTimeout(whenClear,750); return; }
+      show();
+    })();
+    function show(){
     el.classList.add('on');
     requestAnimationFrame(function(){ setTimeout(function(){ el.classList.add('lit'); },40); });
     el.addEventListener('click',function(e){
@@ -8714,6 +8814,7 @@ try{
       var b=document.getElementById('my-aura-btn')||document.getElementById('tab-my');
       if(b){ try{ b.click(); }catch(_){ } }
     });
+    }
   }
   function land(){
     if(fired)return; fired=true;
