@@ -305,14 +305,26 @@ body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #
    The edge is gone. What remains is a soft round breath of the sense's own
    colour with the words inside it, and it now waits for the light to land
    before it speaks. Nothing in Aurasense has a hard edge. This did. */
-#pmsg.witness{font-size:15.5px;line-height:1.62;padding:26px 30px;max-width:min(430px,84vw);
-  color:#fff;border:0;border-radius:50% / 42%;letter-spacing:.015em;
-  background:radial-gradient(ellipse at 50% 50%,
-      rgba(14,11,30,.93) 0%, rgba(14,11,30,.90) 46%,
-      rgba(14,11,30,.62) 72%, rgba(14,11,30,.22) 88%, rgba(14,11,30,0) 100%);
-  box-shadow:0 0 70px 26px var(--wc,rgba(167,139,250,.30));
-  text-shadow:0 0 18px var(--wc,rgba(196,181,253,.9)),0 0 40px rgba(0,0,0,.8);
-  animation:witnessBloom 2.2s cubic-bezier(.32,0,.2,1)}
+/* 6 Sep, second pass - Karl: "its own background with the message is also too
+   hard edged." It was: the dark went from nine-tenths solid to nothing across
+   the last quarter, which the eye reads as an edge however round it is.
+   Two things fix it and both were needed. The fade now runs across the WHOLE
+   shape instead of the last quarter, and there is far more empty room around
+   the words for it to happen in. A cloud has no border because it never
+   finishes anywhere - only thins until it has gone. */
+#pmsg.witness{font-size:15.5px;line-height:1.68;padding:58px 74px;
+  max-width:min(560px,94vw);box-sizing:border-box;
+  color:#fff;border:0;border-radius:50%;letter-spacing:.015em;
+  background:radial-gradient(ellipse 62% 58% at 50% 50%,
+      rgba(14,11,30,.90) 0%,  rgba(14,11,30,.86) 22%,
+      rgba(14,11,30,.74) 40%, rgba(14,11,30,.55) 55%,
+      rgba(14,11,30,.36) 68%, rgba(14,11,30,.20) 79%,
+      rgba(14,11,30,.09) 88%, rgba(14,11,30,.03) 95%,
+      rgba(14,11,30,0)   100%);
+  box-shadow:none;
+  text-shadow:0 0 20px var(--wc,rgba(196,181,253,.95)),
+              0 0 12px rgba(0,0,0,.95),0 0 44px rgba(0,0,0,.9);
+  animation:witnessBloom 2.4s cubic-bezier(.32,0,.2,1)}
 @keyframes witnessBloom{0%{transform:translateX(-50%) scale(.86);filter:brightness(.6);opacity:0}45%{opacity:1}62%{transform:translateX(-50%) scale(1.03);filter:brightness(1.16)}100%{transform:translateX(-50%) scale(1);filter:brightness(1);opacity:1}}
 /* THE NEW SENSE DOOR — the belly of the table, as a chip in the picker */
 .sc-new{border-style:dashed!important;border-color:rgba(233,221,255,.6)!important;color:#f2ecff!important;background:rgba(233,221,255,.07)!important}
@@ -1635,8 +1647,19 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
 #mem-priv-wrap.show{display:block}
 .mem-priv{background:rgba(232,183,107,.08);border:0.5px solid rgba(232,183,107,.35);color:#e8c794;font-size:11px;padding:6px 12px;border-radius:14px;cursor:pointer}
 .mem-priv.priv{background:rgba(120,110,150,.18);border-color:rgba(167,139,250,.4);color:#cbbff0}
-#as-cloudrim{position:fixed;inset:0;pointer-events:none;z-index:3;opacity:1;
-  transition:opacity 2.4s cubic-bezier(.4,0,.2,1);will-change:opacity}
+/* 6 Sep 2026 - Karl: "the cloud in the seeking, I would like to be the one
+   that is seen throughout... the cloud that you have throughout the map needs
+   to be seen to be moving, its movement isn't visible... it also needs a
+   softer fluffier edge and blend into the image of the map."
+   All three come from the same mistake: what was here was a FLAT COLOUR WASH
+   pretending to be cloud. A wash has no substance, so it cannot drift and it
+   cannot have a soft edge - only a shape.
+   It is now the actual cloud. The same noise, the same palette, the same
+   drift as the Seeking's own sky - painted small and let up to full size, so
+   its edges are as soft as the browser can make them. */
+#as-cloudrim{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;
+  z-index:3;opacity:1;transition:opacity 2.4s cubic-bezier(.4,0,.2,1);
+  will-change:opacity;image-rendering:auto}
 #as-cloudrim.as-open{opacity:.05}
 #as-cloudrim.as-away{opacity:0;transition:opacity .7s ease}
 /* World Auras — living event glows on the map itself */
@@ -1886,7 +1909,7 @@ window.AS_SEEK_ALWAYS=true;
          ability to predict it, and that lands hardest on exactly the people
          this project is built for.
      ?rim=0 in the address turns it off entirely. -->
-<div id="as-cloudrim"></div>
+<canvas id="as-cloudrim"></canvas>
 <canvas id="ac"></canvas>
 <div id="ui">
   <div id="hdr1">
@@ -4552,39 +4575,90 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
 (function(){
   var el=document.getElementById('as-cloudrim'); if(!el)return;
   if(/[?&]rim=0/.test(location.search)){ el.remove(); return; }
+  var cx=el.getContext('2d'); if(!cx)return;
 
-  /* Karl's ladder: world, then +3% at nation, +2% at region, +1% at town, and
-     street holds the town level. Density rises with it, because two percent of
-     a phone's width is a few pixels and a step nobody can see says nothing.
-     These are first numbers, set to be tuned by eye. */
-  /* Karl: "the aura cloud will have to be more circular, and occupy more
-     screen, currently looks elongated oval and not much at all is visible."
-     An ellipse stretches to fit the box it is in, so a wide screen made a wide
-     oval. A CIRCLE inscribed in the screen keeps its shape on any device, and
-     everything outside it becomes cloud - which is what "circled by the cloud"
-     actually looks like. Stepped up, not thrown open. Still an increment. */
+  /* Karl's ladder: how far in from the edge the cloud reaches at each height.
+     The stars stay visible at world level; nothing is ever smothered. */
   var LEV=[
-    {to:3.2,  rim:14, a:.30},   /* world  - the stars stay visible */
-    {to:5.8,  rim:18, a:.40},   /* nation */
-    {to:8.6,  rim:21, a:.48},   /* region */
-    {to:12.4, rim:23, a:.55},   /* town   */
-    {to:99,   rim:23, a:.55}    /* street - holds the town level */
+    {to:3.2,  rim:16, a:.62},
+    {to:5.8,  rim:21, a:.72},
+    {to:8.6,  rim:25, a:.80},
+    {to:12.4, rim:28, a:.86},
+    {to:99,   rim:28, a:.86}
   ];
-  var last='';
-  function paint(){
+  var BW=0,BH=0,den=null,img=null,T=0,last=performance.now(),next=0;
+  var wantRim=16,wantA=.62,haveRim=16,haveA=.62;
+
+  function size(){
+    var W=Math.max(1,innerWidth), H=Math.max(1,innerHeight);
+    /* deliberately tiny. The browser grows it back to full size, and that
+       growing IS the softness - no edge painted this small can be hard once
+       it has been stretched across a screen. */
+    BW=104; BH=Math.max(52,Math.round(104*H/W));
+    el.width=BW; el.height=BH;
+    den=new Float32Array(BW*BH);
+    img=cx.createImageData(BW,BH);
+  }
+
+  function paint(ms){
+    if(!den)size();
+    var P=MAC_PAL, oct=4, units=90/38, warp=0.34, light=0.34;
+    if(!macReduced())T+=0.0011*Math.min(60,ms-last);   /* the drift, made visible */
+    last=ms;
+    haveRim+=(wantRim-haveRim)*0.07;                   /* eased into, never jumped to */
+    haveA  +=(wantA  -haveA  )*0.07;
+    var inner=1-haveRim/50, span=Math.max(0.12,1.45-inner);
+    var x,y,i;
+    for(y=0;y<BH;y++){
+      for(x=0;x<BW;x++){
+        var px=(x/BH)*units, py=(y/BH)*units;
+        var m1=macFBM(px,py,T*0.09,oct);
+        var m2=macFBM(px*1.87+m1*warp*6, py*1.87-m1*warp*6, T*0.14+37.4, oct);
+        var m=m1*(0.42+0.58*m2)*1.62;
+        var e=(m-0.26)*2.05; if(e<0)e=0; else if(e>1)e=1;
+        den[y*BW+x]=e;
+      }
+    }
+    var d=img.data;
+    for(y=0;y<BH;y++){
+      var yb=y/(BH-1), uy=(yb-0.5)*2;
+      for(x=0;x<BW;x++){
+        i=y*BW+x;
+        var ux=(x/(BW-1)-0.5)*2;
+        var q=Math.sqrt(ux*ux+uy*uy);
+        var msk=(q-inner)/span; if(msk<0)msk=0; else if(msk>1)msk=1;
+        msk=msk*msk*(3-2*msk);
+        var c=den[i];
+        var sx=x>1?2:0, ex=x<BW-2?2:0, sy=y>1?2:0, ey=y<BH-2?2:0;
+        var slope=((den[i-sx]-den[i+ex])+(den[i-sy*BW]-den[i+ey*BW]))*0.5;
+        var sh=1+slope*light*1.7; if(sh<0.68)sh=0.68; else if(sh>1.34)sh=1.34;
+        var lp=Math.max(0,slope)*light*1.3; if(lp>0.85)lp=0.85;
+        var cr=P.cloud[0]*sh+(P.lit[0]-P.cloud[0])*lp;
+        var cg=P.cloud[1]*sh+(P.lit[1]-P.cloud[1])*lp;
+        var cb=P.cloud[2]*sh+(P.lit[2]-P.cloud[2])*lp;
+        var sr=P.skyTop[0]+(P.skyBot[0]-P.skyTop[0])*yb;
+        var sg=P.skyTop[1]+(P.skyBot[1]-P.skyTop[1])*yb;
+        var sb=P.skyTop[2]+(P.skyBot[2]-P.skyTop[2])*yb;
+        var k=c*c*(3-2*c), o=i*4;
+        d[o]  =sr+(cr-sr)*k;
+        d[o+1]=sg+(cg-sg)*k;
+        d[o+2]=sb+(cb-sb)*k;
+        /* THE WHOLE ANSWER TO "BLEND INTO THE MAP": it is only ever as solid as
+           the cloud itself. Where the cloud thins, the map shows THROUGH it
+           rather than beside it. */
+        d[o+3]=Math.round(255*haveA*msk*(0.30+0.70*k));
+      }
+    }
+    cx.putImageData(img,0,0);
+  }
+
+  function level(){
     try{
       var z=map.getZoom(), L=LEV[LEV.length-1];
       for(var i=0;i<LEV.length;i++){ if(z<LEV[i].to){ L=LEV[i]; break; } }
-      var inn=100-L.rim;
-      var g='radial-gradient(circle closest-side at 50% 50%,'
-        +' rgba(255,247,238,0) '+Math.max(0,inn-9)+'%,'
-        +' rgba(255,247,238,'+(L.a*0.34).toFixed(3)+') '+Math.max(0,inn-3)+'%,'
-        +' rgba(255,247,238,'+(L.a*0.72).toFixed(3)+') '+inn+'%,'
-        +' rgba(255,250,244,'+L.a.toFixed(3)+') 100%)';
-      if(g!==last){ el.style.background=g; last=g; }
+      wantRim=L.rim; wantA=L.a;
     }catch(e){}
   }
-  /* the rim belongs to the map. It has no business over My Aura or the Seeking. */
   function elsewhere(){
     try{
       if(document.body.classList.contains('seeking'))return true;
@@ -4598,24 +4672,24 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
   var held=0;
   function open(){ held++; el.classList.add('as-open'); }
   function close(){ held=Math.max(0,held-1); if(!held)el.classList.remove('as-open'); }
-  /* only a real hand opens it - a flight the map takes on its own must keep the
-     rim on, because that flight IS the ladder being shown */
   function byHand(fn){ return function(e){ if(e&&e.originalEvent)fn(); }; }
 
+  function loop(ms){
+    requestAnimationFrame(loop);
+    if(ms<next)return;
+    next=ms+62;                       /* ~16 a second: slow drift, plainly moving */
+    if(el.classList.contains('as-away'))return;
+    level(); paint(ms);
+  }
+
   try{
-    map.on('zoom',   function(){ paint(); });
-    map.on('move',   function(){ place(); });
-    map.on('dragstart', byHand(open));
-    map.on('dragend',   byHand(close));
-    map.on('rotatestart', byHand(open));
-    map.on('rotateend',   byHand(close));
-    map.on('pitchstart',  byHand(open));
-    map.on('pitchend',    byHand(close));
-    map.on('zoomstart', byHand(open));
-    map.on('zoomend',   byHand(function(){ close(); paint(); }));
-    map.on('load', function(){ paint(); place(); });
+    map.on('zoom',level);
+    map.on('move',place);
+    map.on('dragstart',byHand(open));   map.on('dragend',byHand(close));
+    map.on('rotatestart',byHand(open)); map.on('rotateend',byHand(close));
+    map.on('pitchstart',byHand(open));  map.on('pitchend',byHand(close));
+    map.on('zoomstart',byHand(open));   map.on('zoomend',byHand(function(){close();level();}));
   }catch(e){}
-  /* a hand on the map opens it even before anything has moved */
   try{
     var mp=document.getElementById('map');
     if(mp){
@@ -4624,9 +4698,10 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
       addEventListener('pointercancel',close,{passive:true});
     }
   }catch(e){}
-  addEventListener('resize',paint);
+  addEventListener('resize',size);
   setInterval(place,900);
-  paint(); place();
+  size(); level(); place();
+  requestAnimationFrame(loop);
 })();
 
 const socTip=document.getElementById('soc-tip-el');
@@ -9003,7 +9078,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 86 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 87 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
