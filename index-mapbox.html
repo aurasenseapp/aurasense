@@ -3960,7 +3960,7 @@ function submit(lat,lng,text){
   } else {
     setTimeout(()=>{let _at=null;try{const _pp=map.project([lng,lat]);_at={x:_pp.x,y:_pp.y};}catch(e){}
       const _wl=witnessLine(sid,lat,lng,s.label);
-      if(_wl)witnessShow(_wl,8200,s.color,_at);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)],null,null,null,null,_at);},3200);
+      if(_wl)witnessShow(_wl,8200,s.color,_at);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)],null,null,null,null,_at);},5100);
   }
 }
 
@@ -4619,7 +4619,8 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
     last=ms;
     haveRim+=(wantRim-haveRim)*0.07;                   /* eased into, never jumped to */
     haveA  +=(wantA  -haveA  )*0.07;
-    var inner=1-haveRim/50, span=Math.max(0.12,1.45-inner);
+    var inner=1-haveRim/50, span=Math.max(0.12,1.52-inner);
+    var STRETCH=Math.min(1.55,Math.max(1,(BW/BH)*0.66));
     var x,y,i;
     for(y=0;y<BH;y++){
       for(x=0;x<BW;x++){
@@ -4634,10 +4635,20 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
     var d=img.data;
     for(y=0;y<BH;y++){
       var yb=y/(BH-1), uy=(yb-0.5)*2;
+      /* nothing above uses uy directly any more; the arch is built below */
       for(x=0;x<BW;x++){
         i=y*BW+x;
-        var ux=(x/(BW-1)-0.5)*2;
-        var q=Math.sqrt(ux*ux+uy*uy);
+        /* 6 Sep, third pass - Karl: "sit lower at the top to form more of a
+           circular shape so we can put the menu options from my aura to world
+           view in the arch of the upper portion of the cloud edge."
+           Two moves. The clear middle is dropped BELOW centre, so the cloud
+           comes further down from the top and leaves a true arch across it.
+           And on a wide screen horizontal distance is made to count for more,
+           so the arch curves as a circle would rather than stretching flat
+           with the window. A phone is left alone - it is already tall. */
+        var ux=(x/(BW-1)-0.5)*2*STRETCH;
+        var uq=uy-0.20;
+        var q=Math.sqrt(ux*ux+uq*uq);
         var msk=(q-inner)/span; if(msk<0)msk=0; else if(msk>1)msk=1;
         msk=msk*msk*(3-2*msk);
         var c=den[i];
@@ -9096,7 +9107,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 88 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 89 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
