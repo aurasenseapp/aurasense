@@ -2756,6 +2756,10 @@ let T=0;
 // frame — which happens before the walk's own block further down has run. Declaring it after
 // left the loop reading a binding that did not exist yet, and the whole canvas died on arrival.
 let atOn=false, atWatch=null, atPath=[], atDist=0, atStart=0, atMet=0, atSenses=[], atTick=null, atLastFix=0;
+/* the moment the map itself began. Anything already on the map when a person
+   arrives is not landing - it has been here all along - so only a light that
+   truly arrives afterwards is given the bloom. */
+const _mapOpened=Date.now();
 (function draw(){
   ctx.clearRect(0,0,canvas.width,canvas.height);T+=0.016;
   atDrawTrail(ctx);
@@ -2772,7 +2776,23 @@ let atOn=false, atWatch=null, atPath=[], atDist=0, atStart=0, atMet=0, atSenses=
     // AURATOUR — an aura met on foot swells and settles, over about three seconds.
     let _sw=1;
     if(p._met){const e=(Date.now()-p._met)/3000;_sw=e>=1?1:(1+1.35*Math.sin(Math.PI*Math.min(1,e))*(1-e*0.35));if(e>=1)p._met=0;}
-    const r=(45+p.intensity*35)*breath*life*_sw*Math.pow(2,(map.getZoom()-14)*0.7);
+    /* ═══ THE ARRIVAL BLOOM · 6 Sep 2026 ══════════════════════════════════
+       Karl: "the auras have become so big upon landing that some of them meld
+       into the cloud now. I would like the initial glow or two to be large
+       like that but reduce in size enough for the streets to be visible."
+       At street height every light was being multiplied five and a half times
+       over - wider than the screen it was drawn on - so an offering and the
+       cloud became one thing and the street underneath was lost.
+       A light now ARRIVES large, holds for the first breath or two, and then
+       settles to something the place can be seen through. The event keeps its
+       size; the record does not need it. */
+    const REST=0.46, BLOOM_MS=9000;
+    let _bloom=REST;
+    if(p.born>_mapOpened+1500){
+      const e=(Date.now()-p.born)/BLOOM_MS;
+      if(e<1){ const k=e*e*(3-2*e); _bloom=1-(1-REST)*k; }   /* holds, then eases down */
+    }
+    const r=(45+p.intensity*35)*breath*life*_sw*_bloom*Math.pow(2,(map.getZoom()-14)*0.7);
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
     const swell=(breath-0.52)/0.60;
     // From the street the field is intimate; seen from the town it turns to mist — mid and inner bands thin toward the outer fog.
@@ -9107,7 +9127,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 89 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 90 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
