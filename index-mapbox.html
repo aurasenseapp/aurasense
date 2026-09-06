@@ -1604,6 +1604,10 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
 #mem-priv-wrap.show{display:block}
 .mem-priv{background:rgba(232,183,107,.08);border:0.5px solid rgba(232,183,107,.35);color:#e8c794;font-size:11px;padding:6px 12px;border-radius:14px;cursor:pointer}
 .mem-priv.priv{background:rgba(120,110,150,.18);border-color:rgba(167,139,250,.4);color:#cbbff0}
+#as-cloudrim{position:fixed;inset:0;pointer-events:none;z-index:3;opacity:1;
+  transition:opacity 2.4s cubic-bezier(.4,0,.2,1);will-change:opacity}
+#as-cloudrim.as-open{opacity:.05}
+#as-cloudrim.as-away{opacity:0;transition:opacity .7s ease}
 /* World Auras — living event glows on the map itself */
 #wev-chips{position:absolute;top:104px;left:50%;transform:translateX(-50%);z-index:40;display:none;flex-wrap:wrap;gap:6px;justify-content:center;max-width:min(92vw,560px)}
 #wev-chips.show{display:flex}
@@ -1839,6 +1843,19 @@ window.AS_SEEK_ALWAYS=true;
 </head>
 <body>
 <div id="map"></div>
+<!-- ═══ THE CLOUD RIM · 5 Sep 2026 ═══════════════════════════════════════════
+     Karl's hypnogogic spec: the cloud from the Seeking does not leave when the
+     world arrives. A light rim stays, and thickens as the descent goes deeper -
+     world, nation, region, town, street - so that a person always knows how far
+     in they are without a word being written.
+     Two things it does NOT do, both agreed:
+       - it never smothers. The stars stay visible at world level.
+       - it never moves on a clock. It answers the zoom and the hand, and
+         nothing else. A screen that changes on its own takes away a person's
+         ability to predict it, and that lands hardest on exactly the people
+         this project is built for.
+     ?rim=0 in the address turns it off entirely. -->
+<div id="as-cloudrim"></div>
 <canvas id="ac"></canvas>
 <div id="ui">
   <div id="hdr1">
@@ -1903,11 +1920,11 @@ window.AS_SEEK_ALWAYS=true;
   <div id="wbal" title="The balance of the world's field"><div id="wbal-mini"><div id="wbal-fill"></div><div id="wbal-needle"></div></div><span id="wbal-lab">The world's field</span></div>
   <div id="wbal-panel">
     <button id="wbal-x">✕</button>
-    <div id="wbal-h">The balance of the world's field</div>
+    <div id="wbal-h">The balance of the world’s light, right now</div>
     <div id="wbal-bar"><div id="wbal-fill2"></div><div id="wbal-needle2"></div></div>
-    <div id="wbal-ends"><span>The heavier auras</span><span>Aurasensers answering with light</span></div>
+    <div id="wbal-ends"><span>The heavier auras</span><span>People answering with light</span></div>
     <div id="wbal-note"></div>
-    <div id="wbal-foot">An honest note: these are illustrative auras for now — real kinds of situation placed to build and feel the mechanism. I have not invented specific live tragedies, since getting a real person's suffering wrong would be the worst kind of error. When a respectful, live source is connected through the backend, these glows will track what is genuinely happening — so compassion can follow real need, and responsibility can be gently traced, from a moment of bullying to a natural disaster.</div>
+    <div id="wbal-foot"><b>These are illustrative for now.</b> Real kinds of situation, placed so the mechanism can be built and felt — but no specific living tragedy has been invented here. Getting a real person’s suffering wrong would be the worst error Aurasense could make. Once a respectful live source is connected, these glows will follow what is genuinely happening, so that compassion can reach real need.</div>
   </div>
   <div id="wev-panel">
     <button id="wev-x">✕</button>
@@ -1917,7 +1934,7 @@ window.AS_SEEK_ALWAYS=true;
     <div id="wev-d"></div>
     <div id="wev-c"></div>
     <button id="wev-send">✦ Answer with an aura of compassion</button>
-    <div id="wev-accord">Where many answer one circumstance, an Aura Accord will gather the reachings into one shared light — arriving with Gate profiles ✧</div>
+    <div id="wev-accord">When many people answer the same situation, an Aura Accord gathers their lights into one shared aura. This opens once you can sign in ✧</div>
   </div>
   <div id="locality-tip">Set your home (only you see this)</div>
   <button id="mobile-offer">✦ Offer an aurasense</button>
@@ -4369,6 +4386,19 @@ function asLandOn(f,houseNo){
       const levelFor={country:3,region:2,district:2,postcode:1,place:1,
                       locality:1,neighborhood:0,address:0,poi:0,street:0};
       searching=true;
+      /* the sense panel was staying up across the whole flight and covering the
+         place a person had just asked to see. It steps aside and comes back. */
+      try{
+        const _p=document.getElementById('panel');
+        if(_p&&(_p.classList.contains('show')||_p.classList.contains('show-mobile'))){
+          _p.style.transition='opacity .5s ease';
+          _p.style.opacity='0'; _p.style.pointerEvents='none';
+          clearTimeout(window._asPanelBack);
+          window._asPanelBack=setTimeout(function(){ try{
+            _p.style.opacity=''; _p.style.pointerEvents='';
+          }catch(e){} },9000);
+        }
+      }catch(e){}
       if(f.center){lastStreetView={lat:f.center[1],lng:f.center[0],zoom:15};lastOfferedPoint={lat:f.center[1],lng:f.center[0],zoom:15};anchorPoint={lat:f.center[1],lng:f.center[0],zoom:15};}
       setActiveTab(t in levelFor?levelFor[t]:0);
       if(f.bbox){
@@ -4378,7 +4408,24 @@ function asLandOn(f,houseNo){
       }else{
         const z=(t==='address')?17.5:(t==='street')?17:(t==='poi')?16.5:15;
         const mob=window.innerWidth<=600;
-        flyProgrammatic({center:f.center,zoom:z,duration:4200,offset:mob?[0,Math.round(window.innerHeight*0.17)]:[-60,-80]});
+        const off=mob?[0,Math.round(window.innerHeight*0.17)]:[-60,-80];
+        /* Karl: "it lands precisely, but moves too fast to see the landing in a
+           satisfying way." Calgary to Wales in one 4-second sweep is a whip-pan
+           and the arrival is over before the eye has caught up. Far journeys now
+           come down in two - across at height, a held breath, then the settling.
+           The Seeking's descent taught this; the search box had never been told. */
+        let far=0;
+        try{ const c=map.getCenter();
+             far=Math.max(Math.abs(c.lng-f.center[0]),Math.abs(c.lat-f.center[1])); }catch(e){}
+        if(far>2.2){
+          const midZ=Math.min(9.2,Math.max(4.4,z-8));
+          flyProgrammatic({center:f.center,zoom:midZ,duration:3600,curve:1.2});
+          setTimeout(function(){ try{
+            flyProgrammatic({center:f.center,zoom:z,duration:3400,curve:1.15,offset:off});
+          }catch(e){} },4100);
+        }else{
+          flyProgrammatic({center:f.center,zoom:z,duration:4200,offset:off});
+        }
       }
       if(t==='address'||t==='poi'||t==='street') dropSearchMarker(f.center,name);
       if(houseNo&&String(f.address||'').toLowerCase()!==String(houseNo).toLowerCase())
@@ -4412,6 +4459,87 @@ document.getElementById('sg').onclick=async()=>{
   }catch(e){showMsg('Search unavailable \u2014 try again shortly');}
 };
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
+
+/* ═══ THE CLOUD RIM · the ladder, and the hand ══════════════════════════════
+   The rim answers TWO things and nothing else:
+     the zoom  - which sets how thick it stands
+     the hand  - which opens it while a person is actually moving the map
+   It opens on touch and closes when the hand lets go. Not after five seconds,
+   not after any number of seconds. A person can always predict it because a
+   person always caused it. */
+(function(){
+  var el=document.getElementById('as-cloudrim'); if(!el)return;
+  if(/[?&]rim=0/.test(location.search)){ el.remove(); return; }
+
+  /* Karl's ladder: world, then +3% at nation, +2% at region, +1% at town, and
+     street holds the town level. Density rises with it, because two percent of
+     a phone's width is a few pixels and a step nobody can see says nothing.
+     These are first numbers, set to be tuned by eye. */
+  var LEV=[
+    {to:3.2,  rim: 8, a:.26},   /* world  - the stars stay visible */
+    {to:5.8,  rim:11, a:.36},   /* nation */
+    {to:8.6,  rim:13, a:.44},   /* region */
+    {to:12.4, rim:14, a:.50},   /* town   */
+    {to:99,   rim:14, a:.50}    /* street - holds the town level */
+  ];
+  var last='';
+  function paint(){
+    try{
+      var z=map.getZoom(), L=LEV[LEV.length-1];
+      for(var i=0;i<LEV.length;i++){ if(z<LEV[i].to){ L=LEV[i]; break; } }
+      var inn=100-L.rim;
+      var g='radial-gradient(ellipse at 50% 50%,'
+        +' rgba(255,247,238,0) '+Math.max(0,inn-9)+'%,'
+        +' rgba(255,247,238,'+(L.a*0.34).toFixed(3)+') '+Math.max(0,inn-3)+'%,'
+        +' rgba(255,247,238,'+(L.a*0.72).toFixed(3)+') '+inn+'%,'
+        +' rgba(255,250,244,'+L.a.toFixed(3)+') 100%)';
+      if(g!==last){ el.style.background=g; last=g; }
+    }catch(e){}
+  }
+  /* the rim belongs to the map. It has no business over My Aura or the Seeking. */
+  function elsewhere(){
+    try{
+      if(document.body.classList.contains('seeking'))return true;
+      var mp=document.getElementById('myaura-page');
+      if(mp&&mp.classList.contains('show'))return true;
+    }catch(e){}
+    return false;
+  }
+  function place(){ el.classList.toggle('as-away',elsewhere()); }
+
+  var held=0;
+  function open(){ held++; el.classList.add('as-open'); }
+  function close(){ held=Math.max(0,held-1); if(!held)el.classList.remove('as-open'); }
+  /* only a real hand opens it - a flight the map takes on its own must keep the
+     rim on, because that flight IS the ladder being shown */
+  function byHand(fn){ return function(e){ if(e&&e.originalEvent)fn(); }; }
+
+  try{
+    map.on('zoom',   function(){ paint(); });
+    map.on('move',   function(){ place(); });
+    map.on('dragstart', byHand(open));
+    map.on('dragend',   byHand(close));
+    map.on('rotatestart', byHand(open));
+    map.on('rotateend',   byHand(close));
+    map.on('pitchstart',  byHand(open));
+    map.on('pitchend',    byHand(close));
+    map.on('zoomstart', byHand(open));
+    map.on('zoomend',   byHand(function(){ close(); paint(); }));
+    map.on('load', function(){ paint(); place(); });
+  }catch(e){}
+  /* a hand on the map opens it even before anything has moved */
+  try{
+    var mp=document.getElementById('map');
+    if(mp){
+      mp.addEventListener('pointerdown',open,{passive:true});
+      addEventListener('pointerup',close,{passive:true});
+      addEventListener('pointercancel',close,{passive:true});
+    }
+  }catch(e){}
+  addEventListener('resize',paint);
+  setInterval(place,900);
+  paint(); place();
+})();
 
 const socTip=document.getElementById('soc-tip-el');
 document.querySelectorAll('.soc-btn').forEach(b=>{
@@ -5483,6 +5611,7 @@ function macEnter(){
     macCv.classList.add('on'); macAur.classList.add('on');
     var w=document.getElementById('ma-cloud-words'); if(w)w.classList.add('on');
     var b=document.getElementById('ma-cloud-through'); if(b)b.classList.add('on');
+    try{macFitChrome();}catch(e){}
   },90);
 }
 function macLeave(keepPage){
@@ -5565,26 +5694,52 @@ function macBuildDoors(){
    The same shape as every other fault this week: two things deciding one thing,
    neither aware of the other. The list is now MEASURED against where the doors
    really are, so they cannot overlap on any screen that exists. */
-function macFitItems(){
+/* ═══ 4 Sep 2026 (evening) · ONE STACK, MEASURED ═══════════════════════════
+   Karl's two photographs: "Let it close" sitting on top of the caption on the
+   laptop, and on top of a card on the phone; the caption sitting across two
+   sense names.
+   FOUR things were each pinned to the bottom of the same screen by a fixed
+   percentage decided separately - the doors, the way through, the list and the
+   caption - and not one of them could see the other three. Percentages that do
+   not collide on one screen shape collide on the next.
+   They are now STACKED, bottom upward, each measured against the real edge of
+   the one below it. There is no arrangement of screen, wrap or wording that can
+   make them touch. */
+function macFitChrome(){
   try{
-    var d=document.getElementById('ma-cloud-doors');
+    var d =document.getElementById('ma-cloud-doors');
     var it=document.getElementById('ma-cloud-items');
-    if(!d||!it)return;
-    if(!d.classList.contains('on')||!it.classList.contains('on')){
-      it.style.bottom=''; it.style.maxHeight=''; return; }
-    var host=d.offsetParent||document.getElementById('myaura-page')||document.body;
-    var hr=host.getBoundingClientRect(), dr=d.getBoundingClientRect();
-    var clear=Math.round(hr.bottom-dr.top)+16;      /* the doors' true top edge */
-    it.style.bottom=clear+'px';
-    /* and it must never run off the top either - the aura has to stay visible */
-    var room=Math.round(dr.top-hr.top-Math.max(150,hr.height*0.30));
-    it.style.maxHeight=Math.max(140,room)+'px';
-    it.style.overflowY='auto';
-    it.style.webkitOverflowScrolling='touch';
+    var th=document.getElementById('ma-cloud-through');
+    var wd=document.getElementById('ma-cloud-words');
+    var host=(d&&d.offsetParent)||document.getElementById('myaura-page')||document.body;
+    var hr=host.getBoundingClientRect();
+    var edge=0;                                   /* px up from the bottom, so far */
+
+    if(d&&d.classList.contains('on')){
+      var dr=d.getBoundingClientRect();
+      edge=Math.max(edge,Math.round(hr.bottom-dr.top));
+    }
+    if(th){
+      th.style.bottom=(edge+14)+'px';
+      var tr=th.getBoundingClientRect();
+      edge=Math.max(edge,Math.round(hr.bottom-tr.top));
+    }
+    if(it){
+      if(it.classList.contains('on')){
+        it.style.bottom=(edge+14)+'px';
+        var room=Math.round(hr.height-edge-14-Math.max(150,hr.height*0.28));
+        it.style.maxHeight=Math.max(140,room)+'px';
+        it.style.overflowY='auto'; it.style.webkitOverflowScrolling='touch';
+        var ir=it.getBoundingClientRect();
+        edge=Math.max(edge,Math.round(hr.bottom-ir.top));
+      }else{ it.style.bottom=''; it.style.maxHeight=''; }
+    }
+    if(wd) wd.style.bottom=(edge+18)+'px';
   }catch(e){}
 }
-addEventListener('resize',function(){ try{macFitItems();}catch(e){} });
-addEventListener('orientationchange',function(){ setTimeout(function(){try{macFitItems();}catch(e){}},260); });
+function macFitItems(){ macFitChrome(); }
+addEventListener('resize',function(){ try{macFitChrome();}catch(e){} });
+addEventListener('orientationchange',function(){ setTimeout(function(){try{macFitChrome();}catch(e){}},260); });
 function macOpenDoor(i){
   macDoorOpen=i;
   var d=document.getElementById('ma-cloud-doors'),box=document.getElementById('ma-cloud-items');
@@ -5652,7 +5807,15 @@ function macOpenDoor(i){
       macBuildDoors();
       var d=document.getElementById('ma-cloud-doors');if(d)d.classList.add('on');
       var w=document.getElementById('ma-cloud-words');
-      if(w)w.innerHTML='<b>Each light, on its own.</b><span>Touch one to see where and when you offered it.</span>';
+      if(w){
+        w.innerHTML='<b>Each light, on its own.</b><span>Touch one to see where and when you offered it.</span>';
+        /* An instruction has a job and then it is finished. Held across the
+           spread senses it stops being help and becomes something in front of
+           the thing it was pointing at. It withdraws once it has been read. */
+        w.classList.remove('hushed');
+        clearTimeout(window._macHush);
+        window._macHush=setTimeout(function(){ try{w.classList.add('hushed');}catch(e){} },7000);
+      }
       thr.textContent='Let it close';
     }else{
       macWantSpread=0; macShowName(-1); macOpenDoor(-1);
@@ -8364,7 +8527,7 @@ function mirrorOpen(){
     const mrWell=(wn>=2)?('<div class="mr-card"><div class="mr-h">The well</div><div class="mr-b">'+wn+' check-ins rest in the well, on this device alone.</div><div class="mr-q">Do any two rhyme? Rhyme is the Weave\u2019s word for a pattern asking to be seen.</div></div>'):'';
     let cards='';
     if(total===0){
-      cards+='<div class="mr-card"><div class="mr-h">The Mirror is dark, honestly.</div><div class="mr-b">It can only reflect what you have offered \u2014 and nothing has been offered yet. That is not emptiness; it is a clean surface. One sense, anywhere true, and the first light appears here.</div></div>';
+      cards+='<div class="mr-card"><div class="mr-h">A clean surface.</div><div class="mr-b">The Mirror reflects what you have offered, and nothing has been offered yet. One sense, anywhere true, and the first light appears here.</div></div>';
     }else{
       if(topS)cards+='<div class="mr-card"><div class="mr-h">The light you reach for most</div><div class="mr-b"><b style="color:'+topS.color+'">'+escT(topS.label)+'</b> \u2014 '+used[top]+' of your '+total+' offering'+(total>1?'s':'')+'.</div><div class="mr-q">What does it give you, that keeps you returning? Yours to answer, or not.</div></div>';
       cards+=mrBal;
@@ -8376,7 +8539,7 @@ function mirrorOpen(){
     d.innerHTML='<div id="mr-t">\ud83e\ude9e The Mirror</div>'
       +'<div id="mr-s">A reflection, not a reading. Only what is true; only questions, never verdicts.</div>'
       +cards
-      +'<div class="mr-s2">The Mirror grows with the Gate: soon, your trajectories \u2014 and, only ever with your yes, your learning meeting others through Accords.</div>'
+      +'<div class="mr-s2">More will appear here as Aurasense grows. Nothing of yours ever reaches another person without your yes.</div>'
       +'<button id="mr-x" type="button">close the mirror</button>';
     document.body.appendChild(d);
     requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});
@@ -8733,7 +8896,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp">Build 4 Sep 2026 · 79</div>
+<div id="build-stamp">Build 5 Sep 2026 · 83</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -9035,7 +9198,16 @@ try{
     try{
       if(typeof window.AS_FIND==='function'){
         const r=await window.AS_FIND(raw);
-        const f0=(r&&(r.best||(r.list&&r.list[0])))||null;
+        /* 4 Sep evening - Karl named "Foothills Hospital, Calgary" and arrived
+           at a school across the city, twice.
+           The search box, when it is not sure, ASKS. The Seeking cannot ask in
+           the middle of a descent, so it was quietly taking the best-scoring
+           guess instead. A guess dressed as an answer.
+           It no longer does. Only a place that carries every word the person
+           typed is flown to. If nothing does, the older lookup below tries, and
+           failing that the person is set down where they can place their own
+           light - which is honest, where a confident wrong street is not. */
+        const f0=(r&&r.best)||null;
         if(f0&&f0.center)return {lat:f0.center[1],lng:f0.center[0],
           kind:(f0.place_type&&f0.place_type[0])||'place',
           name:f0.text||raw, full:f0.place_name||raw};
