@@ -194,7 +194,21 @@ html.as-arrived #build-stamp,html.as-arrived #mv-orb
    sat in the corner through the entire arrival. It is not offered at the
    landing — it waits, and returns with everything else. 29 Aug 2026. */
 /* THE BUILD STAMP — one number, one place, bottom-left. Read it here and nowhere else. */
-#build-stamp{position:fixed;left:9px;bottom:6px;z-index:2200;pointer-events:none;font-family:var(--sans),system-ui,sans-serif;font-size:10px;letter-spacing:.04em;color:rgba(196,181,253,.42);text-shadow:0 0 8px rgba(6,5,16,.9)}
+/* 6 Sep 2026 - THE ONE THING THAT MUST ALWAYS BE READABLE.
+   Karl reported five changes as "still the same" that were provably in the
+   file. The build stamp is the only instrument either of us has for knowing
+   what is actually on screen - and it was ten pixels at forty per cent
+   opacity, unreadable in every screenshot he has ever sent. So we have both
+   been guessing for days.
+   It is now legible on any background, and TAPPING IT fetches a guaranteed
+   fresh copy - no cache anywhere can survive it. */
+#build-stamp{position:fixed;left:10px;bottom:8px;z-index:2200;cursor:pointer;
+  pointer-events:auto;font-family:var(--sans),system-ui,sans-serif;font-size:12px;
+  font-weight:600;letter-spacing:.03em;padding:5px 11px;border-radius:999px;
+  color:#f4efff;background:rgba(20,14,40,.78);border:1px solid rgba(196,181,253,.42);
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  box-shadow:0 2px 10px rgba(0,0,0,.28);transition:background .2s,transform .2s}
+#build-stamp:hover{background:rgba(32,22,60,.92);transform:translateY(-1px)}
 /* THE ASCENT (build name: location lighting sequence) — the light climbing the scales after an
    offering. Paint only: it never touches the senser's standing scale and never moves the map. */
 @keyframes ascGlow{0%{box-shadow:0 0 0 0 var(--asc,#c4b5fd);transform:scale(1)}34%{box-shadow:0 0 15px 4px var(--asc,#c4b5fd);transform:scale(2)}100%{box-shadow:0 0 0 0 var(--asc,#c4b5fd);transform:scale(1)}}
@@ -281,8 +295,25 @@ body.space-view #hdr2:hover,body.space-view #hdr2:focus-within,body.space-view #
 /* THE QUIET FIRST SCREEN \u2014 secondary doors rest dim (never disabled) until the first offering */
 body.first-quiet #register-btn,body.first-quiet #livefeed-btn,body.first-quiet #locality-btn,body.first-quiet #place-mini,body.first-quiet #wev-chips,body.first-quiet #wbal{opacity:.35;transition:opacity 1.2s ease}
 /* THE WITNESS — the one true sentence arrives like a small ceremony, in the aura's own light */
-#pmsg.witness{font-size:15.5px;line-height:1.6;padding:16px 22px;max-width:min(480px,88vw);color:#fff;background:rgba(12,10,26,.96);border:1px solid var(--wc,rgba(196,181,253,.7));border-radius:18px;box-shadow:0 0 42px var(--wc,rgba(167,139,250,.55)),0 8px 34px rgba(0,0,0,.55);text-shadow:0 0 16px var(--wc,rgba(196,181,253,.85));letter-spacing:.015em;animation:witnessBloom 1.4s ease}
-@keyframes witnessBloom{0%{transform:translateX(-50%) scale(.94);filter:brightness(.75)}60%{transform:translateX(-50%) scale(1.02);filter:brightness(1.2)}100%{transform:translateX(-50%) scale(1);filter:brightness(1)}}
+/* ═══ 6 Sep 2026 · THE FIRST LIGHT SHOULD BE SEEN, NOT READ OVER ══════════
+   Karl: "Yours is the first light message still blocks the initial wow moment
+   of first landing... the box the text is in seems harsh and clunky, the sort
+   of thing I want to get away from with Aurasense in general. Doesn't match the
+   circular etheric energy we are working with."
+   Right on both counts, and they are the same fault: a rectangle with a hard
+   edge, sitting on top of the one thing a person should be looking at.
+   The edge is gone. What remains is a soft round breath of the sense's own
+   colour with the words inside it, and it now waits for the light to land
+   before it speaks. Nothing in Aurasense has a hard edge. This did. */
+#pmsg.witness{font-size:15.5px;line-height:1.62;padding:26px 30px;max-width:min(430px,84vw);
+  color:#fff;border:0;border-radius:50% / 42%;letter-spacing:.015em;
+  background:radial-gradient(ellipse at 50% 50%,
+      rgba(14,11,30,.93) 0%, rgba(14,11,30,.90) 46%,
+      rgba(14,11,30,.62) 72%, rgba(14,11,30,.22) 88%, rgba(14,11,30,0) 100%);
+  box-shadow:0 0 70px 26px var(--wc,rgba(167,139,250,.30));
+  text-shadow:0 0 18px var(--wc,rgba(196,181,253,.9)),0 0 40px rgba(0,0,0,.8);
+  animation:witnessBloom 2.2s cubic-bezier(.32,0,.2,1)}
+@keyframes witnessBloom{0%{transform:translateX(-50%) scale(.86);filter:brightness(.6);opacity:0}45%{opacity:1}62%{transform:translateX(-50%) scale(1.03);filter:brightness(1.16)}100%{transform:translateX(-50%) scale(1);filter:brightness(1);opacity:1}}
 /* THE NEW SENSE DOOR — the belly of the table, as a chip in the picker */
 .sc-new{border-style:dashed!important;border-color:rgba(233,221,255,.6)!important;color:#f2ecff!important;background:rgba(233,221,255,.07)!important}
 #ns-modal{position:fixed;left:50%;top:38%;transform:translate(-50%,-50%);z-index:100001;width:min(400px,92vw);background:rgba(12,10,26,.97);border:1px solid rgba(233,221,255,.55);border-radius:20px;padding:22px 20px 18px;box-shadow:0 12px 48px rgba(0,0,0,.6),0 0 34px rgba(233,221,255,.28);text-align:center;opacity:0;transition:opacity .6s ease}
@@ -3899,7 +3930,7 @@ function submit(lat,lng,text){
   } else {
     setTimeout(()=>{let _at=null;try{const _pp=map.project([lng,lat]);_at={x:_pp.x,y:_pp.y};}catch(e){}
       const _wl=witnessLine(sid,lat,lng,s.label);
-      if(_wl)witnessShow(_wl,8200,s.color,_at);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)],null,null,null,null,_at);},900);
+      if(_wl)witnessShow(_wl,8200,s.color,_at);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)],null,null,null,null,_at);},3200);
   }
 }
 
@@ -4188,6 +4219,13 @@ async function asFind(q){
       +encodeURIComponent(text)+'.json?access_token='+MAPBOX_TOKEN+'&limit=8'+(extra||'');
     const uNew=(text,extra)=>'https://api.mapbox.com/search/geocode/v6/forward?q='
       +encodeURIComponent(text)+'&access_token='+MAPBOX_TOKEN+'&limit=8'+(extra||'');
+    /* 5 Sep - Karl searched "Calgary Foothills Hospital" and got six districts
+       of Calgary and an airport. Not one building came back, because the plain
+       address service barely holds buildings at all. Named places - hospitals,
+       schools, parks, stations - live in a different service, and nothing here
+       had ever asked it. */
+    const uPoi=(text,extra)=>'https://api.mapbox.com/search/searchbox/v1/forward?q='
+      +encodeURIComponent(text)+'&access_token='+MAPBOX_TOKEN+'&limit=8'+(extra||'');
 
     /* The current service answers in a different shape. It is translated into
        the shape the rest of the map already understands, so nothing else in
@@ -4252,6 +4290,26 @@ async function asFind(q){
       if(hit&&hit.center){town=hit;townWords=cands[i].split(/\s+/).length;}
     }
 
+    /* A province, state or county is not a town and never matched here, so
+       "Cochrane, AB" had nothing at all to hold it and Australia's Cochrane
+       Avenues were as near as Alberta's. A region now anchors the search - as
+       a direction to look in, never as a fence, because a region is far too
+       large to fence anything. */
+    let anchorC = (town&&town.center)?town.center:null;
+    if(!anchorC){
+      const regSets=await Promise.all(cands.map(c=>
+        grab(uOld(c,'&autocomplete=false&types=region,district,country'))));
+      for(let i=0;i<cands.length&&!anchorC;i++){
+        const ct=cands[i].toLowerCase();
+        const hit=(regSets[i]||[]).find(function(c){
+          if(String(c.text||'').toLowerCase()===ct)return true;
+          try{ var sc=String((c.properties&&c.properties.short_code)||'').toLowerCase();
+               if(sc&&sc.split('-').pop()===ct)return true; }catch(e){}
+          return false;
+        });
+        if(hit&&hit.center)anchorC=hit.center;
+      }
+    }
     let fence=null;
     if(town&&town.center){
       const dLat=0.13, dLng=0.13/Math.max(0.25,Math.cos(town.center[1]*Math.PI/180));
@@ -4259,7 +4317,7 @@ async function asFind(q){
     }
     const box  = fence?('&bbox='+fence.map(v=>v.toFixed(5)).join(',')):'';
     /* Always carried. Never dropped. This is the thing whose absence broke it. */
-    const near = '&proximity='+(town&&town.center?(town.center[0]+','+town.center[1]):(cc.lng+','+cc.lat));
+    const near = '&proximity='+(anchorC?(anchorC[0]+','+anchorC[1]):(cc.lng+','+cc.lat));
 
     const streetOnly=(q.indexOf(',')>=0)?q.split(',')[0].trim()
       :(townWords&&toks.length>townWords?toks.slice(0,toks.length-townWords).join(' '):q);
@@ -4277,7 +4335,8 @@ async function asFind(q){
       grab(uOld(q,'&autocomplete=true'+near)),
       grab(uOld(q,'&autocomplete=false'+near)),
       grab(uOld(q,'&autocomplete=true&types=poi'+near+box)),
-      grab(uNew(q,'&types=poi,street,address'+near+box),true)
+      grab(uPoi(q,near),true),
+      grab(uPoi(streetOnly,near),true)
     ];
     if(looksLikeAddress){
       jobs.push(grab(uNew(q,'&types=address,street'+near+box),true));
@@ -4418,12 +4477,22 @@ function asLandOn(f,houseNo){
         try{ const c=map.getCenter();
              far=Math.max(Math.abs(c.lng-f.center[0]),Math.abs(c.lat-f.center[1])); }catch(e){}
         if(far>2.2){
+          /* Karl: "when I rejected them it seemed to select Cochrane Ave,
+             Melbourne." The second half of an earlier long flight was still
+             sitting on a timer, and it fired after the next search had already
+             begun. Two flights deciding one map - the same fault as everything
+             else this week. Each journey now carries a number, and a stage that
+             finds a newer number in the air simply stands down. */
+          window._asFlight=(window._asFlight||0)+1;
+          const mine=window._asFlight;
           const midZ=Math.min(9.2,Math.max(4.4,z-8));
           flyProgrammatic({center:f.center,zoom:midZ,duration:3600,curve:1.2});
           setTimeout(function(){ try{
+            if(window._asFlight!==mine)return;
             flyProgrammatic({center:f.center,zoom:z,duration:3400,curve:1.15,offset:off});
           }catch(e){} },4100);
         }else{
+          window._asFlight=(window._asFlight||0)+1;
           flyProgrammatic({center:f.center,zoom:z,duration:4200,offset:off});
         }
       }
@@ -4460,6 +4529,19 @@ document.getElementById('sg').onclick=async()=>{
 };
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
 
+/* Tap the stamp, get the real thing. A fresh number every time means no cache
+   between here and Vercel can hand back yesterday's page. */
+(function(){
+  var b=document.getElementById('build-stamp'); if(!b)return;
+  b.addEventListener('click',function(){
+    try{
+      var u=location.href.replace(/[?&]fresh=\d+/g,'');
+      u+=(u.indexOf('?')<0?'?':'&')+'fresh='+Date.now();
+      location.replace(u);
+    }catch(e){ location.reload(true); }
+  });
+})();
+
 /* ═══ THE CLOUD RIM · the ladder, and the hand ══════════════════════════════
    The rim answers TWO things and nothing else:
      the zoom  - which sets how thick it stands
@@ -4475,12 +4557,18 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
      street holds the town level. Density rises with it, because two percent of
      a phone's width is a few pixels and a step nobody can see says nothing.
      These are first numbers, set to be tuned by eye. */
+  /* Karl: "the aura cloud will have to be more circular, and occupy more
+     screen, currently looks elongated oval and not much at all is visible."
+     An ellipse stretches to fit the box it is in, so a wide screen made a wide
+     oval. A CIRCLE inscribed in the screen keeps its shape on any device, and
+     everything outside it becomes cloud - which is what "circled by the cloud"
+     actually looks like. Stepped up, not thrown open. Still an increment. */
   var LEV=[
-    {to:3.2,  rim: 8, a:.26},   /* world  - the stars stay visible */
-    {to:5.8,  rim:11, a:.36},   /* nation */
-    {to:8.6,  rim:13, a:.44},   /* region */
-    {to:12.4, rim:14, a:.50},   /* town   */
-    {to:99,   rim:14, a:.50}    /* street - holds the town level */
+    {to:3.2,  rim:14, a:.30},   /* world  - the stars stay visible */
+    {to:5.8,  rim:18, a:.40},   /* nation */
+    {to:8.6,  rim:21, a:.48},   /* region */
+    {to:12.4, rim:23, a:.55},   /* town   */
+    {to:99,   rim:23, a:.55}    /* street - holds the town level */
   ];
   var last='';
   function paint(){
@@ -4488,7 +4576,7 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
       var z=map.getZoom(), L=LEV[LEV.length-1];
       for(var i=0;i<LEV.length;i++){ if(z<LEV[i].to){ L=LEV[i]; break; } }
       var inn=100-L.rim;
-      var g='radial-gradient(ellipse at 50% 50%,'
+      var g='radial-gradient(circle closest-side at 50% 50%,'
         +' rgba(255,247,238,0) '+Math.max(0,inn-9)+'%,'
         +' rgba(255,247,238,'+(L.a*0.34).toFixed(3)+') '+Math.max(0,inn-3)+'%,'
         +' rgba(255,247,238,'+(L.a*0.72).toFixed(3)+') '+inn+'%,'
@@ -5369,9 +5457,9 @@ function macBlob(ax,px,py,r,t,seed,wob){
   for(var i=0;i<=N;i++){
     var a=i/N*Math.PI*2;
     var w=1
-      + Math.sin(a*2+t*0.00042+seed      )*0.062*wob
-      + Math.sin(a*3-t*0.00061+seed*1.7  )*0.041*wob
-      + Math.sin(a*5+t*0.00029+seed*2.3  )*0.024*wob;
+      + Math.sin(a*2+t*0.00068+seed      )*0.092*wob
+      + Math.sin(a*3-t*0.00094+seed*1.7  )*0.061*wob
+      + Math.sin(a*5+t*0.00047+seed*2.3  )*0.036*wob;
     var rr=r*w;
     var x=px+Math.cos(a)*rr, y=py+Math.sin(a)*rr*0.94;
     if(i===0)ax.moveTo(x,y); else ax.lineTo(x,y);
@@ -5393,7 +5481,7 @@ function macDrawAura(ts){
   var still=(typeof window.AS_CALM!=='undefined'&&window.AS_CALM)||macReduced();
   /* the slow resonant breath — about six seconds, brightness rises on the swell */
   var br=still?0:Math.sin(ts/6000*Math.PI*2);
-  var swell=1+br*0.045, glow=1+br*0.11;
+  var swell=1+br*0.088, glow=1+br*0.24;
   /* Karl's own framework: layers moving at different speeds. The slow resonant
      breath above is the whole field. This faster one is the etheric throb and
      it belongs to the core alone, so the middle is alive even while the outside
@@ -5494,7 +5582,12 @@ function macDrawAura(ts){
       var nm=String(L[li].label).split(' \u2014 ')[0];
       if(nm.length>22)nm=nm.slice(0,21)+'\u2026';
       macAx.save();
-      macAx.globalAlpha=Math.min(1,(macSpread-0.34)/0.42);
+      /* Karl: "Aurasense names are not always visible in the spread view."
+         With a door list open, the names and the cards were fighting and both
+         lost. A name is not competing for attention while a list is being
+         read, so it steps back - and returns the moment the list closes. */
+      var _dim=(typeof window!=='undefined'&&window._macListOpen)?0.24:1;
+      macAx.globalAlpha=Math.min(1,(macSpread-0.34)/0.42)*_dim;
       macAx.textAlign='center'; macAx.textBaseline='middle';
       macAx.font='13px Georgia, "Times New Roman", serif';
       macAx.shadowColor='rgba(255,251,246,0.95)'; macAx.shadowBlur=7;
@@ -5515,8 +5608,8 @@ function macDrawAura(ts){
   /* 4 Sep - the core was nearly half the whole aura, so the strongest colour
      was also the widest and it read as one soft wash. A light source is small.
      It is tightened, deepened, and given the faster breath of its own. */
-  var cGlow=glow*(1+eth*0.11);
-  var coreR=base*0.33*swell*(1+eth*0.032)*(1-macSpread*(n>1?0.52:0));
+  var cGlow=glow*(1+eth*0.21);
+  var coreR=base*0.33*swell*(1+eth*0.062)*(1-macSpread*(n>1?0.52:0));
   if(coreR>0.5){
     var cg=macAx.createRadialGradient(p0.x,p0.y,0,p0.x,p0.y,coreR);
     cg.addColorStop(0,   'rgba('+cRGB+','+Math.min(0.99,0.97*cGlow).toFixed(3)+')');
@@ -5545,7 +5638,7 @@ function macDrawAura(ts){
      even when the breath is at rest. */
   if(!still){
     var shR=base*1.30*swell;
-    var shA=0.050*glow*(1+Math.sin(ts/900*Math.PI*2)*0.30);
+    var shA=0.082*glow*(1+Math.sin(ts/900*Math.PI*2)*0.55);
     var sh=macAx.createRadialGradient(cx,cy,shR*0.62,cx,cy,shR);
     sh.addColorStop(0,   'rgba('+cRGB+',0)');
     sh.addColorStop(0.72,'rgba('+cRGB+','+shA.toFixed(3)+')');
@@ -5611,6 +5704,7 @@ function macEnter(){
     macCv.classList.add('on'); macAur.classList.add('on');
     var w=document.getElementById('ma-cloud-words'); if(w)w.classList.add('on');
     var b=document.getElementById('ma-cloud-through'); if(b)b.classList.add('on');
+  window._macListOpen=false;
     try{macFitChrome();}catch(e){}
   },90);
 }
@@ -5647,7 +5741,7 @@ addEventListener('resize',function(){
 var MAC_DOORS=[
  {t:'Add to your aura',s:'more colour, from you',items:[
    {l:'Set up your profile',p:'The name you go by here, and where you are',sel:'.mj-i[data-mj="profile"]'},
-   {l:'Upload a selfie here',p:'It belongs in the middle of your aura, not in a list',sel:'#ma-selfie-btn',face:1},
+   {l:'See yourself in your aura',p:'Only you ever see this. It sits in the centre, not in a list',sel:'#ma-selfie-btn',face:1},
    {l:'Answer gentle questions',p:'Shape your aura',sel:'.mj-i[data-mj="quest"]'},
    {l:'Go deeper, in five steps',p:'Soul Search',sel:'.mj-i[data-mj="soul"]'},
    {l:'Tell your story',p:'Your life story',sel:'.mj-i[data-mj="life"]'}]},
@@ -5738,6 +5832,17 @@ function macFitChrome(){
   }catch(e){}
 }
 function macFitItems(){ macFitChrome(); }
+/* 5 Sep - the stack was measured once, in the very instant the doors were told
+   to appear: before they had wrapped onto their rows and before a single
+   transition had run. So it measured a layout that did not exist yet, and the
+   answer was stale the moment it landed. It now keeps watch while the page is
+   open, which costs nothing and cannot be caught out by any transition. */
+setInterval(function(){
+  try{
+    var mp=document.getElementById('myaura-page');
+    if(mp&&mp.classList.contains('show'))macFitChrome();
+  }catch(e){}
+},420);
 addEventListener('resize',function(){ try{macFitChrome();}catch(e){} });
 addEventListener('orientationchange',function(){ setTimeout(function(){try{macFitChrome();}catch(e){}},260); });
 function macOpenDoor(i){
@@ -5747,7 +5852,9 @@ function macOpenDoor(i){
   Array.prototype.forEach.call(d.children,function(c,k){ c.classList.toggle('sel',k===i); });
   var wq=document.getElementById('ma-cloud-words');
   if(wq)wq.classList.toggle('hushed',i>=0);
-  if(i<0){ box.classList.remove('on'); box.innerHTML=''; try{macFitItems();}catch(e){} return; }
+  if(i<0){ box.classList.remove('on'); box.innerHTML=''; window._macListOpen=false;
+           try{macFitChrome();}catch(e){} return; }
+  window._macListOpen=true;
   box.innerHTML='';
   MAC_DOORS[i].items.forEach(function(it){
     var b=document.createElement('button');
@@ -8896,7 +9003,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp">Build 5 Sep 2026 · 83</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 86 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
