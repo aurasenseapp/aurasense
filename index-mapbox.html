@@ -135,7 +135,48 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 .soc-btn:hover{border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.12);transform:scale(1.1)}
 .soc-tip{position:fixed;background:rgba(15,12,25,.98);border:0.5px solid rgba(167,139,250,.3);border-radius:8px;padding:5px 9px;font-size:10px;color:#9d8fcc;white-space:nowrap;z-index:9999;pointer-events:none;display:none}
 #hdr2{position:absolute;top:13px;left:330px;right:16px;display:flex;align-items:center;justify-content:flex-start;pointer-events:all;gap:12px}
-#tabs{display:flex;gap:1px;background:rgba(10,10,20,.88);border:0.5px solid rgba(255,255,255,.08);border-radius:20px;padding:4px 5px;backdrop-filter:blur(8px);flex-shrink:0}
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE ARC · 6 September 2026
+   ───────────────────────────────────────────────────────────────────────────
+   Karl: "put the menu options from my aura to world view in the arch of the
+   upper portion of the cloud edge that form the circle."
+
+   The dark pill is gone. The six levels now sit ALONG the dome the cloud makes
+   across the top of the screen - highest in the middle, easing down at either
+   side, exactly as the cloud's own inner edge does.
+
+   No box, no border, no bar. Aurasense had one rectangle left at the very top
+   of every screen, and this was it.
+   ═══════════════════════════════════════════════════════════════════════════ */
+#tabs{display:flex;gap:1px;background:none;border:0;border-radius:0;padding:4px 5px;
+  -webkit-backdrop-filter:none;backdrop-filter:none;flex-shrink:0;
+  align-items:flex-start}
+#tabs .tab,#tabs .tab-group{transition:transform .5s cubic-bezier(.4,0,.2,1)}
+/* the dome. Six places along it, the middle standing highest. Widths are a
+   fraction of the viewport so the curve holds its shape on any screen. */
+#tabs>*:nth-child(1){transform:translateY(2.10vw)}
+#tabs>*:nth-child(2){transform:translateY(0.78vw)}
+#tabs>*:nth-child(3){transform:translateY(0.10vw)}
+#tabs>*:nth-child(4){transform:translateY(0.10vw)}
+#tabs>*:nth-child(5){transform:translateY(0.78vw)}
+#tabs>*:nth-child(6){transform:translateY(2.10vw)}
+/* Every word now sits on live cloud rather than on a dark slab, so each one
+   carries its own small halo instead. Nothing is boxed; everything is legible. */
+#tabs .tab{text-shadow:0 1px 3px rgba(8,6,20,.92),0 0 14px rgba(8,6,20,.85),0 0 26px rgba(8,6,20,.6)}
+#tabs .tab-caret{text-shadow:0 1px 3px rgba(8,6,20,.92),0 0 12px rgba(8,6,20,.8)}
+@media(max-width:600px){
+  #tabs>*:nth-child(1){transform:translateY(3.4vw)}
+  #tabs>*:nth-child(2){transform:translateY(1.3vw)}
+  #tabs>*:nth-child(3){transform:translateY(0.16vw)}
+  #tabs>*:nth-child(4){transform:translateY(0.16vw)}
+  #tabs>*:nth-child(5){transform:translateY(1.3vw)}
+  #tabs>*:nth-child(6){transform:translateY(3.4vw)}
+}
+/* the World view stacks the levels into rows, where a dome would only muddle
+   them. It lays flat there, and keeps its old pill. */
+body.world-view #tabs{background:rgba(10,10,20,.88);border:0.5px solid rgba(255,255,255,.08);
+  border-radius:18px;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+body.world-view #tabs>*:nth-child(n){transform:none}
 /* ── WORLD VIEW · the scale strip settles into two rows of three ───────────
    Six scales crowded into one line reads as a jumble out at planet range,
    where there is room to breathe. Out here they lay out properly and larger. */
@@ -9127,7 +9168,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 90 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 91 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
