@@ -157,12 +157,30 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 /* the dome itself is measured, not guessed - see asArcTabs() below */
 /* Every word now sits on live cloud rather than on a dark slab, so each one
    carries its own small halo instead. Nothing is boxed; everything is legible. */
-#tabs .tab{color:#cfc6f2;font-weight:600;
+/* Karl: "the text is functional but basic, any inspiration there."
+   The reason it read as functional is plain once seen: THESE SIX WORDS WERE
+   THE ONLY PLACE IN AURASENSE SPEAKING IN A DIFFERENT VOICE. The wordmark, the
+   witness lines, the cards, the Mirror - all of it is set in the serif. The
+   levels alone were in the interface sans, which is the typeface of settings
+   screens, and it read exactly like one.
+   They now speak in Aurasense's own voice. Larger, letter-spaced so they carry
+   on live cloud, and the current level is marked by SIZE AND WEIGHT as well as
+   brightness - never by colour alone, which a good many people cannot use. */
+#tabs .tab{font-family:Georgia,"Times New Roman",serif;
+  font-size:16.5px;font-weight:400;letter-spacing:.055em;color:#d5cdf4;
+  gap:9px;padding:5px 13px;
   text-shadow:0 1px 2px rgba(8,6,20,.98),0 0 10px rgba(8,6,20,.95),
-              0 0 22px rgba(8,6,20,.85),0 0 40px rgba(8,6,20,.55)}
-#tabs .tab.active{color:#fff;
+              0 0 22px rgba(8,6,20,.85),0 0 40px rgba(8,6,20,.55);
+  transition:color .35s,font-size .35s,letter-spacing .35s}
+#tabs .tab:hover{color:#efe9ff}
+#tabs .tab.active{color:#fff;font-size:18.5px;font-weight:600;letter-spacing:.075em;
   text-shadow:0 1px 2px rgba(8,6,20,.98),0 0 10px rgba(8,6,20,.95),
-              0 0 20px rgba(196,181,253,.65),0 0 44px rgba(8,6,20,.7)}
+              0 0 22px rgba(214,201,255,.7),0 0 48px rgba(8,6,20,.75)}
+#tabs .tab-caret{font-size:13px;color:#c2b8e8;opacity:.85}
+@media(max-width:600px){
+  #tabs .tab{font-size:15px;padding:5px 9px;gap:7px}
+  #tabs .tab.active{font-size:17px}
+}
 #tabs .tab-caret{text-shadow:0 1px 3px rgba(8,6,20,.92),0 0 12px rgba(8,6,20,.8)}
 
 /* the World view stacks the levels into rows, where a dome would only muddle
@@ -227,16 +245,28 @@ body.world-view #tabs .tab-orb{width:8px;height:8px}
 @keyframes orbBreath{
   0%,100%{transform:scale(.93);filter:brightness(.9)}
   50%    {transform:scale(1.07);filter:brightness(1.16)}}
-/* the journey outward: larger, softer, slower */
-#orbMy{width:9px;height:9px;animation-duration:3.3s}
-#orb0 {width:10px;height:10px;animation-duration:4.7s}
-#orb1 {width:11px;height:11px;animation-duration:6.1s}
-#orb2 {width:12px;height:12px;animation-duration:7.9s}
-#orb3 {width:13px;height:13px;animation-duration:9.7s}
-#orb4 {width:15px;height:15px;animation-duration:12.3s}
+/* 6 Sep, second pass - Karl: "the orbs need to be larger to see the
+   distinction you mentioned. I am very open to it. Just cant see it as yet."
+   Nine pixels growing to fifteen is a difference of six across an entire
+   screen, and no eye finds that. The journey now more than doubles from end to
+   end, which is a thing you can watch rather than a thing you can measure. */
+#orbMy{width:13px;height:13px;animation-duration:3.3s}
+#orb0 {width:16px;height:16px;animation-duration:4.7s}
+#orb1 {width:19px;height:19px;animation-duration:6.1s}
+#orb2 {width:22px;height:22px;animation-duration:7.9s}
+#orb3 {width:25px;height:25px;animation-duration:9.7s}
+#orb4 {width:29px;height:29px;animation-duration:12.3s}
+/* the further out, the softer - a self has an edge, the world does not */
+#orb1{filter:blur(.3px)} #orb2{filter:blur(.55px)}
+#orb3{filter:blur(.85px)} #orb4{filter:blur(1.2px)}
+@media(max-width:600px){
+  #orbMy{width:11px;height:11px} #orb0{width:13px;height:13px}
+  #orb1 {width:15px;height:15px} #orb2{width:17px;height:17px}
+  #orb3 {width:19px;height:19px} #orb4{width:22px;height:22px}
+}
 /* THE ONE THAT DOES NOT CLOSE */
-#orb4::after{content:'';position:absolute;inset:-5px;border-radius:50%;
-  border:1px solid rgba(196,181,253,.42);
+#orb4::after{content:'';position:absolute;inset:-7px;border-radius:50%;
+  border:1.5px solid rgba(214,201,255,.55);
   border-right-color:transparent;border-bottom-color:transparent;
   transform:rotate(-24deg);pointer-events:none;
   animation:orbOpen 12.3s ease-in-out infinite}
@@ -4684,22 +4714,45 @@ function asArcTabs(){
     var t=document.getElementById('tabs'); if(!t)return;
     var kids=[].slice.call(t.children);
     if(document.body.classList.contains('world-view')){
-      kids.forEach(function(c){ c.style.transform=''; });
+      t.style.transform=''; kids.forEach(function(c){ c.style.transform=''; });
       return;
     }
+    t.style.transform='none';
     kids.forEach(function(c){ c.style.transform='none'; });   /* measure untouched */
+
     var W=Math.max(1,innerWidth), mid=W/2;
-    var DEPTH=Math.min(52,Math.max(18,W*0.032));
-    var pos=kids.map(function(c){
+    var seen=[], i;
+    kids.forEach(function(c){
       var r=c.getBoundingClientRect();
-      if(!r.width)return null;
-      var u=((r.left+r.width/2)-mid)/mid;
-      if(u<-1)u=-1; if(u>1)u=1;
-      return u;
+      if(r.width)seen.push({el:c,c:r.left+r.width/2,l:r.left,r:r.right});
     });
-    kids.forEach(function(c,i){
-      if(pos[i]===null){ c.style.transform=''; return; }
-      c.style.transform='translateY('+(DEPTH*pos[i]*pos[i]).toFixed(2)+'px)';
+    if(!seen.length)return;
+
+    /* ═══ WHY THE ARC VANISHED · 6 Sep 2026 ═════════════════════════════════
+       The curve was measured against half the SCREEN. But the six levels only
+       occupy the middle third of a laptop screen, so nothing ever reached the
+       far end of the curve - the widest step was a fifth of the way along it,
+       and a fifth of a parabola is a straight line. The arc was there. It was
+       simply too small a slice of one to be seen.
+       It is measured against the width of the ROW now, so the six span the
+       whole curve from one end to the other. */
+    var rowL=seen[0].l, rowR=seen[seen.length-1].r;
+    var rowMid=(rowL+rowR)/2, half=Math.max(1,(rowR-rowL)/2);
+
+    /* and the row itself is slid to sit over the middle of the screen, which is
+       where the cloud's apex is and where a landing light arrives. Clamped, so
+       it can never be pushed off the edge or over the wordmark. */
+    var shift=mid-rowMid;
+    var room=Math.max(0,(W-(rowR-rowL))/2-14);
+    if(shift> room)shift= room;
+    if(shift<-room)shift=-room;
+    t.style.transform='translateX('+shift.toFixed(1)+'px)';
+
+    var DEPTH=Math.min(64,Math.max(26,W*0.034));
+    seen.forEach(function(o){
+      var u=(o.c-rowMid)/half;                 /* now truly spans -1 .. 1 */
+      if(u<-1)u=-1; if(u>1)u=1;
+      o.el.style.transform='translateY('+(DEPTH*u*u).toFixed(2)+'px)';
     });
   }catch(e){}
 }
@@ -9256,7 +9309,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 92 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 93 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
