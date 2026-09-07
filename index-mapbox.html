@@ -154,24 +154,17 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #tabs .tab,#tabs .tab-group{transition:transform .5s cubic-bezier(.4,0,.2,1)}
 /* the dome. Six places along it, the middle standing highest. Widths are a
    fraction of the viewport so the curve holds its shape on any screen. */
-#tabs>*:nth-child(1){transform:translateY(2.10vw)}
-#tabs>*:nth-child(2){transform:translateY(0.78vw)}
-#tabs>*:nth-child(3){transform:translateY(0.10vw)}
-#tabs>*:nth-child(4){transform:translateY(0.10vw)}
-#tabs>*:nth-child(5){transform:translateY(0.78vw)}
-#tabs>*:nth-child(6){transform:translateY(2.10vw)}
+/* the dome itself is measured, not guessed - see asArcTabs() below */
 /* Every word now sits on live cloud rather than on a dark slab, so each one
    carries its own small halo instead. Nothing is boxed; everything is legible. */
-#tabs .tab{text-shadow:0 1px 3px rgba(8,6,20,.92),0 0 14px rgba(8,6,20,.85),0 0 26px rgba(8,6,20,.6)}
+#tabs .tab{color:#cfc6f2;font-weight:600;
+  text-shadow:0 1px 2px rgba(8,6,20,.98),0 0 10px rgba(8,6,20,.95),
+              0 0 22px rgba(8,6,20,.85),0 0 40px rgba(8,6,20,.55)}
+#tabs .tab.active{color:#fff;
+  text-shadow:0 1px 2px rgba(8,6,20,.98),0 0 10px rgba(8,6,20,.95),
+              0 0 20px rgba(196,181,253,.65),0 0 44px rgba(8,6,20,.7)}
 #tabs .tab-caret{text-shadow:0 1px 3px rgba(8,6,20,.92),0 0 12px rgba(8,6,20,.8)}
-@media(max-width:600px){
-  #tabs>*:nth-child(1){transform:translateY(3.4vw)}
-  #tabs>*:nth-child(2){transform:translateY(1.3vw)}
-  #tabs>*:nth-child(3){transform:translateY(0.16vw)}
-  #tabs>*:nth-child(4){transform:translateY(0.16vw)}
-  #tabs>*:nth-child(5){transform:translateY(1.3vw)}
-  #tabs>*:nth-child(6){transform:translateY(3.4vw)}
-}
+
 /* the World view stacks the levels into rows, where a dome would only muddle
    them. It lays flat there, and keeps its old pill. */
 body.world-view #tabs{background:rgba(10,10,20,.88);border:0.5px solid rgba(255,255,255,.08);
@@ -196,7 +189,63 @@ body.world-view #tabs .tab-orb{width:8px;height:8px}
 .tab{font-size:11px;padding:5px 9px;border-radius:14px;border:none;background:transparent;color:#7870a0;cursor:pointer;transition:color .3s;letter-spacing:.03em;display:flex;align-items:center;gap:4px;font-family:inherit;white-space:nowrap;pointer-events:all}
 .tab:hover{color:#c4b5fd}
 .tab.active{color:#c4b5fd}
-.tab-orb{width:7px;height:7px;border-radius:50%;background:rgba(167,139,250,.12);flex-shrink:0;transition:background .3s,box-shadow .3s}
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE SIX LIGHTS · 6 September 2026
+   ───────────────────────────────────────────────────────────────────────────
+   Karl asked what these should BE, given everything the founding documents say
+   about auras and the movement toward the light. Not six identical dots.
+
+   The six levels are one journey - from the self outward until there is
+   nothing left outside. So they are drawn as that journey:
+
+     · MY AURA is small, dense and near-white at its heart. Your own light,
+       held close. It breathes FASTEST, because a self does.
+     · Outward through Street, Town, Region and Nation each one grows a little
+       LARGER and a little SOFTER, and breathes a little SLOWER.
+     · WORLD is the widest and the most diffuse of all - and it is the only one
+       whose ring does not close. It is left open on one side.
+
+   That open side is the whole answer to Karl's question. Six closed circles
+   would say: this is all there is. One that never finishes says the opposite -
+   that the scale does not end at World, that there are senses not yet named
+   and a light further out still. Nothing is claimed. It is simply not shut.
+
+   Slower-outward is also true rather than decorative: large things do move
+   more slowly than small ones. And because the six periods never divide into
+   one another, the arc never pulses in unison. It shimmers unevenly, the way
+   anything alive does, and that is what the eye catches.
+
+   Each also sits in its own small pool of shade, so it reads as light against
+   live cloud instead of being swallowed by it - the same move that finally made
+   My Aura's own aura work.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.tab-orb{width:9px;height:9px;border-radius:50%;flex-shrink:0;position:relative;
+  background:radial-gradient(circle at 50% 46%,rgba(226,214,255,.34) 0%,rgba(167,139,250,.16) 55%,rgba(167,139,250,.05) 100%);
+  box-shadow:0 0 0 2px rgba(10,8,24,.34),0 0 10px 4px rgba(10,8,24,.30);
+  transition:background .45s,box-shadow .45s,width .5s,height .5s}
+#tabs .tab-orb{animation:orbBreath 4.6s ease-in-out infinite}
+@keyframes orbBreath{
+  0%,100%{transform:scale(.93);filter:brightness(.9)}
+  50%    {transform:scale(1.07);filter:brightness(1.16)}}
+/* the journey outward: larger, softer, slower */
+#orbMy{width:9px;height:9px;animation-duration:3.3s}
+#orb0 {width:10px;height:10px;animation-duration:4.7s}
+#orb1 {width:11px;height:11px;animation-duration:6.1s}
+#orb2 {width:12px;height:12px;animation-duration:7.9s}
+#orb3 {width:13px;height:13px;animation-duration:9.7s}
+#orb4 {width:15px;height:15px;animation-duration:12.3s}
+/* THE ONE THAT DOES NOT CLOSE */
+#orb4::after{content:'';position:absolute;inset:-5px;border-radius:50%;
+  border:1px solid rgba(196,181,253,.42);
+  border-right-color:transparent;border-bottom-color:transparent;
+  transform:rotate(-24deg);pointer-events:none;
+  animation:orbOpen 12.3s ease-in-out infinite}
+@keyframes orbOpen{0%,100%{opacity:.30}50%{opacity:.72}}
+.tab.active .tab-orb,.tab-mi.mi-active .tab-orb{
+  background:radial-gradient(circle at 50% 44%,#fff 0%,#e6dcff 26%,#c4b5fd 62%,rgba(167,139,250,.55) 100%);
+  box-shadow:0 0 0 2px rgba(10,8,24,.30),0 0 12px 5px rgba(10,8,24,.26),
+             0 0 14px rgba(196,181,253,.95),0 0 30px rgba(167,139,250,.55)}
+@media(prefers-reduced-motion:reduce){#tabs .tab-orb,#orb4::after{animation:none}}
 .tab.active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
 /* ═══ THE SEEKING IN FRONT, AND THE MAP'S OWN FURNITURE OUT OF THE WAY ═══
    While the Seeking is up, none of this page's controls may show through the
@@ -4619,6 +4668,45 @@ document.getElementById('sg').onclick=async()=>{
   }catch(e){showMsg('Search unavailable \u2014 try again shortly');}
 };
 document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('sg').click()});
+
+/* ═══ THE DOME, MEASURED · 6 Sep 2026 ══════════════════════════════════════
+   Karl: "Alignment to be fixed."
+   The curve was set by counting children - first one lowest, middle ones
+   highest. But the six are not equal widths, and the row is not centred on the
+   screen (the wordmark pushes it right on a laptop). So the highest point of
+   the dome landed nowhere near the highest point of the cloud.
+   Each level is now placed by WHERE IT ACTUALLY IS: measured across the real
+   screen, and dropped by how far it stands from the centre. Whatever the
+   widths, whatever pushes the row about, the apex is always the middle of the
+   screen - which is where the cloud's own apex is. */
+function asArcTabs(){
+  try{
+    var t=document.getElementById('tabs'); if(!t)return;
+    var kids=[].slice.call(t.children);
+    if(document.body.classList.contains('world-view')){
+      kids.forEach(function(c){ c.style.transform=''; });
+      return;
+    }
+    kids.forEach(function(c){ c.style.transform='none'; });   /* measure untouched */
+    var W=Math.max(1,innerWidth), mid=W/2;
+    var DEPTH=Math.min(52,Math.max(18,W*0.032));
+    var pos=kids.map(function(c){
+      var r=c.getBoundingClientRect();
+      if(!r.width)return null;
+      var u=((r.left+r.width/2)-mid)/mid;
+      if(u<-1)u=-1; if(u>1)u=1;
+      return u;
+    });
+    kids.forEach(function(c,i){
+      if(pos[i]===null){ c.style.transform=''; return; }
+      c.style.transform='translateY('+(DEPTH*pos[i]*pos[i]).toFixed(2)+'px)';
+    });
+  }catch(e){}
+}
+addEventListener('resize',function(){ setTimeout(asArcTabs,60); });
+addEventListener('orientationchange',function(){ setTimeout(asArcTabs,300); });
+setInterval(asArcTabs,900);
+setTimeout(asArcTabs,200); setTimeout(asArcTabs,1200);
 
 /* Tap the stamp, get the real thing. A fresh number every time means no cache
    between here and Vercel can hand back yesterday's page. */
@@ -9168,7 +9256,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 91 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 92 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
