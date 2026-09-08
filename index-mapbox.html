@@ -152,7 +152,13 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #logo-mark:focus-visible{outline:2px solid rgba(196,181,253,.8);outline-offset:6px}
 #logo-mark::after{content:'';position:absolute;inset:-9px;border-radius:50%;
   border:1px solid rgba(196,181,253,0);transition:border-color .9s ease,box-shadow .9s ease}
-#logo-mark:hover::after,body.myaura-live #logo-mark::after{border-color:rgba(214,201,255,.5)}
+/* 8 Sep - Karl: "My aura shape is odd oval crossing over on cell."
+   It was: a ring drawn round a 53-by-33 box is an OVAL, and an oval laid over
+   two meeting circles crosses them both. There is no ring anywhere now - the
+   mark glows as the shape it actually is. */
+#logo-mark:hover::after,body.myaura-live #logo-mark::after{border-color:rgba(214,201,255,0)}
+#logo-mark:hover svg,body.myaura-live #logo-mark svg{
+  filter:drop-shadow(0 0 9px rgba(214,201,255,.7)) drop-shadow(0 0 20px rgba(167,139,250,.42))}
 body.myaura-live #logo-mark{filter:brightness(1.3)}
 /* ═══ THE MARK IS THE DOOR · 7 September 2026 ═══════════════════════
    Karl: "My Aura text needs to pop more on both. And when the aura flys to my
@@ -194,10 +200,10 @@ body.myaura-live #logo-mark{filter:brightness(1.3)}
 @keyframes asMarkWait{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 body.as-mark-lit #logo-mark svg{animation:asMarkWait 5.4s ease-in-out infinite}
 body.as-mark-lit #logo-mark{filter:brightness(1.34) saturate(1.14)}
-/* 8 Sep - Karl: "an unsightly hard rim around it". It was a drawn one-pixel
-   ring, which is a border and not a light. Only light now. */
-body.as-mark-lit #logo-mark::after{border-color:rgba(226,214,255,0);
-  box-shadow:0 0 26px 6px rgba(167,139,250,.34),0 0 54px 14px rgba(196,181,253,.16)}
+/* the waiting glow follows the two meeting circles, not a box around them */
+body.as-mark-lit #logo-mark::after{border-color:rgba(226,214,255,0);box-shadow:none}
+body.as-mark-lit #logo-mark svg{
+  filter:drop-shadow(0 0 11px rgba(226,214,255,.85)) drop-shadow(0 0 26px rgba(167,139,250,.5))}
 /* placed after the waiting breath so the arrival can interrupt it */
 body #logo-mark.as-flare svg{animation:asMarkFlare 2.6s cubic-bezier(.22,.9,.3,1)}
 body #logo-mark.as-flare .as-home{animation:asMarkHome 2.6s ease-out}
@@ -222,12 +228,16 @@ body.as-mark-calling #logo-mark .as-hint{left:0;transform:none;
    slab, no border and no shadow - one sentence and the way back, standing on
    the map like everything else. The dark sheet returns only when the choices
    do, which is the moment it is actually a sheet of choices.               */
-body.as-peak #panel.just-offered,
-body.as-peak #panel.just-offered.show-mobile{
+/* 8 Sep, second pass - this hung off a class on the body while the hush hung
+   off a class on the strip, and on the laptop the two disagreed: the strip went
+   quiet and the black sheet stayed. ONE class decides both now - the same one
+   that is visibly working. */
+#panel.just-offered:has(#offer-confirm.oc-hush),
+#panel.just-offered.show-mobile:has(#offer-confirm.oc-hush){
   background:none!important;border:none!important;box-shadow:none!important;
   backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
   padding-bottom:26px!important}
-body.as-peak #offer-confirm .oc-head{
+#offer-confirm.oc-hush .oc-head{
   text-shadow:0 1px 3px rgba(8,6,20,.98),0 0 14px rgba(8,6,20,.95),0 0 30px rgba(8,6,20,.8)}
 @keyframes ocRise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 #offer-confirm.oc-open .oc-actions{animation:ocRise 1.2s ease both}
@@ -1704,7 +1714,10 @@ body.ma-incloud .as-rail{display:none!important}
   #lf-back{position:fixed;top:calc(env(safe-area-inset-top) + 8px);left:10px;right:10px;z-index:12;font-size:15px;padding:13px 18px;display:block;text-align:center;border-radius:14px;backdrop-filter:blur(6px)}
   #lf-inner{padding-top:64px}
   #logo h1{font-size:15px}#logo p{display:none}
-  #hdr2{top:52px;left:8px;right:8px;justify-content:center}
+  /* 8 Sep - Karl: "Search bar clashes with my aura text on left on cell."
+     It did: the mark's own word sits just under the logo, and the stack began
+     on top of it. The stack starts below it now. */
+  #hdr2{top:74px;left:8px;right:8px;justify-content:center}
   #tabs{width:100%;justify-content:space-between;gap:2px}
   #tabs .tab{font-size:16px;padding:7px 4px;letter-spacing:.01em}
   @media(max-width:380px){#tabs .tab{font-size:14.5px;padding:7px 3px}}
@@ -1753,7 +1766,9 @@ body.ma-incloud .as-rail{display:none!important}
 
   #ui.offer-open #wev-chips,#ui.offer-open #wbal,#ui.offer-open #wbal-panel,#ui.offer-open #wev-panel,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #aura-views,#ui.offer-open #place-mini{display:none}
   /* the live feed stays: it is a destination now, and a thread is pointing at it */
-  #ui.offer-open #livefeed-btn{display:block}
+  #ui.offer-open #livefeed-btn{display:block!important}
+  /* and it is never dimmed away on the first quiet arrival either */
+  body.first-quiet #livefeed-btn{opacity:1}
 }
 /* FIX: these map buttons live inside #ui (pointer-events:none) and must opt back in */
 #register-btn,#livefeed-btn,#locality-btn,#place-mini,#mobile-offer,#wev-chips,#wbal,#wbal-panel,#wev-panel{pointer-events:auto}
@@ -3032,9 +3047,6 @@ const _mapOpened=Date.now();
     const x=pt.x,y=pt.y;
     const s=SENSES.find(s=>s.id===p.sense),col=s?s.color:'#a78bfa';
     const life=Math.min(1,(Date.now()-p.born)/2000);
-    /* THE THREAD HOME reads this senser's own light off the very frame that
-       draws it, so the thread can never start anywhere but where the light is. */
-    try{const _th=window.AS_THREAD;if(_th&&_th.ap===p){_th._x=x;_th._y=y;_th._seen=T;}}catch(_){}
     // OFFERED AT HEIGHT — this light was never given to a doorstep. It was given to a whole
     // place, so the whole place carries it: a breathing field with a luminous edge, filling
     // the place's own extent. No hard border is drawn, because an aura does not have one.
@@ -3067,15 +3079,23 @@ const _mapOpened=Date.now();
     /* 8 Sep - Karl: "I meant 4 seconds rather than 4 glows... lets say 9
        seconds because the message is there anyway upon landing." Nine at full
        size, easing down across the next three and a half. */
-    const REST=0.42, FULL_MS=9000, EASE_MS=3500;
+    const REST=0.34, FULL_MS=9000, EASE_MS=3500;
     let _bloom=REST;
     if(p.born>_mapOpened+1500){
       const el2=Date.now()-p.born;
       if(el2<FULL_MS){ _bloom=1; }
       else if(el2<FULL_MS+EASE_MS){ const e=(el2-FULL_MS)/EASE_MS, k=e*e*(3-2*e); _bloom=1-(1-REST)*k; }
     }
-    const r=(45+p.intensity*35)*breath*life*_sw*_bloom*Math.pow(2,(map.getZoom()-14)*0.7);
-    try{const _th=window.AS_THREAD;if(_th&&_th.ap===p)_th._r=r;}catch(_){}
+    /* 8 Sep - Karl: "reduce expansion size on landed auras on cell so the touch
+       your light can stay in screen." A light is now never wider than two fifths
+       of the shorter side of whatever screen it is on, so its own words - and
+       the streets under it - always have somewhere to be. The cap is a ceiling,
+       not a size: on a laptop nothing reaches it, and the breath is untouched. */
+    const _cap=Math.min(innerWidth,innerHeight)*0.40;
+    const r=Math.min(_cap,(45+p.intensity*35)*breath*life*_sw*_bloom*Math.pow(2,(map.getZoom()-14)*0.7));
+    try{const _th=window.AS_THREAD;
+      if(_th&&(_th.ap===p||(Math.abs(p.lat-_th.lat)<1e-7&&Math.abs(p.lng-_th.lng)<1e-7))){_th._r=r;_th._seen=T;}
+    }catch(_){}
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
     const swell=(breath-0.52)/0.60;
     // From the street the field is intimate; seen from the town it turns to mist — mid and inner bands thin toward the outer fog.
@@ -3254,9 +3274,12 @@ function asArcWords(cx2,text,x,y,rad,col,alpha,size,mid){
     cx2.restore();
   }catch(e){}
 }
-/* Where the words stand: below, upper-right, upper-left. Kept clear of the
-   quarter the thread leaves through, so a thread never runs over a word. */
-const AS_WORD_ANGLES=[Math.PI/2, -Math.PI*0.32, Math.PI*1.18];
+/* 8 Sep, second pass - Karl: "touch your light moves out of range on cell."
+   They were sitting above the middle, where the search box and the whole arch
+   of levels already are, and on a phone that is off the top of the light
+   altogether. All three now stand in the LOWER half, spread wide - clear of
+   the arch above and of the two threads, which both leave upward. */
+const AS_WORD_ANGLES=[Math.PI/2, Math.PI/2-0.95, Math.PI/2+0.95];
 /* where the live feed stands, so a second thread can reach for it */
 function asFeedPoint(){
   try{
@@ -3279,8 +3302,17 @@ function asFeedPoint(){
 function asDrawOneThread(cx2,x,y,rr,dest,col,alive,reach,seed,lead){
   const dx=dest.x-x, dy=dest.y-y, dist=Math.hypot(dx,dy)||1;
   const ux=dx/dist, uy=dy/dist, px=-uy, py=ux;
-  const sx=x+ux*rr*0.86, sy=y+uy*rr*0.86;
-  const ex=x+ux*dist*reach, ey=y+uy*dist*reach;
+  /* ═══ 8 Sep, second pass · WHY THERE WERE NO THREADS ══════════════════
+     The reach was measured from the CENTRE of the light. But a landed light is
+     enormous, so its own rim was already most of the way to the mark - and the
+     thread was being drawn entirely inside the glow it came from. It was there
+     the whole time. It could not be seen.
+     It is measured from the RIM outward now: the thread always has a real run
+     across open map, whatever size the light happens to be.                 */
+  const start=Math.min(rr*0.88, dist*0.55);
+  const gap=Math.max(40,dist-start);
+  const sx=x+ux*start, sy=y+uy*start;
+  const ex=x+ux*(start+gap*reach), ey=y+uy*(start+gap*reach);
   const run=Math.hypot(ex-sx,ey-sy);
   const bend=Math.sin(T*0.4+seed)*dist*0.075;
   /* first handle: straight out, no sideways component at all */
@@ -3298,10 +3330,10 @@ function asDrawOneThread(cx2,x,y,rr,dest,col,alive,reach,seed,lead){
   for(let k=0;k<=N;k++){
     const t2=k/N, q=at(t2);
     const taper=Math.pow(1-t2,0.75);
-    const a2=(0.10+0.44*taper)*alive*lead;
+    const a2=(0.16+0.60*taper)*alive*lead;
     if(a2<=0.004)continue;
     cx2.fillStyle=hexA(col,a2);
-    cx2.beginPath();cx2.arc(q[0],q[1],(0.7+1.9*taper),0,Math.PI*2);cx2.fill();
+    cx2.beginPath();cx2.arc(q[0],q[1],(1.0+2.4*taper),0,Math.PI*2);cx2.fill();
     if(k%6===0){cx2.fillStyle='rgba(255,255,255,'+(a2*0.5).toFixed(3)+')';
       cx2.beginPath();cx2.arc(q[0],q[1],0.7*taper+0.25,0,Math.PI*2);cx2.fill();}
   }
@@ -3320,20 +3352,26 @@ function drawThreadHome(cx2){
   const th=window.AS_THREAD; if(!th)return;
   const age=(Date.now()-th.from)/1000;
   if(!th.done&&age>420){window.AS_THREAD=null;return;}    /* it does not wait for ever */
-  if(th._x==null||th._seen==null||(T-th._seen)>0.2)return; /* only while its light is on screen */
+  if(!th.done&&th.dismissed)return;
   try{if(window.AS_CALM)return;}catch(e){}
   try{const mp=document.getElementById('myaura-page');if(mp&&mp.classList.contains('show'))return;}catch(e){}
   try{if(map.getZoom()<3.6)return;}catch(e){}
   const wake=Math.min(1,(age-8.5)/2.5);
   if(wake<=0&&!th.done)return;
-  const x=th._x,y=th._y,rr=Math.max(24,th._r||60);
+  /* the place is projected fresh every frame, so the thread is joined to the
+     light whatever else happens to the list it lives in */
+  let x,y;
+  try{const _p=map.project([th.lng,th.lat]);x=_p.x;y=_p.y;}catch(e){return;}
+  th._x=x; th._y=y;
+  if(x<-260||y<-260||x>innerWidth+260||y>innerHeight+260)return;
+  const rr=Math.max(26,(T-(th._seen||-99)<0.4)?th._r:(Math.min(innerWidth,innerHeight)*0.30));
   const col=th.color||'#c4b5fd';
   /* how far along it has got. Waiting: a little over half, breathing.
      Completed: all the way, in about a second. */
-  let reach=0.54+0.05*Math.sin(T*0.5), fade=1;
+  let reach=0.58+0.06*Math.sin(T*0.5), fade=1;
   if(th.done){
     const rp=Math.min(1,(Date.now()-th.raceFrom)/950);
-    reach=0.54+(1-0.54)*(rp*rp*(3-2*rp));
+    reach=0.58+(1-0.58)*(rp*rp*(3-2*rp));
     fade=rp>0.82?Math.max(0,1-(rp-0.82)/0.18):1;
   }
   const alive=(0.55+0.45*Math.sin(T*0.62))*wake*fade;
@@ -3357,10 +3395,15 @@ function drawThreadHome(cx2){
     const wW=Math.min(1,(age-10)/2.2);
     if(wW>0){
       const size=Math.max(12.5,Math.min(19,rr*0.11));
-      const rad=rr*1.13+size*0.9;
+      const rad=rr*1.05+size*0.6;
       for(let q=0;q<AS_WORD_ANGLES.length;q++){
+        const a3=AS_WORD_ANGLES[q];
+        /* a word that would stand off the edge simply does not speak - the
+           other two are still there, which is the whole reason there are three */
+        const wx=x+Math.cos(a3)*rad, wy=y+Math.sin(a3)*rad;
+        if(wx<26||wy<26||wx>innerWidth-26||wy>innerHeight-16)continue;
         const bob=0.42+0.58*(0.5+0.5*Math.sin(T*0.55-q*2.09));
-        asArcWords(cx2,'touch your light',x,y,rad,col,wW*bob*0.95,size,AS_WORD_ANGLES[q]);
+        asArcWords(cx2,'touch your light',x,y,rad,col,wW*bob*0.95,size,a3);
       }
     }
   }
@@ -4443,7 +4486,10 @@ function submit(lat,lng,text){
   /* the peak begins here. The confirm strip reads this to know it should stay
      quiet while the light itself is the door. */
   window.AS_PEAK_AT=Date.now();
-  window.AS_THREAD={ap:_ap,color:s.color,from:Date.now(),done:false};
+  /* 8 Sep - keyed by WHERE, not by which object. The Gate replaces the point
+     objects when it syncs, and the thread was quietly losing its own light and
+     drawing nothing at all. A place cannot be replaced. */
+  window.AS_THREAD={ap:_ap,lat:lat,lng:lng,color:s.color,from:Date.now(),done:false,dismissed:false};
   try{document.body.classList.add('as-mark-lit');}catch(e){}
   // THE CLIMB — turned off 25 Aug 2026. It was doing a second time what triggerWave (below)
   // already does: sweeping the scales out and back in the sense's colour. Two journeys where
@@ -5143,6 +5189,24 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
    One function decides size and place together. Two functions deciding one
    thing between them is what made the row dance yesterday.
    ═══════════════════════════════════════════════════════════════════════════ */
+/* ═══ 8 September 2026, second pass · WHY 'TOWN' DANCED ═════════════════════
+   Karl: "'Town' dances back and forth on mac."
+   The row is measured, then moved. But the words carry a half-second EASE on
+   the very thing being measured - so every reading was taken while the row was
+   still gliding into its last position, and each reading moved the next one.
+   A measurement that changes what it measures never settles.
+   offsetLeft and offsetWidth are LAYOUT numbers. No transform, and no
+   transition on a transform, can touch them. The row is read from those now,
+   and the reading is the same on every tick whatever the words are doing.
+
+   The curve is set the other way round too. Before, the depth fell out of the
+   width - which on a laptop meant a two-hundred-pixel drop and World shoved
+   under the live feed. Now the DROP is chosen, and the circle follows from it:
+       drop = half-width × tan(half-angle)
+   so a wide screen gets a broad shallow arch and a phone gets a deep one, and
+   the outermost level is placed from the edge of the screen rather than
+   arriving there by accident.
+   ═══════════════════════════════════════════════════════════════════════════ */
 var _arcW=-1, _arcFS=0;
 window.asRefit=function(){ _arcW=-1; };
 function asArcTabs(){
@@ -5150,62 +5214,64 @@ function asArcTabs(){
     var t=document.getElementById('tabs'); if(!t)return;
     var W=Math.max(1,innerWidth), phone=(W<=600);
     var kids=[].slice.call(t.children);
+    var tabs=[].slice.call(t.querySelectorAll('.tab'));
+    var caret=t.querySelector('.tab-caret');
 
     if(document.body.classList.contains('world-view')){
       t.style.transform='';
       kids.forEach(function(c){ c.style.transform=''; });
-      t.querySelectorAll('.tab').forEach(function(c){ c.style.fontSize=''; });
+      tabs.forEach(function(c){ c.style.fontSize=''; });
+      if(caret)caret.style.fontSize='';
       _arcW=-1; return;
     }
     t.style.transform='none';
-    kids.forEach(function(c){ c.style.transform='none'; });   /* measure untouched */
 
-    var tabs=[].slice.call(t.querySelectorAll('.tab'));
-    var caret=t.querySelector('.tab-caret');
     var setFS=function(v){
       if(!v){ tabs.forEach(function(c){c.style.fontSize='';}); if(caret)caret.style.fontSize=''; return; }
-      tabs.forEach(function(c){ c.style.fontSize=v.toFixed(2)+'px'; });
+      tabs.forEach(function(c){
+        c.style.fontSize=(c.classList.contains('active')?v*1.12:v).toFixed(2)+'px';
+      });
       if(caret)caret.style.fontSize=(v*0.85).toFixed(2)+'px';
     };
+    /* measured from layout, never from a rectangle that is mid-glide */
+    var host=(kids[0]&&kids[0].offsetParent)||t.offsetParent||document.body;
+    var hostL=host.getBoundingClientRect().left;
     var natural=function(){
       var out=[];
-      kids.forEach(function(c){ var r=c.getBoundingClientRect(); if(r.width)out.push({el:c,w:r.width,c:r.left+r.width/2}); });
+      kids.forEach(function(c){ var w=c.offsetWidth; if(w)out.push({el:c,w:w,c:hostL+c.offsetLeft+w/2}); });
       return out;
     };
 
-    var M = phone?9:16, usable=W-2*M;
-    /* the size is settled once per screen width - a size recalculated while it
-       is being looked at is the dance itself */
-    if(phone && _arcW!==W){
+    var M=phone?9:16, usable=W-2*M;
+    if(_arcW!==W){
       _arcW=W;
-      var fs=17.5, guard=0;              /* Karl asked for larger, so we start larger */
-      setFS(fs);
-      while(guard++<16 && fs>11){
-        var m0=natural(); if(!m0.length)break;
-        var tot=0; m0.forEach(function(o){tot+=o.w;});
-        /* the curve buys about a seventh of the flat width back. Anything inside
-           that will sit on the arc without two words touching. */
-        if(tot <= usable*1.15) break;
-        fs-=0.5; setFS(fs);
+      if(!phone){ setFS(0); _arcFS=0; }
+      else{
+        var fs=17.5, guard=0; setFS(fs);
+        while(guard++<16 && fs>11){
+          var m0=natural(); if(!m0.length)break;
+          var tot=0; m0.forEach(function(o){tot+=o.w;});
+          if(tot<=usable*1.12)break;      /* the curve buys back about an eighth */
+          fs-=0.5; setFS(fs);
+        }
+        _arcFS=fs;
       }
-      _arcFS=fs;
-    } else if(!phone && _arcW!==W){
-      _arcW=W; _arcFS=0; setFS(0);
-    } else if(phone && _arcFS){
-      setFS(_arcFS);
-    }
+    }else if(phone&&_arcFS){ setFS(_arcFS); }
 
     var m=natural(); if(!m.length)return;
     var lo=m[0], hi=m[m.length-1];
     var cx=W/2;
-    /* the furthest a word's CENTRE may stand from the middle and still be whole */
-    var halfEx=Math.max(30,(usable-lo.w/2-hi.w/2)/2);
-    var TH = phone?0.86:0.66;                   /* half the arc, in radians */
-    var R  = halfEx/Math.sin(TH);
-    var rowL=lo.c-lo.w/2, rowR=hi.c+hi.w/2;
-    var rowMid=(rowL+rowR)/2, half=Math.max(1,(rowR-rowL)/2);
+    var natL=lo.c-lo.w/2, natR=hi.c+hi.w/2;
+    var natHalf=Math.max(30,(natR-natL)/2), natMid=(natL+natR)/2;
+    /* the furthest a word's centre may stand from the middle and still be whole */
+    var maxHalf=Math.max(30,(usable-lo.w/2-hi.w/2)/2);
+    var halfEx=phone?maxHalf:Math.min(natHalf,maxHalf);
+    var DROP=phone?58:60;
+    var TH=2*Math.atan(Math.min(0.95,DROP/halfEx));
+    var R=halfEx/Math.sin(TH);
+
     m.forEach(function(o){
-      var u=(o.c-rowMid)/half; if(u<-1)u=-1; if(u>1)u=1;
+      var u=(o.c-natMid)/natHalf; if(u<-1)u=-1; if(u>1)u=1;
       var th=u*TH;
       var tx=cx+R*Math.sin(th)-o.c;
       var ty=R*(1-Math.cos(th));
@@ -5218,7 +5284,8 @@ addEventListener('resize',function(){ _arcW=-1; setTimeout(asArcAndFit,60); });
 addEventListener('orientationchange',function(){ _arcW=-1; setTimeout(asArcAndFit,300); });
 setInterval(asArcAndFit,900);
 try{ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){ _arcW=-1; asArcAndFit(); }); }catch(e){}
-setTimeout(asArcAndFit,200); setTimeout(asArcAndFit,1200); setTimeout(function(){_arcW=-1;asArcAndFit();},2600);
+setTimeout(asArcAndFit,200); setTimeout(function(){_arcW=-1;asArcAndFit();},1400);
+setTimeout(function(){_arcW=-1;asArcAndFit();},3000);
 
 /* ═══ THE MARK IS THE WAY IN · 6 Sep 2026 ══════════════════════════════════
    The My Aura button has left the row. The wordmark's own orb - two auras
@@ -7615,7 +7682,7 @@ function raiseOfferPanel(address){
 }
 /* The one place that lifts the hush, so it can never be lifted in two. */
 window.asUnhushOffer=function(){
-  try{document.body.classList.remove('as-peak');}catch(e){}
+  try{if(window.AS_THREAD)window.AS_THREAD.dismissed=true;}catch(e){}
   try{const b=document.getElementById('offer-confirm');
     if(b&&b.classList.contains('oc-hush')){b.classList.remove('oc-hush');b.classList.add('oc-open');}
   }catch(e){}
@@ -7634,7 +7701,7 @@ function asHushWatch(){
        a minute and a half - so nothing is ever locked behind a thing they did
        not happen to notice. */
     try{const _t=window.AS_THREAD;
-      if(_t&&!_t.done&&(Date.now()-_t.from)<90000)busy=true;}catch(e){}
+      if(_t&&!_t.done&&!_t.dismissed&&(Date.now()-_t.from)<90000)busy=true;}catch(e){}
     if(busy&&waited<95000){waited+=600;setTimeout(look,600);return;}
     window.asUnhushOffer();
   })();
@@ -7655,9 +7722,9 @@ function showOfferConfirm(senseId,text,place,lat,lng){
        It did, because whether it hushed depended on a clock. It now depends on
        ONE FACT: is this senser's own light still waiting to be touched. Same
        question, same answer, every single time. */
-    const _live=!!(window.AS_THREAD&&!window.AS_THREAD.done);
-    if(_live){box.classList.add('oc-hush');document.body.classList.add('as-peak');asHushWatch();}
-    else{box.classList.remove('oc-hush');document.body.classList.remove('as-peak');}
+    const _live=!!(window.AS_THREAD&&!window.AS_THREAD.done&&!window.AS_THREAD.dismissed);
+    if(_live){box.classList.add('oc-hush');asHushWatch();}
+    else{box.classList.remove('oc-hush');}
   }catch(e){}
   const panel=document.getElementById('panel');
   if(panel){panel.classList.add('show-mobile','just-offered','offer-quiet','has-last');panel.classList.remove('locating');panel.style.maxHeight='';panel.style.bottom='';
@@ -9856,7 +9923,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 8 Sep 2026 · 97 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 8 Sep 2026 · 98 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
