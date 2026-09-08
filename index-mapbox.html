@@ -194,8 +194,10 @@ body.myaura-live #logo-mark{filter:brightness(1.3)}
 @keyframes asMarkWait{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
 body.as-mark-lit #logo-mark svg{animation:asMarkWait 5.4s ease-in-out infinite}
 body.as-mark-lit #logo-mark{filter:brightness(1.34) saturate(1.14)}
-body.as-mark-lit #logo-mark::after{border-color:rgba(226,214,255,.6);
-  box-shadow:0 0 24px rgba(167,139,250,.5),inset 0 0 16px rgba(196,181,253,.2)}
+/* 8 Sep - Karl: "an unsightly hard rim around it". It was a drawn one-pixel
+   ring, which is a border and not a light. Only light now. */
+body.as-mark-lit #logo-mark::after{border-color:rgba(226,214,255,0);
+  box-shadow:0 0 26px 6px rgba(167,139,250,.34),0 0 54px 14px rgba(196,181,253,.16)}
 /* placed after the waiting breath so the arrival can interrupt it */
 body #logo-mark.as-flare svg{animation:asMarkFlare 2.6s cubic-bezier(.22,.9,.3,1)}
 body #logo-mark.as-flare .as-home{animation:asMarkHome 2.6s ease-out}
@@ -214,6 +216,19 @@ body.as-mark-calling #logo-mark .as-hint{left:0;transform:none;
    arrive once the invitation under the mark has had its moment.            */
 #offer-confirm.oc-hush .oc-lbl,
 #offer-confirm.oc-hush .oc-btn:not(.oc-withdraw){display:none!important}
+/* ═══ 8 Sep 2026 · THE PEAK HAS NO PANEL ══════════════════════════
+   Karl: "Still need to get away from panels."
+   While the light itself is the way through, the foot of the screen keeps no
+   slab, no border and no shadow - one sentence and the way back, standing on
+   the map like everything else. The dark sheet returns only when the choices
+   do, which is the moment it is actually a sheet of choices.               */
+body.as-peak #panel.just-offered,
+body.as-peak #panel.just-offered.show-mobile{
+  background:none!important;border:none!important;box-shadow:none!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  padding-bottom:26px!important}
+body.as-peak #offer-confirm .oc-head{
+  text-shadow:0 1px 3px rgba(8,6,20,.98),0 0 14px rgba(8,6,20,.95),0 0 30px rgba(8,6,20,.8)}
 @keyframes ocRise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 #offer-confirm.oc-open .oc-actions{animation:ocRise 1.2s ease both}
 /* out of the row, on every screen */
@@ -358,9 +373,10 @@ body.world-view #tabs .tab-orb{width:8px;height:8px}
 #orb1{filter:blur(.3px)} #orb2{filter:blur(.55px)}
 #orb3{filter:blur(.85px)} #orb4{filter:blur(1.2px)}
 @media(max-width:600px){
-  #orbMy{width:11px;height:11px} #orb0{width:13px;height:13px}
-  #orb1 {width:15px;height:15px} #orb2{width:17px;height:17px}
-  #orb3 {width:19px;height:19px} #orb4{width:22px;height:22px}
+  /* larger again on 8 Sep - Karl: "the aura orbs for each are tiny" */
+  #orbMy{width:12px;height:12px} #orb0{width:15px;height:15px}
+  #orb1 {width:18px;height:18px} #orb2{width:21px;height:21px}
+  #orb3 {width:24px;height:24px} #orb4{width:28px;height:28px}
 }
 /* THE ONE THAT DOES NOT CLOSE */
 #orb4::after{content:'';position:absolute;inset:-7px;border-radius:50%;
@@ -485,7 +501,13 @@ html.as-arrived #build-stamp,html.as-arrived #mv-orb
 button,.tab{touch-action:manipulation}
 body:has(#panel.show-mobile) #mobile-offer,body:has(#panel.show) #mobile-offer,body:has(#panel.just-offered) #mobile-offer{display:none!important}
 body.panel-live #mobile-offer{display:none!important}
-body.panel-live #search-box{display:none!important}
+/* 8 Sep - Karl: "appears momentarily upon offering then disappears when the
+   panel opens at the bottom". It used to be pinned under the arc where the
+   sheet needed the room; it now rides above the arc where it needs no room at
+   all, so it simply stays. A thing that comes and goes on its own is the one
+   thing usability research is united about. */
+body.panel-live #search-box{opacity:.55;transition:opacity .5s ease}
+body.panel-live #search-box:focus-within{opacity:1}
 /* One bottom action, always: the resting bar retires so the breathing Offer pill stands alone (Plan Phase 2). */
 #panel:not(.show-mobile):not(.show):not(.just-offered){display:none!important}
 /* At planet height there is no place to offer to — the pill rests with the tip. */
@@ -1686,7 +1708,11 @@ body.ma-incloud .as-rail{display:none!important}
   #tabs{width:100%;justify-content:space-between;gap:2px}
   #tabs .tab{font-size:16px;padding:7px 4px;letter-spacing:.01em}
   @media(max-width:380px){#tabs .tab{font-size:14.5px;padding:7px 3px}}
-  #tabs .tab-orb{width:6px;height:6px;margin-right:3px}
+  /* 8 Sep - this single line was overruling all six orb sizes on a phone (an
+     id-and-class beats a bare id), so the whole journey from a small dense self
+     out to a wide open world was being flattened to six identical specks. It
+     now sets only the spacing, and the sizes below are free to speak. */
+  #tabs .tab-orb{margin-right:5px}
   /* there is room for every level now that My Aura has moved to the mark */
   .tab.top-region{display:flex!important}
   #tabs .tab-menu{display:none}
@@ -1725,7 +1751,9 @@ body.ma-incloud .as-rail{display:none!important}
   #offer-confirm .oc-actions{flex-wrap:wrap}
   #offer-confirm .oc-card{flex:1 1 100%;text-align:center}
 
-  #ui.offer-open #wev-chips,#ui.offer-open #wbal,#ui.offer-open #wbal-panel,#ui.offer-open #wev-panel,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #livefeed-btn,#ui.offer-open #aura-views,#ui.offer-open #place-mini{display:none}
+  #ui.offer-open #wev-chips,#ui.offer-open #wbal,#ui.offer-open #wbal-panel,#ui.offer-open #wev-panel,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #aura-views,#ui.offer-open #place-mini{display:none}
+  /* the live feed stays: it is a destination now, and a thread is pointing at it */
+  #ui.offer-open #livefeed-btn{display:block}
 }
 /* FIX: these map buttons live inside #ui (pointer-events:none) and must opt back in */
 #register-btn,#livefeed-btn,#locality-btn,#place-mini,#mobile-offer,#wev-chips,#wbal,#wbal-panel,#wev-panel{pointer-events:auto}
@@ -3189,29 +3217,104 @@ function asMarkPoint(){
   }catch(e){}
   return {x:Math.min(60,innerWidth*0.1),y:34};
 }
-/* words that curve along the rim, never in a box */
-function asArcWords(cx2,text,x,y,rad,col,alpha,size){
+/* ═══ 8 Sep 2026 · THE WORDS GO ROUND ═════════════════════════════
+   Karl: "I only saw it on MacBook so know it's hidden on the cell... maybe try
+   adding one or two more of those words equally around the aura at the same
+   level you have the first, so it breaths acting as a gentle luring invite.
+   And so it's visible on all screen sizes."
+   One place on a rim can always be the one place a sheet is covering. Three
+   cannot. They breathe out of phase, so the invitation travels round the light
+   rather than blinking on and off in one spot - and on any screen at least one
+   of them is in the clear.
+   Words sitting above the middle are turned the other way, so nothing is ever
+   printed upside down.                                                      */
+function asArcWords(cx2,text,x,y,rad,col,alpha,size,mid){
   try{
+    if(alpha<=0.01)return;
     cx2.save();
     cx2.font='italic '+size.toFixed(1)+'px Georgia,"Times New Roman",serif';
     cx2.textAlign='center'; cx2.textBaseline='middle';
     let total=0; const ws=[];
     for(let i=0;i<text.length;i++){const w=cx2.measureText(text[i]).width;ws.push(w);total+=w;}
     const span=total/rad;
-    let a=Math.PI/2+span/2;
-    cx2.shadowColor=col; cx2.shadowBlur=16;
+    const under=Math.sin(mid)>=0;                 /* below the middle of the light */
+    let a=under?(mid+span/2):(mid-span/2);
+    cx2.shadowColor=col; cx2.shadowBlur=18;
     for(let i=0;i<text.length;i++){
-      const ac=a-(ws[i]/2)/rad;
+      const half=(ws[i]/2)/rad;
+      const ac=under?(a-half):(a+half);
       cx2.save();
       cx2.translate(x+Math.cos(ac)*rad,y+Math.sin(ac)*rad);
-      cx2.rotate(ac-Math.PI/2);
+      cx2.rotate(under?(ac-Math.PI/2):(ac+Math.PI/2));
       cx2.fillStyle='rgba(255,251,242,'+alpha.toFixed(3)+')';
       cx2.fillText(text[i],0,0);
       cx2.restore();
-      a-=ws[i]/rad;
+      a+=under?(-ws[i]/rad):(ws[i]/rad);
     }
     cx2.restore();
   }catch(e){}
+}
+/* Where the words stand: below, upper-right, upper-left. Kept clear of the
+   quarter the thread leaves through, so a thread never runs over a word. */
+const AS_WORD_ANGLES=[Math.PI/2, -Math.PI*0.32, Math.PI*1.18];
+/* where the live feed stands, so a second thread can reach for it */
+function asFeedPoint(){
+  try{
+    const b=document.getElementById('livefeed-btn');
+    if(b){const r=b.getBoundingClientRect();
+      if(r.width&&getComputedStyle(b).display!=='none')return {x:r.left+r.width/2,y:r.top+r.height/2};}
+  }catch(e){}
+  try{
+    const f=document.getElementById('feed');
+    if(f){const r=f.getBoundingClientRect();
+      if(r.width&&getComputedStyle(f).display!=='none')return {x:r.left+r.width/2,y:r.top+34};}
+  }catch(e){}
+  return null;
+}
+/* ONE thread, drawn from a light to a destination. Karl: "The thread needs to
+   stay connected to my aura longer before turning." So it is a cubic now, and
+   its first handle lies straight along the way out - it leaves the light on a
+   true line, holds that line for a third of the distance, and only then finds
+   its drift. A thread that bends the instant it leaves never looked joined. */
+function asDrawOneThread(cx2,x,y,rr,dest,col,alive,reach,seed,lead){
+  const dx=dest.x-x, dy=dest.y-y, dist=Math.hypot(dx,dy)||1;
+  const ux=dx/dist, uy=dy/dist, px=-uy, py=ux;
+  const sx=x+ux*rr*0.86, sy=y+uy*rr*0.86;
+  const ex=x+ux*dist*reach, ey=y+uy*dist*reach;
+  const run=Math.hypot(ex-sx,ey-sy);
+  const bend=Math.sin(T*0.4+seed)*dist*0.075;
+  /* first handle: straight out, no sideways component at all */
+  const c1x=sx+ux*run*0.42, c1y=sy+uy*run*0.42;
+  /* second handle: where it finds its drift */
+  const c2x=sx+ux*run*0.78+px*bend, c2y=sy+uy*run*0.78+py*bend;
+  const at=function(t2){
+    const mt=1-t2;
+    return [mt*mt*mt*sx+3*mt*mt*t2*c1x+3*mt*t2*t2*c2x+t2*t2*t2*ex,
+            mt*mt*mt*sy+3*mt*mt*t2*c1y+3*mt*t2*t2*c2y+t2*t2*t2*ey];
+  };
+  const N=48;
+  cx2.save();
+  cx2.shadowColor=col; cx2.shadowBlur=12;
+  for(let k=0;k<=N;k++){
+    const t2=k/N, q=at(t2);
+    const taper=Math.pow(1-t2,0.75);
+    const a2=(0.10+0.44*taper)*alive*lead;
+    if(a2<=0.004)continue;
+    cx2.fillStyle=hexA(col,a2);
+    cx2.beginPath();cx2.arc(q[0],q[1],(0.7+1.9*taper),0,Math.PI*2);cx2.fill();
+    if(k%6===0){cx2.fillStyle='rgba(255,255,255,'+(a2*0.5).toFixed(3)+')';
+      cx2.beginPath();cx2.arc(q[0],q[1],0.7*taper+0.25,0,Math.PI*2);cx2.fill();}
+  }
+  for(let g=0;g<3;g++){
+    const ph=((T*0.20)+g/3+seed*0.17)%1;
+    const q=at(ph);
+    const gA=Math.sin(Math.PI*ph)*alive*lead;
+    cx2.fillStyle=hexA(col,gA*0.85);
+    cx2.beginPath();cx2.arc(q[0],q[1],2.7,0,Math.PI*2);cx2.fill();
+    cx2.fillStyle='rgba(255,255,255,'+(gA*0.85).toFixed(3)+')';
+    cx2.beginPath();cx2.arc(q[0],q[1],1.15,0,Math.PI*2);cx2.fill();
+  }
+  cx2.restore();
 }
 function drawThreadHome(cx2){
   const th=window.AS_THREAD; if(!th)return;
@@ -3224,9 +3327,7 @@ function drawThreadHome(cx2){
   const wake=Math.min(1,(age-8.5)/2.5);
   if(wake<=0&&!th.done)return;
   const x=th._x,y=th._y,rr=Math.max(24,th._r||60);
-  const home=asMarkPoint();
-  const dx=home.x-x, dy=home.y-y, dist=Math.hypot(dx,dy)||1;
-  const ux=dx/dist, uy=dy/dist, px=-uy, py=ux;
+  const col=th.color||'#c4b5fd';
   /* how far along it has got. Waiting: a little over half, breathing.
      Completed: all the way, in about a second. */
   let reach=0.54+0.05*Math.sin(T*0.5), fade=1;
@@ -3235,48 +3336,32 @@ function drawThreadHome(cx2){
     reach=0.54+(1-0.54)*(rp*rp*(3-2*rp));
     fade=rp>0.82?Math.max(0,1-(rp-0.82)/0.18):1;
   }
-  const sx=x+ux*rr*0.86, sy=y+uy*rr*0.86;
-  const ex=x+ux*dist*reach, ey=y+uy*dist*reach;
-  const bend=Math.sin(T*0.4)*dist*0.085;
-  const bx=(sx+ex)/2+px*bend, by=(sy+ey)/2+py*bend;
-  const col=th.color||'#c4b5fd';
   const alive=(0.55+0.45*Math.sin(T*0.62))*wake*fade;
-  const N=44;
-  cx2.save();
-  cx2.shadowColor=col; cx2.shadowBlur=12;
-  for(let k=0;k<=N;k++){
-    const t2=k/N, mt=1-t2;
-    const qx=mt*mt*sx+2*mt*t2*bx+t2*t2*ex;
-    const qy=mt*mt*sy+2*mt*t2*by+t2*t2*ey;
-    /* it thins and fades toward its tip - a thread that stops, never a line that ends */
-    const taper=Math.pow(1-t2,0.75);
-    const a2=(0.10+0.44*taper)*alive;
-    if(a2<=0.004)continue;
-    cx2.fillStyle=hexA(col,a2);
-    cx2.beginPath();cx2.arc(qx,qy,(0.7+1.9*taper),0,Math.PI*2);cx2.fill();
-    if(k%6===0){cx2.fillStyle='rgba(255,255,255,'+(a2*0.5).toFixed(3)+')';
-      cx2.beginPath();cx2.arc(qx,qy,0.7*taper+0.25,0,Math.PI*2);cx2.fill();}
+  /* ═══ TWO WAYS THE LIGHT GOES ═════════════════════════════════
+     Karl: "The thread I think we should consider adding another leading to
+     live feed."
+     Yes - and it says the whole thing in one picture. What a person offers goes
+     TWO WAYS AT ONCE: into their own aura, and out into everyone's. One thread
+     to the mark, one to the feed. Neither is the more important, and no words
+     are needed to explain it.
+     The one to the feed is quieter, because the self is where this moment is
+     leading; the other is simply true and does not have to shout.          */
+  asDrawOneThread(cx2,x,y,rr,asMarkPoint(),col,alive,reach,0,1);
+  if(!th.done){
+    const fp=asFeedPoint();
+    if(fp)asDrawOneThread(cx2,x,y,rr,fp,col,alive,reach*0.86,2.1,0.62);
   }
-  /* three lights walking the thread, so it reads as travel and not as a wire */
-  for(let g=0;g<3;g++){
-    const ph=((T*0.20)+g/3)%1;
-    const mt=1-ph;
-    const qx=mt*mt*sx+2*mt*ph*bx+ph*ph*ex;
-    const qy=mt*mt*sy+2*mt*ph*by+ph*ph*ey;
-    const gA=Math.sin(Math.PI*ph)*alive;
-    cx2.fillStyle=hexA(col,gA*0.85);
-    cx2.beginPath();cx2.arc(qx,qy,2.7,0,Math.PI*2);cx2.fill();
-    cx2.fillStyle='rgba(255,255,255,'+(gA*0.85).toFixed(3)+')';
-    cx2.beginPath();cx2.arc(qx,qy,1.15,0,Math.PI*2);cx2.fill();
-  }
-  cx2.restore();
-  /* the words, curved along the rim of their own light */
+  /* the words, curved along the rim of their own light - three of them, out of
+     phase, so the invitation travels round it */
   if(!th.done){
     const wW=Math.min(1,(age-10)/2.2);
     if(wW>0){
-      const bob=0.78+0.22*Math.sin(T*0.62);
       const size=Math.max(12.5,Math.min(19,rr*0.11));
-      asArcWords(cx2,'touch your light',x,y,rr*1.13+size*0.9,col,wW*bob*0.95,size);
+      const rad=rr*1.13+size*0.9;
+      for(let q=0;q<AS_WORD_ANGLES.length;q++){
+        const bob=0.42+0.58*(0.5+0.5*Math.sin(T*0.55-q*2.09));
+        asArcWords(cx2,'touch your light',x,y,rad,col,wW*bob*0.95,size,AS_WORD_ANGLES[q]);
+      }
     }
   }
 }
@@ -3444,6 +3529,9 @@ function tabZoomSync(){
   }catch(e){}
 }
 try{map.on('zoomend',tabZoomSync);}catch(e){}
+/* A hand on the map says "I have moved on" - so the foot of the screen comes
+   back, caused by the person rather than by a timer. */
+try{map.on('dragstart',function(){try{if(typeof window.asUnhushOffer==='function')window.asUnhushOffer();}catch(e){}});}catch(e){}
 // Sense buttons — two rows: the world around you (external) and how it makes you feel (internal)
 const stip=document.getElementById('stip');
 const allEl=document.getElementById('scats-all');
@@ -5032,101 +5120,105 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
    screen, and dropped by how far it stands from the centre. Whatever the
    widths, whatever pushes the row about, the apex is always the middle of the
    screen - which is where the cloud's own apex is. */
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE ARCH, MADE REAL  ·  8 September 2026
+   ───────────────────────────────────────────────────────────────────────────
+   Karl: "World still edged out on the right. Try to see what you have to do to
+   make an even more arch arc around the aura to make it fit." And: "the aura
+   orbs for each are tiny so make them larger too."
+
+   Those two are the same fix, which is why neither worked on its own. The row
+   was a FLAT LINE with each word nudged downward - so its width was whatever
+   the five words happened to add up to, and on a narrow phone that was more
+   than the phone. Every attempt to shrink the type fought every attempt to
+   make it readable.
+
+   Placed on a TRUE ARC the words are pulled inward as well as downward, exactly
+   as points on a circle are. So the arch is now built the other way round: the
+   screen decides the circle, and the circle decides where each word goes. The
+   outermost word CANNOT leave the screen, because its position is measured
+   from the edge of the screen rather than arrived at by accident. Bigger type
+   and bigger orbs now cost depth of curve instead of costing World.
+
+   One function decides size and place together. Two functions deciding one
+   thing between them is what made the row dance yesterday.
+   ═══════════════════════════════════════════════════════════════════════════ */
+var _arcW=-1, _arcFS=0;
+window.asRefit=function(){ _arcW=-1; };
 function asArcTabs(){
   try{
     var t=document.getElementById('tabs'); if(!t)return;
+    var W=Math.max(1,innerWidth), phone=(W<=600);
     var kids=[].slice.call(t.children);
+
     if(document.body.classList.contains('world-view')){
-      t.style.transform=''; kids.forEach(function(c){ c.style.transform=''; });
-      return;
+      t.style.transform='';
+      kids.forEach(function(c){ c.style.transform=''; });
+      t.querySelectorAll('.tab').forEach(function(c){ c.style.fontSize=''; });
+      _arcW=-1; return;
     }
     t.style.transform='none';
     kids.forEach(function(c){ c.style.transform='none'; });   /* measure untouched */
 
-    var W=Math.max(1,innerWidth), mid=W/2;
-    var seen=[], i;
-    kids.forEach(function(c){
-      var r=c.getBoundingClientRect();
-      if(r.width)seen.push({el:c,c:r.left+r.width/2,l:r.left,r:r.right});
-    });
-    if(!seen.length)return;
-
-    /* ═══ WHY THE ARC VANISHED · 6 Sep 2026 ═════════════════════════════════
-       The curve was measured against half the SCREEN. But the six levels only
-       occupy the middle third of a laptop screen, so nothing ever reached the
-       far end of the curve - the widest step was a fifth of the way along it,
-       and a fifth of a parabola is a straight line. The arc was there. It was
-       simply too small a slice of one to be seen.
-       It is measured against the width of the ROW now, so the six span the
-       whole curve from one end to the other. */
-    var rowL=seen[0].l, rowR=seen[seen.length-1].r;
-    var rowMid=(rowL+rowR)/2, half=Math.max(1,(rowR-rowL)/2);
-
-    /* ═══ 8 Sep 2026 · THE ROW STOPPED DANCING ════════════════════════
-       Karl: "it shows Street to World dancing back and forth, left and right."
-       It was being centred twice: once by its own layout, and again by a
-       measurement taken every nine-tenths of a second - and each measurement
-       moved the thing it was measuring. The classic shape of this project's
-       one recurring fault, in miniature.
-       The row is centred by its layout alone now. Nothing here slides it.  */
-    t.style.transform='none';
-
-    /* and the curve is deeper, so the row reads as the arch of the cloud
-       around the aura rather than a line with a slight sag in it */
-    var DEPTH=Math.min(74,Math.max(38,W*0.05));
-    seen.forEach(function(o){
-      var u=(o.c-rowMid)/half;                 /* now truly spans -1 .. 1 */
-      if(u<-1)u=-1; if(u>1)u=1;
-      o.el.style.transform='translateY('+(DEPTH*u*u).toFixed(2)+'px)';
-    });
-  }catch(e){}
-}
-/* ═══ EVERY LEVEL ON THE SCREEN · 7 Sep 2026 ════════════════════════
-   Karl: "you can see from the cell screen shot that world is nudged out to the
-   right."
-   It was, and it was simply too wide: five levels at sixteen point come to more
-   than a narrow phone is, so the last one walked off the edge.
-   Rather than guessing a smaller number that would be wrong on the next phone,
-   the row MEASURES ITSELF - stepping its size down until the outermost level
-   sits inside the screen, and stepping back up whenever there is room again.
-   The same method as the dome above it: measured, never guessed.           */
-var _fitW=-1;
-window.asRefit=function(){ _fitW=-1; };
-function asFitTabs(){
-  try{
-    var t=document.getElementById('tabs'); if(!t)return;
-    var kids=[].slice.call(t.querySelectorAll('.tab'));
+    var tabs=[].slice.call(t.querySelectorAll('.tab'));
     var caret=t.querySelector('.tab-caret');
-    if(!kids.length)return;
-    /* measured ONCE per screen width, never on a repeating clock. A size that
-       is recalculated while it is being looked at is the dance itself. */
-    if(_fitW===innerWidth)return;
-    _fitW=innerWidth;
-    if(innerWidth>600||document.body.classList.contains('world-view')){
-      kids.forEach(function(c){c.style.fontSize='';});
-      if(caret)caret.style.fontSize='';
-      return;
-    }
-    var apply=function(v){
-      kids.forEach(function(c){c.style.fontSize=v.toFixed(2)+'px';});
+    var setFS=function(v){
+      if(!v){ tabs.forEach(function(c){c.style.fontSize='';}); if(caret)caret.style.fontSize=''; return; }
+      tabs.forEach(function(c){ c.style.fontSize=v.toFixed(2)+'px'; });
       if(caret)caret.style.fontSize=(v*0.85).toFixed(2)+'px';
     };
-    var over=function(){
-      var lo=1e9,hi=-1e9;
-      kids.forEach(function(c){var r=c.getBoundingClientRect();if(!r.width)return;
-        if(r.left<lo)lo=r.left; if(r.right>hi)hi=r.right;});
-      if(hi<-1e8)return false;
-      return (hi>innerWidth-5)||(lo<5);
+    var natural=function(){
+      var out=[];
+      kids.forEach(function(c){ var r=c.getBoundingClientRect(); if(r.width)out.push({el:c,w:r.width,c:r.left+r.width/2}); });
+      return out;
     };
-    var fs=16, guard=0; apply(fs);
-    while(over()&&fs>10.5&&guard++<14){ fs-=0.5; apply(fs); }
+
+    var M = phone?9:16, usable=W-2*M;
+    /* the size is settled once per screen width - a size recalculated while it
+       is being looked at is the dance itself */
+    if(phone && _arcW!==W){
+      _arcW=W;
+      var fs=17.5, guard=0;              /* Karl asked for larger, so we start larger */
+      setFS(fs);
+      while(guard++<16 && fs>11){
+        var m0=natural(); if(!m0.length)break;
+        var tot=0; m0.forEach(function(o){tot+=o.w;});
+        /* the curve buys about a seventh of the flat width back. Anything inside
+           that will sit on the arc without two words touching. */
+        if(tot <= usable*1.15) break;
+        fs-=0.5; setFS(fs);
+      }
+      _arcFS=fs;
+    } else if(!phone && _arcW!==W){
+      _arcW=W; _arcFS=0; setFS(0);
+    } else if(phone && _arcFS){
+      setFS(_arcFS);
+    }
+
+    var m=natural(); if(!m.length)return;
+    var lo=m[0], hi=m[m.length-1];
+    var cx=W/2;
+    /* the furthest a word's CENTRE may stand from the middle and still be whole */
+    var halfEx=Math.max(30,(usable-lo.w/2-hi.w/2)/2);
+    var TH = phone?0.86:0.66;                   /* half the arc, in radians */
+    var R  = halfEx/Math.sin(TH);
+    var rowL=lo.c-lo.w/2, rowR=hi.c+hi.w/2;
+    var rowMid=(rowL+rowR)/2, half=Math.max(1,(rowR-rowL)/2);
+    m.forEach(function(o){
+      var u=(o.c-rowMid)/half; if(u<-1)u=-1; if(u>1)u=1;
+      var th=u*TH;
+      var tx=cx+R*Math.sin(th)-o.c;
+      var ty=R*(1-Math.cos(th));
+      o.el.style.transform='translate('+tx.toFixed(1)+'px,'+ty.toFixed(1)+'px)';
+    });
   }catch(e){}
 }
-function asArcAndFit(){ asFitTabs(); asArcTabs(); }
-addEventListener('resize',function(){ setTimeout(asArcAndFit,60); });
-addEventListener('orientationchange',function(){ setTimeout(asArcAndFit,300); });
+function asArcAndFit(){ asArcTabs(); }
+addEventListener('resize',function(){ _arcW=-1; setTimeout(asArcAndFit,60); });
+addEventListener('orientationchange',function(){ _arcW=-1; setTimeout(asArcAndFit,300); });
 setInterval(asArcAndFit,900);
-setTimeout(asArcAndFit,200); setTimeout(asArcAndFit,1200);
+try{ if(document.fonts&&document.fonts.ready)document.fonts.ready.then(function(){ _arcW=-1; asArcAndFit(); }); }catch(e){}
+setTimeout(asArcAndFit,200); setTimeout(asArcAndFit,1200); setTimeout(function(){_arcW=-1;asArcAndFit();},2600);
 
 /* ═══ THE MARK IS THE WAY IN · 6 Sep 2026 ══════════════════════════════════
    The My Aura button has left the row. The wordmark's own orb - two auras
@@ -7523,6 +7615,7 @@ function raiseOfferPanel(address){
 }
 /* The one place that lifts the hush, so it can never be lifted in two. */
 window.asUnhushOffer=function(){
+  try{document.body.classList.remove('as-peak');}catch(e){}
   try{const b=document.getElementById('offer-confirm');
     if(b&&b.classList.contains('oc-hush')){b.classList.remove('oc-hush');b.classList.add('oc-open');}
   }catch(e){}
@@ -7536,12 +7629,13 @@ function asHushWatch(){
     try{const m=document.getElementById('pmsg');if(m&&m.classList.contains('show'))busy=true;}catch(e){}
     if(window.AS_INVITE_PENDING)busy=true;
     if(document.body.classList.contains('as-mark-calling'))busy=true;
-    /* while the light itself is offering the way through, the foot of the
-       screen stays quiet. It comes back on its own after half a minute, so
-       nothing is ever locked away behind a thing a person did not notice. */
+    /* the light itself is the way through for as long as it is waiting. The
+       choices return when the senser moves the map, opens their aura, or after
+       a minute and a half - so nothing is ever locked behind a thing they did
+       not happen to notice. */
     try{const _t=window.AS_THREAD;
-      if(_t&&!_t.done&&(Date.now()-_t.from)<32000)busy=true;}catch(e){}
-    if(busy&&waited<40000){waited+=600;setTimeout(look,600);return;}
+      if(_t&&!_t.done&&(Date.now()-_t.from)<90000)busy=true;}catch(e){}
+    if(busy&&waited<95000){waited+=600;setTimeout(look,600);return;}
     window.asUnhushOffer();
   })();
 }
@@ -7557,8 +7651,13 @@ function showOfferConfirm(senseId,text,place,lat,lng){
      way back. Its other choices arrive when the invitation has finished. */
   try{
     box.classList.remove('oc-open');
-    if(Date.now()-(window.AS_PEAK_AT||0)<20000){box.classList.add('oc-hush');asHushWatch();}
-    else{box.classList.remove('oc-hush');}
+    /* 8 Sep - Karl: "the panel says different things upon each time offered".
+       It did, because whether it hushed depended on a clock. It now depends on
+       ONE FACT: is this senser's own light still waiting to be touched. Same
+       question, same answer, every single time. */
+    const _live=!!(window.AS_THREAD&&!window.AS_THREAD.done);
+    if(_live){box.classList.add('oc-hush');document.body.classList.add('as-peak');asHushWatch();}
+    else{box.classList.remove('oc-hush');document.body.classList.remove('as-peak');}
   }catch(e){}
   const panel=document.getElementById('panel');
   if(panel){panel.classList.add('show-mobile','just-offered','offer-quiet','has-last');panel.classList.remove('locating');panel.style.maxHeight='';panel.style.bottom='';
@@ -9757,7 +9856,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 8 Sep 2026 · 96 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 8 Sep 2026 · 97 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
