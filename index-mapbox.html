@@ -225,7 +225,14 @@ body.as-mark-calling #logo-mark .as-hint{left:0;transform:none;
 .soc-btn{width:27px;height:27px;border-radius:50%;border:0.5px solid rgba(255,255,255,.14);background:rgba(10,10,20,.85);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px;transition:all .2s;color:#ece6ff;font-weight:600}
 .soc-btn:hover{border-color:rgba(167,139,250,.4);background:rgba(167,139,250,.12);transform:scale(1.1)}
 .soc-tip{position:fixed;background:rgba(15,12,25,.98);border:0.5px solid rgba(167,139,250,.3);border-radius:8px;padding:5px 9px;font-size:10px;color:#9d8fcc;white-space:nowrap;z-index:9999;pointer-events:none;display:none}
-#hdr2{position:absolute;top:13px;left:330px;right:16px;display:flex;align-items:center;justify-content:flex-start;pointer-events:all;gap:12px}
+/* ═══ 8 Sep 2026 · THE HEAD OF THE SCREEN, IN THE ORDER KARL ASKED FOR ═════
+   "Put the location search box 'above' the Street to World view aura buttons."
+   "Put the live feed button in the top right where the social media icons were."
+   Finding a place comes first; choosing how far out to stand comes second. The
+   two now sit in that order, both centred on the middle of the screen, which is
+   where the cloud's arch is and where a landing light arrives.              */
+#hdr2{position:absolute;top:11px;left:0;right:0;display:flex;align-items:center;
+  justify-content:center;flex-direction:column-reverse;pointer-events:none;gap:9px}
 /* ═══════════════════════════════════════════════════════════════════════════
    THE ARC · 6 September 2026
    ───────────────────────────────────────────────────────────────────────────
@@ -467,7 +474,8 @@ html.as-arrived #build-stamp,html.as-arrived #mv-orb
 .tab-mi.mi-active .tab-orb{background:#c4b5fd;box-shadow:0 0 7px rgba(196,181,253,.9)}
 .fi-loc{font-size:9.5px;color:#9d8fcc;margin-top:2px;font-style:italic}
 @keyframes searchPulse{0%{transform:scale(1);box-shadow:0 0 10px 3px rgba(167,139,250,.6)}50%{transform:scale(1.35);box-shadow:0 0 18px 7px rgba(167,139,250,.9)}100%{transform:scale(1);box-shadow:0 0 10px 3px rgba(167,139,250,.6)}}
-#search-box{display:flex;gap:5px;flex-shrink:0}
+#search-box{display:flex;gap:5px;flex-shrink:0;pointer-events:all}
+@media(min-width:601px){#search-box{width:min(430px,42vw)}#search-box #si{flex:1 1 auto}}
 #si{background:rgba(14,12,28,.92);border:0.5px solid rgba(167,139,250,.5);border-radius:12px;padding:12px 13px;font-size:13px;color:#e0d8ff;outline:none;width:280px;font-family:inherit;box-shadow:0 0 18px rgba(124,92,255,.3)}
 #si:focus{border-color:rgba(167,139,250,.85);box-shadow:0 0 0 2px rgba(167,139,250,.25),0 0 24px rgba(124,92,255,.5)}
 #si::placeholder{color:#5a5270}
@@ -1501,7 +1509,7 @@ body.ma-incloud .as-rail{display:none!important}
 #qz-thanks .big{font-size:24px;color:#efe8ff;font-weight:300;text-shadow:0 0 26px rgba(167,139,250,.8)}
 #qz-thanks .sm{font-size:13px;color:#b4a9d8;margin-top:12px;max-width:380px;line-height:1.6}
 /* Live aura feed */
-#livefeed-btn{position:absolute;top:134px;right:16px;z-index:40;background:rgba(20,16,40,.72);border:0.5px solid rgba(124,200,255,.4);color:#bfe2ff;font-size:12px;padding:9px 15px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s}
+#livefeed-btn{position:absolute;top:13px;right:16px;z-index:46;background:rgba(20,16,40,.72);border:0.5px solid rgba(124,200,255,.4);color:#bfe2ff;font-size:12px;padding:9px 15px;border-radius:20px;cursor:pointer;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .25s}
 #livefeed-btn:hover{background:rgba(28,40,68,.85)}
 #lf-inner{max-width:620px;margin:0 auto;padding:64px 22px 60px}
 #lf-title{font-size:24px;font-weight:300;letter-spacing:.04em;color:#efe8ff;text-align:center;text-shadow:0 0 22px rgba(124,200,255,.5);animation:lfTglow 4.5s ease-in-out infinite}
@@ -1569,12 +1577,14 @@ body.ma-incloud .as-rail{display:none!important}
 /* Become an Aurasenser sits below My Aura; Live feed below that */
 #register-btn{top:236px;left:16px;bottom:auto;right:auto}
 #register-btn.hidden{display:none}
-#livefeed-btn{top:140px;left:50%;right:auto;bottom:auto;transform:translateX(-50%)}
+#livefeed-btn{top:13px;left:auto;right:12px;bottom:auto;transform:none}
 /* Top search box folds into the centre prompt */
 #search-box{display:none}
 @media(min-width:601px){#search-box{display:flex}}
 @media(max-width:600px){
-  #search-box{display:flex !important;position:fixed !important;top:112px !important;left:50% !important;right:auto !important;transform:translateX(-50%) !important;width:min(350px,92vw);margin:0 !important;pointer-events:all;z-index:41;justify-content:center}
+  /* 8 Sep - the search now rides inside the stack, above the arc, instead of
+     being pinned under it by a number of its own. */
+  #search-box{display:flex !important;position:static !important;transform:none !important;width:min(350px,92vw);margin:0 auto !important;pointer-events:all;z-index:41;justify-content:center}
   #si{flex:1;width:auto;box-shadow:0 0 26px rgba(124,92,255,.55),0 0 8px rgba(196,181,253,.4);border-color:rgba(196,181,253,.7)}
   #si{flex:1;width:auto;font-size:16px;padding:13px 13px}
   #sg{font-size:13.5px;padding:11px 18px}
@@ -1672,7 +1682,7 @@ body.ma-incloud .as-rail{display:none!important}
   #lf-back{position:fixed;top:calc(env(safe-area-inset-top) + 8px);left:10px;right:10px;z-index:12;font-size:15px;padding:13px 18px;display:block;text-align:center;border-radius:14px;backdrop-filter:blur(6px)}
   #lf-inner{padding-top:64px}
   #logo h1{font-size:15px}#logo p{display:none}
-  #hdr2{top:58px;left:8px;right:8px;justify-content:center}
+  #hdr2{top:52px;left:8px;right:8px;justify-content:center}
   #tabs{width:100%;justify-content:space-between;gap:2px}
   #tabs .tab{font-size:16px;padding:7px 4px;letter-spacing:.01em}
   @media(max-width:380px){#tabs .tab{font-size:14.5px;padding:7px 3px}}
@@ -1698,7 +1708,9 @@ body.ma-incloud .as-rail{display:none!important}
   #my-aura{top:88px;left:10px;transform:scale(.9);transform-origin:top left}
   #explore-btn{left:118px;top:128px;transform:scale(.92);transform-origin:top left}
   #register-btn{top:220px;left:10px;font-size:11px;padding:8px 12px}
-  #livefeed-btn{position:fixed;z-index:41;top:172px;left:50%;transform:translateX(-50%);right:auto;bottom:auto;font-size:14px;padding:11px 20px;border-color:rgba(150,215,255,.75);color:#dbefff;box-shadow:0 0 28px rgba(110,180,255,.6),0 0 10px rgba(180,225,255,.45);background:rgba(22,20,48,.85)}
+  /* 8 Sep - out of the middle of the screen, where it stood in front of the
+     map, and into the corner the social marks used to hold. */
+  #livefeed-btn{position:fixed;z-index:46;top:calc(env(safe-area-inset-top) + 12px);right:10px;left:auto;transform:none;bottom:auto;font-size:11.5px;padding:8px 12px;border-color:rgba(150,215,255,.65);color:#dbefff;box-shadow:0 0 18px rgba(110,180,255,.45);background:rgba(22,20,48,.86)}
   #place-mini{top:auto;bottom:84px;left:10px}
   #locality-btn{bottom:86px;right:14px;width:42px;height:42px;font-size:16px}
   #place-prompt{top:21%;width:92%;padding:18px 16px 16px}
@@ -2992,6 +3004,9 @@ const _mapOpened=Date.now();
     const x=pt.x,y=pt.y;
     const s=SENSES.find(s=>s.id===p.sense),col=s?s.color:'#a78bfa';
     const life=Math.min(1,(Date.now()-p.born)/2000);
+    /* THE THREAD HOME reads this senser's own light off the very frame that
+       draws it, so the thread can never start anywhere but where the light is. */
+    try{const _th=window.AS_THREAD;if(_th&&_th.ap===p){_th._x=x;_th._y=y;_th._seen=T;}}catch(_){}
     // OFFERED AT HEIGHT — this light was never given to a doorstep. It was given to a whole
     // place, so the whole place carries it: a breathing field with a luminous edge, filling
     // the place's own extent. No hard border is drawn, because an aura does not have one.
@@ -3021,15 +3036,18 @@ const _mapOpened=Date.now();
        and the ripples are all set as fractions of that radius, so the light
        keeps every bit of its strength and all of its motion, and simply stops
        covering the street.                                                  */
-    const REST=0.46, HOLD=4, EASE=2;
+    /* 8 Sep - Karl: "I meant 4 seconds rather than 4 glows... lets say 9
+       seconds because the message is there anyway upon landing." Nine at full
+       size, easing down across the next three and a half. */
+    const REST=0.42, FULL_MS=9000, EASE_MS=3500;
     let _bloom=REST;
     if(p.born>_mapOpened+1500){
-      if(p._bornT===undefined)p._bornT=T;
-      const glows=(T-p._bornT)*0.55/(Math.PI*2);
-      if(glows<HOLD){ _bloom=1; }
-      else if(glows<HOLD+EASE){ const e=(glows-HOLD)/EASE, k=e*e*(3-2*e); _bloom=1-(1-REST)*k; }
+      const el2=Date.now()-p.born;
+      if(el2<FULL_MS){ _bloom=1; }
+      else if(el2<FULL_MS+EASE_MS){ const e=(el2-FULL_MS)/EASE_MS, k=e*e*(3-2*e); _bloom=1-(1-REST)*k; }
     }
     const r=(45+p.intensity*35)*breath*life*_sw*_bloom*Math.pow(2,(map.getZoom()-14)*0.7);
+    try{const _th=window.AS_THREAD;if(_th&&_th.ap===p)_th._r=r;}catch(_){}
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
     const swell=(breath-0.52)/0.60;
     // From the street the field is intimate; seen from the town it turns to mist — mid and inner bands thin toward the outer fog.
@@ -3037,12 +3055,23 @@ const _mapOpened=Date.now();
     // a wide misty halo just beyond the edge, glowing broadly in the sense colour — misty and mysterious
     const halo=ctx.createRadialGradient(x,y,r*0.6,x,y,r*1.95);
     halo.addColorStop(0,hexA(col,0));
-    halo.addColorStop(0.45,hexA(col,(0.12+0.06*swell)*life));
-    halo.addColorStop(0.7,hexA(col,(0.06+0.03*swell)*life));
+    halo.addColorStop(0.45,hexA(col,(0.095+0.05*swell)*life));
+    halo.addColorStop(0.7,hexA(col,(0.048+0.026*swell)*life));
     halo.addColorStop(1,hexA(col,0));
     ctx.fillStyle=halo;ctx.beginPath();ctx.arc(x,y,r*1.95,0,Math.PI*2);ctx.fill();
-    glow.addColorStop(0,    hexA(col,(0.95+0.05*swell)*life*(1-0.55*townness)));
-    glow.addColorStop(0.35, hexA(col,(0.55+0.10*swell)*life*(1-0.62*townness)));
+    /* ═══ 8 Sep 2026 · THE BODY THINS SO THE MOTION CAN BE SEEN ═══════════
+       Karl: "is there a way we can add to the transparency a touch whilst
+       increasing the amazing motion of the auras? I love the motions that were
+       developed and the details of this underlying motion needs to stand out
+       more."
+       The body was very nearly solid at its middle, so every grain, wisp,
+       ripple and mote was being painted on top of a wall of its own colour and
+       could not be told apart from it. The wall comes down; the living layers
+       below come up. This is the recorded principle at last: HARD IDENTITY AT
+       THE CORE, SOFT BLEED AT THE RIM - the white centre is untouched, so the
+       sense is still unmistakable, and the map can now be seen through it. */
+    glow.addColorStop(0,    hexA(col,(0.58+0.06*swell)*life*(1-0.55*townness)));
+    glow.addColorStop(0.35, hexA(col,(0.30+0.08*swell)*life*(1-0.62*townness)));
     glow.addColorStop(1,    hexA(col,0));
     ctx.fillStyle=glow;ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();
     const cr=11*breath*life;
@@ -3059,18 +3088,18 @@ const _mapOpened=Date.now();
     if(!m.fieldColor)m.fieldColor=makeFieldColor(hexRGB(col));
     const fc=m.fieldColor;
     const throb=Math.sin(T*9+i*0.7)*0.5+0.5;
-    const bright=life*(0.55+0.45*swell)*(0.86+0.14*throb);
+    const bright=life*(0.80+0.55*swell)*(0.86+0.14*throb);   /* the motion, brought forward */
     for(let k=0;k<m.grain.length;k++){
       const gp=m.grain[k];const rr1=gp.r*r;const gx=x+Math.cos(gp.a)*rr1,gy=y+Math.sin(gp.a)*rr1;
       const tw1=Math.sin(T*gp.sp+gp.ph)*0.5+0.5,twS1=Math.pow(tw1,2.2);
-      const op1=gp.base*twS1*bright*(1-gp.r*0.25);
+      const op1=gp.base*twS1*bright*(1-gp.r*0.25)*1.35;
       ctx.fillStyle=rgbaArr(fc(gp.r),op1);ctx.beginPath();ctx.arc(gx,gy,gp.size,0,Math.PI*2);ctx.fill();
     }
     for(let w=0;w<m.wisps.length;w++){
       const wp=m.wisps[w];const lifeA=Math.sin(wp.life+T*wp.lsp)*0.5+0.5;
       const wx=x+Math.cos(wp.a0)*wp.r0*r+Math.sin(T*wp.dx+wp.phx)*wp.wander*r;
       const wy=y+Math.sin(wp.a0)*wp.r0*r+Math.cos(T*wp.dy+wp.phy)*wp.wander*r;
-      const wr=wp.size*r*(0.85+0.3*lifeA),wA=(0.07+0.17*lifeA)*bright,wc=fc(0.2);
+      const wr=wp.size*r*(0.85+0.3*lifeA),wA=(0.10+0.26*lifeA)*bright,wc=fc(0.2);
       const wg=ctx.createRadialGradient(wx,wy,0,wx,wy,wr);
       wg.addColorStop(0,rgbaArr(wc,wA));wg.addColorStop(0.4,rgbaArr(wc,wA*0.55));wg.addColorStop(1,rgbaArr(wc,0));
       ctx.fillStyle=wg;ctx.beginPath();ctx.arc(wx,wy,wr,0,Math.PI*2);ctx.fill();
@@ -3079,26 +3108,26 @@ const _mapOpened=Date.now();
       const rp=m.ripples[ri];const cyc=((T/rp.period)+rp.phase)%1;
       if(cyc<rp.active){
         const prog=cyc/rp.active,rad=(0.08+prog*1.0)*r;
-        const flash=Math.min(1,prog*9)*Math.pow(1-prog,1.5),op2=flash*0.32*bright,rc=fc(Math.min(0.97,prog));
+        const flash=Math.min(1,prog*9)*Math.pow(1-prog,1.5),op2=flash*0.48*bright,rc=fc(Math.min(0.97,prog));
         const feather=[-7,-5,-3,-1.5,0,1.5,3,5,7],weights=[0.05,0.14,0.28,0.42,0.5,0.42,0.28,0.14,0.05];
         for(let fi=0;fi<feather.length;fi++){ctx.lineWidth=1.6;ctx.strokeStyle=rgbaArr(rc,op2*weights[fi]);ctx.beginPath();ctx.arc(x,y,Math.max(0,rad+feather[fi]),0,Math.PI*2);ctx.stroke();}
       }
     }
-    const rimC=fc(0.97),rimOp=(0.13+0.06*Math.sin(T*0.6+i))*bright;
+    const rimC=fc(0.97),rimOp=(0.185+0.09*Math.sin(T*0.6+i))*bright;
     const feather2=[-6,-4,-2,0,2,4,6],weights2=[0.08,0.2,0.38,0.5,0.38,0.2,0.08];
     for(let fi2=0;fi2<feather2.length;fi2++){ctx.lineWidth=1.8;ctx.strokeStyle=rgbaArr(rimC,rimOp*weights2[fi2]);ctx.beginPath();ctx.arc(x,y,Math.max(0,0.97*r+feather2[fi2]),0,Math.PI*2);ctx.stroke();}
     for(let ei=0;ei<m.edge.length;ei++){
       const ep=m.edge[ei];const rr2=ep.r*r;const ex=x+Math.cos(ep.a)*rr2,ey=y+Math.sin(ep.a)*rr2;
       const tw2=Math.sin(T*ep.sp+ep.ph)*0.5+0.5,twS2=Math.pow(tw2,3);
       const band=Math.max(0,1-Math.abs(ep.r-0.98)*1.9),opB=ep.base*twS2*bright*band,ec=fc(0.98);
-      ctx.fillStyle=rgbaArr(ec,opB*0.4);ctx.beginPath();ctx.arc(ex,ey,ep.size*1.8,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='rgba(255,255,255,'+Math.min(1,opB*1.3)+')';ctx.beginPath();ctx.arc(ex,ey,ep.size*0.65,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle=rgbaArr(ec,opB*0.56);ctx.beginPath();ctx.arc(ex,ey,ep.size*1.8,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,'+Math.min(1,opB*1.5)+')';ctx.beginPath();ctx.arc(ex,ey,ep.size*0.65,0,Math.PI*2);ctx.fill();
     }
     for(let j=0;j<m.motes.length;j++){
       const mp=m.motes[j];const rr3=mp.r*r*0.82;const mx=x+Math.cos(mp.a)*rr3,my=y+Math.sin(mp.a)*rr3;
       const tw3=Math.sin(T*mp.sp+mp.ph)*0.5+0.5,twS3=Math.pow(tw3,2.5),opM=twS3*(1-mp.r*0.35)*bright;
-      ctx.fillStyle='rgba(255,251,255,'+(opM*0.4)+')';ctx.beginPath();ctx.arc(mx,my,1.7,0,Math.PI*2);ctx.fill();
-      ctx.fillStyle='rgba(255,255,255,'+Math.min(1,opM*1.1)+')';ctx.beginPath();ctx.arc(mx,my,0.7,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,251,255,'+(opM*0.58)+')';ctx.beginPath();ctx.arc(mx,my,1.9,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,'+Math.min(1,opM*1.3)+')';ctx.beginPath();ctx.arc(mx,my,0.8,0,Math.PI*2);ctx.fill();
     }
   });
   ripples=ripples.filter(r=>r.age<1);
@@ -3116,8 +3145,154 @@ const _mapOpened=Date.now();
       }
     });
   });
+  try{drawThreadHome(ctx);}catch(e){}
   requestAnimationFrame(draw);
 })();
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   THE THREAD HOME  ·  8 September 2026
+   ────────────────────────────────────────────────────────────────────────
+   Karl: "someone looked at the screen at this state and said, what do I do
+   now?... its not addressing the original usability question, and KEY moment
+   issue... what to do at the moment of landing is - to encourage clicking on
+   the aura just offered and landed - see what you just did - type of thing,
+   then upon tapping it... since what they have just offered IS a part of their
+   own aura it would make sense to organically connect my aura through their
+   own light on the map."
+
+   He is right, and every panel we tried failed for the same reason: A CONTROL
+   AT THE EDGE OF THE SCREEN ASKS A PERSON TO LOOK AWAY FROM THE THING THEY
+   JUST MADE. The eye is on the light. So the door has to be the light.
+
+   What makes a person touch it, from the research:
+     · an UNFINISHED thing is the strongest pull an interface has. A line that
+       sets out and stops halfway asks to be completed, and people complete it
+       without being told to.
+     · FEEDFORWARD - showing what WILL happen before you act - beats any label.
+       The thread points at the mark, so the offer is legible before the tap.
+     · DIRECT MANIPULATION - touching the object itself rather than a proxy for
+       it - is both more findable and more satisfying than any button.
+     · THE ISOLATION EFFECT - only their own light has a thread. Nothing else
+       on the map does. Difference is what the eye goes to.
+     · FITTS - the landed aura is the largest target on the screen by far.
+     · And the scent still has to be named, so one line of words curves along
+       the aura's own rim. Circular frame. No rectangle anywhere in it.
+
+   So: the light rises from the offering, reaches HALFWAY to the mark, and
+   waits there, breathing. Touch the light and the thread completes - it runs
+   home, the mark blooms, and My Aura opens with the new colour already in it.
+   ════════════════════════════════════════════════════════════════════════════ */
+function asMarkPoint(){
+  try{const mk=document.getElementById('logo-mark');
+    if(mk){const r=mk.getBoundingClientRect();
+      if(r.width)return {x:r.left+r.width/2,y:r.top+r.height/2};}
+  }catch(e){}
+  return {x:Math.min(60,innerWidth*0.1),y:34};
+}
+/* words that curve along the rim, never in a box */
+function asArcWords(cx2,text,x,y,rad,col,alpha,size){
+  try{
+    cx2.save();
+    cx2.font='italic '+size.toFixed(1)+'px Georgia,"Times New Roman",serif';
+    cx2.textAlign='center'; cx2.textBaseline='middle';
+    let total=0; const ws=[];
+    for(let i=0;i<text.length;i++){const w=cx2.measureText(text[i]).width;ws.push(w);total+=w;}
+    const span=total/rad;
+    let a=Math.PI/2+span/2;
+    cx2.shadowColor=col; cx2.shadowBlur=16;
+    for(let i=0;i<text.length;i++){
+      const ac=a-(ws[i]/2)/rad;
+      cx2.save();
+      cx2.translate(x+Math.cos(ac)*rad,y+Math.sin(ac)*rad);
+      cx2.rotate(ac-Math.PI/2);
+      cx2.fillStyle='rgba(255,251,242,'+alpha.toFixed(3)+')';
+      cx2.fillText(text[i],0,0);
+      cx2.restore();
+      a-=ws[i]/rad;
+    }
+    cx2.restore();
+  }catch(e){}
+}
+function drawThreadHome(cx2){
+  const th=window.AS_THREAD; if(!th)return;
+  const age=(Date.now()-th.from)/1000;
+  if(!th.done&&age>420){window.AS_THREAD=null;return;}    /* it does not wait for ever */
+  if(th._x==null||th._seen==null||(T-th._seen)>0.2)return; /* only while its light is on screen */
+  try{if(window.AS_CALM)return;}catch(e){}
+  try{const mp=document.getElementById('myaura-page');if(mp&&mp.classList.contains('show'))return;}catch(e){}
+  try{if(map.getZoom()<3.6)return;}catch(e){}
+  const wake=Math.min(1,(age-8.5)/2.5);
+  if(wake<=0&&!th.done)return;
+  const x=th._x,y=th._y,rr=Math.max(24,th._r||60);
+  const home=asMarkPoint();
+  const dx=home.x-x, dy=home.y-y, dist=Math.hypot(dx,dy)||1;
+  const ux=dx/dist, uy=dy/dist, px=-uy, py=ux;
+  /* how far along it has got. Waiting: a little over half, breathing.
+     Completed: all the way, in about a second. */
+  let reach=0.54+0.05*Math.sin(T*0.5), fade=1;
+  if(th.done){
+    const rp=Math.min(1,(Date.now()-th.raceFrom)/950);
+    reach=0.54+(1-0.54)*(rp*rp*(3-2*rp));
+    fade=rp>0.82?Math.max(0,1-(rp-0.82)/0.18):1;
+  }
+  const sx=x+ux*rr*0.86, sy=y+uy*rr*0.86;
+  const ex=x+ux*dist*reach, ey=y+uy*dist*reach;
+  const bend=Math.sin(T*0.4)*dist*0.085;
+  const bx=(sx+ex)/2+px*bend, by=(sy+ey)/2+py*bend;
+  const col=th.color||'#c4b5fd';
+  const alive=(0.55+0.45*Math.sin(T*0.62))*wake*fade;
+  const N=44;
+  cx2.save();
+  cx2.shadowColor=col; cx2.shadowBlur=12;
+  for(let k=0;k<=N;k++){
+    const t2=k/N, mt=1-t2;
+    const qx=mt*mt*sx+2*mt*t2*bx+t2*t2*ex;
+    const qy=mt*mt*sy+2*mt*t2*by+t2*t2*ey;
+    /* it thins and fades toward its tip - a thread that stops, never a line that ends */
+    const taper=Math.pow(1-t2,0.75);
+    const a2=(0.10+0.44*taper)*alive;
+    if(a2<=0.004)continue;
+    cx2.fillStyle=hexA(col,a2);
+    cx2.beginPath();cx2.arc(qx,qy,(0.7+1.9*taper),0,Math.PI*2);cx2.fill();
+    if(k%6===0){cx2.fillStyle='rgba(255,255,255,'+(a2*0.5).toFixed(3)+')';
+      cx2.beginPath();cx2.arc(qx,qy,0.7*taper+0.25,0,Math.PI*2);cx2.fill();}
+  }
+  /* three lights walking the thread, so it reads as travel and not as a wire */
+  for(let g=0;g<3;g++){
+    const ph=((T*0.20)+g/3)%1;
+    const mt=1-ph;
+    const qx=mt*mt*sx+2*mt*ph*bx+ph*ph*ex;
+    const qy=mt*mt*sy+2*mt*ph*by+ph*ph*ey;
+    const gA=Math.sin(Math.PI*ph)*alive;
+    cx2.fillStyle=hexA(col,gA*0.85);
+    cx2.beginPath();cx2.arc(qx,qy,2.7,0,Math.PI*2);cx2.fill();
+    cx2.fillStyle='rgba(255,255,255,'+(gA*0.85).toFixed(3)+')';
+    cx2.beginPath();cx2.arc(qx,qy,1.15,0,Math.PI*2);cx2.fill();
+  }
+  cx2.restore();
+  /* the words, curved along the rim of their own light */
+  if(!th.done){
+    const wW=Math.min(1,(age-10)/2.2);
+    if(wW>0){
+      const bob=0.78+0.22*Math.sin(T*0.62);
+      const size=Math.max(12.5,Math.min(19,rr*0.11));
+      asArcWords(cx2,'touch your light',x,y,rr*1.13+size*0.9,col,wW*bob*0.95,size);
+    }
+  }
+}
+/* completing it: the thread runs home, the mark blooms, My Aura opens */
+function asThreadComplete(){
+  const th=window.AS_THREAD; if(!th||th.done)return;
+  th.done=true; th.raceFrom=Date.now();
+  try{playShift(523.25,1.7,.05);}catch(e){}
+  setTimeout(()=>{try{if(typeof window.asMarkFlare==='function')window.asMarkFlare(th.color);}catch(e){}},860);
+  setTimeout(()=>{
+    try{document.body.classList.remove('as-mark-lit','as-mark-calling');}catch(e){}
+    try{if(typeof window.asUnhushOffer==='function')window.asUnhushOffer();}catch(e){}
+    try{if(typeof openMyAuraPage==='function')openMyAuraPage();}catch(e){}
+    setTimeout(()=>{window.AS_THREAD=null;},900);
+  },1420);
+}
 // KITT wave
 let waveRaf=null,waveStartTs=0,waveColor='#a78bfa';
 const WAVE_DUR=9000;
@@ -3600,6 +3775,8 @@ function setActiveTab(i){
   paintActiveTab(i);
 }
 function paintActiveTab(i){
+  /* the folded button changes its own word, so the row is measured once more */
+  try{if(typeof window.asRefit==='function')window.asRefit();}catch(e){}
   const cellW=window.matchMedia&&window.matchMedia('(max-width:600px)').matches;
   const SCALE_NAMES=['Street','Town','Region','Nation','World'];
   document.querySelectorAll('.tab[data-i]').forEach(t=>{
@@ -3952,6 +4129,16 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
 }
 
 map.on('click',async function(e){
+  /* THE LIGHT IS THE DOOR. A tap inside a senser's own just-offered aura
+     completes the thread and carries them into My Aura. Nothing else gets to
+     claim this tap, which is why it is tested first. */
+  try{
+    const _th=window.AS_THREAD;
+    if(_th&&!_th.done&&_th._x!=null){
+      const _p2=map.project([e.lngLat.lng,e.lngLat.lat]);
+      if(Math.hypot(_p2.x-_th._x,_p2.y-_th._y)<=Math.max(50,(_th._r||60)*0.92)){asThreadComplete();return;}
+    }
+  }catch(_){}
   // World-event glows own their taps — the offering flow steps aside when a glow is under the finger.
   try{if(typeof wevReady!=='undefined'&&wevReady&&map.queryRenderedFeatures){const _wh=map.queryRenderedFeatures(e.point,{layers:['wev-mid','wev-core','wev-dot']});if(_wh&&_wh.length)return;}}catch(_){}
   // An open world-event panel closes on the next tap anywhere — that tap is a dismissal, never an offering.
@@ -4166,8 +4353,10 @@ function submit(lat,lng,text){
   // once, quietly, in their own colour. Nothing invented: it is the very point they placed.
   ascent={lat:lat,lng:lng,color:s.color,from:Date.now(),seen:{0:true}};
   /* the peak begins here. The confirm strip reads this to know it should stay
-     quiet until the invitation under the mark has had its moment. */
+     quiet while the light itself is the door. */
   window.AS_PEAK_AT=Date.now();
+  window.AS_THREAD={ap:_ap,color:s.color,from:Date.now(),done:false};
+  try{document.body.classList.add('as-mark-lit');}catch(e){}
   // THE CLIMB — turned off 25 Aug 2026. It was doing a second time what triggerWave (below)
   // already does: sweeping the scales out and back in the sense's colour. Two journeys where
   // there is one. The wave keeps the journey; ascentClimb stays defined but unused.
@@ -4873,16 +5062,18 @@ function asArcTabs(){
     var rowL=seen[0].l, rowR=seen[seen.length-1].r;
     var rowMid=(rowL+rowR)/2, half=Math.max(1,(rowR-rowL)/2);
 
-    /* and the row itself is slid to sit over the middle of the screen, which is
-       where the cloud's apex is and where a landing light arrives. Clamped, so
-       it can never be pushed off the edge or over the wordmark. */
-    var shift=mid-rowMid;
-    var room=Math.max(0,(W-(rowR-rowL))/2-14);
-    if(shift> room)shift= room;
-    if(shift<-room)shift=-room;
-    t.style.transform='translateX('+shift.toFixed(1)+'px)';
+    /* ═══ 8 Sep 2026 · THE ROW STOPPED DANCING ════════════════════════
+       Karl: "it shows Street to World dancing back and forth, left and right."
+       It was being centred twice: once by its own layout, and again by a
+       measurement taken every nine-tenths of a second - and each measurement
+       moved the thing it was measuring. The classic shape of this project's
+       one recurring fault, in miniature.
+       The row is centred by its layout alone now. Nothing here slides it.  */
+    t.style.transform='none';
 
-    var DEPTH=Math.min(64,Math.max(26,W*0.034));
+    /* and the curve is deeper, so the row reads as the arch of the cloud
+       around the aura rather than a line with a slight sag in it */
+    var DEPTH=Math.min(74,Math.max(38,W*0.05));
     seen.forEach(function(o){
       var u=(o.c-rowMid)/half;                 /* now truly spans -1 .. 1 */
       if(u<-1)u=-1; if(u>1)u=1;
@@ -4899,18 +5090,23 @@ function asArcTabs(){
    the row MEASURES ITSELF - stepping its size down until the outermost level
    sits inside the screen, and stepping back up whenever there is room again.
    The same method as the dome above it: measured, never guessed.           */
-var _fitFS=0;
+var _fitW=-1;
+window.asRefit=function(){ _fitW=-1; };
 function asFitTabs(){
   try{
     var t=document.getElementById('tabs'); if(!t)return;
     var kids=[].slice.call(t.querySelectorAll('.tab'));
     var caret=t.querySelector('.tab-caret');
     if(!kids.length)return;
+    /* measured ONCE per screen width, never on a repeating clock. A size that
+       is recalculated while it is being looked at is the dance itself. */
+    if(_fitW===innerWidth)return;
+    _fitW=innerWidth;
     if(innerWidth>600||document.body.classList.contains('world-view')){
-      if(_fitFS){kids.forEach(function(c){c.style.fontSize='';});if(caret)caret.style.fontSize='';_fitFS=0;}
+      kids.forEach(function(c){c.style.fontSize='';});
+      if(caret)caret.style.fontSize='';
       return;
     }
-    t.style.transform='none';                       /* measure the row untilted */
     var apply=function(v){
       kids.forEach(function(c){c.style.fontSize=v.toFixed(2)+'px';});
       if(caret)caret.style.fontSize=(v*0.85).toFixed(2)+'px';
@@ -4920,13 +5116,10 @@ function asFitTabs(){
       kids.forEach(function(c){var r=c.getBoundingClientRect();if(!r.width)return;
         if(r.left<lo)lo=r.left; if(r.right>hi)hi=r.right;});
       if(hi<-1e8)return false;
-      return (hi>innerWidth-4)||(lo<4);
+      return (hi>innerWidth-5)||(lo<5);
     };
-    var fs=_fitFS||16, guard=0;
-    if(!_fitFS)apply(fs);
-    while(over()&&fs>11&&guard++<16){ fs-=0.5; apply(fs); }
-    while(!over()&&fs<16&&guard++<34){ fs+=0.5; apply(fs); if(over()){ fs-=0.5; apply(fs); break; } }
-    _fitFS=fs;
+    var fs=16, guard=0; apply(fs);
+    while(over()&&fs>10.5&&guard++<14){ fs-=0.5; apply(fs); }
   }catch(e){}
 }
 function asArcAndFit(){ asFitTabs(); asArcTabs(); }
@@ -7343,7 +7536,12 @@ function asHushWatch(){
     try{const m=document.getElementById('pmsg');if(m&&m.classList.contains('show'))busy=true;}catch(e){}
     if(window.AS_INVITE_PENDING)busy=true;
     if(document.body.classList.contains('as-mark-calling'))busy=true;
-    if(busy&&waited<30000){waited+=600;setTimeout(look,600);return;}
+    /* while the light itself is offering the way through, the foot of the
+       screen stays quiet. It comes back on its own after half a minute, so
+       nothing is ever locked away behind a thing a person did not notice. */
+    try{const _t=window.AS_THREAD;
+      if(_t&&!_t.done&&(Date.now()-_t.from)<32000)busy=true;}catch(e){}
+    if(busy&&waited<40000){waited+=600;setTimeout(look,600);return;}
     window.asUnhushOffer();
   })();
 }
@@ -9559,7 +9757,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 7 Sep 2026 · 95 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 8 Sep 2026 · 96 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -9647,6 +9845,10 @@ try{
         var mark=document.getElementById('logo-mark');
         var hint=mark?mark.querySelector('.as-hint'):null;
         document.body.classList.add('as-mark-lit');
+        /* 8 Sep - if they have already offered, their own light is the door and
+           the thread is pointing at this mark. Two doors is the fault we keep
+           meeting; the mark simply lights, and says nothing. */
+        try{if(window.AS_THREAD&&!window.AS_THREAD.done){window.AS_INVITE_PENDING=false;return;}}catch(_){ }
         if(!hint){ window.AS_INVITE_PENDING=false; return; }
         var was=hint.textContent||'My Aura';
         document.body.classList.add('as-mark-calling');
