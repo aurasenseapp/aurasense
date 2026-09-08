@@ -151,13 +151,71 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #logo-mark:hover{transform:scale(1.09);filter:brightness(1.22)}
 #logo-mark:focus-visible{outline:2px solid rgba(196,181,253,.8);outline-offset:6px}
 #logo-mark::after{content:'';position:absolute;inset:-9px;border-radius:50%;
-  border:1px solid rgba(196,181,253,0);transition:border-color .45s}
+  border:1px solid rgba(196,181,253,0);transition:border-color .9s ease,box-shadow .9s ease}
 #logo-mark:hover::after,body.myaura-live #logo-mark::after{border-color:rgba(214,201,255,.5)}
 body.myaura-live #logo-mark{filter:brightness(1.3)}
-#logo-mark .as-hint{position:absolute;left:50%;top:calc(100% + 7px);transform:translateX(-50%);
-  font-family:Georgia,"Times New Roman",serif;font-size:11px;letter-spacing:.09em;
-  color:#cfc6f2;white-space:nowrap;opacity:.72;pointer-events:none;
-  text-shadow:0 1px 2px rgba(8,6,20,.95),0 0 12px rgba(8,6,20,.9)}
+/* ═══ THE MARK IS THE DOOR · 7 September 2026 ═══════════════════════
+   Karl: "My Aura text needs to pop more on both. And when the aura flys to my
+   aura it misses. The old logo now representing the My Aura aura on the map
+   needs to be impressive, and more so when the aurasense just offered arrives,
+   then moves to street, town, region, nation and world glows in turn."
+
+   Three things with one cause. My Aura left the row on 6 September, but every
+   light was still being flown to the OLD BUTTON - which is display:none, and
+   so has no width and no place on the screen. The light was landing on nothing
+   in the top corner. That is the miss.
+   The mark carries it now, at both ends of the journey: the light arrives
+   there, the levels glow in turn, and the light comes home there. And because
+   the climb ends at the mark, the invitation waits there too, instead of in a
+   slab at the foot of the screen that had to fight the offering strip for the
+   same second. Nothing at the bottom, nothing to dismiss.                   */
+#logo-mark .as-hint{position:absolute;left:50%;top:calc(100% + 8px);transform:translateX(-50%);
+  font-family:Georgia,"Times New Roman",serif;font-size:12.5px;letter-spacing:.1em;
+  color:#f4efff;white-space:nowrap;opacity:1;pointer-events:none;
+  transition:color .9s ease,font-size .9s ease,letter-spacing .9s ease,
+             text-shadow .9s ease,left .9s ease,transform .9s ease;
+  text-shadow:0 1px 2px rgba(8,6,20,.98),0 0 10px rgba(8,6,20,.96),
+              0 0 20px rgba(8,6,20,.88),0 0 28px rgba(196,181,253,.5)}
+@media (max-width:600px){#logo-mark .as-hint{font-size:12px;top:calc(100% + 6px)}}
+/* the light coming home — one bloom of the mark, in the sense's own colour */
+#logo-mark .as-home{position:absolute;left:50%;top:50%;width:15px;height:15px;
+  margin:-7.5px 0 0 -7.5px;border-radius:50%;pointer-events:none;opacity:0;
+  background:radial-gradient(circle,#ffffff 0%,var(--home,#c4b5fd) 52%,rgba(0,0,0,0) 74%)}
+@keyframes asMarkFlare{
+  0%  {transform:scale(1);   filter:brightness(1)}
+  15% {transform:scale(1.32);filter:brightness(2.2) saturate(1.35)}
+  45% {transform:scale(1.11);filter:brightness(1.5)}
+  100%{transform:scale(1);   filter:brightness(1)}}
+@keyframes asMarkHome{
+  0%  {opacity:0;transform:scale(.28)}
+  13% {opacity:1;transform:scale(1)}
+  100%{opacity:0;transform:scale(5.4)}}
+/* the standing invitation — the mark keeps breathing until it is opened */
+@keyframes asMarkWait{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+body.as-mark-lit #logo-mark svg{animation:asMarkWait 5.4s ease-in-out infinite}
+body.as-mark-lit #logo-mark{filter:brightness(1.34) saturate(1.14)}
+body.as-mark-lit #logo-mark::after{border-color:rgba(226,214,255,.6);
+  box-shadow:0 0 24px rgba(167,139,250,.5),inset 0 0 16px rgba(196,181,253,.2)}
+/* placed after the waiting breath so the arrival can interrupt it */
+body #logo-mark.as-flare svg{animation:asMarkFlare 2.6s cubic-bezier(.22,.9,.3,1)}
+body #logo-mark.as-flare .as-home{animation:asMarkHome 2.6s ease-out}
+body.as-mark-calling #logo-mark .as-hint{left:0;transform:none;
+  color:#fff8ec;font-size:13.5px;letter-spacing:.045em;
+  text-shadow:0 1px 2px rgba(8,6,20,.98),0 0 12px rgba(8,6,20,.96),
+              0 0 26px rgba(232,192,116,.8),0 0 46px rgba(196,181,253,.6)}
+@media (max-width:600px){body.as-mark-calling #logo-mark .as-hint{font-size:12.5px}}
+@media (prefers-reduced-motion:reduce){
+  body.as-mark-lit #logo-mark svg,body #logo-mark.as-flare svg{animation:none}}
+/* the old door at the foot of the screen is retired — the mark is the door */
+#as-land{display:none!important}
+/* ═══ ONE THING AT A TIME AT THE PEAK · 7 September 2026 ══════════════════
+   The strip and the door were both answering "what now?" in the same second.
+   The strip now says only WHAT HAPPENED, and keeps the way back. Its choices
+   arrive once the invitation under the mark has had its moment.            */
+#offer-confirm.oc-hush .oc-lbl,
+#offer-confirm.oc-hush .oc-btn:not(.oc-withdraw){display:none!important}
+@keyframes ocRise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+#offer-confirm.oc-open .oc-actions{animation:ocRise 1.2s ease both}
 /* out of the row, on every screen */
 #tabs .tab-myaura{display:none!important}
 #social[hidden]{display:none!important}
@@ -1616,9 +1674,9 @@ body.ma-incloud .as-rail{display:none!important}
   #logo h1{font-size:15px}#logo p{display:none}
   #hdr2{top:58px;left:8px;right:8px;justify-content:center}
   #tabs{width:100%;justify-content:space-between;gap:2px}
-  #tabs .tab{font-size:16px;padding:7px 6px;letter-spacing:.01em}
-  @media(max-width:380px){#tabs .tab{font-size:14.5px;padding:7px 4px}}
-  #tabs .tab-orb{width:6px;height:6px;margin-right:4px}
+  #tabs .tab{font-size:16px;padding:7px 4px;letter-spacing:.01em}
+  @media(max-width:380px){#tabs .tab{font-size:14.5px;padding:7px 3px}}
+  #tabs .tab-orb{width:6px;height:6px;margin-right:3px}
   /* there is room for every level now that My Aura has moved to the mark */
   .tab.top-region{display:flex!important}
   #tabs .tab-menu{display:none}
@@ -2882,7 +2940,7 @@ function playBond(fa,fb){try{if(!actx)actx=new(window.AudioContext||window.webki
  s.connect(sg);sg.connect(actx.destination);s.start(t+d*0.55);s.stop(t+d+0.8);
 }catch(e){}}
 function maMote(c,dur){try{const cv=document.getElementById('ma-canvas');if(!cv)return;const r=cv.getBoundingClientRect(),tx=r.left+r.width/2,ty=r.top+r.height*0.42;const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:18px;height:18px;border-radius:50%;pointer-events:none;left:'+(Math.random()*innerWidth*0.7+innerWidth*0.15)+'px;top:-20px;background:radial-gradient(circle,#fff,'+c+' 60%,transparent);box-shadow:0 0 20px '+c+';';document.body.appendChild(d);d.animate([{opacity:1},{left:(tx-9)+'px',top:(ty-9)+'px',opacity:0,transform:'scale(.4)'}],{duration:dur||1500,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
-function flyToMyAura(color){try{const t=document.querySelector('.tab-myaura')||document.querySelector('#tabs .tab');const r=t?t.getBoundingClientRect():{left:innerWidth/2,top:20,width:0,height:0};const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:16px;height:16px;border-radius:50%;pointer-events:none;left:'+(innerWidth/2-8)+'px;top:'+(innerHeight/2-8)+'px;background:radial-gradient(circle,#fff,'+color+' 60%,transparent);box-shadow:0 0 18px '+color+';';document.body.appendChild(d);d.animate([{left:(innerWidth/2-8)+'px',top:(innerHeight/2-8)+'px',opacity:1,transform:'scale(1)'},{left:(r.left+r.width/2-8)+'px',top:(r.top+r.height/2-8)+'px',opacity:0,transform:'scale(.4)'}],{duration:950,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
+function flyToMyAura(color){try{const t=document.getElementById('logo-mark')||document.querySelector('#tabs .tab');const r=t?t.getBoundingClientRect():{left:innerWidth/2,top:20,width:0,height:0};const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:16px;height:16px;border-radius:50%;pointer-events:none;left:'+(innerWidth/2-8)+'px;top:'+(innerHeight/2-8)+'px;background:radial-gradient(circle,#fff,'+color+' 60%,transparent);box-shadow:0 0 18px '+color+';';document.body.appendChild(d);d.animate([{left:(innerWidth/2-8)+'px',top:(innerHeight/2-8)+'px',opacity:1,transform:'scale(1)'},{left:(r.left+r.width/2-8)+'px',top:(r.top+r.height/2-8)+'px',opacity:0,transform:'scale(.4)'}],{duration:950,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
 function playChime(fs){
   /* LOUD ENOUGH TO HEAR. 29 Aug 2026. Karl turned his MacBook to maximum and
      heard only a faint dull sound. The notes were always playing — they were
@@ -2952,11 +3010,24 @@ const _mapOpened=Date.now();
        A light now ARRIVES large, holds for the first breath or two, and then
        settles to something the place can be seen through. The event keeps its
        size; the record does not need it. */
-    const REST=0.46, BLOOM_MS=9000;
+    /* ═══ 7 Sep 2026 · FOUR GLOWS, THEN IT SETTLES ════════════════════
+       Karl: "you can see some auras are meeting the cloud, I dont mind this on
+       the first few glows. It needs to shrink, (not in power and colour and
+       vitality of movement at all), just in size after about 4 glows."
+       So it is no longer counted in seconds. It is counted in the aura's OWN
+       BREATHS — full size for four of them, easing down across the fifth and
+       sixth, settled from there.
+       ONLY THE RADIUS MOVES. Every colour stop, the core, the grain, the wisps
+       and the ripples are all set as fractions of that radius, so the light
+       keeps every bit of its strength and all of its motion, and simply stops
+       covering the street.                                                  */
+    const REST=0.46, HOLD=4, EASE=2;
     let _bloom=REST;
     if(p.born>_mapOpened+1500){
-      const e=(Date.now()-p.born)/BLOOM_MS;
-      if(e<1){ const k=e*e*(3-2*e); _bloom=1-(1-REST)*k; }   /* holds, then eases down */
+      if(p._bornT===undefined)p._bornT=T;
+      const glows=(T-p._bornT)*0.55/(Math.PI*2);
+      if(glows<HOLD){ _bloom=1; }
+      else if(glows<HOLD+EASE){ const e=(glows-HOLD)/EASE, k=e*e*(3-2*e); _bloom=1-(1-REST)*k; }
     }
     const r=(45+p.intensity*35)*breath*life*_sw*_bloom*Math.pow(2,(map.getZoom()-14)*0.7);
     const glow=ctx.createRadialGradient(x,y,0,x,y,r);
@@ -3079,7 +3150,11 @@ function haversine(la1,lo1,la2,lo2){const R=6371000,toR=Math.PI/180;const dLa=(l
 // A sense, once offered, also flows into the user's own aura. A spark rises from where it
 // landed to the My Aura orb, and the personal aura swells. Both external and internal senses do this.
 function feedMyAura(lat,lng,color){
-  const orb=document.getElementById('orbMy')||document.getElementById('pac');
+  /* 7 Sep 2026 — the mark, not the retired button. #orbMy lives inside the My
+     Aura tab, which left the row and is display:none, so it had no width and no
+     position: every comet was flying to the top corner of the screen and
+     landing on nothing. This is the miss Karl saw. */
+  const orb=document.getElementById('logo-mark')||document.getElementById('orbMy')||document.getElementById('pac');
   if(!orb)return;
   const oRect=orb.getBoundingClientRect();
   const ox=oRect.left+oRect.width/2, oy=oRect.top+oRect.height/2;
@@ -3108,6 +3183,7 @@ function feedMyAura(lat,lng,color){
     paFeedColor=color;
     const mo=document.getElementById('orbMy');
     if(mo){mo.classList.add('orb-fed');setTimeout(()=>{mo.classList.remove('orb-fed');},3000);}
+    try{if(typeof window.asMarkFlare==='function')window.asMarkFlare(color);}catch(e){}
     if(typeof updateMyOrb==='function')updateMyOrb();
     const ring=document.createElement('div');
     ring.style.cssText='position:fixed;left:'+ox+'px;top:'+oy+'px;width:22px;height:22px;border-radius:50%;'+
@@ -3170,6 +3246,8 @@ function animateWave(ts){
         if(_mo){_mo.classList.remove('orb-fed');void _mo.offsetWidth;_mo.classList.add('orb-fed');
           setTimeout(()=>{try{_mo.classList.remove('orb-fed');}catch(e){}},3000);}
       }catch(e){}
+      /* and the mark blooms, because the mark is where it actually came home */
+      try{if(typeof window.asMarkFlare==='function')window.asMarkFlare(waveColor);}catch(e){}
     }
   }catch(e){waveRaf=null;}
 }
@@ -3481,6 +3559,10 @@ function ascentClimb(color){
   ASCENT_STOPS.forEach((id,k)=>{
     _ascentTimers.push(setTimeout(()=>{
       try{
+        /* 7 Sep 2026 — My Aura's own orb has no width since the button left the
+           row, so both ends of the climb were quietly lighting Town instead of
+           coming home. The mark takes them. */
+        if(id==='orbMy'){try{if(typeof window.asMarkFlare==='function')window.asMarkFlare(col);}catch(e){}return;}
         let orb=document.getElementById(id);
         // On a phone, Region and Nation fold inside the Town button. Light Town in their place
         // rather than lighting nothing at all.
@@ -4083,6 +4165,9 @@ function submit(lat,lng,text){
   // and the first time the senser widens out to a scale they have not yet seen it from, it says so
   // once, quietly, in their own colour. Nothing invented: it is the very point they placed.
   ascent={lat:lat,lng:lng,color:s.color,from:Date.now(),seen:{0:true}};
+  /* the peak begins here. The confirm strip reads this to know it should stay
+     quiet until the invitation under the mark has had its moment. */
+  window.AS_PEAK_AT=Date.now();
   // THE CLIMB — turned off 25 Aug 2026. It was doing a second time what triggerWave (below)
   // already does: sweeping the scales out and back in the sense's colour. Two journeys where
   // there is one. The wave keeps the journey; ascentClimb stays defined but unused.
@@ -4130,7 +4215,10 @@ function submit(lat,lng,text){
   try{if(navigator.vibrate)navigator.vibrate([35,70,35]);}catch(e){}   // a heartbeat where the device allows one; silence where it doesn't
   try{if(typeof auraSyncMap==='function')auraSyncMap();}catch(e){}
   shareCount++;myShareCount++;
-  triggerWave(s.color);
+  /* Karl's order, kept: the light ARRIVES at the mark first, and only then do
+     the levels glow in turn. The comet takes about a second and a third to get
+     home, so the climb sets off as it lands rather than racing it. */
+  setTimeout(()=>{try{triggerWave(s.color);}catch(e){}},1350);
   if(shareCount%4===0&&auraLevel<4){
     const here=map.getCenter();
     const hereZoom=map.getZoom();
@@ -4802,10 +4890,50 @@ function asArcTabs(){
     });
   }catch(e){}
 }
-addEventListener('resize',function(){ setTimeout(asArcTabs,60); });
-addEventListener('orientationchange',function(){ setTimeout(asArcTabs,300); });
-setInterval(asArcTabs,900);
-setTimeout(asArcTabs,200); setTimeout(asArcTabs,1200);
+/* ═══ EVERY LEVEL ON THE SCREEN · 7 Sep 2026 ════════════════════════
+   Karl: "you can see from the cell screen shot that world is nudged out to the
+   right."
+   It was, and it was simply too wide: five levels at sixteen point come to more
+   than a narrow phone is, so the last one walked off the edge.
+   Rather than guessing a smaller number that would be wrong on the next phone,
+   the row MEASURES ITSELF - stepping its size down until the outermost level
+   sits inside the screen, and stepping back up whenever there is room again.
+   The same method as the dome above it: measured, never guessed.           */
+var _fitFS=0;
+function asFitTabs(){
+  try{
+    var t=document.getElementById('tabs'); if(!t)return;
+    var kids=[].slice.call(t.querySelectorAll('.tab'));
+    var caret=t.querySelector('.tab-caret');
+    if(!kids.length)return;
+    if(innerWidth>600||document.body.classList.contains('world-view')){
+      if(_fitFS){kids.forEach(function(c){c.style.fontSize='';});if(caret)caret.style.fontSize='';_fitFS=0;}
+      return;
+    }
+    t.style.transform='none';                       /* measure the row untilted */
+    var apply=function(v){
+      kids.forEach(function(c){c.style.fontSize=v.toFixed(2)+'px';});
+      if(caret)caret.style.fontSize=(v*0.85).toFixed(2)+'px';
+    };
+    var over=function(){
+      var lo=1e9,hi=-1e9;
+      kids.forEach(function(c){var r=c.getBoundingClientRect();if(!r.width)return;
+        if(r.left<lo)lo=r.left; if(r.right>hi)hi=r.right;});
+      if(hi<-1e8)return false;
+      return (hi>innerWidth-4)||(lo<4);
+    };
+    var fs=_fitFS||16, guard=0;
+    if(!_fitFS)apply(fs);
+    while(over()&&fs>11&&guard++<16){ fs-=0.5; apply(fs); }
+    while(!over()&&fs<16&&guard++<34){ fs+=0.5; apply(fs); if(over()){ fs-=0.5; apply(fs); break; } }
+    _fitFS=fs;
+  }catch(e){}
+}
+function asArcAndFit(){ asFitTabs(); asArcTabs(); }
+addEventListener('resize',function(){ setTimeout(asArcAndFit,60); });
+addEventListener('orientationchange',function(){ setTimeout(asArcAndFit,300); });
+setInterval(asArcAndFit,900);
+setTimeout(asArcAndFit,200); setTimeout(asArcAndFit,1200);
 
 /* ═══ THE MARK IS THE WAY IN · 6 Sep 2026 ══════════════════════════════════
    The My Aura button has left the row. The wordmark's own orb - two auras
@@ -4818,6 +4946,23 @@ setTimeout(asArcTabs,200); setTimeout(asArcTabs,1200);
     var hint=document.createElement('span');
     hint.className='as-hint'; hint.textContent='My Aura';
     mark.appendChild(hint);
+    /* the small bloom that opens outward when a light comes home */
+    var home=document.createElement('span'); home.className='as-home';
+    mark.appendChild(home);
+    /* ONE flare, callable from anywhere: the arriving comet, the climb's two
+       ends, and the wave coming home all speak to the mark through this. */
+    window.asMarkFlare=function(color){
+      try{
+        var m=document.getElementById('logo-mark'); if(!m)return;
+        m.style.setProperty('--home',color||'#c4b5fd');
+        m.classList.remove('as-flare'); void m.offsetWidth; m.classList.add('as-flare');
+        setTimeout(function(){ try{m.classList.remove('as-flare');}catch(_){ } },2700);
+      }catch(e){}
+    };
+    /* the mark stops waiting the moment a person walks through it */
+    mark.addEventListener('click',function(){
+      try{document.body.classList.remove('as-mark-lit','as-mark-calling');}catch(_){ }
+    });
     function go(){
       var b=document.querySelector('#tabs .tab-myaura')
           ||document.querySelector('[data-myaura]');
@@ -4831,7 +4976,10 @@ setTimeout(asArcTabs,200); setTimeout(asArcTabs,1200);
     setInterval(function(){
       try{
         var b=document.querySelector('#tabs .tab-myaura');
-        document.body.classList.toggle('myaura-live',!!(b&&b.classList.contains('active')));
+        var live=!!(b&&b.classList.contains('active'));
+        document.body.classList.toggle('myaura-live',live);
+        /* an invitation that has been accepted stops standing there */
+        if(live)document.body.classList.remove('as-mark-lit','as-mark-calling');
       }catch(e){}
     },700);
   }catch(e){}
@@ -7180,6 +7328,25 @@ function raiseOfferPanel(address){
   openOfferSheet();
   const sb=document.getElementById('sbtn');if(sb)sb.classList.add('sbtn-glow');
 }
+/* The one place that lifts the hush, so it can never be lifted in two. */
+window.asUnhushOffer=function(){
+  try{const b=document.getElementById('offer-confirm');
+    if(b&&b.classList.contains('oc-hush')){b.classList.remove('oc-hush');b.classList.add('oc-open');}
+  }catch(e){}
+};
+function asHushWatch(){
+  let waited=0;
+  (function look(){
+    const b=document.getElementById('offer-confirm');
+    if(!b||!b.classList.contains('oc-hush'))return;
+    let busy=false;
+    try{const m=document.getElementById('pmsg');if(m&&m.classList.contains('show'))busy=true;}catch(e){}
+    if(window.AS_INVITE_PENDING)busy=true;
+    if(document.body.classList.contains('as-mark-calling'))busy=true;
+    if(busy&&waited<30000){waited+=600;setTimeout(look,600);return;}
+    window.asUnhushOffer();
+  })();
+}
 function showOfferConfirm(senseId,text,place,lat,lng){
   const s=SENSES.find(x=>x.id===senseId);if(!s)return;
   lastOfferInfo={senseId,text,place,lat,lng,born:Date.now()};
@@ -7188,6 +7355,13 @@ function showOfferConfirm(senseId,text,place,lat,lng){
   const body=(senseId==='memory'&&(text||'').indexOf('kept private')<0&&typeof memoryPrivate!=='undefined'&&memoryPrivate)?'a memory, kept private':esc(text);
   box.innerHTML='<div class="oc-head">'+(place?('✨ Aura just offered at <b>'+esc(place)+'</b>'):'✨ Aura just offered here')+'</div>'
     +'<div class="oc-actions"><span class="oc-lbl">Offer another aura</span><button type="button" class="oc-btn oc-here">Here</button><button type="button" class="oc-btn oc-elsewhere">Elsewhere</button><button type="button" class="oc-btn oc-social">Share</button></div>';
+  /* THE HUSH. At the peak this strip says only what happened, and keeps the
+     way back. Its other choices arrive when the invitation has finished. */
+  try{
+    box.classList.remove('oc-open');
+    if(Date.now()-(window.AS_PEAK_AT||0)<20000){box.classList.add('oc-hush');asHushWatch();}
+    else{box.classList.remove('oc-hush');}
+  }catch(e){}
   const panel=document.getElementById('panel');
   if(panel){panel.classList.add('show-mobile','just-offered','offer-quiet','has-last');panel.classList.remove('locating');panel.style.maxHeight='';panel.style.bottom='';
     // The sheet keeps whatever scroll it had, which sometimes left the symbol strip pushed up
@@ -9385,7 +9559,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 94 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 7 Sep 2026 · 95 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -9444,8 +9618,11 @@ try{
       try{
         var m=document.getElementById('pmsg');
         if(m&&m.classList.contains('show'))busy=true;
-        var pn=document.getElementById('panel');
-        if(pn&&(pn.classList.contains('show-mobile')||pn.classList.contains('show')))busy=true;
+        /* 7 Sep 2026 - the offering strip no longer counts as busy. It used to,
+           and because it never leaves on its own the door waited its whole half
+           minute and then forced itself in on top of it. They are no longer in
+           the same place or answering the same question, so they can share the
+           screen without either one shouting. */
         var mp=document.getElementById('myaura-page');
         if(mp&&mp.classList.contains('show'))busy=true;
         var ov=document.getElementById('materialize');
@@ -9454,23 +9631,46 @@ try{
       if(busy&&waited<30000){ waited+=750; setTimeout(whenClear,750); return; }
       show();
     })();
+    /* ═══ 7 Sep 2026 · THE DOOR IS THE MARK ═════════════════════════
+       Karl: "the Open My Aura and Aura just offered panels clash... Open My
+       Aura should appear after the 'Yours is the first light..' message appears
+       and dissolves."
+       Both true, and the second explains the first: a slab at the foot of the
+       screen and a strip at the foot of the screen, both asking what to do
+       next, in the same second, in the same place.
+       The offering's own climb already ends somewhere - it comes home to the
+       mark. So the invitation waits there instead, in the mark's own words,
+       and the mark stays lit until it is opened. There is nothing to dismiss,
+       which is why there is no longer anything to dismiss it with.         */
     function show(){
-    el.classList.add('on');
-    requestAnimationFrame(function(){ setTimeout(function(){ el.classList.add('lit'); },40); });
-    el.addEventListener('click',function(e){
-      var quiet=e.target&&e.target.tagName==='I';
-      el.classList.remove('lit');
-      setTimeout(function(){ try{el.classList.remove('on');}catch(_){ } },2400);
-      if(quiet)return;
-      try{ if(typeof window.openMyAuraPage==='function'){ window.openMyAuraPage(); return; } }catch(_){ }
-      var b=document.getElementById('my-aura-btn')||document.getElementById('tab-my');
-      if(b){ try{ b.click(); }catch(_){ } }
-    });
+      try{
+        var mark=document.getElementById('logo-mark');
+        var hint=mark?mark.querySelector('.as-hint'):null;
+        document.body.classList.add('as-mark-lit');
+        if(!hint){ window.AS_INVITE_PENDING=false; return; }
+        var was=hint.textContent||'My Aura';
+        document.body.classList.add('as-mark-calling');
+        hint.textContent=(innerWidth>700)
+          ? '◇ Open My Aura — your light is in here'
+          : '◇ Open My Aura';
+        setTimeout(function(){
+          try{
+            document.body.classList.remove('as-mark-calling');
+            setTimeout(function(){ try{hint.textContent=was;}catch(_){ } },900);
+          }catch(_){ }
+          window.AS_INVITE_PENDING=false;
+          try{ if(typeof window.asUnhushOffer==='function')window.asUnhushOffer(); }catch(_){ }
+        },10500);
+      }catch(e){
+        window.AS_INVITE_PENDING=false;
+      }
     }
   }
   function land(){
     if(fired)return; fired=true;
     try{ localStorage.setItem(KEY,'1'); }catch(e){}
+    /* the offering strip stays quiet while this is still coming */
+    window.AS_INVITE_PENDING=true;
     /* THE SILENCE. Seven seconds in which nothing at all is offered. */
     setTimeout(door,7000);
   }
