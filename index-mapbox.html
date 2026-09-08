@@ -128,6 +128,39 @@ canvas#ac{position:absolute;inset:0;pointer-events:none;z-index:500}
 #mat-name{position:relative;font-size:clamp(20px,4.5vw,40px);letter-spacing:.14em;color:#f5efff;text-transform:uppercase;font-weight:300;margin-bottom:20px;opacity:0;transition:opacity .8s ease;text-shadow:0 0 34px rgba(167,139,250,.95),0 0 12px rgba(255,255,255,.5)}
 #mat-symbol{position:relative;width:min(50vw,330px);height:min(50vw,330px);opacity:0;will-change:transform,opacity;filter:drop-shadow(0 0 48px rgba(167,139,250,.55)) drop-shadow(0 0 14px rgba(255,255,255,.35))}
 #hdr1{position:absolute;top:11px;left:16px;right:16px;display:flex;align-items:center;justify-content:space-between;pointer-events:all}
+/* ═══════════════════════════════════════════════════════════════════════════
+   MY AURA LEAVES THE ARC · 6 September 2026
+   ───────────────────────────────────────────────────────────────────────────
+   Karl asked whether My Aura might sit under the wordmark - or replace it, with
+   the logo's own meeting auras used as its orb. Yes, and for a reason better
+   than the space it frees.
+
+   The five place levels are ONE CONTINUUM: street, town, region, nation, world.
+   My Aura is not a point on it. It is where the person stands looking at it.
+   Six things in a row said they were six of a kind. They are one and five.
+
+   And the mark was already the picture of it - two auras meeting, with a light
+   where they cross. So the mark of Aurasense and a person's own light are now
+   the same thing, and touching it is how you reach yourself.
+
+   It also solves the phone entirely: with My Aura out of the row, all five
+   levels fit in the arc without a single one being dropped.
+   ═══════════════════════════════════════════════════════════════════════════ */
+#logo-mark{cursor:pointer;position:relative;border-radius:50%;
+  transition:transform .45s cubic-bezier(.4,0,.2,1),filter .45s}
+#logo-mark:hover{transform:scale(1.09);filter:brightness(1.22)}
+#logo-mark:focus-visible{outline:2px solid rgba(196,181,253,.8);outline-offset:6px}
+#logo-mark::after{content:'';position:absolute;inset:-9px;border-radius:50%;
+  border:1px solid rgba(196,181,253,0);transition:border-color .45s}
+#logo-mark:hover::after,body.myaura-live #logo-mark::after{border-color:rgba(214,201,255,.5)}
+body.myaura-live #logo-mark{filter:brightness(1.3)}
+#logo-mark .as-hint{position:absolute;left:50%;top:calc(100% + 7px);transform:translateX(-50%);
+  font-family:Georgia,"Times New Roman",serif;font-size:11px;letter-spacing:.09em;
+  color:#cfc6f2;white-space:nowrap;opacity:.72;pointer-events:none;
+  text-shadow:0 1px 2px rgba(8,6,20,.95),0 0 12px rgba(8,6,20,.9)}
+/* out of the row, on every screen */
+#tabs .tab-myaura{display:none!important}
+#social[hidden]{display:none!important}
 #logo h1{font-size:17px;font-weight:400;letter-spacing:.1em;color:#e0d8ff;text-transform:uppercase}
 #logo p{font-size:10px;color:#6860a0;letter-spacing:.05em;margin-top:1px}
 #social{display:flex;gap:7px;align-items:center;margin-right:10px}
@@ -1586,7 +1619,8 @@ body.ma-incloud .as-rail{display:none!important}
   #tabs .tab{font-size:16px;padding:7px 6px;letter-spacing:.01em}
   @media(max-width:380px){#tabs .tab{font-size:14.5px;padding:7px 4px}}
   #tabs .tab-orb{width:6px;height:6px;margin-right:4px}
-  .tab.top-region{display:none!important}
+  /* there is room for every level now that My Aura has moved to the mark */
+  .tab.top-region{display:flex!important}
   #tabs .tab-menu{display:none}
   #tabs .tab-caret{display:block!important}
   #tabs{font-size:13px;padding:5px 5px;max-width:calc(100vw - 24px);overflow:visible;flex-wrap:nowrap}
@@ -2040,8 +2074,20 @@ window.AS_SEEK_ALWAYS=true;
 <canvas id="ac"></canvas>
 <div id="ui">
   <div id="hdr1">
-    <div id="logo"><span id="logo-mark"><svg viewBox="0 0 64 40" width="53" height="33" style="overflow:visible"><defs><radialGradient id="lg-a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#c4b5fd" stop-opacity=".9"/><stop offset="60%" stop-color="#7c5cff" stop-opacity=".35"/><stop offset="100%" stop-color="#7c5cff" stop-opacity="0"/></radialGradient><radialGradient id="lg-b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9ad9c0" stop-opacity=".82"/><stop offset="60%" stop-color="#3a9d7e" stop-opacity=".3"/><stop offset="100%" stop-color="#3a9d7e" stop-opacity="0"/></radialGradient><radialGradient id="lg-core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff7e6" stop-opacity="1"/><stop offset="55%" stop-color="#e8c074" stop-opacity=".82"/><stop offset="100%" stop-color="#e8c074" stop-opacity="0"/></radialGradient></defs><circle cx="24" cy="20" r="17" fill="url(#lg-a)" class="as-breathe"/><circle cx="40" cy="20" r="17" fill="url(#lg-b)" class="as-breathe"/><circle cx="32" cy="20" r="8.5" fill="url(#lg-core)" class="as-breathe"/></svg></span><span id="logo-text"><h1>Aurasense</h1><p>The living aura of humanity<span class="tag-extra">, sensed together</span></p></span></div>
-    <div id="social">
+    <div id="logo"><span id="logo-mark" role="button" tabindex="0" title="Your aura"><svg viewBox="0 0 64 40" width="53" height="33" style="overflow:visible"><defs><radialGradient id="lg-a" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#c4b5fd" stop-opacity=".9"/><stop offset="60%" stop-color="#7c5cff" stop-opacity=".35"/><stop offset="100%" stop-color="#7c5cff" stop-opacity="0"/></radialGradient><radialGradient id="lg-b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9ad9c0" stop-opacity=".82"/><stop offset="60%" stop-color="#3a9d7e" stop-opacity=".3"/><stop offset="100%" stop-color="#3a9d7e" stop-opacity="0"/></radialGradient><radialGradient id="lg-core" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff7e6" stop-opacity="1"/><stop offset="55%" stop-color="#e8c074" stop-opacity=".82"/><stop offset="100%" stop-color="#e8c074" stop-opacity="0"/></radialGradient></defs><circle cx="24" cy="20" r="17" fill="url(#lg-a)" class="as-breathe"/><circle cx="40" cy="20" r="17" fill="url(#lg-b)" class="as-breathe"/><circle cx="32" cy="20" r="8.5" fill="url(#lg-core)" class="as-breathe"/></svg></span><span id="logo-text"><h1>Aurasense</h1><p>The living aura of humanity<span class="tag-extra">, sensed together</span></p></span></div>
+    <!-- ═══ 6 Sep 2026 · THE ICONS COME OFF THE ARRIVAL ══════════════════
+         Karl: "do those share icons look desperate? Do they detract?"
+         Yes, and the research is not close. Persistent social buttons are used
+         by a very small share of visitors, they carry attention OUT of the very
+         moment a product is trying to hold, and their presence reads as a
+         request. On a map about being somewhere, four exits in the corner say
+         "leave" before anything has said "look".
+         The pattern that works is sharing offered AT THE MOMENT OF PRIDE - and
+         Aurasense already has it, in the panel that appears the instant a light
+         lands. Nothing is lost by taking these off the arrival.
+         Nothing is deleted either: they are hidden, and one line brings them
+         back if Karl wants them somewhere a person goes deliberately. -->
+    <div id="social" hidden aria-hidden="true">
       <div class="soc-btn" data-tip="Share to X">𝕏</div>
       <div class="soc-btn" data-tip="Share to Instagram">◎</div>
       <div class="soc-btn" data-tip="Share to Facebook">f</div>
@@ -4760,6 +4806,36 @@ addEventListener('resize',function(){ setTimeout(asArcTabs,60); });
 addEventListener('orientationchange',function(){ setTimeout(asArcTabs,300); });
 setInterval(asArcTabs,900);
 setTimeout(asArcTabs,200); setTimeout(asArcTabs,1200);
+
+/* ═══ THE MARK IS THE WAY IN · 6 Sep 2026 ══════════════════════════════════
+   The My Aura button has left the row. The wordmark's own orb - two auras
+   meeting, with a light where they cross - now carries it. Touching the mark
+   of Aurasense is how a person reaches their own light, which is either a neat
+   coincidence or the whole idea, depending on how you look at it. */
+(function(){
+  try{
+    var mark=document.getElementById('logo-mark'); if(!mark)return;
+    var hint=document.createElement('span');
+    hint.className='as-hint'; hint.textContent='My Aura';
+    mark.appendChild(hint);
+    function go(){
+      var b=document.querySelector('#tabs .tab-myaura')
+          ||document.querySelector('[data-myaura]');
+      if(b){ try{ b.click(); }catch(e){} }
+    }
+    mark.addEventListener('click',go);
+    mark.addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); }
+    });
+    /* the mark brightens while a person's own aura is the one being shown */
+    setInterval(function(){
+      try{
+        var b=document.querySelector('#tabs .tab-myaura');
+        document.body.classList.toggle('myaura-live',!!(b&&b.classList.contains('active')));
+      }catch(e){}
+    },700);
+  }catch(e){}
+})();
 
 /* Tap the stamp, get the real thing. A fresh number every time means no cache
    between here and Vercel can hand back yesterday's page. */
@@ -9309,7 +9385,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 93 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 6 Sep 2026 · 94 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
