@@ -1865,6 +1865,127 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
 #ma-handle{position:absolute;top:48px;left:50%;transform:translateX(-50%);font-size:12px;color:#b6a9e0;letter-spacing:.04em;z-index:8}
 @media (max-width:600px){#ma-handle{top:90px}}
 @media (min-width:601px){#ma-offerings{max-height:238px;overflow-y:auto;padding-right:5px;scrollbar-width:thin;scrollbar-color:rgba(167,139,250,.35) transparent}}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   MY AURA · THE PANELS COME DOWN  ·  8 September 2026
+   ────────────────────────────────────────────────────────────────────────
+   Karl: "My aura presentation just needs a less panel based appearance
+   maintaining the circular structure throughout."
+
+   Every part of this page was a rounded rectangle on a dark sheet: seven boxed
+   doors down the left, boxed offerings, boxed asides, a boxed sentence under
+   the aura itself, and two hard rules dividing the columns.
+   A PAGE ABOUT A ROUND BREATHING THING, BUILT ENTIRELY OUT OF SQUARES.
+
+   Nothing is removed and nothing moves. What changes is what holds it:
+     · a door is a CIRCLE OF LIGHT with its words beside it, not a card
+     · an offering is a lit point, not a tile
+     · the asides lose their frames and keep a soft round wash
+     · the column rules become light that fades out at both ends - hard at the
+       core and soft at the rim, which is the project's own rule for an edge
+     · the sentence under the aura stands on the page with a halo, the way
+       every word on the map already does
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* THE DOORS — a circle of light, and its words beside it */
+#ma-left #calm-toggle,#ma-left #mr-open,#ma-left #gp-open,#ma-left #fc-open,
+#ma-left #ra-open,#ma-left #ss-open,#ma-left #at-open{
+  position:relative;border:none!important;background:none!important;
+  box-shadow:none!important;border-radius:0!important;animation:none!important;
+  width:100%!important;margin:0 0 4px!important;min-height:0!important;
+  padding:12px 6px 12px 44px!important;
+  transition:background .5s ease,color .4s ease}
+#ma-left #calm-toggle::before,#ma-left #mr-open::before,#ma-left #gp-open::before,
+#ma-left #fc-open::before,#ma-left #ra-open::before,#ma-left #ss-open::before,
+#ma-left #at-open::before{
+  content:'';position:absolute;left:9px;top:50%;width:19px;height:19px;margin-top:-9.5px;
+  border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.9) 0%,rgba(214,201,255,.6) 34%,
+             rgba(167,139,250,.16) 68%,rgba(167,139,250,0) 100%);
+  box-shadow:0 0 15px rgba(167,139,250,.5);
+  transition:box-shadow .5s ease,transform .5s ease}
+#ma-left #calm-toggle:hover,#ma-left #mr-open:hover,#ma-left #gp-open:hover,
+#ma-left #fc-open:hover,#ma-left #ra-open:hover,#ma-left #ss-open:hover,
+#ma-left #at-open:hover{
+  background:radial-gradient(105% 150% at 18px 50%,rgba(167,139,250,.16) 0%,
+             rgba(167,139,250,.05) 42%,rgba(167,139,250,0) 74%)!important;
+  border-color:transparent!important}
+#ma-left #calm-toggle:hover::before,#ma-left #mr-open:hover::before,#ma-left #gp-open:hover::before,
+#ma-left #fc-open:hover::before,#ma-left #ra-open:hover::before,#ma-left #ss-open:hover::before,
+#ma-left #at-open:hover::before{transform:scale(1.2);box-shadow:0 0 26px rgba(214,201,255,.9)}
+/* the Mirror keeps its own light, as it always had its own colour */
+#ma-left #mr-open::before{
+  background:radial-gradient(circle,#fff 0%,rgba(255,214,230,.8) 30%,
+             rgba(196,181,253,.34) 62%,rgba(167,139,250,0) 100%);
+  box-shadow:0 0 20px rgba(255,159,192,.6),0 0 36px rgba(167,139,250,.42)}
+#ma-left #mr-open{background:none!important}
+
+/* THE OFFERINGS — a lit point, not a tile. The sense's own colour was living
+   in a left-hand border; it lives in the point of light now.               */
+.ma-offering{border:none!important;border-left:0!important;background:none!important;
+  border-radius:0!important;padding:8px 4px 9px 2px!important;margin-bottom:5px!important;
+  transition:background .45s ease}
+.ma-offering:hover{background:radial-gradient(100% 130% at 8px 50%,rgba(167,139,250,.13) 0%,
+  rgba(167,139,250,0) 66%)!important}
+.ma-offering .s{position:relative;padding-left:19px}
+.ma-offering .s::before{content:'';position:absolute;left:1px;top:.44em;width:9px;height:9px;
+  border-radius:50%;background:currentColor;box-shadow:0 0 11px currentColor;opacity:.95}
+.ma-offering .t,.ma-offering .p{padding-left:19px}
+
+/* THE ASIDES — no frames; a soft round wash instead */
+#ma-privacy,#ma-quest,#ma-widen{
+  border:none!important;border-radius:0!important;
+  background:radial-gradient(120% 150% at 4% 0%,rgba(167,139,250,.10) 0%,
+             rgba(167,139,250,.03) 45%,rgba(167,139,250,0) 78%)!important;
+  padding:14px 6px 14px 4px!important}
+
+/* THE SECTION NAMES — each one carries a small light of its own */
+.ma-h{position:relative;padding-left:15px}
+.ma-h::before{content:'';position:absolute;left:0;top:50%;margin-top:-2.5px;
+  width:5px;height:5px;border-radius:50%;background:rgba(214,201,255,.8);
+  box-shadow:0 0 9px rgba(167,139,250,.75)}
+
+/* THE COLUMN RULES — light that fades out at both ends */
+#ma-left{border-right:0.5px solid transparent!important;
+  border-image:linear-gradient(to bottom,rgba(167,139,250,0) 0%,rgba(167,139,250,.26) 26%,
+               rgba(167,139,250,.26) 74%,rgba(167,139,250,0) 100%) 1!important}
+#ma-right{border-left:0.5px solid transparent!important;
+  border-image:linear-gradient(to bottom,rgba(167,139,250,0) 0%,rgba(167,139,250,.26) 26%,
+               rgba(167,139,250,.26) 74%,rgba(167,139,250,0) 100%) 1!important}
+
+/* THE SENTENCE UNDER THE AURA — it stands on the page, like every word on the
+   map. A halo instead of a sheet.                                          */
+#ma-explain{background:none!important;border-radius:0!important;
+  backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+  text-shadow:0 1px 3px rgba(6,4,16,.97),0 0 13px rgba(6,4,16,.92),0 0 28px rgba(6,4,16,.72)}
+
+/* THE WAY BACK, AND THE JOURNEY — round-ended light, not blocks of colour */
+#ma-back{border:none!important;border-radius:24px!important;
+  background:radial-gradient(120% 170% at 22% 50%,rgba(140,110,255,.42) 0%,
+             rgba(124,92,255,.16) 58%,rgba(124,92,255,0) 100%)!important;
+  box-shadow:0 0 26px rgba(124,92,255,.3)!important;
+  text-shadow:0 1px 3px rgba(6,4,16,.92)}
+#mj-btn{border:none!important;border-radius:24px!important;
+  background:radial-gradient(130% 180% at 24% 50%,rgba(214,201,255,.38) 0%,
+             rgba(124,92,255,.16) 60%,rgba(124,92,255,0) 100%)!important;
+  box-shadow:0 0 28px rgba(124,92,255,.34)!important;
+  text-shadow:0 1px 3px rgba(6,4,16,.92)}
+#mj-menu{border:none!important;border-radius:22px!important;
+  background:radial-gradient(120% 110% at 50% 0%,rgba(27,21,56,.985) 0%,rgba(11,9,25,.985) 100%)!important;
+  box-shadow:0 0 0 .5px rgba(167,139,250,.2),0 14px 44px rgba(0,0,0,.72),
+             0 0 36px rgba(124,92,255,.18)!important;padding:9px!important}
+#mj-menu .mj-i{border-radius:16px!important}
+
+@media (max-width:600px){
+  /* the divider between the stacked columns fades out the same way */
+  #ma-left{border-right:none!important;border-image:none!important;
+    border-bottom:0.5px solid transparent!important;
+    border-image:linear-gradient(to right,rgba(167,139,250,0),rgba(167,139,250,.3) 30%,
+                 rgba(167,139,250,.3) 70%,rgba(167,139,250,0)) 1!important}
+  #ma-right{border-left:none!important;border-image:none!important}
+  #ma-left #calm-toggle,#ma-left #mr-open,#ma-left #gp-open,#ma-left #fc-open,
+  #ma-left #ra-open,#ma-left #ss-open,#ma-left #at-open{padding:13px 4px 13px 42px!important}
+}
 .mj-dot{height:0;border-top:1px dotted rgba(167,139,250,.45);margin:5px 8px}
 /* Lower-left mini becomes a real compact search bar */
 #place-mini{display:none;align-items:center;gap:0;background:rgba(20,16,40,.86);border:0.5px solid rgba(167,139,250,.45);border-radius:18px;padding:3px 3px 3px 4px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 0 22px rgba(124,92,255,.3)}
@@ -3380,13 +3501,21 @@ function asDrawOneThread(cx2,x,y,rr,dest,col,alive,reach,seed,lead,rush,calm){
     cx2.beginPath(); cx2.moveTo(sx,sy);
     cx2.bezierCurveTo(c1x,c1y,c2x,c2y,ex,ey);
   };
+  /* 8 Sep - Karl: "The threads dont look as etheric on the mac."
+     They were one hard line with a heavy dark casing, which reads as WIRE. A
+     thing made of light is not one line: it is a wide soft breath, a body
+     inside it, and a fine bright heart at the middle - and the dark casing is
+     there only to keep it legible on a bleached sky, so it is thinned to the
+     least that still does that job. */
   const A=Math.max(0,Math.min(1,alive*lead));
   cx2.shadowColor='transparent'; cx2.shadowBlur=0;
-  lay(); cx2.lineWidth=6.0; cx2.strokeStyle='rgba(6,4,18,'+(0.46*A).toFixed(3)+')'; cx2.stroke();
-  cx2.shadowColor=col; cx2.shadowBlur=15;
-  lay(); cx2.lineWidth=2.6; cx2.strokeStyle=hexA(col,Math.min(1,0.95*A)); cx2.stroke();
-  cx2.shadowBlur=6;
-  lay(); cx2.lineWidth=1.0; cx2.strokeStyle='rgba(255,255,255,'+(0.55*A).toFixed(3)+')'; cx2.stroke();
+  lay(); cx2.lineWidth=4.6; cx2.strokeStyle='rgba(6,4,18,'+(0.24*A).toFixed(3)+')'; cx2.stroke();
+  cx2.shadowColor=col; cx2.shadowBlur=30;
+  lay(); cx2.lineWidth=11; cx2.strokeStyle=hexA(col,0.11*A); cx2.stroke();
+  cx2.shadowBlur=17;
+  lay(); cx2.lineWidth=3.2; cx2.strokeStyle=hexA(col,0.44*A); cx2.stroke();
+  cx2.shadowBlur=7;
+  lay(); cx2.lineWidth=1.05; cx2.strokeStyle='rgba(255,255,255,'+(0.46*A).toFixed(3)+')'; cx2.stroke();
   cx2.shadowColor='transparent'; cx2.shadowBlur=0;
   /* ═══ THE TWO STRANDS ═══════════════════════════════════════
      Karl: "enjoyed the 3 dimension spinning of the first version. We should
@@ -3457,7 +3586,17 @@ function drawThreadHome(cx2){
      In Calm it now draws whole, and only the travelling lights slow down.   */
   const _calm=(function(){try{return !!window.AS_CALM;}catch(e){return false;}})();
   try{const mp=document.getElementById('myaura-page');if(mp&&mp.classList.contains('show'))return;}catch(e){}
-  try{if(map.getZoom()<3.6)return;}catch(e){}
+  if(asThreadsLearned()&&!th.done)return;      /* understood; it need not be said again */
+  /* ═══ 8 Sep · THE THREADS BELONG TO THE NEAR SCALES ══════════════════
+     Karl: "what do you think about both dissolving upon moving out out of
+     street and town view... as there would be too many lines crossing after one
+     is offered."
+     Agreed, and for a second reason: at Region and beyond the light being
+     pointed at is no longer a place a person can see themselves standing in.
+     They fade rather than vanish, so it reads as distance and not as a fault. */
+  let _near=1;
+  try{ _near=Math.max(0,Math.min(1,(map.getZoom()-10.4)/1.6)); }catch(e){}
+  if(_near<=0.02)return;
   const wake=Math.min(1,(age-2.5)/2.5);    /* sooner again, so it is easy to catch */
   if(wake<=0&&!th.done)return;
   /* the place is projected fresh every frame, so the thread is joined to the
@@ -3478,7 +3617,7 @@ function drawThreadHome(cx2){
     rush=rp;
     fade=rp>0.82?Math.max(0,1-(rp-0.82)/0.18):1;
   }
-  const alive=(0.55+0.45*Math.sin(T*0.62))*wake*fade;
+  const alive=(0.55+0.45*Math.sin(T*0.62))*wake*fade*_near;
   /* ═══ TWO WAYS THE LIGHT GOES ═════════════════════════════════
      Karl: "The thread I think we should consider adding another leading to
      live feed."
@@ -3500,6 +3639,7 @@ function drawThreadHome(cx2){
     if(wW>0){
       const size=Math.max(12.5,Math.min(19,rr*0.11));
       const rad=rr*1.05+size*0.6;
+      /* the words keep the threads' company - same teaching, same leaving */
       for(let q=0;q<AS_WORD_ANGLES.length;q++){
         const a3=AS_WORD_ANGLES[q];
         /* a word that would stand off the edge simply does not speak - the
@@ -3507,7 +3647,7 @@ function drawThreadHome(cx2){
         const wx=x+Math.cos(a3)*rad, wy=y+Math.sin(a3)*rad;
         if(wx<26||wy<26||wx>innerWidth-26||wy>innerHeight-16)continue;
         const bob=0.42+0.58*(0.5+0.5*Math.sin(T*0.55-q*2.09));
-        asArcWords(cx2,'touch your light',x,y,rad,col,wW*bob*0.95,size,a3);
+        asArcWords(cx2,'touch your light',x,y,rad,col,wW*bob*0.95*_near,size,a3);
       }
     }
   }
@@ -6216,7 +6356,33 @@ function attachScrollRail(el){
     setTimeout(sync,60);setTimeout(sync,700);setInterval(sync,1200);
   }catch(e){}
 }
+/* ═══ THE THREAD TEACHES, THEN LEAVES · 8 September 2026 ═════════════════
+   Karl: "Maybe even removed from street and Town view after My Aura and Live
+   Feed have been accessed by the user/senser more than once. So it's not a
+   coincidence they clicked on those organically, ie. they more likely did so
+   because the threads point to them."
+   This counts the two places the threads point at. Once a senser has walked
+   BOTH of those doors more than once, the threads stop being drawn on that
+   device - for good. They were never decoration; they were a sentence, and a
+   sentence that has been understood does not need saying again.
+   It is the opposite of what an engagement-driven design would do here, and it
+   is the whole difference: THIS IS BUILT TO BECOME UNNECESSARY.            */
+function asWalked(key){
+  try{
+    const k='as_walked_'+key;
+    const v=(parseInt(localStorage.getItem(k)||'0',10)||0)+1;
+    localStorage.setItem(k,String(v));
+  }catch(e){}
+}
+function asThreadsLearned(){
+  try{
+    const a=parseInt(localStorage.getItem('as_walked_mine')||'0',10)||0;
+    const b=parseInt(localStorage.getItem('as_walked_feed')||'0',10)||0;
+    return a>1&&b>1;
+  }catch(e){ return false; }
+}
 function openMyAuraPage(){
+  asWalked('mine');
   const page=document.getElementById('myaura-page');if(!page)return;
   // THE MY AURA WALKTHROUGH IS OFF — 25 Aug 2026. "Tip 1 of 6" no longer runs.
   // Same method as the map's: the trigger is removed, the code above is left whole and
@@ -7489,6 +7655,7 @@ async function lfLoadTrue(){
   }catch(e){console.warn('[gate] feed',e);}
 }
 function openLiveFeed(){
+  asWalked('feed');
   const p=document.getElementById('livefeed-page');if(!p)return;
   const lh=document.getElementById('lf-handle');if(lh)lh.textContent=(myProfile&&myProfile.handle)?('\u2726 '+myProfile.handle):'';
   if(lfTimer){clearInterval(lfTimer);lfTimer=null;}
@@ -10046,7 +10213,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 8 Sep 2026 · 101 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 8 Sep 2026 · 103 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
