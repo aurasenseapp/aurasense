@@ -10092,7 +10092,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 8 Sep 2026 · 104 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 9 Sep 2026 · 105 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -10227,6 +10227,104 @@ try{
   box-shadow:0 0 0 .5px rgba(167,139,250,.2),0 14px 44px rgba(0,0,0,.72),
              0 0 36px rgba(124,92,255,.18)!important;padding:9px!important}
 #myaura-page #mj-menu .mj-i{border-radius:16px!important}
+
+/* ═════════════════════════════════════════════════════════════════════════════
+   THE CLOUD VIEW · THE PANELS COME DOWN  ·  9 September 2026
+   ────────────────────────────────────────────────────────────────────────
+   Yesterday's pass de-panelled the LOOK CLOSER layout - the one behind this
+   screen. This is the screen My Aura actually opens on, and it was untouched:
+   five cream cards along the foot, a stack of cream cards in the middle, a
+   cream pill top left. A cloud with a filing cabinet standing in front of it.
+
+   The hard part here is not removing the cards. It is removing them WITHOUT
+   losing the words - a lesson already paid for on 4 September, when these
+   items were dropped to two-thirds opacity and neither the words nor the aura
+   behind them could be read.
+
+   So the cards do not become transparent. They become LIGHT: a soft cream wash
+   that is brightest under the words and fades to nothing at its edges, with a
+   round light to lead each one. No rectangle, no border, nothing to read as a
+   panel - and every word still standing clear of the cloud.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* THE FIVE DOORS — a light above each verb, no card under it */
+#myaura-page .macd{
+  border:none!important;background:none!important;border-radius:0!important;
+  box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  display:flex!important;flex-direction:column;align-items:center;
+  text-align:center!important;padding:5px 12px 3px!important;
+  transition:transform .4s ease}
+#myaura-page .macd::before{
+  content:'';display:block;width:27px;height:27px;margin:0 auto 8px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.97) 0%,rgba(255,214,168,.78) 32%,
+             rgba(212,146,92,.26) 66%,rgba(212,146,92,0) 100%);
+  box-shadow:0 0 17px rgba(226,168,110,.7);
+  transition:transform .45s ease,box-shadow .45s ease}
+#myaura-page .macd:hover::before{transform:scale(1.2);box-shadow:0 0 28px rgba(255,196,130,.95)}
+#myaura-page .macd.sel::before{transform:scale(1.26);box-shadow:0 0 32px rgba(255,188,118,1)}
+#myaura-page .macd b,#myaura-page .macd i{
+  text-shadow:0 1px 9px rgba(255,249,240,.99),0 0 17px rgba(255,249,240,.96),
+              0 0 30px rgba(255,249,240,.82)}
+
+/* WHAT IS BEHIND A DOOR — a lit point and a wash that fades out, not a tile */
+#myaura-page .maci{
+  border:none!important;border-radius:0!important;box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  position:relative;padding:11px 16px 11px 32px!important;
+  background:radial-gradient(135% 200% at 15px 50%,rgba(255,250,242,.97) 0%,
+             rgba(255,250,242,.88) 36%,rgba(255,250,242,.44) 68%,rgba(255,250,242,0) 100%)!important;
+  transition:background .3s ease}
+#myaura-page .maci::before{
+  content:'';position:absolute;left:9px;top:50%;width:13px;height:13px;margin-top:-6.5px;
+  border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,rgba(255,206,150,.9) 34%,
+             rgba(212,146,92,.24) 70%,rgba(212,146,92,0) 100%);
+  box-shadow:0 0 13px rgba(226,168,110,.78);transition:transform .45s ease}
+#myaura-page .maci:hover::before{transform:scale(1.24)}
+#myaura-page .maci:hover{
+  background:radial-gradient(135% 200% at 15px 50%,rgba(255,253,249,1) 0%,
+             rgba(255,253,249,.92) 38%,rgba(255,253,249,.48) 70%,rgba(255,253,249,0) 100%)!important}
+#myaura-page .maci b,#myaura-page .maci i,#myaura-page .maci .why{
+  text-shadow:0 1px 8px rgba(255,251,244,.95)}
+#myaura-page .maci.resting::before{opacity:.45;box-shadow:0 0 8px rgba(226,168,110,.4)}
+
+/* THE WAY THROUGH, AND THE WAY BACK — round-ended light */
+#myaura-page #ma-cloud-through{
+  border:none!important;border-radius:26px!important;box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  background:radial-gradient(120% 210% at 50% 50%,rgba(255,250,242,.94) 0%,
+             rgba(255,250,242,.62) 50%,rgba(255,250,242,0) 100%)!important;
+  text-shadow:0 1px 9px rgba(255,250,242,.97),0 0 18px rgba(255,250,242,.85)}
+#myaura-page #ma-cloud-through:hover{
+  background:radial-gradient(120% 210% at 50% 50%,rgba(255,254,250,1) 0%,
+             rgba(255,254,250,.7) 52%,rgba(255,254,250,0) 100%)!important}
+#myaura-page.cloudfirst #ma-back{
+  border:none!important;border-radius:26px!important;box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  background:radial-gradient(125% 220% at 32% 50%,rgba(255,248,238,.92) 0%,
+             rgba(255,248,238,.52) 54%,rgba(255,248,238,0) 100%)!important;
+  text-shadow:0 1px 9px rgba(255,248,238,.97),0 0 18px rgba(255,248,238,.85)}
+#myaura-page.cloudfirst #ma-back:hover{
+  background:radial-gradient(125% 220% at 32% 50%,rgba(255,253,247,1) 0%,
+             rgba(255,253,247,.6) 56%,rgba(255,253,247,0) 100%)!important}
+
+/* THE SENSE THAT NAMES ITSELF — already meant to be "never a panel" */
+#myaura-page #ma-sense-card{
+  border:none!important;border-radius:0!important;box-shadow:none!important;
+  -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
+  background:radial-gradient(110% 150% at 50% 22%,rgba(255,250,242,.97) 0%,
+             rgba(255,250,242,.86) 40%,rgba(255,250,242,.34) 72%,rgba(255,250,242,0) 100%)!important;
+  padding:18px 26px 20px!important}
+#myaura-page #ma-sense-card h4,#myaura-page #ma-sense-card p,
+#myaura-page #ma-sense-card .soon{text-shadow:0 1px 8px rgba(255,251,244,.95)}
+#myaura-page #ma-sense-card .soon{border-top:none!important;
+  box-shadow:inset 0 1px 0 rgba(180,130,90,.16)}
+#myaura-page #ma-sense-card button{
+  border:none!important;border-radius:22px!important;
+  background:radial-gradient(120% 210% at 50% 50%,rgba(238,206,168,.7) 0%,
+             rgba(238,206,168,.3) 55%,rgba(238,206,168,0) 100%)!important;
+  text-shadow:0 1px 7px rgba(255,250,242,.9)}
 
 @media (max-width:600px){
   /* the divider between the stacked columns fades out the same way */
