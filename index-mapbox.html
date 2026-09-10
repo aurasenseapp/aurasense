@@ -9540,7 +9540,88 @@ const RA_ART={
  core:'<svg viewBox="0 0 260 150" fill="none"><defs><radialGradient id="ra-k" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff"/><stop offset="40%" stop-color="#f0e9ff" stop-opacity=".85"/><stop offset="100%" stop-color="#c4b5fd" stop-opacity="0"/></radialGradient></defs><circle cx="130" cy="75" r="60" stroke="#c4b5fd" stroke-opacity=".18" stroke-width="1"/><circle cx="130" cy="75" r="40" stroke="#c4b5fd" stroke-opacity=".26" stroke-width="1"/><circle cx="130" cy="75" r="26" fill="url(#ra-k)" class="as-breathe"/><text x="130" y="142" text-anchor="middle" fill="#a79dc9" font-size="9" font-family="Georgia,serif">small is not lesser — only younger</text></svg>',
  seer:'<svg viewBox="0 0 260 150" fill="none"><defs><radialGradient id="ra-s" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffe8c4" stop-opacity=".5"/><stop offset="100%" stop-color="#ffd88a" stop-opacity="0"/></radialGradient></defs><ellipse cx="130" cy="75" rx="84" ry="46" fill="url(#ra-s)" class="as-breathe"/><path d="M62 75 Q130 34 198 75 Q130 116 62 75 Z" stroke="#ffe8c4" stroke-opacity=".7" stroke-width="1.5" fill="none"/><circle cx="130" cy="75" r="14" stroke="#ffe8c4" stroke-opacity=".8" stroke-width="1.2" fill="none"/><circle cx="130" cy="75" r="5" fill="#fff8e8"/><text x="130" y="140" text-anchor="middle" fill="#a79dc9" font-size="9" font-family="Georgia,serif">yours is not wrong here</text></svg>'
 };
-const RA_CARDS=[
+/* ═════════════════════════════════════════════════════════════════════════════
+   THE READING  ·  9 September 2026
+   ────────────────────────────────────────────────────────────────────────
+   The seven cards that were here explained THE NOTATION - the rings, the
+   colour, the breath, the core. Every word of it true, and all of it kept.
+   But it taught a person to read Aurasense's drawing, and then the questions
+   asked what their own aura looked like. Nobody had been given any practice.
+   That is why it read as fluff. The writing was never the problem; the missing
+   half was.
+
+   Karl's law, recorded 8 September:
+     NEVER ASK FOR A REPORT THAT REQUIRES A CAPACITY THE PERSON HAS NOT BEEN
+     GIVEN YET.
+
+   So the guide is three parts now:
+     ONE   · The Reading   - the capacity itself, from what everyone already does
+     TWO   · What is drawn - the seven cards, arriving when they can be used
+     THREE · Further       - the deep questions, opened only by someone who asks
+
+   And under the Open Question rule of 9 September, nothing here asserts what
+   it cannot show. Where it would have to assert, it asks.
+   ════════════════════════════════════════════════════════════════════════════ */
+const RA_BODY=['chest','stomach','shoulders and neck','throat and jaw','head','everywhere','nowhere I can place'];
+const RA_SHAPE=['moving','still','near','far','warm','cool','heavy','light','wide','narrow','rising','settling'];
+const RA_COLOUR=[['#e8a33d','warm'],['#f2d64b','bright'],['#7ec9a0','green'],['#6fb4e8','cool'],['#a78bfa','violet'],
+                 ['#f08bb0','rose'],['#d8d2c4','pale'],['#5c5470','dark'],['','it had no colour']];
+/* PART ONE · THE READING — the capacity, taught from what everyone already does */
+const RA_ONE=[
+ {k:'rings',t:'You already do this',
+  b:'You have walked into a room and known something was wrong before anyone spoke.<br><br>Nobody taught you that. You were not guessing, and you were not imagining it — <b>you were reading a place</b>.<br><br>This guide does not give you a new sense. It gives you back one you already use, and were never shown how to name.',
+  ask:'say',ph:'The last time it happened, where were you?',key:'ra_where'},
+ {k:'core',t:'It arrives in the body first',
+  b:'Before you have a word for a place, you usually have a feeling somewhere in you. The shoulders. The jaw. The chest. The stomach. The back of the neck.<br><br>That is not mystical. <b>It is simply where a sense lands before language catches up with it.</b>',
+  ask:'pick',opts:RA_BODY,q:'Bring that place back to mind. Where did you feel it?',key:'ra_body'},
+ {k:'breath',t:'Shape before name',
+  b:'A word arrives carrying its own history, and it can flatten what you actually felt. <b>Shape arrives clean.</b>',
+  ask:'multi',opts:RA_SHAPE,q:'Which of these were true of it?',key:'ra_shape',
+  after:'These are not decoration. They are the same qualities the map draws with — how a light moves, how wide it reaches, how warm its colour runs. You are already speaking its language.'},
+ {k:'colour',t:'Now the word',
+  b:'Now name it.<br><br>If several fit, <b>take the one you would be least comfortable saying out loud</b>. That one is usually closer.',
+  ask:'sense',q:'What was it?',key:'ra_sense'},
+ {k:'colour',t:'Colour, honestly',
+  b:'Colour is where people get uneasy, so here is the plain version.<br><br><b>Aurasense does not claim your feeling gives off light.</b> Colour is the fastest shorthand most people have for what a feeling was like — which is why every language on earth already has warm words and cool ones.',
+  ask:'colour',q:'If what you felt had a colour, what colour was it?',key:'ra_colour',
+  after:'Some people find a colour at once and some find none. Both are real answers.'},
+ {k:'place',t:'Two people, one place',
+  b:'Someone else standing exactly where you stood would have felt something different — and would also be right.<br><br><b>A reading is a contribution, not a verdict.</b> The map is not asking who is correct about a place. It is asking what a place is like to be in, from as many sides as it can get.<br><br>There is an old story about blind men and an elephant. One finds a pillar, one a rope, one a fan — and the story is usually told to show how wrong they all are.<br><br><b>They were not wrong.</b> Each was right about one part, and nobody had put the parts together.<br><br>One person’s account of a street is an opinion. Two hundred accounts of a street is something nobody could have got any other way.<br><br><i>And the elephant is still bigger than all of them. This map is a real instrument and a partial one. Both are true, and it will keep saying so.</i>'},
+ {k:'other',t:'The part that is not decoration',
+  b:'The people who feel a place go wrong first are usually the ones told they are too sensitive.<br><br><b>Aurasense is built on the opposite assumption.</b> Sensory-sensitive and autistic people are, very often, the most accurate instruments a place has — and somewhere made bearable for them turns out to be better for everyone in it.<br><br><b>If you have ever been told you feel things too strongly, this is the one place where that is the qualification.</b>'},
+ {k:'seer',t:'Putting the guide down',
+  b:'You will not need this for long.<br><br>Noticing is a skill, and skills stop needing instructions. <b>When you catch yourself naming a place before you have opened anything, the guide has done its work</b> — and it will stop appearing.<br><br><i>Nothing in Aurasense is meant to be needed for ever.</i>'},
+ {k:'seer',t:'Some people see it directly',
+  b:'Colour, movement, light around a person or a place — with nothing open in front of them.<br><br><b>If that is you, there are questions here that are for you.</b><br><br><b>If it isn’t you, nothing is missing.</b> Most people feel rather than see, and this map is built out of feeling.',
+  ask:'offer'}
+];
+/* PART TWO · WHAT IS DRAWN — kept as written, arriving when it can be used */
+const RA_TWO=[
+ {k:'rings',t:'The rings',b:'Your aura is drawn in layers. The wide outer bloom is the reach of everything you have offered — it widens as you give. The middle band holds what you have taken in: readings woven, lights received, questions answered. The bright core is you as you stand today.'},
+ {k:'colour',t:'Colour',b:'Every sense carries its own colour, and each light you offer threads that colour in. A colour appearing often means you reach for it often — not that you <i>are</i> it. Where two colours meet they mix rather than compete, which is why an aura with many lights looks like weather instead of a chart.'},
+ {k:'breath',t:'The breath',b:'Auras breathe on a roughly six-second cycle, brightening as they swell. This is not decoration — it is the resting rhythm of a living field. When one has been reached toward recently it swells a little wider for a while, then settles.'},
+ {k:'place',t:'Reading a place',b:'An aura on the map is not one person — it is the gathered light of everyone who has offered something there. Brighter and wider means more lights have been given. Tap it, and the doorway tells you what the place is carrying, in plain words, without naming anyone.'},
+ {k:'other',t:'Reading another',b:'In the live feed you are beholding real offerings. Sit with one before responding — the half-second where you catch yourself before reaching for an easy phrase is the important one. And remember the thread runs both ways: to offer to a light, or to question it, already takes some of it into your own.'},
+ {k:'core',t:'The core',b:'The bright centre is you today, not you at your best. It does not grow by trying. Nothing here is a score, and a small aura is not a lesser one — only a younger one.'},
+ {k:'rings',t:'What you have just done',b:'You noticed something. You found where it sat in you. You gave it a shape, then a name, and then you offered it.<br><br><b>That is the whole of it.</b> Everything else on this map is that, repeated by other people in other places, until a street can say what it is like to stand in.',
+  ask:'door'}
+];
+/* PART THREE · FURTHER — questions, opened only by someone who asks for them */
+const RA_THREE=[
+ {k:'other',t:'Does noticing change what is noticed?',
+  b:'When you attend to a place on purpose, something moves — in you at least, and perhaps in the place.<br><br>Aurasense is not standing outside what it reads. <b>It is inside the thing it is reading, and it says so.</b><br><br><i>So: what happens to a street when the people in it begin noticing it deliberately? Nobody knows yet. This is the sort of thing a map like this could find out.</i>'},
+ {k:'breath',t:'Why the present will not hold still',
+  b:'The past and the future are held in memory and in words. Both are still. The thing they describe is not.<br><br>A sense is your only contact with what is actually happening — and it is gone by the time you have named it.<br><br><i>So: what is the least still way to carry something that will not hold still? That question is why the symbols exist.</i>'},
+ {k:'seer',t:'Reached by what it does',
+  b:'Anything unseen has only ever been approached by its effects. If something were not bound by time, it would still leave marks — in what people feel, sense, think, and become aware of.<br><br><i>So: does anything turn up in what people feel that where-and-when cannot account for?</i><br><br><b>That is a real question with a real method.</b> Felt reports, with place and time attached, at scale, from people who were never asked to expect anything. Every honest reading offered here is part of the answer either way.'},
+ {k:'core',t:'Why this is held gently',
+  b:'Every question here could be turned into a belief, and beliefs harden into the very thing they were asked to escape.<br><br>So Aurasense holds them open.<br><br><b>Compassion is not decoration on this. It is the condition.</b> Kindness is what keeps an inquiry an inquiry, instead of turning it into a side.'}
+];
+let RA_PART=1;
+function raDeck(){ return RA_PART===3?RA_THREE:(RA_PART===2?RA_TWO:RA_ONE); }
+function raSave(k,v){ try{localStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v));}catch(e){} }
+function raGet(k){ try{return localStorage.getItem(k)||'';}catch(e){return '';} }
+const RA_CARDS_LEGACY=[
  ['rings','The rings','Your aura is drawn in layers. The wide outer bloom is the reach of everything you have offered — it widens as you give. The middle band holds what you have taken in: readings woven, lights received, questions answered. The bright core is you as you stand today.'],
  ['colour','Colour','Every sense carries its own colour, and each light you offer threads that colour in. A colour appearing often means you reach for it often — not that you <i>are</i> it. Where two colours meet they mix rather than compete, which is why an aura with many lights looks like weather instead of a chart.'],
  ['breath','The breath','Auras breathe on a roughly six-second cycle, brightening as they swell. This is not decoration — it is the resting rhythm of a living field. When one has been reached toward recently it swells a little wider for a while, then settles.'],
@@ -9552,37 +9633,112 @@ const RA_CARDS=[
 let raStep=0;
 function raSet(i){
   const d=document.getElementById('ra-modal');if(!d)return;
-  raStep=Math.max(0,Math.min(RA_CARDS.length-1,i));
-  const c=RA_CARDS[raStep];
+  const deck=raDeck();
+  raStep=Math.max(0,Math.min(deck.length-1,i));
+  const c=deck[raStep];
   const body=d.querySelector('#ra-body');
   if(body){body.style.opacity='0';
     setTimeout(()=>{
-      body.innerHTML='<div class="ra-art">'+(RA_ART[c[0]]||'')+'</div><div class="ra-h">'+c[1]+'</div><div class="ra-b">'+c[2]+'</div>';
+      body.innerHTML='<div class="ra-art">'+(RA_ART[c.k]||'')+'</div><div class="ra-h">'+c.t+'</div><div class="ra-b">'+c.b+'</div>'+raAsk(c);
+      raWire(c,body);
       body.style.opacity='1';
     },180);}
-  const ct=d.querySelector('#ra-count');if(ct)ct.textContent=(raStep+1)+' of '+RA_CARDS.length;
-  const dt=d.querySelector('#ra-dots');if(dt)dt.innerHTML=RA_CARDS.map((_,k)=>'<span class="'+(k===raStep?'on':'')+'">\u25cf</span>').join('');
+  const ct=d.querySelector('#ra-count');
+  if(ct)ct.textContent=(RA_PART===1?'':(RA_PART===2?'what is drawn \u00b7 ':'further \u00b7 '))+(raStep+1)+' of '+deck.length;
+  const dt=d.querySelector('#ra-dots');if(dt)dt.innerHTML=deck.map((_,k)=>'<span class="'+(k===raStep?'on':'')+'">\u25cf</span>').join('');
   const pv=d.querySelector('#ra-prev'),nx=d.querySelector('#ra-next');
-  if(pv)pv.classList.toggle('dim',raStep===0);
-  if(nx)nx.textContent=(raStep===RA_CARDS.length-1)?'\u2713':'\u203a';
+  if(pv)pv.classList.toggle('dim',raStep===0&&RA_PART===1);
+  if(nx)nx.textContent=(raStep===deck.length-1)?'\u2713':'\u203a';
+}
+/* what a card asks for, if it asks for anything. Circular throughout: a ring
+   of lights to choose from, never a row of boxes. */
+function raAsk(c){
+  if(!c.ask)return '';
+  const q=c.q?'<div class="ra-q">'+c.q+'</div>':'';
+  const af=c.after?'<div class="ra-after">'+c.after+'</div>':'';
+  if(c.ask==='say')
+    return q+'<div class="ra-q">'+(c.ph||'')+'</div><input class="ra-say" id="ra-say" maxlength="90" placeholder="\u2026 or carry on, this one is optional">'+af;
+  if(c.ask==='pick'||c.ask==='multi')
+    return q+'<div class="ra-opts">'+c.opts.map(o=>'<button type="button" class="ra-o" data-v="'+o+'"><i></i>'+o+'</button>').join('')+'</div>'+af;
+  if(c.ask==='sense'){
+    let list=[];
+    try{list=SENSES.slice(0,24).map(x=>[x.id,(x.label||x.id),(x.color||'#a78bfa')]);}catch(e){}
+    if(!list.length)return q+af;
+    return q+'<div class="ra-opts ra-senses">'+list.map(x=>'<button type="button" class="ra-o" data-v="'+x[0]+'" style="--oc:'+x[2]+'"><i></i>'+x[1]+'</button>').join('')+'</div>'+af;
+  }
+  if(c.ask==='colour')
+    return q+'<div class="ra-opts ra-cols">'+RA_COLOUR.map(x=>'<button type="button" class="ra-o'+(x[0]?'':' ra-none')+'" data-v="'+x[1]+'"'+(x[0]?' style="--oc:'+x[0]+'"':'')+'><i></i>'+x[1]+'</button>').join('')+'</div>'+af;
+  if(c.ask==='offer')
+    return '<div class="ra-doors"><button type="button" class="ra-door" id="ra-yes">These questions are for me</button>'
+          +'<button type="button" class="ra-door ra-quiet" id="ra-no">Not me \u2014 carry on</button></div>';
+  if(c.ask==='door')
+    return '<div class="ra-doors"><button type="button" class="ra-door ra-quiet" id="ra-further">If you want to go further</button></div>'
+          +'<div class="ra-note"><b>What this is, and what it isn\u2019t</b><br>Aurasense holds that what people report about a place is real information about that place. Enough reports, and you know something about a street no survey would have found.<br><br><b>It does not claim to have measured a field, and it will not tell you it has.</b><br><br>Every light on this map came from a person. Nothing here was invented to fill a gap, and nothing will be.</div>';
+  return q+af;
+}
+function raWire(c,body){
+  try{
+    if(c.ask==='say'){
+      const el=body.querySelector('#ra-say'); if(el){ el.value=raGet(c.key)||'';
+        el.addEventListener('input',()=>raSave(c.key,el.value)); }
+    }
+    if(c.ask==='pick'||c.ask==='sense'||c.ask==='colour'){
+      const was=raGet(c.key);
+      body.querySelectorAll('.ra-o').forEach(b=>{
+        if(b.dataset.v===was)b.classList.add('on');
+        b.addEventListener('click',()=>{
+          body.querySelectorAll('.ra-o').forEach(x=>x.classList.remove('on'));
+          b.classList.add('on'); raSave(c.key,b.dataset.v);
+        });
+      });
+    }
+    if(c.ask==='multi'){
+      let was=[]; try{was=JSON.parse(raGet(c.key)||'[]');}catch(e){}
+      body.querySelectorAll('.ra-o').forEach(b=>{
+        if(was.indexOf(b.dataset.v)>=0)b.classList.add('on');
+        b.addEventListener('click',()=>{
+          b.classList.toggle('on');
+          const now=[].slice.call(body.querySelectorAll('.ra-o.on')).map(x=>x.dataset.v);
+          raSave(c.key,now);
+        });
+      });
+    }
+    const yes=body.querySelector('#ra-yes');
+    if(yes)yes.addEventListener('click',()=>{
+      /* NOT YET WIRED to the seeing questions - it records the answer and moves
+         on. Wiring it is the next piece, and saying so is better than a button
+         that quietly does nothing anyone expected. */
+      raSave('ra_seer','1'); RA_PART=2; raSet(0);
+    });
+    const no=body.querySelector('#ra-no');
+    if(no)no.addEventListener('click',()=>{ raSave('ra_seer','0'); RA_PART=2; raSet(0); });
+    const fu=body.querySelector('#ra-further');
+    if(fu)fu.addEventListener('click',()=>{ RA_PART=3; raSet(0); });
+  }catch(e){}
 }
 function raOpen(){
   if(document.getElementById('ra-modal'))return;
   const back=document.createElement('div');back.id='gp-back';document.body.appendChild(back);
   const d=document.createElement('div');d.id='ra-modal';
   d.innerHTML='<div class="ra-t">\u25d0 How to read My Aura</div>'
-    +'<div class="ra-s">Seven small pages. No jargon, no scoring \u2014 just what the light is showing you.</div>'
+    +'<div class="ra-s">Nothing to believe, nothing scored. Everything here is something you already do.</div>'
     +'<div id="ra-body"></div>'
     +'<div id="ra-nav"><button type="button" id="ra-prev">\u2039</button><div id="ra-mid"><span id="ra-count"></span><span id="ra-dots"></span></div><button type="button" id="ra-next">\u203a</button></div>'
     +'<button class="ra-x" type="button" id="ra-x">close the guide</button>';
   document.body.appendChild(d);
   requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});
-  raStep=0;raSet(0);
+  RA_PART=1;raStep=0;raSet(0);
   const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},600);};
   back.addEventListener('click',close);
   d.querySelector('#ra-x').addEventListener('click',close);
   d.querySelector('#ra-prev').addEventListener('click',()=>raSet(raStep-1));
-  d.querySelector('#ra-next').addEventListener('click',()=>{if(raStep===RA_CARDS.length-1)close();else raSet(raStep+1);});
+  d.querySelector('#ra-next').addEventListener('click',()=>{
+    const deck=raDeck();
+    if(raStep<deck.length-1){raSet(raStep+1);return;}
+    if(RA_PART===1){RA_PART=2;raSet(0);return;}      /* the offer decides this normally */
+    if(RA_PART===3){RA_PART=2;raSet(RA_TWO.length-1);return;}
+    close();
+  });
   // a swipe turns the page, as a book should
   let sx=0;
   d.addEventListener('touchstart',e=>{if(e.touches.length===1)sx=e.touches[0].clientX;},{passive:true});
@@ -10092,7 +10248,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 9 Sep 2026 · 105 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 9 Sep 2026 · 107 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -10268,13 +10424,30 @@ try{
               0 0 30px rgba(255,249,240,.82)}
 
 /* WHAT IS BEHIND A DOOR — a lit point and a wash that fades out, not a tile */
+/* ═══ 9 Sep, second pass · WHY THEY WERE STILL BOXES ════════════════════
+   Karl: "Youve put aura orbs alongside things but they are still in boxes."
+   He is right, and the reason is arithmetic. The wash I wrote was 135% wide
+   and 200% tall - so it only reached nothing WELL OUTSIDE the element, and
+   inside the element it was near solid all the way to every edge. A gradient
+   that fades beyond its own box is a flat fill with extra steps.
+   A background can never feather its own edges while it is confined to the
+   box it fills. So the light is no longer a background at all: it is laid
+   BEHIND the words on its own layer, larger than the row, and faded on all
+   four sides - across by the gradient, up and down by a mask. Nothing is
+   confined, so nothing has an edge.                                       */
 #myaura-page .maci{
   border:none!important;border-radius:0!important;box-shadow:none!important;
+  background:none!important;
   -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
-  position:relative;padding:11px 16px 11px 32px!important;
-  background:radial-gradient(135% 200% at 15px 50%,rgba(255,250,242,.97) 0%,
-             rgba(255,250,242,.88) 36%,rgba(255,250,242,.44) 68%,rgba(255,250,242,0) 100%)!important;
-  transition:background .3s ease}
+  position:relative;z-index:0;overflow:visible;
+  padding:11px 16px 11px 32px!important}
+#myaura-page .maci::after{
+  content:'';position:absolute;inset:-7px -30px;z-index:-1;pointer-events:none;
+  background:linear-gradient(to right,rgba(255,250,242,0) 0%,rgba(255,250,242,.93) 13%,
+             rgba(255,250,242,.95) 46%,rgba(255,250,242,.88) 70%,rgba(255,250,242,0) 100%);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 24%,#000 76%,rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 24%,#000 76%,rgba(0,0,0,0) 100%);
+  transition:opacity .35s ease}
 #myaura-page .maci::before{
   content:'';position:absolute;left:9px;top:50%;width:13px;height:13px;margin-top:-6.5px;
   border-radius:50%;
@@ -10282,44 +10455,103 @@ try{
              rgba(212,146,92,.24) 70%,rgba(212,146,92,0) 100%);
   box-shadow:0 0 13px rgba(226,168,110,.78);transition:transform .45s ease}
 #myaura-page .maci:hover::before{transform:scale(1.24)}
-#myaura-page .maci:hover{
-  background:radial-gradient(135% 200% at 15px 50%,rgba(255,253,249,1) 0%,
-             rgba(255,253,249,.92) 38%,rgba(255,253,249,.48) 70%,rgba(255,253,249,0) 100%)!important}
+#myaura-page .maci:hover::after{
+  background:linear-gradient(to right,rgba(255,254,250,0) 0%,rgba(255,254,250,.98) 13%,
+             rgba(255,254,250,1) 46%,rgba(255,254,250,.94) 70%,rgba(255,254,250,0) 100%)}
 #myaura-page .maci b,#myaura-page .maci i,#myaura-page .maci .why{
   text-shadow:0 1px 8px rgba(255,251,244,.95)}
 #myaura-page .maci.resting::before{opacity:.45;box-shadow:0 0 8px rgba(226,168,110,.4)}
 
 /* THE WAY THROUGH, AND THE WAY BACK — round-ended light */
 #myaura-page #ma-cloud-through{
-  border:none!important;border-radius:26px!important;box-shadow:none!important;
+  border:none!important;border-radius:0!important;box-shadow:none!important;
+  background:none!important;position:absolute;z-index:4;overflow:visible;
   -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
-  background:radial-gradient(120% 210% at 50% 50%,rgba(255,250,242,.94) 0%,
-             rgba(255,250,242,.62) 50%,rgba(255,250,242,0) 100%)!important;
-  text-shadow:0 1px 9px rgba(255,250,242,.97),0 0 18px rgba(255,250,242,.85)}
-#myaura-page #ma-cloud-through:hover{
-  background:radial-gradient(120% 210% at 50% 50%,rgba(255,254,250,1) 0%,
-             rgba(255,254,250,.7) 52%,rgba(255,254,250,0) 100%)!important}
+  text-shadow:0 1px 9px rgba(255,250,242,.97),0 0 18px rgba(255,250,242,.9),
+              0 0 32px rgba(255,250,242,.7)}
+#myaura-page #ma-cloud-through::after{
+  content:'';position:absolute;inset:-9px -34px;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 42% 60% at 50% 50%,rgba(255,250,242,.96) 0%,
+             rgba(255,250,242,.8) 45%,rgba(255,250,242,.3) 74%,rgba(255,250,242,0) 100%)}
+#myaura-page #ma-cloud-through:hover::after{
+  background:radial-gradient(ellipse 44% 62% at 50% 50%,rgba(255,255,252,1) 0%,
+             rgba(255,255,252,.88) 45%,rgba(255,255,252,.34) 74%,rgba(255,255,252,0) 100%)}
 #myaura-page.cloudfirst #ma-back{
-  border:none!important;border-radius:26px!important;box-shadow:none!important;
+  border:none!important;border-radius:0!important;box-shadow:none!important;
+  background:none!important;overflow:visible;
   -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
-  background:radial-gradient(125% 220% at 32% 50%,rgba(255,248,238,.92) 0%,
-             rgba(255,248,238,.52) 54%,rgba(255,248,238,0) 100%)!important;
-  text-shadow:0 1px 9px rgba(255,248,238,.97),0 0 18px rgba(255,248,238,.85)}
-#myaura-page.cloudfirst #ma-back:hover{
-  background:radial-gradient(125% 220% at 32% 50%,rgba(255,253,247,1) 0%,
-             rgba(255,253,247,.6) 56%,rgba(255,253,247,0) 100%)!important}
+  text-shadow:0 1px 9px rgba(255,248,238,.97),0 0 18px rgba(255,248,238,.9),
+              0 0 32px rgba(255,248,238,.7)}
+#myaura-page.cloudfirst #ma-back::after{
+  content:'';position:absolute;inset:-9px -32px;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 44% 60% at 50% 50%,rgba(255,248,238,.94) 0%,
+             rgba(255,248,238,.76) 45%,rgba(255,248,238,.28) 74%,rgba(255,248,238,0) 100%)}
+#myaura-page.cloudfirst #ma-back:hover::after{
+  background:radial-gradient(ellipse 46% 62% at 50% 50%,rgba(255,254,250,1) 0%,
+             rgba(255,254,250,.86) 45%,rgba(255,254,250,.32) 74%,rgba(255,254,250,0) 100%)}
 
 /* THE SENSE THAT NAMES ITSELF — already meant to be "never a panel" */
 #myaura-page #ma-sense-card{
   border:none!important;border-radius:0!important;box-shadow:none!important;
+  background:none!important;overflow:visible;z-index:7;
   -webkit-backdrop-filter:none!important;backdrop-filter:none!important;
-  background:radial-gradient(110% 150% at 50% 22%,rgba(255,250,242,.97) 0%,
-             rgba(255,250,242,.86) 40%,rgba(255,250,242,.34) 72%,rgba(255,250,242,0) 100%)!important;
   padding:18px 26px 20px!important}
+#myaura-page #ma-sense-card::after{
+  content:'';position:absolute;inset:-14px -30px;z-index:-1;pointer-events:none;
+  background:radial-gradient(ellipse 46% 46% at 50% 50%,rgba(255,250,242,.98) 0%,
+             rgba(255,250,242,.9) 42%,rgba(255,250,242,.4) 72%,rgba(255,250,242,0) 100%)}
 #myaura-page #ma-sense-card h4,#myaura-page #ma-sense-card p,
 #myaura-page #ma-sense-card .soon{text-shadow:0 1px 8px rgba(255,251,244,.95)}
 #myaura-page #ma-sense-card .soon{border-top:none!important;
   box-shadow:inset 0 1px 0 rgba(180,130,90,.16)}
+/* ═══ THE READING, DRESSED AS LIGHT · 9 September 2026 ════════════════════
+   Every choice in the guide is a small light with its word beside it. Nothing
+   in here is a box, a chip, a checkbox or a tick - a person is being asked
+   what they felt, and the shapes they are choosing between should look like
+   the thing the map is made of.                                            */
+#ra-modal .ra-q{font-size:13.5px;line-height:1.55;color:#cfc6f2;margin:15px 2px 9px;
+  letter-spacing:.01em}
+#ra-modal .ra-after{font-size:12px;line-height:1.6;color:#8f86bb;margin:12px 2px 2px;font-style:italic}
+#ra-modal .ra-say{width:100%;box-sizing:border-box;background:none;border:none;
+  border-bottom:.5px solid rgba(167,139,250,.35);color:#efe9ff;font-family:var(--serif);
+  font-size:14.5px;padding:7px 2px;outline:none;transition:border-color .4s}
+#ra-modal .ra-say:focus{border-bottom-color:rgba(214,201,255,.85)}
+#ra-modal .ra-say::placeholder{color:#6c639a}
+#ra-modal .ra-opts{display:flex;flex-wrap:wrap;gap:5px 4px;margin:4px 0 2px}
+#ra-modal .ra-o{display:inline-flex;align-items:center;gap:7px;
+  background:none!important;border:none!important;border-radius:0;
+  padding:7px 11px 7px 4px;cursor:pointer;
+  font-family:var(--serif);font-size:13.5px;letter-spacing:.01em;
+  color:#a99fd0;transition:color .35s ease}
+#ra-modal .ra-o i{display:block;width:11px;height:11px;border-radius:50%;flex:0 0 auto;
+  background:radial-gradient(circle,rgba(255,255,255,.5) 0%,var(--oc,#a78bfa) 46%,
+             rgba(0,0,0,0) 78%);
+  opacity:.42;box-shadow:0 0 0 var(--oc,#a78bfa);
+  transition:opacity .4s ease,transform .4s ease,box-shadow .4s ease}
+#ra-modal .ra-o:hover{color:#ded6ff}
+#ra-modal .ra-o:hover i{opacity:.8;transform:scale(1.12)}
+#ra-modal .ra-o.on{color:#fff}
+#ra-modal .ra-o.on i{opacity:1;transform:scale(1.3);
+  box-shadow:0 0 14px var(--oc,#a78bfa),0 0 26px var(--oc,#a78bfa)}
+#ra-modal .ra-o.ra-none i{background:radial-gradient(circle,rgba(190,182,220,.5) 0%,
+  rgba(120,112,150,.4) 50%,rgba(0,0,0,0) 78%)}
+#ra-modal .ra-cols .ra-o i{width:14px;height:14px}
+#ra-modal .ra-doors{display:flex;flex-direction:column;gap:9px;margin:18px 0 4px;align-items:center}
+#ra-modal .ra-door{font-family:var(--serif);font-size:14px;letter-spacing:.02em;
+  color:#f0eaff;cursor:pointer;border:none!important;border-radius:24px!important;
+  padding:11px 22px;
+  background:radial-gradient(130% 200% at 50% 50%,rgba(167,139,250,.32) 0%,
+             rgba(124,92,255,.12) 58%,rgba(124,92,255,0) 100%)!important;
+  box-shadow:0 0 22px rgba(124,92,255,.24);transition:box-shadow .4s ease}
+#ra-modal .ra-door:hover{box-shadow:0 0 34px rgba(167,139,250,.5)}
+#ra-modal .ra-door.ra-quiet{color:#b7aee0;
+  background:radial-gradient(130% 200% at 50% 50%,rgba(167,139,250,.14) 0%,
+             rgba(124,92,255,.05) 58%,rgba(124,92,255,0) 100%)!important;
+  box-shadow:none}
+#ra-modal .ra-door.ra-quiet:hover{color:#e6dfff;box-shadow:0 0 22px rgba(124,92,255,.24)}
+#ra-modal .ra-note{margin:20px 2px 2px;padding-top:14px;font-size:11.8px;line-height:1.7;
+  color:#8f86bb;box-shadow:inset 0 1px 0 rgba(167,139,250,.18)}
+#ra-modal .ra-note b{color:#c3b9ea;font-weight:400}
 #myaura-page #ma-sense-card button{
   border:none!important;border-radius:22px!important;
   background:radial-gradient(120% 210% at 50% 50%,rgba(238,206,168,.7) 0%,
