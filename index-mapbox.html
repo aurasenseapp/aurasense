@@ -9568,15 +9568,26 @@ const RA_COLOUR=[['#e8a33d','warm'],['#f2d64b','bright'],['#7ec9a0','green'],['#
                  ['#f08bb0','rose'],['#d8d2c4','pale'],['#5c5470','dark'],['','it had no colour']];
 /* PART ONE · THE READING — the capacity, taught from what everyone already does */
 const RA_ONE=[
+/* ═══ THE SILENT OPENING · 9 September 2026 ═══════════════════════════════
+    Karl asked whether the presentation matched the thing Aurasense is to
+    become, and the honest answer was no - it was a card-and-tap sequence in
+    Aurasense's clothes.
+    So the first turn is no longer ABOUT noticing. It IS noticing.
+    The guide opens with nothing written on it. A field breathes. Something in
+    it genuinely changes - a drift of colour, a slowing of the breath, a light
+    that arrives. Nothing is asked and nothing is scored.
+    Only afterwards does the guide say what it did and ask whether you caught
+    it. Either answer is the lesson, which is why neither one is wrong. */
+ {k:'rings',t:'',b:'',ask:'silence',key:'ra_noticed'},
  {k:'rings',t:'You already do this',
   b:'You have walked into a room and known something was wrong before anyone spoke.<br><br>Nobody taught you that. You were not guessing, and you were not imagining it — <b>you were reading a place</b>.<br><br>This guide does not give you a new sense. It gives you back one you already use, and were never shown how to name.',
   ask:'say',ph:'The last time it happened, where were you?',key:'ra_where'},
  {k:'core',t:'It arrives in the body first',
   b:'Before you have a word for a place, you usually have a feeling somewhere in you. The shoulders. The jaw. The chest. The stomach. The back of the neck.<br><br>That is not mystical. <b>It is simply where a sense lands before language catches up with it.</b>',
   ask:'pick',opts:RA_BODY,q:'Bring that place back to mind. Where did you feel it?',key:'ra_body'},
- {k:'breath',t:'Shape before name',
+ {k:'breath',t:'Shape before name',ask:'gesture',
   b:'A word arrives carrying its own history, and it can flatten what you actually felt. <b>Shape arrives clean.</b>',
-  ask:'multi',opts:RA_SHAPE,q:'Which of these were true of it?',key:'ra_shape',
+  opts:RA_SHAPE,q:'Move the way it felt. The light will follow you.',key:'ra_shape',
   after:'These are not decoration. They are the same qualities the map draws with — how a light moves, how wide it reaches, how warm its colour runs. You are already speaking its language.'},
  {k:'colour',t:'Now the word',
   b:'Now name it.<br><br>If several fit, <b>take the one you would be least comfortable saying out loud</b>. That one is usually closer.',
@@ -9619,6 +9630,222 @@ const RA_THREE=[
 ];
 let RA_PART=1;
 function raDeck(){ return RA_PART===3?RA_THREE:(RA_PART===2?RA_TWO:RA_ONE); }
+/* The field that changes while nobody is asking anything. One drift of colour,
+   one slowing of the breath, one light arriving - real changes, not a trick, so
+   that whichever answer a person gives is true. */
+function raSilence(body,c){
+  const cv=body.querySelector('#ra-field'); if(!cv)return;
+  const g=cv.getContext('2d'); const W=cv.width,H=cv.height;
+  const born=Date.now();
+  let hue=[167,139,250], rate=1, extra=null, stop=false;
+  /* the three changes, spaced so at least one lands in anyone's attention */
+  const t1=setTimeout(()=>{hue=[232,163,110];},4200);          /* the colour drifts warm */
+  const t2=setTimeout(()=>{rate=0.45;},8600);                  /* the breath slows */
+  const t3=setTimeout(()=>{extra={x:.72,y:.31,born:Date.now()};},13000);  /* a light arrives */
+  const q=body.querySelector('#ra-still-q');
+  const t4=setTimeout(()=>{ if(q)q.classList.add('on'); },17500);
+  (function paint(){
+    if(stop||!document.body.contains(cv))return;
+    const T=(Date.now()-born)/1000;
+    g.clearRect(0,0,W,H);
+    const br=0.78+0.22*Math.sin(T*0.62*rate);
+    const cx=W/2, cy=H/2, r=W*0.34*br;
+    const col=(a)=>'rgba('+hue[0]+','+hue[1]+','+hue[2]+','+a+')';
+    let gr=g.createRadialGradient(cx,cy,0,cx,cy,r*1.9);
+    gr.addColorStop(0,col(0.10*br));gr.addColorStop(0.5,col(0.05*br));gr.addColorStop(1,col(0));
+    g.fillStyle=gr;g.beginPath();g.arc(cx,cy,r*1.9,0,Math.PI*2);g.fill();
+    gr=g.createRadialGradient(cx,cy,0,cx,cy,r);
+    gr.addColorStop(0,col(0.52*br));gr.addColorStop(0.42,col(0.26*br));gr.addColorStop(1,col(0));
+    g.fillStyle=gr;g.beginPath();g.arc(cx,cy,r,0,Math.PI*2);g.fill();
+    g.fillStyle='rgba(255,255,255,'+(0.7*br)+')';
+    g.beginPath();g.arc(cx,cy,2.4,0,Math.PI*2);g.fill();
+    for(let k=0;k<26;k++){
+      const a2=k*2.4+T*0.13*rate, rr=r*(0.2+0.72*((k*37)%100)/100);
+      const px=cx+Math.cos(a2)*rr, py=cy+Math.sin(a2)*rr;
+      g.fillStyle='rgba(255,252,246,'+(0.05+0.16*Math.abs(Math.sin(T*0.8+k)))+')';
+      g.beginPath();g.arc(px,py,0.9,0,Math.PI*2);g.fill();
+    }
+    if(extra){
+      const e=Math.min(1,(Date.now()-extra.born)/2600);
+      const ex=W*extra.x, ey=H*extra.y, er=W*0.1*e*(0.85+0.15*Math.sin(T*0.9));
+      const g2=g.createRadialGradient(ex,ey,0,ex,ey,er);
+      g2.addColorStop(0,'rgba(255,255,255,'+(0.6*e)+')');
+      g2.addColorStop(0.4,col(0.4*e));g2.addColorStop(1,col(0));
+      g.fillStyle=g2;g.beginPath();g.arc(ex,ey,er,0,Math.PI*2);g.fill();
+    }
+    requestAnimationFrame(paint);
+  })();
+  body.querySelectorAll('#ra-still .ra-o').forEach(b=>{
+    b.addEventListener('click',()=>{
+      raSave(c.key,b.dataset.v);
+      body.querySelectorAll('#ra-still .ra-o').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on');
+      const said=body.querySelector('#ra-still-q');
+      if(said)said.insertAdjacentHTML('beforeend',
+        '<div class="ra-after" style="text-align:center">The colour warmed, the breath slowed, and a second light arrived.'
+        +'<br><b>Whichever you answered, that was the whole lesson.</b> Noticing is not a talent you have or lack \u2014 it is attention, pointed somewhere, and it can be practised.</div>');
+    });
+  });
+  const kill=()=>{stop=true;clearTimeout(t1);clearTimeout(t2);clearTimeout(t3);clearTimeout(t4);};
+  setTimeout(()=>{ if(!document.body.contains(cv))kill(); },60000);
+}
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE GESTURE TURN  ·  9 September 2026
+   ───────────────────────────────────────────────────────────────────────────
+   Karl's founding clause is that a person's mastery of words must not be the
+   key. Here that stops being a sentiment and becomes a mechanic: a senser
+   who cannot or will not write can still finish this turn, and the whole
+   guide with it.
+
+   You move. The light follows. Four things are read from the movement —
+   how fast, how wide, which way, and how far from the middle — and the words
+   ASSEMBLE THEMSELVES AROUND THE RIM as the evidence arrives, so you watch
+   the reading form rather than being handed it.
+
+   Three things the research insists on, all of them honoured:
+     · a gesture nobody is told about is a hidden feature, so the field shows
+       what to do before it asks for anything
+     · you remember what you PRODUCE far better than what you pick off a list,
+       which is the whole reason this beats the row of words
+     · and it can never be the only door. The words are here from the start,
+       one tap away, EQUAL and not a fallback — a movement-only turn would
+       exclude exactly the people this project exists for.
+   ═══════════════════════════════════════════════════════════════════════════ */
+const RA_AXES=[
+  {a:-Math.PI/2,hi:'moving',lo:'still'},
+  {a:0,          hi:'wide',  lo:'narrow'},
+  {a:Math.PI/2,  hi:'settling',lo:'rising'},
+  {a:Math.PI,    hi:'far',   lo:'near'}
+];
+function raGesture(body,c){
+  const cv=body.querySelector('#ra-move'); if(!cv)return;
+  const g=cv.getContext('2d'), W=cv.width, H=cv.height, CX=W/2, CY=H/2, R=W*0.40;
+  const readEl=body.querySelector('#ra-read');
+  let pts=[], drawing=false, done=false, born=Date.now(), verdict=[], conf=[0,0,0,0];
+  let calm=false; try{calm=!!window.AS_CALM;}catch(e){}
+
+  const px=(e)=>{const r=cv.getBoundingClientRect();
+    return {x:(e.clientX-r.left)*(W/r.width), y:(e.clientY-r.top)*(H/r.height), t:Date.now()};};
+
+  function measure(){
+    if(pts.length<4){conf=[0,0,0,0];return [];}
+    let dist=0, ms=Math.max(1,pts[pts.length-1].t-pts[0].t);
+    let minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9,rad=0;
+    for(let i=0;i<pts.length;i++){
+      const p=pts[i];
+      if(i)dist+=Math.hypot(p.x-pts[i-1].x,p.y-pts[i-1].y);
+      minx=Math.min(minx,p.x);maxx=Math.max(maxx,p.x);
+      miny=Math.min(miny,p.y);maxy=Math.max(maxy,p.y);
+      rad+=Math.hypot(p.x-CX,p.y-CY);
+    }
+    rad/=pts.length;
+    const speed=dist/ms*1000;                       /* pixels per second */
+    const spread=Math.max(maxx-minx,maxy-miny)/(R*2);
+    const drift=(pts[pts.length-1].y-pts[0].y)/(R*2);
+    const outness=rad/R;
+    const band=(v,mid,soft)=>Math.max(-1,Math.min(1,(v-mid)/soft));
+    const vals=[band(speed,150,150),band(spread,0.45,0.35),band(drift,0,0.34),band(outness,0.5,0.4)];
+    conf=vals.map(v=>Math.min(1,Math.abs(v)*1.5));
+    return vals.map((v,i)=>Math.abs(v)<0.16?null:(v>0?RA_AXES[i].hi:RA_AXES[i].lo));
+  }
+
+  function say(list){
+    const w=list.filter(Boolean);
+    if(!w.length){readEl.innerHTML='';return;}
+    const phrase=w.length===1?w[0]:(w.slice(0,-1).join(', ')+' and '+w[w.length-1]);
+    readEl.innerHTML='<div class="ra-verdict">That was <b>'+phrase+'</b>.</div>'
+      +'<div class="ra-verdict-s">If that is not it, move again, or take the words instead.</div>'
+      +'<button type="button" class="ra-words-door" id="ra-again">move again</button>';
+    const ag=readEl.querySelector('#ra-again');
+    if(ag)ag.addEventListener('click',()=>{pts=[];done=false;verdict=[];readEl.innerHTML='';});
+    raSave(c.key,w);
+    try{body.querySelectorAll('#ra-words .ra-o').forEach(b=>{
+      b.classList.toggle('on',w.indexOf(b.dataset.v)>=0);});}catch(e){}
+  }
+
+  cv.addEventListener('pointerdown',e=>{cv.setPointerCapture(e.pointerId);drawing=true;done=false;pts=[px(e)];readEl.innerHTML='';});
+  cv.addEventListener('pointermove',e=>{if(!drawing)return;pts.push(px(e));if(pts.length>420)pts.shift();verdict=measure();});
+  cv.addEventListener('pointerup',()=>{if(!drawing)return;drawing=false;done=true;verdict=measure();say(verdict);});
+  cv.addEventListener('pointercancel',()=>{drawing=false;});
+
+  (function paint(){
+    if(!document.body.contains(cv))return;
+    const T=(Date.now()-born)/1000;
+    g.clearRect(0,0,W,H);
+    /* the resting field — the same light the map is made of */
+    const br=0.8+0.2*Math.sin(T*0.62);
+    let gr=g.createRadialGradient(CX,CY,0,CX,CY,R*1.25*br);
+    gr.addColorStop(0,'rgba(167,139,250,'+(0.13*br)+')');
+    gr.addColorStop(0.55,'rgba(167,139,250,'+(0.05*br)+')');
+    gr.addColorStop(1,'rgba(167,139,250,0)');
+    g.fillStyle=gr;g.beginPath();g.arc(CX,CY,R*1.25*br,0,Math.PI*2);g.fill();
+    /* before anyone has touched it, a light shows what to do */
+    if(!pts.length&&!done){
+      const ph=(T*0.45)%(Math.PI*2);
+      const hx=CX+Math.cos(ph)*R*0.52, hy=CY+Math.sin(ph)*R*0.52;
+      for(let k=0;k<16;k++){
+        const p2=ph-k*0.06, a2=(1-k/16)*0.34;
+        g.fillStyle='rgba(226,214,255,'+a2+')';
+        g.beginPath();g.arc(CX+Math.cos(p2)*R*0.52,CY+Math.sin(p2)*R*0.52,2.1-k*0.09,0,Math.PI*2);g.fill();
+      }
+      g.fillStyle='rgba(255,255,255,.85)';g.beginPath();g.arc(hx,hy,3.1,0,Math.PI*2);g.fill();
+      g.font='italic 13px Georgia, serif';g.textAlign='center';g.textBaseline='middle';
+      g.fillStyle='rgba(200,191,232,.62)';g.fillText('move here', CX, CY);
+    }
+    /* the trail — a comet with a bloom, fading behind itself */
+    for(let i=1;i<pts.length;i++){
+      const f=i/pts.length, a2=Math.pow(f,1.4);
+      g.strokeStyle='rgba(214,201,255,'+(0.5*a2)+')';
+      g.lineWidth=1+4.5*a2; g.lineCap='round';
+      g.beginPath();g.moveTo(pts[i-1].x,pts[i-1].y);g.lineTo(pts[i].x,pts[i].y);g.stroke();
+    }
+    if(pts.length){
+      const p=pts[pts.length-1];
+      const g2=g.createRadialGradient(p.x,p.y,0,p.x,p.y,18);
+      g2.addColorStop(0,'rgba(255,255,255,.9)');
+      g2.addColorStop(0.32,'rgba(196,181,253,.55)');
+      g2.addColorStop(1,'rgba(167,139,250,0)');
+      g.fillStyle=g2;g.beginPath();g.arc(p.x,p.y,18,0,Math.PI*2);g.fill();
+    }
+    /* THE WORDS ASSEMBLE — each axis speaks as its evidence arrives */
+    g.font='italic 14.5px Georgia, serif';g.textAlign='center';g.textBaseline='middle';
+    for(let i=0;i<4;i++){
+      const word=verdict[i]; if(!word)continue;
+      const a2=Math.min(1,conf[i])*(done?1:0.62+0.38*Math.sin(T*2.2));
+      if(a2<=0.05)continue;
+      const ax=RA_AXES[i].a, wx=CX+Math.cos(ax)*R*1.06, wy=CY+Math.sin(ax)*R*1.06;
+      g.lineWidth=3.4;g.strokeStyle='rgba(6,4,18,'+(0.8*a2)+')';g.strokeText(word,wx,wy);
+      g.shadowColor='rgba(196,181,253,.9)';g.shadowBlur=calm?4:12;
+      g.fillStyle='rgba(255,252,246,'+a2+')';g.fillText(word,wx,wy);
+      g.shadowBlur=0;
+    }
+    requestAnimationFrame(paint);
+  })();
+
+  /* the words, equal and present from the start */
+  const door=body.querySelector('#ra-words-door'), words=body.querySelector('#ra-words');
+  if(door&&words)door.addEventListener('click',()=>{
+    words.classList.toggle('on');
+    door.textContent=words.classList.contains('on')?'or move instead':'or choose the words instead';
+  });
+  let was=[]; try{was=JSON.parse(raGet(c.key)||'[]');}catch(e){}
+  body.querySelectorAll('#ra-words .ra-o').forEach(b=>{
+    if(was.indexOf(b.dataset.v)>=0)b.classList.add('on');
+    b.addEventListener('click',()=>{
+      b.classList.toggle('on');
+      raSave(c.key,[].slice.call(body.querySelectorAll('#ra-words .ra-o.on')).map(x=>x.dataset.v));
+    });
+  });
+  /* warm and cool are not motion, so they are asked separately and honestly */
+  const wasW=raGet('ra_temp');
+  body.querySelectorAll('#ra-warm .ra-o').forEach(b=>{
+    if(b.dataset.w===wasW)b.classList.add('on');
+    b.addEventListener('click',()=>{
+      body.querySelectorAll('#ra-warm .ra-o').forEach(x=>x.classList.remove('on'));
+      b.classList.add('on'); raSave('ra_temp',b.dataset.w);
+    });
+  });
+}
 function raSave(k,v){ try{localStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v));}catch(e){} }
 function raGet(k){ try{return localStorage.getItem(k)||'';}catch(e){return '';} }
 const RA_CARDS_LEGACY=[
@@ -9656,8 +9883,27 @@ function raAsk(c){
   if(!c.ask)return '';
   const q=c.q?'<div class="ra-q">'+c.q+'</div>':'';
   const af=c.after?'<div class="ra-after">'+c.after+'</div>':'';
+  if(c.ask==='silence')
+    return '<div class="ra-still" id="ra-still">'
+      +'<canvas id="ra-field" width="300" height="300"></canvas>'
+      +'<div class="ra-still-q" id="ra-still-q">'
+      +'<div class="ra-q" style="text-align:center">Something on this screen changed while you sat with it.<br>Did you notice?</div>'
+      +'<div class="ra-opts" style="justify-content:center">'
+      +'<button type="button" class="ra-o" data-v="yes"><i></i>I noticed</button>'
+      +'<button type="button" class="ra-o" data-v="no"><i></i>I did not</button>'
+      +'</div></div></div>';
   if(c.ask==='say')
     return q+'<div class="ra-q">'+(c.ph||'')+'</div><input class="ra-say" id="ra-say" maxlength="90" placeholder="\u2026 or carry on, this one is optional">'+af;
+  if(c.ask==='gesture')
+    return '<div class="ra-q" style="text-align:center">'+c.q+'</div>'
+      +'<div class="ra-still"><canvas id="ra-move" width="320" height="320"></canvas></div>'
+      +'<div class="ra-read" id="ra-read"></div>'
+      +'<div class="ra-warm" id="ra-warm"><span>and was it</span>'
+      +'<button type="button" class="ra-o" data-w="warm" style="--oc:#e8a33d"><i></i>warm</button>'
+      +'<button type="button" class="ra-o" data-w="cool" style="--oc:#6fb4e8"><i></i>cool</button>'
+      +'<button type="button" class="ra-o" data-w="neither" style="--oc:#9a92c0"><i></i>neither</button></div>'
+      +'<button type="button" class="ra-words-door" id="ra-words-door">or choose the words instead</button>'
+      +'<div class="ra-opts ra-words" id="ra-words">'+c.opts.map(o=>'<button type="button" class="ra-o" data-v="'+o+'"><i></i>'+o+'</button>').join('')+'</div>';
   if(c.ask==='pick'||c.ask==='multi')
     return q+'<div class="ra-opts">'+c.opts.map(o=>'<button type="button" class="ra-o" data-v="'+o+'"><i></i>'+o+'</button>').join('')+'</div>'+af;
   if(c.ask==='sense'){
@@ -9678,6 +9924,8 @@ function raAsk(c){
 }
 function raWire(c,body){
   try{
+    if(c.ask==='silence')raSilence(body,c);
+    if(c.ask==='gesture')raGesture(body,c);
     if(c.ask==='say'){
       const el=body.querySelector('#ra-say'); if(el){ el.value=raGet(c.key)||'';
         el.addEventListener('input',()=>raSave(c.key,el.value)); }
@@ -9721,7 +9969,7 @@ function raOpen(){
   const back=document.createElement('div');back.id='gp-back';document.body.appendChild(back);
   const d=document.createElement('div');d.id='ra-modal';
   d.innerHTML='<div class="ra-t">\u25d0 How to read My Aura</div>'
-    +'<div class="ra-s">Nothing to believe, nothing scored. Everything here is something you already do.</div>'
+    +'<div class="ra-s">Nothing to believe, nothing scored. It begins in silence \u2014 stay with it a moment before you read anything.</div>'
     +'<div id="ra-body"></div>'
     +'<div id="ra-nav"><button type="button" id="ra-prev">\u2039</button><div id="ra-mid"><span id="ra-count"></span><span id="ra-dots"></span></div><button type="button" id="ra-next">\u203a</button></div>'
     +'<button class="ra-x" type="button" id="ra-x">close the guide</button>';
@@ -10248,7 +10496,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 9 Sep 2026 · 107 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 9 Sep 2026 · 109 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -10509,6 +10757,28 @@ try{
    in here is a box, a chip, a checkbox or a tick - a person is being asked
    what they felt, and the shapes they are choosing between should look like
    the thing the map is made of.                                            */
+#ra-modal #ra-move{width:min(320px,80vw);height:min(320px,80vw);display:block;
+  touch-action:none;cursor:crosshair}
+#ra-modal .ra-read{min-height:8px;margin:6px 0 0;text-align:center}
+#ra-modal .ra-verdict{font-size:16px;color:#f0eaff;letter-spacing:.01em;margin-top:4px}
+#ra-modal .ra-verdict b{color:#fff;font-weight:400;text-shadow:0 0 16px rgba(196,181,253,.8)}
+#ra-modal .ra-verdict-s{font-size:12px;color:#8f86bb;margin-top:5px;font-style:italic}
+#ra-modal .ra-warm{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+  gap:2px 4px;margin:14px 0 2px;font-size:13px;color:#a99fd0}
+#ra-modal .ra-warm span{margin-right:4px}
+#ra-modal .ra-words-door{display:block;margin:12px auto 0;background:none!important;
+  border:none!important;font-family:var(--serif);font-size:12.5px;color:#8f86bb;
+  cursor:pointer;text-decoration:underline;text-underline-offset:4px;
+  text-decoration-color:rgba(167,139,250,.4);transition:color .35s}
+#ra-modal .ra-words-door:hover{color:#d6cbff}
+#ra-modal .ra-words{max-height:0;overflow:hidden;opacity:0;
+  transition:max-height .6s ease,opacity .5s ease;justify-content:center}
+#ra-modal .ra-words.on{max-height:280px;opacity:1;margin-top:8px}
+#ra-modal .ra-still{display:flex;flex-direction:column;align-items:center;margin:2px 0 0}
+#ra-modal #ra-field{width:min(300px,74vw);height:min(300px,74vw);display:block}
+#ra-modal .ra-still-q{opacity:0;transform:translateY(8px);transition:opacity 2.4s ease,transform 2.4s ease;
+  pointer-events:none;width:100%}
+#ra-modal .ra-still-q.on{opacity:1;transform:none;pointer-events:auto}
 #ra-modal .ra-q{font-size:13.5px;line-height:1.55;color:#cfc6f2;margin:15px 2px 9px;
   letter-spacing:.01em}
 #ra-modal .ra-after{font-size:12px;line-height:1.6;color:#8f86bb;margin:12px 2px 2px;font-style:italic}
