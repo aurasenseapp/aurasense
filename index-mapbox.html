@@ -9562,7 +9562,15 @@ const RA_ART={
    And under the Open Question rule of 9 September, nothing here asserts what
    it cannot show. Where it would have to assert, it asks.
    ════════════════════════════════════════════════════════════════════════════ */
-const RA_BODY=['chest','stomach','shoulders and neck','throat and jaw','head','everywhere','nowhere I can place'];
+/* 10 Sep - widened on Karl's account. The first list assumed a sense lands
+   somewhere findable, and his own strongest experiences do not: the shift in
+   the air before someone reached the top of the stairs, the room filling as a
+   life left it, the field that had held children a century ago. Those were not
+   in a shoulder or a chest. THE LIST HAD NO ROOM FOR THE BELLY OF THE TABLE,
+   which is the one thing this project cannot afford to leave out. */
+const RA_BODY=['chest','stomach','spine','back of the head','forehead','shoulders and neck',
+  'throat and jaw','hands','all through me at once','not in my body — in the air',
+  'somewhere I have no word for'];
 const RA_SHAPE=['moving','still','near','far','warm','cool','heavy','light','wide','narrow','rising','settling'];
 const RA_COLOUR=[['#e8a33d','warm'],['#f2d64b','bright'],['#7ec9a0','green'],['#6fb4e8','cool'],['#a78bfa','violet'],
                  ['#f08bb0','rose'],['#d8d2c4','pale'],['#5c5470','dark'],['','it had no colour']];
@@ -9580,11 +9588,12 @@ const RA_ONE=[
     it. Either answer is the lesson, which is why neither one is wrong. */
  {k:'rings',t:'',b:'',ask:'silence',key:'ra_noticed'},
  {k:'rings',t:'You already do this',
-  b:'You have walked into a room and known something was wrong before anyone spoke.<br><br>Nobody taught you that. You were not guessing, and you were not imagining it — <b>you were reading a place</b>.<br><br>This guide does not give you a new sense. It gives you back one you already use, and were never shown how to name.',
+  b:'You have walked into a room and known something was wrong before anyone spoke.<br><br>Or you have felt someone looking at you, turned, and been right.<br><br>Nobody taught you either of those. You were not guessing, and you were not imagining it — <b>you were reading</b>.<br><br>This guide does not give you a new sense. It gives you back ones you already use, and were never shown how to name.',
   ask:'say',ph:'The last time it happened, where were you?',key:'ra_where'},
  {k:'core',t:'It arrives in the body first',
   b:'Before you have a word for a place, you usually have a feeling somewhere in you. The shoulders. The jaw. The chest. The stomach. The back of the neck.<br><br>That is not mystical. <b>It is simply where a sense lands before language catches up with it.</b>',
-  ask:'pick',opts:RA_BODY,q:'Bring that place back to mind. Where did you feel it?',key:'ra_body'},
+  ask:'pick',opts:RA_BODY,q:'Bring that moment back. Where did you feel it?',key:'ra_body',
+  after:'Some senses do not land anywhere you can point to. They arrive in the room, or in the air, or in the whole of you at once. Those are not lesser readings — they are the ones we understand least, which is a good part of why this map is being built.'},
  {k:'breath',t:'Shape before name',ask:'gesture',
   b:'A word arrives carrying its own history, and it can flatten what you actually felt. <b>Shape arrives clean.</b>',
   opts:RA_SHAPE,q:'Move the way it felt. The light will follow you.',key:'ra_shape',
@@ -9866,7 +9875,14 @@ function raSet(i){
   const body=d.querySelector('#ra-body');
   if(body){body.style.opacity='0';
     setTimeout(()=>{
-      body.innerHTML='<div class="ra-art">'+(RA_ART[c.k]||'')+'</div><div class="ra-h">'+c.t+'</div><div class="ra-b">'+c.b+'</div>'+raAsk(c);
+      /* 10 Sep - Karl: "The diagram at the top pushes out the animation below
+         whilst it's happening, so asking what one observed becomes detached
+         from the moment." Right: on a turn where the moving thing IS the turn,
+         nothing may stand above it. */
+      const quiet=(c.ask==='silence');
+      body.innerHTML=(quiet?'':'<div class="ra-art">'+(RA_ART[c.k]||'')+'</div>')
+        +(c.t?'<div class="ra-h">'+c.t+'</div>':'')
+        +(c.b?'<div class="ra-b">'+c.b+'</div>':'')+raAsk(c);
       raWire(c,body);
       body.style.opacity='1';
     },180);}
@@ -10496,7 +10512,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 9 Sep 2026 · 109 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 10 Sep 2026 · 110 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
