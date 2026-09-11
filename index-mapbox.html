@@ -9595,8 +9595,8 @@ const RA_ONE=[
   ask:'pick',opts:RA_BODY,q:'Bring that moment back. Where did you feel it?',key:'ra_body',
   after:'Some senses do not land anywhere you can point to. They arrive in the room, or in the air, or in the whole of you at once. Those are not lesser readings — they are the ones we understand least, which is a good part of why this map is being built.'},
  {k:'breath',t:'Shape before name',ask:'gesture',
-  b:'A word arrives carrying its own history, and it can flatten what you actually felt. <b>Shape arrives clean.</b>',
-  opts:RA_SHAPE,q:'Move the way it felt. The light will follow you.',key:'ra_shape',
+  b:'Any word you use for a feeling is only a label, and every label carries its own history. <b>It can flatten what you actually felt, or point at something a little to one side of it.</b><br><br>A movement carries none of that. So before you look for the word, try showing it instead.<br><br><i>If you have never done anything like this, that is completely normal \u2014 most people have not. Move roughly, or skip to the words underneath. Neither is worse.</i>',
+  opts:RA_SHAPE,q:'Move the way it felt, and the light will follow you. If it moved through you, trace where it went.',key:'ra_shape',
   after:'These are not decoration. They are the same qualities the map draws with — how a light moves, how wide it reaches, how warm its colour runs. You are already speaking its language.'},
  {k:'colour',t:'Now the word',
   b:'Now name it.<br><br>If several fit, <b>take the one you would be least comfortable saying out loud</b>. That one is usually closer.',
@@ -9611,6 +9611,8 @@ const RA_ONE=[
   b:'The people who feel a place go wrong first are usually the ones told they are too sensitive.<br><br><b>Aurasense is built on the opposite assumption.</b> Sensory-sensitive and autistic people are, very often, the most accurate instruments a place has — and somewhere made bearable for them turns out to be better for everyone in it.<br><br><b>If you have ever been told you feel things too strongly, this is the one place where that is the qualification.</b>'},
  {k:'seer',t:'Putting the guide down',
   b:'You will not need this for long.<br><br>Noticing is a skill, and skills stop needing instructions. <b>When you catch yourself naming a place before you have opened anything, the guide has done its work</b> — and it will stop appearing.<br><br><i>Nothing in Aurasense is meant to be needed for ever.</i>'},
+ {k:'core',t:'If none of this has matched anything',
+  b:'Then you are in the largest group there is, and nothing has gone wrong.<br><br>Plenty of people go a long time without noticing anything they would call a sense of a place. <b>That is not a lack of ability. It is usually a lack of occasion, and of anyone ever having suggested it was worth attending to.</b><br><br>So here is the honest suggestion. <b>Go and live for a week.</b> Nothing to practise, nothing to look for. If something happens \u2014 a room, a street, a person, a moment where you knew before you were told \u2014 come back and put it here while it is fresh.<br><br><i>And if nothing does, that is a real answer too, and this map would rather have it than not.</i>'},
  {k:'seer',t:'Some people see it directly',
   b:'Colour, movement, light around a person or a place — with nothing open in front of them.<br><br><b>If that is you, there are questions here that are for you.</b><br><br><b>If it isn’t you, nothing is missing.</b> Most people feel rather than see, and this map is built out of feeling.',
   ask:'offer'}
@@ -9732,6 +9734,41 @@ function raGesture(body,c){
   const readEl=body.querySelector('#ra-read');
   let pts=[], drawing=false, done=false, born=Date.now(), verdict=[], conf=[0,0,0,0];
   let calm=false; try{calm=!!window.AS_CALM;}catch(e){}
+  /* 10 Sep - Karl: "I'd have to have a diagram on the body, since I felt it
+     there. Drop down from near my throat down to the centre of my chest and
+     then down to fade. It's hard to represent that on the diagram you have."
+     Quite right - the open field can hold a shape but not a PATH THROUGH A
+     PERSON, and some senses are exactly that and nothing else.
+     So a body can be called up to trace on, and when it is, the movement
+     answers two questions at once: what shape the sense had, and where in a
+     person it travelled. Nobody is made to use it. */
+  let onBody=false;
+  const BODY_ZONES=[[0.10,'the head'],[0.24,'the throat'],[0.40,'the chest'],
+                    [0.56,'the stomach'],[0.74,'the belly'],[1.01,'the legs']];
+  function bodyPath(){
+    if(!onBody||pts.length<3)return '';
+    const seen=[];
+    for(const p of pts){
+      const f=(p.y-H*0.06)/(H*0.88);
+      for(const z of BODY_ZONES){ if(f<=z[0]){ if(seen[seen.length-1]!==z[1])seen.push(z[1]); break; } }
+    }
+    if(seen.length<2)return seen[0]||'';
+    return seen.slice(0,4).join(', then ');
+  }
+  function drawBody(){
+    g.save();
+    g.strokeStyle='rgba(196,181,253,.30)';g.lineWidth=1.4;g.lineCap='round';g.lineJoin='round';
+    const cx=CX;
+    g.beginPath();g.arc(cx,H*0.13,H*0.062,0,Math.PI*2);g.stroke();          /* head */
+    g.beginPath();g.moveTo(cx,H*0.20);g.lineTo(cx,H*0.60);g.stroke();       /* spine */
+    g.beginPath();g.moveTo(cx-W*0.13,H*0.27);g.lineTo(cx+W*0.13,H*0.27);g.stroke();  /* shoulders */
+    g.beginPath();g.moveTo(cx-W*0.13,H*0.27);g.lineTo(cx-W*0.18,H*0.52);g.stroke();
+    g.beginPath();g.moveTo(cx+W*0.13,H*0.27);g.lineTo(cx+W*0.18,H*0.52);g.stroke();
+    g.beginPath();g.moveTo(cx-W*0.09,H*0.60);g.lineTo(cx-W*0.10,H*0.90);g.stroke();
+    g.beginPath();g.moveTo(cx+W*0.09,H*0.60);g.lineTo(cx+W*0.10,H*0.90);g.stroke();
+    g.beginPath();g.moveTo(cx-W*0.09,H*0.60);g.lineTo(cx+W*0.09,H*0.60);g.stroke();
+    g.restore();
+  }
 
   const px=(e)=>{const r=cv.getBoundingClientRect();
     return {x:(e.clientX-r.left)*(W/r.width), y:(e.clientY-r.top)*(H/r.height), t:Date.now()};};
@@ -9762,12 +9799,15 @@ function raGesture(body,c){
     const w=list.filter(Boolean);
     if(!w.length){readEl.innerHTML='';return;}
     const phrase=w.length===1?w[0]:(w.slice(0,-1).join(', ')+' and '+w[w.length-1]);
-    readEl.innerHTML='<div class="ra-verdict">That was <b>'+phrase+'</b>.</div>'
+    const bp=bodyPath();
+    readEl.innerHTML='<div class="ra-verdict">That was <b>'+phrase+'</b>.'
+      +(bp?'<br><span style="font-size:14px">It went through <b>'+bp+'</b>.</span>':'')+'</div>'
       +'<div class="ra-verdict-s">If that is not it, move again, or take the words instead.</div>'
       +'<button type="button" class="ra-words-door" id="ra-again">move again</button>';
     const ag=readEl.querySelector('#ra-again');
     if(ag)ag.addEventListener('click',()=>{pts=[];done=false;verdict=[];readEl.innerHTML='';});
     raSave(c.key,w);
+      const bp2=bodyPath(); if(bp2)raSave('ra_path',bp2);
     try{body.querySelectorAll('#ra-words .ra-o').forEach(b=>{
       b.classList.toggle('on',w.indexOf(b.dataset.v)>=0);});}catch(e){}
   }
@@ -9781,6 +9821,7 @@ function raGesture(body,c){
     if(!document.body.contains(cv))return;
     const T=(Date.now()-born)/1000;
     g.clearRect(0,0,W,H);
+    if(onBody)drawBody();
     /* the resting field — the same light the map is made of */
     const br=0.8+0.2*Math.sin(T*0.62);
     let gr=g.createRadialGradient(CX,CY,0,CX,CY,R*1.25*br);
@@ -9832,6 +9873,12 @@ function raGesture(body,c){
   })();
 
   /* the words, equal and present from the start */
+  const bd=body.querySelector('#ra-body-door');
+  if(bd)bd.addEventListener('click',()=>{
+    onBody=!onBody; pts=[]; verdict=[]; readEl.innerHTML='';
+    bd.textContent=onBody?'take the body away':'show a body to trace on';
+    if(onBody)raSave('ra_onbody','1');
+  });
   const door=body.querySelector('#ra-words-door'), words=body.querySelector('#ra-words');
   if(door&&words)door.addEventListener('click',()=>{
     words.classList.toggle('on');
@@ -9885,6 +9932,11 @@ function raSet(i){
         +(c.b?'<div class="ra-b">'+c.b+'</div>':'')+raAsk(c);
       raWire(c,body);
       body.style.opacity='1';
+      /* 10 Sep - Karl: "the next page starts at the bottom rather than the top
+         each time, so you have to scroll up... an extra movement, time, focus,
+         effort, attention." Every turn now begins where it begins. */
+      try{body.scrollTop=0;const sc=d.querySelector('#ra-scroll')||d;if(sc&&sc.scrollTop!==undefined)sc.scrollTop=0;
+        if(body.parentElement)body.parentElement.scrollTop=0;}catch(e){}
     },180);}
   const ct=d.querySelector('#ra-count');
   if(ct)ct.textContent=(RA_PART===1?'':(RA_PART===2?'what is drawn \u00b7 ':'further \u00b7 '))+(raStep+1)+' of '+deck.length;
@@ -9912,7 +9964,8 @@ function raAsk(c){
     return q+'<div class="ra-q">'+(c.ph||'')+'</div><input class="ra-say" id="ra-say" maxlength="90" placeholder="\u2026 or carry on, this one is optional">'+af;
   if(c.ask==='gesture')
     return '<div class="ra-q" style="text-align:center">'+c.q+'</div>'
-      +'<div class="ra-still"><canvas id="ra-move" width="320" height="320"></canvas></div>'
+      +'<div class="ra-still"><canvas id="ra-move" width="320" height="320"></canvas>'
+      +'<button type="button" class="ra-words-door" id="ra-body-door">show a body to trace on</button></div>'
       +'<div class="ra-read" id="ra-read"></div>'
       +'<div class="ra-warm" id="ra-warm"><span>and was it</span>'
       +'<button type="button" class="ra-o" data-w="warm" style="--oc:#e8a33d"><i></i>warm</button>'
@@ -10512,7 +10565,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 10 Sep 2026 · 110 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 10 Sep 2026 · 111 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
