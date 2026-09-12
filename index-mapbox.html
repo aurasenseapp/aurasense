@@ -7243,14 +7243,88 @@ const QUESTS=[
     {q:'My days feel connected to something larger than tasks',pol:'pos'},{q:'What I do lines up with what I value',pol:'pos'},{q:'I am going through the motions',pol:'neg'},{q:'Curiosity still wakes up in me regularly',pol:'pos'},{q:'The future feels like mine to shape',pol:'pos'},{q:'The thing that matters most keeps getting postponed',pol:'neg'}]},
   {id:'accept',name:'Making peace with what is',desc:'Acceptance — sometimes the deepest rebalancing there is.',items:[
     {q:'I am at peace with things I cannot change',pol:'pos'},{q:'An old memory still hums in my body when it is touched',pol:'neg'},{q:'I can sit with discomfort without rushing to fix it',pol:'pos'},{q:'There are parts of myself I refuse to meet',pol:'neg'},{q:'Gratitude arrives on ordinary days, unasked',pol:'pos'},{q:'I have come to love a flaw I once fought',pol:'pos'}]}
+,
+  /* ═══ THE READINGS THAT REACH · 11 September 2026 ═══════════════════════
+     The eight above are inward and present-tense: where a person stands
+     today. Nothing in them reaches forward or outward.
+     These five turn the arc: the unmet self, what was handed to you, the
+     reach into new sensing, the two intelligences, and the one light.
+     Karl: "no aim, but an ask if they would like to balance their aura
+     toward pure light, through self compassion and self awareness, which are
+     synonymous — as compassion for oneself and for others is one compassion."
+     Influences are named, never quoted. Every word here is newly written. */
+  {id:'unmet',name:'The unmet self',from:'Drawing on Carl Jung on the unrecognised self.',
+   reach:1,desc:'What is less known of you \u2014 and what it costs to keep it that way.',items:[
+    {q:'There are parts of myself I have never looked at directly',pol:'neg'},
+    {q:'What irritates me most in others, I suspect I carry',pol:'pos'},
+    {q:'I have a version of myself I show, and one I do not',pol:'neg'},
+    {q:'When something in me surprises me, I want to know it rather than explain it away',pol:'pos'},
+    {q:'I can meet something I dislike in myself without flinching from it',pol:'pos'}]},
+  {id:'handed',name:'What was handed to you',from:'Drawing on J. Krishnamurti on belief, memory, and what is in motion.',
+   reach:1,desc:'What you concluded, and what you were simply given.',items:[
+    {q:'I hold beliefs I have never actually examined',pol:'neg'},
+    {q:'I can tell what I have concluded from what I was taught',pol:'pos'},
+    {q:'Something I was certain of a year ago has since moved',pol:'pos'},
+    {q:'I can say \u201cI do not know\u201d without discomfort',pol:'pos'},
+    {q:'My picture of the world updates when the world does',pol:'pos'}]},
+  {id:'reach',name:'The reach',reach:1,
+   desc:'New senses, your surroundings, and ways of noticing you did not have before.',items:[
+    {q:'I notice things about a place that others seem not to',pol:'pos'},
+    {q:'I have sensed something I had no name for',pol:'pos'},
+    {q:'My surroundings change how I feel more than people assume',pol:'pos'},
+    {q:'I have found a way of noticing that I did not have a year ago',pol:'pos'},
+    {q:'I want more senses than the ones I was given',pol:'pos'}]},
+  {id:'twoint',name:'The two intelligences',reach:1,
+   desc:'What you would share with another kind of mind \u2014 and where your line is.',items:[
+    {q:'I would share what I sense if it helped another intelligence understand people',pol:'pos'},
+    {q:'There are things I would never share, and I want them to stay mine',pol:'pos'},
+    {q:'I would rather be understood by something not human than not understood at all',pol:'pos'},
+    {q:'I want help seeing what I cannot see alone',pol:'pos'},
+    {q:'I would want to be told if I were being changed by what I use',pol:'pos'}]},
+  {id:'onelight',name:'Toward one light',reach:1,
+   desc:'Held as a question, never as a doctrine.',items:[
+    {q:'I have felt, even briefly, that I was not separate from what surrounds me',pol:'pos'},
+    {q:'Being one small part of something vast is a relief rather than a fear',pol:'pos'},
+    {q:'I would like to know what is there, even if it unmakes what I believe',pol:'pos'},
+    {q:'The idea of merging with something larger draws me',pol:'pos'},
+    {q:'I am content not to have an answer to this',pol:'pos'}]}
 ];
 let qzCur=-1,qzAns={};
+/* Shown at most once a fortnight, and never as a verdict. */
+function qzHeavy(q,negA,negN){
+  if(!negN||negA<4.2)return;                        /* only the far end of the scale */
+  if(['phq','gad','dass'].indexOf(q.id)<0)return;   /* only the readings that warrant it */
+  try{
+    const k='as_heavy_seen', last=parseInt(localStorage.getItem(k)||'0',10)||0;
+    if(Date.now()-last < 12*24*3600*1000)return;
+    localStorage.setItem(k,String(Date.now()));
+  }catch(e){}
+  setTimeout(()=>{
+    try{
+      const w=document.createElement('div'); w.id='as-heavy';
+      w.innerHTML='<div class="ah-in">'
+        +'<div class="ah-t">That reading came back heavy.</div>'
+        +'<div class="ah-b">Aurasense is not able to tell you what that means, and it will not try.<br><br>'
+        +'But a reading like that is worth saying out loud to somebody \u2014 someone you trust, or a doctor, '
+        +'or a helpline if that is easier tonight.<br><br>'
+        +'<b>It costs nothing to say it to one person.</b></div>'
+        +'<div class="ah-l">Helplines by country: '
+        +'<a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a></div>'
+        +'<button type="button" class="ah-x">I have read this</button></div>';
+      document.body.appendChild(w);
+      requestAnimationFrame(()=>w.classList.add('on'));
+      w.querySelector('.ah-x').addEventListener('click',()=>{
+        w.classList.remove('on'); setTimeout(()=>{try{w.remove();}catch(e){}},900);
+      });
+    }catch(e){}
+  },2600);
+}
 function openQuestPage(){const p=document.getElementById('quest-page');if(!p)return;qzShowMenu();p.classList.add('show');}
 function closeQuest(){const p=document.getElementById('quest-page');if(p)p.classList.remove('show');const t=document.getElementById('qz-thanks');if(t)t.classList.remove('show');}
 function qzShowMenu(){
   const menu=document.getElementById('qz-menu'),act=document.getElementById('qz-active'),sub=document.getElementById('qz-submit'),intro=document.getElementById('qz-intro');
   if(intro)intro.textContent='Gentle, private prompts. There are no wrong answers — only a truer reading of your aura. Each one you share adds colour and depth to your aura.';
-  if(menu){menu.style.display='';let _pv=true;menu.innerHTML=QUESTS.map((q,i)=>{const done=!!(myProfile&&myProfile.qzDone&&myProfile.qzDone[q.name]);const open=done||_pv;if(!done)_pv=false;return '<div class="qz-card'+(done?' qz-done':'')+(open?'':' qz-locked')+'" data-i="'+i+'"><div class="qn">'+q.name+(done?' <span class="qz-tick">✓ woven in</span>':'')+'</div><div class="qd">'+q.desc+'</div></div>';}).join('');menu.querySelectorAll('.qz-card').forEach(card=>card.addEventListener('click',()=>{const i=parseInt(card.getAttribute('data-i'),10);if(card.classList.contains('qz-locked')){const pv=QUESTS[i-1];showMsg('Each reading opens on the ground of the one before. Complete \u201c'+((pv&&pv.name)||'the reading before')+'\u201d first \u2014 it is glowing for you now \u2727',6800);const pc=menu.querySelector('.qz-card[data-i="'+(i-1)+'"]');if(pc){pc.classList.remove('qz-hint');void pc.offsetWidth;pc.classList.add('qz-hint');setTimeout(()=>pc.classList.remove('qz-hint'),3400);}return;}qzOpen(i);}));}
+  if(menu){menu.style.display='';let _pv=true;menu.innerHTML=QUESTS.map((q,i)=>{const done=!!(myProfile&&myProfile.qzDone&&myProfile.qzDone[q.name]);const open=done||_pv;if(!done)_pv=false;return '<div class="qz-card'+(done?' qz-done':'')+(open?'':' qz-locked')+'" data-i="'+i+'"><div class="qn">'+q.name+(done?' <span class="qz-tick">✓ woven in</span>':'')+'</div>'+(q.from?'<div class="qf">'+q.from+'</div>':'')+'<div class="qd">'+q.desc+'</div></div>';}).join('');menu.querySelectorAll('.qz-card').forEach(card=>card.addEventListener('click',()=>{const i=parseInt(card.getAttribute('data-i'),10);if(card.classList.contains('qz-locked')){const pv=QUESTS[i-1];showMsg('Each reading opens on the ground of the one before. Complete \u201c'+((pv&&pv.name)||'the reading before')+'\u201d first \u2014 it is glowing for you now \u2727',6800);const pc=menu.querySelector('.qz-card[data-i="'+(i-1)+'"]');if(pc){pc.classList.remove('qz-hint');void pc.offsetWidth;pc.classList.add('qz-hint');setTimeout(()=>pc.classList.remove('qz-hint'),3400);}return;}qzOpen(i);}));}
   if(act)act.style.display='none';if(sub)sub.style.display='none';
 }
 function qzOpen(i){
@@ -7282,6 +7356,17 @@ function qzSubmit(){
     const mp=document.getElementById('myaura-page');
     if(mp&&mp.classList.contains('show')){try{maBuildLayers();}catch(e){}}
   },1900+i*800));
+  /* ═══ WHEN A READING COMES BACK HEAVY · 11 September 2026 ═══════════════
+     Karl: "No diagnosis even though we are using high concepts. Helping those
+     who need help find it within and externally. We can't ignore someone in
+     need."
+     Two of these readings are close to instruments used in clinics, and
+     somebody will one day answer every item of one of them at its heaviest.
+     At that moment Aurasense is holding something that matters.
+     IT DOES NOT DIAGNOSE AND MUST NOT. It says one quiet thing, once, without
+     alarm, and leaves a way to somebody real. No warning, no label, no
+     repetition — a line offered the way anything here is offered. */
+  try{qzHeavy(q,negA,negN);}catch(e){}
   const t=document.getElementById('qz-thanks');if(t)t.classList.add('show');
   setTimeout(()=>{closeQuest();openMyAuraPage();},1100);
   setTimeout(()=>{try{
@@ -9593,68 +9678,78 @@ const RA_COLOUR=[['#e8a33d','warm'],['#f2d64b','bright'],['#7ec9a0','green'],['#
                  ['#f08bb0','rose'],['#d8d2c4','pale'],['#5c5470','dark'],['','it had no colour']];
 /* PART ONE · THE READING — the capacity, taught from what everyone already does */
 const RA_ONE=[
-/* ═══ THE SILENT OPENING · 9 September 2026 ═══════════════════════════════
-    Karl asked whether the presentation matched the thing Aurasense is to
-    become, and the honest answer was no - it was a card-and-tap sequence in
-    Aurasense's clothes.
-    So the first turn is no longer ABOUT noticing. It IS noticing.
-    The guide opens with nothing written on it. A field breathes. Something in
-    it genuinely changes - a drift of colour, a slowing of the breath, a light
-    that arrives. Nothing is asked and nothing is scored.
-    Only afterwards does the guide say what it did and ask whether you caught
-    it. Either answer is the lesson, which is why neither one is wrong. */
+ /* 11 Sep - every turn cut to ONE IDEA. Karl: the content was still hidden, and
+    shrinking the type was the wrong answer to a turn being too long. Nothing is
+    lost; it is spread over more turns, each of which fits its screen with room
+    to spare. Short turns are also what any future container will need. */
  {k:'rings',t:'',b:'',ask:'silence',key:'ra_noticed'},
  {k:'rings',t:'You already do this',
-  b:'You have walked into a room and known something was wrong before anyone spoke.<br><br>Or you have felt someone looking at you, turned, and been right.<br><br>Nobody taught you either of those. You were not guessing, and you were not imagining it — <b>you were reading</b>.<br><br>This guide does not give you a new sense. It gives you back ones you already use, and were never shown how to name.',
+  b:'You have walked into a room and known something was wrong before anyone spoke.<br><br>Or felt someone looking at you, turned, and been right.'},
+ {k:'rings',t:'Nobody taught you that',
+  b:'You were not guessing, and you were not imagining it. <b>You were reading.</b><br><br>This guide gives you no new sense. It gives back ones you already use.',
   ask:'say',ph:'The last time it happened, where were you?',key:'ra_where'},
- {k:'core',t:'It arrives in the body first',
-  b:'Before you have a word for a place, you usually have a feeling somewhere in you. The shoulders. The jaw. The chest. The stomach. The back of the neck.<br><br>That is not mystical. <b>It is simply where a sense lands before language catches up with it.</b>',
-  ask:'pick',opts:RA_BODY,q:'Bring that moment back. Where did you feel it?',key:'ra_body',
-  after:'Some senses do not land anywhere you can point to. They arrive in the room, or in the air, or in the whole of you at once. Those are not lesser readings — they are the ones we understand least, which is a good part of why this map is being built.'},
- {k:'breath',t:'Shape before name',ask:'gesture',
-  b:'Any word you use for a feeling is only a label, and every label carries its own history. <b>It can flatten what you actually felt, or point at something a little to one side of it.</b><br><br>A movement carries none of that. So before you look for the word, try showing it instead.<br><br><i>If you have never done anything like this, that is completely normal \u2014 most people have not. Move roughly, or skip to the words underneath. Neither is worse.</i>',
-  opts:RA_SHAPE,q:'Move the way it felt, and the light will follow you. If it moved through you, trace where it went.',key:'ra_shape',
-  after:'These are not decoration. They are the same qualities the map draws with — how a light moves, how wide it reaches, how warm its colour runs. You are already speaking its language.'},
+ {k:'core',t:'It arrives before the words do',
+  b:'Before you have a name for a place, there is usually a feeling somewhere in you.<br><br>That is simply where a sense lands first.',
+  ask:'pick',opts:RA_BODY,q:'Where did you feel it?',key:'ra_body'},
+ {k:'core',t:'Some land nowhere at all',
+  b:'Not in a shoulder or a chest \u2014 in the room, in the air, or in the whole of you at once.<br><br><b>Those are not lesser readings.</b> They are the ones we understand least, which is much of why this map exists.'},
+ {k:'breath',t:'A word is only a label',
+  b:'Every label carries its own history. It can flatten what you felt, or point a little to one side of it.<br><br>A movement carries none of that.'},
+ {k:'breath',t:'Show it before you name it',
+  b:'<i>Never done anything like this? Most people have not. Move roughly, or take the words underneath. Neither is worse.</i>',
+  ask:'gesture',opts:RA_SHAPE,q:'Move the way it felt. If it moved through you, trace where it went.',key:'ra_shape'},
  {k:'colour',t:'Now the word',
-  b:'Now name it.<br><br>If several fit, <b>take the one you would be least comfortable saying out loud</b>. That one is usually closer.',
+  b:'If several fit, take the one you would be least comfortable saying out loud.<br><br>That one is usually closer.',
   ask:'sense',q:'What was it?',key:'ra_sense'},
  {k:'colour',t:'Colour, honestly',
-  b:'Colour is where people get uneasy, so here is the plain version.<br><br><b>Aurasense does not claim your feeling gives off light.</b> Colour is the fastest shorthand most people have for what a feeling was like — which is why every language on earth already has warm words and cool ones.',
-  ask:'colour',q:'If what you felt had a colour, what colour was it?',key:'ra_colour',
-  after:'Some people find a colour at once and some find none. Both are real answers.'},
+  b:'<b>Aurasense does not claim your feeling gives off light.</b> Colour is the quickest shorthand most people have for what a feeling was like.',
+  ask:'colour',q:'If it had a colour, what colour?',key:'ra_colour',
+  after:'Some find a colour at once and some find none. Both are real answers.'},
  {k:'place',t:'Two people, one place',
-  b:'Someone else standing exactly where you stood would have felt something different — and would also be right.<br><br><b>A reading is a contribution, not a verdict.</b> The map is not asking who is correct about a place. It is asking what a place is like to be in, from as many sides as it can get.<br><br>There is an old story about blind men and an elephant. One finds a pillar, one a rope, one a fan — and the story is usually told to show how wrong they all are.<br><br><b>They were not wrong.</b> Each was right about one part, and nobody had put the parts together.<br><br>One person’s account of a street is an opinion. Two hundred accounts of a street is something nobody could have got any other way.<br><br><i>And the elephant is still bigger than all of them. This map is a real instrument and a partial one. Both are true, and it will keep saying so.</i>'},
- {k:'other',t:'The part that is not decoration',
-  b:'The people who feel a place go wrong first are usually the ones told they are too sensitive.<br><br><b>Aurasense is built on the opposite assumption.</b> Sensory-sensitive and autistic people are, very often, the most accurate instruments a place has — and somewhere made bearable for them turns out to be better for everyone in it.<br><br><b>If you have ever been told you feel things too strongly, this is the one place where that is the qualification.</b>'},
+  b:'Someone standing exactly where you stood would have felt something different \u2014 and would also be right.<br><br><b>A reading is a contribution, not a verdict.</b>'},
+ {k:'place',t:'The elephant',
+  b:'Blind men find a pillar, a rope, a fan. The story is told to show how wrong they are.<br><br><b>They were not wrong.</b> Each was right about one part, and nobody had put the parts together.'},
+ {k:'place',t:'And still bigger',
+  b:'One account of a street is an opinion. Two hundred is something nobody could get any other way.<br><br><i>And the elephant is still bigger than all of them. This map is real and partial, and will keep saying so.</i>'},
+ {k:'other',t:'Not decoration',
+  b:'The people who feel a place go wrong first are usually the ones told they are too sensitive.<br><br><b>Here that is the qualification.</b>'},
  {k:'seer',t:'Putting the guide down',
-  b:'You will not need this for long.<br><br>Noticing is a skill, and skills stop needing instructions. <b>When you catch yourself naming a place before you have opened anything, the guide has done its work</b> — and it will stop appearing.<br><br><i>Nothing in Aurasense is meant to be needed for ever.</i>'},
- {k:'core',t:'If none of this has matched anything',
-  b:'Then you are in the largest group there is, and nothing has gone wrong.<br><br>Plenty of people go a long time without noticing anything they would call a sense of a place. <b>That is not a lack of ability. It is usually a lack of occasion, and of anyone ever having suggested it was worth attending to.</b><br><br>So here is the honest suggestion. <b>Go and live for a week.</b> Nothing to practise, nothing to look for. If something happens \u2014 a room, a street, a person, a moment where you knew before you were told \u2014 come back and put it here while it is fresh.<br><br><i>And if nothing does, that is a real answer too, and this map would rather have it than not.</i>'},
+  b:'Noticing is a skill, and skills stop needing instructions.<br><br>When you name a place before opening anything, this has done its work \u2014 and will stop appearing.'},
+ {k:'core',t:'If none of this matched',
+  b:'You are in the largest group there is, and nothing has gone wrong. <b>It is usually a lack of occasion, not of ability.</b>'},
+ {k:'core',t:'So go and live a week',
+  b:'Nothing to practise. If something happens, come back and put it here while it is fresh.<br><br><i>And if nothing does, that is a real answer too.</i>'},
  {k:'seer',t:'Some people see it directly',
-  b:'Colour, movement, light around a person or a place — with nothing open in front of them.<br><br><b>If that is you, there are questions here that are for you.</b><br><br><b>If it isn’t you, nothing is missing.</b> Most people feel rather than see, and this map is built out of feeling.',
+  b:'Colour or movement around a person or a place, with nothing open in front of them.<br><br><b>If that is not you, nothing is missing.</b> This map is built out of feeling.',
   ask:'offer'}
 ];
-/* PART TWO · WHAT IS DRAWN — kept as written, arriving when it can be used */
+/* PART TWO · WHAT IS DRAWN — arriving when a person can use it. Cut to one
+   idea a turn on 11 September, same as Part One. */
 const RA_TWO=[
- {k:'rings',t:'The rings',b:'Your aura is drawn in layers. The wide outer bloom is the reach of everything you have offered — it widens as you give. The middle band holds what you have taken in: readings woven, lights received, questions answered. The bright core is you as you stand today.'},
- {k:'colour',t:'Colour',b:'Every sense carries its own colour, and each light you offer threads that colour in. A colour appearing often means you reach for it often — not that you <i>are</i> it. Where two colours meet they mix rather than compete, which is why an aura with many lights looks like weather instead of a chart.'},
- {k:'breath',t:'The breath',b:'Auras breathe on a roughly six-second cycle, brightening as they swell. This is not decoration — it is the resting rhythm of a living field. When one has been reached toward recently it swells a little wider for a while, then settles.'},
- {k:'place',t:'Reading a place',b:'An aura on the map is not one person — it is the gathered light of everyone who has offered something there. Brighter and wider means more lights have been given. Tap it, and the doorway tells you what the place is carrying, in plain words, without naming anyone.'},
- {k:'other',t:'Reading another',b:'In the live feed you are beholding real offerings. Sit with one before responding — the half-second where you catch yourself before reaching for an easy phrase is the important one. And remember the thread runs both ways: to offer to a light, or to question it, already takes some of it into your own.'},
- {k:'core',t:'The core',b:'The bright centre is you today, not you at your best. It does not grow by trying. Nothing here is a score, and a small aura is not a lesser one — only a younger one.'},
- {k:'rings',t:'What you have just done',b:'You noticed something. You found where it sat in you. You gave it a shape, then a name, and then you offered it.<br><br><b>That is the whole of it.</b> Everything else on this map is that, repeated by other people in other places, until a street can say what it is like to stand in.',
+ {k:'rings',t:'The rings',b:'The wide outer bloom is the reach of everything you have offered. It widens as you give.'},
+ {k:'rings',t:'The middle band',b:'What you have taken in \u2014 readings woven, lights received, questions answered.<br><br>The bright core is you as you stand today.'},
+ {k:'colour',t:'Colour',b:'Every sense carries its own, and each light you offer threads that colour in.<br><br>A colour appearing often means you reach for it often \u2014 not that you <i>are</i> it.'},
+ {k:'colour',t:'Where colours meet',b:'They mix rather than compete.<br><br>That is why an aura with many lights looks like weather instead of a chart.'},
+ {k:'breath',t:'The breath',b:'Auras breathe on roughly a six-second cycle, brightening as they swell.<br><br>Not decoration \u2014 the resting rhythm of a living field.'},
+ {k:'breath',t:'When one is reached toward',b:'It swells a little wider for a while, then settles.<br><br>You can see, on the map, where somebody has just been.'},
+ {k:'place',t:'Reading a place',b:'An aura on the map is not one person. It is the gathered light of everyone who has offered something there.<br><br>Brighter and wider means more lights given.'},
+ {k:'other',t:'Reading another',b:'Sit with an offering before responding.<br><br>The half-second where you catch yourself before reaching for an easy phrase is the important one.'},
+ {k:'other',t:'The thread runs both ways',b:'To offer to a light, or to question it, already takes some of it into your own.'},
+ {k:'core',t:'The core',b:'The bright centre is you today, not you at your best. It does not grow by trying.<br><br><b>A small aura is not a lesser one. Only a younger one.</b>'},
+ {k:'rings',t:'What you have just done',b:'You noticed something. You found where it sat. You gave it a shape, then a name, and offered it.<br><br><b>That is the whole of it.</b>',
   ask:'door'}
 ];
-/* PART THREE · FURTHER — questions, opened only by someone who asks for them */
+/* PART THREE · FURTHER — opened only by someone who asks */
 const RA_THREE=[
- {k:'other',t:'Does noticing change what is noticed?',
-  b:'When you attend to a place on purpose, something moves — in you at least, and perhaps in the place.<br><br>Aurasense is not standing outside what it reads. <b>It is inside the thing it is reading, and it says so.</b><br><br><i>So: what happens to a street when the people in it begin noticing it deliberately? Nobody knows yet. This is the sort of thing a map like this could find out.</i>'},
- {k:'breath',t:'Why the present will not hold still',
-  b:'The past and the future are held in memory and in words. Both are still. The thing they describe is not.<br><br>A sense is your only contact with what is actually happening — and it is gone by the time you have named it.<br><br><i>So: what is the least still way to carry something that will not hold still? That question is why the symbols exist.</i>'},
- {k:'seer',t:'Reached by what it does',
-  b:'Anything unseen has only ever been approached by its effects. If something were not bound by time, it would still leave marks — in what people feel, sense, think, and become aware of.<br><br><i>So: does anything turn up in what people feel that where-and-when cannot account for?</i><br><br><b>That is a real question with a real method.</b> Felt reports, with place and time attached, at scale, from people who were never asked to expect anything. Every honest reading offered here is part of the answer either way.'},
- {k:'core',t:'Why this is held gently',
-  b:'Every question here could be turned into a belief, and beliefs harden into the very thing they were asked to escape.<br><br>So Aurasense holds them open.<br><br><b>Compassion is not decoration on this. It is the condition.</b> Kindness is what keeps an inquiry an inquiry, instead of turning it into a side.'}
+ {k:'other',t:'These are questions',b:'Nothing here is settled and nothing is asked of you.<br><br>The map works perfectly well for someone who never opens this.'},
+ {k:'other',t:'Does noticing change it?',b:'Attend to a place on purpose and something moves \u2014 in you at least, and perhaps in the place.<br><br><b>Aurasense is inside the thing it reads, and says so.</b>'},
+ {k:'other',t:'So what happens to a street',b:'\u2026when the people in it begin noticing it deliberately?<br><br><i>Nobody knows. This is the sort of thing a map like this could find out.</i>'},
+ {k:'breath',t:'The present will not hold still',b:'Past and future are held in memory and in words. Both are still. The thing they describe is not.'},
+ {k:'breath',t:'A sense is your only contact',b:'\u2026with what is actually happening \u2014 and it is gone by the time you have named it.<br><br><i>So what is the least still way to carry it? That is why the symbols exist.</i>'},
+ {k:'seer',t:'Reached by what it does',b:'Anything unseen has only ever been approached by its effects.<br><br>Something not bound by time would still leave marks \u2014 in what people feel, sense and become aware of.'},
+ {k:'seer',t:'So here is the question',b:'<i>Does anything turn up in what people feel that where-and-when cannot account for?</i><br><br><b>That has a real method.</b> Every honest reading here is part of the answer, either way.'},
+ {k:'core',t:'Why this is held gently',b:'Every question here could be turned into a belief, and beliefs harden into the thing they were asked to escape.'},
+ {k:'core',t:'Compassion is the condition',b:'Not decoration on this.<br><br><b>Kindness is what keeps an inquiry an inquiry, instead of turning it into a side.</b>'}
 ];
 let RA_PART=1;
 function raDeck(){ return RA_PART===3?RA_THREE:(RA_PART===2?RA_TWO:RA_ONE); }
@@ -9967,7 +10062,7 @@ function raSet(i){
          each time, so you have to scroll up... an extra movement, time, focus,
          effort, attention." Every turn now begins where it begins. */
       try{body.scrollTop=0;d.scrollTop=0;}catch(e){}
-      raFit(d,body);
+      requestAnimationFrame(()=>raFit(d,body));
     },180);}
   const ct=d.querySelector('#ra-count');
   if(ct)ct.textContent=(RA_PART===1?'':(RA_PART===2?'what is drawn \u00b7 ':'further \u00b7 '))+(raStep+1)+' of '+deck.length;
@@ -9982,15 +10077,15 @@ function raSet(i){
 function raFit(d,body){
   try{
     const fits=()=>body.scrollHeight<=body.clientHeight+1;
+    /* 11 Sep - the type no longer shrinks to hide a long turn. A turn that does
+       not fit is a turn that is too long, and the answer is to cut it, not to
+       make a reader squint. Only the pictures give way, and only a little. */
     body.style.fontSize='';
-    let fs=100, guard=0;
-    while(!fits()&&fs>72&&guard++<16){ fs-=3; body.style.fontSize=fs+'%'; }
     const art=body.querySelector('.ra-art svg'),cv=body.querySelector('canvas');
-    if(!fits()&&art){art.style.maxHeight='30vh';}
-    if(!fits()&&cv){cv.style.width='min(240px,62vw)';cv.style.height='min(240px,62vw)';}
-    guard=0;
-    while(!fits()&&fs>62&&guard++<10){ fs-=3; body.style.fontSize=fs+'%'; }
-    if(!fits())console.info('[Aurasense] this turn is too long for one screen \u2014 shorten it rather than shrink it');
+    if(!fits()&&art)art.style.maxHeight='26vh';
+    if(!fits()&&cv){cv.style.width='min(250px,64vw)';cv.style.height='min(250px,64vw)';}
+    if(!fits()&&art)art.style.display='none';
+    if(!fits())console.info('[Aurasense] turn too long for one screen \u2014 cut it');
   }catch(e){}
 }
 /* what a card asks for, if it asks for anything. Circular throughout: a ring
@@ -10613,7 +10708,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 10 Sep 2026 · 112 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 11 Sep 2026 · 115 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -10874,6 +10969,21 @@ try{
    in here is a box, a chip, a checkbox or a tick - a person is being asked
    what they felt, and the shapes they are choosing between should look like
    the thing the map is made of.                                            */
+#quest-page .qf{font-size:11.5px;color:#8a80b4;font-style:italic;margin:3px 0 5px;letter-spacing:.01em}
+#as-heavy{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;
+  background:rgba(6,4,16,.72);opacity:0;transition:opacity .9s ease;pointer-events:none;padding:22px}
+#as-heavy.on{opacity:1;pointer-events:auto}
+#as-heavy .ah-in{max-width:430px;font-family:var(--serif);text-align:center;
+  background:radial-gradient(120% 130% at 50% 30%,rgba(28,22,58,.99) 0%,rgba(12,10,26,.99) 100%);
+  border-radius:26px;padding:30px 26px 24px;box-shadow:0 0 0 .5px rgba(167,139,250,.22),0 0 46px rgba(124,92,255,.22)}
+#as-heavy .ah-t{font-size:18px;color:#f2ecff;margin-bottom:14px;letter-spacing:.01em}
+#as-heavy .ah-b{font-size:14px;line-height:1.72;color:#c3b9ea}
+#as-heavy .ah-b b{color:#efe9ff;font-weight:400}
+#as-heavy .ah-l{font-size:12.5px;color:#8f86bb;margin-top:18px}
+#as-heavy .ah-l a{color:#c4b5fd}
+#as-heavy .ah-x{margin-top:20px;font-family:var(--serif);font-size:14px;color:#f0eaff;cursor:pointer;
+  border:none;border-radius:24px;padding:10px 22px;
+  background:radial-gradient(130% 200% at 50% 50%,rgba(167,139,250,.3) 0%,rgba(124,92,255,0) 100%)}
 #ra-modal #ra-move{width:min(320px,80vw);height:min(320px,80vw);display:block;
   touch-action:none;cursor:crosshair}
 #ra-modal .ra-read{min-height:8px;margin:6px 0 0;text-align:center}
