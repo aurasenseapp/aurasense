@@ -1400,7 +1400,24 @@ body.ma-incloud .as-rail{display:none!important}
 #ra-modal.show{opacity:1}
 #ra-modal .ra-t{font-size:19px;color:var(--ink);text-align:center;letter-spacing:.02em}
 #ra-modal .ra-s{font-size:12.5px;color:var(--label);text-align:center;line-height:1.6;margin:7px 0 4px}
-#ra-modal #ra-body{min-height:290px;transition:opacity .18s ease}
+/* ═══ ONE TURN, ONE SCREEN · 10 September 2026 ═════════════════════════════
+   Karl: "The panels still have to be scrolled down through most of them to
+   read it, I don't like that."
+   A turn that has to be scrolled is not one moment, it is two - and the
+   second half arrives after the first has already gone out of sight. That is
+   why the guide keeps feeling like pages.
+   So the guide no longer scrolls at all. Each turn is measured after it is
+   drawn and, if it does not fit, its own type steps down until it does.
+   AND THE MEASURING IS ALSO A CONTENT RULE: a turn that needs its type
+   shrunk below the floor is a turn that is too long, and gets shortened
+   rather than squeezed. The container is now telling the writing what to do,
+   which is the right way round.                                          */
+#ra-modal{overflow:hidden!important;display:flex;flex-direction:column;
+  max-height:min(88vh,760px)!important}
+#ra-modal #ra-body{min-height:0;flex:1 1 auto;overflow:hidden;
+  display:flex;flex-direction:column;justify-content:center;
+  transition:opacity .18s ease}
+#ra-modal #ra-body>*{flex:0 0 auto}
 #ra-modal .ra-art{display:flex;justify-content:center;margin:6px 0 2px}
 #ra-modal .ra-art svg{width:min(300px,92%);height:auto;filter:drop-shadow(0 0 16px rgba(124,92,255,.25))}
 #ra-modal .ra-h{font-size:18px;color:var(--ink);text-align:center;margin:6px 0 8px;letter-spacing:.01em}
@@ -9755,19 +9772,32 @@ function raGesture(body,c){
     if(seen.length<2)return seen[0]||'';
     return seen.slice(0,4).join(', then ');
   }
+  /* 10 Sep - Karl: "The stick man was pretty... basic." It was, and worse than
+     that it was WRONG FOR THIS PLACE: a line drawing in an app that has no
+     lines anywhere else in it. A person here should be made of the same stuff
+     as everything else on the map.
+     So there is no outline at all. A standing column of light, wider at the
+     chest, drawn in on itself at the waist, with a bloom where the head is -
+     breathing at the same rate the auras do. You can tell where you are on it
+     without a single edge being drawn. */
   function drawBody(){
-    g.save();
-    g.strokeStyle='rgba(196,181,253,.30)';g.lineWidth=1.4;g.lineCap='round';g.lineJoin='round';
+    const T2=(Date.now()-born)/1000, br2=0.88+0.12*Math.sin(T2*0.62);
     const cx=CX;
-    g.beginPath();g.arc(cx,H*0.13,H*0.062,0,Math.PI*2);g.stroke();          /* head */
-    g.beginPath();g.moveTo(cx,H*0.20);g.lineTo(cx,H*0.60);g.stroke();       /* spine */
-    g.beginPath();g.moveTo(cx-W*0.13,H*0.27);g.lineTo(cx+W*0.13,H*0.27);g.stroke();  /* shoulders */
-    g.beginPath();g.moveTo(cx-W*0.13,H*0.27);g.lineTo(cx-W*0.18,H*0.52);g.stroke();
-    g.beginPath();g.moveTo(cx+W*0.13,H*0.27);g.lineTo(cx+W*0.18,H*0.52);g.stroke();
-    g.beginPath();g.moveTo(cx-W*0.09,H*0.60);g.lineTo(cx-W*0.10,H*0.90);g.stroke();
-    g.beginPath();g.moveTo(cx+W*0.09,H*0.60);g.lineTo(cx+W*0.10,H*0.90);g.stroke();
-    g.beginPath();g.moveTo(cx-W*0.09,H*0.60);g.lineTo(cx+W*0.09,H*0.60);g.stroke();
-    g.restore();
+    const soft=(x,y,rx,ry,a)=>{
+      g.save(); g.translate(x,y); g.scale(1,ry/rx);
+      const gg=g.createRadialGradient(0,0,0,0,0,rx);
+      gg.addColorStop(0,'rgba(206,192,255,'+(a*br2)+')');
+      gg.addColorStop(0.45,'rgba(176,158,240,'+(a*0.5*br2)+')');
+      gg.addColorStop(1,'rgba(167,139,250,0)');
+      g.fillStyle=gg; g.beginPath(); g.arc(0,0,rx,0,Math.PI*2); g.fill();
+      g.restore();
+    };
+    soft(cx,H*0.125,W*0.105,H*0.115,0.30);            /* the head */
+    soft(cx,H*0.225,W*0.075,H*0.055,0.20);            /* the throat */
+    soft(cx,H*0.355,W*0.215,H*0.135,0.26);            /* the chest, widest */
+    soft(cx,H*0.505,W*0.150,H*0.105,0.20);            /* the stomach, drawn in */
+    soft(cx,H*0.645,W*0.170,H*0.095,0.17);            /* the belly */
+    soft(cx,H*0.835,W*0.135,H*0.180,0.12);            /* the legs, fading out */
   }
 
   const px=(e)=>{const r=cv.getBoundingClientRect();
@@ -9877,6 +9907,7 @@ function raGesture(body,c){
   if(bd)bd.addEventListener('click',()=>{
     onBody=!onBody; pts=[]; verdict=[]; readEl.innerHTML='';
     bd.textContent=onBody?'take the body away':'show a body to trace on';
+    raSave('ra_onbody',onBody?'1':'0');
     if(onBody)raSave('ra_onbody','1');
   });
   const door=body.querySelector('#ra-words-door'), words=body.querySelector('#ra-words');
@@ -9935,8 +9966,8 @@ function raSet(i){
       /* 10 Sep - Karl: "the next page starts at the bottom rather than the top
          each time, so you have to scroll up... an extra movement, time, focus,
          effort, attention." Every turn now begins where it begins. */
-      try{body.scrollTop=0;const sc=d.querySelector('#ra-scroll')||d;if(sc&&sc.scrollTop!==undefined)sc.scrollTop=0;
-        if(body.parentElement)body.parentElement.scrollTop=0;}catch(e){}
+      try{body.scrollTop=0;d.scrollTop=0;}catch(e){}
+      raFit(d,body);
     },180);}
   const ct=d.querySelector('#ra-count');
   if(ct)ct.textContent=(RA_PART===1?'':(RA_PART===2?'what is drawn \u00b7 ':'further \u00b7 '))+(raStep+1)+' of '+deck.length;
@@ -9944,6 +9975,23 @@ function raSet(i){
   const pv=d.querySelector('#ra-prev'),nx=d.querySelector('#ra-next');
   if(pv)pv.classList.toggle('dim',raStep===0&&RA_PART===1);
   if(nx)nx.textContent=(raStep===deck.length-1)?'\u2713':'\u203a';
+}
+/* Measured, not guessed: the type steps down until the turn fits its screen,
+   and reports in the console when a turn is too long to fit honestly - so the
+   writing gets shortened rather than the reader squinting. */
+function raFit(d,body){
+  try{
+    const fits=()=>body.scrollHeight<=body.clientHeight+1;
+    body.style.fontSize='';
+    let fs=100, guard=0;
+    while(!fits()&&fs>72&&guard++<16){ fs-=3; body.style.fontSize=fs+'%'; }
+    const art=body.querySelector('.ra-art svg'),cv=body.querySelector('canvas');
+    if(!fits()&&art){art.style.maxHeight='30vh';}
+    if(!fits()&&cv){cv.style.width='min(240px,62vw)';cv.style.height='min(240px,62vw)';}
+    guard=0;
+    while(!fits()&&fs>62&&guard++<10){ fs-=3; body.style.fontSize=fs+'%'; }
+    if(!fits())console.info('[Aurasense] this turn is too long for one screen \u2014 shorten it rather than shrink it');
+  }catch(e){}
 }
 /* what a card asks for, if it asks for anything. Circular throughout: a ring
    of lights to choose from, never a row of boxes. */
@@ -10565,7 +10613,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 10 Sep 2026 · 111 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 10 Sep 2026 · 112 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
