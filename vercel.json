@@ -1,7 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/", "destination": "/index-mapbox.html" }
+    { "source": "/m", "destination": "/index-mapbox.html" },
+    { "source": "/map", "destination": "/index-mapbox.html" }
   ],
   "headers": [
     {
@@ -13,7 +14,15 @@
       ]
     },
     {
-      "source": "/",
+      "source": "/m",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" },
+        { "key": "CDN-Cache-Control", "value": "no-store" },
+        { "key": "Cloudflare-CDN-Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/map",
       "headers": [
         { "key": "Cache-Control", "value": "no-store, no-cache, must-revalidate, max-age=0" },
         { "key": "CDN-Cache-Control", "value": "no-store" },
