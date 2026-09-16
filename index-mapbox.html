@@ -9881,18 +9881,23 @@ function raGesture(body,c){
     const soft=(x,y,rx,ry,a)=>{
       g.save(); g.translate(x,y); g.scale(1,ry/rx);
       const gg=g.createRadialGradient(0,0,0,0,0,rx);
-      gg.addColorStop(0,'rgba(206,192,255,'+(a*br2)+')');
-      gg.addColorStop(0.45,'rgba(176,158,240,'+(a*0.5*br2)+')');
+      /* 14 Sep - Karl: "the human body looks interest, if too faint." It was
+         nearly invisible on a dark screen. Brighter at every stop, and the
+         falloff pulled in so the form has an edge you can feel without one
+         being drawn. */
+      gg.addColorStop(0,'rgba(228,218,255,'+(a*br2)+')');
+      gg.addColorStop(0.38,'rgba(198,182,250,'+(a*0.72*br2)+')');
+      gg.addColorStop(0.72,'rgba(176,150,245,'+(a*0.30*br2)+')');
       gg.addColorStop(1,'rgba(167,139,250,0)');
       g.fillStyle=gg; g.beginPath(); g.arc(0,0,rx,0,Math.PI*2); g.fill();
       g.restore();
     };
-    soft(cx,H*0.125,W*0.105,H*0.115,0.30);            /* the head */
-    soft(cx,H*0.225,W*0.075,H*0.055,0.20);            /* the throat */
-    soft(cx,H*0.355,W*0.215,H*0.135,0.26);            /* the chest, widest */
-    soft(cx,H*0.505,W*0.150,H*0.105,0.20);            /* the stomach, drawn in */
-    soft(cx,H*0.645,W*0.170,H*0.095,0.17);            /* the belly */
-    soft(cx,H*0.835,W*0.135,H*0.180,0.12);            /* the legs, fading out */
+    soft(cx,H*0.125,W*0.105,H*0.115,0.62);            /* the head */
+    soft(cx,H*0.225,W*0.078,H*0.058,0.46);            /* the throat */
+    soft(cx,H*0.355,W*0.215,H*0.135,0.56);            /* the chest, widest */
+    soft(cx,H*0.505,W*0.150,H*0.105,0.44);            /* the stomach, drawn in */
+    soft(cx,H*0.645,W*0.170,H*0.095,0.38);            /* the belly */
+    soft(cx,H*0.835,W*0.135,H*0.180,0.26);            /* the legs, fading out */
   }
 
   const px=(e)=>{const r=cv.getBoundingClientRect();
@@ -9965,7 +9970,9 @@ function raGesture(body,c){
       }
       g.fillStyle='rgba(255,255,255,.85)';g.beginPath();g.arc(hx,hy,3.1,0,Math.PI*2);g.fill();
       g.font='italic 13px Georgia, serif';g.textAlign='center';g.textBaseline='middle';
-      g.fillStyle='rgba(200,191,232,.62)';g.fillText('move here', CX, CY);
+      g.fillStyle='rgba(226,218,255,.85)';
+      g.shadowColor='rgba(6,4,18,.9)';g.shadowBlur=8;
+      g.fillText('move here', CX, CY); g.shadowBlur=0;
     }
     /* the trail — a comet with a bloom, fading behind itself */
     for(let i=1;i<pts.length;i++){
@@ -10708,7 +10715,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 11 Sep 2026 · 115 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 14 Sep 2026 · 116 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
