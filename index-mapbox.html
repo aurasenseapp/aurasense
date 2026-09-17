@@ -4046,8 +4046,9 @@ function setActiveTab(i){
   paintActiveTab(i);
 }
 function paintActiveTab(i){
-  /* the folded button changes its own word, so the row is measured once more */
-  try{if(typeof window.asRefit==='function')window.asRefit();}catch(e){}
+  /* 15 Sep - this used to force a full refit on every level change, which is
+     exactly when a light is offered. The signature check inside asArcTabs now
+     notices a genuine change on its own, without the jump. */
   const cellW=window.matchMedia&&window.matchMedia('(max-width:600px)').matches;
   const SCALE_NAMES=['Street','Town','Region','Nation','World'];
   document.querySelectorAll('.tab[data-i]').forEach(t=>{
@@ -5348,8 +5349,8 @@ document.getElementById('si').addEventListener('keydown',e=>{if(e.key==='Enter')
    the outermost level is placed from the edge of the screen rather than
    arriving there by accident.
    ═══════════════════════════════════════════════════════════════════════════ */
-var _arcW=-1, _arcFS=0;
-window.asRefit=function(){ _arcW=-1; };
+var _arcW=-1, _arcFS=0, _arcSig='';
+window.asRefit=function(){ _arcW=-1; _arcSig=''; };
 function asArcTabs(){
   try{
     var t=document.getElementById('tabs'); if(!t)return;
@@ -5411,6 +5412,17 @@ function asArcTabs(){
     var TH=2*Math.atan(Math.min(0.95,DROP/halfEx));
     var R=halfEx/Math.sin(TH);
 
+    /* ═══ 15 Sep · WHY IT WOBBLED WHEN A LIGHT WAS OFFERED ══════════════════
+       Karl: "the menu, street to world, do a weird jumble wobble upon aura
+       being offered."
+       Offering changes the active level, which changes a word's weight and
+       size, which changes the measurement, which moves every word in the row —
+       for a difference of a pixel or two that nobody asked to see.
+       So the row now only MOVES when the thing it is made of has actually
+       changed. Same widths, same places, no matter how often it is measured. */
+    const sig=m.map(o=>Math.round(o.w)+':'+Math.round(o.c)).join('|')+'@'+W;
+    if(sig===_arcSig)return;
+    _arcSig=sig;
     m.forEach(function(o){
       var u=(o.c-natMid)/natHalf; if(u<-1)u=-1; if(u>1)u=1;
       var th=u*TH;
@@ -6491,7 +6503,7 @@ function macHex(h){
   function ch(v){ v=mid+(v-mid)*S; v*=V; return Math.max(0,Math.min(255,Math.round(v))); }
   return [ch(r),ch(g),ch(b)];
 }
-var macSpread=0, macWantSpread=0, macPts=[], macHover=-1, macWhole=false;
+var macSpread=0, macWantSpread=0, macPts=[], macHover=-1, macWhole=false, macNamed=[];
 /* ═══ 4 Sep 2026 · THE LIVING RIM ════════════════════════════════════════════
    Karl has seen this three times and not once did it have an edge. Everything
    built so far has been a circle - and a circle drawn softly is still a circle,
@@ -6524,6 +6536,7 @@ function macDrawAura(ts){
   /* THE OPENING — the senses drift apart from where they already are. They never
      jump and the whole is never off screen, which is the one rule that keeps a
      cloud from becoming a place to get lost in. */
+  macNamed.length=0;                       /* each frame places its names afresh */
   macSpread+=(macWantSpread-macSpread)*0.055;
   if(macWantSpread&&macSpread>0.985)macSpread=1;
   if(!macWantSpread&&macSpread<0.004)macSpread=0;
@@ -6631,6 +6644,14 @@ function macDrawAura(ts){
       var nm=String(L[li].label).split(' \u2014 ')[0];
       if(nm.length>22)nm=nm.slice(0,21)+'\u2026';
       macAx.save();
+      /* ═══ 15 Sep · NAMES THAT DO NOT CROSS ══════════════════════════════
+         Karl sent two screens with the words lying across one another and
+         across the sentence beneath them. A name written over another name is
+         not a label, it is noise.
+         So a name is only written where there is room for it: kept clear of
+         every name already placed, and clear of the words at the foot of the
+         screen. Any name that cannot find room stays quiet, and touching its
+         light still says it — which is what the instruction told you to do. */
       /* Karl: "Aurasense names are not always visible in the spread view."
          With a door list open, the names and the cards were fighting and both
          lost. A name is not competing for attention while a list is being
@@ -6642,8 +6663,27 @@ function macDrawAura(ts){
       macAx.shadowColor='rgba(255,251,246,0.95)'; macAx.shadowBlur=7;
       macAx.fillStyle='rgba(74,42,26,0.94)';
       var ny=py+spread*0.92+15;
-      macAx.fillText(nm,px,ny);
-      macAx.fillText(nm,px,ny);
+      var wpx=macAx.measureText(nm).width;
+      var clash=false;
+      /* clear of every name already placed */
+      for(var ci=0;ci<macNamed.length;ci++){
+        var o2=macNamed[ci];
+        if(Math.abs(o2.y-ny)<17 && Math.abs(o2.x-px)<(o2.w+wpx)/2+14){clash=true;break;}
+      }
+      /* and clear of the sentence at the foot of the screen */
+      try{
+        var wEl=document.getElementById('ma-cloud-words');
+        if(!clash&&wEl&&!wEl.classList.contains('hushed')){
+          var wr=wEl.getBoundingClientRect(), cr=macCv.getBoundingClientRect();
+          var ay=cr.top+ny*(cr.height/macCv.height), ax=cr.left+px*(cr.width/macCv.width);
+          if(ay>wr.top-14&&ay<wr.bottom+14&&ax>wr.left-30&&ax<wr.right+30)clash=true;
+        }
+      }catch(e){}
+      if(!clash){
+        macNamed.push({x:px,y:ny,w:wpx});
+        macAx.fillText(nm,px,ny);
+        macAx.fillText(nm,px,ny);
+      }
       macAx.shadowBlur=0;
       macAx.restore();
     }
@@ -10715,7 +10755,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 14 Sep 2026 · 116 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 15 Sep 2026 · 117 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
