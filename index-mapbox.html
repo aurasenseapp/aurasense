@@ -6668,17 +6668,11 @@ function macDrawAura(ts){
       /* clear of every name already placed */
       for(var ci=0;ci<macNamed.length;ci++){
         var o2=macNamed[ci];
-        if(Math.abs(o2.y-ny)<17 && Math.abs(o2.x-px)<(o2.w+wpx)/2+14){clash=true;break;}
+        if(Math.abs(o2.y-ny)<15 && Math.abs(o2.x-px)<(o2.w+wpx)/2+8){clash=true;break;}
       }
-      /* and clear of the sentence at the foot of the screen */
-      try{
-        var wEl=document.getElementById('ma-cloud-words');
-        if(!clash&&wEl&&!wEl.classList.contains('hushed')){
-          var wr=wEl.getBoundingClientRect(), cr=macCv.getBoundingClientRect();
-          var ay=cr.top+ny*(cr.height/macCv.height), ax=cr.left+px*(cr.width/macCv.width);
-          if(ay>wr.top-14&&ay<wr.bottom+14&&ax>wr.left-30&&ax<wr.right+30)clash=true;
-        }
-      }catch(e){}
+      /* 16 Sep - the check against the sentence is gone. The sentence has moved
+         to the top of the screen, so there is nothing there to clash with, and
+         a name no longer has to be sacrificed to a box it never overlapped. */
       if(!clash){
         macNamed.push({x:px,y:ny,w:wpx});
         macAx.fillText(nm,px,ny);
@@ -10755,7 +10749,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 15 Sep 2026 · 117 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 16 Sep 2026 · 118 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -11096,6 +11090,28 @@ try{
 #ra-modal .ra-note{margin:20px 2px 2px;padding-top:14px;font-size:11.8px;line-height:1.7;
   color:#8f86bb;box-shadow:inset 0 1px 0 rgba(167,139,250,.18)}
 #ra-modal .ra-note b{color:#c3b9ea;font-weight:400}
+/* ═══ 16 Sep · THE SENTENCE MOVES OUT OF THE LIGHTS ═══════════════════════
+   Karl sent three screens with the names lying across "Each light, on its own"
+   and across each other. I had tried to solve it by detecting collisions and
+   hiding the names that clashed — which fixed the overlap by LOSING THE NAMES,
+   and the names are the point.
+   The real fault was that the sentence was sitting in the middle of the field,
+   which is where the lights are. GEOMETRY, NOT DETECTION: the sentence goes to
+   the top, above everything, and then nothing has to be hidden at all.      */
+#myaura-page #ma-cloud-words{bottom:auto!important;top:12%!important}
+@media(max-width:600px){#myaura-page #ma-cloud-words{top:13%!important;padding:0 20px}}
+
+/* ═══ AND THE BUILD LABEL STEPS OFF THE BUTTON ═══════════════════════════════
+   Karl: "any chance we can put the build label somewhere else — it's
+   obstructing the Look Closer button." It was, and on the one screen where
+   that button is the only way forward. On My Aura it moves to the top corner,
+   where nothing else stands. */
+body:has(#myaura-page.show) #build-stamp,
+body:has(#myaura-page.cloudfirst) #build-stamp{
+  bottom:auto!important;left:auto!important;
+  top:calc(env(safe-area-inset-top) + 10px)!important;right:10px!important;
+  font-size:10.5px!important;opacity:.5;padding:5px 10px!important}
+body:has(#myaura-page.show) #build-stamp:hover{opacity:1}
 #myaura-page #ma-sense-card button{
   border:none!important;border-radius:22px!important;
   background:radial-gradient(120% 210% at 50% 50%,rgba(238,206,168,.7) 0%,
