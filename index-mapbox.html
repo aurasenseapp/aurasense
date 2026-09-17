@@ -6560,7 +6560,34 @@ function macDrawAura(ts){
   /* further apart and smaller when opened, so each sense is its own light
      rather than a blur of neighbours — that overlap is why a name appeared
      where nothing seemed to be. */
-  var ring=base*(n>1?0.86:0)*macSpread;
+  /* ═══════════════════════════════════════════════════════════════════════
+     TOWARD ONE LIGHT  ·  16 September 2026
+     ───────────────────────────────────────────────────────────────────────
+     The eight inward readings give a person their COLOURS. The five that
+     reach do something else: each one completed brings the separate lights a
+     step closer to one another, until the centre resolves to a single white.
+
+     This is the line Karl drew on 10 September, at the scale he drew it at.
+     At a street, opposing senses must stay apart — blending two people's
+     distinct readings into grey would invent an experience nobody had.
+     At a PERSON, and at the world, the resolution into one colourless light
+     is the destination, not an error.
+
+     Two things it must never become:
+       · a score — no number, no bar, no "4 of 5". Only what happened.
+       · a ratchet — change the answers and the lights move back apart. A
+         mechanic that only ever advances teaches that the answers are a
+         performance.                                                      */
+  var pull=0;
+  try{
+    var rq=QUESTS.filter(function(q){return q.reach;});
+    var got=0;
+    rq.forEach(function(q){ if(myProfile&&myProfile.qzDone&&myProfile.qzDone[q.name])got++; });
+    pull=rq.length?got/rq.length:0;
+  }catch(e){ pull=0; }
+  window._asPull=pull;
+  /* the lights draw in toward one another as the reach readings are answered */
+  var ring=base*(n>1?0.86:0)*macSpread*(1-0.62*pull);
   /* ═══ 3 Sep 2026 · SECOND PASS ═══════════════════════════════════════════
      THE FAULT, and it was mine: the pale clearing was laid inside the same
      loop that painted the colour. So the fifth sense's clearing went straight
@@ -6618,6 +6645,20 @@ function macDrawAura(ts){
     macAx.fillStyle=bg;
     macBlob(macAx,G.px,G.py,bR,tt,G.li*1.9+0.6,0.8); macAx.fill();
   });
+  /* PASS ONE AND A HALF - the one light, once the reach begins. It is laid
+     between the clearings and the colours, so the colours still show around
+     it: nothing of a person is erased by arriving. */
+  if(pull>0.02){
+    var oneR=base*(0.30+0.46*pull);
+    var oneG=macAx.createRadialGradient(cx,cy,0,cx,cy,oneR);
+    var oneA=0.10+0.62*pull*pull;
+    oneG.addColorStop(0,   'rgba(255,253,248,'+(oneA*glow).toFixed(3)+')');
+    oneG.addColorStop(0.34,'rgba(255,252,246,'+(oneA*0.62*glow).toFixed(3)+')');
+    oneG.addColorStop(0.72,'rgba(255,250,242,'+(oneA*0.20*glow).toFixed(3)+')');
+    oneG.addColorStop(1,   'rgba(255,250,242,0)');
+    macAx.fillStyle=oneG;
+    macBlob(macAx,cx,cy,oneR,tt,3.1,0.7); macAx.fill();
+  }
   /* PASS TWO - the colour, then the name. */
   geo.forEach(function(G){
     var li=G.li,rgb=G.rgb,px=G.px,py=G.py,spread=G.spread,lift=G.lift;
@@ -6626,7 +6667,8 @@ function macDrawAura(ts){
        painted into every sense. That is the bullseye in Karl's photograph.
        The core was corrected on 3 September for exactly this reason and this
        half was missed. One gradient now. No steps anywhere. */
-    var R=spread*1.46;
+    /* and they widen as they close, so they meet rather than merely crowd */
+    var R=spread*1.46*(1+0.34*(window._asPull||0));
     var A=0.92*glow*lift; if(li>0&&macSpread<0.5)A*=0.82;
     var cs=rgb[0]+','+rgb[1]+','+rgb[2];
     var g2=macAx.createRadialGradient(px,py,0,px,py,R);
@@ -9731,7 +9773,7 @@ const RA_ONE=[
   b:'Every label carries its own history. It can flatten what you felt, or point a little to one side of it.<br><br>A movement carries none of that.'},
  {k:'breath',t:'Show it before you name it',
   b:'<i>Never done anything like this? Most people have not. Move roughly, or take the words underneath. Neither is worse.</i>',
-  ask:'gesture',opts:RA_SHAPE,q:'Move the way it felt. If it moved through you, trace where it went.',key:'ra_shape'},
+  ask:'gesture',opts:RA_SHAPE,q:'Trace where you felt it. If it was outside you \u2014 in the room, in the air \u2014 take the body away and move the way it felt.',key:'ra_shape'},
  {k:'colour',t:'Now the word',
   b:'If several fit, take the one you would be least comfortable saying out loud.<br><br>That one is usually closer.',
   ask:'sense',q:'What was it?',key:'ra_sense'},
@@ -10042,7 +10084,7 @@ function raGesture(body,c){
   const bd=body.querySelector('#ra-body-door');
   if(bd)bd.addEventListener('click',()=>{
     onBody=!onBody; pts=[]; verdict=[]; readEl.innerHTML='';
-    bd.textContent=onBody?'take the body away':'show a body to trace on';
+    bd.textContent=onBody?'it was outside me \u2014 take the body away':'put the body back';
     raSave('ra_onbody',onBody?'1':'0');
     if(onBody)raSave('ra_onbody','1');
   });
@@ -10149,7 +10191,7 @@ function raAsk(c){
   if(c.ask==='gesture')
     return '<div class="ra-q" style="text-align:center">'+c.q+'</div>'
       +'<div class="ra-still"><canvas id="ra-move" width="320" height="320"></canvas>'
-      +'<button type="button" class="ra-words-door" id="ra-body-door">show a body to trace on</button></div>'
+      +'<button type="button" class="ra-words-door" id="ra-body-door">it was outside me \u2014 take the body away</button></div>'
       +'<div class="ra-read" id="ra-read"></div>'
       +'<div class="ra-warm" id="ra-warm"><span>and was it</span>'
       +'<button type="button" class="ra-o" data-w="warm" style="--oc:#e8a33d"><i></i>warm</button>'
@@ -10328,6 +10370,139 @@ function openRaiseEvent(){
 // (Krishnamurti: observation without condemnation). It grows with the Gate: trajectories,
 // and \u2014 only ever with a yes \u2014 learning shared onward through Accords.
 window.mirrorNotes=window.mirrorNotes||[];
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   THE MIRROR THAT ANSWERS  ·  16 September 2026
+   ───────────────────────────────────────────────────────────────────────────
+   Until now the Mirror was a REPORT. It told a person what they had offered,
+   in cards, accurately — and it never once listened to them.
+
+   Karl's brief, from the founding instructions:
+     "The responses to people's input need to include some of the words they
+      used back to them, to show they've been listened to. It needs to be
+      psychologically very clever, not to trick anyone but to be of genuine
+      help… Establish what their future aspired self would say back to them in
+      this moment when faced with an issue, life choice, emotion — and say it."
+
+   So the Mirror can now be brought something, and it answers in four moves:
+
+     1 · YOUR OWN WORDS, VERBATIM. Never paraphrased. A paraphrase is a guess
+         about somebody's inner life, and a wrong one is worse than silence.
+     2 · WHAT IS UNDER IT, named without judgement and without advice.
+     3 · THE VOICE OF THE SELF YOU ARE BECOMING — which never instructs, never
+         consoles falsely, and never says "you should".
+     4 · ONE QUESTION, going a step further in than the last one.
+
+   NOTHING IS INVENTED. Everything it says about the person comes from what
+   they wrote or what they have actually offered. Where it knows nothing it
+   says nothing.
+
+   AND IT NEVER DIAGNOSES. When something heavy is brought, the engine stands
+   down entirely and one plain, warm thing is said instead — with a way to
+   somebody real. A clever reflection is the wrong answer to a hard night.
+   ═══════════════════════════════════════════════════════════════════════════ */
+const MR_KINDS=[
+ {k:'choice', re:/\b(should i|decide|decision|choice|choose|whether|either|or not|two options|torn|stay or|leave or)\b/i,
+  under:'A choice is rarely between two options. It is usually between two futures, and one of them is already preferred.',
+  voice:'You already know which one you lean toward. What you are looking for is permission, and I am not able to give it — but I can tell you that you are allowed to want what you want.',
+  ask:'Which of the two would you be relieved to have chosen a year from now?'},
+ {k:'fear', re:/\b(afraid|scared|fear|terrified|anxious|anxiety|worried|worry|dread|panic|nervous)\b/i,
+  under:'Fear points at something. It is often accurate about the direction and wrong about the size.',
+  voice:'You have been afraid before and you are still here. That is not a small fact, and it is the one you keep leaving out.',
+  ask:'What would you do next if this turned out to be smaller than it feels?'},
+ {k:'loss', re:/\b(lost|loss|died|death|grief|grieving|gone|miss(ing)? (him|her|them)|funeral|passed away|bereav)/i,
+  under:'Grief is not a problem being solved. It is love with nowhere to arrive.',
+  voice:'You do not have to be further along than you are. Nothing is overdue.',
+  ask:'What would you still like to say to them, if saying it cost nothing?'},
+ {k:'anger', re:/\b(angry|anger|furious|rage|resent|unfair|hate|betray|fed up|sick of)\b/i,
+  under:'Anger is usually the guard standing in front of something softer.',
+  voice:'You are allowed to be angry. It does not make you the thing you are angry at.',
+  ask:'If the anger stepped aside for a moment, what would be standing behind it?'},
+ {k:'tired', re:/\b(tired|exhausted|drained|burn(t|ed) out|no energy|weary|can\u2019t keep|cant keep|too much)\b/i,
+  under:'Tiredness of this kind is rarely about sleep. It is about carrying something without putting it down.',
+  voice:'You are not failing at this. You are doing it while tired, which is harder, and nobody is counting that.',
+  ask:'What is the one thing you are carrying that was never actually yours?'},
+ {k:'lost', re:/\b(don\u2019t know|dont know|confused|stuck|lost|no idea|unsure|drifting|pointless|meaningless)\b/i,
+  under:'Not knowing is a real state, and it is not the same as failing.',
+  voice:'You are not lost. You are between two things you can name, and the space between them has no signpost yet.',
+  ask:'What is the smallest true thing you do know about this?'},
+ {k:'longing', re:/\b(want|wish|long(ing)? for|hope|dream|if only|someday|miss)\b/i,
+  under:'A longing is information. It is telling you where your attention already lives.',
+  voice:'Wanting something is not a weakness to be managed. It is the part of you that is still reaching.',
+  ask:'What is the first hour of that, and could it happen this week?'},
+ {k:'shame', re:/\b(ashamed|shame|guilt|guilty|stupid|idiot|my fault|failure|failed|embarrass|hate myself)\b/i,
+  under:'Shame speaks in the first person and is almost never in your own voice. It was learned from somebody.',
+  voice:'You would not say this to anyone else in your position. Notice who you learned to say it to yourself for.',
+  ask:'Whose voice is it, when you say that to yourself?'}
+];
+const MR_HEAVY=/\b(kill myself|end it all|suicid|want to die|self harm|self-harm|hurt myself|no reason to live|better off without me|take my own life)\b/i;
+/* the person's own words, taken whole and never rewritten */
+function mrTheirWords(t){
+  const parts=String(t||'').split(/[.!?;\n]+/).map(x=>x.trim()).filter(x=>x.length>12);
+  if(!parts.length){ const w=String(t||'').trim(); return w?[w.slice(0,90)]:[]; }
+  const score=p=>(/\bi\b|\bmy\b|\bme\b/i.test(p)?2:0)+Math.min(2,p.length/45);
+  parts.sort((a,b)=>score(b)-score(a));
+  return parts.slice(0,2).map(p=>p.length>92?p.slice(0,90)+'\u2026':p);
+}
+function mrRead(t){
+  for(const k of MR_KINDS) if(k.re.test(t)) return k;
+  return {k:'open',
+    under:'You brought something here without a name on it. That is often the more honest way to arrive.',
+    voice:'Nothing you have said needs to be tidied before it counts.',
+    ask:'If this had a shape rather than a name, what shape would it be?'};
+}
+/* what the Mirror actually knows — and nothing beyond it */
+function mrGround(){
+  const bits=[];
+  try{
+    const t=(myOfferings||[]).length;
+    if(t) bits.push('You have offered '+t+' light'+(t>1?'s':'')+' to the map.');
+    const rq=(typeof QUESTS!=='undefined')?QUESTS.filter(q=>q.reach):[];
+    let got=0; rq.forEach(q=>{ if(myProfile&&myProfile.qzDone&&myProfile.qzDone[q.name])got++; });
+    if(got) bits.push('Your colours have begun drawing toward one another.');
+    const w=(window.wellNotes||[]).length;
+    if(w>=2) bits.push('You have sat with yourself here '+w+' times before.');
+  }catch(e){}
+  return bits;
+}
+function mrAnswer(){
+  const box=document.getElementById('mr-bring'), out=document.getElementById('mr-said');
+  if(!box||!out)return;
+  const t=(box.value||'').trim();
+  if(t.length<4){ out.innerHTML='<div class="mr-b">Whatever is here is enough to bring. Even a few words.</div>'; return; }
+  /* the engine stands down entirely for the heaviest things */
+  if(MR_HEAVY.test(t)){
+    out.innerHTML='<div class="mr-said-in">'
+      +'<div class="mr-b"><b>Thank you for writing that here.</b></div>'
+      +'<div class="mr-b">The Mirror is not able to meet this, and it is not going to pretend otherwise. '
+      +'What you have written deserves a person, not a reflection.</div>'
+      +'<div class="mr-b">Please say it tonight to someone \u2014 someone you trust, a doctor, or a helpline. '
+      +'<b>It costs nothing to say it to one person.</b></div>'
+      +'<div class="mr-b" style="opacity:.8">Helplines by country: <a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a></div>'
+      +'</div>';
+    try{box.value='';}catch(e){}
+    return;
+  }
+  const words=mrTheirWords(t), k=mrRead(t), ground=mrGround();
+  let h='<div class="mr-said-in">';
+  if(words.length){
+    h+='<div class="mr-h">What you said</div>';
+    words.forEach(w=>{ h+='<div class="mr-quote">\u201c'+escT(w)+'\u201d</div>'; });
+  }
+  h+='<div class="mr-h">What may be under it</div><div class="mr-b">'+k.under+'</div>';
+  h+='<div class="mr-h">The one you are becoming says</div><div class="mr-voice">'+k.voice+'</div>';
+  if(ground.length) h+='<div class="mr-b" style="opacity:.78">'+ground.join(' ')+'</div>';
+  h+='<div class="mr-q">'+k.ask+'</div>';
+  h+='<div class="mr-b" style="opacity:.62;font-size:12px">Nothing here left this device. The Mirror keeps no copy unless you ask it to.</div>';
+  h+='</div>';
+  out.innerHTML=h;
+  try{
+    const keep=document.getElementById('mr-hold');
+    if(keep)keep.style.display='';
+    window._mrLast={t:t,k:k.k,at:Date.now()};
+  }catch(e){}
+}
+
 function mirrorOpen(){
   try{
     if(document.getElementById('mr-modal'))return;
@@ -10378,7 +10553,16 @@ function mirrorOpen(){
       if(mrLine)mrLine='<div class="mr-card"><div class="mr-h">The line between your lights</div>'+mrLine+'<div class="mr-q">If the line kept its direction, where does it arrive? You may bend it any morning.</div></div>';
     }
     const mrWell=(wn>=2)?('<div class="mr-card"><div class="mr-h">The well</div><div class="mr-b">'+wn+' check-ins rest in the well, on this device alone.</div><div class="mr-q">Do any two rhyme? Rhyme is the Weave\u2019s word for a pattern asking to be seen.</div></div>'):'';
-    let cards='';
+    /* first, before any report about them: a place to be heard */
+    let cards='<div class="mr-card mr-bring-card">'
+      +'<div class="mr-h">Bring something here</div>'
+      +'<div class="mr-b">A choice you are facing, a feeling you cannot place, something that will not leave you alone. '
+      +'Write it as it is \u2014 it does not need tidying.</div>'
+      +'<textarea id="mr-bring" maxlength="600" placeholder="what is here\u2026"></textarea>'
+      +'<button id="mr-ask" type="button">\u2727 Let the Mirror answer</button>'
+      +'<div id="mr-said"></div>'
+      +'<button id="mr-hold" type="button" style="display:none">\u25c7 Keep this in the Mirror</button>'
+      +'</div>';
     if(total===0){
       cards+='<div class="mr-card"><div class="mr-h">A clean surface.</div><div class="mr-b">The Mirror reflects what you have offered, and nothing has been offered yet. One sense, anywhere true, and the first light appears here.</div></div>';
     }else{
@@ -10394,6 +10578,19 @@ function mirrorOpen(){
       +cards
       +'<div class="mr-s2">More will appear here as Aurasense grows. Nothing of yours ever reaches another person without your yes.</div>'
       +'<button id="mr-x" type="button">close the mirror</button>';
+    setTimeout(()=>{
+      try{
+        const a=d.querySelector('#mr-ask'); if(a)a.addEventListener('click',mrAnswer);
+        const h=d.querySelector('#mr-hold');
+        if(h)h.addEventListener('click',()=>{
+          try{
+            const L=JSON.parse(localStorage.getItem('as_mr_held')||'[]');
+            L.unshift(window._mrLast||{}); localStorage.setItem('as_mr_held',JSON.stringify(L.slice(0,40)));
+            h.textContent='\u25c7 held'; h.disabled=true;
+          }catch(e){}
+        });
+      }catch(e){}
+    },40);
     document.body.appendChild(d);
     requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});
     const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},750);};
@@ -10749,7 +10946,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 16 Sep 2026 · 118 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 16 Sep 2026 · 120 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -11010,6 +11207,22 @@ try{
    in here is a box, a chip, a checkbox or a tick - a person is being asked
    what they felt, and the shapes they are choosing between should look like
    the thing the map is made of.                                            */
+#mr-modal .mr-bring-card textarea{width:100%;box-sizing:border-box;min-height:92px;resize:vertical;
+  background:rgba(255,255,255,.03);border:none;border-bottom:.5px solid rgba(167,139,250,.32);
+  border-radius:12px 12px 0 0;color:#efe9ff;font-family:var(--serif);font-size:14.5px;line-height:1.6;
+  padding:12px 13px;outline:none;margin-top:10px;transition:border-color .4s}
+#mr-modal .mr-bring-card textarea:focus{border-bottom-color:rgba(214,201,255,.85)}
+#mr-modal .mr-bring-card textarea::placeholder{color:#6c639a}
+#mr-modal #mr-ask,#mr-modal #mr-hold{margin-top:12px;font-family:var(--serif);font-size:14px;
+  color:#f0eaff;cursor:pointer;border:none;border-radius:24px;padding:10px 20px;
+  background:radial-gradient(130% 200% at 50% 50%,rgba(167,139,250,.3) 0%,rgba(124,92,255,0) 100%);
+  box-shadow:0 0 20px rgba(124,92,255,.2)}
+#mr-modal #mr-hold{font-size:12.5px;opacity:.78;box-shadow:none}
+#mr-modal .mr-said-in{margin-top:16px;padding-top:4px;animation:ocRise 1.1s ease both}
+#mr-modal .mr-quote{font-size:15px;line-height:1.66;color:#f4efff;font-style:italic;
+  margin:6px 0 4px;padding-left:13px;box-shadow:inset 2px 0 0 rgba(196,181,253,.45)}
+#mr-modal .mr-voice{font-size:15.5px;line-height:1.72;color:#fff6e8;margin:4px 0 2px;
+  text-shadow:0 0 22px rgba(232,192,116,.34)}
 #quest-page .qf{font-size:11.5px;color:#8a80b4;font-style:italic;margin:3px 0 5px;letter-spacing:.01em}
 #as-heavy{position:fixed;inset:0;z-index:9000;display:flex;align-items:center;justify-content:center;
   background:rgba(6,4,16,.72);opacity:0;transition:opacity .9s ease;pointer-events:none;padding:22px}
