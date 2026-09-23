@@ -4699,7 +4699,8 @@ function submit(lat,lng,text){
   } else {
     setTimeout(()=>{let _at=null;try{const _pp=map.project([lng,lat]);_at={x:_pp.x,y:_pp.y};}catch(e){}
       const _wl=witnessLine(sid,lat,lng,s.label);
-      if(_wl)witnessShow(_wl,8200,s.color,_at);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)],null,null,null,null,_at);},5100);
+      if(_wl)witnessShow(_wl,8200,s.color,_at);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)],null,null,null,null,_at);
+      try{if(typeof asNoticeAfter==='function')asNoticeAfter(sid,s.label,s.color,lat,lng);}catch(e){}},5100);
   }
 }
 
@@ -10445,7 +10446,10 @@ function mrTheirWords(t){
   if(!parts.length){ const w=String(t||'').trim(); return w?[w.slice(0,90)]:[]; }
   const score=p=>(/\bi\b|\bmy\b|\bme\b/i.test(p)?2:0)+Math.min(2,p.length/45);
   parts.sort((a,b)=>score(b)-score(a));
-  return parts.slice(0,2).map(p=>p.length>92?p.slice(0,90)+'\u2026':p);
+  /* 17 Sep - this used to cut at 92 characters, so Karl was quoted back as
+     "my own b...". Quoting somebody and stopping them mid-word is worse than
+     not quoting at all. Whole sentence or nothing. */
+  return parts.slice(0,2);
 }
 function mrRead(t){
   for(const k of MR_KINDS) if(k.re.test(t)) return k;
@@ -10468,7 +10472,56 @@ function mrGround(){
   }catch(e){}
   return bits;
 }
+/* The turns after the first. Not a classifier - these work on what the person
+   wrote IN ANSWER, which is the only material that can take an inquiry deeper.
+   Three turns, not the full branching tree. Labelled as the stop-gap it is. */
+const MR_DEEPER=[
+ 'And if that were true, what would it change about what you do next?',
+ 'What is the part of that you would leave out, if you were telling someone else?',
+ 'What would have to be so, for this to stop mattering?'
+];
+function mrHeavySay(out){
+  out.innerHTML='<div class="mr-said-in">'
+    +'<div class="mr-b"><b>Thank you for writing that here.</b></div>'
+    +'<div class="mr-b">The Mirror is not able to meet this, and it is not going to pretend otherwise. '
+    +'What you have written deserves a person, not a reflection.</div>'
+    +'<div class="mr-b">Please say it tonight to someone \u2014 someone you trust, a doctor, or a helpline. '
+    +'<b>It costs nothing to say it to one person.</b></div>'
+    +'<div class="mr-b" style="opacity:.8">Helplines by country: '
+    +'<a href="https://findahelpline.com" target="_blank" rel="noopener">findahelpline.com</a></div></div>';
+}
+function mrDeeper(k,words){
+  var box=document.getElementById('mr-bring2'), out=document.getElementById('mr-said2');
+  if(!box||!out)return;
+  var t=(box.value||'').trim();
+  if(MR_HEAVY.test(t)){ mrHeavySay(out); return; }
+  if(t.length<3){ out.innerHTML='<div class="mr-b">Even a few words is enough.</div>'; return; }
+  var mine=mrTheirWords(t);
+  var step=(window._mrStep=(window._mrStep||0)+1);
+  var h='<div class="mr-said-in">';
+  if(mine.length) h+='<div class="mr-quote">\u201c'+escT(mine[0])+'\u201d</div>';
+  if(step<MR_DEEPER.length){
+    h+='<div class="mr-q">'+MR_DEEPER[step-1]+'</div>'
+     +'<textarea id="mr-bring2" maxlength="600" placeholder="\u2026"></textarea>'
+     +'<button id="mr-ask2" type="button">\u2727 Go further</button><div id="mr-said2"></div>';
+  }else{
+    /* only now, once the person has actually gone in, does anything speak */
+    h+='<div class="mr-h">What may be under it</div><div class="mr-b">'+k.under+'</div>'
+     +'<div class="mr-h">The one you are becoming says</div><div class="mr-voice">'+k.voice+'</div>';
+    var g=mrGround(); if(g.length)h+='<div class="mr-b" style="opacity:.78">'+g.join(' ')+'</div>';
+    h+='<div class="mr-b" style="opacity:.62;font-size:12px">The Mirror has no more to say than you brought it. '
+     +'That is the whole of what it is.</div>';
+  }
+  h+='</div>';
+  out.innerHTML=h;
+  try{
+    var b3=out.querySelector('#mr-ask2');
+    if(b3)b3.addEventListener('click',function(){mrDeeper(k,words);});
+    var keep=document.getElementById('mr-hold'); if(keep)keep.style.display='';
+  }catch(e){}
+}
 function mrAnswer(){
+  window._mrStep=0;
   const box=document.getElementById('mr-bring'), out=document.getElementById('mr-said');
   if(!box||!out)return;
   const t=(box.value||'').trim();
@@ -10492,13 +10545,23 @@ function mrAnswer(){
     h+='<div class="mr-h">What you said</div>';
     words.forEach(w=>{ h+='<div class="mr-quote">\u201c'+escT(w)+'\u201d</div>'; });
   }
-  h+='<div class="mr-h">What may be under it</div><div class="mr-b">'+k.under+'</div>';
-  h+='<div class="mr-h">The one you are becoming says</div><div class="mr-voice">'+k.voice+'</div>';
-  if(ground.length) h+='<div class="mr-b" style="opacity:.78">'+ground.join(' ')+'</div>';
+  /* 17 Sep - Karl: "a lot of options in one go... too busy for the eye to
+     remain still enough to answer one point at a time."
+     He is right: four blocks arrived at once. Now it is the words back and ONE
+     QUESTION, and nothing else. What may be under it, and the voice of the one
+     he is becoming, are held until the inquiry has actually gone somewhere -
+     a canned line at turn one is a fortune cookie; the same line after three
+     turns of real asking is a mirror.
+     STOP-GAP, HONESTLY LABELLED. The real answer is the branching inquiry set
+     out in the handoff of 17 September, and it needs Karl's answers first. */
   h+='<div class="mr-q">'+k.ask+'</div>';
-  h+='<div class="mr-b" style="opacity:.62;font-size:12px">Nothing here left this device. The Mirror keeps no copy unless you ask it to.</div>';
+  h+='<div class="mr-b" style="opacity:.6;font-size:12px">Answer it here if you want to go further. Nothing leaves this device.</div>';
+  h+='<textarea id="mr-bring2" maxlength="600" placeholder="\u2026"></textarea>'
+   +'<button id="mr-ask2" type="button">\u2727 Go further</button><div id="mr-said2"></div>';
   h+='</div>';
   out.innerHTML=h;
+  try{ var _b2=out.querySelector('#mr-ask2');
+    if(_b2)_b2.addEventListener('click',function(){mrDeeper(k,words);}); }catch(e){}
   try{
     const keep=document.getElementById('mr-hold');
     if(keep)keep.style.display='';
@@ -10949,7 +11012,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 17 Sep 2026 · 121 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 17 Sep 2026 · 122 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -11221,6 +11284,14 @@ try{
   background:radial-gradient(130% 200% at 50% 50%,rgba(167,139,250,.3) 0%,rgba(124,92,255,0) 100%);
   box-shadow:0 0 20px rgba(124,92,255,.2)}
 #mr-modal #mr-hold{font-size:12.5px;opacity:.78;box-shadow:none}
+#mr-modal .mr-said-in textarea{width:100%;box-sizing:border-box;min-height:74px;resize:vertical;
+  background:rgba(255,255,255,.03);border:none;border-bottom:.5px solid rgba(167,139,250,.32);
+  border-radius:12px 12px 0 0;color:#efe9ff;font-family:var(--serif);font-size:14.5px;line-height:1.6;
+  padding:11px 12px;outline:none;margin-top:12px}
+#mr-modal .mr-said-in textarea:focus{border-bottom-color:rgba(214,201,255,.85)}
+#mr-modal .mr-said-in button{margin-top:11px;font-family:var(--serif);font-size:13.5px;color:#f0eaff;
+  cursor:pointer;border:none;border-radius:24px;padding:9px 19px;
+  background:radial-gradient(130% 200% at 50% 50%,rgba(167,139,250,.26) 0%,rgba(124,92,255,0) 100%)}
 #mr-modal .mr-said-in{margin-top:16px;padding-top:4px;animation:ocRise 1.1s ease both}
 #mr-modal .mr-quote{font-size:15px;line-height:1.66;color:#f4efff;font-style:italic;
   margin:6px 0 4px;padding-left:13px;box-shadow:inset 2px 0 0 rgba(196,181,253,.45)}
@@ -11753,5 +11824,141 @@ body:has(#myaura-page.show) #build-stamp:hover{opacity:1}
 })();
 
 </script>
+
+<style id="asn-css">
+/* ── THE NOTICING — on the live map, 23 Sep 2026 ────────────────────────────
+   It rises from the senser's own light, never a bar at the foot of the screen.
+   It speaks only after the witness moment has finished, and only once the
+   senser's own thread has been met. It never talks over anything speaking. */
+#as-noticing{position:fixed;inset:0;z-index:2600;display:none;pointer-events:none;
+  font-family:Georgia,"Iowan Old Style","Times New Roman",serif;}
+#as-noticing.on{display:block}
+#asn-wrap{position:absolute;transform:translateX(-50%);width:min(92vw,420px);text-align:center;pointer-events:none}
+#asn-label,#asn-ask,#asn-choices,#asn-say,#asn-close,#asn-door{display:none;opacity:0}
+#asn-label.on,#asn-ask.on,#asn-choices.on,#asn-say.on,#asn-close.on,#asn-door.on{opacity:1}
+#asn-label{font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:rgba(198,190,175,.85);text-shadow:0 0 18px rgba(0,0,0,.9);transition:opacity 1400ms ease}
+#asn-ask{margin:14px auto 0;max-width:330px;font-size:19px;line-height:1.55;color:#f4f0e8;
+  text-shadow:0 0 30px rgba(0,0,0,.9),0 0 26px rgba(255,214,150,.2);transition:opacity 1500ms ease}
+#asn-choices{gap:14px;justify-content:center;margin-top:20px;transition:opacity 1500ms ease}
+#asn-choices.on{display:flex}
+.asn-c{appearance:none;border:0;cursor:pointer;color:#f4f0e8;font-family:inherit;font-size:15px;line-height:1.35;
+  width:132px;height:132px;border-radius:50%;padding:0 14px;pointer-events:auto;
+  display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 50% 50%,rgba(255,222,170,.12) 0%,rgba(255,222,170,.035) 56%,rgba(255,222,170,0) 75%);
+  box-shadow:0 0 0 1px rgba(242,238,229,.17) inset;
+  transition:transform 600ms ease,box-shadow 600ms ease,background 600ms ease}
+.asn-c:active{transform:scale(.97)}
+#asn-say{margin-top:18px;transition:opacity 1400ms ease}
+#asn-say p{margin:0 0 12px;font-size:16px;line-height:1.5;color:rgba(216,210,196,.96);text-shadow:0 0 22px rgba(0,0,0,.9)}
+#asn-words{width:100%;height:84px;resize:none;background:rgba(8,10,18,.66);color:#f4f0e8;border:0;border-radius:20px;
+  padding:13px 15px;font-family:inherit;font-size:16px;line-height:1.5;pointer-events:auto;
+  box-shadow:0 0 0 1px rgba(242,238,229,.17) inset;outline:none}
+#asn-words::placeholder{color:rgba(198,190,175,.7)}
+#asn-row{display:flex;gap:22px;justify-content:center;margin-top:11px}
+.asn-p{appearance:none;border:0;background:transparent;cursor:pointer;color:rgba(203,196,181,.95);
+  font-family:inherit;font-size:15px;padding:12px 14px;min-height:44px;pointer-events:auto;
+  text-shadow:0 0 18px rgba(0,0,0,.9)}
+.asn-p.lead{color:#f4f0e8;text-shadow:0 0 18px rgba(255,214,150,.3),0 0 18px rgba(0,0,0,.9)}
+#asn-close{transition:opacity 1600ms ease}
+#asn-theirs{margin:0 0 16px;font-size:18px;line-height:1.55;font-style:italic;color:#ffe6bd;
+  text-shadow:0 0 30px rgba(0,0,0,.92);max-height:34vh;overflow-y:auto;pointer-events:auto}
+#asn-said{margin:0;font-size:17px;line-height:1.58;color:#f4f0e8;
+  text-shadow:0 0 26px rgba(0,0,0,.92);transition:opacity 1300ms ease}
+#asn-said.hand{opacity:.34}
+#asn-door{margin-top:20px;flex-direction:column;gap:10px;align-items:center;transition:opacity 1400ms ease}
+#asn-door.on{display:flex}
+.asn-d{appearance:none;border:0;background:transparent;cursor:pointer;font-family:inherit;font-size:15px;
+  color:#f4f0e8;padding:10px 12px;min-height:44px;pointer-events:auto;text-shadow:0 0 18px rgba(0,0,0,.9)}
+.asn-d.quiet{color:rgba(203,196,181,.95);font-size:14px}
+</style>
+<script>
+(function(){
+"use strict";
+var W=null,LAT=0,LNG=0,SENSE='',lastKey='',timers=[];
+function calm(){try{return document.body.classList.contains('calm');}catch(e){return false;}}
+function T(ms,fn){timers.push(setTimeout(fn,ms*(calm()?1.25:1)));}
+function clearT(){timers.forEach(clearTimeout);timers=[];}
+function q(id){return document.getElementById(id);}
+function build(){
+  if(W)return;
+  var r=document.createElement('div');r.id='as-noticing';
+  r.innerHTML='<div id="asn-wrap">'
+   +'<div id="asn-label"></div>'
+   +'<p id="asn-ask">Did you feel anything change as you offered it?</p>'
+   +'<div id="asn-choices"><button type="button" class="asn-c" id="asn-no">No,<br>the same</button>'
+   +'<button type="button" class="asn-c" id="asn-yes">Yes,<br>something changed</button></div>'
+   +'<div id="asn-say"><p>What did you feel change as you offered your light?</p>'
+   +'<textarea id="asn-words" placeholder="in your own words" aria-label="what did you feel change"></textarea>'
+   +'<div id="asn-row"><button type="button" class="asn-p" id="asn-skip">leave it unsaid</button>'
+   +'<button type="button" class="asn-p lead" id="asn-send">that\'s it</button></div></div>'
+   +'<div id="asn-close"><p id="asn-theirs"></p><p id="asn-said"></p>'
+   +'<div id="asn-door"><button type="button" class="asn-d" id="asn-more">see what else is here&nbsp;&rarr;</button>'
+   +'<button type="button" class="asn-d quiet" id="asn-rest">let it rest</button></div></div></div>';
+  document.body.appendChild(r);W=r;
+  q('asn-no').addEventListener('click',function(){answer(false);});
+  q('asn-yes').addEventListener('click',function(){answer(true);});
+  q('asn-skip').addEventListener('click',function(){finish(true,'');});
+  q('asn-send').addEventListener('click',function(){finish(true,q('asn-words').value);});
+  q('asn-more').addEventListener('click',function(){done();try{if(typeof openLiveFeed==='function')openLiveFeed();}catch(e){}});
+  q('asn-rest').addEventListener('click',done);
+}
+function reveal(id,disp){var e=q(id);if(!e)return;e.style.display=disp||'block';void e.offsetWidth;e.classList.add('on');place();}
+function hide(id){var e=q(id);if(!e)return;e.classList.remove('on');e.style.display='none';}
+function place(){
+  var x=innerWidth/2,y=innerHeight*0.40,w=q('asn-wrap');if(!w)return;
+  try{if(typeof map!=='undefined'&&map&&map.project){var p=map.project([LNG,LAT]);if(isFinite(p.x)&&isFinite(p.y)){x=p.x;y=p.y;}}}catch(e){}
+  var H=w.offsetHeight||300;
+  x=Math.max(132,Math.min(innerWidth-132,x));
+  var below=y+54,top=(below+H<innerHeight-150)?below:Math.max(76,y-54-H);
+  w.style.left=Math.round(x)+'px';w.style.top=Math.round(top)+'px';
+}
+function reset(){['asn-label','asn-ask','asn-choices','asn-say','asn-close','asn-door'].forEach(hide);
+  try{q('asn-words').value='';q('asn-said').classList.remove('hand');}catch(e){}}
+function done(){clearT();reset();if(W)W.classList.remove('on');}
+function ready(){try{if(window.AS_THREAD&&!window.AS_THREAD.done&&!window.AS_PEAK_DONE)return false;}catch(e){}return true;}
+function waitPeak(fn,n){n=n||0;if(ready()||n>45)fn();else timers.push(setTimeout(function(){waitPeak(fn,n+1);},1000));}
+function start(label){
+  if(W)W.classList.add('on');
+  try{q('asn-label').textContent=label||'';}catch(e){}
+  reveal('asn-label','block');
+  T(1500,function(){reveal('asn-ask','block');});
+  T(3700,function(){reveal('asn-choices','flex');});
+}
+function answer(yes){
+  clearT();hide('asn-ask');hide('asn-choices');
+  if(yes)T(700,function(){reveal('asn-say','block');try{q('asn-words').focus({preventScroll:true});}catch(e){}});
+  else finish(false,'');
+}
+function finish(moved,said){
+  clearT();hide('asn-say');hide('asn-ask');hide('asn-choices');
+  var own=(said||'').trim();                     /* whole words, never cut */
+  var th=q('asn-theirs');
+  th.textContent=own?'\u201c'+own+'\u201d':'';th.style.display=own?'block':'none';
+  q('asn-said').textContent=moved?'What you offered and what you felt change \u2014 your light holds both.'
+                                 :'Then it stands as you offered it.';
+  q('asn-said').classList.remove('hand');
+  save(moved,own);
+  reveal('asn-close','block');
+  T(2800,function(){reveal('asn-door','flex');q('asn-said').classList.add('hand');});
+}
+function save(moved,words){
+  try{var a=JSON.parse(localStorage.getItem('AS_SHIFTS')||'[]');
+    a.push({s:SENSE,moved:!!moved,words:words||'',lat:LAT,lng:LNG,at:Date.now()});
+    localStorage.setItem('AS_SHIFTS',JSON.stringify(a.slice(-300)));}catch(e){}
+}
+window.asNoticeAfter=function(senseId,label,color,lat,lng){
+  try{
+    if(!isFinite(lat)||!isFinite(lng))return;
+    var key=senseId+'|'+lat.toFixed(5)+'|'+lng.toFixed(5);
+    if(key===lastKey)return;lastKey=key;
+    build();LAT=lat;LNG=lng;SENSE=senseId;clearT();reset();
+    timers.push(setTimeout(function(){waitPeak(function(){start(label||senseId);},0);},9200));
+  }catch(e){}
+};
+try{addEventListener('resize',function(){if(W&&W.classList.contains('on'))place();});}catch(e){}
+})();
+</script>
+
 </body>
 </html>
