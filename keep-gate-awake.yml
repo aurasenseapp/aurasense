@@ -1,0 +1,32 @@
+# Keeps the Aurasense Gate (Supabase) awake. Second version, 26 September 2026.
+#
+# Why a second version: Supabase kept warning about inactivity, so the first version
+# was not running. The two usual reasons are that the file was not in the one folder
+# GitHub reads, or that the GATE_URL secret was never added. This version needs no
+# secret at all, runs every day, and shows a RED CROSS in the Actions tab if the Gate
+# does not answer, so a silent failure can never happen again.
+#
+# WHERE IT MUST LIVE — exactly this path, slashes included:
+#     .github/workflows/keep-gate-awake.yml
+# On GitHub: Add file → Create new file → type that whole path as the name.
+# Then: Actions tab → Keep Gate Awake → Run workflow. A green tick means it works.
+
+name: Keep Gate Awake
+
+on:
+  schedule:
+    - cron: "17 9 * * *"      # every day at 09:17 UTC
+  workflow_dispatch: {}         # run it by hand any time from the Actions tab
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Touch the Gate
+        run: |
+          echo "Waking the Gate with a harmless read..."
+          curl -sS -f -o /dev/null -w "HTTP %{http_code}\n" \
+            "https://iwuqcmhlbjyjhqexbeyy.supabase.co/rest/v1/accord_lights?select=id&limit=1" \
+            -H "apikey: sb_publishable_trDTjqSBIqdwSyd2EVtJHw_JD2exVmr" \
+            -H "Accept: application/json"
+          echo "The Gate answered. It is awake."
