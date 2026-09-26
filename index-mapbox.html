@@ -11087,7 +11087,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 17 Sep 2026 · 122 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 26 Sep 2026 · 123 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -11965,6 +11965,7 @@ function mapClear(){
   try{
     var e=document.elementFromPoint(Math.round(innerWidth/2),Math.round(innerHeight*0.45));
     if(!e)return false;
+    if(e.id==='seekFrame'&&(e.classList.contains('leaving')||!document.body.classList.contains('seeking')))return true;   /* 26 Sep: the Seeking stays a moment for its sound after it hands over; it is leaving, not in the way */
     if(e.closest&&e.closest('#as-noticing'))return true;
     return !!(e.id==='map'||(e.closest&&e.closest('#map')));
   }catch(err){return false;}
@@ -12383,6 +12384,7 @@ function calm(){try{return document.body.classList.contains('calm');}catch(e){re
 function mapClear(){
   try{var e=document.elementFromPoint(Math.round(innerWidth/2),Math.round(innerHeight*.45));
     if(!e)return false;
+    if(e.id==='seekFrame'&&(e.classList.contains('leaving')||!document.body.classList.contains('seeking')))return true;   /* 26 Sep: the Seeking stays a moment for its sound after it hands over; it is leaving, not in the way */
     if(e.closest&&(e.closest('#as-noticing')||e.closest('#as-meet')))return true;
     return !!(e.id==='map'||(e.closest&&e.closest('#map')));}catch(x){return false;}
 }
