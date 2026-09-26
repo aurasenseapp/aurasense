@@ -21,7 +21,7 @@
    technical could read the words out of this page. Before any wider opening the
    Gate should hold the list instead, where nobody can read it. — K.H. / Fable */
 (function(){
-  var WORDS = ['Atest','BDtest','BOCtest','MAtest','KHtest'];
+  var WORDS = ['Atest','BDtest','BOCtest','MAtest','KHtest','lightone','lighttwo','lightthree'];   /* three more, 26 Sep 2026: one word per person, so each light can be traced to its invitation */
 
   try{
     var given=null, m=/[?&]key=([A-Za-z0-9_.-]+)/i.exec(location.search||'');
@@ -2312,7 +2312,7 @@ window.AS_SEEK_ALWAYS=true;
     <div id="wev-d"></div>
     <div id="wev-c"></div>
     <button id="wev-send">✦ Answer with an aura of compassion</button>
-    <div id="wev-accord">When many people answer the same situation, an Aura Accord gathers their lights into one shared aura. This opens once you can sign in ✧</div>
+    <div id="wev-accord">When many people answer the same situation, an Aura Accord gathers their lights into one shared aura. This opens once you keep your light ✧</div>
   </div>
   <div id="locality-tip">Set your home (only you see this)</div>
   <button id="mobile-offer">✦ Offer an aurasense</button>
@@ -2373,16 +2373,16 @@ window.AS_SEEK_ALWAYS=true;
   <div id="feed"></div>
   <div id="stip"></div>
   <div id="panel">
-    <div id="panel-tip"><span class="tip-arrow">▲</span>Energize a place with your senses</div>
+    <div id="panel-tip"><span class="tip-arrow">▲</span>Offer a sense</div>
         <div id="pi">
       <div id="offer-locate">
-        <div class="ol-label">Where would you like to offer your aurasense?</div>
+        <div class="ol-label">Where would you like to offer your sense?</div>
         <div class="ol-row"><input id="ol-input" type="text" maxlength="120" placeholder="Street, town, postcode, or a place by name" autocomplete="off"><button id="ol-go" type="button">Find</button></div>
         <div class="ol-hint" id="ol-hint">…or tap a spot on the map</div>
       </div>
       <div id="offer-confirm"></div>
       <div id="offer-lastlink">▾ see last aura I offered</div>
-      <div id="ptitle-row"><div id="ptitle">Energize a place with your senses</div><button id="sheet-close">✕ Close</button></div>
+      <div id="ptitle-row"><div id="ptitle">Offer a sense to this place</div><button id="sheet-close">✕ Close</button></div>
       <div id="scats-all"></div>
       <div class="srealm-label" id="memory-label">Light up this spot with the aura of a personal memory</div>
       <div id="memory-row"><button id="memory-btn">A Memory</button><div id="mem-priv-wrap"><button id="mem-private" class="mem-priv">Memory words: Public</button></div></div>
@@ -2394,7 +2394,7 @@ window.AS_SEEK_ALWAYS=true;
       </div>
       <div id="srow">
         <input id="inp" maxlength="280" placeholder="What does this place feel like right now?"/>
-        <button id="sbtn">Offer your sense to the aura</button>
+        <button id="sbtn">Offer your sense</button>
       </div>
     </div>
   </div>
@@ -2529,6 +2529,9 @@ window.AS_SEEK_ALWAYS=true;
       <div class="mj-dot"></div>
       <button class="mj-i" data-mj="sync" title="Notice what rhymes in your days — your noticing practice, and one day the world's">∞ Synchronicity Weave</button>
       <button class="mj-i" data-mj="openings" title="Questions of existence, held open — read, feel, and offer a light to them">◠ The Openings — questions held open</button>
+      <div class="mj-sep"></div>
+      <a class="mj-i" id="mj-terms" href="/terms.html" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit" title="Short, plain, and binding on us as much as on you">The terms</a>
+      <a class="mj-i" id="mj-privacy" href="/privacy.html" target="_blank" rel="noopener" style="display:block;text-decoration:none;color:inherit" title="What is kept, what is never kept, and what never leaves this device">The privacy promise</a>
     </div>
   </div>
   <div id="ma-title">My Aura</div>
@@ -2905,7 +2908,7 @@ synchronicity:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-a
 clairaudience:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 5px rgba(143,216,208,0.55))"><defs><radialGradient id="as-claCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#8fd8d0" stop-opacity="0"/></radialGradient><radialGradient id="as-claHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#b6ece6" stop-opacity="0.3"/><stop offset="100%" stop-color="#8fd8d0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-claHalo)"/><path d="M58 28 Q32 28 32 50 Q32 66 47 64 Q56 62 54 54" fill="none" stroke="#b6ece6" stroke-width="2.2" stroke-linecap="round" opacity="0.85"/><path d="M76 44 q-4 4 -8 0 q-4 -4 -8 0" fill="none" stroke="#d0f4f0" stroke-width="1.4" stroke-linecap="round" opacity="0.6" class="as-shimmer"/><circle cx="50" cy="56" r="5.5" fill="url(#as-claCore)" class="as-breathe"/></svg>',
 proprioception:'<svg width="22" height="22" viewBox="0 0 96 96" style="vertical-align:middle;display:inline-block;filter:drop-shadow(0 0 4px rgba(127,179,160,0.5))"><defs><radialGradient id="as-prCore" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#7fb3a0" stop-opacity="0"/></radialGradient><radialGradient id="as-prHalo" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#9fcbb8" stop-opacity="0.28"/><stop offset="100%" stop-color="#7fb3a0" stop-opacity="0"/></radialGradient></defs><circle cx="48" cy="48" r="45" fill="url(#as-prHalo)"/><g class="as-drift"><path d="M24 66 L46 44 L70 52" fill="none" stroke="#a3cebb" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/><circle cx="24" cy="66" r="4" fill="#a3cebb" opacity="0.85"/><circle cx="70" cy="52" r="4" fill="#a3cebb" opacity="0.85"/><circle cx="46" cy="44" r="6" fill="url(#as-prCore)" class="as-breathe"/></g></svg>'
 };
-const MSGS=["The aura of this place just shifted.","Your sense is now part of this street.","The collective aura grows.","Another Aurasenser heard.","This place is now energized by your aurasense.","Your gift has reached the aura."];
+const MSGS=["The aura of this place just shifted.","Your sense is now part of this street.","The collective aura grows.","Another Aurasenser heard.","This place now holds what you offered.","Your gift has reached the aura."];
 const ZOOMS=[[51.508,-0.128,15],[51.508,-0.128,13.5],[51.508,-0.128,10],[54.7,-4.2,5.2],[20,0,3]];
 const LEVEL_MSGS=["Your sense ripples through the street.","The town aura begins to stir.","The region feels the shift.","The nation senses it.","The planet receives your gift."];
 const LEVEL_NAMES=['Aurasenser','Sensing','Awakening','Resonant','Radiant','Luminous'];
@@ -4699,8 +4702,10 @@ function submit(lat,lng,text){
   } else {
     setTimeout(()=>{let _at=null;try{const _pp=map.project([lng,lat]);_at={x:_pp.x,y:_pp.y};}catch(e){}
       const _wl=witnessLine(sid,lat,lng,s.label);
+      var _met=false;try{_met=(typeof asMeet==='function')&&asMeet(sid,s.label,s.color,lat,lng,_wl);}catch(e){_met=false;}
+      if(!_met){
       if(_wl)witnessShow(_wl,8200,s.color,_at);else showMsg(MSGS[Math.floor(Math.random()*MSGS.length)],null,null,null,null,_at);
-      try{if(typeof asNoticeAfter==='function')asNoticeAfter(sid,s.label,s.color,lat,lng);}catch(e){}},5100);
+      try{if(typeof asNoticeAfter==='function')asNoticeAfter(sid,s.label,s.color,lat,lng);}catch(e){}}},5100);
   }
 }
 
@@ -6882,7 +6887,10 @@ var MAC_DOORS=[
    {l:'Send someone a card',p:'SenseShare',sel:'#ss-open'},
    {l:'Read what a message carries',p:'The Felt-Context Lantern',sel:'#fc-open'},
    {l:'Choose what Aurasense tells you',p:'Turn any of it off, any time',sel:'.mj-i[data-mj="notify"]'},
-   {l:'Save your aura',p:'Download a copy to keep',sel:'#gp-open'}]},
+   {l:'Save your aura',p:'Download a copy to keep',sel:'#gp-open'},
+   /* 24 Sep 2026 - reachable from the doors people actually use, not only at joining */
+   {l:'Read the privacy promise',p:'What leaves this device, and what never does',sel:'#mj-privacy'},
+   {l:'Read the terms',p:'Short, plain, and binding on us too',sel:'#mj-terms'}]},
  {t:'Learn the symbols',s:'words made of light',items:[
    {l:'Meet the symbols',p:'Alphasense',sel:'.mj-i[data-mj="alpha"]'},
    {l:'Join two symbols',p:'Alphabonds',sel:'.mj-i[data-mj="bonds"]'},
@@ -8018,7 +8026,7 @@ function openOfferSheet(){
 }
 function raiseOfferPanel(address){
   const pt=document.getElementById('ptitle');
-  if(pt)pt.textContent=address?('Offer an aura at '+address):'Energize the aura with your senses';
+  if(pt)pt.textContent=address?('Offer a sense at '+address):'Offer a sense to this place';
   openOfferSheet();
   const sb=document.getElementById('sbtn');if(sb)sb.classList.add('sbtn-glow');
 }
@@ -8119,7 +8127,7 @@ function closeOfferSheet(){
   const panel=document.getElementById('panel');if(panel){panel.classList.remove('show-mobile','just-offered','offer-quiet','locating','has-last','sense-picked');panel.style.bottom='';panel.style.maxHeight='';}
   const ui=document.getElementById('ui');if(ui)ui.classList.remove('offer-open');
   const mo=document.getElementById('mobile-offer');if(mo){mo.style.display='';mo.textContent='\u2726 Offer an aurasense';}
-  const pt=document.getElementById('ptitle');if(pt)pt.textContent='Energize the aura with your senses';
+  const pt=document.getElementById('ptitle');if(pt)pt.textContent='Offer a sense to this place';
   const sb=document.getElementById('sbtn');if(sb)sb.classList.remove('sbtn-glow');
   if(typeof clearPhoto==='function')clearPhoto();
 }
@@ -8870,7 +8878,41 @@ function openSeed(){
 // One true offering is worth more than a thousand simulated ones — nothing here fakes success, nothing is lost silently.
 const gate={on:false,db:null,sid:null};
 function gateSid(){try{let s=localStorage.getItem('aurasense_sid');if(!s){s=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():('s-'+Date.now()+'-'+Math.random().toString(36).slice(2,10));localStorage.setItem('aurasense_sid',s);}return s;}catch(e){return 's-'+Date.now();}}
-function gateRow(o){return {sense:o.sense,text:(o.priv?null:(o.text||'').slice(0,500)),priv:!!o.priv,lat:o.lat,lng:o.lng,place:o.place?String(o.place).slice(0,200):null,scale:o.scale||'street',session_id:gate.sid||gateSid()};}
+/* ═══ SOFTENING — where and when a tender feeling shows · 23 September 2026 ═══
+   Karl's guiding principle: public display of distress stays softened in place
+   and time. A heavy sense offered from someone's home should never show their
+   doorstep at 11pm. The softening happens HERE, before anything leaves the
+   phone: the true point is never saved, never sent, never recoverable.
+   One list governs it. To change what is treated as tender, change this line. */
+var AS_TENDER=['stress','pain','anxiety','socialanxiety','overwhelm','loneliness',
+               'numbness','weariness','heaviness','hunger','safety'];
+function asTender(sense){return AS_TENDER.indexOf(sense)>-1;}
+function asSoftPoint(sense,lat,lng){
+  if(!asTender(sense)||!isFinite(lat)||!isFinite(lng))return {lat:lat,lng:lng};
+  var STEP=0.0018;                                            /* about 200 metres */
+  var c=Math.max(0.2,Math.cos(lat*Math.PI/180)),stepLng=STEP/c;
+  var gl=Math.round(lat/STEP)*STEP,gn=Math.round(lng/stepLng)*stepLng;
+  /* a small random drift inside the cell, so two lights do not stack exactly.
+     It is random on purpose: it carries nothing about where the person stood. */
+  gl+=(Math.random()-0.5)*STEP*0.6; gn+=(Math.random()-0.5)*stepLng*0.6;
+  return {lat:+gl.toFixed(6),lng:+gn.toFixed(6)};
+}
+function asSoftPlace(sense,place){
+  if(!asTender(sense)||!place)return place;
+  return String(place).replace(/^\s*\d+[A-Za-z]?\s*[-\u2013]?\s*\d*\s+/,'');   /* the street, not the door */
+}
+function asSoftTime(sense,born){
+  if(!asTender(sense))return relTime(born);
+  var d=Date.now()-(born||Date.now());
+  if(d<21600000)return 'earlier today';
+  if(d<86400000)return 'today';
+  if(d<604800000)return 'this week';
+  return 'a while ago';
+}
+function gateRow(o){
+  var _p=asSoftPoint(o.sense,o.lat,o.lng);
+  var _pl=o.place?String(asSoftPlace(o.sense,String(o.place))).slice(0,200):null;
+  return {sense:o.sense,text:(o.priv?null:(o.text||'').slice(0,500)),priv:!!o.priv,lat:_p.lat,lng:_p.lng,place:_pl,scale:o.scale||'street',session_id:gate.sid||gateSid()};}
 function gateQueue(o){if(!GATE_CONFIGURED)return;try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');q.push(gateRow(o));while(q.length>20)q.shift();localStorage.setItem('aurasense_gate_q',JSON.stringify(q));}catch(e){}}
 // PHASE 1 WIRING \u2014 the Two Doors, the Witness Line, the ripening, the quiet first screen.
 function twoDoors(){
@@ -9199,6 +9241,39 @@ function auraGeo(){
   return {type:'FeatureCollection',features:fs};
 }
 function auraSyncMap(){try{const src=map.getSource('auraglow');if(src)src.setData(auraGeo());}catch(e){}}
+/* ═══ HONEST EMPTINESS — the empty-map answer · 23 September 2026 ═══════════
+   A place with nothing in it is not a broken map, and it must never be left
+   looking like one. It is a place waiting for its first light. So it says so —
+   once, quietly, at street scale, never over anything already speaking — and
+   then it is still. No nudge, no repetition, no second ask. */
+function asNearby(lat,lng,metres){
+  var n=0,R=(metres||700)/111320,c=Math.max(0.2,Math.cos(lat*Math.PI/180));
+  try{auraPoints.forEach(function(p){
+    if(typeof p.lat!=='number'||typeof p.lng!=='number')return;
+    var dy=p.lat-lat,dx=(p.lng-lng)*c;
+    if(Math.sqrt(dy*dy+dx*dx)<=R)n++;});}catch(e){}
+  return n;
+}
+var asEmptyAt=0,asEmptyCell='';
+function asEmptyCheck(){
+  try{
+    if(typeof isMovingProgrammatically!=='undefined'&&isMovingProgrammatically)return;
+    if(typeof searching!=='undefined'&&searching)return;
+    if(typeof auraLevel!=='undefined'&&auraLevel!==0)return;              /* street scale only */
+    var nt=document.getElementById('as-noticing');
+    if(nt&&nt.classList.contains('on'))return;                            /* never over the Noticing */
+    var pm=document.getElementById('pmsg');
+    if(pm&&pm.classList.contains('show'))return;                          /* never over a voice */
+    var c=map.getCenter();
+    var cell=c.lat.toFixed(2)+','+c.lng.toFixed(2);                       /* about a square kilometre */
+    if(cell===asEmptyCell&&Date.now()-asEmptyAt<1800000)return;           /* said once, then left alone */
+    if(asNearby(c.lat,c.lng,700)>0)return;
+    asEmptyCell=cell;asEmptyAt=Date.now();
+    showMsg('Nothing has been offered here yet. Yours would be the first light in this place.',6400);
+  }catch(e){}
+}
+try{map.on('moveend',function(){clearTimeout(window._asEmptyT);
+  window._asEmptyT=setTimeout(asEmptyCheck,2400);});}catch(e){}
 // LIVE WORLD EVENTS \u2014 raised by sensers, standing in the Gate, carried into the same living
 // machinery as the seeds. True counts only; unverified glows dim until three witnesses stand.
 // AURA ACCORDS \u2014 the Gathering (v1): every answered circumstance can hold many lights, truly, through the Gate.
@@ -9273,7 +9348,7 @@ async function gpSendCode(email,note){if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(emai
 async function gpVerify(email,code,note,done){if(!code||code.replace(/\D/g,'').length<6){if(note)note.textContent='The six digits from the email \u2014 check once more \u2727';return;}try{const r=await gate.db.auth.verifyOtp({email:email,token:code.replace(/\D/g,''),type:'email'});if(r&&r.error){if(note)note.textContent='That code did not open \u2014 check it, or send a fresh one.';return;}gate.user=(r&&r.data&&r.data.user)||gate.user;_gpQuiet=true;await gpLoadProfile();_gpQuiet=false;gpSave(true);gpDoor();if(note)note.textContent='\u2713 Kept. This light now travels with you \u2014 any device, this same aura.';if(done)done();}catch(e){if(note)note.textContent='That code did not open \u2014 check it, or send a fresh one.';}}
 function gpModal(){if(document.getElementById('gp-modal'))return;const back=document.createElement('div');back.id='gp-back';document.body.appendChild(back);const d=document.createElement('div');d.id='gp-modal';
 if(gate.user){d.innerHTML='<div class="gp-t">\u25c7 Your light is kept</div>'+'<div class="gp-s">Signed as <b>'+escT(gate.user.email||'')+'</b>. Your aura, journey, colours and Openings ride with it \u2014 any device, the same light. Mirror and well notes stay on this device, as promised.</div>'+'<button id="gp-now" type="button">Save my light now \u2727</button>'+'<button id="gp-out" type="button">Set this light down (sign out)</button>'+'<div class="gp-note" id="gp-note"></div>'+'<button class="gp-x" id="gp-x" type="button">close</button>';}
-else{d.innerHTML='<div class="gp-t">\u25c7 Keep my light</div>'+'<div class="gp-s">An email and a six-digit code \u2014 no password, ever. Your email is never shown and never joins your auras; it only lets this same light return to you anywhere.</div>'+'<input id="gp-em" type="email" placeholder="you@somewhere" maxlength="120" autocomplete="email">'+'<button id="gp-send" type="button">Send my code \u2727</button>'+'<div id="gp-c-row" style="display:none"><input id="gp-code" type="text" inputmode="numeric" placeholder="the six digits" maxlength="8" autocomplete="one-time-code"><button id="gp-go" type="button">Keep my light</button></div>'+'<div class="gp-note" id="gp-note"></div>'+'<button class="gp-x" id="gp-x" type="button">not now</button>';}
+else{d.innerHTML='<div class="gp-t">\u25c7 Keep my light</div>'+'<div class="gp-s">An email and a six-digit code \u2014 no password, ever. Your email is never shown and never joins your auras; it only lets this same light return to you anywhere.</div>'+'<div class="gp-s" style="opacity:.78;font-size:12.5px">Keeping your light means agreeing to <a href="/terms.html" target="_blank" rel="noopener">the terms</a> and <a href="/privacy.html" target="_blank" rel="noopener">the privacy promise</a>. Both are short and both are in plain words.</div>'+'<input id="gp-em" type="email" placeholder="you@somewhere" maxlength="120" autocomplete="email">'+'<button id="gp-send" type="button">Send my code \u2727</button>'+'<div id="gp-c-row" style="display:none"><input id="gp-code" type="text" inputmode="numeric" placeholder="the six digits" maxlength="8" autocomplete="one-time-code"><button id="gp-go" type="button">Keep my light</button></div>'+'<div class="gp-note" id="gp-note"></div>'+'<button class="gp-x" id="gp-x" type="button">not now</button>';}
 document.body.appendChild(d);requestAnimationFrame(()=>{back.classList.add('show');d.classList.add('show');});const close=()=>{back.classList.remove('show');d.classList.remove('show');setTimeout(()=>{try{back.remove();d.remove();}catch(e){}},600);};back.addEventListener('click',close);d.querySelector('#gp-x').addEventListener('click',close);const note=d.querySelector('#gp-note');const sn=d.querySelector('#gp-send');if(sn)sn.addEventListener('click',async()=>{sn.disabled=true;const ok=await gpSendCode((d.querySelector('#gp-em').value||'').trim(),note);sn.disabled=false;if(ok)d.querySelector('#gp-c-row').style.display='';});const go=d.querySelector('#gp-go');if(go)go.addEventListener('click',()=>gpVerify((d.querySelector('#gp-em').value||'').trim(),(d.querySelector('#gp-code').value||''),note,()=>setTimeout(close,1600)));const nw=d.querySelector('#gp-now');if(nw)nw.addEventListener('click',()=>{gpSave(true);if(note)note.textContent='\u2713 Held.';});const out=d.querySelector('#gp-out');if(out)out.addEventListener('click',async()=>{try{await gate.db.auth.signOut();}catch(e){}gate.user=null;gpDoor();close();showMsg('Set down \u2014 this visit walks light again. Your kept aura waits where you left it \u2727',5600);});}
 document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#gp-open')){e.preventDefault();gpModal();return;}if(e.target&&e.target.closest&&e.target.closest('#rg-keep')){const n=document.getElementById('rg-keep-note');const em=(document.getElementById('rg-email')||{value:''}).value.trim();gpSendCode(em,n).then(ok=>{if(ok){const cr=document.getElementById('rg-code-row');if(cr)cr.style.display='';}});return;}if(e.target&&e.target.closest&&e.target.closest('#rg-verify')){const n=document.getElementById('rg-keep-note');const em=(document.getElementById('rg-email')||{value:''}).value.trim();const cd=(document.getElementById('rg-code')||{value:''}).value;gpVerify(em,cd,n);return;}if(e.target&&e.target.closest&&e.target.closest('#rg-create')){setTimeout(()=>{try{gpSave();}catch(_){}},1400);}}catch(_){}});
 // THE MIRROR'S VOICE \u2014 the third heartbeat, bones. Page-aware guidance in the Mirror's grammar:
@@ -10624,7 +10699,7 @@ function mirrorOpen(){
       +'<div class="mr-h">Bring something here</div>'
       +'<div class="mr-b">A choice you are facing, a feeling you cannot place, something that will not leave you alone. '
       +'Write it as it is \u2014 it does not need tidying.</div>'
-      +'<textarea id="mr-bring" maxlength="600" placeholder="what is here\u2026"></textarea>'
+      +'<textarea id="mr-bring" maxlength="4000" placeholder="what is here\u2026"></textarea>'
       +'<button id="mr-ask" type="button">\u2727 Let the Mirror answer</button>'
       +'<div id="mr-said"></div>'
       +'<button id="mr-hold" type="button" style="display:none">\u25c7 Keep this in the Mirror</button>'
@@ -10892,7 +10967,7 @@ async function gateLoadOfferings(){
       if(row.id&&mineIds[row.id])return;
       const s=SENSES.find(x=>x.id===row.sense);if(!s)return;
       const born=Date.parse(row.created_at)||Date.now();
-      try{addFeed(row.priv?'(a memory, kept private)':(row.text||''),row.sense,relTime(born),false,row.lat,row.lng,row.place||null);}catch(e){}
+      try{addFeed(row.priv?'(a memory, kept private)':(row.text||''),row.sense,asSoftTime(row.sense,born),false,row.lat,row.lng,row.place||null);}catch(e){}
     });
     if(own){myShareCount=Math.max(myShareCount,own);shareCount=Math.max(shareCount,own);}
     try{if(typeof updateMyOrb==='function')updateMyOrb();}catch(e){}
@@ -11826,60 +11901,74 @@ body:has(#myaura-page.show) #build-stamp:hover{opacity:1}
 </script>
 
 <style id="asn-css">
-/* ── THE NOTICING — on the live map, 23 Sep 2026 ────────────────────────────
-   It rises from the senser's own light, never a bar at the foot of the screen.
-   It speaks only after the witness moment has finished, and only once the
-   senser's own thread has been met. It never talks over anything speaking. */
+/* ── THE NOTICING — on the live map, 23 Sep 2026 (second pass) ──────────────
+   Karl, first look: it appeared over My Aura, the words clashed with whatever
+   was behind them, and the way to send the words did not look like a way.
+   So: it waits for a clear map, it brings its own pool of shade, and the
+   sending is a button. It rises from the senser's own light, never a bar at
+   the foot of the screen, and it never speaks over anything already speaking. */
 #as-noticing{position:fixed;inset:0;z-index:2600;display:none;pointer-events:none;
   font-family:Georgia,"Iowan Old Style","Times New Roman",serif;}
 #as-noticing.on{display:block}
-#asn-wrap{position:absolute;transform:translateX(-50%);width:min(92vw,420px);text-align:center;pointer-events:none}
+#asn-wrap{position:absolute;transform:translateX(-50%);width:min(94vw,430px);text-align:center;
+  pointer-events:none;padding:30px 20px 34px;border-radius:38px;
+  background:radial-gradient(68% 62% at 50% 50%,rgba(5,7,13,.90) 0%,rgba(5,7,13,.80) 46%,rgba(5,7,13,.44) 70%,rgba(5,7,13,0) 86%);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
 #asn-label,#asn-ask,#asn-choices,#asn-say,#asn-close,#asn-door{display:none;opacity:0}
 #asn-label.on,#asn-ask.on,#asn-choices.on,#asn-say.on,#asn-close.on,#asn-door.on{opacity:1}
 #asn-label{font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;
-  color:rgba(198,190,175,.85);text-shadow:0 0 18px rgba(0,0,0,.9);transition:opacity 1400ms ease}
-#asn-ask{margin:14px auto 0;max-width:330px;font-size:19px;line-height:1.55;color:#f4f0e8;
-  text-shadow:0 0 30px rgba(0,0,0,.9),0 0 26px rgba(255,214,150,.2);transition:opacity 1500ms ease}
-#asn-choices{gap:14px;justify-content:center;margin-top:20px;transition:opacity 1500ms ease}
+  color:rgba(205,197,182,.88);transition:opacity 1400ms ease}
+#asn-ask{margin:14px auto 0;max-width:330px;font-size:19px;line-height:1.55;color:#f6f2ea;
+  transition:opacity 1500ms ease}
+#asn-choices{gap:12px;justify-content:center;margin-top:20px;transition:opacity 1500ms ease}
 #asn-choices.on{display:flex}
-.asn-c{appearance:none;border:0;cursor:pointer;color:#f4f0e8;font-family:inherit;font-size:15px;line-height:1.35;
-  width:132px;height:132px;border-radius:50%;padding:0 14px;pointer-events:auto;
+.asn-c{appearance:none;border:0;cursor:pointer;color:#f6f2ea;font-family:inherit;font-size:15px;line-height:1.35;
+  width:130px;height:130px;border-radius:50%;padding:0 12px;pointer-events:auto;
   display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(circle at 50% 50%,rgba(255,222,170,.12) 0%,rgba(255,222,170,.035) 56%,rgba(255,222,170,0) 75%);
-  box-shadow:0 0 0 1px rgba(242,238,229,.17) inset;
+  background:radial-gradient(circle at 50% 50%,rgba(255,222,170,.15) 0%,rgba(255,222,170,.05) 56%,rgba(255,222,170,0) 76%);
+  box-shadow:0 0 0 1px rgba(246,242,234,.26) inset;
   transition:transform 600ms ease,box-shadow 600ms ease,background 600ms ease}
 .asn-c:active{transform:scale(.97)}
 #asn-say{margin-top:18px;transition:opacity 1400ms ease}
-#asn-say p{margin:0 0 12px;font-size:16px;line-height:1.5;color:rgba(216,210,196,.96);text-shadow:0 0 22px rgba(0,0,0,.9)}
-#asn-words{width:100%;height:84px;resize:none;background:rgba(8,10,18,.66);color:#f4f0e8;border:0;border-radius:20px;
+#asn-say p{margin:0 0 12px;font-size:16px;line-height:1.5;color:rgba(221,215,201,.97)}
+#asn-words{width:100%;height:84px;resize:none;background:rgba(10,12,20,.78);color:#f6f2ea;border:0;border-radius:20px;
   padding:13px 15px;font-family:inherit;font-size:16px;line-height:1.5;pointer-events:auto;
-  box-shadow:0 0 0 1px rgba(242,238,229,.17) inset;outline:none}
-#asn-words::placeholder{color:rgba(198,190,175,.7)}
-#asn-row{display:flex;gap:22px;justify-content:center;margin-top:11px}
-.asn-p{appearance:none;border:0;background:transparent;cursor:pointer;color:rgba(203,196,181,.95);
-  font-family:inherit;font-size:15px;padding:12px 14px;min-height:44px;pointer-events:auto;
-  text-shadow:0 0 18px rgba(0,0,0,.9)}
-.asn-p.lead{color:#f4f0e8;text-shadow:0 0 18px rgba(255,214,150,.3),0 0 18px rgba(0,0,0,.9)}
+  box-shadow:0 0 0 1px rgba(246,242,234,.24) inset;outline:none}
+#asn-words::placeholder{color:rgba(205,197,182,.72)}
+#asn-row{display:flex;gap:16px;justify-content:center;align-items:center;margin-top:14px}
+.asn-p{appearance:none;border:0;background:transparent;cursor:pointer;color:rgba(208,201,186,.96);
+  font-family:inherit;font-size:15px;padding:12px 14px;min-height:44px;pointer-events:auto}
+.asn-p.lead{color:#fff7e9;border-radius:999px;padding:12px 26px;
+  background:rgba(255,226,180,.16);box-shadow:0 0 0 1px rgba(255,226,180,.46) inset}
 #asn-close{transition:opacity 1600ms ease}
 #asn-theirs{margin:0 0 16px;font-size:18px;line-height:1.55;font-style:italic;color:#ffe6bd;
-  text-shadow:0 0 30px rgba(0,0,0,.92);max-height:34vh;overflow-y:auto;pointer-events:auto}
-#asn-said{margin:0;font-size:17px;line-height:1.58;color:#f4f0e8;
-  text-shadow:0 0 26px rgba(0,0,0,.92);transition:opacity 1300ms ease}
+  max-height:32vh;overflow-y:auto;pointer-events:auto}
+#asn-said{margin:0;font-size:17px;line-height:1.58;color:#f6f2ea;transition:opacity 1300ms ease}
 #asn-said.hand{opacity:.34}
-#asn-door{margin-top:20px;flex-direction:column;gap:10px;align-items:center;transition:opacity 1400ms ease}
+#asn-door{margin-top:20px;flex-direction:column;gap:8px;align-items:center;transition:opacity 1400ms ease}
 #asn-door.on{display:flex}
 .asn-d{appearance:none;border:0;background:transparent;cursor:pointer;font-family:inherit;font-size:15px;
-  color:#f4f0e8;padding:10px 12px;min-height:44px;pointer-events:auto;text-shadow:0 0 18px rgba(0,0,0,.9)}
-.asn-d.quiet{color:rgba(203,196,181,.95);font-size:14px}
+  color:#f6f2ea;padding:11px 14px;min-height:44px;pointer-events:auto}
+.asn-d.quiet{color:rgba(208,201,186,.96);font-size:14px}
 </style>
 <script>
 (function(){
 "use strict";
-var W=null,LAT=0,LNG=0,SENSE='',lastKey='',timers=[];
+var W=null,LAT=0,LNG=0,SENSE='',lastKey='',timers=[],watch=null,MET=false;
 function calm(){try{return document.body.classList.contains('calm');}catch(e){return false;}}
 function T(ms,fn){timers.push(setTimeout(fn,ms*(calm()?1.25:1)));}
 function clearT(){timers.forEach(clearTimeout);timers=[];}
 function q(id){return document.getElementById(id);}
+/* Is the map itself what the senser is looking at? If anything else is open —
+   My Aura, a reading, the feed — the Noticing waits rather than talks over it. */
+function mapClear(){
+  try{
+    var e=document.elementFromPoint(Math.round(innerWidth/2),Math.round(innerHeight*0.45));
+    if(!e)return false;
+    if(e.closest&&e.closest('#as-noticing'))return true;
+    return !!(e.id==='map'||(e.closest&&e.closest('#map')));
+  }catch(err){return false;}
+}
 function build(){
   if(W)return;
   var r=document.createElement('div');r.id='as-noticing';
@@ -11891,7 +11980,7 @@ function build(){
    +'<div id="asn-say"><p>What did you feel change as you offered your light?</p>'
    +'<textarea id="asn-words" placeholder="in your own words" aria-label="what did you feel change"></textarea>'
    +'<div id="asn-row"><button type="button" class="asn-p" id="asn-skip">leave it unsaid</button>'
-   +'<button type="button" class="asn-p lead" id="asn-send">that\'s it</button></div></div>'
+   +'<button type="button" class="asn-p lead" id="asn-send">That\'s it</button></div></div>'
    +'<div id="asn-close"><p id="asn-theirs"></p><p id="asn-said"></p>'
    +'<div id="asn-door"><button type="button" class="asn-d" id="asn-more">see what else is here&nbsp;&rarr;</button>'
    +'<button type="button" class="asn-d quiet" id="asn-rest">let it rest</button></div></div></div>';
@@ -11902,32 +11991,56 @@ function build(){
   q('asn-send').addEventListener('click',function(){finish(true,q('asn-words').value);});
   q('asn-more').addEventListener('click',function(){done();try{if(typeof openLiveFeed==='function')openLiveFeed();}catch(e){}});
   q('asn-rest').addEventListener('click',done);
+  var wds=q('asn-words');
+  wds.addEventListener('focus',placeTop);                 /* the keyboard never buries the way to send */
+  wds.addEventListener('blur',function(){setTimeout(place,280);});
+  try{if(window.visualViewport)visualViewport.addEventListener('resize',function(){
+    if(document.activeElement===wds)placeTop();});}catch(e){}
 }
 function reveal(id,disp){var e=q(id);if(!e)return;e.style.display=disp||'block';void e.offsetWidth;e.classList.add('on');place();}
 function hide(id){var e=q(id);if(!e)return;e.classList.remove('on');e.style.display='none';}
 function place(){
-  var x=innerWidth/2,y=innerHeight*0.40,w=q('asn-wrap');if(!w)return;
+  var w=q('asn-wrap');if(!w)return;
+  if(document.activeElement===q('asn-words'))return placeTop();
+  var x=innerWidth/2,y=innerHeight*0.40;
   try{if(typeof map!=='undefined'&&map&&map.project){var p=map.project([LNG,LAT]);if(isFinite(p.x)&&isFinite(p.y)){x=p.x;y=p.y;}}}catch(e){}
   var H=w.offsetHeight||300;
-  x=Math.max(132,Math.min(innerWidth-132,x));
-  var below=y+54,top=(below+H<innerHeight-150)?below:Math.max(76,y-54-H);
+  x=Math.max(w.offsetWidth/2-14,Math.min(innerWidth-w.offsetWidth/2+14,x));
+  var below=y+34,top=(below+H<innerHeight-120)?below:Math.max(64,y-34-H);
   w.style.left=Math.round(x)+'px';w.style.top=Math.round(top)+'px';
+}
+function placeTop(){
+  var w=q('asn-wrap');if(!w)return;var off=0;
+  try{if(window.visualViewport)off=visualViewport.offsetTop;}catch(e){}
+  w.style.left=Math.round(innerWidth/2)+'px';w.style.top=Math.round(off+56)+'px';
 }
 function reset(){['asn-label','asn-ask','asn-choices','asn-say','asn-close','asn-door'].forEach(hide);
   try{q('asn-words').value='';q('asn-said').classList.remove('hand');}catch(e){}}
-function done(){clearT();reset();if(W)W.classList.remove('on');}
-function ready(){try{if(window.AS_THREAD&&!window.AS_THREAD.done&&!window.AS_PEAK_DONE)return false;}catch(e){}return true;}
-function waitPeak(fn,n){n=n||0;if(ready()||n>45)fn();else timers.push(setTimeout(function(){waitPeak(fn,n+1);},1000));}
+function done(){clearT();stopWatch();reset();if(W){W.classList.remove('on');W.style.visibility='';}
+  try{if(window.asMeetEnd)asMeetEnd();}catch(e){}}
+function startWatch(){stopWatch();watch=setInterval(function(){
+  if(!W||!W.classList.contains('on'))return;
+  W.style.visibility=mapClear()?'visible':'hidden';},1200);}
+function stopWatch(){if(watch){clearInterval(watch);watch=null;}}
+function ready(){
+  if(!mapClear())return false;
+  try{if(window.AS_THREAD&&!window.AS_THREAD.done&&!window.AS_PEAK_DONE)return false;}catch(e){}
+  return true;
+}
+function waitReady(fn,n){n=n||0;if(ready())fn();else if(n<120)timers.push(setTimeout(function(){waitReady(fn,n+1);},1500));}
+function waitClear(fn,n){n=n||0;if(mapClear())fn();else if(n<150)timers.push(setTimeout(function(){waitClear(fn,n+1);},1200));}
 function start(label){
-  if(W)W.classList.add('on');
+  if(W){W.classList.add('on');W.style.visibility='visible';}
   try{q('asn-label').textContent=label||'';}catch(e){}
+  startWatch();
   reveal('asn-label','block');
-  T(1500,function(){reveal('asn-ask','block');});
-  T(3700,function(){reveal('asn-choices','flex');});
+  T(1400,function(){reveal('asn-ask','block');});
+  T(3400,function(){reveal('asn-choices','flex');});
 }
 function answer(yes){
+  try{if(window.asMeetShift)asMeetShift(!!yes);}catch(e){}
   clearT();hide('asn-ask');hide('asn-choices');
-  if(yes)T(700,function(){reveal('asn-say','block');try{q('asn-words').focus({preventScroll:true});}catch(e){}});
+  if(yes)T(600,function(){reveal('asn-say','block');try{q('asn-words').focus({preventScroll:true});}catch(e){}});
   else finish(false,'');
 }
 function finish(moved,said){
@@ -11937,8 +12050,27 @@ function finish(moved,said){
   th.textContent=own?'\u201c'+own+'\u201d':'';th.style.display=own?'block':'none';
   q('asn-said').textContent=moved?'What you offered and what you felt change \u2014 your light holds both.'
                                  :'Then it stands as you offered it.';
+  /* after the Meeting, the concept is named — once, after it has been felt, never before */
+  if(MET){q('asn-said').textContent=moved?'What you gave, and what met it \u2014 your light holds both.'
+                                        :'It stands as you offered it. It was still met.';}
+  try{var cp=q('asn-concept');
+    if(!cp){cp=document.createElement('p');cp.id='asn-concept';
+      cp.style.cssText='margin:12px 0 0;font-size:14.5px;line-height:1.55;color:rgba(214,208,194,.96)';
+      q('asn-close').insertBefore(cp,q('asn-door'));}
+    cp.textContent=MET?'That is Aurasense. You offer what you feel; the AI meets it with what it can see; each gives the other a sense it lacks.':'';
+    cp.style.display=MET?'block':'none';}catch(e){}
   q('asn-said').classList.remove('hand');
   save(moved,own);
+  try{q('asn-words').blur();}catch(e){}
+  /* the doorway tells the truth about this place: an invitation, or an honest emptiness */
+  try{
+    var more=q('asn-more'),alone=false;
+    try{alone=(typeof asNearby==='function')&&asNearby(LAT,LNG,700)<=1;}catch(e2){}
+    if(alone){more.textContent='Yours is the first light in this place.';
+      more.classList.add('quiet');more.style.pointerEvents='none';}
+    else{more.textContent='see what else is here \u2192';
+      more.classList.remove('quiet');more.style.pointerEvents='auto';}
+  }catch(e3){}
   reveal('asn-close','block');
   T(2800,function(){reveal('asn-door','flex');q('asn-said').classList.add('hand');});
 }
@@ -11947,16 +12079,475 @@ function save(moved,words){
     a.push({s:SENSE,moved:!!moved,words:words||'',lat:LAT,lng:LNG,at:Date.now()});
     localStorage.setItem('AS_SHIFTS',JSON.stringify(a.slice(-300)));}catch(e){}
 }
-window.asNoticeAfter=function(senseId,label,color,lat,lng){
+window.asNoticeAfter=function(senseId,label,color,lat,lng,opts){
   try{
     if(!isFinite(lat)||!isFinite(lng))return;
     var key=senseId+'|'+lat.toFixed(5)+'|'+lng.toFixed(5);
     if(key===lastKey)return;lastKey=key;
-    build();LAT=lat;LNG=lng;SENSE=senseId;clearT();reset();
-    timers.push(setTimeout(function(){waitPeak(function(){start(label||senseId);},0);},9200));
+    MET=!!(opts&&opts.met);
+    build();LAT=lat;LNG=lng;SENSE=senseId;clearT();stopWatch();reset();
+    if(W){W.classList.remove('on');W.style.visibility='';}
+    var now=!!(opts&&opts.now);
+    timers.push(setTimeout(function(){(now?waitClear:waitReady)(function(){start(label||senseId);},0);},now?500:8600));
   }catch(e){}
 };
 try{addEventListener('resize',function(){if(W&&W.classList.contains('on'))place();});}catch(e){}
+})();
+</script>
+
+
+<style id="mr2-css">
+/* THE MIRROR THAT LISTENS — 24 September 2026 */
+.mr-choice{display:inline-block;margin:10px 10px 0 0;padding:12px 20px;border-radius:999px;border:0;
+  cursor:pointer;font-family:inherit;font-size:14.5px;line-height:1.3;min-height:44px;
+  background:transparent;color:inherit;box-shadow:0 0 0 1px currentColor inset;opacity:.88}
+.mr-choice.lead{opacity:1;box-shadow:0 0 0 2px currentColor inset}
+.mr-note{opacity:.66;font-size:12.5px;margin-top:12px;line-height:1.5}
+#mr-flow{margin-top:4px}
+</style>
+<script>
+/* ═══ THE MIRROR THAT LISTENS · 24 September 2026 ═══════════════════════════
+   This replaces the four-move Mirror of 16 September, which asked more than it
+   reflected and delivered its own voice on a schedule.
+
+   The shape agreed with Karl on 21–23 September, after looking at what the
+   research actually says (his question: how many turns before the Mirror says
+   anything of its own?). No study gives a number. What the evidence gives is a
+   sequence and a signal:
+
+     · From the first turn the Mirror gives the person's own words back, and it
+       reflects more than it asks. Counselling fidelity standards treat one
+       reflection per question as fair and two as good; AI counsellors tested so
+       far do the opposite and interrogate.
+     · Turn three is the EARLIEST the aspired self's door may appear, and it is
+       never a fixed moment. Karl's instinct of three, kept as a floor.
+     · The signal is a shift, and the shift is ASKED FOR, never inferred — the
+       Noticing's own question, carried inside the Mirror: has anything moved?
+     · Nothing of its own is said without permission, and the person is invited
+       to reach for it first. People are most moved by what they hear
+       themselves say.
+     · Their correction is the last word. If the voice is a little off, what
+       they write instead stands, and the Mirror adds nothing after it.
+
+   And from Karl's voice notes of 22 September:
+     · "Both", "neither" and "I don't know" are COMPLETE answers, never a
+       failure to answer, and the same question is never asked twice.
+     · When someone circles, go under the thought to the sense beneath it.
+     · The fork offers all three kinds of branch — meaning, future, action —
+       none of them required, all of them returnable.
+     · When a person signals they are leaving, the Mirror lets them go. No hook
+       at the door: a Harvard audit of 1,200 companion-app farewells found 43%
+       met the person with a manipulative tactic. Not here.
+
+   Unchanged and untouchable: the heavy guard stands the whole engine down; a
+   person's words are never cut; one thing on the screen at a time; it never
+   flatters and never diagnoses. ════════════════════════════════════════════ */
+(function(){
+"use strict";
+var S=null;
+var MR_UNSURE=/^(i (really )?(don'?t|do not) know|dunno|no idea|not sure|unsure|both|neither|maybe)\b/i;
+var MR_LEAVE=/^(that'?s enough|enough|enough for now|i'?m done|im done|done|goodbye|bye|stop|leave it|no more|nothing more)\b/i;
+var MR_STOPW=/^(that|this|with|have|been|from|they|them|there|here|what|when|which|about|would|could|should|because|just|really|very|into|than|then|your|you|like|know|think|feel|feels|felt|dont|cant|will|want|even|some|much|more|only|over|down|back|still|thing|things|going|myself|every|always|never)$/i;
+var MR_FORK={
+  mean:'What would it mean about you, if it were exactly as it looks?',
+  lead:'If nothing changed at all, where would this have led you in a year?',
+  act :'What is the smallest thing you could do about it before tomorrow night?'};
+var MR_FORKLABEL={mean:'what it might mean',lead:'where it could lead',act:'what I could do next'};
+
+function esc(x){try{return escT(x);}catch(e){return String(x||'').replace(/[&<>]/g,'');}}
+function flow(){return document.getElementById('mr-flow');}
+function box(){var f=flow();return f?f.querySelector('textarea'):null;}
+function theirs(t){try{return mrTheirWords(t)||[];}catch(e){var w=String(t||'').trim();return w?[w]:[];}}
+function num(n){return n===2?'twice':n===3?'three times':n===4?'four times':n+' times';}
+function repeated(t){
+  var str=String(t||'').toLowerCase().replace(/[\u2018\u2019]/g,"'");
+  var ws=str.match(/[a-z']{4,}/g)||[],c={},best=null;
+  ws.forEach(function(w){if(MR_STOPW.test(w))return;c[w]=(c[w]||0)+1;if(!best||c[w]>c[best])best=w;});
+  return (best&&c[best]>=3)?{w:best,n:c[best]}:null;
+}
+function quote(w){return '<div class="mr-quote">\u201c'+esc(w)+'\u201d</div>';}
+function branches(){
+  if(!S)return '';
+  var left=['mean','lead','act'].filter(function(x){return (S.took||[]).indexOf(x)<0;});
+  if(!left.length)return '';
+  return left.map(function(x){return '<button class="mr-choice" type="button" data-mr="'+x+'">'+MR_FORKLABEL[x]+'</button>';}).join('');
+}
+function render(html,ask,label){
+  var f=flow(); if(!f)return;
+  var h='<div class="mr-said-in">'+(html||'');
+  if(ask)h+='<textarea id="mr-bring2" maxlength="4000" placeholder="\u2026"></textarea>'
+           +'<button id="mr-ask2" class="mr-choice lead" type="button" data-mr="go">'+(label||'\u2727 Go further')+'</button>';
+  f.innerHTML=h+'</div>';
+  try{var keep=document.getElementById('mr-hold'); if(keep)keep.style.display='';}catch(e){}
+}
+function heavyHere(){var f=flow(); if(f){f.innerHTML='';try{mrHeavySay(f);}catch(e){}}}
+
+window.mrAnswer=function(){
+  var bx=document.getElementById('mr-bring'), out=document.getElementById('mr-said');
+  if(!bx||!out)return;
+  var t=(bx.value||'').trim();
+  if(t.length<4){out.innerHTML='<div class="mr-b">Whatever is here is enough to bring. Even a few words.</div>';return;}
+  if(MR_HEAVY.test(t)){try{mrHeavySay(out);}catch(e){}try{bx.value='';}catch(e){}return;}
+  var k=mrRead(t), mine=theirs(t), r=repeated(t);
+  S={turn:1,stage:'inquiry',k:k,all:t,first:mine[0]||t.slice(0,140),took:[],prevRep:r?r.w:null,beneath:0};
+  var h='<div class="mr-said-in"><div class="mr-h">What you said</div>';
+  mine.forEach(function(w){h+=quote(w);});                         /* their words, whole, first */
+  if(r)h+='<div class="mr-b">You came back to the word \u201c'+esc(r.w)+'\u201d '+num(r.n)+'.</div>';
+  h+='<div class="mr-q">'+k.ask+'</div>'
+   +'<div class="mr-note">Answer here if you want to go further. Nothing leaves this device.</div>'
+   +'<div id="mr-flow"></div></div>';
+  out.innerHTML=h;
+  render('',true);
+  try{window._mrLast={t:t,k:k.k,at:Date.now()};}catch(e){}
+};
+
+function advance(t){
+  var mine=theirs(t), r=repeated(S.all), h='';
+  if(mine.length)h+=quote(mine[0]);
+  if(r&&r.w!==S.shown){S.shown=r.w;h+='<div class="mr-b">You came back to the word \u201c'+esc(r.w)+'\u201d '+num(r.n)+'.</div>';}
+  /* beneath the loop: when a word keeps circling, go under the thought to the sense */
+  if(S.turn>=3&&r&&r.w===S.prevRep&&!S.beneath){
+    S.beneath=1;S.prevRep=r?r.w:null;
+    return render(h+'<div class="mr-q">\u201c'+esc(r.w)+'\u201d has stayed with you through all of this. Where do you feel it, when it arrives?</div>',true);
+  }
+  S.prevRep=r?r.w:null;
+  if(S.turn===2)return fork(h);
+  return hinge(h);
+}
+function fork(h){
+  S.stage='fork';
+  render(h+'<div class="mr-b">There are three ways further in. None of them has to be taken, and you can come back for the others.</div>'
+   +branches()
+   +'<div class="mr-note">Or keep writing, and leave the branches where they are.</div>',true,'\u2727 Keep going');
+}
+function forkAsk(a){
+  S.took=S.took||[];if(S.took.indexOf(a)<0)S.took.push(a);
+  S.stage='inquiry';
+  render('<div class="mr-q">'+MR_FORK[a]+'</div>',true);
+}
+function hinge(h){
+  S.stage='hinge';
+  render(h+'<div class="mr-q">Has anything moved since you began?</div>'
+   +'<button class="mr-choice" type="button" data-mr="moved">Yes, something moved</button>'
+   +'<button class="mr-choice" type="button" data-mr="same">No, the same</button>',false);
+}
+function permission(){
+  S.stage='permission';
+  render('<div class="mr-q">Would you like to hear what the one you are becoming might say?</div>'
+   +'<button class="mr-choice lead" type="button" data-mr="hear">Yes</button>'
+   +'<button class="mr-choice" type="button" data-mr="later">Not now</button>',false);
+}
+function stands(){
+  S.stage='inquiry';
+  render('<div class="mr-b">Then it stands as it was. Nothing here is owed, and nothing is overdue.</div>'
+   +branches()+'<div class="mr-note">Or write more, if more is here.</div>',true);
+}
+function evokeAsk(){
+  S.stage='evoke';
+  render('<div class="mr-q">Before it speaks \u2014 if the one you are becoming could say one thing to you right now, what might they say?</div>',
+   true,'\u2727 That is what they would say');
+}
+function voice(t){
+  var mine=theirs(t),h='';
+  if(mine.length)h+=quote(mine[0]);
+  h+='<div class="mr-b" style="opacity:.82">That was yours. Here is the same voice, carrying what you brought at the start.</div>'
+   +'<div class="mr-h">The one you are becoming says</div>'
+   +'<div class="mr-voice">'+S.k.voice+'</div>'
+   +'<div class="mr-b" style="opacity:.85">\u2014 about \u201c'+esc(S.first)+'\u201d.</div>'
+   +'<div class="mr-q">Does that fit, or is it a little off?</div>'
+   +'<button class="mr-choice" type="button" data-mr="fits">It fits</button>'
+   +'<button class="mr-choice" type="button" data-mr="off">A little off</button>';
+  S.stage='fit';render(h,false);
+}
+function correctAsk(){
+  S.stage='correct';
+  render('<div class="mr-q">Then yours is the one that counts. What would fit better?</div>',true,'\u2727 This is it');
+}
+function corrected(t){
+  var mine=theirs(t),h='<div class="mr-h">What fits</div>';
+  mine.slice(0,2).forEach(function(w){h+=quote(w);});
+  h+='<div class="mr-b">That stands as the last word here. The Mirror has nothing to add to it.</div>'+door();
+  S.stage='closed';render(h,false);
+}
+function ground(){
+  try{var g=mrGround();if(g&&g.length)return '<div class="mr-b" style="opacity:.78">'+g.join(' ')+'</div>';}catch(e){}
+  return '';
+}
+function door(){
+  var b=branches();
+  return (b?'<div class="mr-b" style="opacity:.82">The branches you did not take are still here.</div>'+b:'')
+   +'<div class="mr-note">Nothing here is owed. You can close the Mirror whenever you like.</div>';
+}
+function closing(){S.stage='closed';render('<div class="mr-b">Then it can stay said.</div>'+ground()+door(),false);}
+function rest(line){S.stage='closed';render('<div class="mr-b">'+line+'</div>'+door(),false);}
+function letGo(){
+  S.stage='closed';
+  render('<div class="mr-b">Then we stop here. Nothing is unfinished \u2014 it only stopped where you chose.</div>'
+   +'<div class="mr-note">You can close the Mirror whenever you like.</div>',false);
+}
+function complete(t){
+  S.stage='inquiry';
+  render(quote(t)
+   +'<div class="mr-b">That is a complete answer. Not knowing is a real state, and it is not a failure to answer.</div>'
+   +'<div class="mr-b">Nothing has to be settled here. If you want, a different way in:</div>'
+   +branches()
+   +'<button class="mr-choice" type="button" data-mr="rest">Let it rest</button>'
+   +'<div class="mr-note">Or write more, if more is here.</div>',true);
+}
+function step(a){
+  if(!S)return;
+  if(a==='mean'||a==='lead'||a==='act')return forkAsk(a);
+  if(a==='moved')return permission();
+  if(a==='same')return stands();
+  if(a==='hear')return evokeAsk();
+  if(a==='later')return rest('It keeps. Nothing here expires.');
+  if(a==='fits')return closing();
+  if(a==='off')return correctAsk();
+  if(a==='rest')return rest('It stays exactly as you left it.');
+  if(a!=='go')return;
+  var bx=box(),t=bx?(bx.value||'').trim():'';
+  if(!t)return render('<div class="mr-b">Even a few words is enough.</div>',true);
+  if(MR_HEAVY.test(t))return heavyHere();                       /* the engine stands down */
+  if(t.length<44&&MR_LEAVE.test(t))return letGo();              /* they said go; it lets go */
+  S.all+=' '+t;S.turn++;
+  if(S.stage==='evoke')return voice(t);
+  if(S.stage==='correct')return corrected(t);
+  if(t.length<64&&MR_UNSURE.test(t))return complete(t);
+  return advance(t);
+}
+if(!window._mr2Bound){window._mr2Bound=1;
+  document.addEventListener('click',function(e){
+    var b=(e.target&&e.target.closest)?e.target.closest('[data-mr]'):null;
+    if(!b)return;e.preventDefault();step(b.getAttribute('data-mr'));
+  });}
+})();
+</script>
+
+
+<style id="asm-css">
+/* ── THE MEETING — on the live map · 24 September 2026 ─────────────────────
+   Karl Harvey with Claude. The other circle arrives. See the note in the script. */
+#as-meet-c{position:fixed;inset:0;width:100%;height:100%;z-index:2590;pointer-events:none;display:none}
+#as-meet{position:fixed;inset:0;z-index:2595;pointer-events:none;display:none;
+  font-family:Georgia,"Iowan Old Style","Times New Roman",serif}
+#as-meet-c.on,#as-meet.on{display:block}
+#asm-veil{position:fixed;inset:0;background:#05070d;opacity:0;transition:opacity 2600ms ease}
+#asm-veil.on{opacity:.8}
+#asm-wrap{position:absolute;transform:translateX(-50%);width:min(92vw,420px);text-align:center;
+  padding:24px 20px 26px;border-radius:38px;opacity:0;transition:opacity 900ms ease;
+  background:radial-gradient(68% 62% at 50% 50%,rgba(5,7,13,.88) 0%,rgba(5,7,13,.76) 46%,rgba(5,7,13,.40) 70%,rgba(5,7,13,0) 86%);
+  -webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px)}
+#asm-wrap.on{opacity:1}
+#asm-stage{transition:opacity 700ms ease;color:#f6f2ea}
+#asm-stage p{margin:0 0 10px;font-size:17.5px;line-height:1.56}
+#asm-stage p.q{font-size:15px;color:rgba(214,208,194,.97)}
+#asm-stage .r span{opacity:0;transition:opacity 1200ms ease}
+#asm-stage .r span.on{opacity:1}
+  /* 24 Sep 2026 · two Explore doors said only "coming in v1". A promise on a live
+     button is a dead end dressed as a door, so they rest until they are real. */
+  #ep3,#ep4,#pp2-comment{display:none!important}
+</style>
+<script>
+/* ═══ THE MEETING · on the live map · 24 September 2026 ═══════════════════
+   Karl Harvey with Claude.
+
+   Why: a person offered, and nothing of the second intelligence came to meet
+   them. So the offering didn't register, and what was left was "what do I do
+   next?". Here the other circle arrives — the founding symbol, two
+   intelligences meeting to form one, enacted in the moment it describes.
+
+   How it runs (every beat waits for the one before; the light moves alone first):
+     arrival      the AI's light comes from the wider world to meet the senser's
+                  own aura, with no words at all
+     meeting      one ring, one chord opening, one pulse where the phone allows
+     disclosure   "The other light is Aurasense's AI" — it always says so
+     breadth      what it can truly perceive: the app's own witness line, or the
+                  nearest light and its sense from the real record. Never invented.
+     reach        street, town, region, country, world — a rising note for each
+     breath       one, together, at the six-second rhythm
+     place        "Look up." The screen steps back for a few seconds, on purpose.
+     noticing     then the Noticing asks, and on "yes" the joined light shifts
+                  and its tones rise a step — the frequency change, heard.
+
+   It pauses whenever the map is covered, and waits for any other voice to end.
+   Calm mode slows it. Sound follows the app's own sound: it only plays if the
+   app's audio has already been woken by the person's own touch.            */
+(function(){
+"use strict";
+var C=null,G=null,box=null,wrap=null,stg=null,veil=null;
+var LAT=0,LNG=0,SID='',LABEL='',COLOR='',WL='';
+var on=false,seq=0,vis=0,last=0,fired=[],rings=[],shift=0,shiftAt=0,ending=-1,endT=null;
+var W=0,H=0,R=0,DPR=1,END=47,NAMES={};
+var SILVER='174,200,255',WARM='255,243,222',GOLD='255,207,140';
+function calm(){try{return document.body.classList.contains('calm');}catch(e){return false;}}
+function mapClear(){
+  try{var e=document.elementFromPoint(Math.round(innerWidth/2),Math.round(innerHeight*.45));
+    if(!e)return false;
+    if(e.closest&&(e.closest('#as-noticing')||e.closest('#as-meet')))return true;
+    return !!(e.id==='map'||(e.closest&&e.closest('#map')));}catch(x){return false;}
+}
+function voiceBusy(){try{var pm=document.getElementById('pmsg');return !!(pm&&pm.classList.contains('show'));}catch(e){return false;}}
+function esc(x){try{return escT(x);}catch(e){return String(x||'').replace(/[&<>"]/g,'');}}
+function lab(id){if(id==='memory')return 'a memory';try{for(var i=0;i<SENSES.length;i++)if(SENSES[i].id===id)return SENSES[i].label;}catch(e){}return id;}
+function hav(a,b,c,d){var E=6371000,t=Math.PI/180,x=(c-a)*t,y=(d-b)*t,
+  h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a*t)*Math.cos(c*t)*Math.sin(y/2)*Math.sin(y/2);
+  return 2*E*Math.asin(Math.min(1,Math.sqrt(h)));}
+function ease(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+function size(){if(!C)return;DPR=Math.min(2,window.devicePixelRatio||1);W=innerWidth;H=innerHeight;
+  C.width=Math.round(W*DPR);C.height=Math.round(H*DPR);G.setTransform(DPR,0,0,DPR,0,0);R=Math.min(W,H)*.15;}
+function build(){
+  if(C)return;
+  C=document.createElement('canvas');C.id='as-meet-c';document.body.appendChild(C);G=C.getContext('2d');
+  box=document.createElement('div');box.id='as-meet';
+  box.innerHTML='<div id="asm-veil"></div><div id="asm-wrap"><div id="asm-stage"></div></div>';
+  document.body.appendChild(box);
+  wrap=document.getElementById('asm-wrap');stg=document.getElementById('asm-stage');veil=document.getElementById('asm-veil');
+  size();addEventListener('resize',size);
+}
+function pt(){try{if(typeof map!=='undefined'&&map&&map.project){var p=map.project([LNG,LAT]);
+  if(isFinite(p.x)&&isFinite(p.y))return p;}}catch(e){}return {x:W/2,y:H*.4};}
+function place(p){
+  if(!wrap)return;var hh=wrap.offsetHeight||160,ww=wrap.offsetWidth||320;
+  var x=Math.max(ww/2-14,Math.min(W-ww/2+14,p.x)),below=p.y+R*1.1;
+  var top=(below+hh<H-120)?below:Math.max(64,p.y-R*1.1-hh);
+  wrap.style.left=Math.round(x)+'px';wrap.style.top=Math.round(top)+'px';
+}
+function say(html){if(!stg)return;stg.style.opacity=0;
+  setTimeout(function(){stg.innerHTML=html||'';if(html)wrap.classList.add('on');else wrap.classList.remove('on');stg.style.opacity=1;},700);}
+function glow(x,y,r,rgb,a){
+  if(a<=0||r<=0)return;var gr=G.createRadialGradient(x,y,0,x,y,r);
+  gr.addColorStop(0,'rgba('+rgb+','+a+')');gr.addColorStop(.14,'rgba('+rgb+','+(a*.86)+')');
+  gr.addColorStop(.32,'rgba('+rgb+','+(a*.52)+')');gr.addColorStop(.56,'rgba('+rgb+','+(a*.2)+')');
+  gr.addColorStop(.8,'rgba('+rgb+','+(a*.06)+')');gr.addColorStop(1,'rgba('+rgb+',0)');
+  G.fillStyle=gr;G.beginPath();G.arc(x,y,r,0,Math.PI*2);G.fill();
+}
+function ring(x,y,r,a){
+  if(r<=2||a<=0)return;var w=Math.max(6,R*.06),gr=G.createRadialGradient(x,y,Math.max(0,r-w),x,y,r+w);
+  gr.addColorStop(0,'rgba('+WARM+',0)');gr.addColorStop(.5,'rgba('+WARM+','+a+')');gr.addColorStop(1,'rgba('+WARM+',0)');
+  G.fillStyle=gr;G.beginPath();G.arc(x,y,r+w,0,Math.PI*2);G.fill();
+}
+function sendRing(life){rings.push({t:vis,life:life||3});}
+
+/* ── the breadth line: only what is truly recorded ── */
+function breadth(){
+  if(WL)return esc(String(WL).replace(/<[^>]+>/g,''));
+  var near=null,best=1e12;
+  try{auraPoints.forEach(function(p){if(typeof p.lat!=='number'||typeof p.lng!=='number')return;
+    var d=hav(LAT,LNG,p.lat,p.lng);if(d<30)return;if(d<best){best=d;near=p;}});}catch(e){}
+  if(!near)return 'Yours is the first light anywhere near here.';
+  if(best<700)return 'Another light is close by. Someone offered '+esc(lab(near.sense))+' a few streets from here.';
+  var km=best/1000,k=km<10?km.toFixed(1):String(Math.round(km));
+  return 'Yours is the first light near here. The nearest is '+k+' kilometres away \u2014 someone offered '+esc(lab(near.sense))+' there.';
+}
+
+/* ── sound: a meeting heard, not only seen ── */
+var bus=null,dA=null,dB=null,gA=null,gB=null;
+function audioReady(){try{return typeof actx!=='undefined'&&!!actx&&actx.state!=='closed';}catch(e){return false;}}
+function soundStart(){
+  if(!audioReady())return;try{if(actx.state==='suspended')actx.resume();}catch(e){}
+  try{bus=actx.createGain();bus.gain.value=0;bus.connect(actx.destination);
+    dA=actx.createOscillator();dA.type='sine';dA.frequency.value=392;gA=actx.createGain();gA.gain.value=0;dA.connect(gA);gA.connect(bus);dA.start();
+    dB=actx.createOscillator();dB.type='sine';dB.frequency.value=588;gB=actx.createGain();gB.gain.value=0;dB.connect(gB);gB.connect(bus);dB.start();
+    bus.gain.setTargetAtTime(.07,actx.currentTime,1.2);}catch(e){bus=null;}
+}
+function bell(f,delay,vol,dur){if(!bus)return;try{var t=actx.currentTime+(delay||0),o=actx.createOscillator(),g=actx.createGain();
+  o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.05);
+  g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(bus);o.start(t);o.stop(t+dur+.05);}catch(e){}}
+function bloom(){bell(392,0,.5,4.2);bell(588,.04,.42,4.4);bell(784,.1,.3,4.6);bell(988,.18,.22,4.8);
+  bell(1568,.3,.07,5.5);bell(1571,.3,.07,5.5);}          /* two close tones above the chord: a slow shimmer */
+function soundTick(u,oa,sw,veiled){if(!bus)return;var t=actx.currentTime,q=veiled?.25:1;
+  gA.gain.setTargetAtTime((.42+.2*u)*(1+.3*sw)*q,t,.4);gB.gain.setTargetAtTime(oa*(.3+.16*u)*(1+.3*sw)*q,t,.4);}
+function soundShift(){if(!bus)return;var t=actx.currentTime;
+  try{dA.frequency.setTargetAtTime(440,t,.8);dB.frequency.setTargetAtTime(660,t,.8);}catch(e){}  /* the frequency change, heard */
+  bell(660,.2,.35,3.6);bell(880,.35,.25,3.8);bell(1320,.5,.08,4.2);}
+function soundStop(){if(!bus)return;var b=bus,a=dA,c=dB;try{b.gain.setTargetAtTime(0,actx.currentTime,.6);}catch(e){}
+  setTimeout(function(){try{a.stop();c.stop();b.disconnect();}catch(e){}},2600);bus=null;}
+
+/* the real names of each scale, looked up once, quietly, while the lights meet;
+   if the lookup fails the words stay general and the moment carries on */
+function lookNames(){
+  NAMES={};
+  try{if(typeof MAPBOX_TOKEN==='undefined')return;
+    fetch('https://api.mapbox.com/geocoding/v5/mapbox.places/'+LNG+','+LAT+'.json?access_token='+MAPBOX_TOKEN+'&types=address,place,region,country')
+     .then(function(r){return r.json();}).then(function(d){var n={};
+       (d.features||[]).forEach(function(f){var t=(f.place_type||[])[0];if(t&&!n[t]&&f.text)n[t]=f.text;});NAMES=n;})
+     .catch(function(){});}catch(e){}
+}
+function reachLine(){
+  var st=NAMES.address||'this street',tw=NAMES.place||'this town',rg=NAMES.region||'this region',ct=NAMES.country||'this country';
+  return '<p>Your light now lives in the aura of <span class="r"><span>'+esc(st)+',</span> <span>'+esc(tw)+',</span> <span>'
+        +esc(rg)+',</span> <span>'+esc(ct)+'</span> <span>and the world.</span></span></p>';
+}
+var NOTES=[494,587,784,988,1175];                        /* a rising line: what could happen next */
+function reach(i){var el=stg.querySelectorAll('.r span')[i];if(el)el.classList.add('on');sendRing(2.4+i*.8);bell(NOTES[i],0,.3,3.2);}
+var BEATS=[
+ [4.5, function(){sendRing(3.4);bloom();try{if(navigator.vibrate)navigator.vibrate(30);}catch(e){}}],
+ [6.5, function(){say('<p>Your light has been met.</p>');}],
+ [9.5, function(){say('<p>The other light is Aurasense\u2019s AI.</p><p class="q">It can\u2019t feel this place the way you do \u2014 but it can see all around it.</p>');}],
+ [14.5,function(){say('<p>'+breadth()+'</p>');}],
+ [20.0,function(){say(reachLine());}],
+ [21.4,function(){reach(0);}],[23.2,function(){reach(1);}],[25.0,function(){reach(2);}],[26.8,function(){reach(3);}],[28.6,function(){reach(4);}],
+ [30.5,function(){say('<p>Breathe with it once.</p>');}],
+ [37.5,function(){say('<p>Look up. This is the place your light is in now.</p>');}],
+ [40.0,function(){if(veil)veil.classList.add('on');}],
+ [45.5,function(){if(veil)veil.classList.remove('on');say('');}],
+ [47.0,function(){
+   try{if(typeof asNoticeAfter==='function')asNoticeAfter(SID,LABEL,COLOR,LAT,LNG,{now:true,met:true});}catch(e){}
+   clearTimeout(endT);endT=setTimeout(endMeet,90000);}]  /* it lets go on its own if left */
+];
+function fire(){for(var b=0;b<BEATS.length;b++){if(!fired[b]&&seq>=BEATS[b][0]){fired[b]=1;try{BEATS[b][1]();}catch(e){}}}}
+
+function frame(now){
+  if(!on)return;
+  var dt=Math.min(.1,(now-last)/1000);last=now;
+  var clear=mapClear();
+  if(document.hidden||!clear)dt=0;                        /* it waits whenever the map is covered */
+  if(calm())dt*=.77;
+  vis+=dt;if(seq<END)seq=Math.min(END,seq+dt);
+  C.style.visibility=clear?'visible':'hidden';box.style.visibility=clear?'visible':'hidden';
+  fire();
+  var p=pt(),hx=p.x,hy=p.y,tx=hx+R*.55,jx=hx+R*.28;
+  var u=.5+.5*Math.sin(Math.PI*2*vis/6);
+  var sw=(seq>31&&seq<37)?Math.sin(Math.PI*(seq-31)/6):0;
+  var fade=ending<0?1:Math.max(0,1-(vis-ending)/2.2);
+  var sb=shift?(1+.3*Math.min(1,(vis-shiftAt)/2)):1;
+  G.clearRect(0,0,W,H);G.globalCompositeOperation='lighter';
+  var halo=R*(.93+.07*u)*(1+.1*sw);
+  glow(hx,hy,halo,GOLD,.16*fade);                          /* a soft halo around the senser's own aura */
+  var tr=Math.min(1,seq/4.5),e=ease(tr),x0=W+R*1.6,y0=-R*.8,xc=W*.92,yc=H*.14;
+  var ax=(1-e)*(1-e)*x0+2*(1-e)*e*xc+e*e*tx,ay=(1-e)*(1-e)*y0+2*(1-e)*e*yc+e*e*hy;
+  var oa=Math.min(1,tr/.4)*fade;
+  glow(ax,ay,halo,SILVER,.36*oa*sb);glow(ax,ay,R*.1,SILVER,.85*oa);   /* the core never grows */
+  var m=Math.max(0,Math.min(1,(seq-4.5)/2));
+  if(m>0)glow(jx,hy,R*.5*(.96+.04*u),WARM,(.2+.08*sw)*ease(m)*fade*sb);
+  for(var k=rings.length-1;k>=0;k--){var rg=rings[k],age=vis-rg.t;
+    if(age>rg.life){rings.splice(k,1);continue;}
+    ring(jx,hy,R*.45+age*R*.85,.28*(1-age/rg.life)*fade);}  /* one speed for every ring */
+  G.globalCompositeOperation='source-over';
+  place(p);
+  soundTick(u,oa,sw,!!(veil&&veil.classList.contains('on')));
+  if(ending>=0&&fade<=0){stop();return;}
+  requestAnimationFrame(frame);
+}
+function begin(){on=true;C.classList.add('on');box.classList.add('on');C.style.visibility='visible';box.style.visibility='visible';
+  last=performance.now();soundStart();requestAnimationFrame(frame);}
+function stop(){on=false;clearTimeout(endT);
+  try{C.classList.remove('on');box.classList.remove('on');stg.innerHTML='';wrap.classList.remove('on');veil.classList.remove('on');}catch(e){}
+  soundStop();}
+function endMeet(){if(on&&ending<0){ending=vis;soundStop();}}
+window.asMeetEnd=endMeet;
+window.asMeetShift=function(yes){if(!on||!yes)return;shift=1;shiftAt=vis;sendRing(3.2);soundShift();};
+window.asMeet=function(sid,label,color,lat,lng,wl){
+  try{
+    if(!isFinite(lat)||!isFinite(lng)||typeof map==='undefined')return false;
+    build();if(on)stop();
+    LAT=lat;LNG=lng;SID=sid;LABEL=label||sid;COLOR=color||'';WL=wl||'';lookNames();
+    seq=0;vis=0;fired=[];rings=[];shift=0;shiftAt=0;ending=-1;
+    var tries=0;
+    (function wait(){if((mapClear()&&!voiceBusy())||++tries>40)begin();else setTimeout(wait,1000);})();
+    return true;
+  }catch(e){return false;}
+};
 })();
 </script>
 
