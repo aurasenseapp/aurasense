@@ -316,13 +316,13 @@ body.as-mark-calling #logo-mark .as-hint{left:0;transform:none;
               0 0 22px rgba(8,6,20,.85),0 0 40px rgba(8,6,20,.55);
   transition:color .35s,font-size .35s,letter-spacing .35s}
 #tabs .tab:hover{color:#efe9ff}
-#tabs .tab.active{color:#fff;font-size:18.5px;font-weight:600;letter-spacing:.075em;
+#tabs .tab.active{color:#fff;font-size:16.5px;font-weight:400;letter-spacing:.055em;-webkit-text-stroke:.5px currentColor;
   text-shadow:0 1px 2px rgba(8,6,20,.98),0 0 10px rgba(8,6,20,.95),
               0 0 22px rgba(214,201,255,.7),0 0 48px rgba(8,6,20,.75)}
 #tabs .tab-caret{font-size:13px;color:#c2b8e8;opacity:.85}
 @media(max-width:600px){
   #tabs .tab{font-size:15px;padding:5px 9px;gap:7px}
-  #tabs .tab.active{font-size:17px}
+  #tabs .tab.active{font-size:15px}
 }
 #tabs .tab-caret{text-shadow:0 1px 3px rgba(8,6,20,.92),0 0 12px rgba(8,6,20,.8)}
 
@@ -2997,6 +2997,52 @@ function paDistinct(n){
 
 // Audio
 let actx=null;
+/* ONE VOICE · 27 Sep 2026 · Karl: "the function sounds like shooting whistles are
+   pretty nasty." They were bare sine tones sliding in pitch - the sound of a slide
+   whistle. Every sound now speaks through one voice: a struck bowl. A body tone,
+   a twin a breath apart so it slowly beats like breathing, a few overtones that
+   fade first, softened at the top, and given a room to ring in. Nothing slides. */
+function asLoudG(freq,vol){var lift=freq<200?2.0:freq<300?1.7:freq<420?1.3:1.0;return Math.min(0.46,(vol||0.12)*2.6*lift);}
+function asVoiceOut(){
+  try{
+    if(!actx)return null;
+    if(asVoiceOut._c===actx&&asVoiceOut._in)return asVoiceOut._in;
+    var comp=actx.createDynamicsCompressor();
+    comp.threshold.value=-18;comp.knee.value=14;comp.ratio.value=3.5;comp.attack.value=.012;comp.release.value=.3;
+    comp.connect(actx.destination);
+    var lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3600;lp.Q.value=.5;lp.connect(comp);
+    var inp=actx.createGain();inp.gain.value=1;inp.connect(lp);
+    try{
+      var len=Math.floor(actx.sampleRate*2.8),ir=actx.createBuffer(2,len,actx.sampleRate);
+      for(var ch=0;ch<2;ch++){var d=ir.getChannelData(ch);for(var i=0;i<len;i++){d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.2);}}
+      var cv=actx.createConvolver();cv.buffer=ir;var wet=actx.createGain();wet.gain.value=.3;
+      inp.connect(cv);cv.connect(wet);wet.connect(lp);
+    }catch(e){}
+    asVoiceOut._c=actx;asVoiceOut._in=inp;return inp;
+  }catch(e){return null;}
+}
+function asBell(freq,delay,vol,dur,dest,att){
+  try{
+    if(!actx||!freq)return;
+    var out=dest||asVoiceOut()||actx.destination,t=actx.currentTime+(delay||0),D=Math.max(.6,dur||2.4),A=Math.max(.02,Math.min(.2,att||.04));
+    /* [ratio, level, how long it rings, a breath of detune] */
+    [[1,1,1,0],[1,.55,1,.9],[2.0,.2,.6,0],[2.76,.09,.4,0],[5.4,.025,.22,0]].forEach(function(p){
+      var o=actx.createOscillator(),g=actx.createGain();o.type='sine';
+      o.frequency.value=freq*p[0]+p[3];
+      var pk=Math.max(.0002,vol*p[1]),end=Math.max(t+A+.08,t+D*p[2]);
+      g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(pk,t+A);
+      g.gain.exponentialRampToValueAtTime(.0001,end);
+      o.connect(g);g.connect(out);o.start(t);o.stop(end+.05);
+    });
+  }catch(e){}
+}
+/* THE MEETING WAS SILENT · 27 Sep 2026. Its sound lives in a separate part of
+   the page and could never reach this page's sound, so "a meeting heard, not only
+   seen" was never heard. The one voice is now shared with it. */
+try{
+  window.asBell=asBell; window.asVoiceOut=asVoiceOut;
+  if(!Object.getOwnPropertyDescriptor(window,'actx'))Object.defineProperty(window,'actx',{configurable:true,get:function(){return actx;}});
+}catch(e){}
 function playSound(id){
   if(window.AS_CALM)return;   // calm keeps its silence
   try{
@@ -3004,36 +3050,17 @@ function playSound(id){
     const s=SENSES.find(x=>x.id===id);if(!s)return;
     // A newly named sense arrives without a tone of its own — it is given a true one, never silence.
     const _fr=(s.freqs&&s.freqs.length)?s.freqs:[[528,0,.17,.05,1.9],[792,.16,.11,.06,1.6]];
-    _fr.forEach(([freq,delay,vol,at,dur])=>{
-      const o=actx.createOscillator(),g=actx.createGain();
-      o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;
-      g.gain.setValueAtTime(0,actx.currentTime+delay);
-      g.gain.linearRampToValueAtTime(asLoud(freq,vol),actx.currentTime+delay+at);
-      g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);
-      o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);
-    });
+    _fr.forEach(([freq,delay,vol,at,dur])=>{ asBell(freq,delay,asLoudG(freq,vol)*.62,dur*1.25,null,at); });
   }catch(e){}
 }
 function maRenderBonds(){const el=document.getElementById('ma-bonds');if(!el)return;if(!myBonds.length){el.innerHTML='<div class="ma-empty">Aurabonds are never pressed into being — they form through reaching, and through the Weave. When one takes root between you and a person, a place, or a moment, its thread appears here.</div>';return;}el.innerHTML=myBonds.slice().reverse().map(b=>'<div class="mab-row"><span class="mab-dot" style="background:'+b.color+';box-shadow:0 0 10px '+b.color+'"></span><span class="mab-w">'+escT(b.to)+'</span><span class="mab-m">'+escT(b.label)+' · 📍 '+escT(b.place)+' · '+relTime(b.t)+'</span></div>').join('');}
 function playShift(base,dur,vol){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}
- const t=actx.currentTime,d=dur||1.8,v=vol||.05;
- [[1,1.5,1],[1.006,1.494,1],[0.5,0.75,0.6]].forEach(a=>{
-   const o=actx.createOscillator(),g=actx.createGain();o.type='sine';
-   o.frequency.setValueAtTime(base*a[0],t);
-   o.frequency.exponentialRampToValueAtTime(base*a[1],t+d*0.9);
-   g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v*a[2],t+d*0.35);
-   g.gain.exponentialRampToValueAtTime(.0008,t+d);
-   o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.1);});
+ const d=dur||1.8,v=vol||.05;
+ asBell(base*.5,0,v*2.2,d*1.7,null,.08);asBell(base,.06,v*3,d*1.4);asBell(base*1.5,.34,v*2.6,d*1.5);
 }catch(e){}}
 function playBond(fa,fb){try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}
- const t=actx.currentTime,fm=(fa+fb)/2,d=1.7;
- [fa,fb].forEach(f0=>{const o=actx.createOscillator(),g=actx.createGain();o.type='sine';
-  o.frequency.setValueAtTime(f0,t);o.frequency.exponentialRampToValueAtTime(fm,t+d*0.75);
-  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.05,t+.5);g.gain.exponentialRampToValueAtTime(.0008,t+d);
-  o.connect(g);g.connect(actx.destination);o.start(t);o.stop(t+d+.1);});
- const s=actx.createOscillator(),sg=actx.createGain();s.type='sine';s.frequency.setValueAtTime(fm/2,t+d*0.55);
- sg.gain.setValueAtTime(0,t+d*0.55);sg.gain.linearRampToValueAtTime(.04,t+d*0.75);sg.gain.exponentialRampToValueAtTime(.0008,t+d+0.6);
- s.connect(sg);sg.connect(actx.destination);s.start(t+d*0.55);s.stop(t+d+0.8);
+ const fm=(fa+fb)/2;
+ asBell(fa,0,.13,2.6);asBell(fb,.14,.13,2.6);asBell(fm/2,.95,.12,3.4,null,.1);
 }catch(e){}}
 function maMote(c,dur){try{const cv=document.getElementById('ma-canvas');if(!cv)return;const r=cv.getBoundingClientRect(),tx=r.left+r.width/2,ty=r.top+r.height*0.42;const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:18px;height:18px;border-radius:50%;pointer-events:none;left:'+(Math.random()*innerWidth*0.7+innerWidth*0.15)+'px;top:-20px;background:radial-gradient(circle,#fff,'+c+' 60%,transparent);box-shadow:0 0 20px '+c+';';document.body.appendChild(d);d.animate([{opacity:1},{left:(tx-9)+'px',top:(ty-9)+'px',opacity:0,transform:'scale(.4)'}],{duration:dur||1500,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
 function flyToMyAura(color){try{const t=document.getElementById('logo-mark')||document.querySelector('#tabs .tab');const r=t?t.getBoundingClientRect():{left:innerWidth/2,top:20,width:0,height:0};const d=document.createElement('div');d.style.cssText='position:fixed;z-index:3000;width:16px;height:16px;border-radius:50%;pointer-events:none;left:'+(innerWidth/2-8)+'px;top:'+(innerHeight/2-8)+'px;background:radial-gradient(circle,#fff,'+color+' 60%,transparent);box-shadow:0 0 18px '+color+';';document.body.appendChild(d);d.animate([{left:(innerWidth/2-8)+'px',top:(innerHeight/2-8)+'px',opacity:1,transform:'scale(1)'},{left:(r.left+r.width/2-8)+'px',top:(r.top+r.height/2-8)+'px',opacity:0,transform:'scale(.4)'}],{duration:950,easing:'cubic-bezier(.3,.7,.3,1)'}).onfinish=()=>d.remove();}catch(e){}}
@@ -3069,7 +3096,7 @@ function playChime(fs){
          &&_f.contentWindow.asPlayChime(fs))return;
     }
   }catch(e){}
-  try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}fs.forEach(([freq,delay,vol,at,dur])=>{const o=actx.createOscillator(),g=actx.createGain();o.connect(g);g.connect(actx.destination);o.type='sine';o.frequency.value=freq;g.gain.setValueAtTime(0,actx.currentTime+delay);g.gain.linearRampToValueAtTime(asLoud(freq,vol),actx.currentTime+delay+at);g.gain.exponentialRampToValueAtTime(.001,actx.currentTime+delay+dur);o.start(actx.currentTime+delay);o.stop(actx.currentTime+delay+dur+.1);});}catch(e){}}
+  try{if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}fs.forEach(([freq,delay,vol,at,dur])=>{asBell(freq,delay,asLoud(freq,vol)*.62,dur*1.25,null,at);});}catch(e){}}
 // Main draw
 let T=0;
 // AURATOUR state, declared above the paint loop because the loop reads it on its very first
@@ -3770,7 +3797,9 @@ function addFeed(text,sense,time,glow,lat,lng,place){
   const d=document.createElement('div');
   d.className='fi'+(glow?' glow':'');
   const loc=place?`<div class="fi-loc">📍 ${esc(place)}</div>`:'';
-  d.innerHTML=`<div class="fi-sense" style="color:${s.color}">${SENSE_SYMBOLS[s.id]} ${s.label}</div><div class="fi-text">"${esc(text)}"</div>${loc}<div class="fi-meta">${esc(time)}</div>`;
+  const _w=(text&&String(text).trim())?`<div class="fi-text">\u201c${esc(text)}\u201d</div>`:'';
+  d.innerHTML=`${_w}<div class="fi-sense" style="color:${s.color}">${SENSE_SYMBOLS[s.id]} ${s.label}${_w?'':' <span class="fi-quiet">\u00b7 offered without words</span>'}</div>${loc}<div class="fi-meta">${esc(time)}</div>`;
+  try{feed.setAttribute('role','list');d.setAttribute('role','listitem');d.setAttribute('aria-label',s.label+(_w?(': \u201c'+String(text).trim()+'\u201d'):', offered without words')+(place?(', '+place):'')+', '+(time||''));}catch(_){}
   d.onclick=()=>{if(typeof openLiveFeed==='function')openLiveFeed();};
   feed.insertBefore(d,feed.firstChild);
   if(glow)setTimeout(()=>d.classList.remove('glow'),5000);
@@ -3795,7 +3824,8 @@ let _pmsgT=null;
 function msgPlace(el,at){
   try{
     const H=window.innerHeight,cell=window.innerWidth<=600;
-    const topSafe=cell?208:118;                    // clear of logo, tabs and the search box
+    let topSafe=cell?208:118;                      // clear of logo, tabs and the search box
+    try{['tabs','wev-chips'].forEach(function(id){var e=document.getElementById(id);if(!e)return;var r=e.getBoundingClientRect();if(r.height>0&&r.bottom<H*0.55&&getComputedStyle(e).display!=='none')topSafe=Math.max(topSafe,Math.round(r.bottom+14));});}catch(_){}
     const botSafe=cell?196:120;                    // clear of the Offer pill and the Mirror orb
     el.style.top=topSafe+'px';el.style.bottom='auto';
     const h=el.getBoundingClientRect().height||120;
@@ -3999,6 +4029,36 @@ const ASCENT_WORDS={
 // the scale the senser is actually standing at.
 const ASCENT_STOPS=['orbMy','orb0','orb1','orb2','orb3','orb4','orbMy'];
 let _ascentTimers=[];
+/* THE SCALES SPEAK WITH THE WORDS · 27 Sep 2026 · Karl's idea, recorded as his:
+   "as the text says street, town, region, nation, world, each arched label lights
+   up in turn." The Meeting calls this at the very moment each name is spoken.
+   Paint only: nothing is measured, nothing moves, the standing scale is untouched. */
+window.asLightScale=function(i,color){
+  try{
+    if(window.AS_CALM)return;
+    var col=color||'#c4b5fd';
+    var orb=document.getElementById(['orb0','orb1','orb2','orb3','orb4'][i]);
+    if(orb&&orb.getBoundingClientRect().width<1)orb=document.getElementById('orb1');
+    if(!orb)return;
+    var btn=orb.closest?orb.closest('.tab'):null;
+    if(btn)btn.style.setProperty('--asc',col);
+    orb.classList.remove('ascending');void orb.offsetWidth;orb.classList.add('ascending');
+    if(btn){btn.classList.remove('asc-lit');void btn.offsetWidth;btn.classList.add('asc-lit');}
+    setTimeout(function(){try{orb.classList.remove('ascending');if(btn){btn.classList.remove('asc-lit');btn.style.removeProperty('--asc');}}catch(e){}},1150);
+  }catch(e){}
+};
+/* then the two threads the light has just joined: home to My Aura, out to the Live Feed */
+window.asThreadGlow=function(color){
+  try{
+    var col=color||'#c4b5fd';
+    try{if(typeof window.asMarkFlare==='function')window.asMarkFlare(col);}catch(e){}
+    setTimeout(function(){
+      ['livefeed-btn','feed-full'].forEach(function(id){var b=document.getElementById(id);if(!b)return;
+        b.style.setProperty('--asc',col);b.classList.remove('as-thread');void b.offsetWidth;b.classList.add('as-thread');
+        setTimeout(function(){try{b.classList.remove('as-thread');}catch(e){}},2600);});
+    },900);
+  }catch(e){}
+};
 function ascentClimb(color){
   if(window.AS_CALM)return;                                   // in Calm the scales rest
   try{if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;}catch(e){}
@@ -10696,18 +10756,24 @@ function mirrorOpen(){
     const mrWell=(wn>=2)?('<div class="mr-card"><div class="mr-h">The well</div><div class="mr-b">'+wn+' check-ins rest in the well, on this device alone.</div><div class="mr-q">Do any two rhyme? Rhyme is the Weave\u2019s word for a pattern asking to be seen.</div></div>'):'';
     /* first, before any report about them: a place to be heard */
     let cards='<div class="mr-card mr-bring-card">'
-      +'<div class="mr-h">Bring something here</div>'
-      +'<div class="mr-b">A choice you are facing, a feeling you cannot place, something that will not leave you alone. '
-      +'Write it as it is \u2014 it does not need tidying.</div>'
-      +'<textarea id="mr-bring" maxlength="4000" placeholder="what is here\u2026"></textarea>'
-      +'<button id="mr-ask" type="button">\u2727 Let the Mirror answer</button>'
+      +'<div class="mr-b mr-promise">It listens, and gives your own words back. It asks. It never tells you who you are.</div>'
+      +'<div class="mr-h mr-ask-h">What would you like to see more clearly?</div>'
+      +'<div class="mr-doors" role="group" aria-label="Ways to begin">'
+      +'<button class="mr-door" type="button" data-q="What are the choices, as you see them right now?">A choice I\u2019m facing</button>'
+      +'<button class="mr-door" type="button" data-q="Where do you feel it \u2014 and when did it first arrive?">A feeling I can\u2019t place</button>'
+      +'<button class="mr-door" type="button" data-q="What keeps bringing it back?">Something that won\u2019t leave me alone</button>'
+      +'<button class="mr-door" type="button" data-q="What do you notice, when you watch?">I\u2019ve been watching my own mind</button>'
+      +'</div>'
+      +'<textarea id="mr-bring" maxlength="4000" aria-label="Write what is here" placeholder="or write it as it is \u2014 it doesn\u2019t need tidying\u2026"></textarea>'
+      +'<button id="mr-ask" type="button">\u2727 Begin</button>'
       +'<div id="mr-said"></div>'
       +'<button id="mr-hold" type="button" style="display:none">\u25c7 Keep this in the Mirror</button>'
       +'</div>';
     if(total===0){
       cards+='<div class="mr-card"><div class="mr-h">A clean surface.</div><div class="mr-b">The Mirror reflects what you have offered, and nothing has been offered yet. One sense, anywhere true, and the first light appears here.</div></div>';
     }else{
-      if(topS)cards+='<div class="mr-card"><div class="mr-h">The light you reach for most</div><div class="mr-b"><b style="color:'+topS.color+'">'+escT(topS.label)+'</b> \u2014 '+used[top]+' of your '+total+' offering'+(total>1?'s':'')+'.</div><div class="mr-q">What does it give you, that keeps you returning? Yours to answer, or not.</div></div>';
+      cards+=mrBal; mrBal='';
+      if(topS)cards+='<div class="mr-card"><div class="mr-h">The sense you offer most</div><div class="mr-b"><b style="color:'+topS.color+'">'+escT(topS.label)+'</b> \u2014 '+used[top]+' of your '+total+' offering'+(total>1?'s':'')+'.</div><div class="mr-q">What does it give you, that keeps you returning? Yours to answer, or not.</div></div>';
       cards+=mrBal;
       if(quiet.length)cards+='<div class="mr-card"><div class="mr-h">Quiet rooms</div><div class="mr-b">'+quiet.map(q=>'<b style="color:'+q.color+'">'+escT(q.label)+'</b>').join(' \u00b7 ')+' \u2014 senses you have not yet offered. Not tasks, not goals: simply doors you have not opened. If one of them quietly calls, offer it where you stand and watch what it lights.</div></div>';
       cards+=mrLine+mrWell;
@@ -10715,13 +10781,19 @@ function mirrorOpen(){
     }
     cards+='<div class="mr-card"><div class="mr-h">The unlit \u2014 for the Mirror alone</div><div class="mr-b">The shadow is only what has not been looked at yet \u2014 nothing more sinister than that. Look without the word; judge nothing; the looking itself is the change.</div><div class="mr-q">Is there a feeling you notice yourself steering around when you offer? You may write it here. It stays on this device, in this Mirror, and goes nowhere else.</div><textarea id="mr-in" maxlength="200" placeholder="only if you wish\u2026"></textarea><button id="mr-keep" type="button">\u2727 Hold it in the Mirror</button></div>';
     d.innerHTML='<div id="mr-t">\ud83e\ude9e The Mirror</div>'
-      +'<div id="mr-s">A reflection, not a reading. Only what is true; only questions, never verdicts.</div>'
+      +'<div id="mr-s">Talk something through, and see yourself a little more clearly.</div>'
       +cards
       +'<div class="mr-s2">More will appear here as Aurasense grows. Nothing of yours ever reaches another person without your yes.</div>'
       +'<button id="mr-x" type="button">close the mirror</button>';
     setTimeout(()=>{
       try{
         const a=d.querySelector('#mr-ask'); if(a)a.addEventListener('click',mrAnswer);
+        /* the four doors: the Mirror asks first. A door only sets the question and
+           opens the page; what the person writes is still theirs alone. */
+        d.querySelectorAll('.mr-door').forEach(function(b){b.addEventListener('click',function(){
+          try{d.querySelectorAll('.mr-door').forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false');});
+            b.classList.add('on');b.setAttribute('aria-pressed','true');
+            var tx=d.querySelector('#mr-bring');if(tx){tx.placeholder=b.getAttribute('data-q')||tx.placeholder;tx.focus();}}catch(_){}});});
         const h=d.querySelector('#mr-hold');
         if(h)h.addEventListener('click',()=>{
           try{
@@ -10777,7 +10849,7 @@ document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&
 (function raiseWire(){
   try{
     const ch=document.getElementById('wev-chips');
-    if(ch){const b=document.createElement('button');b.id='we-open';b.type='button';b.textContent='\u2691 raise';b.title='Raise a true world event where the map is looking';ch.appendChild(b);}
+    if(ch){const b=document.createElement('button');b.id='we-open';b.className='wev-chip';b.type='button';b.textContent='\u2691 Raise an event';b.title='Raise a true world event where the map is looking';ch.appendChild(b);}
     document.addEventListener('click',function(e){try{if(e.target&&e.target.closest&&e.target.closest('#we-open')){e.preventDefault();openRaiseEvent();}}catch(_){}});
   }catch(e){}
 })();
@@ -11087,7 +11159,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 26 Sep 2026 · 123 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 27 Sep 2026 · 124 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -12447,14 +12519,12 @@ var bus=null,dA=null,dB=null,gA=null,gB=null;
 function audioReady(){try{return typeof actx!=='undefined'&&!!actx&&actx.state!=='closed';}catch(e){return false;}}
 function soundStart(){
   if(!audioReady())return;try{if(actx.state==='suspended')actx.resume();}catch(e){}
-  try{bus=actx.createGain();bus.gain.value=0;bus.connect(actx.destination);
+  try{bus=actx.createGain();bus.gain.value=0;bus.connect((typeof asVoiceOut==='function'&&asVoiceOut())||actx.destination);
     dA=actx.createOscillator();dA.type='sine';dA.frequency.value=392;gA=actx.createGain();gA.gain.value=0;dA.connect(gA);gA.connect(bus);dA.start();
     dB=actx.createOscillator();dB.type='sine';dB.frequency.value=588;gB=actx.createGain();gB.gain.value=0;dB.connect(gB);gB.connect(bus);dB.start();
     bus.gain.setTargetAtTime(.07,actx.currentTime,1.2);}catch(e){bus=null;}
 }
-function bell(f,delay,vol,dur){if(!bus)return;try{var t=actx.currentTime+(delay||0),o=actx.createOscillator(),g=actx.createGain();
-  o.type='sine';o.frequency.value=f;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.05);
-  g.gain.exponentialRampToValueAtTime(.0001,t+dur);o.connect(g);g.connect(bus);o.start(t);o.stop(t+dur+.05);}catch(e){}}
+function bell(f,delay,vol,dur){if(!bus)return;try{asBell(f,delay,vol*.8,dur,bus,.05);}catch(e){}}
 function bloom(){bell(392,0,.5,4.2);bell(588,.04,.42,4.4);bell(784,.1,.3,4.6);bell(988,.18,.22,4.8);
   bell(1568,.3,.07,5.5);bell(1571,.3,.07,5.5);}          /* two close tones above the chord: a slow shimmer */
 function soundTick(u,oa,sw,veiled){if(!bus)return;var t=actx.currentTime,q=veiled?.25:1;
@@ -12480,8 +12550,8 @@ function reachLine(){
   return '<p>Your light now lives in the aura of <span class="r"><span>'+esc(st)+',</span> <span>'+esc(tw)+',</span> <span>'
         +esc(rg)+',</span> <span>'+esc(ct)+'</span> <span>and the world.</span></span></p>';
 }
-var NOTES=[494,587,784,988,1175];                        /* a rising line: what could happen next */
-function reach(i){var el=stg.querySelectorAll('.r span')[i];if(el)el.classList.add('on');sendRing(2.4+i*.8);bell(NOTES[i],0,.3,3.2);}
+var NOTES=[392,440,523,587,659];                        /* a rising line: what could happen next */
+function reach(i){var el=stg.querySelectorAll('.r span')[i];if(el)el.classList.add('on');sendRing(2.4+i*.8);bell(NOTES[i],0,.3,3.2);try{if(window.asLightScale)window.asLightScale(i,COLOR);}catch(e){}}
 var BEATS=[
  [4.5, function(){sendRing(3.4);bloom();try{if(navigator.vibrate)navigator.vibrate(30);}catch(e){}}],
  [6.5, function(){say('<p>Your light has been met.</p>');}],
@@ -12489,6 +12559,7 @@ var BEATS=[
  [14.5,function(){say('<p>'+breadth()+'</p>');}],
  [20.0,function(){say(reachLine());}],
  [21.4,function(){reach(0);}],[23.2,function(){reach(1);}],[25.0,function(){reach(2);}],[26.8,function(){reach(3);}],[28.6,function(){reach(4);}],
+ [29.6,function(){try{if(window.asThreadGlow)window.asThreadGlow(COLOR);}catch(e){}}],
  [30.5,function(){say('<p>Breathe with it once.</p>');}],
  [37.5,function(){say('<p>Look up. This is the place your light is in now.</p>');}],
  [40.0,function(){if(veil)veil.classList.add('on');}],
@@ -12550,6 +12621,70 @@ window.asMeet=function(sid,label,color,lat,lng,wl){
     return true;
   }catch(e){return false;}
 };
+})();
+</script>
+<style id="one-light">
+/* ═══ ONE LIGHT · 27 Sep 2026 ═══════════════════════════════════════════════
+   Karl: "the whole site has to work together and appear as one light, not
+   disjointed functions." Every panel now wears the same surface and the same
+   thin warm edge: the colour of the place where the two lights meet in the
+   Meeting. Every control speaks in Aurasense's own serif voice. Colour, edge,
+   shadow and type only: no size or position is changed here, so nothing moves. */
+:root{--ol-surface:rgba(13,11,28,.88);--ol-edge:rgba(255,218,168,.28);--ol-edge-on:rgba(255,218,168,.62);
+  --ol-ink:#f4efff;--ol-soft:#cdc4e8;--ol-gold:#ffd9a0;--ol-shadow:0 0 30px rgba(196,181,253,.14),0 12px 36px rgba(0,0,0,.5)}
+#mr-modal{border-color:var(--ol-edge)!important;box-shadow:var(--ol-shadow)!important;border-radius:22px!important}
+.mr-card{border-color:var(--ol-edge)!important;background:rgba(255,236,210,.035)!important;border-radius:16px!important}
+#mr-t{letter-spacing:.06em}
+#mr-s{color:var(--ol-soft)!important;font-style:italic}
+.mr-promise{color:var(--ol-soft);font-style:italic;margin-bottom:12px}
+.mr-ask-h{font-size:15px!important;color:var(--ol-ink)!important;margin-bottom:2px}
+.mr-doors{display:flex;flex-wrap:wrap;gap:8px;margin:11px 0 6px}
+.mr-door{font-family:var(--serif);font-size:13.5px;line-height:1.25;padding:9px 13px;border-radius:20px;cursor:pointer;
+  color:var(--ol-ink);background:rgba(255,236,210,.05);border:1px solid var(--ol-edge);transition:border-color .3s,box-shadow .3s,background .3s}
+.mr-door:hover{border-color:var(--ol-edge-on)}
+.mr-door.on{border-color:var(--ol-gold);background:rgba(255,217,160,.1);box-shadow:0 0 16px rgba(255,217,160,.3)}
+.mr-door:focus-visible,#mr-modal button:focus-visible{outline:2px solid var(--ol-gold);outline-offset:2px}
+.fi{background:var(--ol-surface)!important;border-color:var(--ol-edge)!important;border-radius:14px!important}
+.fi-text{color:var(--ol-ink)!important;font-family:var(--serif);font-size:14px!important;margin-bottom:5px}
+.fi-quiet{color:var(--ol-soft);font-style:italic;font-weight:400;letter-spacing:0}
+.wev-chip,#livefeed-btn,#feed-full,#wbal{font-family:var(--serif)!important;letter-spacing:.03em!important}
+.wev-chip{background:var(--ol-surface)!important;border:1px solid var(--ol-edge)!important;color:var(--ol-soft)!important}
+.wev-chip.on{color:var(--ol-ink)!important}
+#livefeed-btn,#feed-full{border-color:var(--ol-edge-on)!important;color:var(--ol-ink)!important}
+#wbal{border-color:var(--ol-edge)!important;background:var(--ol-surface)!important}
+#lf-inner{border-color:var(--ol-edge)!important}
+#pmsg:not(.witness){border-color:var(--ol-edge-on)!important}
+/* the event row: never squeezed into a column over the world */
+#wev-chips{left:0!important;right:0!important;transform:none!important;margin:0 auto;width:max-content;max-width:min(94vw,640px)}
+@media (max-width:600px){
+  #wev-chips{width:auto;max-width:none;flex-wrap:nowrap!important;overflow-x:auto;justify-content:flex-start!important;
+    padding:2px 14px 6px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 26px),transparent);
+            mask-image:linear-gradient(90deg,transparent 0,#000 14px,#000 calc(100% - 26px),transparent)}
+  #wev-chips::-webkit-scrollbar{display:none}
+  .wev-chip{flex:0 0 auto!important}
+}
+/* messages keep their true width instead of shrinking to half the screen */
+#pmsg{width:max-content;max-width:min(400px,88vw)}
+#pmsg.witness{width:min(560px,94vw);max-width:none}
+/* the threads the Meeting's light has joined, glowing once in turn */
+@keyframes olThread{0%{box-shadow:0 0 0 0 var(--asc,#c4b5fd)}35%{box-shadow:0 0 22px 5px var(--asc,#c4b5fd)}100%{box-shadow:0 0 0 0 var(--asc,#c4b5fd)}}
+.as-thread{animation:olThread 2.4s ease-in-out both}
+@media (prefers-reduced-motion:reduce){.as-thread{animation:none}}
+</style>
+<script>
+/* the event row sits just under the scale menu, wherever that menu ends */
+(function(){
+  function place(){try{
+    if(window.innerWidth>600)return;
+    var ch=document.getElementById('wev-chips'),tb=document.getElementById('tabs');
+    if(!ch||!tb||!ch.classList.contains('show'))return;
+    var r=tb.getBoundingClientRect();if(r.height<=0)return;
+    var par=ch.offsetParent?ch.offsetParent.getBoundingClientRect().top:0;
+    var top=Math.round(r.bottom-par+8);
+    if(ch.style.top!==top+'px')ch.style.top=top+'px';
+  }catch(e){}}
+  setInterval(place,700);addEventListener('resize',function(){setTimeout(place,80);});setTimeout(place,300);
 })();
 </script>
 
