@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>The Mirror — Aurasense</title>
+<!--
+  THE LIVING MIRROR · a study, 28 September 2026 · Karl Harvey with Claude
+  Karl: "I dont like the scrolling aspect of mirror... I thought the presentation would be
+  consistent and more dynamic... representing the circular form we have throughout."
+  "The whole thing needs to feel organic, etheric and alive!"
+  "Mirror not responsive soon enough." (It now speaks its own reflection from the first answer.)
+
+  What it rests on:
+  - dark text on a light ground reads better, for younger and older eyes alike (Piepenbrock et al., 2013)
+  - one exchange at a time, in one place: nothing to scroll, nothing to go looking for
+  - the Mirror asks first, and the person steers (ExploreSelf, CHI 2025)
+  - plain words only: every question here can be understood on first reading
+  - when someone is confused, it says the same thing more simply instead of carrying on
+
+  Nothing typed here leaves this page. Nothing is stored. No scripts from anywhere else.
+-->
+<style>
+:root{
+  --ink:#3b2a3a; --soft:#6f5a6c; --faint:#9a8597;
+  --rose:#f3c9c0; --peach:#f8dcc4; --lav:#dcd2f2; --gold:#e9b56a; --sky:#c9dcf4;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{font-family:var(--serif);color:var(--ink);background:#f6e3d6;overflow:hidden;-webkit-font-smoothing:antialiased}
+
+/* the living ground: slow clouds of warm light, never still, never busy */
+.ground{position:fixed;inset:-20%;z-index:0;filter:blur(40px);
+  background:
+    radial-gradient(38% 34% at 22% 28%, var(--rose) 0%, transparent 70%),
+    radial-gradient(40% 36% at 78% 30%, var(--lav) 0%, transparent 70%),
+    radial-gradient(44% 40% at 30% 78%, var(--peach) 0%, transparent 72%),
+    radial-gradient(36% 34% at 76% 76%, var(--sky) 0%, transparent 70%),
+    #f6e3d6;
+  animation:drift 38s ease-in-out infinite alternate}
+@keyframes drift{0%{transform:translate(0,0) rotate(0deg)}50%{transform:translate(-3%,2%) rotate(4deg)}100%{transform:translate(2%,-2%) rotate(-3deg)}}
+
+.stage{position:relative;z-index:1;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:18px 16px}
+
+/* THE MIRROR: one circle, breathing at the six-second rhythm */
+.mirror{position:relative;width:min(88vw,62vh,540px);aspect-ratio:1;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(circle at 50% 42%, rgba(255,252,247,.96) 0%, rgba(255,247,240,.9) 52%, rgba(255,240,232,.55) 72%, rgba(255,236,226,0) 100%);
+  animation:breathe 6s ease-in-out infinite}
+.mirror::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;
+  background:conic-gradient(from 0deg, rgba(233,181,106,.35), rgba(220,210,242,.45), rgba(243,201,192,.4), rgba(201,220,244,.45), rgba(233,181,106,.35));
+  filter:blur(26px);animation:turn 40s linear infinite}
+@keyframes breathe{0%,100%{transform:scale(.985)}50%{transform:scale(1.015)}}
+@keyframes turn{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.mirror,.mirror::before,.ground{animation:none}}
+
+/* their own words, written around the rim */
+.rim{position:absolute;inset:-1%;width:102%;height:102%;pointer-events:none;overflow:visible}
+.rim text{font-family:var(--serif);font-style:italic;font-size:3.4px;fill:var(--soft);letter-spacing:.04em;opacity:0;transition:opacity 1.6s ease}
+.rim.show text{opacity:.9}
+
+.speak{width:74%;max-height:74%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7em;
+  transition:opacity .9s ease, filter .9s ease}
+.speak.fade{opacity:0;filter:blur(6px)}
+.title{font-size:clamp(1.5rem,5vw,2rem);letter-spacing:.06em;margin:0}
+.line{margin:0;font-size:clamp(1.02rem,3.4vw,1.28rem);line-height:1.5}
+.line.soft{color:var(--soft);font-size:clamp(.95rem,3vw,1.06rem)}
+.line.q{font-style:italic;color:var(--ink)}
+.quote{margin:0;font-style:italic;font-size:clamp(1rem,3.2vw,1.18rem);line-height:1.5;color:var(--ink)}
+.quote::before{content:"\201C"}.quote::after{content:"\201D"}
+
+/* the turns taken, as small lights along the path */
+.trail{display:flex;gap:9px;justify-content:center;min-height:14px;margin:14px 0 6px}
+.trail button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;
+  background:radial-gradient(circle,#fff 0%,var(--gold) 60%,rgba(233,181,106,0) 100%);opacity:.55;transition:opacity .3s,transform .3s}
+.trail button.now{opacity:1;transform:scale(1.3)}
+.trail button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* the doors, and the answer */
+.doors{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:620px;margin:6px 0 0}
+.door,.btn{font-family:var(--serif);font-size:1rem;color:var(--ink);cursor:pointer;border-radius:999px;
+  padding:.62em 1.1em;border:1px solid rgba(233,181,106,.55);
+  background:rgba(255,251,245,.72);box-shadow:0 0 18px rgba(233,181,106,.18);transition:box-shadow .3s,background .3s,transform .2s}
+.door:hover,.btn:hover{box-shadow:0 0 26px rgba(233,181,106,.4);background:rgba(255,253,249,.92)}
+.door:active,.btn:active{transform:scale(.98)}
+.door:focus-visible,.btn:focus-visible,textarea:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.btn.lead{background:linear-gradient(180deg,#fff8ee,#fbe6cc);border-color:rgba(214,150,70,.7)}
+.btn.quiet{border-color:transparent;background:transparent;box-shadow:none;color:var(--soft);font-size:.95rem}
+
+.say{width:min(620px,92vw);display:flex;gap:10px;align-items:flex-end;margin-top:8px}
+textarea{flex:1;font-family:var(--serif);font-size:1.05rem;color:var(--ink);line-height:1.45;resize:none;
+  min-height:3.1em;max-height:9em;padding:.8em 1.1em;border-radius:24px;border:1px solid rgba(233,181,106,.5);
+  background:rgba(255,252,247,.85);box-shadow:inset 0 0 14px rgba(233,181,106,.12)}
+textarea::placeholder{color:var(--faint);font-style:italic}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.hide{display:none!important}
+.note{font-size:.85rem;color:var(--faint);margin-top:10px;text-align:center}
+@media (max-width:520px){ .say{flex-direction:column;align-items:stretch} .say .btn{align-self:center} }
+@media (max-height:640px){ .mirror{width:min(80vw,54vh,540px)} }
+</style>
+</head>
+<body>
+<div class="ground" aria-hidden="true"></div>
+<main class="stage">
+  <div class="mirror" id="mirror">
+    <svg class="rim" id="rim" viewBox="0 0 100 100" aria-hidden="true">
+      <defs><path id="arc" d="M 50,50 m -46,0 a 46,46 0 1,1 92,0 a 46,46 0 1,1 -92,0"/></defs>
+      <text><textPath href="#arc" startOffset="0%" id="rimText"></textPath></text>
+    </svg>
+    <div class="speak" id="speak" aria-live="polite"></div>
+  </div>
+  <div class="trail" id="trail" aria-label="Your turns so far"></div>
+  <div class="doors" id="doors" role="group" aria-label="Ways to begin"></div>
+  <div class="say hide" id="say">
+    <textarea id="words" rows="2" maxlength="1200" aria-label="Your words"></textarea>
+    <button class="btn lead" id="send" type="button">Offer it</button>
+  </div>
+  <div class="row hide" id="after">
+    <button class="btn quiet" id="rest" type="button">Let it rest here</button>
+  </div>
+  <p class="note" id="note">Nothing you write leaves this page.</p>
+</main>
+
+<script>
+(function(){
+"use strict";
+/* ── what the Mirror knows how to hear ───────────────────────────────── */
+var FEEL=['tired','exhausted','alone','lonely','stuck','afraid','scared','frightened','angry','furious','sad','lost','hopeful','hope',
+  'heavy','overwhelmed','anxious','worried','calm','peaceful','grateful','confused','guilty','ashamed','excited','numb','empty',
+  'hurt','free','trapped','restless','drained','small','invisible','unheard','loved','unloved','torn','uncertain','relieved'];
+var HEAVY=/\b(kill myself|end my life|suicid|want to die|don'?t want to (live|be here)|hurt myself|self[- ]?harm|no reason to live)\b/i;
+var UNSURE=/^\s*(i\s+)?(really\s+)?(don'?t|do not)\s+know\b|^\s*(dunno|no idea|not sure|unsure|maybe|i'?m not sure)\b/i;
+var LEAVE=/^\s*(that'?s enough|enough( for now)?|i'?m done|done|bye|goodbye|stop|no more)\b/i;
+var CONFUSED=/^\s*[\w'-]{1,14}\s*\?+\s*$|what do you mean|i don'?t (understand|get it)|\bhuh\b|what\?|meaning\?/i;
+var TURN=/\s*(?:,\s*)?\b(whilst|while|but|yet|although|though|even though)\b\s*/i;
+
+/* the doors: each opens with its own first question, and a plainer way to say it */
+var DOORS=[
+  {label:'A choice I\u2019m facing', q:'What are the choices, as you see them right now?', plain:'What are you trying to decide between?'},
+  {label:'A feeling I can\u2019t place', q:'Where do you feel it, and when did it first arrive?', plain:'Where in your body do you notice it?'},
+  {label:'Something that won\u2019t leave me alone', q:'What keeps bringing it back?', plain:'When does it come back to you most?'},
+  {label:'I\u2019ve been watching my own mind', q:'What do you notice, when you watch?', plain:'What did you see your mind doing?'}
+];
+/* the path after the first answer: plain questions, each with a plainer twin */
+var PATH=[
+  {q:'What part of this matters most to you right now?', plain:'What matters most here?'},
+  {q:'When you picture it, what do you feel in your body?', plain:'Where do you feel this \u2014 chest, stomach, shoulders?'},
+  {q:'What would you need, to feel even a little lighter about it?', plain:'What would help, even a little?'},
+  {q:'Imagine the you of a year from now, who came through this well. What would they say to you today?', plain:'If a wiser, older you could say one sentence to you now, what would it be?'},
+  {q:'What is one small thing you could do before tomorrow night?', plain:'What\u2019s one small next step?'}
+];
+
+var S={door:-1,turn:0,step:0,lastQ:null,turns:[],words:{},first:''};
+var $=function(id){return document.getElementById(id);};
+
+/* ── small tools ─────────────────────────────────────────────────────── */
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+function trimPhrase(t,max){t=String(t||'').replace(/\s+/g,' ').trim().replace(/[.!?,;:]+$/,'');
+  if(t.length<=max)return t; var cut=t.slice(0,max);var sp=cut.lastIndexOf(' ');return (sp>max*.6?cut.slice(0,sp):cut)+'\u2026';}
+function sentences(t){return String(t).replace(/([.!?])\s+/g,'$1\n').split(/\n+/).map(function(x){return x.trim();}).filter(Boolean);}
+function keyPhrase(t){
+  var ss=sentences(t); if(!ss.length)return trimPhrase(t,90);
+  var best=ss[0],score=-1;
+  ss.forEach(function(x){var s=x.length>12?1:0;FEEL.forEach(function(f){if(new RegExp('\\b'+f+'\\b','i').test(x))s+=3;});
+    if(/\b(i|i'm|i am|my|me)\b/i.test(x))s+=2; if(s>score){score=s;best=x;}});
+  return trimPhrase(best,110);
+}
+function feelings(t){var out=[];FEEL.forEach(function(f){if(new RegExp('\\b'+f+'\\b','i').test(t)&&out.indexOf(f)<0)out.push(f);});return out;}
+function tally(t){(String(t).toLowerCase().match(/[a-z']{5,}/g)||[]).forEach(function(w){
+  if(/^(about|would|could|should|there|their|which|where|these|those|thing|things|being|really|because|every|other|still|maybe|something|anything|nothing|right|think)$/.test(w))return;
+  S.words[w]=(S.words[w]||0)+1;});}
+function returned(t){var hit=null;(String(t).toLowerCase().match(/[a-z']{5,}/g)||[]).forEach(function(w){if(!hit&&S.words[w]>=2)hit=w;});return hit;}
+
+/* ── speaking: one exchange at a time, in the circle ─────────────────── */
+function show(parts,rimWords){
+  var sp=$('speak'); sp.classList.add('fade');
+  setTimeout(function(){
+    sp.textContent='';
+    parts.forEach(function(p){sp.appendChild(el(p.tag||'p',p.cls,p.text));});
+    sp.classList.remove('fade');
+    if(rimWords!==undefined)setRim(rimWords);
+  },650);
+}
+function setRim(words){var r=$('rim'),t=$('rimText');
+  r.classList.remove('show');
+  setTimeout(function(){t.textContent=words?('\u00b7 '+words+' \u00b7 '+words+' '):'';if(words)r.classList.add('show');},500);}
+function addTrail(parts,rimWords){
+  S.turns.push({parts:parts,rim:rimWords});
+  var tr=$('trail'),b=el('button');b.type='button';b.setAttribute('aria-label','Turn '+S.turns.length);
+  var i=S.turns.length-1;
+  b.addEventListener('click',function(){show(S.turns[i].parts,S.turns[i].rim);mark(i);});
+  tr.appendChild(b);mark(i);
+}
+function mark(i){[].forEach.call($('trail').children,function(b,k){b.classList.toggle('now',k===i);});}
+function ask(q){S.lastQ=q;$('words').placeholder='Write it as it is \u2014 it doesn\u2019t need tidying\u2026';}
+
+/* ── the opening ─────────────────────────────────────────────────────── */
+function open(){
+  show([
+    {tag:'h1',cls:'title',text:'The Mirror'},
+    {cls:'line',text:'Talk something through, and see yourself a little more clearly.'},
+    {cls:'line soft',text:'It listens, and gives your own words back. It never tells you who you are.'},
+    {cls:'line q',text:'What would you like to see more clearly?'}
+  ],'');
+  var d=$('doors');
+  DOORS.forEach(function(o,i){var b=el('button','door',o.label);b.type='button';
+    b.addEventListener('click',function(){begin(i);});d.appendChild(b);});
+  var free=el('button','door','Something else');free.type='button';
+  free.addEventListener('click',function(){begin(-1);});d.appendChild(free);
+}
+function begin(i){
+  S.door=i; $('doors').classList.add('hide'); $('say').classList.remove('hide');
+  var q=i>=0?DOORS[i]:{q:'What\u2019s here for you today?',plain:'What would you like to talk about?'};
+  ask(q);
+  var parts=[{cls:'line q',text:q.q}];
+  show(parts,''); addTrail(parts,'');
+  setTimeout(function(){try{$('words').focus();}catch(e){}},700);
+}
+
+/* ── hearing, and answering from the very first reply ────────────────── */
+function hear(){
+  var t=$('words').value.trim(); if(!t)return;
+  $('words').value='';
+  if(HEAVY.test(t)){care();return;}
+  if(LEAVE.test(t)){rest();return;}
+  if(CONFUSED.test(t)&&S.lastQ){                     /* they didn't follow: say it more simply */
+    var parts=[{cls:'line soft',text:'Let me put that more simply.'},{cls:'line q',text:S.lastQ.plain||S.lastQ.q}];
+    ask({q:S.lastQ.plain||S.lastQ.q,plain:S.lastQ.plain||S.lastQ.q}); show(parts); addTrail(parts); return;
+  }
+  if(UNSURE.test(t)){
+    var p2=[{cls:'line',text:'That\u2019s alright. Not knowing is a place to stand, too.'},{cls:'line q',text:'What\u2019s one small thing you do know about it?'}];
+    ask({q:'What\u2019s one small thing you do know about it?',plain:'Anything at all you\u2019re sure of?'}); show(p2); addTrail(p2); return;
+  }
+  S.turn++; tally(t); if(!S.first)S.first=keyPhrase(t);
+  var kp=keyPhrase(t), fl=feelings(t), back=returned(t), parts=[{tag:'p',cls:'quote',text:kp}];
+  /* the Mirror's own reflection: what it notices in the person's own words */
+  var m=t.match(TURN), noticed=null;
+  if(m){var a0=t.slice(0,m.index),pre=/^\s*(i'?m |i am |i feel like |feeling like |feeling |like )/i;while(pre.test(a0))a0=a0.replace(pre,'');
+        var a=trimPhrase(a0,60),
+          b=trimPhrase(t.slice(m.index+m[0].length).replace(/^(my |the )/i,function(x){return x.toLowerCase()==='my '?'your ':x;}),60);
+    if(a.length>3&&b.length>3)noticed='Two things are pulling here: '+a+', and '+b+'.';}
+  if(!noticed&&back)noticed='You\u2019ve come back to \u201c'+back+'\u201d more than once. It seems to matter.';
+  if(!noticed&&fl.length===1)noticed='You named it: '+fl[0]+'. That word is yours; I\u2019m only holding it up.';
+  if(!noticed&&fl.length>1)noticed='More than one feeling is here: '+fl.slice(0,3).join(', ')+'.';
+  if(!noticed)noticed='I\u2019m hearing that this is real for you, as you said it.';
+  parts.push({cls:'line',text:noticed});
+  var next;
+  if(m&&S.step===0)next={q:'Which of the two is asking for you first today?',plain:'Which one needs you more right now?'};
+  else {next=PATH[Math.min(S.step,PATH.length-1)];S.step++;}
+  parts.push({cls:'line q',text:next.q}); ask(next);
+  show(parts,kp); addTrail(parts,kp);
+  if(S.turn>=2)$('after').classList.remove('hide');
+  if(S.step>=PATH.length){setTimeout(function(){$('rest').textContent='Let it rest here \u2727';},900);}
+}
+
+/* ── when someone is in real pain ────────────────────────────────────── */
+function care(){
+  var parts=[{cls:'line',text:'That sounds really heavy, and I\u2019m glad you said it here.'},
+    {cls:'line',text:'This is more than a mirror should hold alone. Please reach a person now \u2014 someone you trust, or a crisis line where you are.'},
+    {cls:'line soft',text:'In Canada or the US, you can call or text 988. Elsewhere, your local emergency number.'}];
+  show(parts,''); addTrail(parts,'');
+}
+
+/* ── letting it rest: what they leave holding ────────────────────────── */
+function rest(){
+  $('say').classList.add('hide'); $('after').classList.add('hide');
+  var parts=[{cls:'line',text:'You were listened to, just as you are.'},{cls:'line q',text:'What would you like to leave with?'}];
+  show(parts,S.first||'');
+  var d=$('doors'); d.textContent=''; d.classList.remove('hide');
+  [['A question to carry',function(){fin([{cls:'line soft',text:'To carry with you:'},{cls:'line q',text:(S.lastQ&&S.lastQ.q)||'What matters most here?'},{cls:'line soft',text:'No need to answer it today.'}]);}],
+   ['What I found, in my own words',function(){var w=S.turns.map(function(x){return x.rim;}).filter(Boolean);
+      fin([{cls:'line soft',text:'In your own words:'}].concat(w.slice(-3).map(function(x){return {cls:'quote',text:x};})).concat([{cls:'line soft',text:'Only you wrote these. Keep them if they help.'}]));}],
+   ['Just the feeling of being met',function(){fin([{cls:'line',text:'You brought something real, and it was met.'},{cls:'line soft',text:'Come back whenever you like. The Mirror will be here.'}]);}]
+  ].forEach(function(o){var b=el('button','door',o[0]);b.type='button';b.addEventListener('click',o[1]);d.appendChild(b);});
+}
+function fin(parts){ $('doors').classList.add('hide'); show(parts.concat([{cls:'line soft',text:'One step closer to your own light.'}]),S.first||'');
+  var r=$('after');r.textContent='';r.classList.remove('hide');var b=el('button','btn quiet','Begin again');b.type='button';
+  b.addEventListener('click',function(){location.reload();});r.appendChild(b);}
+
+/* ── wiring ──────────────────────────────────────────────────────────── */
+$('send').addEventListener('click',hear);
+$('words').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();hear();}});
+$('rest').addEventListener('click',rest);
+open();
+})();
+</script>
+</body>
+</html>

@@ -4747,7 +4747,9 @@ function submit(lat,lng,text){
      the levels glow in turn. The comet takes about a second and a third to get
      home, so the climb sets off as it lands rather than racing it. */
   setTimeout(()=>{try{triggerWave(s.color);}catch(e){}},1350);
-  if(shareCount%4===0&&auraLevel<4){
+  /* 28 Sep 2026 · every offering is met. Before this, every fourth offering took an old
+     'level tour' path instead, and the AI's light never came. */
+  if(typeof asMeet!=='function'&&shareCount%4===0&&auraLevel<4){
     const here=map.getCenter();
     const hereZoom=map.getZoom();
     const tourZooms=[hereZoom,12,9,5.7];
@@ -10591,7 +10593,7 @@ function mrRead(t){
   return {k:'open',
     under:'You brought something here without a name on it. That is often the more honest way to arrive.',
     voice:'Nothing you have said needs to be tidied before it counts.',
-    ask:'If this had a shape rather than a name, what shape would it be?'};
+    ask:'What part of this matters most to you right now?'};
 }
 /* what the Mirror actually knows — and nothing beyond it */
 function mrGround(){
@@ -11159,7 +11161,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 27 Sep 2026 · 124 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 28 Sep 2026 · 125 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -12676,7 +12678,6 @@ window.asMeet=function(sid,label,color,lat,lng,wl){
 /* the event row sits just under the scale menu, wherever that menu ends */
 (function(){
   function place(){try{
-    if(window.innerWidth>600)return;
     var ch=document.getElementById('wev-chips'),tb=document.getElementById('tabs');
     if(!ch||!tb||!ch.classList.contains('show'))return;
     var r=tb.getBoundingClientRect();if(r.height<=0)return;
