@@ -3011,7 +3011,7 @@ function asVoiceOut(){
     comp.threshold.value=-18;comp.knee.value=14;comp.ratio.value=3.5;comp.attack.value=.012;comp.release.value=.3;
     comp.connect(actx.destination);
     var lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3600;lp.Q.value=.5;lp.connect(comp);
-    var inp=actx.createGain();inp.gain.value=1;inp.connect(lp);
+    var inp=actx.createGain();inp.gain.value=.62;inp.connect(lp);   /* 28 Sep: Karl - 'a little loud, a bit overbearing' */
     try{
       var len=Math.floor(actx.sampleRate*2.8),ir=actx.createBuffer(2,len,actx.sampleRate);
       for(var ch=0;ch<2;ch++){var d=ir.getChannelData(ch);for(var i=0;i<len;i++){d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3.2);}}
@@ -11076,6 +11076,7 @@ try{
   window.map = map;
   window.SENSES = SENSES;
   window.showMsg = showMsg;
+  try{window.openLiveFeed = openLiveFeed;}catch(e){}   /* 29 Sep: the ending's door to the Live Feed could never reach it */
   /* 3 Sep 2026 - the landing's one door needs a way in. #my-aura-btn does not
      exist, which is why the door did nothing at all. */
   window.openMyAuraPage = openMyAuraPage;
@@ -11161,7 +11162,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 28 Sep 2026 · 125 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 29 Sep 2026 · 127 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -12024,6 +12025,32 @@ body:has(#myaura-page.show) #build-stamp:hover{opacity:1}
 .asn-d{appearance:none;border:0;background:transparent;cursor:pointer;font-family:inherit;font-size:15px;
   color:#f6f2ea;padding:11px 14px;min-height:44px;pointer-events:auto}
 .asn-d.quiet{color:rgba(208,201,186,.96);font-size:14px}
+#asn-first{margin:0 0 6px;font-size:14.5px;font-style:italic;color:#ffe6bd}
+#asn-next-h{margin:0 0 12px;font-size:15.5px;line-height:1.55;color:rgba(232,226,212,.97)}
+#asn-next-h b{display:block;margin-top:6px;font-weight:400;font-size:18px;color:#fff7e9}
+.asn-n{appearance:none;border:0;cursor:pointer;font-family:inherit;font-size:16px;line-height:1.3;pointer-events:auto;
+  min-height:48px;width:min(100%,320px);padding:12px 22px;border-radius:999px;color:#f6f2ea;
+  background:rgba(255,226,180,.07);box-shadow:0 0 0 1px rgba(255,226,180,.34) inset;transition:box-shadow .4s,background .4s,transform .2s}
+.asn-n.lead{color:#fff7e9;background:rgba(255,226,180,.17);box-shadow:0 0 0 1.5px rgba(255,226,180,.7) inset,0 0 22px rgba(255,210,150,.28)}
+.asn-n:hover,.asn-n:focus-visible{background:rgba(255,226,180,.22);box-shadow:0 0 0 1.5px rgba(255,226,180,.85) inset,0 0 26px rgba(255,210,150,.4);outline:none}
+.asn-n:active{transform:scale(.98)}
+.asn-d:focus-visible{outline:2px solid #ffe6bd;outline-offset:3px;border-radius:999px}
+#asn-threads{position:fixed;inset:0;width:100%;height:100%;z-index:2599;pointer-events:none;opacity:0;transition:opacity 900ms ease;overflow:visible}
+#asn-threads.on{opacity:1}
+.asn-th path{fill:none;stroke:var(--c,#c4b5fd);stroke-width:2.4;stroke-linecap:round;opacity:.78;
+  filter:drop-shadow(0 0 5px var(--c,#c4b5fd)) drop-shadow(0 0 12px var(--c,#c4b5fd));transition:opacity .5s,stroke-width .5s}
+.asn-th .asn-spark{fill:#fff8ec;filter:drop-shadow(0 0 6px var(--c,#c4b5fd)) drop-shadow(0 0 12px var(--c,#c4b5fd))}
+.asn-th .asn-spark.go{fill:#fffdf6}
+.asn-th .asn-end{fill:none;stroke:var(--c,#c4b5fd);stroke-width:1.6;opacity:.7;transform-box:fill-box;transform-origin:center;
+  animation:asnEnd 2.6s ease-in-out infinite}
+.asn-th.hot path{opacity:1;stroke-width:3.4}
+.asn-th.dim{opacity:.28}
+@keyframes asnEnd{0%,100%{transform:scale(.86);opacity:.35}50%{transform:scale(1.18);opacity:.9}}
+.asn-target{box-shadow:0 0 0 2px var(--asc,#c4b5fd),0 0 22px var(--asc,#c4b5fd)!important;border-radius:999px;transition:box-shadow .6s}
+.asn-arrive{animation:olThread 1s ease-out both}
+#feed.asn-target{border-radius:14px!important}
+body.calm .asn-th .asn-end{animation:none}
+@media (prefers-reduced-motion:reduce){.asn-th .asn-end{animation:none}}
 </style>
 <script>
 (function(){
@@ -12057,20 +12084,102 @@ function build(){
    +'<div id="asn-row"><button type="button" class="asn-p" id="asn-skip">leave it unsaid</button>'
    +'<button type="button" class="asn-p lead" id="asn-send">That\'s it</button></div></div>'
    +'<div id="asn-close"><p id="asn-theirs"></p><p id="asn-said"></p>'
-   +'<div id="asn-door"><button type="button" class="asn-d" id="asn-more">see what else is here&nbsp;&rarr;</button>'
-   +'<button type="button" class="asn-d quiet" id="asn-rest">let it rest</button></div></div></div>';
+   +'<div id="asn-door"><p id="asn-first"></p>'
+   +'<p id="asn-next-h">Your light now lives in two places: your own aura, and everyone\'s.<br><b>Where would you like to go?</b></p>'
+   +'<button type="button" class="asn-n lead" id="asn-aura" data-to="aura">\u2727 See your light in My Aura</button>'
+   +'<button type="button" class="asn-n" id="asn-more" data-to="feed">See what others are offering now</button>'
+   +'<button type="button" class="asn-d quiet" id="asn-rest">Stay here and explore the map</button></div></div></div>';
   document.body.appendChild(r);W=r;
   q('asn-no').addEventListener('click',function(){answer(false);});
   q('asn-yes').addEventListener('click',function(){answer(true);});
   q('asn-skip').addEventListener('click',function(){finish(true,'');});
   q('asn-send').addEventListener('click',function(){finish(true,q('asn-words').value);});
-  q('asn-more').addEventListener('click',function(){done();try{if(typeof openLiveFeed==='function')openLiveFeed();}catch(e){}});
-  q('asn-rest').addEventListener('click',done);
+  q('asn-aura').addEventListener('click',function(){goThread('aura',function(){done();try{if(typeof window.openMyAuraPage==='function')window.openMyAuraPage();}catch(e){}});});
+  q('asn-more').addEventListener('click',function(){goThread('feed',function(){done();try{if(typeof window.openLiveFeed==='function')window.openLiveFeed();}catch(e){}});});
+  q('asn-rest').addEventListener('click',function(){done();
+    setTimeout(function(){try{if(typeof window.showMsg==='function')window.showMsg('Tap any light on the map to feel what it holds. Your own light is always waiting in My Aura.',7000);}catch(e){}},500);});
+  ['asn-aura','asn-more'].forEach(function(id){var b=q(id);
+    ['mouseenter','focus'].forEach(function(ev){b.addEventListener(ev,function(){hotThread(b.getAttribute('data-to'));});});
+    ['mouseleave','blur'].forEach(function(ev){b.addEventListener(ev,function(){hotThread(null);});});});
   var wds=q('asn-words');
   wds.addEventListener('focus',placeTop);                 /* the keyboard never buries the way to send */
   wds.addEventListener('blur',function(){setTimeout(place,280);});
   try{if(window.visualViewport)visualViewport.addEventListener('resize',function(){
     if(document.activeElement===wds)placeTop();});}catch(e){}
+}
+
+/* ═══ THE THREADS THAT LEAD · 29 Sep 2026 ═════════════════════════════════
+   Karl: "If the threads are the answer we need a more impression regarding the
+   fact they are intending to potentially lead the senser there." And: "the whole
+   what do I do next thing has to be beyond doubt."
+   When the ending's doors appear, two threads draw themselves from the person's
+   own light to the two places it now lives: My Aura, and the Live Feed. Sparks
+   travel along each towards its door; the door at the far end breathes. Resting
+   on a choice brightens its thread; choosing sends the light home along it, and
+   only then does the door open. Nothing is ever left without a way on. */
+var COL='#c4b5fd',TS=null,TT=null;
+var SVGNS='http://www.w3.org/2000/svg';
+function lightPt(){var x=innerWidth/2,y=innerHeight*0.40;
+  try{if(typeof map!=='undefined'&&map&&map.project){var p=map.project([LNG,LAT]);if(isFinite(p.x)&&isFinite(p.y)){x=p.x;y=p.y;}}}catch(e){}
+  return {x:x,y:y};}
+function visibleRect(id){var e=document.getElementById(id);if(!e)return null;
+  try{if(getComputedStyle(e).display==='none'||getComputedStyle(e).visibility==='hidden')return null;}catch(x){}
+  var r=e.getBoundingClientRect();return (r.width>2&&r.height>2&&r.bottom>0&&r.right>0&&r.left<innerWidth&&r.top<innerHeight)?{el:e,r:r}:null;}
+function target(which){
+  var ids=which==='aura'?['logo-mark','my-aura']:['livefeed-btn','feed-full','feed'];
+  for(var i=0;i<ids.length;i++){var v=visibleRect(ids[i]);if(v){var r=v.r;
+    return {el:v.el,x:r.left+r.width/2,y:(ids[i]==='feed'?r.top+30:r.top+r.height/2)};}}
+  return null;}
+function curve(a,b){var mx=(a.x+b.x)/2,my=Math.max(10,Math.min(a.y,b.y)-Math.max(40,Math.abs(a.x-b.x)*0.18));
+  return 'M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+b.x.toFixed(1)+','+b.y.toFixed(1);}
+function mk(tag,attrs){var e=document.createElementNS(SVGNS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
+function startThreads(){
+  stopThreads();
+  try{
+    var calm=document.body.classList.contains('calm')||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var svg=mk('svg',{id:'asn-threads','aria-hidden':'true'});svg.style.setProperty('--c',COL);
+    TS={svg:svg,g:{},calm:calm};
+    ['aura','feed'].forEach(function(w){
+      var t=target(w);if(!t)return;
+      var g=mk('g',{'class':'asn-th asn-th-'+w});
+      var path=mk('path',{id:'asn-p-'+w,d:curve(lightPt(),t)});
+      var end=mk('circle',{'class':'asn-end',cx:t.x,cy:t.y,r:w==='aura'?26:22});
+      g.appendChild(path);g.appendChild(end);
+      if(!calm){for(var k=0;k<2;k++){var sp=mk('circle',{'class':'asn-spark',r:3.2});
+        var am=mk('animateMotion',{dur:'2.8s',repeatCount:'indefinite',begin:(k*1.4)+'s',rotate:'auto'});
+        var mp=mk('mpath',{});mp.setAttributeNS('http://www.w3.org/1999/xlink','href','#asn-p-'+w);mp.setAttribute('href','#asn-p-'+w);
+        am.appendChild(mp);sp.appendChild(am);g.appendChild(sp);}}
+      svg.appendChild(g);TS.g[w]={g:g,path:path,end:end,el:t.el};
+      try{t.el.classList.add('asn-target');t.el.style.setProperty('--asc',COL);}catch(e){}
+    });
+    document.body.appendChild(svg);
+    Object.keys(TS.g).forEach(function(w){var p=TS.g[w].path,L=0;try{L=p.getTotalLength();}catch(e){}
+      if(L){p.style.strokeDasharray=L;p.style.strokeDashoffset=L;void p.getBoundingClientRect();
+        p.style.transition='stroke-dashoffset 1.9s ease';p.style.strokeDashoffset=0;
+        setTimeout(function(){try{p.style.transition='';p.style.strokeDasharray='';p.style.strokeDashoffset='';}catch(e){}},2100);}});
+    svg.classList.add('on');
+    TT=setInterval(function(){if(!TS)return;var a=lightPt();
+      Object.keys(TS.g).forEach(function(w){var t=target(w);if(!t)return;var o=TS.g[w];
+        if(!o.path.style.strokeDasharray)o.path.setAttribute('d',curve(a,t));o.end.setAttribute('cx',t.x);o.end.setAttribute('cy',t.y);});},400);
+  }catch(e){}
+}
+function hotThread(w){if(!TS)return;Object.keys(TS.g).forEach(function(k){TS.g[k].g.classList.toggle('hot',k===w);TS.g[k].g.classList.toggle('dim',!!w&&k!==w);});}
+function goThread(w,then){
+  var o=TS&&TS.g[w];
+  if(!o||TS.calm){then();return;}
+  try{hotThread(w);var sp=mk('circle',{'class':'asn-spark go',r:6});
+    var am=mk('animateMotion',{dur:'0.9s',fill:'freeze',begin:'indefinite'});
+    var mp=mk('mpath',{});mp.setAttributeNS('http://www.w3.org/1999/xlink','href','#asn-p-'+w);mp.setAttribute('href','#asn-p-'+w);
+    am.appendChild(mp);sp.appendChild(am);o.g.appendChild(sp);
+    if(am.beginElement)am.beginElement();
+    try{o.el.classList.add('asn-arrive');}catch(e){}
+  }catch(e){}
+  setTimeout(function(){try{o.el.classList.remove('asn-arrive');}catch(e){}then();},950);
+}
+function stopThreads(){
+  if(TT){clearInterval(TT);TT=null;}
+  if(TS){Object.keys(TS.g).forEach(function(k){try{TS.g[k].el.classList.remove('asn-target');}catch(e){}});
+    try{TS.svg.remove();}catch(e){}TS=null;}
 }
 function reveal(id,disp){var e=q(id);if(!e)return;e.style.display=disp||'block';void e.offsetWidth;e.classList.add('on');place();}
 function hide(id){var e=q(id);if(!e)return;e.classList.remove('on');e.style.display='none';}
@@ -12091,7 +12200,7 @@ function placeTop(){
 }
 function reset(){['asn-label','asn-ask','asn-choices','asn-say','asn-close','asn-door'].forEach(hide);
   try{q('asn-words').value='';q('asn-said').classList.remove('hand');}catch(e){}}
-function done(){clearT();stopWatch();reset();if(W){W.classList.remove('on');W.style.visibility='';}
+function done(){clearT();stopWatch();stopThreads();reset();if(W){W.classList.remove('on');W.style.visibility='';}
   try{if(window.asMeetEnd)asMeetEnd();}catch(e){}}
 function startWatch(){stopWatch();watch=setInterval(function(){
   if(!W||!W.classList.contains('on'))return;
@@ -12139,15 +12248,13 @@ function finish(moved,said){
   try{q('asn-words').blur();}catch(e){}
   /* the doorway tells the truth about this place: an invitation, or an honest emptiness */
   try{
-    var more=q('asn-more'),alone=false;
+    var alone=false;
     try{alone=(typeof asNearby==='function')&&asNearby(LAT,LNG,700)<=1;}catch(e2){}
-    if(alone){more.textContent='Yours is the first light in this place.';
-      more.classList.add('quiet');more.style.pointerEvents='none';}
-    else{more.textContent='see what else is here \u2192';
-      more.classList.remove('quiet');more.style.pointerEvents='auto';}
+    q('asn-first').textContent=alone?'Yours is the first light in this place.':'';
+    q('asn-first').style.display=alone?'block':'none';
   }catch(e3){}
   reveal('asn-close','block');
-  T(2800,function(){reveal('asn-door','flex');q('asn-said').classList.add('hand');});
+  T(2800,function(){reveal('asn-door','flex');q('asn-said').classList.add('hand');startThreads();});
 }
 function save(moved,words){
   try{var a=JSON.parse(localStorage.getItem('AS_SHIFTS')||'[]');
@@ -12160,7 +12267,7 @@ window.asNoticeAfter=function(senseId,label,color,lat,lng,opts){
     var key=senseId+'|'+lat.toFixed(5)+'|'+lng.toFixed(5);
     if(key===lastKey)return;lastKey=key;
     MET=!!(opts&&opts.met);
-    build();LAT=lat;LNG=lng;SENSE=senseId;clearT();stopWatch();reset();
+    build();LAT=lat;LNG=lng;SENSE=senseId;COL=color||COL;clearT();stopWatch();stopThreads();reset();
     if(W){W.classList.remove('on');W.style.visibility='';}
     var now=!!(opts&&opts.now);
     timers.push(setTimeout(function(){(now?waitClear:waitReady)(function(){start(label||senseId);},0);},now?500:8600));
@@ -12485,7 +12592,11 @@ function pt(){try{if(typeof map!=='undefined'&&map&&map.project){var p=map.proje
 function place(p){
   if(!wrap)return;var hh=wrap.offsetHeight||160,ww=wrap.offsetWidth||320;
   var x=Math.max(ww/2-14,Math.min(W-ww/2+14,p.x)),below=p.y+R*1.1;
-  var top=(below+hh<H-120)?below:Math.max(64,p.y-R*1.1-hh);
+  /* 28 Sep 2026 · the words must never cover the scale menu, because the menu
+     lights up as they speak. Below the light first; above only if it clears the menu. */
+  var tb=0;try{var tbe=document.getElementById('tabs');if(tbe){var tr=tbe.getBoundingClientRect();if(tr.height>0&&tr.bottom<H*.5)tb=tr.bottom;}}catch(e){}
+  var topMin=Math.max(64,tb+12),above=Math.max(topMin,p.y-R*1.1-hh);
+  var top=(below+hh<H-16)?below:((above+hh<=p.y-R*.5)?above:Math.max(topMin,Math.min(below,H-hh-8)));
   wrap.style.left=Math.round(x)+'px';wrap.style.top=Math.round(top)+'px';
 }
 function say(html){if(!stg)return;stg.style.opacity=0;
