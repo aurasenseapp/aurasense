@@ -99,6 +99,8 @@ textarea{flex:1;font-family:var(--serif);font-size:1.05rem;color:var(--ink);line
 textarea::placeholder{color:var(--faint);font-style:italic}
 .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:8px}
 .hide{display:none!important}
+.home{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:12px;z-index:5}
+.home .btn{background:rgba(255,251,245,.6);border:1px solid rgba(233,181,106,.4)}
 .note{font-size:.85rem;color:var(--faint);margin-top:10px;text-align:center}
 @media (max-width:520px){ .say{flex-direction:column;align-items:stretch} .say .btn{align-self:center} }
 @media (max-height:640px){ .mirror{width:min(80vw,54vh,540px)} }
@@ -106,6 +108,9 @@ textarea::placeholder{color:var(--faint);font-style:italic}
 </head>
 <body>
 <div class="ground" aria-hidden="true"></div>
+<nav class="home hide" id="home" aria-label="Leave the Mirror">
+  <button class="btn quiet" id="back" type="button">← Back to the map</button>
+</nav>
 <main class="stage">
   <div class="mirror" id="mirror">
     <svg class="rim" id="rim" viewBox="0 0 100 100" aria-hidden="true">
@@ -124,6 +129,7 @@ textarea::placeholder{color:var(--faint);font-style:italic}
     <button class="btn quiet" id="rest" type="button">Let it rest here</button>
   </div>
   <p class="note" id="note">Nothing you write leaves this page.</p>
+  <p class="note hide" id="classicRow"><button class="btn quiet" id="classic" type="button">The balance of your light, and the unlit rooms →</button></p>
 </main>
 
 <script>
@@ -280,9 +286,18 @@ function rest(){
 }
 function fin(parts){ $('doors').classList.add('hide'); show(parts.concat([{cls:'line soft',text:'One step closer to your own light.'}]),S.first||'');
   var r=$('after');r.textContent='';r.classList.remove('hide');var b=el('button','btn quiet','Begin again');b.type='button';
-  b.addEventListener('click',function(){location.reload();});r.appendChild(b);}
+  b.addEventListener('click',function(){location.reload();});r.appendChild(b);
+  if(inSite){var h=el('button','btn quiet','← Back to the map');h.type='button';h.addEventListener('click',function(){tell('close');});r.appendChild(h);}}
 
 /* ── wiring ──────────────────────────────────────────────────────────── */
+/* inside Aurasense: a way back to the map, and to the balance and the unlit rooms.
+   Messages go only to Aurasense's own page, and say only "close" or "classic". */
+var inSite=false;try{inSite=(window.parent!==window)&&/[?&]in=site\b/.test(location.search);}catch(e){}
+function tell(act){try{window.parent.postMessage({as:'mirror',act:act},location.origin);}catch(e){}}
+if(inSite){$('home').classList.remove('hide');$('classicRow').classList.remove('hide');
+  $('back').addEventListener('click',function(){tell('close');});
+  $('classic').addEventListener('click',function(){tell('classic');});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')tell('close');});}
 $('send').addEventListener('click',hear);
 $('words').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();hear();}});
 $('rest').addEventListener('click',rest);

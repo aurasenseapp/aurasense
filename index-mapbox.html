@@ -4066,12 +4066,18 @@ window.asLightScale=function(i,color,lat,lng){
       if(tab){tab.style.setProperty('--asc',col);tab.classList.add('as-reached');}
       var a={x:innerWidth/2,y:innerHeight*.45};
       try{if(window.map&&isFinite(lat)&&isFinite(lng)){var p=window.map.project([lng,lat]);if(isFinite(p.x)&&isFinite(p.y)){a={x:p.x,y:p.y};}}}catch(e){}
+      /* 30 Sep · Karl: the threads must point from the text that names them. The Meeting's
+         message holds each scale's words in its own span; the thread starts there. */
+      try{var sp=document.querySelectorAll('#asm-stage .r span')[i];if(sp){var sr=sp.getBoundingClientRect();
+        if(sr.width>0){a={x:sr.left+sr.width/2,y:sr.top+2};sp.classList.add('as-reach-src');sp.style.setProperty('--c',col);}}}catch(e){}
       var r=(tab||orb).getBoundingClientRect(),b={x:r.left+r.width/2,y:r.bottom-2};
       if(!svg){svg=document.createElementNS(NS,'svg');svg.id='as-reach-svg';svg.setAttribute('aria-hidden','true');document.body.appendChild(svg);}
       var mx=(a.x+b.x)/2+(b.x-a.x)*.12,my=Math.max(10,Math.min(a.y,b.y)+(Math.abs(a.y-b.y))*.18);
       var path=document.createElementNS(NS,'path');
       path.setAttribute('d','M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+b.x.toFixed(1)+','+b.y.toFixed(1));
       path.style.setProperty('--c',col);svg.appendChild(path);
+      var flow=document.createElementNS(NS,'path');flow.setAttribute('d',path.getAttribute('d'));flow.setAttribute('class','as-reach-flow');
+      flow.style.setProperty('--c',col);svg.appendChild(flow);
       /* the menu is hushed while the Meeting speaks, so the named word is lit above the hush, in its own place */
       try{if(tab){var wd=document.createElementNS(NS,'text');wd.setAttribute('class','as-reach-word');
         var wx=r.left+r.width/2,wy=r.top+r.height/2+5;
@@ -4083,7 +4089,7 @@ window.asLightScale=function(i,color,lat,lng){
       var L=0;try{L=path.getTotalLength();}catch(e){}
       if(L){path.style.strokeDasharray=L;path.style.strokeDashoffset=L;void path.getBoundingClientRect();
         path.style.transition='stroke-dashoffset 1.3s ease, opacity 2.4s ease';path.style.strokeDashoffset=0;}
-      setTimeout(function(){try{path.style.opacity='.32';}catch(e){}},2600);
+      setTimeout(function(){try{path.style.opacity='.45';}catch(e){}},2600);
       clearTimeout(clearT);clearT=setTimeout(window.asReachClear,i>=4?9000:16000);
     }catch(e){}
   };
@@ -6808,7 +6814,7 @@ function macDrawAura(ts){
          With a door list open, the names and the cards were fighting and both
          lost. A name is not competing for attention while a list is being
          read, so it steps back - and returns the moment the list closes. */
-      var _dim=(typeof window!=='undefined'&&window._macListOpen)?0.24:1;
+      var _dim=(typeof window!=='undefined'&&(window._macListOpen||window._macCardOpen))?(window._macCardOpen?0.08:0.24):1;
       macAx.globalAlpha=Math.min(1,(macSpread-0.34)/0.42)*_dim;
       macAx.textAlign='center'; macAx.textBaseline='middle';
       macAx.font='13px Georgia, "Times New Roman", serif';
@@ -7208,10 +7214,12 @@ function macOpenDoor(i){
     });
   }
   function macCloseSense(){
+    window._macCardOpen=false;
     var c=document.getElementById('ma-sense-card'); if(c)c.classList.remove('on');
   }
   function macOpenSense(i){
     var c=document.getElementById('ma-sense-card'); if(!c)return;
+    window._macCardOpen=true;
     var L=(typeof maLayers!=='undefined'&&maLayers)?maLayers:[];
     var la=L[i]; if(!la)return;
     var places=[];
@@ -10758,7 +10766,31 @@ function mrAnswer(){
   }catch(e){}
 }
 
+/* THE LIVING MIRROR, IN THE SITE · 30 Sep 2026 · Karl: "Still no aura circular
+   My Aura functions." The Mirror now opens as the living, circular Mirror he chose,
+   in its own sealed page laid over the map. It keeps nothing and sends nothing.
+   The balance of your light and the unlit rooms stay one tap away inside it. */
 function mirrorOpen(){
+  try{
+    if(document.getElementById('as-living-mirror'))return;
+    var ov=document.createElement('div');ov.id='as-living-mirror';ov.setAttribute('role','dialog');ov.setAttribute('aria-label','The Mirror');
+    var fr=document.createElement('iframe');fr.src='/mirror-living.html?in=site';fr.title='The Mirror';
+    fr.setAttribute('referrerpolicy','no-referrer');fr.setAttribute('sandbox','allow-scripts allow-same-origin');
+    ov.appendChild(fr);document.body.appendChild(ov);
+    requestAnimationFrame(function(){ov.classList.add('on');});
+    var shut=function(then){try{ov.classList.remove('on');setTimeout(function(){try{ov.remove();}catch(e){}if(then)then();},450);}catch(e){}};
+    var onMsg=function(e){
+      try{if(e.origin!==location.origin||e.source!==fr.contentWindow)return;
+        var m=e.data||{};if(m.as!=='mirror')return;
+        if(m.act==='close'){removeEventListener('message',onMsg);shut();}
+        else if(m.act==='classic'){removeEventListener('message',onMsg);shut(function(){try{mirrorOpenClassic();}catch(x){}});}
+      }catch(x){}};
+    addEventListener('message',onMsg);
+    var esc=function(e){if(e.key==='Escape'){removeEventListener('keydown',esc);removeEventListener('message',onMsg);shut();}};
+    addEventListener('keydown',esc);
+  }catch(e){try{mirrorOpenClassic();}catch(x){}}
+}
+function mirrorOpenClassic(){
   try{
     if(document.getElementById('mr-modal'))return;
     const back=document.createElement('div');back.id='mr-back';document.body.appendChild(back);
@@ -11214,7 +11246,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 29 Sep 2026 · 128 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 129 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -12170,7 +12202,7 @@ function build(){
    travel along each towards its door; the door at the far end breathes. Resting
    on a choice brightens its thread; choosing sends the light home along it, and
    only then does the door open. Nothing is ever left without a way on. */
-var COL='#c4b5fd',TS=null,TT=null;
+var COL='#c4b5fd',TS=null,TT=null,TSflow={};
 var SVGNS='http://www.w3.org/2000/svg';
 function lightPt(){var x=innerWidth/2,y=innerHeight*0.40;
   try{if(typeof map!=='undefined'&&map&&map.project){var p=map.project([LNG,LAT]);if(isFinite(p.x)&&isFinite(p.y)){x=p.x;y=p.y;}}}catch(e){}
@@ -12183,8 +12215,21 @@ function target(which){
   for(var i=0;i<ids.length;i++){var v=visibleRect(ids[i]);if(v){var r=v.r;
     return {el:v.el,x:r.left+r.width/2,y:(ids[i]==='feed'?r.top+30:r.top+r.height/2)};}}
   return null;}
-function curve(a,b){var mx=(a.x+b.x)/2,my=Math.max(10,Math.min(a.y,b.y)-Math.max(40,Math.abs(a.x-b.x)*0.18));
+function curve(a,b,side){
+  var mx,my;
+  if(side){ /* round the outside of the words: out to the side, then up */
+    mx=side<0?Math.max(12,Math.min(a.x,b.x)-70):Math.min(innerWidth-12,Math.max(a.x,b.x)+70);
+    my=(a.y+b.y)/2;
+    return 'M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' C'+mx.toFixed(1)+','+a.y.toFixed(1)+' '+mx.toFixed(1)+','+my.toFixed(1)+' '+b.x.toFixed(1)+','+b.y.toFixed(1);}
+  mx=(a.x+b.x)/2;my=Math.max(10,Math.min(a.y,b.y)-Math.max(40,Math.abs(a.x-b.x)*0.18));
   return 'M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+b.x.toFixed(1)+','+b.y.toFixed(1);}
+/* where a thread begins: the button that names its place while the doors are showing;
+   the person's own light once they are gone */
+function origin(w){
+  try{var door=q('asn-door');if(door&&getComputedStyle(door).display!=='none'&&W&&W.classList.contains('on')){
+    var b=q(w==='aura'?'asn-aura':'asn-more');if(b){var r=b.getBoundingClientRect();
+      if(r.width>0)return {x:w==='aura'?r.left:r.right,y:r.top+r.height/2,side:w==='aura'?-1:1};}}}catch(e){}
+  var p=lightPt();p.side=0;return p;}
 function mk(tag,attrs){var e=document.createElementNS(SVGNS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
 function startThreads(only){
   stopThreads();
@@ -12195,9 +12240,10 @@ function startThreads(only){
     (only||['aura','feed']).forEach(function(w){
       var t=target(w);if(!t)return;
       var g=mk('g',{'class':'asn-th asn-th-'+w});
-      var path=mk('path',{id:'asn-p-'+w,d:curve(lightPt(),t)});
+      var o0=origin(w);var path=mk('path',{id:'asn-p-'+w,d:curve(o0,t,o0.side)});
+      var flw=mk('path',{'class':'asn-flow',d:path.getAttribute('d')});
       var end=mk('circle',{'class':'asn-end',cx:t.x,cy:t.y,r:w==='aura'?26:22});
-      g.appendChild(path);g.appendChild(end);
+      g.appendChild(path);g.appendChild(flw);g.appendChild(end);TSflow[w]=flw;
       if(!calm){for(var k=0;k<2;k++){var sp=mk('circle',{'class':'asn-spark',r:3.2});
         var am=mk('animateMotion',{dur:'2.8s',repeatCount:'indefinite',begin:(k*1.4)+'s',rotate:'auto'});
         var mp=mk('mpath',{});mp.setAttributeNS('http://www.w3.org/1999/xlink','href','#asn-p-'+w);mp.setAttribute('href','#asn-p-'+w);
@@ -12211,9 +12257,10 @@ function startThreads(only){
         p.style.transition='stroke-dashoffset 1.9s ease';p.style.strokeDashoffset=0;
         setTimeout(function(){try{p.style.transition='';p.style.strokeDasharray='';p.style.strokeDashoffset='';}catch(e){}},2100);}});
     svg.classList.add('on');
-    TT=setInterval(function(){if(!TS)return;var a=lightPt();
-      Object.keys(TS.g).forEach(function(w){var t=target(w);if(!t)return;var o=TS.g[w];
-        if(!o.path.style.strokeDasharray)o.path.setAttribute('d',curve(a,t));o.end.setAttribute('cx',t.x);o.end.setAttribute('cy',t.y);});},400);
+    TT=setInterval(function(){if(!TS)return;
+      Object.keys(TS.g).forEach(function(w){var t=target(w);if(!t)return;var o=TS.g[w],a=origin(w);
+        if(!o.path.style.strokeDasharray){var d=curve(a,t,a.side);o.path.setAttribute('d',d);if(TSflow[w])TSflow[w].setAttribute('d',d);}
+        o.end.setAttribute('cx',t.x);o.end.setAttribute('cy',t.y);});},400);
   }catch(e){}
 }
 function hotThread(w){if(!TS)return;Object.keys(TS.g).forEach(function(k){TS.g[k].g.classList.toggle('hot',k===w);TS.g[k].g.classList.toggle('dim',!!w&&k!==w);});}
@@ -12819,6 +12866,34 @@ window.asMeet=function(sid,label,color,lat,lng,wl){
 @keyframes reachWord{0%{opacity:0}40%{opacity:1}100%{opacity:1}}
 @media (max-width:600px){#as-reach-svg .as-reach-word{font-size:15px}}
 body.calm #as-reach-svg{display:none}
+</style>
+<style id="light-that-flows">
+/* 30 Sep 2026 · Karl: "Doesn't illuminate enough... Still cant see whats chosen." A chosen
+   topic now fills with warm light, dark letters, and a lit dot in front; an unchosen one
+   is a quiet outline. Marked by fill, dot AND brightness, never colour alone. */
+#wev-chips .wev-chip{opacity:.72;background:rgba(14,11,26,.72)!important;color:#d9d0ee!important;border:1px solid rgba(255,218,168,.26)!important;box-shadow:none!important}
+#wev-chips .wev-chip:hover{opacity:1}
+#wev-chips .wev-chip.on{opacity:1;background:linear-gradient(180deg,#fff9ee,#ffdcaa)!important;color:#2a1a12!important;
+  border-color:#ffe2b8!important;box-shadow:0 0 0 1.5px rgba(255,226,184,.9),0 0 22px rgba(255,205,140,.75)!important;font-weight:600}
+#wev-chips .wev-chip.on::before{content:"";display:inline-block;width:.5em;height:.5em;border-radius:50%;margin-right:.45em;vertical-align:.08em;
+  background:radial-gradient(circle,#fff 0%,#f0a24a 70%);box-shadow:0 0 6px #f0a24a}
+.wev-chip:focus-visible{outline:2px solid #ffe2b8;outline-offset:2px}
+/* the threads: a glowing line with light flowing along it towards where it leads */
+.asn-th .asn-flow,#as-reach-svg .as-reach-flow{fill:none;stroke:#fffaf0;stroke-width:2.2;stroke-linecap:round;
+  stroke-dasharray:3 16;animation:olFlow 1.4s linear infinite;opacity:.95;filter:drop-shadow(0 0 4px var(--c,#c4b5fd))}
+@keyframes olFlow{to{stroke-dashoffset:-38}}
+.asn-th path:not(.asn-flow){stroke-width:4!important;opacity:.85}
+#as-reach-svg path:not(.as-reach-flow){stroke-width:3.2!important}
+#asm-stage .r span.as-reach-src{color:#fff;text-shadow:0 0 10px var(--c,#c4b5fd),0 0 20px var(--c,#c4b5fd);transition:text-shadow .6s,color .6s}
+body.calm .asn-flow,body.calm .as-reach-flow{animation:none}
+@media (prefers-reduced-motion:reduce){.asn-flow,.as-reach-flow{animation:none}}
+/* My Aura: a sense's card is solid enough to read, and every name reads in ink */
+#ma-sense-card{background:rgba(255,250,244,.97)!important;box-shadow:0 12px 44px rgba(90,50,30,.28)!important}
+#ma-cloud-name b{color:#3b1f0d!important}
+/* the living Mirror, laid over the map */
+#as-living-mirror{position:fixed;inset:0;z-index:2700;opacity:0;transition:opacity .45s ease;background:#f6e3d6}
+#as-living-mirror.on{opacity:1}
+#as-living-mirror iframe{position:absolute;inset:0;width:100%;height:100%;border:0;display:block}
 </style>
 <style id="one-light">
 /* ═══ ONE LIGHT · 27 Sep 2026 ═══════════════════════════════════════════════
