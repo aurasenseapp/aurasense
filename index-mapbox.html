@@ -3007,8 +3007,8 @@ function asVoiceOut(){
   try{
     if(!actx)return null;
     if(asVoiceOut._c===actx&&asVoiceOut._in)return asVoiceOut._in;
-    var comp=actx.createDynamicsCompressor();
-    comp.threshold.value=-18;comp.knee.value=14;comp.ratio.value=3.5;comp.attack.value=.012;comp.release.value=.3;
+    /* 30 Sep: no compressor - it lifted quiet sounds, the hum among them. A plain, lower master. */
+    var comp=actx.createGain();comp.gain.value=.8;
     comp.connect(actx.destination);
     var lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=3600;lp.Q.value=.5;lp.connect(comp);
     var inp=actx.createGain();inp.gain.value=.62;inp.connect(lp);   /* 28 Sep: Karl - 'a little loud, a bit overbearing' */
@@ -3024,9 +3024,9 @@ function asVoiceOut(){
 function asBell(freq,delay,vol,dur,dest,att){
   try{
     if(!actx||!freq)return;
-    var out=dest||asVoiceOut()||actx.destination,t=actx.currentTime+(delay||0),D=Math.max(.6,dur||2.4),A=Math.max(.02,Math.min(.2,att||.04));
+    var out=dest||asVoiceOut()||actx.destination,t=actx.currentTime+(delay||0),D=Math.max(.6,dur||2.4),A=Math.max(.06,Math.min(.25,att||.08));
     /* [ratio, level, how long it rings, a breath of detune] */
-    [[1,1,1,0],[1,.55,1,.9],[2.0,.2,.6,0],[2.76,.09,.4,0],[5.4,.025,.22,0]].forEach(function(p){
+    [[1,1,1,0],[1,.35,1,.35],[2.0,.12,.55,0],[3.0,.035,.32,0]].forEach(function(p){   /* 30 Sep: rounder overtones, no metallic ring */
       var o=actx.createOscillator(),g=actx.createGain();o.type='sine';
       o.frequency.value=freq*p[0]+p[3];
       var pk=Math.max(.0002,vol*p[1]),end=Math.max(t+A+.08,t+D*p[2]);
@@ -4049,6 +4049,38 @@ window.asLightScale=function(i,color,lat,lng){
   }catch(e){}
 };
 
+
+/* SHOOTING STARS · 30 Sep 2026 · Karl: "a shooting star with elongated tail to town..
+   to world. Instead. It looks like a spaghetti junction." A bright head travels the
+   curve with a tail that thins behind it, arrives, and is gone. Nothing is left
+   drawn across the map. The word it reaches lights as it arrives. */
+window.asComet=function(svg,d,col,o){
+  o=o||{};var NS='http://www.w3.org/2000/svg';
+  try{
+    var calm=document.body.classList.contains('calm')||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
+    if(calm){if(o.onArrive)o.onArrive();return;}
+    var g=document.createElementNS(NS,'g');g.setAttribute('class','as-comet');g.style.setProperty('--c',col||'#c4b5fd');
+    var tails=o.tails||[150,70,22],widths=o.widths||[1.6,3,5.2],segs=[];
+    tails.forEach(function(len,k){var pth=document.createElementNS(NS,'path');pth.setAttribute('d',d);
+      pth.setAttribute('class','as-comet-seg s'+k);pth.style.strokeWidth=widths[k];g.appendChild(pth);segs.push({p:pth,len:len});});
+    var head=document.createElementNS(NS,'circle');head.setAttribute('r',o.head||4.2);head.setAttribute('class','as-comet-head');g.appendChild(head);
+    svg.appendChild(g);
+    var L=segs[0].p.getTotalLength();if(!L||!isFinite(L)){g.remove();if(o.onArrive)o.onArrive();return;}
+    var dur=o.dur||1150,t0=performance.now(),arrived=false;
+    function ease(x){return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;}
+    function frame(now){
+      var t=Math.min(1,(now-t0)/dur),f=L*ease(t);
+      segs.forEach(function(sg){sg.p.style.strokeDasharray=sg.len+' '+(L*2+sg.len);sg.p.style.strokeDashoffset=(sg.len-f);});
+      try{var pt=segs[0].p.getPointAtLength(f);head.setAttribute('cx',pt.x);head.setAttribute('cy',pt.y);}catch(e){}
+      if(t<1){requestAnimationFrame(frame);return;}
+      if(!arrived){arrived=true;try{if(o.onArrive)o.onArrive();}catch(e){}
+        try{var fl=document.createElementNS(NS,'circle');var pe=segs[0].p.getPointAtLength(L);fl.setAttribute('cx',pe.x);fl.setAttribute('cy',pe.y);
+          fl.setAttribute('r','3');fl.setAttribute('class','as-comet-flash');g.appendChild(fl);}catch(e){}
+        g.style.transition='opacity .7s ease';setTimeout(function(){g.style.opacity='0';},120);setTimeout(function(){try{g.remove();}catch(e){}},900);}
+    }
+    requestAnimationFrame(frame);
+  }catch(e){try{if(o.onArrive)o.onArrive();}catch(x){}}
+};
 /* THE REACH, MADE VISIBLE · 29 Sep 2026 · Karl: "threads pointing to each: town,
    to world, as the message says it, they don't light up when each is mentioned."
    As the Meeting names each scale, a thread draws from the light to that word,
@@ -4063,7 +4095,7 @@ window.asLightScale=function(i,color,lat,lng){
   window.asReachThread=function(i,col,lat,lng){
     try{
       var orb=orbFor(i);if(!orb)return;var tab=orb.closest?orb.closest('.tab'):null;
-      if(tab){tab.style.setProperty('--asc',col);tab.classList.add('as-reached');}
+      /* the word lights when the star arrives - see onArrive below */
       var a={x:innerWidth/2,y:innerHeight*.45};
       try{if(window.map&&isFinite(lat)&&isFinite(lng)){var p=window.map.project([lng,lat]);if(isFinite(p.x)&&isFinite(p.y)){a={x:p.x,y:p.y};}}}catch(e){}
       /* 30 Sep · Karl: the threads must point from the text that names them. The Meeting's
@@ -4073,23 +4105,19 @@ window.asLightScale=function(i,color,lat,lng){
       var r=(tab||orb).getBoundingClientRect(),b={x:r.left+r.width/2,y:r.bottom-2};
       if(!svg){svg=document.createElementNS(NS,'svg');svg.id='as-reach-svg';svg.setAttribute('aria-hidden','true');document.body.appendChild(svg);}
       var mx=(a.x+b.x)/2+(b.x-a.x)*.12,my=Math.max(10,Math.min(a.y,b.y)+(Math.abs(a.y-b.y))*.18);
-      var path=document.createElementNS(NS,'path');
-      path.setAttribute('d','M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+b.x.toFixed(1)+','+b.y.toFixed(1));
-      path.style.setProperty('--c',col);svg.appendChild(path);
-      var flow=document.createElementNS(NS,'path');flow.setAttribute('d',path.getAttribute('d'));flow.setAttribute('class','as-reach-flow');
-      flow.style.setProperty('--c',col);svg.appendChild(flow);
-      /* the menu is hushed while the Meeting speaks, so the named word is lit above the hush, in its own place */
-      try{if(tab){var wd=document.createElementNS(NS,'text');wd.setAttribute('class','as-reach-word');
-        var wx=r.left+r.width/2,wy=r.top+r.height/2+5;
-        try{var tw=document.createTreeWalker(tab,NodeFilter.SHOW_TEXT),tn=null,nn;while((nn=tw.nextNode())){if(nn.textContent.trim())tn=nn;}
-          if(tn){var rg=document.createRange();rg.selectNodeContents(tn);var q2=rg.getBoundingClientRect();if(q2.width>0){wx=q2.left+q2.width/2;wy=q2.top+q2.height/2+5;}}}catch(e){}
-        wd.setAttribute('x',wx.toFixed(1));wd.setAttribute('y',wy.toFixed(1));
-        wd.setAttribute('text-anchor','middle');wd.style.setProperty('--c',col);
-        wd.textContent=(tab.textContent||'').replace(/\s+/g,' ').trim();svg.appendChild(wd);}}catch(e){}
-      var L=0;try{L=path.getTotalLength();}catch(e){}
-      if(L){path.style.strokeDasharray=L;path.style.strokeDashoffset=L;void path.getBoundingClientRect();
-        path.style.transition='stroke-dashoffset 1.3s ease, opacity 2.4s ease';path.style.strokeDashoffset=0;}
-      setTimeout(function(){try{path.style.opacity='.45';}catch(e){}},2600);
+      var dd='M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+b.x.toFixed(1)+','+b.y.toFixed(1);
+      window.asComet(svg,dd,col,{dur:1150,onArrive:function(){
+        try{if(tab){tab.style.setProperty('--asc',col);tab.classList.add('as-reached');}}catch(e){}
+        /* the menu is hushed while the Meeting speaks, so the named word is lit above the hush, in its own place */
+        try{if(tab){var wd=document.createElementNS(NS,'text');wd.setAttribute('class','as-reach-word');
+          var wx=r.left+r.width/2,wy=r.top+r.height/2;
+          try{var tw=document.createTreeWalker(tab,NodeFilter.SHOW_TEXT),tn=null,nn;while((nn=tw.nextNode())){if(nn.textContent.trim())tn=nn;}
+            if(tn){var rg=document.createRange();rg.selectNodeContents(tn);var q2=rg.getBoundingClientRect();if(q2.width>0){wx=q2.left+q2.width/2;wy=q2.top+q2.height/2;}}}catch(e){}
+          wd.setAttribute('x',wx.toFixed(1));wd.setAttribute('y',wy.toFixed(1));
+          wd.setAttribute('text-anchor','middle');wd.setAttribute('dominant-baseline','central');wd.style.setProperty('--c',col);
+          try{var cs=getComputedStyle(tab);wd.style.fontFamily=cs.fontFamily;wd.style.fontSize=cs.fontSize;wd.style.letterSpacing=cs.letterSpacing;wd.style.fontWeight=cs.fontWeight;}catch(e){}
+          wd.textContent=(tab.textContent||'').replace(/\s+/g,' ').trim();svg.appendChild(wd);}}catch(e){}
+      }});
       clearTimeout(clearT);clearT=setTimeout(window.asReachClear,i>=4?9000:16000);
     }catch(e){}
   };
@@ -6835,6 +6863,7 @@ function macDrawAura(ts){
          a name no longer has to be sacrificed to a box it never overlapped. */
       if(!clash){
         macNamed.push({x:px,y:ny,w:wpx,i:li});
+        try{macAx.save();macAx.shadowBlur=0;macAx.lineJoin='round';macAx.lineWidth=3.4;macAx.strokeStyle='rgba(255,250,244,0.92)';macAx.strokeText(nm,px,ny);macAx.restore();}catch(e){}
         macAx.fillText(nm,px,ny);
         macAx.fillText(nm,px,ny);
       }
@@ -11246,7 +11275,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 129 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 130 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -12172,12 +12201,15 @@ function build(){
    +'<p id="asn-next-h">Your light now lives in two places: your own aura, and everyone\'s.<br><b>Where would you like to go?</b></p>'
    +'<button type="button" class="asn-n lead" id="asn-aura" data-to="aura">\u2727 See your light in My Aura</button>'
    +'<button type="button" class="asn-n" id="asn-more" data-to="feed">See what others are offering now</button>'
-   +'<button type="button" class="asn-d quiet" id="asn-rest">Stay here and explore the map</button></div></div></div>';
+   +'<button type="button" class="asn-d quiet" id="asn-rest">Stay here and explore the map</button>'
+   +'<button type="button" class="asn-d quiet asn-undo" id="asn-undo">Changed your mind? Withdraw this offering</button></div></div></div>';
   document.body.appendChild(r);W=r;
   q('asn-no').addEventListener('click',function(){answer(false);});
   q('asn-yes').addEventListener('click',function(){answer(true);});
   q('asn-skip').addEventListener('click',function(){finish(true,'');});
   q('asn-send').addEventListener('click',function(){finish(true,q('asn-words').value);});
+  q('asn-undo').addEventListener('click',function(){done();PEND=null;
+    setTimeout(function(){try{var w=document.querySelector('#offer-confirm .oc-withdraw');if(w)w.click();}catch(e){}},250);});
   q('asn-aura').addEventListener('click',function(){goThread('aura',function(){done();try{if(typeof window.openMyAuraPage==='function')window.openMyAuraPage();}catch(e){}});});
   q('asn-more').addEventListener('click',function(){goThread('feed',function(){done();try{if(typeof window.openLiveFeed==='function')window.openLiveFeed();}catch(e){}});});
   q('asn-rest').addEventListener('click',function(){done();PEND=null;
@@ -12202,7 +12234,7 @@ function build(){
    travel along each towards its door; the door at the far end breathes. Resting
    on a choice brightens its thread; choosing sends the light home along it, and
    only then does the door open. Nothing is ever left without a way on. */
-var COL='#c4b5fd',TS=null,TT=null,TSflow={};
+var COL='#c4b5fd',TS=null,TT=null,TSflow={},TSloop=null;
 var SVGNS='http://www.w3.org/2000/svg';
 function lightPt(){var x=innerWidth/2,y=innerHeight*0.40;
   try{if(typeof map!=='undefined'&&map&&map.project){var p=map.project([LNG,LAT]);if(isFinite(p.x)&&isFinite(p.y)){x=p.x;y=p.y;}}}catch(e){}
@@ -12243,11 +12275,7 @@ function startThreads(only){
       var o0=origin(w);var path=mk('path',{id:'asn-p-'+w,d:curve(o0,t,o0.side)});
       var flw=mk('path',{'class':'asn-flow',d:path.getAttribute('d')});
       var end=mk('circle',{'class':'asn-end',cx:t.x,cy:t.y,r:w==='aura'?26:22});
-      g.appendChild(path);g.appendChild(flw);g.appendChild(end);TSflow[w]=flw;
-      if(!calm){for(var k=0;k<2;k++){var sp=mk('circle',{'class':'asn-spark',r:3.2});
-        var am=mk('animateMotion',{dur:'2.8s',repeatCount:'indefinite',begin:(k*1.4)+'s',rotate:'auto'});
-        var mp=mk('mpath',{});mp.setAttributeNS('http://www.w3.org/1999/xlink','href','#asn-p-'+w);mp.setAttribute('href','#asn-p-'+w);
-        am.appendChild(mp);sp.appendChild(am);g.appendChild(sp);}}
+      path.setAttribute('class','asn-guide');g.appendChild(path);g.appendChild(end);
       svg.appendChild(g);TS.g[w]={g:g,path:path,end:end,el:t.el};
       try{t.el.classList.add('asn-target');t.el.style.setProperty('--asc',COL);}catch(e){}
     });
@@ -12257,9 +12285,13 @@ function startThreads(only){
         p.style.transition='stroke-dashoffset 1.9s ease';p.style.strokeDashoffset=0;
         setTimeout(function(){try{p.style.transition='';p.style.strokeDasharray='';p.style.strokeDashoffset='';}catch(e){}},2100);}});
     svg.classList.add('on');
+    /* shooting stars along each way, in turn, from the words that name it */
+    var k0=0;function fly(){if(!TS)return;var ks=Object.keys(TS.g);if(!ks.length)return;var w=ks[k0%ks.length];k0++;
+      try{window.asComet(TS.svg,TS.g[w].path.getAttribute('d'),COL,{dur:1500,tails:[190,90,26]});}catch(e){}}
+    setTimeout(fly,700);TSloop=setInterval(fly,1700);
     TT=setInterval(function(){if(!TS)return;
       Object.keys(TS.g).forEach(function(w){var t=target(w);if(!t)return;var o=TS.g[w],a=origin(w);
-        if(!o.path.style.strokeDasharray){var d=curve(a,t,a.side);o.path.setAttribute('d',d);if(TSflow[w])TSflow[w].setAttribute('d',d);}
+        if(!o.path.style.strokeDasharray){var d=curve(a,t,a.side);o.path.setAttribute('d',d);}
         o.end.setAttribute('cx',t.x);o.end.setAttribute('cy',t.y);});},400);
   }catch(e){}
 }
@@ -12285,17 +12317,15 @@ function goThread(w,then){
   watchReturn(w==='aura'?'feed':'aura');
   var o=TS&&TS.g[w];
   if(!o||TS.calm){then();return;}
-  try{hotThread(w);var sp=mk('circle',{'class':'asn-spark go',r:6});
-    var am=mk('animateMotion',{dur:'0.9s',fill:'freeze',begin:'indefinite'});
-    var mp=mk('mpath',{});mp.setAttributeNS('http://www.w3.org/1999/xlink','href','#asn-p-'+w);mp.setAttribute('href','#asn-p-'+w);
-    am.appendChild(mp);sp.appendChild(am);o.g.appendChild(sp);
-    if(am.beginElement)am.beginElement();
-    try{o.el.classList.add('asn-arrive');}catch(e){}
+  try{hotThread(w);if(TSloop){clearInterval(TSloop);TSloop=null;}
+    window.asComet(TS.svg,o.path.getAttribute('d'),COL,{dur:800,tails:[240,120,34],widths:[2.2,4,7],head:6});
+    setTimeout(function(){try{o.el.classList.add('asn-arrive');}catch(e){}},700);
   }catch(e){}
   setTimeout(function(){try{o.el.classList.remove('asn-arrive');}catch(e){}then();},950);
 }
 function stopThreads(){
   if(TT){clearInterval(TT);TT=null;}
+  if(TSloop){clearInterval(TSloop);TSloop=null;}
   if(TS){Object.keys(TS.g).forEach(function(k){try{TS.g[k].el.classList.remove('asn-target');}catch(e){}});
     try{TS.svg.remove();}catch(e){}TS=null;}
 }
@@ -12755,10 +12785,10 @@ function soundStart(){
     dB=actx.createOscillator();dB.type='sine';dB.frequency.value=588;gB=actx.createGain();gB.gain.value=0;dB.connect(gB);gB.connect(bus);dB.start();
     bus.gain.setTargetAtTime(.07,actx.currentTime,1.2);}catch(e){bus=null;}
 }
-function bell(f,delay,vol,dur){if(!bus)return;try{asBell(f,delay,vol*.8,dur,bus,.05);}catch(e){}}
+function bell(f,delay,vol,dur){if(!bus)return;try{asBell(f,delay,vol*.34,dur,bus,.14);}catch(e){}}   /* 30 Sep: 'clang... loud and startling' - softer, slower to bloom */
 function bloom(){bell(392,0,.5,4.2);bell(588,.04,.42,4.4);bell(784,.1,.3,4.6);bell(988,.18,.22,4.8);
-  bell(1568,.3,.07,5.5);bell(1571,.3,.07,5.5);}          /* two close tones above the chord: a slow shimmer */
-function soundTick(u,oa,sw,veiled){if(!bus)return;var t=actx.currentTime,q=veiled?.25:1;
+  }          /* 30 Sep: the high shimmer is gone - it read as a clang */
+function soundTick(u,oa,sw,veiled){if(!bus)return;return;   /* 30 Sep: Karl - 'hum buzz too intense and intrusive'. The breath-hum stays silent. */var t=actx.currentTime,q=veiled?.25:1;
   gA.gain.setTargetAtTime((.42+.2*u)*(1+.3*sw)*q,t,.4);gB.gain.setTargetAtTime(oa*(.3+.16*u)*(1+.3*sw)*q,t,.4);}
 function soundShift(){if(!bus)return;var t=actx.currentTime;
   try{dA.frequency.setTargetAtTime(440,t,.8);dB.frequency.setTargetAtTime(660,t,.8);}catch(e){}  /* the frequency change, heard */
@@ -12866,6 +12896,21 @@ window.asMeet=function(sid,label,color,lat,lng,wl){
 @keyframes reachWord{0%{opacity:0}40%{opacity:1}100%{opacity:1}}
 @media (max-width:600px){#as-reach-svg .as-reach-word{font-size:15px}}
 body.calm #as-reach-svg{display:none}
+</style>
+<style id="shooting-stars">
+/* 30 Sep 2026 · shooting stars, the quiet way home, and the offering panel stepping aside */
+.as-comet{pointer-events:none}
+.as-comet .as-comet-seg{fill:none;stroke-linecap:round}
+.as-comet .as-comet-seg.s0{stroke:var(--c,#c4b5fd);opacity:.28}
+.as-comet .as-comet-seg.s1{stroke:var(--c,#c4b5fd);opacity:.65;filter:drop-shadow(0 0 4px var(--c,#c4b5fd))}
+.as-comet .as-comet-seg.s2{stroke:#fffaf0;opacity:.95;filter:drop-shadow(0 0 6px var(--c,#c4b5fd))}
+.as-comet .as-comet-head{fill:#fffdf8;filter:drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px var(--c,#c4b5fd))}
+.as-comet .as-comet-flash{fill:none;stroke:#fffaf0;stroke-width:2;animation:cometFlash .8s ease-out both}
+@keyframes cometFlash{0%{r:3;opacity:1}100%{r:26;opacity:0}}
+.asn-th path.asn-guide{fill:none;stroke:var(--c,#c4b5fd);stroke-width:1.6!important;opacity:.26!important;filter:none!important;stroke-dasharray:none}
+.asn-th.hot path.asn-guide{opacity:.6!important;stroke-width:2.2!important}
+#asn-undo{font-size:12.5px;opacity:.8;margin-top:2px}
+body:has(#as-meet.on) #offer-confirm,body:has(#as-noticing.on) #offer-confirm{display:none!important}
 </style>
 <style id="light-that-flows">
 /* 30 Sep 2026 · Karl: "Doesn't illuminate enough... Still cant see whats chosen." A chosen

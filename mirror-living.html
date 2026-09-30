@@ -101,6 +101,8 @@ textarea::placeholder{color:var(--faint);font-style:italic}
 .hide{display:none!important}
 .home{position:fixed;top:calc(env(safe-area-inset-top,0px) + 10px);left:12px;z-index:5}
 .home .btn{background:rgba(255,251,245,.6);border:1px solid rgba(233,181,106,.4)}
+body.insite .stage{padding-top:calc(env(safe-area-inset-top,0px) + 74px);justify-content:flex-start}
+body.insite .mirror{margin-top:2vh}
 .note{font-size:.85rem;color:var(--faint);margin-top:10px;text-align:center}
 @media (max-width:520px){ .say{flex-direction:column;align-items:stretch} .say .btn{align-self:center} }
 @media (max-height:640px){ .mirror{width:min(80vw,54vh,540px)} }
@@ -144,6 +146,9 @@ var UNSURE=/^\s*(i\s+)?(really\s+)?(don'?t|do not)\s+know\b|^\s*(dunno|no idea|n
 var LEAVE=/^\s*(that'?s enough|enough( for now)?|i'?m done|done|bye|goodbye|stop|no more)\b/i;
 var CONFUSED=/^\s*[\w'-]{1,14}\s*\?+\s*$|what do you mean|i don'?t (understand|get it)|\bhuh\b|what\?|meaning\?/i;
 var TURN=/\s*(?:,\s*)?\b(whilst|while|but|yet|although|though|even though)\b\s*/i;
+var MISSED=/doesn'?t make sense|makes no sense|are you (even )?listening|you'?re not listening|not listening|that'?s not what i (said|meant)|you don'?t (get|understand)|you'?re not (getting|hearing)|wrong question|what\?+$/i;
+var WANT=/\b(?:i want|i need|i wish|i'?d (?:like|love)|i long|what i want is|all i want is|to be)\s+(?:to be\s+)?([^.,;!?]{3,60})/i;
+var STOP=/^(about|would|could|should|there|their|which|where|these|those|thing|things|being|really|because|every|other|still|maybe|something|anything|nothing|right|think|doesn't|don't|didn't|can't|won't|isn't|wasn't|aren't|couldn't|wouldn't|shouldn't|there's|what's|that's|you're|i've|i'll|it's|it'll|they're|we're|haven't|hasn't|through|again|always|never|going|someone|everything|anyone|actually|feels|feeling|else|little|today|while|whilst)$/;
 
 /* the doors: each opens with its own first question, and a plainer way to say it */
 var DOORS=[
@@ -178,9 +183,9 @@ function keyPhrase(t){
 }
 function feelings(t){var out=[];FEEL.forEach(function(f){if(new RegExp('\\b'+f+'\\b','i').test(t)&&out.indexOf(f)<0)out.push(f);});return out;}
 function tally(t){(String(t).toLowerCase().match(/[a-z']{5,}/g)||[]).forEach(function(w){
-  if(/^(about|would|could|should|there|their|which|where|these|those|thing|things|being|really|because|every|other|still|maybe|something|anything|nothing|right|think)$/.test(w))return;
+  if(STOP.test(w))return;
   S.words[w]=(S.words[w]||0)+1;});}
-function returned(t){var hit=null;(String(t).toLowerCase().match(/[a-z']{5,}/g)||[]).forEach(function(w){if(!hit&&S.words[w]>=2)hit=w;});return hit;}
+function returned(t){var hit=null;(String(t).toLowerCase().match(/[a-z']{5,}/g)||[]).forEach(function(w){if(!hit&&!STOP.test(w)&&S.words[w]>=2)hit=w;});return hit;}
 
 /* ── speaking: one exchange at a time, in the circle ─────────────────── */
 function show(parts,rimWords){
@@ -230,10 +235,15 @@ function begin(i){
 
 /* ── hearing, and answering from the very first reply ────────────────── */
 function hear(){
-  var t=$('words').value.trim(); if(!t)return;
+  var t=$('words').value.replace(/[\u2018\u2019\u02bc]/g,"'").trim(); if(!t)return;
   $('words').value='';
   if(HEAVY.test(t)){care();return;}
   if(LEAVE.test(t)){rest();return;}
+  if(MISSED.test(t)){                                 /* they feel unheard: own it, and come back to their words */
+    var back=S.first?[{cls:'line soft',text:'What you first brought was:'},{tag:'p',cls:'quote',text:S.first}]:[];
+    var pm=[{cls:'line',text:'You\u2019re right to say so. I missed you there, and I\u2019m sorry.'}].concat(back).concat([{cls:'line q',text:'In a few words, what matters most to you in this right now? I\u2019ll stay with that.'}]);
+    ask({q:'In a few words, what matters most to you in this right now?',plain:'What matters most right now?'});S.step=Math.max(0,S.step-1);show(pm,S.first||'');addTrail(pm,S.first||'');return;
+  }
   if(CONFUSED.test(t)&&S.lastQ){                     /* they didn't follow: say it more simply */
     var parts=[{cls:'line soft',text:'Let me put that more simply.'},{cls:'line q',text:S.lastQ.plain||S.lastQ.q}];
     ask({q:S.lastQ.plain||S.lastQ.q,plain:S.lastQ.plain||S.lastQ.q}); show(parts); addTrail(parts); return;
@@ -250,13 +260,21 @@ function hear(){
         var a=trimPhrase(a0,60),
           b=trimPhrase(t.slice(m.index+m[0].length).replace(/^(my |the )/i,function(x){return x.toLowerCase()==='my '?'your ':x;}),60);
     if(a.length>3&&b.length>3)noticed='Two things are pulling here: '+a+', and '+b+'.';}
+  var wm=t.match(WANT),wantQ=null;
+  if(!noticed&&wm){var wt=trimPhrase(wm[1].replace(/\b(what else|and so on|etc)\b.*$/i,''),60);
+    if(wt.length>2){noticed='What you want here is to be '+wt.replace(/^to be /i,'')+'.';
+      if(!/^to be\b/i.test(wm[0])&&!/\bto be\b/i.test(wm[0]))noticed='What you want here is '+wt+'.';
+      wantQ={q:'What would that look like, on an ordinary day?',plain:'What would it look like, day to day?'};}}
   if(!noticed&&back)noticed='You\u2019ve come back to \u201c'+back+'\u201d more than once. It seems to matter.';
   if(!noticed&&fl.length===1)noticed='You named it: '+fl[0]+'. That word is yours; I\u2019m only holding it up.';
   if(!noticed&&fl.length>1)noticed='More than one feeling is here: '+fl.slice(0,3).join(', ')+'.';
+  if(!noticed&&t.split(/\s+/).length<=3)noticed='Thank you. Stay with that a moment.';
   if(!noticed)noticed='I\u2019m hearing that this is real for you, as you said it.';
   parts.push({cls:'line',text:noticed});
   var next;
   if(m&&S.step===0)next={q:'Which of the two is asking for you first today?',plain:'Which one needs you more right now?'};
+  else if(wantQ)next=wantQ;
+  else if(t.split(/\s+/).length<=3)next={q:'What\u2019s underneath that, if you look a little closer?',plain:'Can you say a little more?'};
   else {next=PATH[Math.min(S.step,PATH.length-1)];S.step++;}
   parts.push({cls:'line q',text:next.q}); ask(next);
   show(parts,kp); addTrail(parts,kp);
@@ -294,7 +312,7 @@ function fin(parts){ $('doors').classList.add('hide'); show(parts.concat([{cls:'
    Messages go only to Aurasense's own page, and say only "close" or "classic". */
 var inSite=false;try{inSite=(window.parent!==window)&&/[?&]in=site\b/.test(location.search);}catch(e){}
 function tell(act){try{window.parent.postMessage({as:'mirror',act:act},location.origin);}catch(e){}}
-if(inSite){$('home').classList.remove('hide');$('classicRow').classList.remove('hide');
+if(inSite){document.body.classList.add('insite');$('home').classList.remove('hide');$('classicRow').classList.remove('hide');
   $('back').addEventListener('click',function(){tell('close');});
   $('classic').addEventListener('click',function(){tell('classic');});
   document.addEventListener('keydown',function(e){if(e.key==='Escape')tell('close');});}
