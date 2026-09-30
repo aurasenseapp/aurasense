@@ -2288,12 +2288,12 @@ window.AS_SEEK_ALWAYS=true;
   <button id="register-btn">✦ Become an Aurasenser</button>
   <button id="locality-btn" title="My locality">My locality</button>
   <div id="wev-chips">
-    <button class="wev-chip on" data-fam="conflict">Conflicts &amp; Peace</button>
-    <button class="wev-chip on" data-fam="env">Environment</button>
-    <button class="wev-chip on" data-fam="news">World Events</button>
-    <button class="wev-chip on" data-fam="events">Sport &amp; Festivals</button>
-    <button class="wev-chip on" data-fam="decisions">Decisions</button>
-    <button class="wev-chip" data-fam="weave">∞ Weave</button>
+    <button class="wev-chip" data-fam="conflict" aria-pressed="false" title="Show lights where conflict and peace are being felt">Conflicts &amp; Peace</button>
+    <button class="wev-chip" data-fam="env" aria-pressed="false" title="Show lights where nature is being harmed or repaired">Environment</button>
+    <button class="wev-chip on" data-fam="news" aria-pressed="true" title="Show lights on the world's major events">World Events</button>
+    <button class="wev-chip" data-fam="events" aria-pressed="false" title="Show lights where people gather: sport and festivals">Sport &amp; Festivals</button>
+    <button class="wev-chip" data-fam="decisions" aria-pressed="false" title="Show lights on decisions that will shape many lives, and where they may lead">Decisions</button>
+    <button class="wev-chip" data-fam="weave" aria-pressed="false" title="Show the threads between your own lights and the world's">∞ Weave</button>
   </div>
   <div id="wbal" title="The balance of the world's field"><div id="wbal-mini"><div id="wbal-fill"></div><div id="wbal-needle"></div></div><span id="wbal-lab">The world's field</span></div>
   <div id="wbal-panel">
@@ -4033,10 +4033,11 @@ let _ascentTimers=[];
    "as the text says street, town, region, nation, world, each arched label lights
    up in turn." The Meeting calls this at the very moment each name is spoken.
    Paint only: nothing is measured, nothing moves, the standing scale is untouched. */
-window.asLightScale=function(i,color){
+window.asLightScale=function(i,color,lat,lng){
   try{
     if(window.AS_CALM)return;
     var col=color||'#c4b5fd';
+    try{if(window.asReachThread)window.asReachThread(i,col,lat,lng);}catch(e){}
     var orb=document.getElementById(['orb0','orb1','orb2','orb3','orb4'][i]);
     if(orb&&orb.getBoundingClientRect().width<1)orb=document.getElementById('orb1');
     if(!orb)return;
@@ -4047,6 +4048,46 @@ window.asLightScale=function(i,color){
     setTimeout(function(){try{orb.classList.remove('ascending');if(btn){btn.classList.remove('asc-lit');btn.style.removeProperty('--asc');}}catch(e){}},1150);
   }catch(e){}
 };
+
+/* THE REACH, MADE VISIBLE · 29 Sep 2026 · Karl: "threads pointing to each: town,
+   to world, as the message says it, they don't light up when each is mentioned."
+   As the Meeting names each scale, a thread draws from the light to that word,
+   and the word stays lit, so the whole climb from street to world can be seen at
+   once. Everything clears itself shortly after "the world" has been reached. */
+(function(){
+  var NS='http://www.w3.org/2000/svg',svg=null,clearT=null;
+  function orbFor(i){var o=document.getElementById(['orb0','orb1','orb2','orb3','orb4'][i]);
+    if(o&&o.getBoundingClientRect().width<1)o=document.getElementById('orb1');return o;}
+  window.asReachClear=function(){try{if(svg){svg.remove();svg=null;}
+    document.querySelectorAll('.tab.as-reached').forEach(function(t){t.classList.remove('as-reached');t.style.removeProperty('--asc');});}catch(e){}};
+  window.asReachThread=function(i,col,lat,lng){
+    try{
+      var orb=orbFor(i);if(!orb)return;var tab=orb.closest?orb.closest('.tab'):null;
+      if(tab){tab.style.setProperty('--asc',col);tab.classList.add('as-reached');}
+      var a={x:innerWidth/2,y:innerHeight*.45};
+      try{if(window.map&&isFinite(lat)&&isFinite(lng)){var p=window.map.project([lng,lat]);if(isFinite(p.x)&&isFinite(p.y)){a={x:p.x,y:p.y};}}}catch(e){}
+      var r=(tab||orb).getBoundingClientRect(),b={x:r.left+r.width/2,y:r.bottom-2};
+      if(!svg){svg=document.createElementNS(NS,'svg');svg.id='as-reach-svg';svg.setAttribute('aria-hidden','true');document.body.appendChild(svg);}
+      var mx=(a.x+b.x)/2+(b.x-a.x)*.12,my=Math.max(10,Math.min(a.y,b.y)+(Math.abs(a.y-b.y))*.18);
+      var path=document.createElementNS(NS,'path');
+      path.setAttribute('d','M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+b.x.toFixed(1)+','+b.y.toFixed(1));
+      path.style.setProperty('--c',col);svg.appendChild(path);
+      /* the menu is hushed while the Meeting speaks, so the named word is lit above the hush, in its own place */
+      try{if(tab){var wd=document.createElementNS(NS,'text');wd.setAttribute('class','as-reach-word');
+        var wx=r.left+r.width/2,wy=r.top+r.height/2+5;
+        try{var tw=document.createTreeWalker(tab,NodeFilter.SHOW_TEXT),tn=null,nn;while((nn=tw.nextNode())){if(nn.textContent.trim())tn=nn;}
+          if(tn){var rg=document.createRange();rg.selectNodeContents(tn);var q2=rg.getBoundingClientRect();if(q2.width>0){wx=q2.left+q2.width/2;wy=q2.top+q2.height/2+5;}}}catch(e){}
+        wd.setAttribute('x',wx.toFixed(1));wd.setAttribute('y',wy.toFixed(1));
+        wd.setAttribute('text-anchor','middle');wd.style.setProperty('--c',col);
+        wd.textContent=(tab.textContent||'').replace(/\s+/g,' ').trim();svg.appendChild(wd);}}catch(e){}
+      var L=0;try{L=path.getTotalLength();}catch(e){}
+      if(L){path.style.strokeDasharray=L;path.style.strokeDashoffset=L;void path.getBoundingClientRect();
+        path.style.transition='stroke-dashoffset 1.3s ease, opacity 2.4s ease';path.style.strokeDashoffset=0;}
+      setTimeout(function(){try{path.style.opacity='.32';}catch(e){}},2600);
+      clearTimeout(clearT);clearT=setTimeout(window.asReachClear,i>=4?9000:16000);
+    }catch(e){}
+  };
+})();
 /* then the two threads the light has just joined: home to My Aura, out to the Live Feed */
 window.asThreadGlow=function(color){
   try{
@@ -6605,6 +6646,7 @@ function macDrawAura(ts){
      jump and the whole is never off screen, which is the one rule that keeps a
      cloud from becoming a place to get lost in. */
   macNamed.length=0;                       /* each frame places its names afresh */
+  try{var _mc=macAx.canvas.getBoundingClientRect(),_mb=document.getElementById('ma-cloud-through').getBoundingClientRect();window._macBtn=(_mb.width>0)?{x:_mb.left-_mc.left,y:_mb.top-_mc.top,w:_mb.width,h:_mb.height}:null;}catch(e){window._macBtn=null;}
   macSpread+=(macWantSpread-macSpread)*0.055;
   if(macWantSpread&&macSpread>0.985)macSpread=1;
   if(!macWantSpread&&macSpread<0.004)macSpread=0;
@@ -6774,6 +6816,8 @@ function macDrawAura(ts){
       macAx.fillStyle='rgba(74,42,26,0.94)';
       var ny=py+spread*0.92+15;
       var wpx=macAx.measureText(nm).width;
+      /* 29 Sep - a name that would fall under "Let it close" moves above its light */
+      try{var _B=window._macBtn;if(_B&&ny>_B.y-12&&ny<_B.y+_B.h+12&&Math.abs(px-(_B.x+_B.w/2))<_B.w/2+wpx/2+6)ny=py-spread*0.92-15;}catch(e){}
       var clash=false;
       /* clear of every name already placed */
       for(var ci=0;ci<macNamed.length;ci++){
@@ -6784,7 +6828,7 @@ function macDrawAura(ts){
          to the top of the screen, so there is nothing there to clash with, and
          a name no longer has to be sacrificed to a box it never overlapped. */
       if(!clash){
-        macNamed.push({x:px,y:ny,w:wpx});
+        macNamed.push({x:px,y:ny,w:wpx,i:li});
         macAx.fillText(nm,px,ny);
         macAx.fillText(nm,px,ny);
       }
@@ -6851,6 +6895,10 @@ function macNameAt(cxp,cyp){
     var p=macPts[i],dx=cxp-p.x,dy=cyp-p.y,d=Math.sqrt(dx*dx+dy*dy);
     if(d<p.r&&d<bd){bd=d;best=i;}
   }
+  /* 29 Sep - Karl: "tapping on the text of each sense doesnt do anything but the
+     coloured aura does." A name now answers a touch as its light does. */
+  if(best<0){for(var k=0;k<macNamed.length;k++){var nmr=macNamed[k];
+    if(nmr&&nmr.i!=null&&Math.abs(cxp-nmr.x)<nmr.w/2+10&&Math.abs(cyp-nmr.y)<14){best=nmr.i;break;}}}
   return best;
 }
 function macShowName(i){
@@ -8603,7 +8651,7 @@ const WEV_ACT={
   joy:{btn:'\u2726 Join with an aura of celebration',msg:'Your light joins the celebration: '},
   sport:{btn:'\u2726 Send an aura of good spirit',msg:'Your good spirit reaches: '}
 };
-let wevOn={conflict:true,env:true,news:true,events:true,decisions:true,weave:false};
+let wevOn={conflict:false,env:false,news:true,events:false,decisions:false,weave:false};   /* 29 Sep: begin with one topic lit, so choosing is visible */
 let wevReady=false,wevWorldTipShown=false,wevOpenId=-1,wevDecNoted=false,wevNewsNoted=false,wevRaf=null,wevLastT=0;
 function wevGeo(){return {type:'FeatureCollection',features:WORLD_EVENTS.map((ev,i)=>({type:'Feature',id:i,geometry:{type:'Point',coordinates:[ev.lng,ev.lat]},properties:{i:i,type:ev.type,fam:ev.fam,sent:ev.compassion,col:WA_HEX[ev.type]||'#c4b5fd',st:ev._status||'seed'}}))};}
 function wevFilter(){
@@ -8757,6 +8805,10 @@ function wevZoomUI(){
       const k=btn.dataset.fam;
       wevOn[k]=!wevOn[k];
       btn.classList.toggle('on',wevOn[k]);
+      try{btn.setAttribute('aria-pressed',wevOn[k]?'true':'false');
+        if(k!=='weave'&&!(k==='news'&&wevOn.news&&!wevNewsNoted)&&typeof showMsg==='function'){
+          var _t=(btn.getAttribute('title')||'').replace(/^Show /,'');
+          showMsg((wevOn[k]?'Now showing: ':'Now hidden: ')+_t+'. Tap it again to '+(wevOn[k]?'hide':'show')+' them.',3400);}}catch(_){}
       if(k==='weave'){
         wevWeaveRefresh();
         if(wevOn.weave){
@@ -11162,7 +11214,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 29 Sep 2026 · 127 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 29 Sep 2026 · 128 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -12035,9 +12087,9 @@ body:has(#myaura-page.show) #build-stamp:hover{opacity:1}
 .asn-n:hover,.asn-n:focus-visible{background:rgba(255,226,180,.22);box-shadow:0 0 0 1.5px rgba(255,226,180,.85) inset,0 0 26px rgba(255,210,150,.4);outline:none}
 .asn-n:active{transform:scale(.98)}
 .asn-d:focus-visible{outline:2px solid #ffe6bd;outline-offset:3px;border-radius:999px}
-#asn-threads{position:fixed;inset:0;width:100%;height:100%;z-index:2599;pointer-events:none;opacity:0;transition:opacity 900ms ease;overflow:visible}
+#asn-threads{position:fixed;inset:0;width:100%;height:100%;z-index:2601;pointer-events:none;opacity:0;transition:opacity 900ms ease;overflow:visible}
 #asn-threads.on{opacity:1}
-.asn-th path{fill:none;stroke:var(--c,#c4b5fd);stroke-width:2.4;stroke-linecap:round;opacity:.78;
+.asn-th path{fill:none;stroke:var(--c,#c4b5fd);stroke-width:3;stroke-linecap:round;opacity:.92;
   filter:drop-shadow(0 0 5px var(--c,#c4b5fd)) drop-shadow(0 0 12px var(--c,#c4b5fd));transition:opacity .5s,stroke-width .5s}
 .asn-th .asn-spark{fill:#fff8ec;filter:drop-shadow(0 0 6px var(--c,#c4b5fd)) drop-shadow(0 0 12px var(--c,#c4b5fd))}
 .asn-th .asn-spark.go{fill:#fffdf6}
@@ -12096,7 +12148,8 @@ function build(){
   q('asn-send').addEventListener('click',function(){finish(true,q('asn-words').value);});
   q('asn-aura').addEventListener('click',function(){goThread('aura',function(){done();try{if(typeof window.openMyAuraPage==='function')window.openMyAuraPage();}catch(e){}});});
   q('asn-more').addEventListener('click',function(){goThread('feed',function(){done();try{if(typeof window.openLiveFeed==='function')window.openLiveFeed();}catch(e){}});});
-  q('asn-rest').addEventListener('click',function(){done();
+  q('asn-rest').addEventListener('click',function(){done();PEND=null;
+    setTimeout(function(){try{startThreads();setTimeout(stopThreads,6500);}catch(e){}},300);
     setTimeout(function(){try{if(typeof window.showMsg==='function')window.showMsg('Tap any light on the map to feel what it holds. Your own light is always waiting in My Aura.',7000);}catch(e){}},500);});
   ['asn-aura','asn-more'].forEach(function(id){var b=q(id);
     ['mouseenter','focus'].forEach(function(ev){b.addEventListener(ev,function(){hotThread(b.getAttribute('data-to'));});});
@@ -12133,13 +12186,13 @@ function target(which){
 function curve(a,b){var mx=(a.x+b.x)/2,my=Math.max(10,Math.min(a.y,b.y)-Math.max(40,Math.abs(a.x-b.x)*0.18));
   return 'M'+a.x.toFixed(1)+','+a.y.toFixed(1)+' Q'+mx.toFixed(1)+','+my.toFixed(1)+' '+b.x.toFixed(1)+','+b.y.toFixed(1);}
 function mk(tag,attrs){var e=document.createElementNS(SVGNS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);return e;}
-function startThreads(){
+function startThreads(only){
   stopThreads();
   try{
     var calm=document.body.classList.contains('calm')||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
     var svg=mk('svg',{id:'asn-threads','aria-hidden':'true'});svg.style.setProperty('--c',COL);
     TS={svg:svg,g:{},calm:calm};
-    ['aura','feed'].forEach(function(w){
+    (only||['aura','feed']).forEach(function(w){
       var t=target(w);if(!t)return;
       var g=mk('g',{'class':'asn-th asn-th-'+w});
       var path=mk('path',{id:'asn-p-'+w,d:curve(lightPt(),t)});
@@ -12164,7 +12217,25 @@ function startThreads(){
   }catch(e){}
 }
 function hotThread(w){if(!TS)return;Object.keys(TS.g).forEach(function(k){TS.g[k].g.classList.toggle('hot',k===w);TS.g[k].g.classList.toggle('dim',!!w&&k!==w);});}
+/* 29 Sep · Karl asked: after one door, do both threads come back? The answer
+   chosen: only the one not yet taken, once, the next time the map is clear -
+   so both are learned, and neither nags. */
+var PEND=null,PT=null;
+function mapIsClear(){try{var e=document.elementFromPoint(Math.round(innerWidth/2),Math.round(innerHeight*.45));
+  return !!(e&&(e.id==='map'||(e.closest&&e.closest('#map'))));}catch(x){return false;}}
+function watchReturn(other){
+  PEND={w:other,since:Date.now()};
+  if(PT)clearInterval(PT);
+  PT=setInterval(function(){
+    if(!PEND){clearInterval(PT);PT=null;return;}
+    if(Date.now()-PEND.since>20*60*1000){PEND=null;return;}
+    if(Date.now()-PEND.since<2500||!mapIsClear()||(W&&W.classList.contains('on')))return;
+    var w=PEND.w;PEND=null;clearInterval(PT);PT=null;
+    startThreads([w]);setTimeout(stopThreads,7000);
+  },900);
+}
 function goThread(w,then){
+  watchReturn(w==='aura'?'feed':'aura');
   var o=TS&&TS.g[w];
   if(!o||TS.calm){then();return;}
   try{hotThread(w);var sp=mk('circle',{'class':'asn-spark go',r:6});
@@ -12664,7 +12735,7 @@ function reachLine(){
         +esc(rg)+',</span> <span>'+esc(ct)+'</span> <span>and the world.</span></span></p>';
 }
 var NOTES=[392,440,523,587,659];                        /* a rising line: what could happen next */
-function reach(i){var el=stg.querySelectorAll('.r span')[i];if(el)el.classList.add('on');sendRing(2.4+i*.8);bell(NOTES[i],0,.3,3.2);try{if(window.asLightScale)window.asLightScale(i,COLOR);}catch(e){}}
+function reach(i){var el=stg.querySelectorAll('.r span')[i];if(el)el.classList.add('on');sendRing(2.4+i*.8);bell(NOTES[i],0,.3,3.2);try{if(window.asLightScale)window.asLightScale(i,COLOR,LAT,LNG);}catch(e){}}
 var BEATS=[
  [4.5, function(){sendRing(3.4);bloom();try{if(navigator.vibrate)navigator.vibrate(30);}catch(e){}}],
  [6.5, function(){say('<p>Your light has been met.</p>');}],
@@ -12736,6 +12807,19 @@ window.asMeet=function(sid,label,color,lat,lng,wl){
 };
 })();
 </script>
+<style id="reach-light">
+/* 29 Sep 2026 · the reach made visible */
+#as-reach-svg{position:fixed;inset:0;width:100%;height:100%;z-index:2592;pointer-events:none;overflow:visible}
+#as-reach-svg path{fill:none;stroke:var(--c,#c4b5fd);stroke-width:2.6;stroke-linecap:round;opacity:.95;
+  filter:drop-shadow(0 0 5px var(--c,#c4b5fd)) drop-shadow(0 0 12px var(--c,#c4b5fd))}
+#tabs .tab.as-reached{color:#fff!important;text-shadow:0 0 10px var(--asc,#c4b5fd),0 0 22px var(--asc,#c4b5fd)!important;transition:color .6s,text-shadow .6s}
+#tabs .tab.as-reached .tab-orb{background:var(--asc,#c4b5fd)!important;box-shadow:0 0 10px var(--asc,#c4b5fd),0 0 20px var(--asc,#c4b5fd)!important}
+#as-reach-svg .as-reach-word{font-family:Georgia,"Iowan Old Style","Times New Roman",serif;font-size:16.5px;letter-spacing:.055em;fill:#fff;
+  filter:drop-shadow(0 0 6px var(--c,#c4b5fd)) drop-shadow(0 0 14px var(--c,#c4b5fd));animation:reachWord 1.2s ease-out both}
+@keyframes reachWord{0%{opacity:0}40%{opacity:1}100%{opacity:1}}
+@media (max-width:600px){#as-reach-svg .as-reach-word{font-size:15px}}
+body.calm #as-reach-svg{display:none}
+</style>
 <style id="one-light">
 /* ═══ ONE LIGHT · 27 Sep 2026 ═══════════════════════════════════════════════
    Karl: "the whole site has to work together and appear as one light, not
