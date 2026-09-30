@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Panels as Light — a study · Aurasense</title>
+<!--
+  PANELS AS LIGHT · a study to feel first · 30 September 2026 · Karl Harvey with Claude
+  Karl: "I still want every function and panel to match the impressive circular work you did
+  for the My Aura Mirror." "The dark theme doesn't do much for me, nor the panels."
+  Four scenes, each one piece of the site reborn: the orbit after offering, the Live Feed as
+  petals, the world's topics along an arc, and a sense held in a lens.
+  What it rests on: dark words on light (they read better, for younger and older eyes alike);
+  one clear choice at a time; touch targets large enough for any finger; choices set at equal
+  distance around a centre, which a classic study found quicker and surer than a list.
+  Nothing here is real data. Nothing is sent anywhere. No scripts from anywhere else.
+-->
+<style>
+:root{
+  --ink:#35263a;--soft:#6c5870;--faint:#968199;--gold:#d99a4e;--warm:#fff7ec;
+  --rose:#f3c9c0;--peach:#f8dcc4;--lav:#dcd2f2;--sky:#c9dcf4;
+  --paper:rgba(255,251,246,.9);--edge:rgba(217,154,78,.4);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{font-family:var(--serif);color:var(--ink);background:#eed9ca;overflow:hidden;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;color:inherit}
+button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+/* the ground: a warm living map, softly out of focus */
+.ground{position:fixed;inset:-15%;z-index:0;filter:blur(30px);
+  background:radial-gradient(40% 36% at 24% 30%,var(--rose),transparent 70%),radial-gradient(40% 36% at 78% 24%,var(--lav),transparent 70%),
+  radial-gradient(46% 40% at 30% 80%,var(--peach),transparent 72%),radial-gradient(36% 34% at 80% 76%,var(--sky),transparent 70%),#eed9ca;
+  animation:drift 40s ease-in-out infinite alternate}
+.roads{position:fixed;inset:0;z-index:0;opacity:.34;pointer-events:none}
+.roads path{fill:none;stroke:#fff;stroke-linecap:round}
+@keyframes drift{0%{transform:translate(0,0)}100%{transform:translate(-2%,2%) rotate(2deg)}}
+.motes{position:fixed;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.mote{position:absolute;bottom:-10px;width:var(--s,4px);height:var(--s,4px);border-radius:50%;
+  background:radial-gradient(circle,#fff 0%,rgba(255,236,200,.9) 40%,rgba(255,236,200,0) 100%);
+  animation:rise var(--d,14s) linear infinite;animation-delay:var(--w,0s);opacity:0}
+@keyframes rise{0%{transform:translate(0,0);opacity:0}12%{opacity:.9}70%{opacity:.6}100%{transform:translate(var(--x,20px),-105vh);opacity:0}}
+.shimmer{position:absolute;inset:17%;border-radius:50%;pointer-events:none;
+  background:conic-gradient(from 0deg,rgba(255,255,255,0) 0deg,rgba(255,244,222,.75) 22deg,rgba(255,255,255,0) 60deg,rgba(255,255,255,0) 360deg);
+  -webkit-mask:radial-gradient(circle,transparent 64%,#000 66%,#000 70%,transparent 72%);mask:radial-gradient(circle,transparent 64%,#000 66%,#000 70%,transparent 72%);
+  animation:turn 9s linear infinite}
+@media (prefers-reduced-motion:reduce){.ground,.breathe,.petal,.halo,.mote,.shimmer,.door{animation:none!important}.mote{display:none}}
+
+/* the top of the site, in the light */
+.top{position:fixed;left:0;right:0;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:5;display:flex;justify-content:space-between;align-items:center;padding:0 12px;pointer-events:none}
+.pill{pointer-events:auto;display:flex;align-items:center;gap:.55em;background:var(--paper);border:1px solid var(--edge);border-radius:999px;padding:.5em 1em;box-shadow:0 0 22px rgba(217,154,78,.18)}
+.pill .orb{width:22px;height:22px;border-radius:50%;background:radial-gradient(circle,#fff 0%,#f5c98f 40%,#b9a4f0 80%,transparent 100%)}
+.pill b{font-weight:400;letter-spacing:.12em;font-size:.95rem}
+.pill span{font-size:.95rem}
+
+/* scenes */
+.scene{position:fixed;inset:0;z-index:2;display:none;align-items:center;justify-content:center;padding:calc(env(safe-area-inset-top,0px) + 64px) 0 calc(env(safe-area-inset-bottom,0px) + 150px)}
+.scene.on{display:flex}
+.caption{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 70px);z-index:6;text-align:center;padding:0 18px;pointer-events:none}
+.caption b{display:block;font-weight:400;font-size:1.15rem;letter-spacing:.03em}
+.caption span{display:block;color:var(--soft);font-style:italic;font-size:.95rem;margin-top:.2em}
+
+/* the way between scenes: small lights, in a row */
+.dots{position:fixed;left:0;right:0;bottom:calc(env(safe-area-inset-bottom,0px) + 22px);z-index:6;display:flex;justify-content:center;gap:16px}
+.dots button{width:30px;height:30px;border-radius:50%;border:0;padding:0;cursor:pointer;background:transparent;display:flex;align-items:center;justify-content:center}
+.dots button i{display:block;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle,#fff 0%,var(--gold) 60%,rgba(217,154,78,0) 100%);opacity:.5;transition:transform .3s,opacity .3s}
+.dots button.now i{opacity:1;transform:scale(1.5)}
+
+/* ── SCENE 1 · THE ORBIT: after offering, the choices circle the light itself ── */
+.orbit{position:relative;width:min(88vw,420px);aspect-ratio:1}
+.light{position:absolute;left:50%;top:50%;width:26%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;
+  background:radial-gradient(circle,#fffdf8 0%,var(--c,#8fd3c7) 38%,rgba(143,211,199,0) 72%)}
+.breathe{animation:breathe 6s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:translate(-50%,-50%) scale(.94);opacity:.9}50%{transform:translate(-50%,-50%) scale(1.06);opacity:1}}
+.ring{position:absolute;inset:19%;border-radius:50%;border:1px solid rgba(255,255,255,.7);box-shadow:0 0 30px rgba(255,255,255,.35) inset}
+.arc{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.arc text{font-family:var(--serif);font-size:3.9px;letter-spacing:.14em;fill:var(--ink)}
+.opt{position:absolute;width:84px;transform:translate(-50%,-50%);text-align:center;background:none;border:0;cursor:pointer;padding:0}
+.opt .c{display:flex;align-items:center;justify-content:center;margin:0 auto;width:60px;height:60px;border-radius:50%;font-size:1.25rem;
+  background:var(--paper);border:1px solid var(--edge);box-shadow:0 0 20px rgba(217,154,78,.22);transition:transform .25s,box-shadow .25s}
+.opt:hover .c,.opt:focus-visible .c{transform:scale(1.07);box-shadow:0 0 26px rgba(217,154,78,.45)}
+.opt .l{display:block;margin-top:.35em;font-size:.86rem;line-height:1.2}
+.opt.lead .c{background:linear-gradient(180deg,#fffaf2,#fde0b6);border-color:#e9b56a;box-shadow:0 0 26px rgba(233,181,106,.5)}
+.opt.quiet .c{background:rgba(255,251,246,.55)}
+.opt.quiet .l{color:var(--soft)}
+.o-top{left:50%;top:9%}.o-right{left:88%;top:50%}.o-bottom{left:50%;top:91%}.o-left{left:12%;top:50%}
+.o-top{display:flex;flex-direction:column-reverse}.o-top .l{margin:0 0 .35em}
+.ask{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:78%;text-align:center;background:var(--paper);border:1px solid var(--edge);
+  border-radius:999px;padding:1.2em 1.1em;display:none;box-shadow:0 0 30px rgba(217,154,78,.3)}
+.ask.on{display:block}
+.ask p{margin:0 0 .7em;font-size:1rem}
+.ask .row{display:flex;gap:10px;justify-content:center}
+.ask button{border-radius:999px;border:1px solid var(--edge);background:#fff9f0;padding:.55em 1.05em;cursor:pointer;min-height:44px}
+
+/* ── SCENE 2 · THE LIVE FEED AS PETALS: words first, each carrying its sense's glow ── */
+.stream{position:relative;width:min(92vw,440px);height:min(64vh,560px);overflow:hidden;
+  -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent);mask-image:linear-gradient(180deg,transparent 0,#000 12%,#000 88%,transparent)}
+.stream-in{position:absolute;left:0;right:0;bottom:0;display:flex;flex-direction:column;gap:14px;padding:30px 4px}
+.petal{position:relative;background:var(--paper);border-radius:30px 30px 30px 8px;padding:.9em 1.1em .8em 3.1em;
+  box-shadow:0 0 0 1px rgba(255,255,255,.7) inset,0 0 26px var(--glow,rgba(217,154,78,.25));animation:float 7s ease-in-out infinite}
+.petal:nth-child(2n){animation-delay:-2s;border-radius:30px 30px 8px 30px}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+.petal .g{position:absolute;left:.85em;top:1em;width:1.5em;height:1.5em;border-radius:50%;background:radial-gradient(circle,#fff 0%,var(--c) 55%,rgba(255,255,255,0) 100%)}
+.petal .w{margin:0 0 .3em;font-style:italic;font-size:1.02rem;line-height:1.45}
+.petal .m{margin:0;font-size:.84rem;color:var(--soft)}
+.petal .m b{font-weight:600;color:var(--ink)}
+.petal{cursor:pointer}
+.acts{display:flex;gap:10px;margin-top:.55em;opacity:.3;transition:opacity .35s}
+.petal:hover .acts,.petal:focus-within .acts,.petal.open .acts{opacity:1}
+.acts button{display:flex;align-items:center;gap:.35em;border:1px solid var(--edge);background:#fffaf2;border-radius:999px;padding:.35em .8em;min-height:36px;font-size:.8rem;cursor:pointer}
+.acts button span{font-size:.95rem}
+.petal:not(.open) .acts button em{display:none}
+.acts button em{font-style:normal}
+.petal.new{animation:bloom 1.4s ease-out both}
+/* a new sense arrives through a doorway of light: each one a way in to mutual benefit */
+.door{position:absolute;left:50%;bottom:8px;width:54px;height:74px;transform:translateX(-50%) scaleY(0);transform-origin:50% 100%;
+  border-radius:27px 27px 4px 4px;background:radial-gradient(ellipse at 50% 70%,#fffdf6 0%,#ffe2b0 45%,rgba(255,210,150,0) 75%);
+  box-shadow:0 0 30px rgba(255,214,160,.8);animation:door 1.5s ease-out both;pointer-events:none;z-index:3}
+@keyframes door{0%{transform:translateX(-50%) scaleY(0);opacity:0}30%{transform:translateX(-50%) scaleY(1);opacity:1}70%{opacity:1}100%{transform:translateX(-50%) scaleY(1.3);opacity:0}}
+@keyframes bloom{0%{opacity:0;transform:scale(.9)}60%{opacity:1;transform:scale(1.02)}100%{transform:scale(1)}}
+.feedhead{margin:0 0 4px;text-align:center;font-size:.95rem;color:var(--soft);font-style:italic}
+
+/* ── SCENE 3 · THE WORLD'S TOPICS ALONG AN ARC ── */
+.world{position:relative;width:min(92vw,460px);aspect-ratio:1}
+.globe{position:absolute;inset:18%;border-radius:50%;background:radial-gradient(circle at 38% 34%,#e9f0fb 0%,#b9c9e6 40%,#8a9dc9 75%,#6f7fae 100%);
+  box-shadow:0 0 60px rgba(160,180,230,.5)}
+.globe::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 60% 60%,rgba(255,230,190,.45),transparent 40%)}
+.dot{position:absolute;width:12px;height:12px;border-radius:50%;transform:translate(-50%,-50%);transition:opacity .5s,transform .5s}
+.dot.off{opacity:0;transform:translate(-50%,-50%) scale(.3)}
+.chip{position:absolute;transform:translate(-50%,-50%);white-space:normal;max-width:8.2em;text-align:center;line-height:1.2;border-radius:22px;padding:.5em .85em;min-height:44px;cursor:pointer;
+  font-size:.86rem;background:rgba(255,251,246,.55);border:1px solid var(--edge);color:var(--soft);transition:background .35s,box-shadow .35s,color .35s}
+.chip.on{background:linear-gradient(180deg,#fffaf2,#fde0b6);color:var(--ink);border-color:#e9b56a;box-shadow:0 0 22px rgba(233,181,106,.55);font-weight:600}
+.chip.on::before{content:"";display:inline-block;width:.5em;height:.5em;border-radius:50%;margin-right:.45em;vertical-align:.08em;background:radial-gradient(circle,#fff 0%,#f0a24a 70%)}
+.nowline{position:absolute;left:0;right:0;bottom:-2%;text-align:center;font-size:.95rem;font-style:italic;color:var(--soft);padding:0 8px}
+
+/* ── SCENE 4 · A SENSE HELD IN A LENS ── */
+.lens{position:relative;width:min(84vw,54vh,420px);height:min(84vw,54vh,420px);flex:0 0 auto;border-radius:50%;overflow:visible;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:14%;
+  background:radial-gradient(circle at 50% 40%,rgba(255,253,249,.98) 0%,rgba(255,249,242,.94) 58%,rgba(255,243,234,.6) 76%,rgba(255,238,228,0) 100%)}
+.halo{position:absolute;inset:-5%;border-radius:50%;z-index:-1;background:conic-gradient(from 0deg,rgba(111,142,214,.45),rgba(220,210,242,.5),rgba(243,201,192,.4),rgba(111,142,214,.45));filter:blur(24px);animation:turn 36s linear infinite}
+@keyframes turn{to{transform:rotate(360deg)}}
+.lens .core{width:min(64px,12vw);height:min(64px,12vw);border-radius:50%;margin-bottom:.6em;background:radial-gradient(circle,#fff 0%,#7c96d8 45%,rgba(124,150,216,0) 75%)}
+.lens h2{font-weight:400;font-size:clamp(1.15rem,4.6vw,1.5rem);margin:0 0 .3em;letter-spacing:.04em}
+.lens p{margin:0 0 .5em;font-size:clamp(.82rem,3.4vw,.98rem);line-height:1.45}
+.lens .soft{color:var(--soft);font-style:italic;font-size:.9rem}
+.lens button{margin-top:.4em;border-radius:999px;border:1px solid var(--edge);background:#fff9f0;padding:.55em 1.2em;min-height:44px;cursor:pointer}
+
+@media (max-height:680px){.orbit,.world{width:min(80vw,58vh)}.stream{height:50vh}}
+/* scene 5 */
+.meet{position:relative;width:min(92vw,440px);height:min(64vh,460px)}
+.meet .light{width:26%;}
+.meet .me{left:34%;top:46%}
+.meet .ai{left:62%;top:40%;width:20%}
+.bridge{position:absolute;left:44%;top:41%;width:12%;height:6%;border-radius:50%;background:radial-gradient(ellipse,rgba(255,250,236,.95) 0%,rgba(255,236,200,0) 70%);animation:breathe 6s ease-in-out infinite}
+.sees{position:absolute;left:72%;top:40%;transform:translateY(-50%);border:1px solid var(--edge);background:var(--paper);border-radius:999px;
+  padding:.55em 1em;min-height:44px;font-size:.9rem;cursor:pointer;box-shadow:0 0 22px rgba(201,189,246,.55);max-width:13em;text-align:left;line-height:1.25}
+.sees:hover,.sees:focus-visible{box-shadow:0 0 30px rgba(201,189,246,.9)}
+.lens.small{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:none;width:min(86vw,52vh,400px);height:min(86vw,52vh,400px);z-index:3}
+.lens.small.on{display:flex}
+@media (max-width:420px){.sees{left:auto;right:0;top:66%}}
+.meet:has(.lens.small.on) .sees{opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="ground" aria-hidden="true"></div>
+<div class="motes" id="motes" aria-hidden="true"></div>
+<svg class="roads" viewBox="0 0 400 800" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+  <path d="M-20 120 C 120 160, 220 90, 420 140" stroke-width="3"/><path d="M-20 420 C 90 380, 260 470, 420 400" stroke-width="5"/>
+  <path d="M120 -20 C 150 200, 90 420, 160 820" stroke-width="3"/><path d="M300 -20 C 260 240, 330 520, 280 820" stroke-width="4"/>
+  <path d="M-20 640 C 140 610, 250 700, 420 660" stroke-width="2"/><path d="M40 260 C 160 300, 240 240, 380 300" stroke-width="1.5"/>
+</svg>
+
+<header class="top">
+  <div class="pill" aria-label="Aurasense"><span class="orb"></span><b>AURASENSE</b></div>
+  <div class="pill"><span>◉ Live aura feed</span></div>
+</header>
+
+<!-- SCENE 1 -->
+<section class="scene on" id="s1" aria-label="After offering: the orbit">
+  <div class="orbit">
+    <div class="ring"></div>
+    <div class="shimmer"></div>
+    <div class="light breathe" style="--c:#8fd3c7"></div>
+    <svg class="arc" viewBox="0 0 100 100" aria-hidden="true">
+      <defs><path id="top-arc" d="M 26,50 A 24,24 0 0,1 74,50"/></defs>
+      <text><textPath href="#top-arc" startOffset="50%" text-anchor="middle">OFFERED TO COCHRANE</textPath></text>
+    </svg>
+    <button class="opt lead o-top" type="button" data-say="Choose a sense to offer, right here."><span class="c">✧</span><span class="l">Offer another here</span></button>
+    <button class="opt o-right" type="button" data-say="The map opens so you can choose another place."><span class="c">⟡</span><span class="l">Somewhere else</span></button>
+    <button class="opt o-bottom" type="button" data-say="A postcard of this light, ready to send."><span class="c">✉</span><span class="l">Share</span></button>
+    <button class="opt quiet o-left" type="button" id="withdraw"><span class="c">↩</span><span class="l">Withdraw</span></button>
+    <div class="ask" id="ask" role="dialog" aria-label="Withdraw this offering?">
+      <p>Take this light back?</p>
+      <div class="row"><button type="button" id="yesback">Yes, take it back</button><button type="button" id="keep">Keep it</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- SCENE 2 -->
+<section class="scene" id="s2" aria-label="The Live Feed as petals">
+  <div class="feedwrap"><p class="feedhead">Senses being offered right now, around the world</p>
+  <div class="stream" aria-live="polite"><div class="stream-in" id="stream"></div></div></div>
+</section>
+
+<!-- SCENE 3 -->
+<section class="scene" id="s3" aria-label="The world's topics along an arc">
+  <div class="world" id="world">
+    <div class="globe"></div>
+    <p class="nowline" id="now">Now showing: lights on the world's major events.</p>
+  </div>
+</section>
+
+<!-- SCENE 4 -->
+<section class="scene" id="s4" aria-label="A sense held in a lens">
+  <div class="lens">
+    <div class="halo"></div>
+    <div class="core"></div>
+    <h2>Loneliness</h2>
+    <p>Offered 7 times: about one in seven of the lights you carry.</p>
+    <p class="soft">Left in Calgary, in Dinas Powys, and elsewhere.</p>
+    <button type="button" onclick="go(0)">Let it close</button>
+  </div>
+</section>
+
+<!-- SCENE 5 -->
+<section class="scene" id="s5" aria-label="What the other light sees">
+  <div class="meet">
+    <div class="light breathe me" style="--c:#8fd3c7"></div>
+    <div class="light breathe ai" style="--c:#c9bdf6"></div>
+    <div class="bridge" aria-hidden="true"></div>
+    <button class="sees" type="button" id="sees">What the other light sees <span aria-hidden="true">›</span></button>
+    <div class="lens small" id="seeslens" role="dialog" aria-label="What the other light sees">
+      <div class="halo"></div>
+      <h2>What the other light sees</h2>
+      <p>It met you with 12 lights within a short walk, offered over three years: mostly Calm and Belonging, and some Sound.</p>
+      <p class="soft">It cannot feel this place the way you do. It can only hold up what others have freely offered.</p>
+      <p class="soft">Soon: what learner sensers have said about offerings like yours.</p>
+      <button type="button" id="seesclose">Let it close</button>
+    </div>
+  </div>
+</section>
+
+<div class="caption" id="cap"><b></b><span></span></div>
+<nav class="dots" id="dots" aria-label="Scenes"></nav>
+
+<script>
+(function(){
+"use strict";
+var SC=[
+  ['The orbit','After offering, your choices circle your own light. No panel below.'],
+  ['The Live Feed, as petals','Words first. Each petal carries its sense\u2019s glow.'],
+  ['The world\u2019s topics, on an arc','A chosen topic fills with light. Tap one to try.'],
+  ['A sense, held in a lens','Touch a light in My Aura, and it opens as a circle.'],
+  ['What the other light sees','Beside the AI\u2019s light, a way to see what it drew on to meet you.']
+];
+var cur=0,dots=document.getElementById('dots');
+SC.forEach(function(s,i){var b=document.createElement('button');b.type='button';b.setAttribute('aria-label',(i+1)+' of '+SC.length+': '+s[0]);b.innerHTML='<i></i>';
+  b.addEventListener('click',function(){go(i);});dots.appendChild(b);});
+function say(t,sub){var c=document.getElementById('cap');c.querySelector('b').textContent=t;c.querySelector('span').textContent=sub||'';}
+window.go=function(i){cur=i;[].forEach.call(document.querySelectorAll('.scene'),function(s,k){s.classList.toggle('on',k===i);});
+  [].forEach.call(dots.children,function(b,k){b.classList.toggle('now',k===i);});say(SC[i][0],SC[i][1]);if(i===1)startFeed();};
+
+/* scene 1: the orbit */
+[].forEach.call(document.querySelectorAll('.opt[data-say]'),function(b){b.addEventListener('click',function(){say(b.querySelector('.l').textContent,b.getAttribute('data-say'));});});
+var ask=document.getElementById('ask');
+document.getElementById('withdraw').addEventListener('click',function(){ask.classList.add('on');document.getElementById('keep').focus();});
+document.getElementById('keep').addEventListener('click',function(){ask.classList.remove('on');say(SC[0][0],'Kept. Your light stays where you left it.');});
+document.getElementById('yesback').addEventListener('click',function(){ask.classList.remove('on');say(SC[0][0],'Taken back, gently. Nothing of it remains.');});
+
+/* scene 2: petals drifting up, newest arriving with a bloom */
+var FEED=[['Calm','#8fd3c7','\u201cPerfect silence after 10pm. Heard the rain.\u201d','Dinas Powys','just now'],
+  ['Belonging','#f0b56b','\u201cSomeone left homegrown tomatoes on my doorstep.\u201d','Cochrane','12m ago'],
+  ['Nature','#88c07a','\u201cA fox family lives under the garden shed.\u201d','Penarth','28m ago'],
+  ['Atmosphere','#9fb3e8','\u201cA calm I have never felt anywhere before.\u201d','Kyoto','1h ago'],
+  ['Wonder','#b99af0','\u201cThree lights in formation. Others saw them too.\u201d','Calgary','2h ago'],
+  ['Loneliness','#7c96d8','offered without words','Singapore','3h ago']];
+var fi=0,ft=null,stream=document.getElementById('stream');
+function petal(d,isNew){var p=document.createElement('article');p.className='petal'+(isNew?' new':'');p.style.setProperty('--c',d[1]);p.style.setProperty('--glow',d[1]+'55');
+  p.setAttribute('aria-label',d[0]+': '+d[2]+', '+d[3]+', '+d[4]);
+  p.innerHTML='<span class="g" aria-hidden="true"></span><p class="w"></p><p class="m"><b></b> \u00b7 <span></span></p>'
+    +'<div class="acts"><button type="button" aria-label="Answer it"><span>\u2727</span><em>Answer it</em></button>'
+    +'<button type="button" aria-label="Share"><span>\u2709</span><em>Share</em></button>'
+    +'<button type="button" aria-label="See it on the map"><span>\u25ce</span><em>See it on the map</em></button></div>';
+  p.tabIndex=0;p.addEventListener('click',function(e){if(e.target.closest('.acts'))return;var was=p.classList.contains('open');
+    [].forEach.call(stream.querySelectorAll('.petal.open'),function(x){x.classList.remove('open');});if(!was)p.classList.add('open');});
+  p.querySelector('.w').textContent=d[2];p.querySelector('b').textContent=d[0];p.querySelector('.m span').textContent=d[3]+' \u00b7 '+d[4];
+  if(d[2]==='offered without words'){p.querySelector('.w').style.fontStyle='italic';p.querySelector('.w').style.color='#968199';}
+  return p;}
+function startFeed(){if(ft)return;stream.textContent='';for(var k=FEED.length-1;k>=2;k--)stream.appendChild(petal(FEED[k],false));fi=1;
+  ft=setInterval(function(){if(cur!==1)return;
+    var dr=document.createElement('span');dr.className='door';dr.setAttribute('aria-hidden','true');document.querySelector('.stream').appendChild(dr);
+    setTimeout(function(){try{dr.remove();}catch(e){}},1600);
+    setTimeout(function(){stream.appendChild(petal(FEED[fi%FEED.length],true));fi++;if(stream.children.length>6)stream.removeChild(stream.firstChild);},650);},4200);}
+
+/* scene 3: topics set along the top of an arc around the world */
+var TOP=[['conflict','Conflicts & Peace','lights where conflict and peace are being felt','#e98b8b'],['env','Environment','lights where nature is being harmed or repaired','#88c07a'],
+  ['news','World Events','lights on the world\u2019s major events','#f0b56b'],['events','Sport & Festivals','lights where people gather','#b99af0'],['decisions','Decisions','decisions that will shape many lives','#8fd3c7']];
+var on={news:true},world=document.getElementById('world');
+TOP.forEach(function(t,i){
+  var a=Math.PI*(1.06+0.88*i/(TOP.length-1)),R=38;             /* along the upper arc */
+  var b=document.createElement('button');b.type='button';b.className='chip'+(on[t[0]]?' on':'');b.textContent=t[1];b.setAttribute('aria-pressed',on[t[0]]?'true':'false');
+  b.style.left=(50+R*Math.cos(a))+'%';b.style.top=(50+R*Math.sin(a)*0.92+ (i%2?4:-2))+'%';
+  b.addEventListener('click',function(){on[t[0]]=!on[t[0]];b.classList.toggle('on',!!on[t[0]]);b.setAttribute('aria-pressed',on[t[0]]?'true':'false');
+    document.getElementById('now').textContent=(on[t[0]]?'Now showing: ':'Now hidden: ')+t[2]+'.';
+    [].forEach.call(world.querySelectorAll('.dot[data-k="'+t[0]+'"]'),function(d){d.classList.toggle('off',!on[t[0]]);});});
+  world.appendChild(b);
+  for(var k=0;k<3;k++){var d=document.createElement('span');d.className='dot'+(on[t[0]]?'':' off');d.setAttribute('data-k',t[0]);
+    var r=12+Math.random()*16,ang=Math.random()*Math.PI*2;d.style.left=(50+r*Math.cos(ang))+'%';d.style.top=(52+r*Math.sin(ang))+'%';
+    d.style.background='radial-gradient(circle,#fff 0%,'+t[3]+' 60%,rgba(255,255,255,0) 100%)';d.style.boxShadow='0 0 10px '+t[3];world.appendChild(d);}
+});
+var sl=document.getElementById('seeslens');
+document.getElementById('sees').addEventListener('click',function(){sl.classList.add('on');document.getElementById('seesclose').focus();});
+document.getElementById('seesclose').addEventListener('click',function(){sl.classList.remove('on');document.getElementById('sees').focus();});
+/* motes: a few, slow, never busy */
+try{if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches)){var mo=document.getElementById('motes');
+  for(var m=0;m<16;m++){var d=document.createElement('span');d.className='mote';d.style.left=(Math.random()*100)+'%';
+    d.style.setProperty('--s',(2+Math.random()*4).toFixed(1)+'px');d.style.setProperty('--d',(12+Math.random()*14).toFixed(1)+'s');
+    d.style.setProperty('--w',(-Math.random()*20).toFixed(1)+'s');d.style.setProperty('--x',((Math.random()-.5)*80).toFixed(0)+'px');mo.appendChild(d);}}}catch(e){}
+go(0);
+})();
+</script>
+</body>
+</html>

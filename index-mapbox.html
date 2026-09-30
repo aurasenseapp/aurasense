@@ -4035,9 +4035,11 @@ let _ascentTimers=[];
    Paint only: nothing is measured, nothing moves, the standing scale is untouched. */
 window.asLightScale=function(i,color,lat,lng){
   try{
-    if(window.AS_CALM)return;
+    /* 30 Sep · calm means less motion, never less meaning: the named word still lights, as a still glow */
+    var calmNow=!!window.AS_CALM;
     var col=color||'#c4b5fd';
     try{if(window.asReachThread)window.asReachThread(i,col,lat,lng);}catch(e){}
+    if(calmNow)return;
     var orb=document.getElementById(['orb0','orb1','orb2','orb3','orb4'][i]);
     if(orb&&orb.getBoundingClientRect().width<1)orb=document.getElementById('orb1');
     if(!orb)return;
@@ -4058,7 +4060,15 @@ window.asComet=function(svg,d,col,o){
   o=o||{};var NS='http://www.w3.org/2000/svg';
   try{
     var calm=document.body.classList.contains('calm')||(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches);
-    if(calm){if(o.onArrive)o.onArrive();return;}
+    if(calm){ /* 30 Sep · Karl saw no stars: a phone set to reduce motion hid them entirely.
+                 Now the way is still shown - a glow that fades in and out, with no travel. */
+      var sg=document.createElementNS(NS,'path');sg.setAttribute('d',d);sg.setAttribute('class','as-comet-still');
+      sg.style.setProperty('--c',col||'#c4b5fd');svg.appendChild(sg);
+      requestAnimationFrame(function(){sg.style.opacity='.95';});
+      setTimeout(function(){try{if(o.onArrive)o.onArrive();}catch(e){}},500);
+      setTimeout(function(){try{sg.style.opacity='0';}catch(e){}},1300);
+      setTimeout(function(){try{sg.remove();}catch(e){}},2400);
+      return;}
     var g=document.createElementNS(NS,'g');g.setAttribute('class','as-comet');g.style.setProperty('--c',col||'#c4b5fd');
     var tails=o.tails||[150,70,22],widths=o.widths||[1.6,3,5.2],segs=[];
     tails.forEach(function(len,k){var pth=document.createElementNS(NS,'path');pth.setAttribute('d',d);
@@ -4756,6 +4766,10 @@ function submit(lat,lng,text){
   anchorPoint={lat,lng,zoom:sz};
   lastStreetView={lat,lng,zoom:sz};
   lastViews[0]={lat,lng,zoom:sz};
+  /* 30 Sep 2026 · Karl: "We need the map to move in closer... to make the aura offered the
+     size you rightly represent." Only from a street-level view; a town's light stays as it is. */
+  try{var _z0=map.getZoom();if(_z0>=13){var _z=Math.min(17.4,Math.max(16.2,_z0+1));
+    if(_z>_z0+.05)map.easeTo({center:[lng,lat],zoom:_z,duration:2400});}}catch(e){}
   // The offering also flows into the personal aura — a spark rises to the My Aura orb.
   feedMyAura(lat,lng,s.color);
   // THE ASCENT — armed here, spoken later. The light just given is now findable at every scale,
@@ -11275,7 +11289,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 130 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 131 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -12895,7 +12909,6 @@ window.asMeet=function(sid,label,color,lat,lng,wl){
   filter:drop-shadow(0 0 6px var(--c,#c4b5fd)) drop-shadow(0 0 14px var(--c,#c4b5fd));animation:reachWord 1.2s ease-out both}
 @keyframes reachWord{0%{opacity:0}40%{opacity:1}100%{opacity:1}}
 @media (max-width:600px){#as-reach-svg .as-reach-word{font-size:15px}}
-body.calm #as-reach-svg{display:none}
 </style>
 <style id="shooting-stars">
 /* 30 Sep 2026 · shooting stars, the quiet way home, and the offering panel stepping aside */
@@ -12906,6 +12919,7 @@ body.calm #as-reach-svg{display:none}
 .as-comet .as-comet-seg.s2{stroke:#fffaf0;opacity:.95;filter:drop-shadow(0 0 6px var(--c,#c4b5fd))}
 .as-comet .as-comet-head{fill:#fffdf8;filter:drop-shadow(0 0 6px #fff) drop-shadow(0 0 14px var(--c,#c4b5fd))}
 .as-comet .as-comet-flash{fill:none;stroke:#fffaf0;stroke-width:2;animation:cometFlash .8s ease-out both}
+.as-comet-still{fill:none;stroke:var(--c,#c4b5fd);stroke-width:3;stroke-linecap:round;opacity:0;transition:opacity .5s ease;filter:drop-shadow(0 0 6px var(--c,#c4b5fd))}
 @keyframes cometFlash{0%{r:3;opacity:1}100%{r:26;opacity:0}}
 .asn-th path.asn-guide{fill:none;stroke:var(--c,#c4b5fd);stroke-width:1.6!important;opacity:.26!important;filter:none!important;stroke-dasharray:none}
 .asn-th.hot path.asn-guide{opacity:.6!important;stroke-width:2.2!important}
