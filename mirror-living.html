@@ -181,6 +181,20 @@ function keyPhrase(t){
     if(/\b(i|i'm|i am|my|me)\b/i.test(x))s+=2; if(s>score){score=s;best=x;}});
   return trimPhrase(best,110);
 }
+/* 30 Sep 2026 · Karl: "The mirror just makes little sense in the responses."
+   The old path asked the same questions whatever was said. Now every question is
+   anchored in the person's own words: a list is heard as a list, and the most
+   alive word they used is the one the Mirror asks about. The deeper questions
+   (the future self, a small step) come only when someone has named a struggle. */
+var HARD=/\b(stuck|lost|tired|exhausted|hard|hurt|pain|afraid|scared|alone|lonely|struggl|anxious|worried|overwhelm|trapped|heavy|numb|sad|angry|can'?t cope|no way)\w*/i;
+function keyWord(t){
+  var fl=feelings(t);if(fl.length)return fl[0];
+  var best='',ws=(String(t).toLowerCase().match(/[a-z']{4,}/g)||[]);
+  ws.forEach(function(w){if(STOP.test(w)||/^(this|that|with|have|from|they|them|what|when|just|like|want|need|some|very|much|more|most|your|mine|here|then|than|also|only|into|over|such|even|make|made|will|were|been|does|done|know)$/.test(w))return;if(w.length>best.length)best=w;});
+  return best;}
+function listOf(t){
+  var parts=String(t).replace(/\band\b/gi,',').split(/[,;\/]+/).map(function(x){return x.trim().replace(/[.!?]+$/,'');}).filter(Boolean);
+  if(parts.length>=3&&parts.every(function(x){return x.split(/\s+/).length<=3;}))return parts;return null;}
 function feelings(t){var out=[];FEEL.forEach(function(f){if(new RegExp('\\b'+f+'\\b','i').test(t)&&out.indexOf(f)<0)out.push(f);});return out;}
 function tally(t){(String(t).toLowerCase().match(/[a-z']{5,}/g)||[]).forEach(function(w){
   if(STOP.test(w))return;
@@ -252,7 +266,7 @@ function hear(){
     var p2=[{cls:'line',text:'That\u2019s alright. Not knowing is a place to stand, too.'},{cls:'line q',text:'What\u2019s one small thing you do know about it?'}];
     ask({q:'What\u2019s one small thing you do know about it?',plain:'Anything at all you\u2019re sure of?'}); show(p2); addTrail(p2); return;
   }
-  S.turn++; tally(t); if(!S.first)S.first=keyPhrase(t);
+  S.turn++; tally(t); if(!S.first)S.first=keyPhrase(t); if(HARD.test(t))S.hard=true;
   var kp=keyPhrase(t), fl=feelings(t), back=returned(t), parts=[{tag:'p',cls:'quote',text:kp}];
   /* the Mirror's own reflection: what it notices in the person's own words */
   var m=t.match(TURN), noticed=null;
@@ -260,6 +274,12 @@ function hear(){
         var a=trimPhrase(a0,60),
           b=trimPhrase(t.slice(m.index+m[0].length).replace(/^(my |the )/i,function(x){return x.toLowerCase()==='my '?'your ':x;}),60);
     if(a.length>3&&b.length>3)noticed='Two things are pulling here: '+a+', and '+b+'.';}
+  var btw=t.match(/\bbetween\s+(.{3,50}?)\s+and\s+(.{3,50}?)(?:[.,!?]|$)/i),btwQ=null;
+  if(!noticed&&btw){noticed='Two ways are pulling: '+trimPhrase(btw[1],50)+', and '+trimPhrase(btw[2],50)+'.';
+    btwQ={q:'Which one pulls harder today \u2014 and which one feels more like you?',plain:'Which one pulls harder today?'};}
+  var lst=listOf(t),listQ=null;
+  if(!noticed&&lst){noticed='You named '+(lst.length===3?'three':lst.length===4?'four':lst.length===5?'five':lst.length)+': '+lst.join(', ')+'.';
+    listQ={q:'Which of them feels furthest from you right now?',plain:'Which one do you need most right now?'};}
   var wm=t.match(WANT),wantQ=null;
   if(!noticed&&wm){var wt=trimPhrase(wm[1].replace(/\b(what else|and so on|etc)\b.*$/i,''),60);
     if(wt.length>2){noticed='What you want here is to be '+wt.replace(/^to be /i,'')+'.';
@@ -269,11 +289,15 @@ function hear(){
   if(!noticed&&fl.length===1)noticed='You named it: '+fl[0]+'. That word is yours; I\u2019m only holding it up.';
   if(!noticed&&fl.length>1)noticed='More than one feeling is here: '+fl.slice(0,3).join(', ')+'.';
   if(!noticed&&t.split(/\s+/).length<=3)noticed='Thank you. Stay with that a moment.';
-  if(!noticed)noticed='I\u2019m hearing that this is real for you, as you said it.';
-  parts.push({cls:'line',text:noticed});
+  var kw=keyWord(t);
+  if(!noticed&&kw)noticed='\u201c'+kw.charAt(0).toUpperCase()+kw.slice(1)+'\u201d stands out in what you wrote.';
+  if(noticed)parts.push({cls:'line',text:noticed});
   var next;
   if(m&&S.step===0)next={q:'Which of the two is asking for you first today?',plain:'Which one needs you more right now?'};
+  else if(btwQ)next=btwQ;
+  else if(listQ)next=listQ;
   else if(wantQ)next=wantQ;
+  else if(!S.hard&&!HARD.test(t)&&kw&&t.split(/\s+/).length>3)next={q:'Say a little more about \u201c'+kw+'\u201d. What does it hold for you?',plain:'What does \u201c'+kw+'\u201d mean for you?'};
   else if(t.split(/\s+/).length<=3)next={q:'What\u2019s underneath that, if you look a little closer?',plain:'Can you say a little more?'};
   else {next=PATH[Math.min(S.step,PATH.length-1)];S.step++;}
   parts.push({cls:'line q',text:next.q}); ask(next);

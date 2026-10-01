@@ -4071,17 +4071,25 @@ window.asComet=function(svg,d,col,o){
       return;}
     var g=document.createElementNS(NS,'g');g.setAttribute('class','as-comet');g.style.setProperty('--c',col||'#c4b5fd');
     var tails=o.tails||[150,70,22],widths=o.widths||[1.6,3,5.2],segs=[];
+    /* 30 Sep · Karl saw a flicker before each star: the whole line showed for one frame before
+       its tail was cut. Each piece now begins hidden, and appears only once it is shaped. */
     tails.forEach(function(len,k){var pth=document.createElementNS(NS,'path');pth.setAttribute('d',d);
-      pth.setAttribute('class','as-comet-seg s'+k);pth.style.strokeWidth=widths[k];g.appendChild(pth);segs.push({p:pth,len:len});});
-    var head=document.createElementNS(NS,'circle');head.setAttribute('r',o.head||4.2);head.setAttribute('class','as-comet-head');g.appendChild(head);
+      pth.setAttribute('class','as-comet-seg s'+k);pth.style.strokeWidth=widths[k];pth.style.strokeDasharray='0 100000';pth.style.opacity='0';g.appendChild(pth);segs.push({p:pth,len:len});});
+    var glint=document.createElementNS(NS,'path');glint.setAttribute('class','as-comet-glint');
+    glint.setAttribute('d','M-9,0 L9,0 M0,-9 L0,9');glint.style.opacity='0';g.appendChild(glint);var lastSpark=0;
+    var head=document.createElementNS(NS,'circle');head.setAttribute('r',o.head||4.2);head.setAttribute('class','as-comet-head');head.setAttribute('cx','-99');head.setAttribute('cy','-99');g.appendChild(head);
     svg.appendChild(g);
     var L=segs[0].p.getTotalLength();if(!L||!isFinite(L)){g.remove();if(o.onArrive)o.onArrive();return;}
     var dur=o.dur||1150,t0=performance.now(),arrived=false;
     function ease(x){return x<.5?2*x*x:1-Math.pow(-2*x+2,2)/2;}
     function frame(now){
       var t=Math.min(1,(now-t0)/dur),f=L*ease(t);
-      segs.forEach(function(sg){sg.p.style.strokeDasharray=sg.len+' '+(L*2+sg.len);sg.p.style.strokeDashoffset=(sg.len-f);});
-      try{var pt=segs[0].p.getPointAtLength(f);head.setAttribute('cx',pt.x);head.setAttribute('cy',pt.y);}catch(e){}
+      segs.forEach(function(sg){sg.p.style.strokeDasharray=sg.len+' '+(L*2+sg.len);sg.p.style.strokeDashoffset=(sg.len-f);sg.p.style.opacity='';});
+      try{var pt=segs[0].p.getPointAtLength(f);head.setAttribute('cx',pt.x);head.setAttribute('cy',pt.y);
+        glint.style.opacity='';glint.setAttribute('transform','translate('+pt.x.toFixed(1)+','+pt.y.toFixed(1)+') rotate('+((now/6)%360).toFixed(0)+')');
+        if(now-lastSpark>55&&t<.96){lastSpark=now;var sp=document.createElementNS(NS,'circle');sp.setAttribute('class','as-comet-spark');
+          sp.setAttribute('cx',(pt.x+(Math.random()-.5)*6).toFixed(1));sp.setAttribute('cy',(pt.y+(Math.random()-.5)*6).toFixed(1));sp.setAttribute('r',(0.8+Math.random()*1.6).toFixed(1));
+          g.insertBefore(sp,head);setTimeout(function(){try{sp.remove();}catch(e){}},1000);}}catch(e){}
       if(t<1){requestAnimationFrame(frame);return;}
       if(!arrived){arrived=true;try{if(o.onArrive)o.onArrive();}catch(e){}
         try{var fl=document.createElementNS(NS,'circle');var pe=segs[0].p.getPointAtLength(L);fl.setAttribute('cx',pe.x);fl.setAttribute('cy',pe.y);
@@ -6694,6 +6702,7 @@ function macDrawAura(ts){
      jump and the whole is never off screen, which is the one rule that keeps a
      cloud from becoming a place to get lost in. */
   macNamed.length=0;                       /* each frame places its names afresh */
+  var NAMEQ=[];                            /* 30 Sep - names are written last of all */
   try{var _mc=macAx.canvas.getBoundingClientRect(),_mb=document.getElementById('ma-cloud-through').getBoundingClientRect();window._macBtn=(_mb.width>0)?{x:_mb.left-_mc.left,y:_mb.top-_mc.top,w:_mb.width,h:_mb.height}:null;}catch(e){window._macBtn=null;}
   macSpread+=(macWantSpread-macSpread)*0.055;
   if(macWantSpread&&macSpread>0.985)macSpread=1;
@@ -6840,7 +6849,10 @@ function macDrawAura(ts){
     macBlob(macAx,px,py,R,tt,li*2.7+1.3,1); macAx.fill();
     /* the hit area reaches the name below it, so touching either one answers */
     macPts[li]={x:px,y:py,r:spread*0.98,i:li};
-    if(macSpread>0.34&&L[li]&&L[li].label){
+    /* 30 Sep · Karl: 'Anomaly is behind the aura.' Names were written inside the colour pass,
+       so a later colour could paint over an earlier name. Every name now waits, and is
+       written once all the colour is down. */
+    if(macSpread>0.34&&L[li]&&L[li].label)NAMEQ.push(function(){
       var nm=String(L[li].label).split(' \u2014 ')[0];
       if(nm.length>22)nm=nm.slice(0,21)+'\u2026';
       macAx.save();
@@ -6883,7 +6895,7 @@ function macDrawAura(ts){
       }
       macAx.shadowBlur=0;
       macAx.restore();
-    }
+    });
   });
   /* HARD COLOUR AT THE CORE - 3 Sep 2026. The guiding principle obeyed at last:
      a sense is unmistakably itself at its centre, and has no edge anywhere.
@@ -6932,6 +6944,7 @@ function macDrawAura(ts){
     macAx.fillStyle=sh;
     macBlob(macAx,cx,cy,shR,ts*1.9,4.7,1); macAx.fill();
   }
+  try{NAMEQ.forEach(function(f){try{f();}catch(e){}});}catch(e){}
 }
 /* ── naming a sense, where it sits ────────────────────────────────────── */
 function macNameAt(cxp,cyp){
@@ -6981,7 +6994,7 @@ function macEnter(){
      It stands in the middle of My Aura from the moment the page opens. */
   try{ var _p=document.getElementById('myaura-page'); if(_p)_p.classList.add('faceon'); }catch(e){}
   macPainted=false; macLast=performance.now(); macNext=0;
-  macSpread=0; macWantSpread=0; macHover=-1; macOpenDoor(-1); macShowName(-1);
+  macSpread=0; macWantSpread=0; macHover=-1; macOpenDoor(-1); macShowName(-1);try{var _pgS3=document.getElementById('myaura-page');if(_pgS3)_pgS3.classList.remove('ma-spread');}catch(e){}
   var _t=document.getElementById('ma-cloud-through'); if(_t)_t.textContent='Look closer';
   var _w=document.getElementById('ma-cloud-words');
   if(_w)_w.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here. Touch it.</span>';
@@ -7206,7 +7219,7 @@ function macOpenDoor(i){
   if(thr)thr.addEventListener('click',function(){
     if(!macWantSpread){
       /* DEPTH TWO — the aura opens into the senses that made it */
-      macWantSpread=1;
+      macWantSpread=1;try{var _pgS=document.getElementById('myaura-page');if(_pgS)_pgS.classList.add('ma-spread');}catch(e){}
       macBuildDoors();
       var d=document.getElementById('ma-cloud-doors');if(d)d.classList.add('on');
       var w=document.getElementById('ma-cloud-words');
@@ -7221,7 +7234,7 @@ function macOpenDoor(i){
       }
       thr.textContent='Let it close';
     }else{
-      macWantSpread=0; macShowName(-1); macOpenDoor(-1);
+      macWantSpread=0; macShowName(-1); macOpenDoor(-1);try{var _pgS2=document.getElementById('myaura-page');if(_pgS2)_pgS2.classList.remove('ma-spread');}catch(e){}
       var d2=document.getElementById('ma-cloud-doors');if(d2)d2.classList.remove('on');
       var w2=document.getElementById('ma-cloud-words');
       if(w2)w2.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here. Touch it.</span>';
@@ -11289,7 +11302,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 131 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 132 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -12909,6 +12922,13 @@ window.asMeet=function(sid,label,color,lat,lng,wl){
   filter:drop-shadow(0 0 6px var(--c,#c4b5fd)) drop-shadow(0 0 14px var(--c,#c4b5fd));animation:reachWord 1.2s ease-out both}
 @keyframes reachWord{0%{opacity:0}40%{opacity:1}100%{opacity:1}}
 @media (max-width:600px){#as-reach-svg .as-reach-word{font-size:15px}}
+</style>
+<style id="finer-stars">
+/* 30 Sep 2026 · finer shooting stars, and the selfie stepping aside */
+.as-comet .as-comet-glint{fill:none;stroke:#fffdf8;stroke-width:1.1;stroke-linecap:round;filter:drop-shadow(0 0 4px #fff) drop-shadow(0 0 8px var(--c,#c4b5fd))}
+.as-comet .as-comet-spark{fill:#fffaf0;opacity:.9;animation:cometSpark 1s ease-out both;filter:drop-shadow(0 0 3px var(--c,#c4b5fd))}
+@keyframes cometSpark{0%{opacity:.95}100%{opacity:0;transform:translateY(6px)}}
+#myaura-page.ma-spread #ma-selfie-wrap,#myaura-page.ma-spread #ma-selfie-note{display:none!important}
 </style>
 <style id="shooting-stars">
 /* 30 Sep 2026 · shooting stars, the quiet way home, and the offering panel stepping aside */
