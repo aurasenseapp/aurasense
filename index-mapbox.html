@@ -6869,6 +6869,10 @@ function macDrawAura(ts){
          lost. A name is not competing for attention while a list is being
          read, so it steps back - and returns the moment the list closes. */
       var _dim=(typeof window!=='undefined'&&(window._macListOpen||window._macCardOpen))?(window._macCardOpen?0.08:0.24):1;
+      /* while one name is open, its twin stays unwritten and the others step back a little */
+      var _open=(typeof macHover==='number'&&macHover>=0);
+      if(_open&&macHover===li){macNamed.push({x:px,y:py+spread*0.92+15,w:macAx.measureText(nm).width,i:li});macAx.restore();return;}
+      if(_open)_dim*=0.45;
       macAx.globalAlpha=Math.min(1,(macSpread-0.34)/0.42)*_dim;
       macAx.textAlign='center'; macAx.textBaseline='middle';
       macAx.font='13px Georgia, "Times New Roman", serif';
@@ -6972,8 +6976,13 @@ function macShowName(i){
   var p=macPts[i];if(!p)return;
   var cnt=la.count>1?(la.count+' times'):'once';
   el.innerHTML='<b>'+String(la.label||'').replace(/[<>]/g,'')+'</b><span>offered '+cnt+'</span>';
-  el.style.left=Math.round(p.x)+'px';
-  el.style.top=Math.round(p.y-p.r-16)+'px';
+  /* 30 Sep 2026 · Karl's screens: "Hope" written twice, one over the other, and the larger name
+     landing on a neighbour's. The touched name now opens in its own place, and its small
+     twin is not drawn while it is open, so one name says it all. */
+  var ny2=p.y-p.r-16,nx2=p.x;
+  try{for(var k=0;k<macNamed.length;k++){if(macNamed[k]&&macNamed[k].i===i){nx2=macNamed[k].x;ny2=macNamed[k].y+9;break;}}}catch(e){}
+  el.style.left=Math.round(nx2)+'px';
+  el.style.top=Math.round(ny2)+'px';
   el.classList.add('on');
 }
 function macAuraLoop(ts){
@@ -11302,7 +11311,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 132 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 133 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
