@@ -173,6 +173,20 @@ body.night .symInk{filter:none}
   filter:drop-shadow(0 0 7px #fff) drop-shadow(0 0 15px rgba(255,255,255,.98))
          drop-shadow(0 0 34px rgba(255,255,255,.9))}
 .sym.on{opacity:1}
+/* 4 Oct 2026 · Karl: "The original idea I had for the seeking at the front end was for this
+   Alphasense symbols to fall through the cloud in the same way." The leaving symbol sinks
+   into the cloud, smaller and softer, as a puff of cloud thickens over it; the next comes
+   forward from behind. Brief, so it never lags a moving finger. Reduce-motion: the old fade. */
+.sym.into{animation:symInto .5s cubic-bezier(.5,0,.7,.4) both}
+.sym.outof{animation:symOutof .6s cubic-bezier(.2,.7,.25,1) both}
+@keyframes symInto{0%{opacity:1;transform:scale(1);filter:drop-shadow(0 0 7px #fff) drop-shadow(0 0 15px rgba(255,255,255,.98)) drop-shadow(0 0 34px rgba(255,255,255,.9)) blur(0px)}100%{opacity:0;transform:scale(.38);filter:drop-shadow(0 0 7px #fff) drop-shadow(0 0 15px rgba(255,255,255,.98)) drop-shadow(0 0 34px rgba(255,255,255,.9)) blur(9px)}}
+@keyframes symOutof{0%{opacity:0;transform:scale(.38);filter:drop-shadow(0 0 7px #fff) drop-shadow(0 0 15px rgba(255,255,255,.98)) drop-shadow(0 0 34px rgba(255,255,255,.9)) blur(9px)}100%{opacity:1;transform:scale(1);filter:drop-shadow(0 0 7px #fff) drop-shadow(0 0 15px rgba(255,255,255,.98)) drop-shadow(0 0 34px rgba(255,255,255,.9)) blur(0px)}}
+#symVeil{position:absolute;inset:-35%;border-radius:50%;pointer-events:none;opacity:0;z-index:2;filter:blur(10px);
+  background:radial-gradient(40% 40% at 40% 45%,rgba(255,255,255,.96) 0%,rgba(255,255,255,0) 70%),radial-gradient(42% 40% at 60% 58%,rgba(248,226,214,.92) 0%,rgba(248,226,214,0) 70%),radial-gradient(34% 32% at 30% 64%,rgba(220,210,242,.85) 0%,rgba(220,210,242,0) 70%)}
+body.night #symVeil{background:radial-gradient(40% 40% at 40% 45%,rgba(220,212,255,.5) 0%,rgba(220,212,255,0) 70%),radial-gradient(42% 40% at 60% 58%,rgba(255,226,214,.32) 0%,rgba(255,226,214,0) 70%)}
+#symVeil.puff{animation:symPuff .7s ease-out both}
+@keyframes symPuff{0%{opacity:0;transform:scale(.7)}40%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.2)}}
+@media (prefers-reduced-motion:reduce){.sym.into,.sym.outof{animation:none}#symVeil{display:none}}
 .sym svg{width:100%!important;height:100%!important;display:block;overflow:visible}
 #wordWrap{position:relative;width:86vw;max-width:420px;height:clamp(30px,7.4vw,38px)}
 .wd{position:absolute;left:50%;top:0;transform:translateX(-50%);white-space:nowrap;
@@ -634,7 +648,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
 
 <div id="clear"></div>
 <div id="mark">
-  <div id="symWrap"><div class="sym" id="symA"></div><div class="sym" id="symB"></div></div>
+  <div id="symWrap"><div class="sym" id="symA"></div><div class="sym" id="symB"></div><div id="symVeil" aria-hidden="true"></div></div>
   <div id="wordWrap"><div class="wd" id="wordA"></div><div class="wd" id="wordB"></div></div>
 </div>
 <div id="flyer"><div id="flyerSoft"></div><div id="flyerSym"></div></div>
@@ -1102,10 +1116,16 @@ function showBed(c){ paintBed(c); $('bed').classList.add('here');
 function hideBed(){ $('bed').classList.remove('here');
   $('clear').classList.remove('here'); $('mark').classList.remove('here'); }
 
+function symStill(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
 function crossSym(html){
-  if(!html){$('symA').classList.remove('on');$('symB').classList.remove('on');return;}
+  if(!html){$('symA').classList.remove('on','into','outof');$('symB').classList.remove('on','into','outof');return;}
   var inEl=symFlip?$('symA'):$('symB'), outEl=symFlip?$('symB'):$('symA');
+  var hadOut=outEl.classList.contains('on');
   inEl.innerHTML=html; inEl.classList.add('on'); outEl.classList.remove('on');
+  /* the leaving symbol sinks into the cloud; the next comes forward from behind it */
+  try{if(!symStill()){inEl.classList.remove('into','outof');outEl.classList.remove('into','outof');void inEl.offsetWidth;
+    inEl.classList.add('outof');if(hadOut)outEl.classList.add('into');
+    var v=$('symVeil');if(v&&hadOut){v.classList.remove('puff');void v.offsetWidth;v.classList.add('puff');}}}catch(e){}
   symFlip=!symFlip;
 }
 function crossWord(txt,col){

@@ -7,7 +7,7 @@
 <meta name="referrer" content="no-referrer">
 <title>The Mirror — Aurasense</title>
 <!--
-  THE LIVING MIRROR · a study, 28 September 2026 · Karl Harvey with Claude
+  THE LIVING MIRROR · a study, 28 September 2026 · Karl with Claude
   Karl: "I dont like the scrolling aspect of mirror... I thought the presentation would be
   consistent and more dynamic... representing the circular form we have throughout."
   "The whole thing needs to feel organic, etheric and alive!"
@@ -67,10 +67,33 @@ body{font-family:var(--serif);color:var(--ink);background:#f6e3d6;overflow:hidde
 .speak{width:74%;max-height:74%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7em;
   transition:opacity .9s ease, filter .9s ease}
 .speak.fade{opacity:0;filter:blur(6px)}
+.as-ws{display:inline}.as-w{display:inline-block}
+.as-falling{pointer-events:none}
+.as-falling .as-w{animation:asIntoW .95s cubic-bezier(.5,0,.7,.4) both;animation-delay:calc(var(--i,0)*12ms)}
+.as-rising .as-w{animation:asOutW 1s cubic-bezier(.2,.7,.25,1) both;animation-delay:calc(.25s + var(--i,0)*14ms)}
+/* 4 Oct 2026 · Karl: "falling not down but into, beyond as in behind - from direct view."
+   Each word drifts toward the heart of the circle, growing smaller and softer as if moving
+   away, while a veil of cloud thickens over it; the next words come forward from behind it. */
+@keyframes asIntoW{0%{opacity:1;transform:none;filter:none}100%{opacity:0;transform:translate(var(--tx,0px),var(--ty,0px)) scale(.28);filter:blur(12px)}}
+@keyframes asOutW{0%{opacity:0;transform:translate(var(--tx,0px),var(--ty,0px)) scale(.28);filter:blur(12px)}100%{opacity:1;transform:none;filter:none}}
+.as-cloudband{position:absolute;left:10%;right:10%;top:16%;bottom:16%;border-radius:50%;pointer-events:none;z-index:3;opacity:0;filter:blur(9px);
+  background:radial-gradient(38% 40% at 34% 42%,rgba(243,201,192,.96) 0%,rgba(243,201,192,0) 70%),radial-gradient(36% 38% at 66% 40%,rgba(220,210,242,.96) 0%,rgba(220,210,242,0) 70%),radial-gradient(44% 40% at 50% 64%,rgba(248,220,196,.97) 0%,rgba(248,220,196,0) 72%),radial-gradient(30% 32% at 80% 62%,rgba(201,220,244,.92) 0%,rgba(201,220,244,0) 70%),radial-gradient(28% 30% at 20% 64%,rgba(246,214,200,.92) 0%,rgba(246,214,200,0) 70%),radial-gradient(40% 34% at 50% 48%,rgba(255,255,255,.95) 0%,rgba(255,255,255,0) 72%);
+  background-size:130% 130%;background-position:50% 50%}
+.as-take>.as-cloudband{animation:asVeilTake 1.3s cubic-bezier(.3,.6,.4,1) both}
+.as-give>.as-cloudband{animation:asVeilGive 1.5s cubic-bezier(.3,.6,.4,1) both}
+@keyframes asVeilTake{0%{opacity:0;transform:scale(.6) rotate(-10deg);background-position:30% 40%}55%{opacity:.92}100%{opacity:.96;transform:scale(1.04) rotate(4deg);background-position:60% 55%}}
+@keyframes asVeilGive{0%{opacity:.96;transform:scale(1.04) rotate(4deg);background-position:60% 55%}45%{opacity:.75}100%{opacity:0;transform:scale(1.35) rotate(14deg);background-position:80% 70%}}
+@keyframes asFadeOut{to{opacity:0}}@keyframes asFadeIn{from{opacity:0}}
+.as-falling .quote::before,.as-falling .quote::after{animation:asFadeOut .35s ease both}
+.as-rising .quote::before,.as-rising .quote::after{animation:asFadeIn .8s ease .35s both}
+@media (prefers-reduced-motion:reduce){.as-cloudband{display:none}.as-falling .as-w{animation:asFadeOut .18s ease both;animation-delay:0s}.as-rising .as-w{animation:asFadeIn .3s ease both;animation-delay:0s}}
+.speak.full{font-size:.9em;gap:.55em;width:70%}
+.speak.full .line,.speak.full .quote,.speak.full .line.aspire{font-size:clamp(.92rem,3vw,1.08rem)}
 .title{font-size:clamp(1.5rem,5vw,2rem);letter-spacing:.06em;margin:0}
 .line{margin:0;font-size:clamp(1.02rem,3.4vw,1.28rem);line-height:1.5}
 .line.soft{color:var(--soft);font-size:clamp(.95rem,3vw,1.06rem)}
 .line.q{font-style:italic;color:var(--ink)}
+.line.aspire{font-style:italic;color:var(--ink);font-size:clamp(1rem,3.2vw,1.18rem);line-height:1.5}
 .quote{margin:0;font-style:italic;font-size:clamp(1rem,3.2vw,1.18rem);line-height:1.5;color:var(--ink)}
 .quote::before{content:"\201C"}.quote::after{content:"\201D"}
 
@@ -130,7 +153,7 @@ body.insite .mirror{margin-top:2vh}
   <div class="row hide" id="after">
     <button class="btn quiet" id="rest" type="button">Let it rest here</button>
   </div>
-  <p class="note" id="note">Nothing you write leaves this page.</p>
+  <p class="note" id="note">Nothing you write leaves this page. The Mirror is not a person, and not a therapist.</p>
   <p class="note hide" id="classicRow"><button class="btn quiet" id="classic" type="button">The balance of your light, and the unlit rooms →</button></p>
 </main>
 
@@ -138,17 +161,28 @@ body.insite .mirror{margin-top:2vh}
 (function(){
 "use strict";
 /* ── what the Mirror knows how to hear ───────────────────────────────── */
-var FEEL=['tired','exhausted','alone','lonely','stuck','afraid','scared','frightened','angry','furious','sad','lost','hopeful','hope',
-  'heavy','overwhelmed','anxious','worried','calm','peaceful','grateful','confused','guilty','ashamed','excited','numb','empty',
-  'hurt','free','trapped','restless','drained','small','invisible','unheard','loved','unloved','torn','uncertain','relieved'];
+/* 4 Oct 2026 · Karl: "Mirror isnt responding precisely enough." Two of his own
+   answers showed why. "Cyclical thoughts, Id like to break" came back as
+   "What you want here is to break": it kept the words after "I'd like" and
+   dropped what he wanted to break. "new thoughts maybe" came back as "You've
+   come back to 'thoughts'": it counted a word, and never heard "new" or
+   "maybe", or that he was answering its own question.
+   Now it listens to whole thoughts, by the Mirror's Charter (4 Oct 2026):
+   what is wished, and what it is wished of; the small honest words (maybe,
+   perhaps); what kind of thing is being said (a loop, a choice, a fear); and
+   how an answer meets the question asked. Its questions follow one path
+   toward the light, at the person's own pace: notice it; feel it in the body;
+   hear the voice of the self they are growing into; see the pattern; the part
+   not yet looked at; the other's side; one small step; what shifted.
+   Karl: "Jung, Krishnamurti, + my own insights, towards the one light (over as
+   long as it takes, naturally, years if need be. No rush, intro and
+   outraspection, questions that evoke self awareness)."
+   It is still not an AI. Nobody's words can talk it into anything.        */
 var HEAVY=/\b(kill myself|end my life|suicid|want to die|don'?t want to (live|be here)|hurt myself|self[- ]?harm|no reason to live)\b/i;
-var UNSURE=/^\s*(i\s+)?(really\s+)?(don'?t|do not)\s+know\b|^\s*(dunno|no idea|not sure|unsure|maybe|i'?m not sure)\b/i;
+var UNSURE=/^\s*(?:i\s+)?(?:really\s+)?(?:don'?t|do not)\s+know[.!]*\s*$|^\s*(?:dunno|no idea|not sure|unsure|maybe|perhaps|i'?m not sure|i'?m unsure)[.!?]*\s*$/i;
 var LEAVE=/^\s*(that'?s enough|enough( for now)?|i'?m done|done|bye|goodbye|stop|no more)\b/i;
 var CONFUSED=/^\s*[\w'-]{1,14}\s*\?+\s*$|what do you mean|i don'?t (understand|get it)|\bhuh\b|what\?|meaning\?/i;
-var TURN=/\s*(?:,\s*)?\b(whilst|while|but|yet|although|though|even though)\b\s*/i;
 var MISSED=/doesn'?t make sense|makes no sense|are you (even )?listening|you'?re not listening|not listening|that'?s not what i (said|meant)|you don'?t (get|understand)|you'?re not (getting|hearing)|wrong question|what\?+$/i;
-var WANT=/\b(?:i want|i need|i wish|i'?d (?:like|love)|i long|what i want is|all i want is|to be)\s+(?:to be\s+)?([^.,;!?]{3,60})/i;
-var STOP=/^(about|would|could|should|there|their|which|where|these|those|thing|things|being|really|because|every|other|still|maybe|something|anything|nothing|right|think|doesn't|don't|didn't|can't|won't|isn't|wasn't|aren't|couldn't|wouldn't|shouldn't|there's|what's|that's|you're|i've|i'll|it's|it'll|they're|we're|haven't|hasn't|through|again|always|never|going|someone|everything|anyone|actually|feels|feeling|else|little|today|while|whilst)$/;
 
 /* the doors: each opens with its own first question, and a plainer way to say it */
 var DOORS=[
@@ -157,59 +191,257 @@ var DOORS=[
   {label:'Something that won\u2019t leave me alone', q:'What keeps bringing it back?', plain:'When does it come back to you most?'},
   {label:'I\u2019ve been watching my own mind', q:'What do you notice, when you watch?', plain:'What did you see your mind doing?'}
 ];
-/* the path after the first answer: plain questions, each with a plainer twin */
-var PATH=[
-  {q:'What part of this matters most to you right now?', plain:'What matters most here?'},
-  {q:'When you picture it, what do you feel in your body?', plain:'Where do you feel this \u2014 chest, stomach, shoulders?'},
-  {q:'What would you need, to feel even a little lighter about it?', plain:'What would help, even a little?'},
-  {q:'Imagine the you of a year from now, who came through this well. What would they say to you today?', plain:'If a wiser, older you could say one sentence to you now, what would it be?'},
-  {q:'What is one small thing you could do before tomorrow night?', plain:'What\u2019s one small next step?'}
-];
 
-var S={door:-1,turn:0,step:0,lastQ:null,turns:[],words:{},first:''};
+var S={door:-1,turn:0,stage:0,lastQ:null,turns:[],words:{},first:'',theme:'',obj:'',asked:[],felt:[],
+  hard:false,others:false,body:false,spoke:false,hedged:false,done:false};
 var $=function(id){return document.getElementById(id);};
-
-/* ── small tools ─────────────────────────────────────────────────────── */
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
-function trimPhrase(t,max){t=String(t||'').replace(/\s+/g,' ').trim().replace(/[.!?,;:]+$/,'');
-  if(t.length<=max)return t; var cut=t.slice(0,max);var sp=cut.lastIndexOf(' ');return (sp>max*.6?cut.slice(0,sp):cut)+'\u2026';}
-function sentences(t){return String(t).replace(/([.!?])\s+/g,'$1\n').split(/\n+/).map(function(x){return x.trim();}).filter(Boolean);}
-function keyPhrase(t){
-  var ss=sentences(t); if(!ss.length)return trimPhrase(t,90);
-  var best=ss[0],score=-1;
-  ss.forEach(function(x){var s=x.length>12?1:0;FEEL.forEach(function(f){if(new RegExp('\\b'+f+'\\b','i').test(x))s+=3;});
-    if(/\b(i|i'm|i am|my|me)\b/i.test(x))s+=2; if(s>score){score=s;best=x;}});
-  return trimPhrase(best,110);
-}
-/* 30 Sep 2026 · Karl: "The mirror just makes little sense in the responses."
-   The old path asked the same questions whatever was said. Now every question is
-   anchored in the person's own words: a list is heard as a list, and the most
-   alive word they used is the one the Mirror asks about. The deeper questions
-   (the future self, a small step) come only when someone has named a struggle. */
-var HARD=/\b(stuck|lost|tired|exhausted|hard|hurt|pain|afraid|scared|alone|lonely|struggl|anxious|worried|overwhelm|trapped|heavy|numb|sad|angry|can'?t cope|no way)\w*/i;
-function keyWord(t){
-  var fl=feelings(t);if(fl.length)return fl[0];
-  var best='',ws=(String(t).toLowerCase().match(/[a-z']{4,}/g)||[]);
-  ws.forEach(function(w){if(STOP.test(w)||/^(this|that|with|have|from|they|them|what|when|just|like|want|need|some|very|much|more|most|your|mine|here|then|than|also|only|into|over|such|even|make|made|will|were|been|does|done|know)$/.test(w))return;if(w.length>best.length)best=w;});
-  return best;}
-function listOf(t){
-  var parts=String(t).replace(/\band\b/gi,',').split(/[,;\/]+/).map(function(x){return x.trim().replace(/[.!?]+$/,'');}).filter(Boolean);
-  if(parts.length>=3&&parts.every(function(x){return x.split(/\s+/).length<=3;}))return parts;return null;}
-function feelings(t){var out=[];FEEL.forEach(function(f){if(new RegExp('\\b'+f+'\\b','i').test(t)&&out.indexOf(f)<0)out.push(f);});return out;}
-function tally(t){(String(t).toLowerCase().match(/[a-z']{5,}/g)||[]).forEach(function(w){
-  if(STOP.test(w))return;
-  S.words[w]=(S.words[w]||0)+1;});}
-function returned(t){var hit=null;(String(t).toLowerCase().match(/[a-z']{5,}/g)||[]).forEach(function(w){if(!hit&&!STOP.test(w)&&S.words[w]>=2)hit=w;});return hit;}
+
+/*LISTEN>*/
+var LISTEN=(function(){
+  var FEEL=['tired','exhausted','alone','lonely','stuck','afraid','scared','frightened','angry','furious','sad','lost','hopeful','hope',
+    'heavy','overwhelmed','anxious','worried','calm','peaceful','grateful','confused','guilty','ashamed','excited','numb','empty',
+    'hurt','free','trapped','restless','drained','small','invisible','unheard','loved','unloved','torn','uncertain','relieved',
+    'frustrated','disappointed','rejected','abandoned','nervous','jealous','resentful','bored','joyful','happy','unhappy','grieving','safe','unsafe','content'];
+  var HARD=/\b(stuck|lost|tired|exhausted|hard|hurt|pain|afraid|scared|alone|lonely|struggl|anxious|worried|overwhelm|trapped|heavy|numb|sad|angry|can'?t cope|no way|cycl|loop|spiral|ruminat|depress|griev|grief|ashamed|guilt|frustrat|reject|abandon)\w*/i;
+  var STOP=/^(about|would|could|should|there|their|which|where|these|those|thing|things|being|really|because|every|other|still|maybe|perhaps|probably|possibly|something|anything|nothing|right|think|doesn't|don't|didn't|can't|won't|isn't|wasn't|aren't|couldn't|wouldn't|shouldn't|there's|what's|that's|you're|i've|i'll|i'd|i'm|it's|it'll|they're|we're|haven't|hasn't|through|again|always|never|going|someone|everything|anyone|actually|feels|feeling|else|little|today|while|whilst|like|want|need)$/;
+  var COMMON=/^(this|that|with|have|from|they|them|what|when|just|some|very|much|more|most|your|mine|here|then|than|also|only|into|over|such|even|make|made|will|were|been|does|done|know|said|says|feel|felt|sure|kind|sort|lots|well|yeah|okay)$/;
+  var HEDGE=/\b(maybe|perhaps|i think|i guess|i suppose|sort of|kind of|possibly|probably)\b/i;
+  var CYCLE=/\b(cycl\w*|loops?|looping|round and round|over and over|again and again|repeat\w*|keeps? (?:coming|going) back|same thoughts?|ruminat\w*|spiral\w*|stuck on|can'?t stop thinking)\b/i;
+  var CHOICE=/\b(choose|choice|choosing|decide|decision|deciding|should i)\b/i;
+  var FEAR=/\b(afraid|scared|frightened|fear|fears|terrified|dread|nervous|panic\w*)\b/i;
+  var OTHERS=/\b(he|she|they|them|him|her|people|everyone|someone|somebody|my (?:mum|mom|mother|dad|father|partner|wife|husband|boss|friends?|son|daughter|brother|sister|family|kids|children|colleagues?))\b/i;
+  var BODY=/\b(chest|stomach|belly|throat|head|shoulders?|heart|breath|breathing|jaw|tight|tense|tension|ache|gut|neck)\b/i;
+  var PERSON=/\b(mum|mom|mother|dad|father|partner|wife|husband|boss|friend|son|daughter|brother|sister|him|her|he|she|colleague|teacher|neighbou?r)\b/i;
+  var TURN=/\s*(?:,\s*)?\b(whilst|while|but|yet|although|though|even though)\b\s*/i;
+  var LOOSE=/^(?:it|them|this|that|these|those|him|her)\b|^(?:free|away|for good|once and for all|forever|for ever|soon|now|today|completely|somehow|at last|again)?$/i;
+  var NOTOBJ=/^(?:i|i'm|i am|and|but|so|well|yes|no|ok|okay|honestly|really|actually|basically|anyway|sometimes|today|now|lately|also|though|still|yet|maybe|perhaps)$/i;
+
+  /* for hearing only: their own words are always given back exactly as they wrote them */
+  function norm(t){
+    return String(t||'').replace(/[\u2018\u2019\u02bc]/g,"'")
+      .replace(/\bid\b(?=\s+(?:like|love|rather|want|need|say|be|hate))/gi,"I'd")
+      .replace(/\bim\b/gi,"I'm").replace(/\bive\b/gi,"I've")
+      .replace(/\bill\b(?=\s+(?:be|try|go|do|see|have|never|just|need|always))/gi,"I'll")
+      .replace(/\b(dont|cant|wont|isnt|doesnt|didnt|wasnt|arent|couldnt|wouldnt|shouldnt|havent|hasnt)\b/gi,function(w){return w.slice(0,-1)+"'"+w.slice(-1);})
+      .replace(/\s+/g,' ').trim();
+  }
+  function swap(x){var m={'i':'you','me':'you','my':'your','mine':'yours','myself':'yourself',"i'm":"you're","i've":"you've","i'd":"you'd","i'll":"you'll"};
+    return String(x||'').replace(/\bi am\b/gi,'you are').replace(/\bi was\b/gi,'you were')
+      .replace(/\b(i'm|i've|i'd|i'll|myself|mine|my|me|i)\b/gi,function(w){return m[w.toLowerCase()]||w;});}
+  function low(x){x=String(x||'').trim();return x.charAt(0).toLowerCase()+x.slice(1);}
+  function cap(x){x=String(x||'').trim();return x.charAt(0).toUpperCase()+x.slice(1);}
+  function clean(x){return String(x||'').replace(/\s+/g,' ').trim().replace(/^[,;:\-\u2013\u2014\s]+|[,;:\-\u2013\u2014.!?\s]+$/g,'');}
+  function words(t){return String(t||'').toLowerCase().match(/[a-z']+/g)||[];}
+  function plural(x){var w=words(x).pop()||'';return /[^s]s$/.test(w)||/^(people|children|they|them|these|those)$/.test(w);}
+  function pron(x){return (PERSON.test(x)||plural(x))?'them':'it';}
+  function sentences(t){return String(t).replace(/([.!?])\s+/g,'$1\n').split(/\n+/).map(function(x){return x.trim();}).filter(Boolean);}
+  function feelings(t){var out=[];FEEL.forEach(function(f){if(new RegExp('\\b'+f+'\\b','i').test(t)&&out.indexOf(f)<0)out.push(f);});return out;}
+  function score(x){var s=x.length>12?1:0;FEEL.forEach(function(f){if(new RegExp('\\b'+f+'\\b','i').test(x))s+=3;});
+    if(/\b(i|i'm|i am|my|me)\b/i.test(x))s+=2;if(CYCLE.test(x)||HEDGE.test(x))s+=1;return s;}
+  /* quoted whole: one sentence, or if it is very long its most alive clause; never cut mid-thought */
+  function keyPhrase(t){
+    var ss=sentences(t);if(!ss.length)return clean(t);
+    var best=ss[0],sc=-1;ss.forEach(function(x){var v=score(x);if(v>sc){sc=v;best=x;}});
+    if(best.length>150){var b2=null,s2=-1;best.split(/\s*[,;:\u2013\u2014]\s+|\s+-\s+/).forEach(function(c){var v=score(c);if(c.length>8&&c.length<=150&&v>s2){s2=v;b2=c;}});if(b2)best=b2;}
+    if(best.length>170){var cut=best.slice(0,170),sp=cut.lastIndexOf(' ');best=cut.slice(0,sp>100?sp:170)+'\u2026';}
+    var b=best.replace(/[.,;:]+$/,''),st=b.replace(/^(?:and|but|so|then|because)\s+/i,'');
+    return st!==b?cap(st):b;   /* their words exactly as written; only a clause lifted from mid-sentence loses its leading "and" */
+  }
+  function keyWord(t){
+    var fl=feelings(t);if(fl.length)return fl[0];
+    var ws=words(t),best='',bi=-1;
+    ws.forEach(function(w,i){if(w.length<4||STOP.test(w)||COMMON.test(w))return;if(w.length>best.length){best=w;bi=i;}});
+    if(bi>0){var pw=ws[bi-1];if(pw&&!STOP.test(pw)&&(/^(new|old|same|own|whole|inner|outer|deep|true|real|lost|other)$/.test(pw)||/(al|ful|ous|ive|ic|less|ish|able|ible)$/.test(pw)))best=pw+' '+best;}
+    return best;
+  }
+  function listOf(t){
+    var parts=String(t).replace(/\band\b/gi,',').split(/[,;\/]+/).map(function(x){return x.trim().replace(/[.!?]+$/,'');}).filter(Boolean);
+    if(parts.length>=3&&parts.every(function(x){return x.split(/\s+/).length<=3;}))return parts;return null;}
+
+  function read(raw){
+    var a=norm(raw),r={raw:raw,a:a,n:words(a).length};
+    r.hedge=((a.match(HEDGE)||[])[0]||'').toLowerCase();
+    r.feel=feelings(a);r.hard=HARD.test(a);r.cycle=CYCLE.test(a);r.choice=CHOICE.test(a);r.fear=FEAR.test(a);
+    r.others=OTHERS.test(a);r.body=BODY.test(a);r.newish=/\b(new|fresh|different)\b/i.test(a);
+    /* the wish, with what it is wished of: "Cyclical thoughts, I'd like to break" */
+    var f=a.match(/^\s*(.{3,80}?)\s*(?:[,;:]|\s[\u2013\u2014-])\s*(?:and\s+|so\s+)?(?:i\s*(?:'d|would)?\s+(?:really\s+|so\s+)?(?:like|love|want|need|wish|hope)\s+to|i\s+(?:want|need|have)\s+to)\s+([a-z']+)\s*(.*?)[.!?]*$/i);
+    if(f&&!NOTOBJ.test(clean(f[1]))&&words(f[1]).length<=8&&LOOSE.test(clean(f[3])))
+      r.wish={fronted:true,obj:clean(f[1]),verb:f[2].toLowerCase(),rest:clean(f[3])};
+    else{
+      var w=a.match(/\b(i\s*(?:'d|would)\s+(?:really\s+|so\s+)?(?:like|love)|i\s+(?:really\s+|so\s+)?(?:want|need|wish|hope|long)|what i (?:want|need) is|all i (?:want|need) is)\s+(.{3,90}?)(?:[.!?;]|$)/i);
+      if(w)r.wish={kind:/need/i.test(w[1])?'need':/wish/i.test(w[1])?'wish':/hope/i.test(w[1])?'hope':'want',what:clean(w[2])};
+    }
+    r.btw=a.match(/\bbetween\s+(.{3,50}?)\s+and\s+(.{3,50}?)(?:[.,!?]|$)/i);
+    r.list=listOf(a);
+    var m=a.match(TURN);
+    if(m){var x=clean(a.slice(0,m.index).replace(/^\s*(i'?m |i am |i feel like |feeling like |feeling |like )/i,'')),y=clean(a.slice(m.index+m[0].length));
+      if(x.length>3&&y.length>3&&words(x).length<=12&&words(y).length<=12)r.pulls=[x,y];}
+    var mw=a.match(/\b(i\s+(?:notice|noticed|watch|watched|see|saw|observe|observed|catch|caught)\s+my\s+(?:own\s+)?(?:mind|thoughts?|thinking)[^.!?]{0,70})/i);
+    if(mw)r.mind=clean(mw[1]);
+    r.theme=r.mind?'mind':r.cycle?'cycle':(r.btw||r.choice||r.pulls)?'choice':r.fear?'fear':r.wish?'wish':r.feel.length?'feel':r.newish?'new':'';
+    return r;
+  }
+
+  function tally(r,S){var seen={};words(r.a).forEach(function(w){if(w.length<4||STOP.test(w)||COMMON.test(w)||seen[w])return;seen[w]=1;S.words[w]=(S.words[w]||0)+1;});}
+  function returned(r,S){var topic=words(S.obj+' '+S.first),hit=null;
+    words(r.a).forEach(function(w){if(hit||w.length<4||STOP.test(w)||COMMON.test(w))return;var fe=FEEL.indexOf(w)>=0;
+      if((fe&&S.words[w]>=2)||(!fe&&S.words[w]>=3&&topic.indexOf(w)<0))hit=w;});return hit;}
+
+  /* what it understood, in their own words */
+  function reflect(r,S){
+    var w=r.wish,L=S.lastQ||{};
+    if(w&&w.fronted){var rest=swap(w.rest),p=/^(it|them|this|that|these|those|him|her)\b/i.test(rest)?'':' '+pron(w.obj);
+      return cap(swap(w.obj))+' \u2014 and you\u2019d like to '+w.verb+p+(rest?' '+rest:'')+'.';}
+    if(w&&!w.fronted){var wh=swap(w.what);
+      if(w.kind==='need')return 'You need '+wh+'.';
+      if(w.kind==='wish')return 'You wish '+wh+'.';
+      if(w.kind==='hope')return 'You hope '+wh+'.';
+      return /^to\b/i.test(wh)?'You\u2019d like '+wh+'.':'You want '+wh+'.';}
+    if(L.kind==='aspired'&&r.n<=20&&!r.theme)return 'That\u2019s your own wiser voice. Keep it close.';
+    var hw=r.hedge.replace(/\bi\b/,'I'),door=/^(maybe|perhaps)$/.test(r.hedge);
+    if(L.kind==='picture'&&r.n<=8){var core=clean(r.a.replace(HEDGE,' '));
+      if(core.length>2)return cap(swap(core))+' \u2014 that\u2019s what it might look like'+(r.hedge?(door?', with a \u201c'+hw+'\u201d beside it, as if a door is only just open':'. And that \u201c'+hw+'\u201d may hold more than it says'):'')+'.';}
+    if(r.hedge&&r.n<=8&&!S.hedged){var c2=clean(r.a.replace(HEDGE,' '));
+      if(c2.length>2){S.hedged=true;return door?cap(swap(c2))+' \u2014 and a \u201c'+hw+'\u201d beside '+pron(c2)+', as if a door is only just open.'
+        :cap(swap(c2))+', you said \u2014 and \u201c'+hw+'\u201d. Small words like that often hold more than they say.';}}
+    if(r.mind)return cap(swap(r.mind))+'.';
+    if(r.pulls)return 'Two things are pulling here: '+swap(r.pulls[0])+', and '+swap(r.pulls[1])+'.';
+    if(r.btw)return 'Two ways are pulling: '+swap(clean(r.btw[1]))+', and '+swap(clean(r.btw[2]))+'.';
+    if(r.list)return 'You named '+(r.list.length<=5?['','one','two','three','four','five'][r.list.length]:r.list.length)+': '+r.list.map(swap).join(', ')+'.';
+    var back=returned(r,S);if(back)return 'You\u2019ve come back to \u201c'+back+'\u201d again. It seems to matter.';
+    if(r.feel.length===1)return 'You named it: '+r.feel[0]+'. That word is yours; I\u2019m only holding it up.';
+    if(r.feel.length>1)return 'More than one feeling is here: '+r.feel.slice(0,3).join(', ')+'.';
+    if(r.n<=3)return 'Thank you. Stay with that a moment.';
+    return '';
+  }
+
+  /* the first question for each kind of thing said */
+  function themeQ(r){
+    if(r.theme==='mind')return {q:'When you simply watch it, without judging the watching, what happens to it?',plain:'What happens when you just watch it?',kind:'notice'};
+    if(r.theme==='cycle')return {q:'When one comes round again, what\u2019s the very first thing you notice?',plain:'What happens just before the thought starts again?',kind:'notice'};
+    if(r.theme==='choice'&&r.pulls)return {q:'Which of the two is asking for you first today?',plain:'Which one needs you more right now?',kind:'choice'};
+    if(r.theme==='choice')return {q:'Which one pulls harder today \u2014 and which one feels more like you?',plain:'Which one pulls harder today?',kind:'choice'};
+    if(r.theme==='fear')return {q:'What is the fear trying to protect?',plain:'What are you afraid might happen?',kind:'fear'};
+    if(r.theme==='wish')return {q:'What would that look like, on an ordinary day?',plain:'What would it look like, day to day?',kind:'picture'};
+    if(r.theme==='feel'&&r.body)return null;   /* they have already said where it lives */
+    if(r.theme==='feel')return {q:'Where do you feel that, in your body?',plain:'Where in your body is it?',kind:'body'};
+    if(r.theme==='new'){var nm=r.a.match(/\b(?:new|fresh|different)\s+([a-z]{3,})/i),sg=nm?nm[1].toLowerCase().replace(/([^s])s$/,'$1'):'';
+      return sg&&!/^(and|but|way|one|day)$/.test(sg)?{q:'What would one new '+sg+' feel like, if it came?',plain:'How would a new '+sg+' feel, next to the old ones?',kind:'new'}
+        :{q:'What would something new feel like, if it came?',plain:'How would something new feel?',kind:'new'};}
+    return null;
+  }
+  /* one path toward the light, taken at the person's own pace */
+  var ARC=[
+    {id:'matter',q:'What part of this matters most to you right now?',plain:'What matters most here?'},
+    {id:'body',q:'When you picture it, where do you feel it in your body?',plain:'Where do you feel this \u2014 chest, stomach, shoulders?',
+      cycle:{q:'When the thought starts, where do you feel it first, in your body?',plain:'Where in your body do you feel it start?'}},
+    {id:'aspired'},
+    {id:'pattern',q:'Has this come to you before, in another shape?',plain:'Is this familiar from before?',
+      cycle:{q:'Is the thought new each time, or more like an old recording playing again?',plain:'Does it feel like an old recording?'}},
+    {id:'shadow',q:'Is there a part of this you\u2019d rather not look at?',plain:'Is there anything here that\u2019s hard to admit, even to yourself?'},
+    {id:'other',q:'If someone you love were carrying this, what would you say to them?',plain:'What would you tell a friend who felt this?',
+      others:{q:'How might this look from their side?',plain:'What might they be feeling?'},
+      /* 4 Oct 2026 · research refresh: AI met alone can deepen loneliness over time (Stanford, Nature Human
+         Behaviour; Aalto, CHI 2026; Folk and Dunn). When loneliness is named, the outward step points to people. */
+      lonely:{q:'Who is one person, or one place, where a small part of this could be shared?',plain:'Who could you share a little of this with?'}},
+    {id:'step',q:'What\u2019s one small thing you could do before tomorrow night?',plain:'What\u2019s one small next step?',
+      cycle:{q:'What could you do, kindly, the next time it starts?',plain:'What\u2019s one thing to try, next time it starts?'}},
+    {id:'shift',q:'Has anything shifted since you began \u2014 even a little?',plain:'Does it feel any different now?'}
+  ];
+  /* the voice of the self they are growing into: offered, never imposed */
+  function aspire(S){
+    var f=S.felt.join(' ');
+    if(S.theme==='cycle'){if(S.obj){var o=swap(S.obj).toLowerCase().replace(/^(the|these|those|your|this|that)\s+/,''),pl=pron(S.obj)==='them';
+      return 'You don\u2019t have to break '+(pl?'these ':'this ')+o+' by force. Each time you notice '+(pl?'them':'it')+' kindly, '+(pl?'they lose':'it loses')+' a little of '+(pl?'their':'its')+' hold.';}
+      return 'You don\u2019t have to break the circle by force. Each time you notice it kindly, it\u2019s already less of a circle.';}
+    if(S.theme==='choice')return 'You don\u2019t have to see the whole road. Choose the way you could walk gently, not the one that quietens the fear fastest.';
+    if(S.theme==='fear')return 'The fear is trying to protect you. You can thank it, and still take one small step.';
+    if(/lonely|alone|unloved|invisible|unheard|rejected|abandoned/.test(f))return 'Feeling alone with this doesn\u2019t mean you are alone in it. Reach toward one person, just one.';
+    if(/tired|exhausted|drained|heavy|overwhelmed/.test(f))return 'Rest isn\u2019t giving up. You\u2019ve carried this a long way; you\u2019re allowed to set it down for a while.';
+    if(/angry|furious|frustrated|resentful/.test(f))return 'Your anger is pointing at something that matters to you. Listen to what it\u2019s guarding before you act on it.';
+    if(/lost|stuck|trapped|confused|torn/.test(f))return 'Not knowing the way isn\u2019t the same as having no way. The next step only has to be small.';
+    if(S.theme==='wish')return 'What you want for yourself is allowed. Begin with the smallest true version of it.';
+    return 'You are more than this moment. Be as kind to yourself here as you would be to someone you love.';
+  }
+
+  function reply(t,S){
+    var r=read(t);S.turn++;tally(r,S);
+    if(!S.first)S.first=keyPhrase(t);
+    if(r.hard)S.hard=true;if(r.others)S.others=true;if(r.body)S.body=true;
+    r.feel.forEach(function(x){if(S.felt.indexOf(x)<0)S.felt.push(x);});
+    if(!S.theme&&r.theme&&r.theme!=='new'&&r.theme!=='mind')S.theme=r.theme;
+    if(r.wish&&r.wish.fronted&&!S.obj)S.obj=r.wish.obj;
+    var kp=keyPhrase(t),parts=[{tag:'p',cls:'quote',text:kp}],line=reflect(r,S),next=null;
+    var struggle=S.hard||/^(cycle|choice|fear|wish)$/.test(S.theme);
+    /* 1 · something newly named gets its own question first */
+    var tq=themeQ(r);
+    if(tq&&S.asked.indexOf(tq.kind+tq.q)<0){S.asked.push(tq.kind+tq.q);next=tq;}
+    /* 2 · a first long answer with nothing else to hold: ask about its most alive words */
+    if(!next&&S.turn===1&&r.n>4){var kw=keyWord(r.a);if(kw)next={q:'What does \u201c'+kw+'\u201d mean for you, here?',plain:'What do you mean by \u201c'+kw+'\u201d?',kind:'word'};}
+    if(!next&&S.turn===1&&r.n<=3)next={q:'What\u2019s underneath that, if you look a little closer?',plain:'Can you say a little more?',kind:'more'};
+    /* 3 · otherwise, the next station on the path */
+    while(!next&&S.stage<ARC.length){
+      var st=ARC[S.stage++];
+      if(st.id==='matter'&&S.theme)continue;
+      if(st.id==='body'&&S.body)continue;
+      if(st.id==='shadow'&&!S.hard)continue;
+      if(st.id==='aspired'){if(!struggle||S.spoke)continue;S.spoke=true;
+        parts=[];
+        parts.push({cls:'line soft',text:'The you who has come through this might say:'});
+        parts.push({cls:'line aspire',text:'\u201c'+aspire(S)+'\u201d'});
+        parts.push({cls:'line q',text:'Does that sound like you \u2014 or what would your own wiser self say?'});
+        return {parts:parts,rim:kp,next:{q:'Does that sound like you \u2014 or what would your own wiser self say?',plain:'Is that close to what you\u2019d tell yourself?',kind:'aspired'},done:false};}
+      var v=(S.theme==='cycle'&&st.cycle)?st.cycle:(st.id==='other'&&/lonely|alone|unheard|invisible|unloved|rejected|abandoned/.test(S.felt.join(' ')))?st.lonely:(st.id==='other'&&S.others&&st.others)?st.others:st;
+      next={q:v.q,plain:v.plain,kind:st.id};
+      if(st.id==='shift')S.done=true;
+    }
+    if(!next)next={q:'What else is here, now?',plain:'Is there anything else?',kind:'more'};
+    if(line)parts.push({cls:'line',text:line});
+    parts.push({cls:'line q',text:next.q});
+    return {parts:parts,rim:kp,next:next,done:S.done};
+  }
+  return {reply:reply,read:read,norm:norm,keyPhrase:keyPhrase};
+})();
+/*<LISTEN*/
 
 /* ── speaking: one exchange at a time, in the circle ─────────────────── */
+/* 4 Oct 2026 · WORDS FALL INTO THE CLOUD, AND RISE AGAIN — the same movement as
+   every one-thing-at-a-time moment on the site (Karl: "text falling into the
+   cloud and re-emerging with the new part"). Reduce-motion: a quiet fade. */
+function asStill(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
+function asWordsOf(root){try{
+  var tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;
+    if(!p||!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+    if(p.closest('.as-w,button,a,input,textarea,select,label'))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT;}});
+  var list=[],i=0;while(tw.nextNode())list.push(tw.currentNode);
+  list.forEach(function(n){var f=document.createElement('span');f.className='as-ws';
+    n.nodeValue.split(/(\s+)/).forEach(function(w){if(!w)return;if(/^\s+$/.test(w)){f.appendChild(document.createTextNode(w));return;}
+      var s=document.createElement('span');s.className='as-w';s.style.setProperty('--i',String(Math.min(i++,40)));s.textContent=w;f.appendChild(s);});
+    n.parentNode.replaceChild(f,n);});
+}catch(e){}}
+function asFallMs(root){var n=root.querySelectorAll('.as-w').length;return asStill()?180:950+Math.min(n,40)*12;}
+function asAim(root,c){try{var r=c.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;[].forEach.call(root.querySelectorAll('.as-w'),function(w){var b=w.getBoundingClientRect();w.style.setProperty('--tx',((cx-(b.left+b.width/2))*.6).toFixed(1)+'px');w.style.setProperty('--ty',((cy-(b.top+b.height/2))*.6).toFixed(1)+'px');});}catch(e){}}
+/* Karl, 4 Oct: "Needs to fall more obviously, so cloud moves and is visible." A cloud in the
+   circle's own colours billows up to receive the words, then parts as the next rise out of it. */
+function asCloud(circle,mode){if(!circle||asStill())return;var b=circle.querySelector(':scope > .as-cloudband');
+  if(!b){b=document.createElement('span');b.className='as-cloudband';b.setAttribute('aria-hidden','true');circle.appendChild(b);}
+  circle.classList.remove('as-take','as-give');void circle.offsetWidth;circle.classList.add(mode==='take'?'as-take':'as-give');
+  clearTimeout(circle.__asC);circle.__asC=setTimeout(function(){circle.classList.remove('as-take','as-give');},mode==='take'?6000:1900);}
 function show(parts,rimWords){
-  var sp=$('speak'); sp.classList.add('fade');
-  setTimeout(function(){
+  var sp=$('speak');
+  function render(){
     sp.textContent='';
     parts.forEach(function(p){sp.appendChild(el(p.tag||'p',p.cls,p.text));});
-    sp.classList.remove('fade');
+    sp.classList.toggle('full',parts.length>=4||parts.reduce(function(n,p){return n+String(p.text||'').length;},0)>230);
     if(rimWords!==undefined)setRim(rimWords);
-  },650);
+    sp.classList.remove('as-falling','as-rising');asWordsOf(sp);asAim(sp,$('mirror'));asCloud($('mirror'),'give');void sp.offsetWidth;sp.classList.add('as-rising');
+    clearTimeout(sp.__asR);sp.__asR=setTimeout(function(){sp.classList.remove('as-rising');},2200);
+  }
+  if(sp.__asT){clearTimeout(sp.__asT);sp.__asT=0;render();return;}
+  if(!sp.textContent.trim()){render();return;}
+  sp.classList.remove('as-rising','as-falling');asWordsOf(sp);asAim(sp,$('mirror'));asCloud($('mirror'),'take');void sp.offsetWidth;sp.classList.add('as-falling');
+  sp.__asT=setTimeout(function(){sp.__asT=0;render();},asFallMs(sp));
 }
 function setRim(words){var r=$('rim'),t=$('rimText');
   r.classList.remove('show');
@@ -249,61 +481,28 @@ function begin(i){
 
 /* ── hearing, and answering from the very first reply ────────────────── */
 function hear(){
-  var t=$('words').value.replace(/[\u2018\u2019\u02bc]/g,"'").trim(); if(!t)return;
+  var raw=$('words').value.trim(); if(!raw)return;
+  var t=raw.replace(/[\u2018\u2019\u02bc]/g,"'");
   $('words').value='';
   if(HEAVY.test(t)){care();return;}
   if(LEAVE.test(t)){rest();return;}
   if(MISSED.test(t)){                                 /* they feel unheard: own it, and come back to their words */
     var back=S.first?[{cls:'line soft',text:'What you first brought was:'},{tag:'p',cls:'quote',text:S.first}]:[];
     var pm=[{cls:'line',text:'You\u2019re right to say so. I missed you there, and I\u2019m sorry.'}].concat(back).concat([{cls:'line q',text:'In a few words, what matters most to you in this right now? I\u2019ll stay with that.'}]);
-    ask({q:'In a few words, what matters most to you in this right now?',plain:'What matters most right now?'});S.step=Math.max(0,S.step-1);show(pm,S.first||'');addTrail(pm,S.first||'');return;
+    ask({q:'In a few words, what matters most to you in this right now?',plain:'What matters most right now?',kind:'repair'});S.stage=Math.max(0,S.stage-1);show(pm,S.first||'');addTrail(pm,S.first||'');return;
   }
   if(CONFUSED.test(t)&&S.lastQ){                     /* they didn't follow: say it more simply */
     var parts=[{cls:'line soft',text:'Let me put that more simply.'},{cls:'line q',text:S.lastQ.plain||S.lastQ.q}];
-    ask({q:S.lastQ.plain||S.lastQ.q,plain:S.lastQ.plain||S.lastQ.q}); show(parts); addTrail(parts); return;
+    ask({q:S.lastQ.plain||S.lastQ.q,plain:S.lastQ.plain||S.lastQ.q,kind:S.lastQ.kind}); show(parts); addTrail(parts); return;
   }
   if(UNSURE.test(t)){
     var p2=[{cls:'line',text:'That\u2019s alright. Not knowing is a place to stand, too.'},{cls:'line q',text:'What\u2019s one small thing you do know about it?'}];
-    ask({q:'What\u2019s one small thing you do know about it?',plain:'Anything at all you\u2019re sure of?'}); show(p2); addTrail(p2); return;
+    ask({q:'What\u2019s one small thing you do know about it?',plain:'Anything at all you\u2019re sure of?',kind:'unsure'}); show(p2); addTrail(p2); return;
   }
-  S.turn++; tally(t); if(!S.first)S.first=keyPhrase(t); if(HARD.test(t))S.hard=true;
-  var kp=keyPhrase(t), fl=feelings(t), back=returned(t), parts=[{tag:'p',cls:'quote',text:kp}];
-  /* the Mirror's own reflection: what it notices in the person's own words */
-  var m=t.match(TURN), noticed=null;
-  if(m){var a0=t.slice(0,m.index),pre=/^\s*(i'?m |i am |i feel like |feeling like |feeling |like )/i;while(pre.test(a0))a0=a0.replace(pre,'');
-        var a=trimPhrase(a0,60),
-          b=trimPhrase(t.slice(m.index+m[0].length).replace(/^(my |the )/i,function(x){return x.toLowerCase()==='my '?'your ':x;}),60);
-    if(a.length>3&&b.length>3)noticed='Two things are pulling here: '+a+', and '+b+'.';}
-  var btw=t.match(/\bbetween\s+(.{3,50}?)\s+and\s+(.{3,50}?)(?:[.,!?]|$)/i),btwQ=null;
-  if(!noticed&&btw){noticed='Two ways are pulling: '+trimPhrase(btw[1],50)+', and '+trimPhrase(btw[2],50)+'.';
-    btwQ={q:'Which one pulls harder today \u2014 and which one feels more like you?',plain:'Which one pulls harder today?'};}
-  var lst=listOf(t),listQ=null;
-  if(!noticed&&lst){noticed='You named '+(lst.length===3?'three':lst.length===4?'four':lst.length===5?'five':lst.length)+': '+lst.join(', ')+'.';
-    listQ={q:'Which of them feels furthest from you right now?',plain:'Which one do you need most right now?'};}
-  var wm=t.match(WANT),wantQ=null;
-  if(!noticed&&wm){var wt=trimPhrase(wm[1].replace(/\b(what else|and so on|etc)\b.*$/i,''),60);
-    if(wt.length>2){noticed='What you want here is to be '+wt.replace(/^to be /i,'')+'.';
-      if(!/^to be\b/i.test(wm[0])&&!/\bto be\b/i.test(wm[0]))noticed='What you want here is '+wt+'.';
-      wantQ={q:'What would that look like, on an ordinary day?',plain:'What would it look like, day to day?'};}}
-  if(!noticed&&back)noticed='You\u2019ve come back to \u201c'+back+'\u201d more than once. It seems to matter.';
-  if(!noticed&&fl.length===1)noticed='You named it: '+fl[0]+'. That word is yours; I\u2019m only holding it up.';
-  if(!noticed&&fl.length>1)noticed='More than one feeling is here: '+fl.slice(0,3).join(', ')+'.';
-  if(!noticed&&t.split(/\s+/).length<=3)noticed='Thank you. Stay with that a moment.';
-  var kw=keyWord(t);
-  if(!noticed&&kw)noticed='\u201c'+kw.charAt(0).toUpperCase()+kw.slice(1)+'\u201d stands out in what you wrote.';
-  if(noticed)parts.push({cls:'line',text:noticed});
-  var next;
-  if(m&&S.step===0)next={q:'Which of the two is asking for you first today?',plain:'Which one needs you more right now?'};
-  else if(btwQ)next=btwQ;
-  else if(listQ)next=listQ;
-  else if(wantQ)next=wantQ;
-  else if(!S.hard&&!HARD.test(t)&&kw&&t.split(/\s+/).length>3)next={q:'Say a little more about \u201c'+kw+'\u201d. What does it hold for you?',plain:'What does \u201c'+kw+'\u201d mean for you?'};
-  else if(t.split(/\s+/).length<=3)next={q:'What\u2019s underneath that, if you look a little closer?',plain:'Can you say a little more?'};
-  else {next=PATH[Math.min(S.step,PATH.length-1)];S.step++;}
-  parts.push({cls:'line q',text:next.q}); ask(next);
-  show(parts,kp); addTrail(parts,kp);
+  var R=LISTEN.reply(raw,S);
+  ask(R.next); show(R.parts,R.rim); addTrail(R.parts,R.rim);
   if(S.turn>=2)$('after').classList.remove('hide');
-  if(S.step>=PATH.length){setTimeout(function(){$('rest').textContent='Let it rest here \u2727';},900);}
+  if(R.done){setTimeout(function(){$('rest').textContent='Let it rest here \u2727';},900);}
 }
 
 /* ── when someone is in real pain ────────────────────────────────────── */

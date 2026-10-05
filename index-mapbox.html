@@ -1577,6 +1577,55 @@ body.ma-incloud .as-rail{display:none!important}
 #qz-submit:hover{box-shadow:0 0 42px rgba(124,92,255,.7)}
 #qz-thanks{position:fixed;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(7,6,18,.6);z-index:3;text-align:center;padding:30px}
 #qz-thanks.show{display:flex}
+/* ═══ 4 Oct 2026 · THE READINGS, LIGHT AND CIRCULAR ═══════════════════════
+   The living Mirror's ground and circle, given to the readings. */
+#quest-page{background:radial-gradient(38% 34% at 22% 26%,#f3c9c0 0%,transparent 70%),radial-gradient(40% 36% at 80% 28%,#dcd2f2 0%,transparent 70%),radial-gradient(44% 40% at 28% 80%,#f8dcc4 0%,transparent 72%),radial-gradient(36% 34% at 78% 78%,#c9dcf4 0%,transparent 70%),#f6e3d6!important;color:#3b2a3a}
+#quest-page .qz-back{background:rgba(255,251,245,.7);border:1px solid rgba(233,181,106,.45);color:#3b2a3a;border-radius:999px;box-shadow:0 0 18px rgba(233,181,106,.18)}
+#quest-page .qz-back:hover{background:rgba(255,253,249,.94)}
+#quest-page #qz-title{color:#3b2a3a;text-shadow:none;font-weight:400}
+#quest-page #qz-intro{color:#6f5a6c;font-size:14px}
+#quest-page #qz-course{color:#6f5a6c}
+#quest-page #qz-course-link{color:#8a5a2b;text-shadow:none;text-decoration-color:rgba(214,150,70,.6)}
+#quest-page #qz-menu{display:flex;flex-wrap:wrap;justify-content:center;gap:14px 12px;padding:6px 0 30px}
+#quest-page .qz-card{width:150px;height:150px;border-radius:50%;margin:0;padding:18px 14px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:0;
+  background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.88) 55%,rgba(255,240,232,.42) 78%,rgba(255,236,226,0) 100%);box-shadow:0 0 26px rgba(233,181,106,.16);animation:qzcBreathe 6s ease-in-out infinite}
+#quest-page .qz-card:hover{border:0;box-shadow:0 0 34px rgba(233,181,106,.36)}
+#quest-page .qz-card .qn{color:#3b2a3a;font-size:14.5px;font-weight:400;line-height:1.3}
+#quest-page .qz-card .qd{display:none}
+#quest-page .qz-card .qf{font-size:10.5px;color:#7a6577;margin:5px 0 0}
+#quest-page .qz-card.qz-done{background:radial-gradient(circle at 50% 42%,rgba(255,246,226,.98) 0%,rgba(251,226,180,.82) 55%,rgba(233,181,106,.3) 80%,rgba(233,181,106,0) 100%)}
+#quest-page .qz-tick{display:block;margin:5px 0 0;color:#8a5a2b;font-size:11px}
+#quest-page .qz-card.qz-locked{opacity:.4;filter:saturate(.5);animation:none}
+@keyframes qzcBreathe{0%,100%{transform:scale(.985)}50%{transform:scale(1.015)}}
+#quest-page .qzc-name{text-align:center;color:#6f5a6c;font-size:15px;letter-spacing:.04em;margin:4px 0 8px}
+#quest-page .qzc-trail{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:0 auto 12px;max-width:420px}
+#quest-page .qzc-trail button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(233,181,106,.3)}
+#quest-page .qzc-trail button.done{background:radial-gradient(circle,#fff 0%,#e9b56a 60%,rgba(233,181,106,.45) 100%)}
+#quest-page .qzc-trail button.now{transform:scale(1.4);box-shadow:0 0 0 2px rgba(59,42,58,.25)}
+#quest-page .qzc-circle{position:relative;width:min(78vw,44vh,420px);aspect-ratio:1;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);animation:qzcBreathe 6s ease-in-out infinite}
+#quest-page .qzc-circle::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;background:conic-gradient(rgba(233,181,106,.3),rgba(220,210,242,.42),rgba(243,201,192,.36),rgba(201,220,244,.42),rgba(233,181,106,.3));filter:blur(24px)}
+#quest-page .qzc-say{width:72%;font-size:clamp(1.05rem,3.6vw,1.3rem);line-height:1.5;color:#3b2a3a;transition:opacity .26s ease,filter .26s ease}
+#quest-page .qzc-say.fade{opacity:0;filter:blur(5px)}
+#quest-page .qzc-answers{display:flex;justify-content:center;gap:8px;margin:14px auto 4px;max-width:440px}
+#quest-page .qzc-answers .qz-dot{flex:0 0 auto;width:64px;background:none;border:0;border-radius:12px;padding:0;color:#6f5a6c;font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;box-shadow:none}
+#quest-page .qzc-answers .qz-dot:nth-child(2),#quest-page .qzc-answers .qz-dot:nth-child(4){transform:translateY(9px)}
+#quest-page .qzc-answers .qz-dot:nth-child(3){transform:translateY(13px)}
+#quest-page .qzc-light{width:42px;height:42px;border-radius:50%;background:radial-gradient(circle,rgba(255,252,247,.96) 0%,rgba(248,220,196,.82) 55%,rgba(233,181,106,.2) 100%);box-shadow:0 0 14px rgba(233,181,106,.24);transition:transform .2s,box-shadow .3s,background .3s}
+#quest-page .qz-dot:hover .qzc-light{box-shadow:0 0 22px rgba(233,181,106,.5)}
+#quest-page .qzc-answers .qz-dot.on{background:none;border:0;color:#3b2a3a;box-shadow:none}
+#quest-page .qz-dot.on .qzc-light{background:radial-gradient(circle,#fff 0%,#f3c98a 50%,rgba(233,181,106,.6) 100%);box-shadow:0 0 26px rgba(233,181,106,.75);transform:scale(1.14)}
+#quest-page .qzc-answers .qz-dot:focus-visible{outline:2px solid #3b2a3a;outline-offset:3px}
+#quest-page .qzc-back{display:block;margin:26px auto 0;background:none;border:0;color:#7a6577;font-family:inherit;font-size:14px;cursor:pointer}
+#quest-page #qz-active.qzc-complete .qzc-answers{opacity:.35}
+#quest-page #qz-submit{width:auto;margin:16px auto 10px;padding:13px 26px;border-radius:999px;background:linear-gradient(180deg,#fff8ee,#fbe6cc);border:1px solid rgba(214,150,70,.7);color:#3b2a3a;box-shadow:0 0 22px rgba(233,181,106,.35)}
+#quest-page #qz-thanks{background:rgba(246,227,214,.86)}
+#quest-page #qz-thanks .big{color:#3b2a3a;text-shadow:none}
+#quest-page #qz-thanks .sm{color:#6f5a6c}
+@media (prefers-reduced-motion:reduce){#quest-page .qz-card,#quest-page .qzc-circle{animation:none}}
+@media (max-width:520px){#quest-page .qz-card{width:112px;height:112px;padding:12px 9px}#quest-page .qz-card .qn{font-size:12.5px}#quest-page .qz-card .qf{display:none}
+  #quest-page #qz-menu{gap:10px 8px}#quest-page .qzc-answers{gap:3px}#quest-page .qzc-answers .qz-dot{width:60px;font-size:10.5px}}
+
 #qz-thanks .big{font-size:24px;color:#efe8ff;font-weight:300;text-shadow:0 0 26px rgba(167,139,250,.8)}
 #qz-thanks .sm{font-size:13px;color:#b4a9d8;margin-top:12px;max-width:380px;line-height:1.6}
 /* Live aura feed */
@@ -2479,8 +2528,9 @@ window.AS_SEEK_ALWAYS=true;
   <button id="quest-back">← Back to My Aura</button>
   <div id="quest-title">The Soul Search</div>
   <div id="quest-sub">Four gates, each one deeper. Every answer you give becomes real colour in your aura — the way those who see auras describe seeing them. There are no wrong answers. There is only what you notice.</div>
-  <div id="quest-path"></div>
-  <div id="quest-play"></div>
+  <div id="quest-path" class="as-own"></div>
+  <div id="quest-play" class="as-own"></div>
+  <button type="button" id="qp-to-gates" class="as-own">← the gates</button>
 </div>
 <div id="alpha-page">
   <button id="alpha-back">← Back to My Aura</button>
@@ -2785,7 +2835,7 @@ window.AS_SEEK_ALWAYS=true;
     </div>
     <div id="ls-quiz">
       <div id="ls-progress"></div>
-      <div id="ls-question"></div>
+      <div id="ls-question" class="as-bare"></div>
       <textarea id="ls-answer" placeholder="Take your time. There are no wrong answers."></textarea>
       <div id="ls-nav"><button id="ls-prev" class="ls-navbtn">← Back</button><button id="ls-next" class="ls-navbtn ls-primary">Next →</button></div>
     </div>
@@ -5850,6 +5900,15 @@ const TWO=Math.PI*2;
 function maLine(text,color){return '<div class="ma-line" style="--lc:'+(color||'#a78bfa')+'">'+text+'</div>';}
 let coStep=0;
 function coSet(i){
+  const cards=document.querySelectorAll('#co-deck .co-card'),pg=document.getElementById('course-page');
+  const to=Math.max(0,Math.min(cards.length-1,i|0)),from=cards[coStep];
+  if(coSet.__t){clearTimeout(coSet.__t);coSet.__t=0;if(from)from.classList.remove('as-falling');}
+  if(!cards.length||!from||to===coStep||!(pg&&pg.classList.contains('show'))){coSetNow(i);return;}
+  if(asStill()){coSetNow(to);asWake(cards[coStep],':scope','.co-illus');return;}
+  asLeave(from,':scope','.co-illus');
+  coSet.__t=setTimeout(()=>{coSet.__t=0;from.classList.remove('as-falling');coSetNow(to);asWake(cards[coStep],':scope','.co-illus');},asFallMs(from));
+}
+function coSetNow(i){
   const cards=document.querySelectorAll('#co-deck .co-card');if(!cards.length)return;
   coStep=Math.max(0,Math.min(cards.length-1,i));
   cards.forEach((c,k)=>c.classList.toggle('on',k===coStep));
@@ -5984,14 +6043,14 @@ function alphaGlyph(word,size){
 function renderAlphaPage(){
   const sen=document.getElementById('alpha-senses');
   if(sen&&!sen.childElementCount){
-    sen.innerHTML=SENSES.map(s=>'<div class="alpha-cell"><div style="transform:scale(1.8);transform-origin:center;margin:8px 0 12px">'+(SENSE_SYMBOLS[s.id]||'')+'</div><div class="alpha-w" style="color:'+s.color+'">'+s.label+'</div><div class="alpha-d">'+(s.realm==='internal'?'felt within':'sensed in the world')+'</div></div>').join('');
+    sen.innerHTML=SENSES.map(s=>'<div class="alpha-cell as-bare"><div style="transform:scale(1.8);transform-origin:center;margin:8px 0 12px">'+(SENSE_SYMBOLS[s.id]||'')+'</div><div class="alpha-w" style="color:'+s.color+'">'+s.label+'</div><div class="alpha-d">'+(s.realm==='internal'?'felt within':'sensed in the world')+'</div></div>').join('');
   }
   if(sen&&!sen.dataset.bound){sen.dataset.bound='1';
     sen.querySelectorAll('.alpha-cell').forEach((c,i)=>c.addEventListener('click',()=>gvSense(SENSES[i])));
   }
   const wo=document.getElementById('alpha-words');
   if(wo&&!wo.childElementCount){
-    wo.innerHTML=ALPHA_WORDS.map((w,i)=>'<div class="alpha-cell" data-w="'+i+'">'+alphaGlyph(w)+'<div class="alpha-w" style="color:'+w.c+'">'+w.w+'</div><div class="alpha-d">'+w.d+'</div></div>').join('');
+    wo.innerHTML=ALPHA_WORDS.map((w,i)=>'<div class="alpha-cell as-bare" data-w="'+i+'">'+alphaGlyph(w)+'<div class="alpha-w" style="color:'+w.c+'">'+w.w+'</div><div class="alpha-d">'+w.d+'</div></div>').join('');
     wo.querySelectorAll('.alpha-cell').forEach(c=>c.addEventListener('click',()=>gvWord(ALPHA_WORDS[+c.dataset.w])));
   }
   const ju=document.getElementById('alpha-junctions');
@@ -5999,9 +6058,10 @@ function renderAlphaPage(){
     ju.innerHTML=ALPHA_JUNCTIONS.map(j=>{
       const a=ALPHA_WORDS.find(x=>x.w===j[0]),b=ALPHA_WORDS.find(x=>x.w===j[1]);
       if(!a||!b)return '';
-      return '<div class="alpha-j" data-j="'+ALPHA_JUNCTIONS.indexOf(j)+'"><div class="aj-row"><div class="aj-side aj-a">'+alphaGlyph(a,52)+'<div class="aj-nm" style="color:'+a.c+'">'+a.w+'</div><div class="aj-sm">'+a.d+'</div></div><span class="aj-plus">+</span><div class="aj-side aj-b">'+alphaGlyph(b,52)+'<div class="aj-nm" style="color:'+b.c+'">'+b.w+'</div><div class="aj-sm">'+b.d+'</div></div></div><div class="aj-fused">'+fuseGlyphs([a,b],52)+'</div><div class="aj-joint"><b style="color:#efe8ff">'+j[0]+'\u00b7'+j[1]+'</b> \u2014 '+j[2]+'</div><div class="aj-invite">Tap to watch how aurasense symbols fuse to form greater meaning ✧</div></div>';
+      return '<div class="alpha-j as-bare" data-j="'+ALPHA_JUNCTIONS.indexOf(j)+'"><div class="aj-row"><div class="aj-side aj-a">'+alphaGlyph(a,52)+'<div class="aj-nm" style="color:'+a.c+'">'+a.w+'</div><div class="aj-sm">'+a.d+'</div></div><span class="aj-plus">+</span><div class="aj-side aj-b">'+alphaGlyph(b,52)+'<div class="aj-nm" style="color:'+b.c+'">'+b.w+'</div><div class="aj-sm">'+b.d+'</div></div></div><div class="aj-fused">'+fuseGlyphs([a,b],52)+'</div><div class="aj-joint"><b style="color:#efe8ff">'+j[0]+'\u00b7'+j[1]+'</b> \u2014 '+j[2]+'</div><div class="aj-invite">Tap to watch how aurasense symbols fuse to form greater meaning ✧</div></div>';
     }).join('');
     ju.querySelectorAll('.alpha-j').forEach(c=>c.addEventListener('click',()=>gvJunction(ALPHA_JUNCTIONS[+c.dataset.j])));
+    asOne(ju,'.alpha-j',':scope','svg','Alphabond');   /* 4 Oct 2026 · one Alphabond at a time */
   }
 }
 // ——— The Soul Search: four gates, each answer becoming colour in the aura ———
@@ -6068,6 +6128,7 @@ let questState={done:{},cur:null,qi:0,picked:[]};
 const QUEST_REQS={shadow:2,whole:4};
 function questRenderPath(){
   const path=document.getElementById('quest-path');if(!path)return;
+  {const sp=document.getElementById('soul-page');if(sp)sp.classList.remove('qp-playing');}
   const shares=(typeof myShareCount!=='undefined')?myShareCount:0;
   let prevDone=true;
   path.innerHTML=QUEST_LAYERS.map((L,i)=>{
@@ -6087,9 +6148,11 @@ function questRenderPath(){
 function questStart(i){
   const L=QUEST_LAYERS[i];if(!L)return;
   questState.cur=i;questState.qi=0;questState.picked=[];
+  {const sp=document.getElementById('soul-page');if(sp)sp.classList.add('qp-playing');}
   questShowStep();
 }
-function questShowStep(){
+function questShowStep(){asTurn(document.getElementById('quest-play'),questShowStepNow,'.q-q,.q-intro,.q-done-note','.q-prog,.q-opts,.q-open-btn,.q-done-sw');}
+function questShowStepNow(){
   const L=QUEST_LAYERS[questState.cur],play=document.getElementById('quest-play');if(!L||!play)return;
   const total=(L.type==='open'?L.prompts.length:L.questions.length);
   if(questState.qi>=total){questComplete(L);return;}
@@ -6103,7 +6166,7 @@ function questShowStep(){
     play.innerHTML='<div class="q-card">'+dots+intro+'<div class="q-q">'+Q.q+'</div><div class="q-opts">'+Q.opts.map((o,k)=>'<button type="button" class="q-opt" data-k="'+k+'" style="--qc:'+o.c+'">'+o.t+'</button>').join('')+'</div></div>';
     play.querySelectorAll('.q-opt').forEach(b=>{b.addEventListener('click',()=>{const o=Q.opts[+b.dataset.k];questState.picked.push(o.c);questState.qi++;questShowStep();});});
   }
-  play.scrollIntoView({behavior:'smooth',block:'start'});
+  try{const sp=document.getElementById('soul-page');if(sp)sp.scrollTop=0;}catch(e){}
 }
 function questComplete(L){
   const play=document.getElementById('quest-play');
@@ -6119,6 +6182,7 @@ function questComplete(L){
   questState.cur=null;
 }
 function openSoulPage(){questRenderPath();const p=document.getElementById('soul-page');if(p)p.classList.add('show');}
+(function(){const b=document.getElementById('qp-to-gates');if(b)b.addEventListener('click',()=>{try{questRenderPath();}catch(e){}});})();
 function closeSoulPage(){const p=document.getElementById('soul-page');if(p)p.classList.remove('show');if(typeof updateMyOrb==='function')updateMyOrb();}
 (function(){
   const qk=document.getElementById('quest-back');if(qk)qk.addEventListener('click',closeSoulPage);
@@ -6205,7 +6269,7 @@ function openWorkshop(){
   const p=document.getElementById('work-page');if(!p)return;
   const strip=document.getElementById('work-strip');
   if(strip&&!strip.childElementCount){
-    strip.innerHTML=ALPHA_WORDS.map((w,i)=>'<button class="wk-g" data-i="'+i+'" title="'+w.w+'">'+alphaGlyph(w,34)+'<span class="wk-lbl" style="color:'+w.c+'">'+w.w+'</span></button>').join('');
+    strip.innerHTML=ALPHA_WORDS.map((w,i)=>'<button class="wk-g as-bare" data-i="'+i+'" title="'+w.w+'">'+alphaGlyph(w,34)+'<span class="wk-lbl" style="color:'+w.c+'">'+w.w+'</span></button>').join('');
     strip.querySelectorAll('.wk-g').forEach(b=>b.addEventListener('click',()=>{if(workChain.length<6){workFused=false;workChain.push(ALPHA_WORDS[+b.dataset.i]);}workRender();}));
     if(!p.dataset.wb){p.dataset.wb='1';
     const fb=document.getElementById('work-fuse');if(fb)fb.addEventListener('click',()=>{if(workChain.length>=2){workFused=true;workRender();}});
@@ -6574,14 +6638,23 @@ function macSize(){
   macCx=macCv.getContext('2d');
   macCx.imageSmoothingEnabled=true;
   if(macCx.imageSmoothingQuality)macCx.imageSmoothingQuality='high';
-  var ar=W/H;
+  macResBuf();
+  if(macAur){ macAur.width=Math.round(W*d); macAur.height=Math.round(H*d);
+    macAx=macAur.getContext('2d'); macAx.scale(d,d); }
+  /* 4 Oct 2026 · THE LIGHT GAP. Karl's photograph of My Aura came out dark.
+     Changing a canvas's size wipes it, and with "reduce motion" on the cloud
+     was never painted again, so the dark page beneath showed through. Now any
+     wipe tells the loop to paint again, whatever the motion setting. */
+  macPainted=false; macNext=0;
+}
+/* the working buffer alone: changing its fineness must never wipe what is on screen */
+function macResBuf(){
+  var ar=innerWidth/innerHeight;
   macBW=Math.max(40,Math.round(MAC.res*Math.sqrt(ar)));
   macBH=Math.max(40,Math.round(MAC.res/Math.sqrt(ar)));
   macBuf.width=macBW; macBuf.height=macBH;
   macImg=macBx.createImageData(macBW,macBH);
   macDen=new Float32Array(macBW*macBH);
-  if(macAur){ macAur.width=Math.round(W*d); macAur.height=Math.round(H*d);
-    macAx=macAur.getContext('2d'); macAx.scale(d,d); }
 }
 
 function macPaint(ms){
@@ -6631,7 +6704,7 @@ function macPaint(ms){
   macCx.drawImage(macBuf,0,0,macBW,macBH,0,0,macCv.width,macCv.height);
   macPainted=true;
   macCost=performance.now()-t0;
-  if(macCost>34&&MAC.res>84){ MAC.res=Math.max(84,Math.round(MAC.res*0.85)); macSize(); }
+  if(macCost>34&&MAC.res>84){ MAC.res=Math.max(84,Math.round(MAC.res*0.85)); macResBuf(); }
 }
 
 function macLoop(ts){
@@ -6871,14 +6944,17 @@ function macDrawAura(ts){
       var _dim=(typeof window!=='undefined'&&(window._macListOpen||window._macCardOpen))?(window._macCardOpen?0.08:0.24):1;
       /* while one name is open, its twin stays unwritten and the others step back a little */
       var _open=(typeof macHover==='number'&&macHover>=0);
-      if(_open&&macHover===li){macNamed.push({x:px,y:py+spread*0.92+15,w:macAx.measureText(nm).width,i:li});macAx.restore();return;}
+      if(_open&&macHover===li){macNamed.push({x:px,y:py,w:macAx.measureText(nm).width,i:li});macAx.restore();return;}
       if(_open)_dim*=0.45;
       macAx.globalAlpha=Math.min(1,(macSpread-0.34)/0.42)*_dim;
       macAx.textAlign='center'; macAx.textBaseline='middle';
       macAx.font='13px Georgia, "Times New Roman", serif';
       macAx.shadowColor='rgba(255,251,246,0.95)'; macAx.shadowBlur=7;
       macAx.fillStyle='rgba(74,42,26,0.94)';
-      var ny=py+spread*0.92+15;
+      /* 4 Oct 2026 · Karl: "put the names of each broken down aura types right over the
+         center of each aura, as they just look too mismatched in terms of position."
+         Each name now sits on the heart of its own light. */
+      var ny=py;
       var wpx=macAx.measureText(nm).width;
       /* 29 Sep - a name that would fall under "Let it close" moves above its light */
       try{var _B=window._macBtn;if(_B&&ny>_B.y-12&&ny<_B.y+_B.h+12&&Math.abs(px-(_B.x+_B.w/2))<_B.w/2+wpx/2+6)ny=py-spread*0.92-15;}catch(e){}
@@ -7041,7 +7117,7 @@ function macLeave(keepPage){
 }
 addEventListener('resize',function(){
   var p=document.getElementById('myaura-page');
-  if(p&&p.classList.contains('cloudfirst')){ try{ macSize(); }catch(e){} }
+  if(p&&p.classList.contains('cloudfirst')){ try{ macSize(); macPaint(performance.now()); }catch(e){} }
 });
 /* ══ THE FIVE DOORS · 2 September 2026 ═══════════════════════════════════
    Five verbs, never a sixth. Every label leads with what it DOES — the first two
@@ -7446,7 +7522,7 @@ function rgSuggest(){
   const num=Math.random()<0.3?String(Math.floor(Math.random()*89)+10):'';
   return a+n+num;
 }
-function openRegister(){const p=document.getElementById('register-page');if(p)p.classList.add('show');
+function openRegister(){try{if(window.asRgStep)window.asRgStep(0);}catch(e){}const p=document.getElementById('register-page');if(p)p.classList.add('show');
   try{const has=!!(myProfile&&myProfile.handle);
     const t=document.getElementById('rg-title');if(t)t.textContent=has?'Update my profile':'Become an Aurasenser';
     const b=document.getElementById('rg-create');if(b)b.textContent=has?'Update my aura':'Create my aura';
@@ -7471,6 +7547,264 @@ const rgHandle=document.getElementById('rg-handle'),rgNote=document.getElementBy
 if(rgSuggestBtn)rgSuggestBtn.addEventListener('click',()=>{const name=rgSuggest();if(rgHandle)rgHandle.value=name;if(rgNote)rgNote.textContent='\u2713 '+name+' looks available — make it yours, or suggest again.';});
 if(rgHandle)rgHandle.addEventListener('input',()=>{if(rgNote)rgNote.textContent=rgHandle.value.trim()?('\u2713 '+rgHandle.value.trim()+' looks available'):'';});
 const rgBack=document.getElementById('rg-back');if(rgBack)rgBack.addEventListener('click',closeRegister);
+/* ═══ 4 Oct 2026 · BECOMING AN AURASENSER, ONE LIGHT AT A TIME ═══════════
+   Karl: "turn 'all' panels that exist into circular to match the rest of the
+   site" — registration included (30 Sep).
+   The long form becomes a path: one step at a time, its words held in a
+   breathing circle, its answers beneath, small lights for the way travelled.
+   Every field, every id, every check and the Gate's email code are exactly as
+   they were; only how much is shown at once has changed. */
+(function rgSteps(){try{
+  const page=document.getElementById('register-page'),inner=document.getElementById('rg-inner');
+  if(!page||!inner)return;
+  const cards=Array.from(inner.querySelectorAll('.rg-card')).filter(c=>!c.classList.contains('rg-quest'));
+  const create=document.getElementById('rg-create');
+  if(!cards.length||!create)return;
+  page.classList.add('rg-steps');
+  cards.forEach(c=>{const h=c.querySelector('.rg-h'),sb=c.querySelector('.rg-sub');if(!h)return;
+    const ci=document.createElement('div');ci.className='rg-circle';c.insertBefore(ci,h);ci.appendChild(h);if(sb)ci.appendChild(sb);
+    if(((h.textContent||'').length+(sb?(sb.textContent||'').length:0))>190)ci.classList.add('full');});
+  const trail=document.createElement('div');trail.className='rg-trail';trail.setAttribute('role','group');trail.setAttribute('aria-label','The steps');
+  const nav=document.createElement('div');nav.className='rg-nav';
+  const back=document.createElement('button');back.type='button';back.className='rg-prev';back.textContent='\u2190 back';
+  const next=document.createElement('button');next.type='button';next.className='rg-next';next.textContent='Next \u2192';
+  nav.appendChild(back);nav.appendChild(next);
+  inner.insertBefore(trail,cards[0]);inner.insertBefore(nav,create);
+  nav.appendChild(create);   /* the last step's offering sits beside "back", always in view */
+  cards.forEach(c=>{if(c.querySelector('.rg-chips'))c.classList.add('rg-chipcard');});
+  const intro=document.getElementById('rg-intro');
+  let at=0;
+  cards.forEach((c,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Step '+(i+1)+' of '+cards.length);
+    b.addEventListener('click',()=>go(i));trail.appendChild(b);});
+  function show(){
+    cards.forEach((c,k)=>c.classList.toggle('rg-now',k===at));
+    Array.from(trail.children).forEach((b,k)=>{b.classList.toggle('now',k===at);b.classList.toggle('done',k<at);});
+    back.style.visibility=at>0?'visible':'hidden';
+    const last=at===cards.length-1;
+    next.style.display=last?'none':'';create.style.display=last?'':'none';
+    if(intro)intro.style.display=at===0?'':'none';
+    try{page.scrollTop=0;}catch(e){}
+  }
+  let rgT=0;const W='.rg-circle',B=':scope > :not(.rg-circle)';
+  function go(i,now){
+    const to=Math.max(0,Math.min(cards.length-1,i|0)),from=cards[at];
+    if(rgT){clearTimeout(rgT);rgT=0;from.classList.remove('as-falling');}
+    if(now||to===at){at=to;show();return;}
+    if(asStill()){at=to;show();asWake(cards[at],W,B);return;}
+    asLeave(from,W,B);
+    rgT=setTimeout(()=>{rgT=0;from.classList.remove('as-falling');at=to;show();asWake(cards[at],W,B);},asFallMs(from));
+  }
+  back.addEventListener('click',()=>go(at-1));
+  next.addEventListener('click',()=>go(at+1));
+  /* "Create my aura" asks for a name and an email. If one is missing, the path
+     first returns to that step, so the existing gentle note appears in view. */
+  inner.addEventListener('click',e=>{try{
+    if(!e.target.closest||!e.target.closest('#rg-create'))return;
+    const hv=((document.getElementById('rg-handle')||{}).value||'').trim();
+    const ev=((document.getElementById('rg-email')||{}).value||'').trim();
+    if(!hv){go(cards.findIndex(c=>c.querySelector('#rg-handle')),true);return;}
+    if(!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(ev))go(cards.findIndex(c=>c.querySelector('#rg-email')),true);
+  }catch(_){}},true);
+  window.asRgStep=i=>go(i,true);
+  go(0,true);
+}catch(e){}})();
+/* ═══ 4 Oct 2026 · WORDS FALL INTO THE CLOUD, AND RISE AGAIN ═════════════
+   Karl: "Can we make each alternative moment to scrolling a visually
+   experienceable moment as it dissolves and transitions into the next as
+   opposed to just flicking into the next, text falling into the cloud and
+   re-emerging with the new part ... I think it's aesthetically beautiful and
+   represents the motion of senses, as well as the true originality and
+   living intelligence of Aurasense."
+   ONE movement for every one-thing-at-a-time moment, decided here: the words
+   drift down and soften into the cloud, word by word; the next rise out of
+   it, word by word; answers and fields sink and rise softly with them. With
+   "reduce motion" on, a quiet fade. Words inside buttons, links and fields
+   are never wrapped, so nothing anyone taps changes. */
+function asStill(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
+function asWordsOf(el){try{
+  const tw=document.createTreeWalker(el,NodeFilter.SHOW_TEXT,{acceptNode:function(n){const p=n.parentElement;
+    if(!p||!n.nodeValue.trim())return NodeFilter.FILTER_REJECT;
+    if(p.closest('.as-w,button,a,input,textarea,select,label,svg,[data-v],[role="button"]'))return NodeFilter.FILTER_REJECT;
+    return NodeFilter.FILTER_ACCEPT;}});
+  const list=[];while(tw.nextNode())list.push(tw.currentNode);
+  let i=0;
+  list.forEach(function(n){const f=document.createElement('span');f.className='as-ws';
+    n.nodeValue.split(/(\s+)/).forEach(function(w){if(!w)return;if(/^\s+$/.test(w)){f.appendChild(document.createTextNode(w));return;}
+      const sp=document.createElement('span');sp.className='as-w';sp.style.setProperty('--i',String(Math.min(i++,40)));sp.textContent=w;f.appendChild(sp);});
+    n.parentNode.replaceChild(f,n);});
+}catch(e){}}
+function asMark(root,words,blocks){try{
+  if(words){if(words===':scope')asWordsOf(root);else root.querySelectorAll(words).forEach(asWordsOf);}
+  if(blocks)root.querySelectorAll(blocks).forEach(function(b){b.classList.add('as-block');});
+}catch(e){}}
+function asFallMs(root){const n=root?root.querySelectorAll('.as-w').length:0;return asStill()?180:950+Math.min(n,40)*12;}
+/* 4 Oct 2026 · Karl: "Needs to fall more obviously, so cloud moves and is visible."
+   A soft cloud in the circle's own colours billows up to receive the falling
+   words, then lifts and parts as the next words rise out of it. */
+function asCircleOf(root){try{const C='.qzc-circle,.rg-circle,.q-q,.tjs-circle,.op-q,#ls-question,.as-card,.asp-circle,.wk-circle';return (root.closest&&root.closest(C))||root.querySelector(C);}catch(e){return null;}}
+function asCloud(circle,mode){if(!circle||asStill())return;
+  let b=null;for(const ch of circle.children){if(ch.classList&&ch.classList.contains('as-cloudband')){b=ch;break;}}
+  if(!b){b=document.createElement('span');b.className='as-cloudband';b.setAttribute('aria-hidden','true');circle.appendChild(b);}
+  circle.classList.remove('as-take','as-give');void circle.offsetWidth;circle.classList.add(mode==='take'?'as-take':'as-give');
+  clearTimeout(circle.__asC);circle.__asC=setTimeout(function(){circle.classList.remove('as-take','as-give');},mode==='take'?6000:1900);}
+/* each word is aimed at the heart of its circle, so it recedes into the cloud rather than dropping */
+function asAim(root){try{const c=asCircleOf(root)||root;const r=c.getBoundingClientRect();const cx=r.left+r.width/2,cy=r.top+r.height/2;
+  root.querySelectorAll('.as-w').forEach(function(w){const b=w.getBoundingClientRect();
+    w.style.setProperty('--tx',((cx-(b.left+b.width/2))*.6).toFixed(1)+'px');w.style.setProperty('--ty',((cy-(b.top+b.height/2))*.6).toFixed(1)+'px');});}catch(e){}}
+function asWake(el,words,blocks){if(!el)return;el.classList.remove('as-falling','as-rising');asMark(el,words,blocks);asAim(el);asCloud(asCircleOf(el),'give');void el.offsetWidth;el.classList.add('as-rising');
+  clearTimeout(el.__asR);el.__asR=setTimeout(function(){el.classList.remove('as-rising');},2600);}
+function asLeave(el,words,blocks){if(!el)return;el.classList.remove('as-rising','as-falling');asMark(el,words,blocks);asAim(el);asCloud(asCircleOf(el),'take');void el.offsetWidth;el.classList.add('as-falling');}
+/* the old words fall; render() puts the new; they rise */
+function asTurn(root,render,words,blocks){
+  if(!root){render();return;}
+  function finish(){root.__asT=0;root.classList.remove('as-falling');render();asWake(root,words,blocks);}
+  if(root.__asT){clearTimeout(root.__asT);finish();return;}
+  if(!root.textContent.trim()){finish();return;}
+  asLeave(root,words,blocks);
+  root.__asT=setTimeout(finish,asFallMs(root));
+}
+/* ═══ 4 Oct 2026 · OFFERING A TRAJECTORY, ONE LIGHT AT A TIME ═════════════
+   Karl: "Pages into one thing at a time, starting with Soul Search and the
+   Conscious Trajectory offering. Yes please." The four fields become a path,
+   each question held in a breathing circle. Every field, id and check, and
+   the offering itself, are exactly as they were. */
+(function tjSteps(){try{
+  const form=document.getElementById('tj-form'),offer=document.getElementById('tj-offer');
+  const Q=[['tj-place','Where did this happen?','A street, a town, a home \u2014 or keep it to yourself.'],
+           ['tj-choice','What was the choice you faced?',''],
+           ['tj-unfolded','What unfolded \u2014 the decision, and where it led?',''],
+           ['tj-reflection','What would you tell someone standing at the same crossroads?','']];
+  if(!form||!offer||!Q.every(x=>document.getElementById(x[0])))return;   /* anything unexpected: the form stays as it was */
+  const steps=Q.map(([id,q,sub])=>{const f=document.getElementById(id);
+    const st=document.createElement('div');st.className='tjs';
+    const ci=document.createElement('div');ci.className='tjs-circle as-own';
+    const h=document.createElement('div');h.className='tjs-q';h.textContent=q;ci.appendChild(h);
+    if(sub){const sb=document.createElement('div');sb.className='tjs-sub';sb.textContent=sub;ci.appendChild(sb);}
+    st.appendChild(ci);form.insertBefore(st,offer);st.appendChild(f);return st;});
+  form.classList.add('tj-steps');
+  const trail=document.createElement('div');trail.className='tj-trail as-own';trail.setAttribute('role','group');trail.setAttribute('aria-label','The steps');
+  const nav=document.createElement('div');nav.className='tj-nav as-own';
+  const back=document.createElement('button');back.type='button';back.className='tj-prev';back.textContent='\u2190 back';
+  const next=document.createElement('button');next.type='button';next.className='tj-next';next.textContent='Next \u2192';
+  nav.appendChild(back);nav.appendChild(next);form.insertBefore(trail,steps[0]);form.insertBefore(nav,offer);nav.appendChild(offer);
+  const intro=document.getElementById('tj-intro');let at=0,tT=0;const W='.tjs-circle',B=':scope > :not(.tjs-circle)';
+  steps.forEach((x,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Step '+(i+1)+' of '+steps.length);b.addEventListener('click',()=>go(i));trail.appendChild(b);});
+  function show(){steps.forEach((x,k)=>x.classList.toggle('tjs-now',k===at));
+    Array.from(trail.children).forEach((b,k)=>{b.classList.toggle('now',k===at);b.classList.toggle('done',k<at);});
+    back.style.visibility=at>0?'visible':'hidden';const last=at===steps.length-1;next.style.display=last?'none':'';offer.style.display=last?'':'none';
+    if(intro)intro.style.display=at===0?'':'none';}
+  function go(i,now){const to=Math.max(0,Math.min(steps.length-1,i|0)),from=steps[at];
+    if(tT){clearTimeout(tT);tT=0;from.classList.remove('as-falling');}
+    if(now||to===at){at=to;show();return;}
+    if(asStill()){at=to;show();asWake(steps[at],W,B);return;}
+    asLeave(from,W,B);tT=setTimeout(()=>{tT=0;from.classList.remove('as-falling');at=to;show();asWake(steps[at],W,B);},asFallMs(from));}
+  back.addEventListener('click',()=>go(at-1));next.addEventListener('click',()=>go(at+1));
+  const val=id=>((document.getElementById(id)||{}).value||'').trim();
+  /* the offering asks for the choice or what unfolded: if both are empty, the path returns there first */
+  form.addEventListener('click',e=>{try{if(e.target.closest&&e.target.closest('#tj-offer')&&!val('tj-choice')&&!val('tj-unfolded'))go(1,true);}catch(_){}},true);
+  /* once offered (the fields are emptied), the path begins again */
+  offer.addEventListener('click',()=>setTimeout(()=>{if(Q.every(x=>!val(x[0])))go(0,true);},80));
+  go(0,true);
+}catch(e){}})();
+/* ═══ 4 Oct 2026 · ANY LIST, ONE AT A TIME ═══════════════════════════════
+   One shared way for a list page to show one card at a time: small lights for
+   the way travelled, "the one before" and "the next", and every change falling
+   into the cloud as the next comes forward. First used by the Alphabonds. */
+function asOne(list,cardSel,words,blocks,label){
+  if(!list)return null;if(list.__asOne){list.__asOne.show();return list.__asOne;}
+  const api={at:0,t:0};list.__asOne=api;list.classList.add('as-one');
+  const nav=document.createElement('div');nav.className='as-onenav as-own';
+  nav.innerHTML='<div class="as-onetrail" role="group"></div><div class="as-onesteps"><button type="button" class="as-oneprev">\u2190 the one before</button><button type="button" class="as-onenext">the next \u2192</button></div>';
+  nav.querySelector('.as-onetrail').setAttribute('aria-label',label);
+  list.parentNode.insertBefore(nav,list.nextSibling);
+  const cards=()=>Array.from(list.children).filter(c=>c.matches&&c.matches(cardSel));
+  function show(){const cs=cards();if(!cs.length)return;api.at=Math.max(0,Math.min(cs.length-1,api.at));
+    cs.forEach((c,k)=>{c.classList.add('as-card');c.classList.toggle('as-now',k===api.at);});
+    const tr=nav.querySelector('.as-onetrail');
+    if(tr.children.length!==cs.length){tr.innerHTML='';cs.forEach((_,k)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label',label+' '+(k+1)+' of '+cs.length);b.addEventListener('click',()=>go(k));tr.appendChild(b);});}
+    Array.from(tr.children).forEach((b,k)=>b.classList.toggle('now',k===api.at));
+    nav.querySelector('.as-oneprev').style.visibility=api.at>0?'visible':'hidden';
+    nav.querySelector('.as-onenext').style.visibility=api.at<cs.length-1?'visible':'hidden';}
+  function go(i){const cs=cards();if(!cs.length)return;const to=Math.max(0,Math.min(cs.length-1,i|0)),from=cs[api.at];
+    if(api.t){clearTimeout(api.t);api.t=0;if(from)from.classList.remove('as-falling');}
+    if(!from||to===api.at){api.at=to;show();return;}
+    if(asStill()){api.at=to;show();asWake(cs[api.at],words,blocks);return;}
+    asLeave(from,words,blocks);
+    api.t=setTimeout(()=>{api.t=0;from.classList.remove('as-falling');api.at=to;show();asWake(cs[api.at],words,blocks);},asFallMs(from));}
+  nav.querySelector('.as-oneprev').addEventListener('click',()=>go(api.at-1));
+  nav.querySelector('.as-onenext').addEventListener('click',()=>go(api.at+1));
+  api.go=go;api.show=show;show();return api;}
+/* ═══ 4 Oct 2026 · ANY FORM, AS A PATH OF LIGHTS ═══════════════════════════
+   One shared way for a form to ask one thing at a time: each question in a
+   breathing circle, its field beneath, small lights for the way travelled,
+   the final button beside "back". Every field keeps its own id and listeners.
+   First used by the Synchronicity Weave. */
+function asPath(form,steps,finalBtn,label,introEl){
+  if(!form||!finalBtn)return null;if(form.__asPath)return form.__asPath;
+  const made=steps.map(st=>{const box=document.createElement('div');box.className='asp';
+    const ci=document.createElement('div');ci.className='asp-circle as-own';
+    const h=document.createElement('div');h.className='asp-q';h.textContent=st.q;ci.appendChild(h);
+    if(st.sub){const sb=document.createElement('div');sb.className='asp-sub';sb.textContent=st.sub;ci.appendChild(sb);}
+    box.appendChild(ci);form.insertBefore(box,finalBtn);st.els.forEach(e=>box.appendChild(e));
+    if(box.querySelectorAll('button').length>8)box.classList.add('asp-many');   /* many choices: a smaller circle, so everything stays in view */
+    return box;});
+  form.classList.add('as-path');
+  const trail=document.createElement('div');trail.className='asp-trail as-own';trail.setAttribute('role','group');trail.setAttribute('aria-label',label);
+  const nav=document.createElement('div');nav.className='asp-nav as-own';
+  const back=document.createElement('button');back.type='button';back.className='asp-prev';back.textContent='\u2190 back';
+  const next=document.createElement('button');next.type='button';next.className='asp-next';next.textContent='Next \u2192';
+  nav.appendChild(back);nav.appendChild(next);form.insertBefore(trail,made[0]);form.insertBefore(nav,finalBtn);nav.appendChild(finalBtn);
+  let at=0,t=0;const W='.asp-circle',B=':scope > :not(.asp-circle)';
+  made.forEach((x,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Step '+(i+1)+' of '+made.length);b.addEventListener('click',()=>go(i));trail.appendChild(b);});
+  function show(){made.forEach((x,k)=>x.classList.toggle('asp-now',k===at));
+    made[at].classList.toggle('asp-many',made[at].querySelectorAll('button').length>8);   /* decided when shown: choices may load later */
+    Array.from(trail.children).forEach((b,k)=>{b.classList.toggle('now',k===at);b.classList.toggle('done',k<at);});
+    back.style.visibility=at>0?'visible':'hidden';const last=at===made.length-1;next.style.display=last?'none':'';finalBtn.style.display=last?'':'none';
+    if(introEl)introEl.style.display=at===0?'':'none';}
+  function go(i,now){const to=Math.max(0,Math.min(made.length-1,i|0)),from=made[at];
+    if(t){clearTimeout(t);t=0;from.classList.remove('as-falling');}
+    if(now||to===at){at=to;show();return;}
+    if(asStill()){at=to;show();asWake(made[at],W,B);return;}
+    asLeave(from,W,B);t=setTimeout(()=>{t=0;from.classList.remove('as-falling');at=to;show();asWake(made[at],W,B);},asFallMs(from));}
+  back.addEventListener('click',()=>go(at-1));next.addEventListener('click',()=>go(at+1));
+  const api={go:go,show:show};form.__asPath=api;show();return api;}
+/* the Synchronicity Weave: weaving a rhyme, one question at a time */
+(function swSteps(){try{
+  const form=document.getElementById('sw-compose'),btn=document.getElementById('sw-weave');
+  const rowOf=id=>{const e=document.getElementById(id);return e?(e.closest('.sw-row')||e):null;};
+  const A=document.getElementById('sw-a'),Bb=document.getElementById('sw-b'),R3=rowOf('sw-scope'),R4=rowOf('sw-gap'),R5=rowOf('sw-kind'),R6=rowOf('sw-strip');
+  if(!form||!btn||!A||!Bb||!R3||!R4||!R5||!R6)return;   /* anything unexpected: the form stays as it was */
+  const path=asPath(form,[
+    {q:'What happened \u2014 or what were you holding in mind?',sub:'The first thread.',els:[A]},
+    {q:'What rhymed with it?',sub:'The echo.',els:[Bb]},
+    {q:'How far did it reach?',sub:'',els:[R3]},
+    {q:'How much time felt between them?',sub:'',els:[R4]},
+    {q:'What kind of thread was it?',sub:'',els:[R5]},
+    {q:'Which symbols did it carry?',sub:'Up to four \u2014 meanings can bond.',els:[R6]}],btn,'Weaving a rhyme',null);
+  if(!path)return;
+  const v=e=>((e&&e.value)||'').trim();
+  form.addEventListener('click',e=>{try{if(e.target.closest&&e.target.closest('#sw-weave')){if(!v(A))path.go(0,true);else if(!v(Bb))path.go(1,true);}}catch(_){}},true);
+  btn.addEventListener('click',()=>setTimeout(()=>{if(!v(A)&&!v(Bb))path.go(0,true);},80));
+}catch(e){}})();
+/* the life story's beginning: three questions, one at a time (4 Oct 2026) */
+(function lsSteps(){try{
+  const form=document.getElementById('ls-setup'),btn=document.getElementById('ls-begin');
+  const N=document.getElementById('ls-name'),A=document.getElementById('ls-age'),F=document.getElementById('ls-focus'),FH=form&&form.querySelector('.ls-fh');
+  if(!form||!btn||!N||!A||!F)return;   /* anything unexpected: the form stays as it was */
+  asPath(form,[
+    {q:'What should your story call you?',sub:'A name or a pseudonym \u2014 or leave it empty.',els:[N]},
+    {q:'How old are you?',sub:'It helps shape the questions. You can leave it empty.',els:[A]},
+    {q:'What would you like your story to hold most?',sub:'',els:FH?[FH,F]:[F]}],btn,'Beginning your life story',document.getElementById('ls-intro'));
+}catch(e){}})();
+/* the workshop: what is composed sits inside a breathing circle */
+(function wkCircle(){try{
+  const ch=document.getElementById('work-chain'),me=document.getElementById('work-meaning');
+  if(!ch||!me||(ch.parentNode&&ch.parentNode.classList.contains('wk-circle')))return;
+  const ci=document.createElement('div');ci.className='wk-circle as-bare';
+  const strip=document.getElementById('work-strip');   /* the circle above the symbols: the sentence forms where it is seen */
+  (strip&&strip.parentNode===ch.parentNode?strip:ch).parentNode.insertBefore(ci,strip&&strip.parentNode===ch.parentNode?strip:ch);ci.appendChild(ch);ci.appendChild(me);
+  ch.classList.add('as-bare');me.classList.add('as-bare');
+}catch(e){}})();
 const rgCreate=document.getElementById('rg-create');
 if(rgCreate)rgCreate.addEventListener('click',()=>{
   const h=(rgHandle?rgHandle.value.trim():'');
@@ -7603,9 +7937,63 @@ function qzOpen(i){
   const q=QUESTS[i],menu=document.getElementById('qz-menu'),act=document.getElementById('qz-active'),sub=document.getElementById('qz-submit'),intro=document.getElementById('qz-intro');
   if(menu)menu.style.display='none';if(act)act.style.display='';if(sub)sub.style.display='';
   if(intro)intro.textContent=q.desc;
-  act.innerHTML='<div style="font-size:16px;color:#efe8ff;text-align:center;margin-bottom:18px;font-weight:300;letter-spacing:.03em">'+q.name+'</div>'+q.items.map((it,idx)=>'<div class="qz-item"><div class="qz-q">'+it.q+'</div><div class="qz-scale" data-q="'+idx+'">'+QZ_LABELS.map((l,v)=>'<div class="qz-dot" data-v="'+(v+1)+'">'+l+'</div>').join('')+'</div></div>').join('');
-  act.querySelectorAll('.qz-scale').forEach(row=>{const qi=row.getAttribute('data-q');row.querySelectorAll('.qz-dot').forEach(dot=>dot.addEventListener('click',()=>{row.querySelectorAll('.qz-dot').forEach(d=>d.classList.remove('on'));dot.classList.add('on');qzAns[qi]=parseInt(dot.getAttribute('data-v'),10);}));});
+  qzCircle(q);
   const inner=document.getElementById('qz-inner');if(inner)inner.scrollTop=0;
+}
+/* ═══ 4 Oct 2026 · THE READINGS AS A CIRCLE ═══════════════════════════════
+   Karl: "turn 'all' panels that exist into circular to match the rest of the
+   site... Even the great questionnaires."
+   One statement at a time, held in a breathing circle like the living Mirror;
+   the five answers are round lights; small lights show the way travelled, and
+   any of them can be touched to go back. NOTHING ABOUT THE READINGS CHANGED:
+   the same statements, the same five answers, the same qzAns, the same
+   offering at the end, the same quiet word if a reading comes back heavy. */
+let qzAt=0;
+function qzCircle(q){
+  const act=document.getElementById('qz-active'),sub=document.getElementById('qz-submit');
+  if(!act||!q)return;
+  qzAt=0; act.classList.remove('qzc-complete');
+  act.innerHTML='<div class="qzc-name"></div><div class="qzc-trail" role="group" aria-label="The statements"></div>'
+    +'<div class="qzc-circle"><div class="qzc-say" aria-live="polite"></div></div>'
+    +'<div class="qzc-answers" role="group" aria-label="How true is this for you?"></div>'
+    +'<button type="button" class="qzc-back">\u2190 the one before</button>';
+  act.querySelector('.qzc-name').textContent=q.name;
+  const tr=act.querySelector('.qzc-trail');
+  q.items.forEach((it,i)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Statement '+(i+1));
+    b.addEventListener('click',()=>qzShowItem(q,i));tr.appendChild(b);});
+  const ans=act.querySelector('.qzc-answers');
+  QZ_LABELS.forEach((l,v)=>{const b=document.createElement('button');b.type='button';b.className='qz-dot';b.setAttribute('data-v',String(v+1));
+    b.innerHTML='<span class="qzc-light"></span><span class="qzc-lab"></span>';b.querySelector('.qzc-lab').textContent=l;
+    b.addEventListener('click',()=>qzChoose(q,v+1,b));ans.appendChild(b);});
+  act.querySelector('.qzc-back').addEventListener('click',()=>{if(qzAt>0)qzShowItem(q,qzAt-1);});
+  if(sub)sub.style.display='none';
+  qzShowItem(q,0);
+}
+function qzShowItem(q,i){
+  const act=document.getElementById('qz-active');if(!act||!q)return;
+  qzAt=Math.max(0,Math.min(q.items.length-1,i)); act.classList.remove('qzc-complete');
+  const say=act.querySelector('.qzc-say'),at=qzAt;
+  asTurn(say,()=>{say.textContent=q.items[at].q;},':scope');
+  act.querySelectorAll('.qzc-answers .qz-dot').forEach(d=>d.classList.toggle('on',String(qzAns[at])===d.getAttribute('data-v')));
+  act.querySelectorAll('.qzc-trail button').forEach((b,k)=>{b.classList.toggle('now',k===at);b.classList.toggle('done',qzAns[k]!=null);});
+  const bk=act.querySelector('.qzc-back');if(bk)bk.style.visibility=at>0?'visible':'hidden';
+}
+function qzChoose(q,v,btn){
+  const act=document.getElementById('qz-active');if(!act)return;
+  qzAns[qzAt]=v;                                   /* the very same store the offering reads */
+  act.querySelectorAll('.qzc-answers .qz-dot').forEach(d=>d.classList.toggle('on',d===btn));
+  const tb=act.querySelectorAll('.qzc-trail button')[qzAt];if(tb)tb.classList.add('done');
+  const from=qzAt;
+  setTimeout(()=>{
+    if(qzAt!==from)return;                         /* they have already moved on */
+    let nx=-1;for(let k=from+1;k<q.items.length;k++){if(qzAns[k]==null){nx=k;break;}}
+    if(nx<0)for(let k=0;k<from;k++){if(qzAns[k]==null){nx=k;break;}}
+    if(nx>=0){qzShowItem(q,nx);return;}
+    const say=act.querySelector('.qzc-say');
+    asTurn(say,()=>{say.textContent='Every statement is answered. Offer it to your aura whenever you\u2019re ready.';},':scope');
+    act.classList.add('qzc-complete');
+    const sub=document.getElementById('qz-submit');if(sub)sub.style.display='';
+  },420);
 }
 function qzSubmit(){
   const q=QUESTS[qzCur];if(!q)return;
@@ -7682,7 +8070,29 @@ function lfVisible(){
   return rows;
 }
 const LF_HAND='<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px"><path d="M17.9 10.7V6a1.9 1.9 0 0 0-3.8 0v4.2"/><path d="M14.1 9.8V4a1.9 1.9 0 0 0-3.8 0v5.8"/><path d="M10.3 10.2V6a1.9 1.9 0 0 0-3.8 0v7.6"/><path d="M17.9 8.2a1.9 1.9 0 0 1 3.8 0v5.6a7.7 7.7 0 0 1-7.7 7.7h-1.9c-2.7 0-4.3-.8-5.7-2.2l-3.5-3.5a1.9 1.9 0 0 1 2.7-2.7l1.9 1.9"/><circle cx="13.1" cy="15.6" r="1.1" fill="currentColor" stroke="none" opacity=".85"/></svg>';
+/* ═══ 4 Oct 2026 · THE LIVE FEED, ONE OFFERING AT A TIME, ALIVE ════════════
+   One offering at a time, in its own light. New offerings keep arriving, so the
+   person is never pulled away from the one they are looking at: the first small
+   light glows twice to say a new one has come, and they go to it when they choose. */
 function lfRender(){
+  const list=document.getElementById('lf-list');let prev=null;
+  /* remembered by the offering itself, never by its place in the list: new arrivals shift every place */
+  try{if(list&&list.__asOne){const cur=Array.from(list.children).filter(c=>c.classList&&c.classList.contains('lf-row'))[list.__asOne.at];if(cur)prev=cur.__lfObj||null;}}catch(e){}
+  const firstBefore=list?list.__lfFirst:null;
+  lfRenderAll();
+  try{
+    if(!list)return;const els=Array.from(list.children).filter(c=>c.classList&&c.classList.contains('lf-row'));
+    const nav=list.__asOne?list.nextElementSibling:null;
+    els.forEach(e=>{e.__lfObj=lfRows[parseInt(e.getAttribute('data-i'),10)];});list.__lfFirst=lfRows[0];
+    if(!els.length){list.classList.remove('as-one');if(nav&&nav.classList.contains('as-onenav'))nav.style.display='none';return;}
+    if(nav&&nav.classList.contains('as-onenav'))nav.style.display='';
+    const api=asOne(list,'.lf-row',':scope','svg','Offering');
+    if(api&&prev){const k=els.findIndex(e=>e.__lfObj===prev);if(k>=0&&k!==api.at){api.at=k;api.show();}}
+    if(firstBefore&&lfRows[0]!==firstBefore){const tr=list.nextElementSibling&&list.nextElementSibling.querySelector('.as-onetrail');
+      const d=tr&&tr.firstElementChild;if(d&&api&&api.at!==0){d.classList.remove('fresh');void d.offsetWidth;d.classList.add('fresh');setTimeout(()=>d.classList.remove('fresh'),3400);}}
+  }catch(e){}
+}
+function lfRenderAll(){
   const list=document.getElementById('lf-list');if(!list)return;
   const rows=lfVisible();
   if(!rows.length){
@@ -8093,15 +8503,49 @@ const OPENINGS=[
 ];
 let opState={};
 function opWord(n){return (typeof ALPHA_WORDS!=='undefined')?ALPHA_WORDS.find(x=>x.w===n):null;}
-function opRender(){
+/* ═══ 4 Oct 2026 · THE OPENINGS, ONE AT A TIME ═══════════════════════════
+   Karl: "More pages yes please." Each Opening stands alone: its two symbols
+   above, its question held in a breathing circle, its lights beneath; small
+   lights for the way travelled. The Openings themselves, and what offering a
+   light does, are exactly as they were. */
+let opAt=0,opT=0;
+function opRender(){opRenderAll();opOne();}
+function opOne(){
+  const L=document.getElementById('op-list');if(!L)return;
+  L.classList.add('op-one');
+  const cards=Array.from(L.querySelectorAll('.op-card'));if(!cards.length)return;
+  opAt=Math.max(0,Math.min(cards.length-1,opAt));
+  cards.forEach((c,k)=>c.classList.toggle('op-now',k===opAt));
+  let nav=document.getElementById('op-nav');
+  if(!nav){nav=document.createElement('div');nav.id='op-nav';nav.className='as-own';
+    nav.innerHTML='<div class="op-trail" role="group" aria-label="The Openings"></div><div class="op-steps"><button type="button" class="op-prev">\u2190 the one before</button><button type="button" class="op-next">the next Opening \u2192</button></div>';
+    L.parentNode.insertBefore(nav,L.nextSibling);
+    nav.querySelector('.op-prev').addEventListener('click',()=>opGo(opAt-1));
+    nav.querySelector('.op-next').addEventListener('click',()=>opGo(opAt+1));}
+  const tr=nav.querySelector('.op-trail');
+  if(tr.children.length!==cards.length){tr.innerHTML='';cards.forEach((_,k)=>{const b=document.createElement('button');b.type='button';b.setAttribute('aria-label','Opening '+(k+1)+' of '+cards.length);b.addEventListener('click',()=>opGo(k));tr.appendChild(b);});}
+  Array.from(tr.children).forEach((b,k)=>{b.classList.toggle('now',k===opAt);b.classList.toggle('done',!!opState[k]);});
+  nav.querySelector('.op-prev').style.visibility=opAt>0?'visible':'hidden';
+  nav.querySelector('.op-next').style.visibility=opAt<cards.length-1?'visible':'hidden';
+}
+function opGo(i){
+  const L=document.getElementById('op-list');if(!L)return;const cards=Array.from(L.querySelectorAll('.op-card'));
+  const to=Math.max(0,Math.min(cards.length-1,i|0)),from=cards[opAt],W='.op-q,.op-a',B='.op-lock,.op-res,.op-done';
+  if(opT){clearTimeout(opT);opT=0;if(from)from.classList.remove('as-falling');}
+  if(!from||to===opAt){opAt=to;opOne();return;}
+  if(asStill()){opAt=to;opOne();asWake(cards[opAt],W,B);return;}
+  asLeave(from,W,B);
+  opT=setTimeout(()=>{opT=0;from.classList.remove('as-falling');opAt=to;opOne();asWake(cards[opAt],W,B);try{document.getElementById('open-page').scrollTop=0;}catch(e){}},asFallMs(from));
+}
+function opRenderAll(){
   const L=document.getElementById('op-list');if(!L)return;
   L.innerHTML=OPENINGS.map((o,i)=>{
     const wa=opWord(o.a),wb=opWord(o.b);
     const lock='<div class="op-lock" style="--ja:'+((wa&&wa.c)||'#c4b5fd')+';--jb:'+((wb&&wb.c)||'#c4b5fd')+'">'+(wa?alphaGlyph(wa,58):'')+'<span class="op-j"></span>'+(wb?alphaGlyph(wb,58):'')+'</div>';
     const done=opState[i];
     const row=done?('<div class="op-done">Your <b style="color:'+done.c+'">'+done.w+'</b> light is offered to this Opening \u2014 held with it \u2727</div>')
-      :('<div class="op-res" data-i="'+i+'">'+o.r.map(n=>{const w=opWord(n);return w?('<button type="button" data-w="'+w.w+'" style="--rc:'+w.c+'">'+alphaGlyph(w,20)+' '+w.w+'</button>'):'';}).join('')+'</div>');
-    return '<div class="op-card">'+lock+'<div class="op-q">'+o.q+'</div><div class="op-a">'+o.t+'</div>'+row+'</div>';
+      :('<div class="op-res" data-i="'+i+'">'+o.r.map(n=>{const w=opWord(n);return w?('<button type="button" class="as-bare" data-w="'+w.w+'" style="--rc:'+w.c+'">'+alphaGlyph(w,20)+' '+w.w+'</button>'):'';}).join('')+'</div>');
+    return '<div class="op-card as-bare">'+lock+'<div class="op-q">'+o.q+'</div><div class="op-a">'+o.t+'</div>'+row+'</div>';
   }).join('');
 }
 function openOpeningsPage(){const p=document.getElementById('open-page');if(!p)return;opRender();p.classList.add('show');}
@@ -8653,7 +9097,9 @@ function closeLifeStory(){const p=document.getElementById('lifestory-page');if(p
 function lsShowSetup(){const s=document.getElementById('ls-setup');if(s)s.classList.remove('hide');const q=document.getElementById('ls-quiz');if(q)q.classList.remove('show');const st=document.getElementById('ls-story');if(st)st.classList.remove('show');}
 function lsRenderFocus(){const f=document.getElementById('ls-focus');if(!f)return;const opts=['Childhood','Love & relationships','Work & purpose','Adventure','Struggle & growth','Family','A turning point','The whole journey'];f.innerHTML=opts.map(o=>'<button class="ls-chip" data-f="'+o+'">'+o+'</button>').join('');f.querySelectorAll('.ls-chip').forEach(c=>c.addEventListener('click',()=>{f.querySelectorAll('.ls-chip').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');lsState.focus=c.getAttribute('data-f');}));}
 function lsSaveCurrent(){const ta=document.getElementById('ls-answer');if(ta)lsState.answers[lsState.idx]=ta.value;}
-function lsShowQuestion(){
+/* 4 Oct 2026 · each life-story question falls into the cloud, and the next rises from it */
+function lsShowQuestion(){asTurn(document.getElementById('ls-question'),lsShowQuestionNow,':scope');}
+function lsShowQuestionNow(){
   const q=lsState.qs[lsState.idx];if(!q)return;
   let text=q.t;
   if(q.prev){text='You wrote about \u201c'+lsSnippet(lsState.answers[lsState.idx-1])+'\u201d. '+text;}
@@ -9911,9 +10357,19 @@ function mvPanel(){
     const h=document.createElement('div');h.id='mv-hint';
     h.textContent='\ud83e\ude9e The Mirror is here on every page \u2014 mirror, shadow, and who you are becoming.';
     document.body.appendChild(h);
-    setTimeout(()=>h.classList.add('show'),4200);
+    /* 4 Oct 2026 · it once covered the questionnaire's offering button. Nothing
+       speaks over something already speaking: it waits until no page or panel
+       is open, looks again, and gives up quietly rather than force its way in. */
+    let tries=0;
+    const when=()=>{try{
+      if(!document.body.contains(h))return;
+      const busy=document.querySelector('[id$="-page"].show,#mv-panel.show,#explore-panel.open,#gv.show');
+      if(busy){if(++tries<6)setTimeout(when,5000);else go();return;}
+      h.classList.add('show');setTimeout(go,11000);
+    }catch(e){}};
+    setTimeout(when,4200);
     const go=()=>{h.classList.remove('show');setTimeout(()=>{try{h.remove();}catch(e){}},700);try{localStorage.setItem('aurasense_mv_seen','1');}catch(e){}};
-    setTimeout(go,15000);o.addEventListener('click',go,{once:true});h.addEventListener('click',go);
+    o.addEventListener('click',go,{once:true});h.addEventListener('click',go);
   }
 }catch(e){}})();
 document.addEventListener('click',function(e){try{
@@ -11311,7 +11767,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 30 Sep 2026 · 133 · tap to refresh</div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build 4 Oct 2026 · 145 · tap to refresh</div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -12692,7 +13148,7 @@ if(!window._mr2Bound){window._mr2Bound=1;
 
 <style id="asm-css">
 /* ── THE MEETING — on the live map · 24 September 2026 ─────────────────────
-   Karl Harvey with Claude. The other circle arrives. See the note in the script. */
+   Karl with Claude. The other circle arrives. See the note in the script. */
 #as-meet-c{position:fixed;inset:0;width:100%;height:100%;z-index:2590;pointer-events:none;display:none}
 #as-meet{position:fixed;inset:0;z-index:2595;pointer-events:none;display:none;
   font-family:Georgia,"Iowan Old Style","Times New Roman",serif}
@@ -12715,7 +13171,7 @@ if(!window._mr2Bound){window._mr2Bound=1;
 </style>
 <script>
 /* ═══ THE MEETING · on the live map · 24 September 2026 ═══════════════════
-   Karl Harvey with Claude.
+   Karl with Claude.
 
    Why: a person offered, and nothing of the second intelligence came to meet
    them. So the offering didn't register, and what was left was "what do I do
@@ -13045,6 +13501,319 @@ body.calm .asn-flow,body.calm .as-reach-flow{animation:none}
   }catch(e){}}
   setInterval(place,700);addEventListener('resize',function(){setTimeout(place,80);});setTimeout(place,300);
 })();
+</script>
+
+
+<style id="as-light-4oct">
+/* ═══ 4 Oct 2026 · LIGHT AND CIRCULAR, SECOND PASS ════════════════════════
+   One place for this pass's look, laid last so it holds. Karl: "turn 'all'
+   panels that exist into circular to match the rest of the site." */
+/* the answer words, in the Aurasense lettering */
+#quest-page .qzc-answers .qz-dot,#quest-page .qzc-back,#quest-page #qz-submit{font-family:var(--serif)}
+/* the Mirror's hint, light */
+#mv-hint{background:rgba(255,251,245,.97)!important;border:1px solid rgba(233,181,106,.5)!important;color:#3b2a3a!important;border-radius:20px!important;box-shadow:0 0 22px rgba(233,181,106,.28)!important;font-size:14px!important}
+/* the first panels a visitor meets */
+#si{background:rgba(255,252,247,.92)!important;color:#3b2a3a!important;border:1px solid rgba(233,181,106,.5)!important;border-radius:999px!important}
+#si::placeholder{color:#8a7587!important;font-style:italic}
+#feed-full,#livefeed-btn{background:rgba(255,251,245,.86)!important;color:#3b2a3a!important;border:1px solid rgba(233,181,106,.5)!important;border-radius:999px!important}
+#place-prompt{background:rgba(255,251,245,.97)!important;border:1px solid rgba(233,181,106,.5)!important;border-radius:30px!important;box-shadow:0 0 40px rgba(233,181,106,.3)!important}
+#pp-title{color:#3b2a3a!important;text-shadow:none!important}
+#pp-input{background:#fffdf9!important;color:#3b2a3a!important;border:1px solid rgba(233,181,106,.5)!important;border-radius:999px!important;font-size:16px!important}
+#pp-go{border-radius:999px!important}
+#pp-select{color:#6f5a6c!important}
+#explore-panel{background:rgba(255,251,245,.97)!important;border:1px solid rgba(233,181,106,.45)!important;border-radius:30px!important}
+#explore-panel .ep-title{color:#6f5a6c!important;font-size:13px!important;text-align:center}
+#explore-panel .ep-opt{border:0!important;border-radius:999px!important;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%)!important;text-align:center!important}
+#explore-panel .ep-opt-title{color:#3b2a3a!important;font-size:13.5px!important}
+#explore-panel .ep-opt-sub{color:#7a6577!important}
+/* registration: a path of lights */
+#register-page{background:radial-gradient(38% 34% at 22% 26%,#f3c9c0 0%,transparent 70%),radial-gradient(40% 36% at 80% 28%,#dcd2f2 0%,transparent 70%),radial-gradient(44% 40% at 28% 80%,#f8dcc4 0%,transparent 72%),radial-gradient(36% 34% at 78% 78%,#c9dcf4 0%,transparent 70%),#f6e3d6!important;color:#3b2a3a}
+#register-page #rg-back{background:rgba(255,251,245,.74);border:1px solid rgba(233,181,106,.45);color:#3b2a3a;font-size:14px;padding:10px 16px;border-radius:999px;font-family:var(--serif)}
+#register-page #rg-title{color:#3b2a3a;text-shadow:none;font-weight:400}
+#register-page #rg-intro{color:#6f5a6c;font-size:14px;line-height:1.6;text-align:center}
+#register-page.rg-steps .rg-card{display:none;background:none;border:0;padding:0;margin:0}
+#register-page.rg-steps .rg-card.rg-now{display:block;animation:rgIn .5s ease}
+#register-page.rg-steps .rg-quest{display:none!important}
+@keyframes rgIn{from{opacity:0;filter:blur(4px)}to{opacity:1;filter:none}}
+#register-page .rg-circle{position:relative;width:min(84vw,46vh,400px);aspect-ratio:1;margin:6px auto 16px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 11%;box-sizing:border-box;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);animation:qzcBreathe 6s ease-in-out infinite}
+#register-page .rg-circle::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;background:conic-gradient(rgba(233,181,106,.3),rgba(220,210,242,.42),rgba(243,201,192,.36),rgba(201,220,244,.42),rgba(233,181,106,.3));filter:blur(24px)}
+#register-page .rg-h{justify-content:center;color:#3b2a3a;font-size:18px;font-weight:400}
+#register-page .rg-req,#register-page .rg-opt{flex-basis:100%;font-size:11.5px;color:#8a5a2b;letter-spacing:.03em;font-weight:400}
+#register-page .rg-sub{color:#6f5a6c;font-size:14px;line-height:1.55;margin:8px 0 0}
+#register-page .rg-circle.full .rg-sub{font-size:12.5px;line-height:1.5}
+#register-page .rg-in{background:rgba(255,252,247,.94);border:1px solid rgba(233,181,106,.5);border-radius:999px;padding:12px 18px;color:#3b2a3a;font-size:16px;font-family:var(--serif)}
+#register-page .rg-in::placeholder{color:#9a8597;font-style:italic}
+#register-page .rg-in:focus{border-color:rgba(214,150,70,.85);box-shadow:0 0 0 3px rgba(233,181,106,.22)}
+#register-page .rg-row{gap:8px}
+#register-page .rg-mini{background:rgba(255,251,245,.86);border:1px solid rgba(233,181,106,.55);color:#3b2a3a;font-size:14px;border-radius:999px;padding:0 16px;min-height:44px;font-family:var(--serif)}
+#register-page .rg-chips{justify-content:center;gap:8px}
+#register-page .rg-chip{background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);border:1px solid rgba(233,181,106,.38);color:#3b2a3a;font-size:14px;padding:10px 16px;border-radius:999px;font-family:var(--serif)}
+#register-page .rg-chip.on{background:radial-gradient(circle,#fff 0%,#f6d7a6 70%,#efc483 100%);border-color:rgba(214,150,70,.8);color:#3b2a3a;box-shadow:0 0 18px rgba(233,181,106,.55)}
+#register-page .rg-note{color:#6f5a6c;font-size:13.5px;text-align:center}
+#register-page .rg-note[style*="#a99bd6"]{color:#7a6577!important}
+#register-page .rg-info{color:#8a5a2b}
+#register-page .rg-tip{background:rgba(255,251,245,.98);color:#3b2a3a;border:1px solid rgba(233,181,106,.5)}
+#register-page .rg-trail{display:flex;gap:9px;justify-content:center;margin:14px 0 4px}
+#register-page .rg-trail button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(233,181,106,.3)}
+#register-page .rg-trail button.done{background:radial-gradient(circle,#fff 0%,#e9b56a 60%,rgba(233,181,106,.45) 100%)}
+#register-page .rg-trail button.now{transform:scale(1.4);box-shadow:0 0 0 2px rgba(59,42,58,.25)}
+#register-page .rg-nav{display:flex;justify-content:center;align-items:center;gap:18px;margin:22px 0 8px}
+#register-page .rg-prev{background:none;border:0;color:#7a6577;font-family:var(--serif);font-size:15px;cursor:pointer;padding:10px}
+#register-page .rg-next{font-family:var(--serif);font-size:16px;padding:12px 26px;cursor:pointer;background:linear-gradient(180deg,#fff8ee,#fbe6cc);border:1px solid rgba(214,150,70,.7);color:#3b2a3a;box-shadow:0 0 22px rgba(233,181,106,.35);border-radius:999px}
+#register-page #rg-create{width:auto;margin:22px auto 12px;padding:13px 28px;font-family:var(--serif);background:linear-gradient(180deg,#fff8ee,#fbe6cc);border:1px solid rgba(214,150,70,.7);color:#3b2a3a;box-shadow:0 0 22px rgba(233,181,106,.35);border-radius:999px}
+#register-page #rg-foot{color:#7a6577;text-align:center}
+#register-page .rg-nav #rg-create{margin:0}
+#register-page .rg-chipcard .rg-circle{width:min(62vw,30vh,300px);padding:0 9%}
+@media (prefers-reduced-motion:reduce){#register-page .rg-circle,#register-page.rg-steps .rg-card.rg-now{animation:none}}
+@media (max-width:520px){#register-page .rg-circle{width:min(88vw,44vh,400px);padding:0 10%}#register-page .rg-h{font-size:16.5px}#register-page .rg-sub{font-size:13px}#register-page .rg-circle.full .rg-sub{font-size:12px}#register-page .rg-chip{padding:8px 13px;font-size:13.5px}#register-page .rg-chips{gap:6px}#register-page #rg-inner{padding-top:56px}}
+
+/* ═══ 4 Oct 2026 · THE LIGHT PASS: every remaining page's ground ═══ */
+:is(#soul-page,#alpha-page,#junc-page,#work-page,#sync-page,#open-page,#trajectory-page,#lifestory-page,#livefeed-page,#course-page,#pubprofile-page,#placeaura-page){background:radial-gradient(38% 34% at 22% 26%,#f3c9c0 0%,transparent 70%),radial-gradient(40% 36% at 80% 28%,#dcd2f2 0%,transparent 70%),radial-gradient(44% 40% at 28% 80%,#f8dcc4 0%,transparent 72%),radial-gradient(36% 34% at 78% 78%,#c9dcf4 0%,transparent 70%),#f6e3d6!important;color:#3b2a3a}
+.as-lit ::placeholder{color:#8a7587!important;opacity:1;font-style:italic}
+#mv-panel.as-lit,#panel.as-lit,#gv-panel{background:rgba(255,251,245,.97)!important;border:1px solid rgba(233,181,106,.45)!important;border-radius:28px!important;box-shadow:0 0 34px rgba(233,181,106,.28)!important;color:#3b2a3a}
+#gv.as-lit{background:rgba(246,227,214,.86)!important}
+/* ═══ 4 Oct 2026 · WORDS FALL INTO THE CLOUD, AND RISE AGAIN ═══ */
+.as-ws{display:inline}
+.as-w{display:inline-block}
+.as-falling{pointer-events:none}
+.as-falling .as-w{animation:asIntoW .95s cubic-bezier(.5,0,.7,.4) both;animation-delay:calc(var(--i,0)*12ms)}
+.as-rising .as-w{animation:asOutW 1s cubic-bezier(.2,.7,.25,1) both;animation-delay:calc(.25s + var(--i,0)*14ms)}
+/* 4 Oct 2026 · Karl: "falling not down but into, beyond as in behind - from direct view."
+   Each word drifts toward the heart of the circle, growing smaller and softer as if moving
+   away, while a veil of cloud thickens over it; the next words come forward from behind it. */
+@keyframes asIntoW{0%{opacity:1;transform:none;filter:none}100%{opacity:0;transform:translate(var(--tx,0px),var(--ty,0px)) scale(.28);filter:blur(12px)}}
+@keyframes asOutW{0%{opacity:0;transform:translate(var(--tx,0px),var(--ty,0px)) scale(.28);filter:blur(12px)}100%{opacity:1;transform:none;filter:none}}
+.as-cloudband{position:absolute;left:10%;right:10%;top:16%;bottom:16%;border-radius:50%;pointer-events:none;z-index:3;opacity:0;filter:blur(9px);
+  background:radial-gradient(38% 40% at 34% 42%,rgba(243,201,192,.96) 0%,rgba(243,201,192,0) 70%),radial-gradient(36% 38% at 66% 40%,rgba(220,210,242,.96) 0%,rgba(220,210,242,0) 70%),radial-gradient(44% 40% at 50% 64%,rgba(248,220,196,.97) 0%,rgba(248,220,196,0) 72%),radial-gradient(30% 32% at 80% 62%,rgba(201,220,244,.92) 0%,rgba(201,220,244,0) 70%),radial-gradient(28% 30% at 20% 64%,rgba(246,214,200,.92) 0%,rgba(246,214,200,0) 70%),radial-gradient(40% 34% at 50% 48%,rgba(255,255,255,.95) 0%,rgba(255,255,255,0) 72%);
+  background-size:130% 130%;background-position:50% 50%}
+.as-take>.as-cloudband{animation:asVeilTake 1.3s cubic-bezier(.3,.6,.4,1) both}
+.as-give>.as-cloudband{animation:asVeilGive 1.5s cubic-bezier(.3,.6,.4,1) both}
+@keyframes asVeilTake{0%{opacity:0;transform:scale(.6) rotate(-10deg);background-position:30% 40%}55%{opacity:.92}100%{opacity:.96;transform:scale(1.04) rotate(4deg);background-position:60% 55%}}
+@keyframes asVeilGive{0%{opacity:.96;transform:scale(1.04) rotate(4deg);background-position:60% 55%}45%{opacity:.75}100%{opacity:0;transform:scale(1.35) rotate(14deg);background-position:80% 70%}}
+.as-falling .as-block{animation:asIntoB .8s cubic-bezier(.5,0,.7,.4) both}
+.as-rising .as-block{animation:asOutB .9s cubic-bezier(.2,.7,.25,1) both;animation-delay:.35s}
+@keyframes asIntoB{to{opacity:0;transform:scale(.8);filter:blur(8px)}}
+@keyframes asOutB{from{opacity:0;transform:scale(.8);filter:blur(8px)}}
+@keyframes asFadeOut{to{opacity:0}}@keyframes asFadeIn{from{opacity:0}}
+@media (prefers-reduced-motion:reduce){.as-cloudband{display:none}.as-falling .as-w,.as-falling .as-block{animation:asFadeOut .18s ease both;animation-delay:0s}.as-rising .as-w,.as-rising .as-block{animation:asFadeIn .3s ease both;animation-delay:0s}}
+#register-page.rg-steps .rg-card.rg-now{animation:none}
+/* ═══ Soul Search: the gates as round lights, one question at a time ═══ */
+#soul-page{color:#3b2a3a}
+#soul-page.qp-playing #quest-path,#soul-page.qp-playing #quest-sub{display:none}
+#soul-page #quest-path{display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;justify-content:center;gap:14px 12px;padding:10px 0 30px}
+#soul-page #quest-path .qp-gate{width:150px;height:150px;border-radius:50%;flex-direction:column;justify-content:center;text-align:center;padding:16px 12px;gap:6px;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);border:0;box-shadow:0 0 26px rgba(233,181,106,.16);animation:qzcBreathe 6s ease-in-out infinite;cursor:pointer;margin:0}
+#soul-page .qp-gate .qp-t{color:#3b2a3a;font-size:14.5px;line-height:1.3}
+#soul-page .qp-gate .qp-d{display:none}
+#soul-page .qp-gate .qp-state{color:#8a5a2b;font-size:11.5px}
+#soul-page .qp-gate.locked{opacity:.42;animation:none;cursor:default}
+#soul-page .qp-gate.done{background:radial-gradient(circle at 50% 42%,rgba(255,246,226,.98) 0%,rgba(251,226,180,.82) 55%,rgba(233,181,106,.3) 80%,rgba(233,181,106,0) 100%)}
+#soul-page .qp-orb{width:16px;height:16px;border-radius:50%;flex:0 0 auto}
+#soul-page #quest-play .q-card{background:none;border:0;padding:0;box-shadow:none;text-align:center;margin:0 auto;max-width:520px}
+#soul-page .q-prog{display:flex;gap:8px;justify-content:center;margin:6px 0 12px}
+#soul-page .q-dot{width:11px;height:11px;border-radius:50%;background:rgba(233,181,106,.3);display:inline-block}
+#soul-page .q-dot.on{background:radial-gradient(circle,#fff 0%,#e9b56a 60%,rgba(233,181,106,.45) 100%)}
+#soul-page .q-intro{color:#6f5a6c;font-size:14px;line-height:1.55;margin:0 auto 10px}
+#soul-page .q-q{position:relative;width:min(78vw,42vh,400px);aspect-ratio:1;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;align-content:center;text-align:center;padding:0 11%;box-sizing:border-box;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);animation:qzcBreathe 6s ease-in-out infinite;color:#3b2a3a;font-size:clamp(1.05rem,3.6vw,1.28rem);line-height:1.5}
+#soul-page .q-q::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;background:conic-gradient(rgba(233,181,106,.3),rgba(220,210,242,.42),rgba(243,201,192,.36),rgba(201,220,244,.42),rgba(233,181,106,.3));filter:blur(24px)}
+#soul-page .q-opts{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:18px auto 6px}
+#soul-page .q-opt{font-family:var(--serif);font-size:15px;color:#3b2a3a;padding:11px 18px;border-radius:999px;border:1px solid color-mix(in srgb,var(--qc,#e9b56a) 55%,#fff);background:radial-gradient(circle at 50% 40%,#fff 0%,color-mix(in srgb,var(--qc,#f6d7a6) 24%,#fff) 100%);box-shadow:0 0 16px color-mix(in srgb,var(--qc,#e9b56a) 30%,transparent);cursor:pointer}
+#soul-page .q-open-btn,#soul-page #q-return{display:inline-block;margin:18px auto 6px;padding:12px 24px;font-size:15px;cursor:pointer;background:linear-gradient(180deg,#fff8ee,#fbe6cc);border:1px solid rgba(214,150,70,.7);color:#3b2a3a;box-shadow:0 0 22px rgba(233,181,106,.35);border-radius:999px;font-family:var(--serif)}
+#soul-page .q-done-sw{display:flex;gap:8px;justify-content:center;margin:14px 0}
+#soul-page .q-done-note{color:#6f5a6c;font-size:14px;line-height:1.55}
+#soul-page #qp-to-gates{display:none;margin:22px auto 0;background:none;border:0;color:#7a6577;font-family:var(--serif);font-size:15px;cursor:pointer}
+#soul-page.qp-playing #qp-to-gates{display:block}
+@media (max-width:520px){#soul-page #quest-path .qp-gate{width:120px;height:120px;padding:12px 9px}#soul-page .qp-gate .qp-t{font-size:13px}}
+/* ═══ the Trajectory offering, one light at a time ═══ */
+#trajectory-page #tj-form.tj-steps{background:none!important;border:0!important;padding:0!important;box-shadow:none!important}
+#trajectory-page .tjs{display:none}
+#trajectory-page .tjs.tjs-now{display:block}
+#trajectory-page .tjs-circle{position:relative;width:min(76vw,38vh,360px);aspect-ratio:1;margin:8px auto 14px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 11%;box-sizing:border-box;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);animation:qzcBreathe 6s ease-in-out infinite}
+#trajectory-page .tjs-circle::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;background:conic-gradient(rgba(233,181,106,.3),rgba(220,210,242,.42),rgba(243,201,192,.36),rgba(201,220,244,.42),rgba(233,181,106,.3));filter:blur(24px)}
+#trajectory-page .tjs-q{color:#3b2a3a;font-size:clamp(1.05rem,3.6vw,1.25rem);line-height:1.45}
+#trajectory-page .tjs-sub{color:#6f5a6c;font-size:13.5px;margin-top:8px;line-height:1.5}
+#trajectory-page .tjs input,#trajectory-page .tjs textarea{display:block;width:100%;max-width:480px;margin:0 auto;box-sizing:border-box}
+#trajectory-page .tjs textarea{min-height:110px}
+#trajectory-page .tj-trail{display:flex;gap:9px;justify-content:center;margin:12px 0 4px}
+#trajectory-page .tj-trail button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(233,181,106,.3)}
+#trajectory-page .tj-trail button.done{background:radial-gradient(circle,#fff 0%,#e9b56a 60%,rgba(233,181,106,.45) 100%)}
+#trajectory-page .tj-trail button.now{transform:scale(1.4);box-shadow:0 0 0 2px rgba(59,42,58,.25)}
+#trajectory-page .tj-nav{display:flex;justify-content:center;align-items:center;gap:18px;margin:18px 0 8px}
+#trajectory-page .tj-prev{background:none;border:0;color:#7a6577;font-family:var(--serif);font-size:15px;cursor:pointer;padding:10px}
+#trajectory-page .tj-next{font-size:16px;padding:12px 26px;cursor:pointer;background:linear-gradient(180deg,#fff8ee,#fbe6cc);border:1px solid rgba(214,150,70,.7);color:#3b2a3a;box-shadow:0 0 22px rgba(233,181,106,.35);border-radius:999px;font-family:var(--serif)}
+#trajectory-page .tj-nav #tj-offer{width:auto!important;margin:0!important;padding:12px 24px!important}
+@media (prefers-reduced-motion:reduce){#soul-page #quest-path .qp-gate,#soul-page .q-q,#trajectory-page .tjs-circle{animation:none}}
+/* ═══ the Openings, one at a time ═══ */
+#open-page #op-list.op-one .op-card{display:none}
+#open-page #op-list.op-one .op-card.op-now{display:block;background:none!important;border:0!important;box-shadow:none!important;padding:0!important;margin:0 auto!important;text-align:center;max-width:520px}
+#open-page .op-one .op-lock{display:flex;justify-content:center;align-items:center;margin:2px auto 8px}
+#open-page .op-one .op-q{position:relative;width:min(76vw,38vh,380px);aspect-ratio:1;margin:0 auto;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 11%;box-sizing:border-box;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);animation:qzcBreathe 6s ease-in-out infinite;color:#3b2a3a;font-size:clamp(1.05rem,3.6vw,1.26rem);line-height:1.5}
+#open-page .op-one .op-q::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;background:conic-gradient(rgba(233,181,106,.3),rgba(220,210,242,.42),rgba(243,201,192,.36),rgba(201,220,244,.42),rgba(233,181,106,.3));filter:blur(24px)}
+#open-page .op-one .op-a{max-width:440px;margin:12px auto 4px;color:#6f5a6c;font-size:14px;line-height:1.55}
+#open-page .op-one .op-res{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:16px auto 4px}
+#open-page .op-res button.as-bare{font-family:var(--serif);font-size:15px;color:#3b2a3a;padding:10px 16px;border-radius:999px;border:1px solid color-mix(in srgb,var(--rc,#e9b56a) 55%,#fff);background:radial-gradient(circle at 50% 40%,#fff 0%,color-mix(in srgb,var(--rc,#f6d7a6) 22%,#fff) 100%);box-shadow:0 0 16px color-mix(in srgb,var(--rc,#e9b56a) 30%,transparent);display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+#open-page .op-one .op-done{margin:16px auto 4px;color:#3b2a3a;font-size:14.5px}
+#op-nav .op-trail{display:flex;gap:9px;justify-content:center;margin:16px 0 6px}
+#op-nav .op-trail button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(233,181,106,.3)}
+#op-nav .op-trail button.done{background:radial-gradient(circle,#fff 0%,#e9b56a 60%,rgba(233,181,106,.45) 100%)}
+#op-nav .op-trail button.now{transform:scale(1.4);box-shadow:0 0 0 2px rgba(59,42,58,.25)}
+#op-nav .op-steps{display:flex;justify-content:center;gap:22px;margin:8px 0 10px}
+#op-nav .op-prev,#op-nav .op-next{background:none;border:0;color:#7a6577;font-family:var(--serif);font-size:15px;cursor:pointer;padding:10px}
+#op-nav .op-next{color:#3b2a3a}
+@media (prefers-reduced-motion:reduce){#open-page .op-one .op-q{animation:none}}
+/* ═══ the life story: each question in a breathing circle ═══ */
+#lifestory-page #ls-question{position:relative;width:min(76vw,38vh,380px);aspect-ratio:1;margin:10px auto 14px;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 11%;box-sizing:border-box;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%)!important;border:0!important;animation:qzcBreathe 6s ease-in-out infinite;color:#3b2a3a;font-size:clamp(1rem,3.4vw,1.2rem);line-height:1.5}
+#lifestory-page #ls-question::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;background:conic-gradient(rgba(233,181,106,.3),rgba(220,210,242,.42),rgba(243,201,192,.36),rgba(201,220,244,.42),rgba(233,181,106,.3));filter:blur(24px)}
+#lifestory-page #ls-progress{text-align:center;color:#7a6577;font-size:13px;letter-spacing:.04em}
+@media (prefers-reduced-motion:reduce){#lifestory-page #ls-question{animation:none}}
+/* ═══ any list, one at a time ═══ */
+.as-one>.as-card{display:none!important}
+.as-one>.as-card.as-now{display:flex!important}
+.as-onenav .as-onetrail{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:14px auto 6px;max-width:440px}
+.as-onenav .as-onetrail button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(233,181,106,.3)}
+.as-onenav .as-onetrail button.now{transform:scale(1.4);background:radial-gradient(circle,#fff 0%,#e9b56a 60%,rgba(233,181,106,.45) 100%);box-shadow:0 0 0 2px rgba(59,42,58,.25)}
+.as-onenav .as-onesteps{display:flex;justify-content:center;gap:22px;margin:6px 0 12px}
+.as-onenav .as-oneprev,.as-onenav .as-onenext{background:none;border:0;color:#7a6577;font-family:var(--serif);font-size:15px;cursor:pointer;padding:10px}
+.as-onenav .as-onenext{color:#3b2a3a}
+#junc-page .as-one>.alpha-j.as-now{position:relative;width:min(86vw,46vh,440px);aspect-ratio:1;margin:8px auto;border-radius:50%;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 8%;box-sizing:border-box;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%)!important;border:0!important;box-shadow:none!important;animation:qzcBreathe 6s ease-in-out infinite;cursor:pointer}
+#junc-page .as-one>.alpha-j.as-now::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;background:conic-gradient(rgba(233,181,106,.3),rgba(220,210,242,.42),rgba(243,201,192,.36),rgba(201,220,244,.42),rgba(233,181,106,.3));filter:blur(24px)}
+/* ═══ Alphasense: round lights, the whole alphabet in view ═══ */
+#alpha-page .alpha-grid{display:grid!important;grid-template-columns:repeat(auto-fill,minmax(122px,1fr))!important;gap:14px 10px!important;justify-items:center}
+#alpha-page .alpha-cell.as-bare{width:122px;height:122px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px 10px;box-sizing:border-box;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);border:0;box-shadow:0 0 22px rgba(233,181,106,.16);cursor:pointer;animation:qzcBreathe 6s ease-in-out infinite;overflow:hidden}
+#alpha-page .alpha-cell.as-bare:hover{box-shadow:0 0 30px rgba(233,181,106,.38)}
+#alpha-page .alpha-cell.as-bare .alpha-d{font-size:10.5px;line-height:1.3}
+@media (prefers-reduced-motion:reduce){#junc-page .as-one>.alpha-j.as-now,#alpha-page .alpha-cell.as-bare{animation:none}}
+/* ═══ any form, as a path of lights ═══ */
+.as-path .asp{display:none}
+.as-path .asp.asp-now{display:block}
+.asp-circle{position:relative;width:min(76vw,36vh,340px);aspect-ratio:1;margin:8px auto 14px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 11%;box-sizing:border-box;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);animation:qzcBreathe 6s ease-in-out infinite}
+.asp-circle::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;background:conic-gradient(rgba(233,181,106,.3),rgba(220,210,242,.42),rgba(243,201,192,.36),rgba(201,220,244,.42),rgba(233,181,106,.3));filter:blur(24px)}
+.asp-many .asp-circle{width:min(56vw,24vh,230px)}
+.asp-many .asp-q{font-size:1rem}
+.asp-q{color:#3b2a3a;font-size:clamp(1.05rem,3.6vw,1.25rem);line-height:1.45}
+.asp-sub{color:#6f5a6c;font-size:13.5px;margin-top:8px;line-height:1.5}
+.asp input,.asp textarea{display:block;width:100%;max-width:480px;margin:0 auto;box-sizing:border-box}
+.asp .sw-l{display:none}
+.asp .ls-fh{display:none}
+.asp #ls-focus{display:flex;flex-wrap:wrap;justify-content:center;gap:8px}
+/* the course: each picture sits in a soft cream glow, not a dark one drawn for a night sky */
+#course-page .co-illus stop[stop-color^="#0"],#course-page .co-illus stop[stop-color^="#1"],#course-page .co-illus stop[stop-color^="#2"]{stop-color:#fbe7d6}
+/* the public profile: its aura breathes like every other light */
+#pubprofile-page #pp2-orb{animation:qzcBreathe 6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){#pubprofile-page #pp2-orb{animation:none}}
+.asp .sw-row{justify-content:center;display:flex;flex-wrap:wrap}
+.asp-trail{display:flex;gap:9px;justify-content:center;margin:12px 0 4px}
+.asp-trail button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(233,181,106,.3)}
+.asp-trail button.done{background:radial-gradient(circle,#fff 0%,#e9b56a 60%,rgba(233,181,106,.45) 100%)}
+.asp-trail button.now{transform:scale(1.4);box-shadow:0 0 0 2px rgba(59,42,58,.25)}
+.asp-nav{display:flex;justify-content:center;align-items:center;gap:18px;margin:18px 0 8px}
+.asp-prev{background:none;border:0;color:#7a6577;font-family:var(--serif);font-size:15px;cursor:pointer;padding:10px}
+.asp-next{font-size:16px;padding:12px 26px;cursor:pointer;background:linear-gradient(180deg,#fff8ee,#fbe6cc);border:1px solid rgba(214,150,70,.7);color:#3b2a3a;box-shadow:0 0 22px rgba(233,181,106,.35);border-radius:999px;font-family:var(--serif)}
+.asp-nav>button:last-child:not(.asp-next):not(.asp-prev){width:auto!important;margin:0!important;padding:12px 24px!important}
+/* ═══ the workshop: round lights, and a breathing circle for what is composed ═══ */
+#work-page #work-strip{display:flex;flex-wrap:wrap;justify-content:center}
+#work-page .wk-g.as-bare{width:74px;height:74px;border-radius:50%;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:6px;margin:4px;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);border:0;box-shadow:0 0 16px rgba(233,181,106,.16);cursor:pointer;font-family:var(--serif)}
+#work-page .wk-g.as-bare .wk-lbl{font-size:10.5px}
+#work-page .wk-g.as-bare:hover{box-shadow:0 0 24px rgba(233,181,106,.4)}
+#work-page .wk-circle{position:relative;width:min(80vw,40vh,380px);aspect-ratio:1;margin:12px auto 14px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 10%;box-sizing:border-box;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);animation:qzcBreathe 6s ease-in-out infinite}
+@media (max-width:520px){#work-page .wk-circle{width:min(64vw,30vh,300px)}#work-page .wk-g.as-bare{width:66px;height:66px;margin:3px}}
+#work-page .wk-circle::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;background:conic-gradient(rgba(233,181,106,.3),rgba(220,210,242,.42),rgba(243,201,192,.36),rgba(201,220,244,.42),rgba(233,181,106,.3));filter:blur(24px)}
+#work-page #work-chain.as-bare,#work-page #work-meaning.as-bare{background:none!important;border:0!important;box-shadow:none!important}
+#work-page #work-meaning{color:#3b2a3a;font-size:13px;line-height:1.45;margin-top:8px;max-height:46%;overflow:hidden}
+/* ═══ the Live Feed, one offering at a time ═══ */
+#livefeed-page .as-one>.lf-row.as-now{position:relative;flex-direction:column;align-items:center;text-align:center;max-width:460px;margin:6px auto 0!important;padding:18px 18px 14px!important;gap:8px}
+#livefeed-page .as-one>.lf-row.as-now .lf-sym{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);box-shadow:0 0 22px rgba(233,181,106,.22)}
+#livefeed-page .as-one>.lf-row.as-now .lf-sym svg{width:44px!important;height:44px!important}
+.as-onenav .as-onetrail button.fresh{animation:asFresh 1.6s ease-in-out 2}
+@keyframes asFresh{50%{transform:scale(1.9);box-shadow:0 0 14px rgba(233,181,106,.95)}}
+@media (prefers-reduced-motion:reduce){.asp-circle,#work-page .wk-circle{animation:none}.as-onenav .as-onetrail button.fresh{animation:none;box-shadow:0 0 0 3px rgba(233,181,106,.9)}}
+#gp-back.as-lit{background:rgba(246,227,214,.84)!important}
+#gp-modal.as-lit{background:rgba(255,251,245,.98)!important;border:1px solid rgba(233,181,106,.5)!important;border-radius:30px!important;box-shadow:0 0 40px rgba(233,181,106,.3)!important;color:#3b2a3a}
+/* the name at the top of the map, light */
+#logo{background:rgba(255,251,245,.74)!important;border-color:rgba(233,181,106,.45)!important}
+#logo-text h1{color:#3b2a3a!important;text-shadow:none!important}
+#logo-text p{color:#6f5a6c!important;text-shadow:none!important}
+</style>
+<script>
+/* ═══ 4 Oct 2026 · THE LIGHT PASS ═══════════════════════════════════════════
+   Karl: "turn 'all' panels that exist into circular to match the rest of the
+   site. You know what you are doing."
+   These pages were built for a dark sky, their colours written in hundreds of
+   places. Rather than hunt each one, every one passes through ONE decision,
+   here, when it opens and whenever it changes:
+     · pale words become ink; a coloured word keeps its hue and only deepens,
+       so a Wonder is still unmistakably a Wonder (the rule My Aura already
+       follows for sense colours, 3 Sep);
+     · dark boxes become soft light; buttons become glowing pills, and small
+       square buttons become round lights; glows turn warm;
+     · symbols drawn in pale light deepen the same way.
+   My Aura, the readings and registration have their own light and are left
+   alone. Nothing else about any page changes. */
+(function asLightPass(){try{
+  const IDS=['soul-page','alpha-page','junc-page','work-page','sync-page','open-page','trajectory-page','lifestory-page','livefeed-page','course-page','pubprofile-page','placeaura-page','gv','mv-panel','panel','gp-back','gp-modal'];
+  const INK='#3b2a3a',SOFT='#6f5a6c',EDGE='rgba(233,181,106,.45)',WARM='0 0 22px rgba(233,181,106,.24)';
+  const CARD='rgba(255,252,247,.66)',FIELD='rgba(255,251,245,.94)',PILL='linear-gradient(180deg,#fff8ee,#fbe6cc)';
+  function rgb(c){const m=c&&/rgba?\(([^)]+)\)/.exec(c);if(!m)return null;const p=m[1].split(/[\s,\/]+/).filter(Boolean).map(parseFloat);return {r:p[0],g:p[1],b:p[2],a:p.length>3?p[3]:1};}
+  function hsl(c){const r=c.r/255,g=c.g/255,b=c.b/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d=mx-mn;let h=0,s=0;
+    if(d){s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?((g-b)/d+(g<b?6:0)):mx===g?((b-r)/d+2):((r-g)/d+4);h/=6;}return {h:h,s:s,l:l,ch:d};}
+  function toRgb(h,s,l){function f(n){const k=(n+h*12)%12,a=s*Math.min(l,1-l);return Math.round(255*(l-a*Math.max(-1,Math.min(k-3,9-k,1))));}return 'rgb('+f(0)+','+f(8)+','+f(4)+')';}
+  /* a colour made readable on the light ground (null if it already is) */
+  function deep(c){if(!c||c.a<.05)return null;const x=hsl(c);
+    if(x.ch<.3){if(x.l>.62)return INK;if(x.l>.45)return SOFT;return null;}
+    if(x.l>.45)return toRgb(x.h,Math.min(1,Math.max(.55,x.s)),.34);
+    return null;}
+  function dark(c){return !!c&&c.a>.12&&hsl(c).l<.36;}
+  function isCtrl(el){const t=el.tagName;return t==='BUTTON'||t==='A'||el.getAttribute('role')==='button';}
+  function put(el,p,v){el.style.setProperty(p,v,'important');(el.__lit||(el.__lit=[])).push(p);}
+  function clear(el){if(el.__lit)el.__lit.forEach(p=>el.style.removeProperty(p));el.__lit=null;try{delete el.dataset.lit;}catch(e){}}
+  function lightOne(el,root){
+    if(!el||el.nodeType!==1||(el.dataset&&el.dataset.lit))return;
+    if(el.closest&&el.closest('.as-own'))return;
+    if(el.id&&IDS.indexOf(el.id)>=0)root=true;   /* a page or panel keeps the ground its own style gives it */
+    try{el.dataset.lit='1';}catch(e){}
+    const cs=getComputedStyle(el),tag=el.tagName;
+    if(el instanceof SVGElement){
+      if(tag==='svg'||tag==='SVG')return;
+      const sk=deep(rgb(cs.stroke)),fl=deep(rgb(cs.fill));
+      if(sk)put(el,'stroke',sk);if(fl)put(el,'fill',fl);return;}
+    if(tag==='CANVAS'){if(dark(rgb(cs.backgroundColor))){put(el,'background','transparent');put(el,'filter','brightness(.62) saturate(1.5) contrast(1.08)');}return;}   /* a drawing made for a dark sky: its backing goes, its strokes deepen */
+    if(tag==='IMG'||tag==='VIDEO')return;
+    const tc=deep(rgb(cs.color));if(tc)put(el,'color',tc);
+    if(cs.textShadow&&cs.textShadow!=='none')put(el,'text-shadow','none');
+    if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT'){
+      put(el,'background',FIELD);put(el,'color',INK);put(el,'border-color',EDGE);put(el,'border-radius',tag==='TEXTAREA'?'22px':'999px');
+      if(parseFloat(cs.fontSize)<16)put(el,'font-size','16px');return;}
+    if(el.classList&&el.classList.contains('as-bare'))return;   /* a surface this page lights for itself */
+    const ctrl=isCtrl(el),bg=rgb(cs.backgroundColor),gi=(cs.backgroundImage||'').indexOf('gradient')>=0;
+    if(!root&&(dark(bg)||gi)){
+      if(ctrl){put(el,'background',PILL);put(el,'color',INK);}
+      else if(dark(bg))put(el,'background',CARD);
+      else if(gi){const st=(cs.backgroundImage.match(/rgba?\([^)]+\)/g)||[]).map(rgb);if(st.length&&st.every(dark))put(el,'background',CARD);}}
+    if((parseFloat(cs.borderTopWidth)||0)>0&&cs.borderTopStyle!=='none'){const bc=rgb(cs.borderTopColor);if(bc&&bc.a>.05)put(el,'border-color',EDGE);}
+    const r=parseFloat(cs.borderTopLeftRadius)||0;
+    if(r>0&&!root){const w=el.offsetWidth,h=el.offsetHeight;
+      if(ctrl&&w&&h&&Math.abs(w-h)<6)put(el,'border-radius','50%');
+      else if(ctrl)put(el,'border-radius','999px');
+      else if(r<24)put(el,'border-radius','24px');}
+    if(cs.boxShadow&&cs.boxShadow!=='none'&&!root)put(el,'box-shadow',WARM);
+  }
+  function lightAll(root,isRoot){try{lightOne(root,isRoot);root.querySelectorAll('*').forEach(e=>lightOne(e,false));}catch(e){}}
+  const queue=new Map();let timer=0;
+  function flush(){timer=0;const items=Array.from(queue.entries());queue.clear();
+    items.forEach(([el,v])=>{try{if(!el.isConnected)return;
+      if(v.a){lightAll(el,!!el.__litRoot);return;}
+      if(v.r){ /* a chosen state fades in; look at its true colour, not a moment mid-fade */
+        el.style.setProperty('transition','none','important');clear(el);lightOne(el,!!el.__litRoot);
+        requestAnimationFrame(()=>{try{el.style.removeProperty('transition');}catch(e){}});}
+      }catch(e){}});}
+  function later(el,re){const v=queue.get(el)||{a:false,r:false};if(re)v.r=true;else v.a=true;queue.set(el,v);}   /* newly made: lit all the way through; only restyled: looked at again */   /* lit in the same moment, before the screen is drawn: nothing flashes dark */
+  function setup(el){if(!el||el.__litRoot)return;
+    el.classList.add('as-lit');el.__litRoot=true;lightAll(el,true);
+    new MutationObserver(recs=>{recs.forEach(r=>{if(r.type==='attributes'){if(r.target!==el)later(r.target,true);}
+      else r.addedNodes.forEach(n=>{if(n.nodeType===1)later(n,false);});});flush();}).observe(el,{childList:true,subtree:true,attributes:true,attributeFilter:['class']});}
+  IDS.forEach(id=>setup(document.getElementById(id)));
+  /* some panels are only born when first opened (the Mirror panel): lit the moment they appear */
+  new MutationObserver(recs=>{recs.forEach(r=>r.addedNodes.forEach(n=>{if(n.nodeType===1&&n.id&&IDS.indexOf(n.id)>=0)setup(n);}));}).observe(document.body,{childList:true});
+}catch(e){}})();
 </script>
 
 </body>
