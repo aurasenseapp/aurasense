@@ -4,6 +4,10 @@
      padding, so the last button can no longer sit against the edge of the
      browser. Everything else as v39.
 
+     6 October 2026, build 148. The shades inside Weariness and Anomaly carry their own
+     marks and colours from the larger Alphasense, and the marks fall into thick smoke
+     as the finger moves from one sense to the next.
+
      THE GUIDING PRINCIPLE OF TRANSITION: nothing in Aurasense snaps.
 
      THE SHAPE OF IT
@@ -187,6 +191,10 @@ body.night #symVeil{background:radial-gradient(40% 40% at 40% 45%,rgba(220,212,2
 #symVeil.puff{animation:symPuff .7s ease-out both}
 @keyframes symPuff{0%{opacity:0;transform:scale(.7)}40%{opacity:.85;transform:scale(1)}100%{opacity:0;transform:scale(1.2)}}
 @media (prefers-reduced-motion:reduce){.sym.into,.sym.outof{animation:none}#symVeil{display:none}}
+/* 6 Oct 2026 · into thick smoke: drawn over the marks as they fall in, and only while they move */
+#symSmoke{position:absolute;inset:-45%;pointer-events:none;z-index:3;border-radius:50%}
+.as-smoke{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:4;border-radius:50%}
+@media (prefers-reduced-motion:reduce){#symSmoke,.as-smoke{display:none}}
 .sym svg{width:100%!important;height:100%!important;display:block;overflow:visible}
 #wordWrap{position:relative;width:86vw;max-width:420px;height:clamp(30px,7.4vw,38px)}
 .wd{position:absolute;left:50%;top:0;transform:translateX(-50%);white-space:nowrap;
@@ -648,7 +656,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
 
 <div id="clear"></div>
 <div id="mark">
-  <div id="symWrap"><div class="sym" id="symA"></div><div class="sym" id="symB"></div><div id="symVeil" aria-hidden="true"></div></div>
+  <div id="symWrap"><div class="sym as-w" id="symA"></div><div class="sym as-w" id="symB"></div><div id="symVeil" aria-hidden="true"></div><div id="symSmoke" aria-hidden="true"></div></div>
   <div id="wordWrap"><div class="wd" id="wordA"></div><div class="wd" id="wordB"></div></div>
 </div>
 <div id="flyer"><div id="flyerSoft"></div><div id="flyerSym"></div></div>
@@ -684,7 +692,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 3 Sep 2026 &middot; 52</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 6 Oct 2026 &middot; 148</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -777,7 +785,26 @@ var ALPHA=[
 {w:'Relief',c:'#ffd9a0',g:'<path d="M13 31q11 10 22 0"/><circle cx="24" cy="22" r="3.2" class="f"/><path d="M24 13v-4"/>'},
 /* ANOMALY — the shell with the ember inside it, "a glimpse through". Taken from
    the symbol gallery and halved to this viewBox. Nothing about it is invented. */
-{w:'Anomaly',c:'#f0c76a',g:'<path d="M24 7C13 15 13 33 24 41C35 33 35 15 24 7Z"/><ellipse cx="24" cy="24" rx="4.2" ry="6.6" class="f"/>'}
+{w:'Anomaly',c:'#f0c76a',g:'<path d="M24 7C13 15 13 33 24 41C35 33 35 15 24 7Z"/><ellipse cx="24" cy="24" rx="4.2" ry="6.6" class="f"/>'},
+/* 6 Oct 2026 · THE SHADES' OWN MARKS, from the larger Alphasense, spliced VERBATIM from the
+   map's alphabet (the same marks the Alphasense page draws). Nothing here is retyped. */
+{w:'UFO',c:'#e9d686',g:'<circle cx="24" cy="13" r="2.4" class="f"/><circle cx="13" cy="30" r="2.4" class="f"/><circle cx="35" cy="30" r="2.4" class="f"/><path d="M8 38q16-8 32 0" opacity="0.35"/>'},
+{w:'Apparition',c:'#8ba9e4',g:'<path d="M24 8c-7 0-9 8-9 16s2 16-2 16h22c-4 0-2-8-2-16s-2-16-9-16z" stroke-dasharray="2 3" opacity="0.6"/><circle cx="24" cy="17" r="2.6" class="f"/>'},
+{w:'Manifested something here',c:'#e8bc87',g:'<circle cx="24" cy="34" r="3" class="f"/><path d="M24 30V19"/><path d="M15 9q9 11 18 0" opacity="0.6"/><circle cx="24" cy="14" r="1.8" opacity="0.7"/>'},
+{w:'Dream connection',c:'#9b8ce3',g:'<path d="M8 28c0-8 8-12 14-8 4-6 14-4 16 4 4 2 3 10-3 10H12c-3 0-4-3-4-6z" opacity="0.5"/><circle cx="18" cy="29" r="2.4" class="f"/><circle cx="30" cy="29" r="2.4" class="f"/><path d="M20.5 29h7" opacity="0.6"/>'},
+{w:'Discovery of something new',c:'#e4d28c',g:'<path d="M8 29h12M28 29h12"/><circle cx="24" cy="29" r="3" class="f"/><path d="M24 24V11M19 15l5-5 5 5" opacity="0.8"/>'},
+{w:'Synchronicity',c:'#e4cc84',g:'<circle cx="14" cy="18" r="2.6" class="f"/><circle cx="34" cy="30" r="2.6" class="f"/><path d="M14 21c2 10 18 0 20 6" opacity="0.85"/><path d="M34 27c-2-10-18 0-20-6" opacity="0.5"/>'},
+{w:'Clairaudience',c:'#8ba7e4',g:'<circle cx="24" cy="24" r="16" stroke-dasharray="1 3" opacity="0.5"/><circle cx="19" cy="24" r="2.6" class="f"/><path d="M25 19a7 7 0 0 1 0 10M29 16a11 11 0 0 1 0 16" opacity="0.7"/>'},
+{w:'Clairvoyance',c:'#a380ef',g:'<path d="M6 24q18-14 36 0q-18 14-36 0z" stroke-dasharray="2 3" opacity="0.6"/><circle cx="24" cy="24" r="3" class="f"/><path d="M24 14V6M24 34v8" opacity="0.5"/>'},
+{w:'D\u00e9j\u00e0 vu',c:'#b08be4',g:'<circle cx="21" cy="27" r="3" class="f"/><circle cx="28" cy="20" r="3" opacity="0.45"/><circle cx="24.5" cy="23.5" r="9" stroke-dasharray="2 3" opacity="0.5"/>'},
+{w:'Remote-viewed',c:'#8cb0e4',g:'<circle cx="12" cy="34" r="3" class="f"/><path d="M15 31c6-8 12-12 18-14" stroke-dasharray="1 3" opacity="0.6"/><circle cx="36" cy="15" r="5" opacity="0.6"/><path d="M36 12v6M33 15h6" opacity="0.6"/>'},
+{w:'Prediction dream',c:'#a98ce3',g:'<path d="M18 9a9 9 0 1 0 8 14a7 7 0 1 1-8-14z" opacity="0.8"/><path d="M27 27l7 7" stroke-dasharray="1 3" opacity="0.6"/><circle cx="37" cy="37" r="2.6" class="f"/>'},
+{w:'Premonition',c:'#e4bb8b',g:'<circle cx="12" cy="29" r="3" class="f"/><path d="M16 27q8-10 15-9" opacity="0.6"/><circle cx="35" cy="18" r="4" opacity="0.5"/><path d="M35 9v3M42 18h-3M35 27v-3" opacity="0.4"/>'},
+{w:'Burnout',c:'#d57b99',g:'<path d="M24 10c-6 7-8 12-5 18" opacity="0.5"/><path d="M26 14c3 5 4 9 1 14" opacity="0.35"/><circle cx="24" cy="33" r="3" class="f" opacity="0.6"/><path d="M15 38h18" opacity="0.5"/>'},
+{w:'Exhaustion',c:'#9680d8',g:'<path d="M8 34h32"/><ellipse cx="24" cy="31" rx="5" ry="2.4" class="f"/><path d="M14 24q10 4 20 0" opacity="0.3"/>'},
+{w:'Jadedness',c:'#78a4d0',g:'<path d="M12 20h24" stroke-width="3"/><circle cx="24" cy="28" r="3" class="f"/><path d="M14 34h20" opacity="0.35"/>'},
+{w:'World-weariness',c:'#7777d1',g:'<circle cx="24" cy="18" r="10" opacity="0.7"/><circle cx="24" cy="35" r="3" class="f"/><path d="M14 40h20" opacity="0.5"/>'},
+{w:'Listlessness',c:'#9e88e1',g:'<circle cx="14" cy="28" r="3" class="f"/><path d="M18 27c4-2 6 3 10 1s4-5 8-3" opacity="0.6"/>'}
 ];
 function alphaSvg(word,s,deep){
   /* the gesture is drawn TWICE: a thick white pass beneath, the colour on top.
@@ -849,6 +876,11 @@ var SENSES=[
    Adding another family is one line. The parent always appears first, so its
    plain form is always choosable. */
 var FAMILIES={
+ /* 6 Oct 2026 · THEIR OWN MARKS. The larger Alphasense has now drawn every shade below, so
+    each carries its own mark (m) and its own colour, taken from the language exactly as the
+    Alphasense page shows them, and none is dimmed any longer. The key the map reads (k) is
+    left as it was: on the map the light still lands as its family, Weariness or Anomaly.
+    Weariness itself keeps Weariness's own mark and colour. */
  /* Karl's own list, 14 Aug 2026. A family is SHADES OF THE SAME THING.
     A doorway out is a different relationship and does not belong here —
     Loneliness leading to Belonging was that mistake, and is removed.
@@ -874,28 +906,28 @@ var FAMILIES={
     between Wonder and Love where a glimpse through belongs. An anomaly found
     among the ordinary would have stopped being one. */
  'Anomaly':[
-   {w:'UFO',                       k:'Anomaly', c:'#f0c76a'},
-   {w:'Apparition',                k:'Anomaly', c:'#f0c76a'},
-   {w:'Manifested something here', k:'Anomaly', c:'#f0c76a'},
-   {w:'Dream connection',          k:'Anomaly', c:'#f0c76a'},
-   {w:'Discovery of something new',k:'Anomaly', c:'#f0c76a'},
-   {w:'Synchronicity',             k:'Anomaly', c:'#f0c76a'},
-   {w:'Clairaudience',             k:'Anomaly', c:'#f0c76a'},
-   {w:'Clairvoyance',              k:'Anomaly', c:'#f0c76a'},
-   {w:'D\u00e9j\u00e0 Vu',              k:'Anomaly', c:'#f0c76a'},
-   {w:'Remote-viewed',             k:'Anomaly', c:'#f0c76a'},
-   {w:'Prediction Dream',          k:'Anomaly', c:'#f0c76a'},
-   {w:'Premonition',               k:'Anomaly', c:'#f0c76a'}
+   {w:'UFO',                       k:'Anomaly', c:'#e9d686', m:'UFO'},
+   {w:'Apparition',                k:'Anomaly', c:'#8ba9e4', m:'Apparition'},
+   {w:'Manifested something here', k:'Anomaly', c:'#e8bc87', m:'Manifested something here'},
+   {w:'Dream connection',          k:'Anomaly', c:'#9b8ce3', m:'Dream connection'},
+   {w:'Discovery of something new',k:'Anomaly', c:'#e4d28c', m:'Discovery of something new'},
+   {w:'Synchronicity',             k:'Anomaly', c:'#e4cc84', m:'Synchronicity'},
+   {w:'Clairaudience',             k:'Anomaly', c:'#8ba7e4', m:'Clairaudience'},
+   {w:'Clairvoyance',              k:'Anomaly', c:'#a380ef', m:'Clairvoyance'},
+   {w:'D\u00e9j\u00e0 Vu',              k:'Anomaly', c:'#b08be4', m:'D\u00e9j\u00e0 vu'},
+   {w:'Remote-viewed',             k:'Anomaly', c:'#8cb0e4', m:'Remote-viewed'},
+   {w:'Prediction Dream',          k:'Anomaly', c:'#a98ce3', m:'Prediction dream'},
+   {w:'Premonition',               k:'Anomaly', c:'#e4bb8b', m:'Premonition'}
  ],
  'Weariness':[
-   {w:'Burnout',         k:'Weariness', c:'#a99cc9'},
-   {w:'Exhaustion',      k:'Weariness', c:'#a99cc9'},
-   {w:'Jadedness',       k:'Weariness', c:'#a99cc9'},
-   {w:'World-weariness', k:'Weariness', c:'#a99cc9'},
+   {w:'Burnout',         k:'Weariness', c:'#d57b99', m:'Burnout'},
+   {w:'Exhaustion',      k:'Weariness', c:'#9680d8', m:'Exhaustion'},
+   {w:'Jadedness',       k:'Weariness', c:'#78a4d0', m:'Jadedness'},
+   {w:'World-weariness', k:'Weariness', c:'#7777d1', m:'World-weariness'},
    /* Ennui let go, 29 Aug 2026, Karl's word: not commonly understood, and
        Listlessness beside it already carries what it meant. Kept here rather than
        cut away:   {w:'Ennui', k:'Weariness', c:'#a99cc9'},                     */
-   {w:'Listlessness',    k:'Weariness', c:'#a99cc9'},
+   {w:'Listlessness',    k:'Weariness', c:'#9e88e1', m:'Listlessness'},
    /* the plain form last, and NOT repeating its own name inside itself */
    {w:'Weariness itself', k:'Weariness', c:'#a99cc9', own:true}
  ]
@@ -960,7 +992,7 @@ function paintBed(c){
     c+'e6 0%,'+c+'c4 22%,'+c+'8f 44%,'+c+'4d 66%,'+c+'1a 82%,'+c+'00 100%)';
 }
 function drawCloud(){}
-var state={sense:null,senseColor:null,senseKey:null,doing:null,strength:null,place:null,where:'',words:'',photo:null};
+var state={sense:null,senseColor:null,senseKey:null,senseMark:null,doing:null,strength:null,place:null,where:'',words:'',photo:null};
 var stage='sense',SET=SENSES,ARC=null,familyOf=null,lit=null,locked=false,down=false;
 var holdTimer=null,dwellTimer=null,restTimer=null,beadList=[],lastQ=null,symFlip=false,wordFlip=false;
 /* Unhurried the first time. Less ceremonious once it is known — the same
@@ -1116,6 +1148,182 @@ function showBed(c){ paintBed(c); $('bed').classList.add('here');
 function hideBed(){ $('bed').classList.remove('here');
   $('clear').classList.remove('here'); $('mark').classList.remove('here'); }
 
+/* ═══ 6 Oct 2026 · INTO THICK SMOKE ═════════════════════════════════════
+   Karl: "the motion, of the words and symbols falling into the cloud would have
+   to be described as falling into thick smoke ... the way smoke might bend and
+   swirl if you dropped something into a thick soup of it" - "even though I want
+   the cloud to remain what it actually is".
+   So the cloud stays a cloud; only its motion becomes smoke's. Seen as one looks
+   down into a bowl of thick smoke: as each word goes in, the smoke is drawn in
+   after it and turns as it closes over the place it went, sinking toward the
+   heart of the circle and growing smaller there, as smoke does going down a
+   funnel. When the next words come forward they part it: it opens outward,
+   unwinding the other way, and goes on turning a moment after they have arrived
+   - the cloud remembering the word - then settles and clears.
+   Drawn only while words move; nothing runs at rest. With reduce-motion or Calm
+   there is no smoke at all, and the quiet fade stays. Kept identical in the map
+   file and the living Mirror. */
+var asSmoke=(function(){
+  var PAL=[[188,166,224],[228,160,154],[238,186,146],[156,186,230],[255,252,248]];
+  var WEIGHT=[.28,.22,.2,.14,.16];
+  var SPR=null,LAST={t:0,turn:1};   /* the last time words went in, anywhere on the page */
+  function sprites(){
+    if(SPR)return SPR;
+    SPR=PAL.map(function(c){var s=document.createElement('canvas');s.width=s.height=96;
+      var x=s.getContext('2d'),g=x.createRadialGradient(48,48,0,48,48,48),k=c.join(',');
+      g.addColorStop(0,'rgba('+k+',.95)');g.addColorStop(.32,'rgba('+k+',.62)');
+      g.addColorStop(.66,'rgba('+k+',.2)');g.addColorStop(1,'rgba('+k+',0)');
+      x.fillStyle=g;x.fillRect(0,0,96,96);return s;});
+    return SPR;}
+  function off(){try{
+    if(window.AS_CALM)return true;
+    if(document.body&&document.body.classList.contains('calm'))return true;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
+  function pick(){var r=Math.random(),a=0;for(var i=0;i<WEIGHT.length;i++){a+=WEIGHT[i];if(r<a)return i;}return 0;}
+  function rnd(a,b){return a+Math.random()*(b-a);}
+  function state(circle){
+    var st=circle.__smk;if(st&&st.cv.parentNode===circle)return st;
+    var cv=document.createElement('canvas');cv.className='as-smoke';cv.setAttribute('aria-hidden','true');circle.appendChild(cv);
+    st={el:circle,cv:cv,cx:cv.getContext('2d'),P:[],V:[],raf:0,last:0,w:0,h:0,d:1,t:0,stir:0,took:0,turn:1,gv:-1};
+    circle.__smk=st;return st;}
+  function size(st){var c=st.el,w=c.clientWidth||c.offsetWidth||0,h=c.clientHeight||c.offsetHeight||0,d=Math.min(window.devicePixelRatio||1,1.75);
+    if(w!==st.w||h!==st.h||d!==st.d){st.w=w;st.h=h;st.d=d;st.cv.width=Math.max(1,Math.round(w*d));st.cv.height=Math.max(1,Math.round(h*d));}}
+  /* where each word rests, measured in the circle's own size, so its breathing does not count */
+  function spots(st,root){
+    var out=[];try{var c=st.el.getBoundingClientRect(),k=st.w/(c.width||1);
+      root.querySelectorAll('.as-w').forEach(function(w,i){if(i>60)return;var b=w.getBoundingClientRect();if(!b.width)return;
+        out.push({x:(b.left-c.left+b.width/2)*k,y:(b.top-c.top+b.height/2)*k,w:b.width*k,h:b.height*k});});}catch(e){}
+    return out;}
+  function puff(st,x,y,r,life,vx,vy,body){if(st.P.length>=260)return;
+    st.P.push({x:x,y:y,vx:vx||0,vy:vy||0,r0:r,age:0,life:life,col:pick(),a:body?rnd(.025,.045):rnd(.05,.085),gr:body?rnd(.3,.55):rnd(.15,.35)});}
+  /* the flow: a slow turning everywhere, and a whirl wherever a word goes in or comes out */
+  function flow(st,x,y){
+    var D=Math.min(st.w,st.h)||1,t=st.t,u=x/D*6.2,v=y/D*6.2,A=D*.028*(.35+st.stir);
+    var vx=A*(1.1*Math.cos(1.7*v+.5*t)+.8*Math.cos(1.3*(u+v)-.37*t)),
+        vy=-A*(1.0*Math.cos(1.5*u-.43*t)+.8*Math.cos(1.3*(u+v)-.37*t));
+    for(var i=0;i<st.V.length;i++){var q=st.V[i],dx=x-q.x,dy=y-q.y,f=q.k/(6.2832*(dx*dx+dy*dy+q.c*q.c));
+      vx+=(-dy*q.g+dx*q.s)*f;vy+=(dx*q.g+dy*q.s)*f;}
+    return [vx,vy];}
+  function draw(st){
+    var x=st.cx,d=st.d,W=st.w,H=st.h,D=Math.min(W,H),cx=W/2,cy=H/2,S=sprites();
+    var thin=st.gv<0?1:1-.45*Math.min(1,st.gv/.7);   /* the next words come clear of it */
+    x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;
+    /* what was drawn a moment ago fades, so each wisp leaves a trail along the way it turned */
+    x.globalCompositeOperation='destination-out';x.fillStyle='rgba(0,0,0,'+(1-Math.exp(-st.dt/.24)).toFixed(4)+')';
+    x.fillRect(0,0,st.cv.width,st.cv.height);x.globalCompositeOperation='source-over';
+    for(var i=0;i<st.P.length;i++){var p=st.P[i],k=p.age/p.life;
+      var env=Math.min(1,p.age/.28)*(k>.55?Math.max(0,1-(k-.55)/.45):1);
+      var dist=Math.sqrt((p.x-cx)*(p.x-cx)+(p.y-cy)*(p.y-cy))/(D*.5);
+      var depth=.42+.58*Math.min(1,dist*1.25);              /* smaller toward the heart: going in, away */
+      var a=p.a*env*thin*(.45+.55*Math.min(1,dist*1.6));
+      if(a<.004)continue;
+      var R=p.r0*(1+p.gr*p.age)*depth;
+      var sp=Math.sqrt(p.vx*p.vx+p.vy*p.vy),L=1+Math.min(1.5,sp/(D*.55)),Wd=1/Math.sqrt(L),th=Math.atan2(p.vy,p.vx),co=Math.cos(th),si=Math.sin(th);
+      x.setTransform(d*L*co,d*L*si,-d*Wd*si,d*Wd*co,p.x*d,p.y*d);   /* drawn out along the way it is moving: a wisp */
+      x.globalAlpha=a;x.drawImage(S[p.col],-R,-R,2*R,2*R);}
+    /* no edge anywhere: the smoke thins to nothing before the rim */
+    x.setTransform(d*W/D,0,0,d*H/D,0,0);x.globalAlpha=1;x.globalCompositeOperation='destination-in';
+    var g=x.createRadialGradient(D/2,D/2,0,D/2,D/2,D/2);
+    g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.72,'rgba(0,0,0,1)');g.addColorStop(.97,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,0)');
+    x.fillStyle=g;x.fillRect(0,0,D,D);
+    x.globalCompositeOperation='source-over';x.setTransform(1,0,0,1,0,0);}
+  function run(st){
+    if(st.raf)return;st.last=0;
+    var step=function(ts){
+      st.raf=0;
+      try{
+        if(!st.cv.isConnected){st.P.length=0;st.V.length=0;return;}
+        var dt=st.last?Math.min(.05,(ts-st.last)/1000):.016;st.last=ts;st.t+=dt;st.dt=dt;
+        st.stir*=Math.exp(-dt/1.6);if(st.gv>=0)st.gv+=dt;
+        for(var i=st.V.length-1;i>=0;i--){var q=st.V[i];q.age+=dt;if(q.age>=q.life){st.V.splice(i,1);continue;}
+          var e=1-q.age/q.life;q.k=q.k0*e*e;q.x+=q.vx*dt;q.y+=q.vy*dt;var dmp=Math.exp(-dt/.6);q.vx*=dmp;q.vy*=dmp;}
+        var ease=1-Math.exp(-dt/.16);
+        for(var j=st.P.length-1;j>=0;j--){var p=st.P[j];p.age+=dt;if(p.age>=p.life){st.P.splice(j,1);continue;}
+          var fl=flow(st,p.x,p.y);p.vx+=(fl[0]-p.vx)*ease;p.vy+=(fl[1]-p.vy)*ease;p.x+=p.vx*dt;p.y+=p.vy*dt;}
+        draw(st);
+        if(st.P.length||st.V.length){st.end=0;st.raf=requestAnimationFrame(step);}
+        else if((st.end=(st.end||0)+dt)<.9)st.raf=requestAnimationFrame(step);   /* the last trails settle and clear */
+        else{st.end=0;st.cx.setTransform(1,0,0,1,0,0);st.cx.clearRect(0,0,st.cv.width,st.cv.height);}
+      }catch(err){try{st.cx.setTransform(1,0,0,1,0,0);st.cx.clearRect(0,0,st.cv.width,st.cv.height);}catch(_){}st.P.length=0;st.V.length=0;}
+    };
+    st.raf=requestAnimationFrame(step);}
+  /* the words go in */
+  function take(circle,root,dir){try{
+    if(!circle||!root||off())return;
+    var st=state(circle);size(st);if(!st.w||!st.h)return;
+    var D=Math.min(st.w,st.h),cx=st.w/2,cy=st.h/2,S=spots(st,root),turn=(dir===1||dir===-1)?dir:(Math.random()<.5?-1:1);
+    st.took=performance.now();st.stir=1;st.turn=turn;st.gv=-1;LAST.t=st.took;LAST.turn=turn;
+    st.V.push({x:cx,y:cy,vx:0,vy:0,c:D*.07,g:turn,s:-.3,k0:D*D*.78,k:0,age:0,life:2.4});   /* the heart draws everything in, turning */
+    S.forEach(function(w,i){
+      var tx=w.x+(cx-w.x)*.6,ty=w.y+(cy-w.y)*.6,side=(w.x<cx)?1:-1;
+      if(i%2===0||S.length<10)st.V.push({x:w.x,y:w.y,vx:(tx-w.x)/.95,vy:(ty-w.y)/.95,c:Math.max(8,w.h*.9),g:side*turn,s:-.5,k0:D*D*.05,k:0,age:0,life:1.35});
+      var n=Math.max(2,Math.min(4,Math.round(w.w/22)+1));
+      for(var j=0;j<n;j++)puff(st,w.x+rnd(-.6,.6)*w.w,w.y+rnd(-.9,.9)*w.h,D*rnd(.022,.04),rnd(2.4,3.2),rnd(-1,1)*D*.05,rnd(-1,1)*D*.05);
+    });
+    for(var k=0;k<44;k++){var ang=Math.random()*6.2832,rr=D*rnd(.12,.43);   /* the soup all around, drawn into the turn */
+      puff(st,cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr*.92,D*rnd(.018,.036),rnd(2.5,3.3),0,0);}
+    for(var b=0;b<16;b++){var a2=Math.random()*6.2832,r2=D*Math.sqrt(rnd(.004,.16));   /* the body of the smoke */
+      puff(st,cx+Math.cos(a2)*r2,cy+Math.sin(a2)*r2,D*rnd(.06,.1),rnd(2.6,3.4),0,0,1);}
+    run(st);
+  }catch(e){}}
+  /* the next words come forward, and part it */
+  function give(circle,root){try{
+    if(!circle||!root||off())return;
+    var st=circle.__smk,now=performance.now(),fresh=false;
+    if(!st||!st.took||now-st.took>4000){
+      /* a path of lights shows the next step in a new circle: the smoke the words went into is carried across to it */
+      if(now-LAST.t>2500)return;   /* only after something went in */
+      st=state(circle);st.took=LAST.t;st.turn=LAST.turn;fresh=true;}
+    size(st);if(!st.w||!st.h)return;
+    var D=Math.min(st.w,st.h),cx=st.w/2,cy=st.h/2,S=spots(st,root),turn=-(st.turn||1);   /* it unwinds the other way */
+    if(fresh){for(var k=0;k<26;k++){var ang=Math.random()*6.2832,rr=D*rnd(.04,.3);
+        puff(st,cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr*.92,D*rnd(.02,.036),rnd(1.7,2.3),0,0);}
+      for(var b=0;b<10;b++){var a2=Math.random()*6.2832,r2=D*rnd(.02,.22);
+        puff(st,cx+Math.cos(a2)*r2,cy+Math.sin(a2)*r2,D*rnd(.06,.1),rnd(1.8,2.4),0,0,1);}}
+    st.stir=Math.max(st.stir,.85);st.gv=0;
+    st.V.push({x:cx,y:cy,vx:0,vy:0,c:D*.08,g:turn,s:.3,k0:D*D*.5,k:0,age:0,life:2.6});
+    S.forEach(function(w,i){
+      if(i%2===0||S.length<10)st.V.push({x:w.x,y:w.y,vx:0,vy:0,c:Math.max(8,w.h),g:(w.x<cx?-1:1)*turn*.5,s:.8,k0:D*D*.035,k:0,age:0,life:1.1});
+      if(i%3===0)puff(st,w.x,w.y,D*rnd(.02,.035),rnd(1.5,2.1),(w.x-cx)*.4,(w.y-cy)*.4);
+    });
+    st.P.forEach(function(p){p.life=Math.max(p.life,p.age+rnd(1.7,2.5));});   /* the cloud remembering the word */
+    run(st);
+  }catch(e){}}
+  return {take:take,give:give};
+})();
+/* 6 Oct 2026 · INTO THICK SMOKE, IN THE SEEKING. Karl, 4 Oct: "The original idea I had for
+   the seeking at the front end was for this Alphasense symbols to fall through the cloud in the
+   same way." And of that motion, 6 Oct: "the way smoke might bend and swirl if you dropped
+   something into a thick soup of it."
+   As the finger moves from one sense to the next, the leaving mark falls into smoke that is
+   drawn in after it, turning the way the finger travels round the circle, as if the soup were
+   being stirred. When the finger rests, the smoke parts, the new mark comes forward, and the
+   cloud goes on turning a moment, remembering. A sweeping finger stirs it at most every
+   two-thirds of a second, so it never lags the hand. None of it with reduced motion, or with
+   Calm on the map behind. The engine is the map's and the Mirror's own; this copy alone is
+   also told which way to turn. */
+var skLast=0,skGive=null,skTurn=1;
+function seekSmokeOff(){
+  try{if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return true;}catch(e){}
+  try{var P=window.parent;
+    if(P&&P!==window){if(P.AS_CALM)return true;
+      if(P.document&&P.document.body&&P.document.body.classList.contains('calm'))return true;}}catch(e){}
+  return false;
+}
+function seekTurn(i){
+  try{if(lit===null||lit===undefined||!SET||!SET.length)return;
+    var n=SET.length,d=((i-lit)%n+n)%n;if(d)skTurn=(d<=n/2)?1:-1;}catch(e){}
+}
+function seekSmoke(){
+  try{
+    if(typeof asSmoke==='undefined'||seekSmokeOff())return;
+    var host=$('symSmoke'),root=$('symWrap');if(!host||!root)return;
+    var now=performance.now();
+    if(now-skLast>=650){skLast=now;asSmoke.take(host,root,skTurn);}
+    if(skGive)clearTimeout(skGive);
+    skGive=setTimeout(function(){skGive=null;try{if(!seekSmokeOff())asSmoke.give(host,root);}catch(e){}},360);
+  }catch(e){}
+}
 function symStill(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
 function crossSym(html){
   if(!html){$('symA').classList.remove('on','into','outof');$('symB').classList.remove('on','into','outof');return;}
@@ -1126,6 +1334,7 @@ function crossSym(html){
   try{if(!symStill()){inEl.classList.remove('into','outof');outEl.classList.remove('into','outof');void inEl.offsetWidth;
     inEl.classList.add('outof');if(hadOut)outEl.classList.add('into');
     var v=$('symVeil');if(v&&hadOut){v.classList.remove('puff');void v.offsetWidth;v.classList.add('puff');}}}catch(e){}
+  if(hadOut)seekSmoke();
   symFlip=!symFlip;
 }
 function crossWord(txt,col){
@@ -1136,13 +1345,14 @@ function crossWord(txt,col){
 }
 function light(i){
   if(i===lit)return;
+  seekTurn(i);
   cancelHold();                       /* a new sense restarts the quiet second */
   if(restTimer){clearTimeout(restTimer);restTimer=null;}
   lit=i; placeMark();
   var o=SET[i], col=(stage==='sense'||stage==='family')?o.c:state.senseColor;
-  crossSym((stage==='sense'||stage==='family')?gestureOf(o.k,true)
-          :(stage==='strength'?gestureOf(state.senseKey,true):''));
-  $('symWrap').style.opacity=(stage==='family'&&!o.own)?'.42':'1';
+  crossSym((stage==='sense'||stage==='family')?gestureOf(o.m||o.k,true)
+          :(stage==='strength'?gestureOf(state.senseMark||state.senseKey,true):''));
+  $('symWrap').style.opacity=(stage==='family'&&!o.own&&!o.m)?'.42':'1';
   crossWord(o.w,readable(col,0.15));
   /* the ring brightens where the finger is, and slides there — no marker */
   markSeen(i,col);
@@ -1360,12 +1570,14 @@ var QSIG={
   'Joy':                {breath:4.4,ether:0.80,dir:1,mental:1400,shimmer:1.80,soft:1.35,particle:true, vortex:1.00, c2:'#ffe9b8'},
   /* ── inside Weariness: the exhaustion family. All of the same colour, so the
        motion is the only thing that tells them apart — which is the point. ── */
-  'Burnout':            {breath:7.2,ether:2.20,dir:-1,mental:4800,shimmer:0.75,soft:1.10,particle:true, vortex:-0.15,c2:'#d6cdea'},
-  'Exhaustion':         {breath:9.0,ether:3.40,dir:-1,mental:8000,shimmer:0.30,soft:1.35,particle:false,vortex:0,     c2:'#d6cdea'},
-  'Jadedness':          {breath:7.8,ether:2.60,dir:-1,mental:5600,shimmer:0.50,soft:1.00,particle:false,vortex:-0.30,c2:'#d6cdea'},
-  'World-weariness':    {breath:8.8,ether:3.00,dir:-1,mental:6800,shimmer:0.40,soft:1.65,particle:false,vortex:-0.20,c2:'#d6cdea'},
+  /* 6 Oct 2026: each shade now has its own colour and mark from the larger Alphasense, so the
+     second colour of each follows its own. The motion of each is exactly as it was. */
+  'Burnout':            {breath:7.2,ether:2.20,dir:-1,mental:4800,shimmer:0.75,soft:1.10,particle:true, vortex:-0.15,c2:'#ebc0ce'},
+  'Exhaustion':         {breath:9.0,ether:3.40,dir:-1,mental:8000,shimmer:0.30,soft:1.35,particle:false,vortex:0,     c2:'#cdc2ec'},
+  'Jadedness':          {breath:7.8,ether:2.60,dir:-1,mental:5600,shimmer:0.50,soft:1.00,particle:false,vortex:-0.30,c2:'#bed3e8'},
+  'World-weariness':    {breath:8.8,ether:3.00,dir:-1,mental:6800,shimmer:0.40,soft:1.65,particle:false,vortex:-0.20,c2:'#bebee9'},
   'Ennui':              {breath:8.2,ether:2.90,dir:1,mental:7400,shimmer:0.35,soft:1.45,particle:true, vortex:0,     c2:'#d6cdea'},
-  'Listlessness':       {breath:8.6,ether:3.10,dir:1,mental:7800,shimmer:0.25,soft:1.50,particle:true, vortex:0,     c2:'#d6cdea'},
+  'Listlessness':       {breath:8.6,ether:3.10,dir:1,mental:7800,shimmer:0.25,soft:1.50,particle:true, vortex:0,     c2:'#d0c6f1'},
   /* ── ANOMALY AND ITS TWELVE ──────────────────────────────────────────────
      The signature is the one from the living motion study, unchanged:
      irregular, quick, grainy, and turning the other way. VISIT marks the ones
@@ -1373,18 +1585,18 @@ var QSIG={
      never the same twice. The behaviours are Karl's own sightings, written
      down in July, not invented here. */
   'Anomaly':                     {breath:5.2,ether:0.75,dir:-1,mental:1100,shimmer:1.90,soft:0.80,particle:true,vortex:0,c2:'#fff0c9',visit:true},
-  'UFO':                         {breath:5.0,ether:0.70,dir:-1,mental:1000,shimmer:1.95,soft:0.78,particle:true,vortex:0,c2:'#fff0c9',visit:true},
-  'Apparition':                  {breath:6.4,ether:1.30,dir:-1,mental:2400,shimmer:1.40,soft:1.10,particle:true,vortex:0,c2:'#fff0c9',visit:true},
-  'Manifested something here':   {breath:5.6,ether:0.95,dir:1, mental:1600,shimmer:1.60,soft:0.95,particle:true,vortex:0.35,c2:'#fff0c9',visit:true},
-  'Dream connection':            {breath:7.0,ether:1.70,dir:-1,mental:3200,shimmer:1.20,soft:1.30,particle:false,vortex:0.45,c2:'#fff0c9',visit:true},
-  'Discovery of something new':  {breath:5.4,ether:0.90,dir:1, mental:1400,shimmer:1.70,soft:1.05,particle:true,vortex:0.55,c2:'#fff0c9',visit:true},
-  'Synchronicity':               {breath:6.0,ether:1.10,dir:1, mental:1900,shimmer:1.55,soft:1.00,particle:true,vortex:0.70,c2:'#fff0c9',visit:true},
-  'Clairaudience':               {breath:5.8,ether:1.00,dir:-1,mental:1500,shimmer:1.75,soft:0.90,particle:true,vortex:0,c2:'#fff0c9',visit:true},
-  'Clairvoyance':                {breath:6.2,ether:1.20,dir:-1,mental:2000,shimmer:1.65,soft:0.95,particle:true,vortex:0,c2:'#fff0c9',visit:true},
-  'D\u00e9j\u00e0 Vu':                {breath:6.6,ether:1.45,dir:-1,mental:2800,shimmer:1.30,soft:1.15,particle:true,vortex:-0.40,c2:'#fff0c9',visit:true},
-  'Remote-viewed':               {breath:7.2,ether:1.85,dir:-1,mental:3600,shimmer:1.10,soft:1.35,particle:false,vortex:0,c2:'#fff0c9',visit:true},
-  'Prediction Dream':            {breath:7.4,ether:1.95,dir:-1,mental:3800,shimmer:1.05,soft:1.40,particle:false,vortex:0.30,c2:'#fff0c9',visit:true},
-  'Premonition':                 {breath:5.2,ether:0.80,dir:-1,mental:1200,shimmer:1.85,soft:0.85,particle:true,vortex:0,c2:'#fff0c9',visit:true}
+  'UFO':                         {breath:5.0,ether:0.70,dir:-1,mental:1000,shimmer:1.95,soft:0.78,particle:true,vortex:0,c2:'#f4ebc5',visit:true},
+  'Apparition':                  {breath:6.4,ether:1.30,dir:-1,mental:2400,shimmer:1.40,soft:1.10,particle:true,vortex:0,c2:'#c7d6f2',visit:true},
+  'Manifested something here':   {breath:5.6,ether:0.95,dir:1, mental:1600,shimmer:1.60,soft:0.95,particle:true,vortex:0.35,c2:'#f4dfc5',visit:true},
+  'Dream connection':            {breath:7.0,ether:1.70,dir:-1,mental:3200,shimmer:1.20,soft:1.30,particle:false,vortex:0.45,c2:'#cfc8f2',visit:true},
+  'Discovery of something new':  {breath:5.4,ether:0.90,dir:1, mental:1400,shimmer:1.70,soft:1.05,particle:true,vortex:0.55,c2:'#f2e9c8',visit:true},
+  'Synchronicity':               {breath:6.0,ether:1.10,dir:1, mental:1900,shimmer:1.55,soft:1.00,particle:true,vortex:0.70,c2:'#f2e7c4',visit:true},
+  'Clairaudience':               {breath:5.8,ether:1.00,dir:-1,mental:1500,shimmer:1.75,soft:0.90,particle:true,vortex:0,c2:'#c7d5f2',visit:true},
+  'Clairvoyance':                {breath:6.2,ether:1.20,dir:-1,mental:2000,shimmer:1.65,soft:0.95,particle:true,vortex:0,c2:'#d3c2f7',visit:true},
+  'D\u00e9j\u00e0 Vu':                {breath:6.6,ether:1.45,dir:-1,mental:2800,shimmer:1.30,soft:1.15,particle:true,vortex:-0.40,c2:'#d9c7f2',visit:true},
+  'Remote-viewed':               {breath:7.2,ether:1.85,dir:-1,mental:3600,shimmer:1.10,soft:1.35,particle:false,vortex:0,c2:'#c8d9f2',visit:true},
+  'Prediction Dream':            {breath:7.4,ether:1.95,dir:-1,mental:3800,shimmer:1.05,soft:1.40,particle:false,vortex:0.30,c2:'#d6c8f2',visit:true},
+  'Premonition':                 {breath:5.2,ether:0.80,dir:-1,mental:1200,shimmer:1.85,soft:0.85,particle:true,vortex:0,c2:'#f2dec7',visit:true}
 };
 
 /* ═══ THE VISITATIONS ═══ Karl's sightings, written down 14 July 2026:
@@ -1852,7 +2064,7 @@ function commit(){
   var o=SET[lit];
   if(stage==='sense'&&FAMILIES[o.k]){ openFamily(o); return; }
   if(stage==='sense'||stage==='family'){
-    state.sense=o.w; state.senseColor=o.c; state.senseKey=o.k;
+    state.sense=o.w; state.senseColor=o.c; state.senseKey=o.k; state.senseMark=o.m||o.k;
     /* THE ARC IS LET GO. 29 Aug 2026, Karl's decision.
        A strength was asked for and then had nowhere to go — an aura has no way
        of holding one, and the map never once read it. Where a sense has a
@@ -1864,7 +2076,7 @@ function commit(){
        Nothing below is deleted. born('strength', …) still works, STRENGTHS is
        still here, and this is one line away from returning if it is ever
        wanted — which is why it is written this way and not cut out. */
-    fly(o.c,o.k,'sense',function(){ toTyped(); });
+    fly(o.c,o.m||o.k,'sense',function(){ toTyped(); });
     /* the way back, kept:
        fly(o.c,o.k,'sense',function(){
          born('strength','How strong is it?',
@@ -2076,7 +2288,7 @@ function land(){
     L.style.boxShadow='0 16px 40px '+col+'55';
     $('mapRipple').style.setProperty('--lc',col);
     $('mapWord').textContent=state.sense||''; $('mapWord').style.color=col;
-    $('mapSym').innerHTML=gestureOf(state.senseKey);
+    $('mapSym').innerHTML=gestureOf(state.senseMark||state.senseKey);
     var bits=[];
     if(state.strength)bits.push(state.strength);
     if(state.where)bits.push(state.where);
@@ -2164,7 +2376,7 @@ function openList(){
     b.type='button'; b.className='litem';
     var col=(stage==='sense'||stage==='family')?o.c:(state.senseColor||'#7a63c8');
     if((stage==='sense'||stage==='family')&&o.k){
-      b.innerHTML='<span class="lsym">'+gestureOf(o.k)+'</span><span>'+o.w+'</span>';
+      b.innerHTML='<span class="lsym">'+gestureOf(o.m||o.k)+'</span><span>'+o.w+'</span>';
     }else{
       b.innerHTML='<span class="ldot" style="background:'+col+'"></span><span>'+o.w+'</span>';
     }

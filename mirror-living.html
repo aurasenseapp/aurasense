@@ -64,7 +64,7 @@ body{font-family:var(--serif);color:var(--ink);background:#f6e3d6;overflow:hidde
 .rim text{font-family:var(--serif);font-style:italic;font-size:3.4px;fill:var(--soft);letter-spacing:.04em;opacity:0;transition:opacity 1.6s ease}
 .rim.show text{opacity:.9}
 
-.speak{width:74%;max-height:74%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7em;
+.speak{width:72%;max-height:74%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.7em;
   transition:opacity .9s ease, filter .9s ease}
 .speak.fade{opacity:0;filter:blur(6px)}
 .as-ws{display:inline}.as-w{display:inline-block}
@@ -87,6 +87,27 @@ body{font-family:var(--serif);color:var(--ink);background:#f6e3d6;overflow:hidde
 .as-falling .quote::before,.as-falling .quote::after{animation:asFadeOut .35s ease both}
 .as-rising .quote::before,.as-rising .quote::after{animation:asFadeIn .8s ease .35s both}
 @media (prefers-reduced-motion:reduce){.as-cloudband{display:none}.as-falling .as-w{animation:asFadeOut .18s ease both;animation-delay:0s}.as-rising .as-w{animation:asFadeIn .3s ease both;animation-delay:0s}}
+/* 6 Oct 2026 · into thick smoke: the smoke is drawn over the words as they go in, and only while they move */
+.as-smoke{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;z-index:4;border-radius:50%}
+@media (prefers-reduced-motion:reduce){.as-smoke{display:none}}
+/* 6 Oct 2026 · the doorway: a heavy word's symbol and the word that leads out of it, outside the circle */
+.dw{position:fixed;z-index:6;padding:7px 14px 7px 10px;border-radius:999px;background:rgba(255,251,245,.82);border:1px solid rgba(233,181,106,.38);
+  box-shadow:0 6px 26px rgba(120,80,60,.12);opacity:0;transform:translateY(6px);transition:opacity 1s ease,transform 1s ease;max-width:calc(100vw - 16px)}
+.dw.show{opacity:1;transform:none}
+.dw[hidden]{display:none}
+.dw-k{font-size:10.5px;letter-spacing:.08em;color:var(--faint);text-align:center;margin:1px 0 2px}
+.dw-row{display:flex;align-items:center;justify-content:center;gap:4px}
+.dw-w{display:flex;align-items:center;gap:5px;background:none;border:0;cursor:pointer;font:inherit;font-size:13.5px;color:var(--soft);padding:2px 4px;border-radius:999px;white-space:nowrap}
+.dw-w:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.dw-door{color:var(--ink)}
+.dw-door svg{animation:dwGlow 3.2s ease-in-out infinite}
+@keyframes dwGlow{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+.dw-to{display:flex;align-items:center;gap:5px;font-size:11.5px;font-style:italic;color:var(--faint);white-space:nowrap}
+.dw-to::before{content:"";width:16px;height:2px;border-radius:2px;background:linear-gradient(90deg,rgba(233,181,106,.15),rgba(233,181,106,.85))}
+.dw-line{font-size:12.5px;font-style:italic;color:var(--soft);text-align:center;margin:2px 4px 1px;max-width:300px}
+.dw-line:empty{display:none}
+.dw.side{border-radius:22px;padding:9px 14px 8px}
+@media (prefers-reduced-motion:reduce){.dw{transition:opacity .3s ease;transform:none}.dw-door svg{animation:none}}
 .speak.full{font-size:.9em;gap:.55em;width:70%}
 .speak.full .line,.speak.full .quote,.speak.full .line.aspire{font-size:clamp(.92rem,3vw,1.08rem)}
 .title{font-size:clamp(1.5rem,5vw,2rem);letter-spacing:.06em;margin:0}
@@ -95,7 +116,7 @@ body{font-family:var(--serif);color:var(--ink);background:#f6e3d6;overflow:hidde
 .line.q{font-style:italic;color:var(--ink)}
 .line.aspire{font-style:italic;color:var(--ink);font-size:clamp(1rem,3.2vw,1.18rem);line-height:1.5}
 .quote{margin:0;font-style:italic;font-size:clamp(1rem,3.2vw,1.18rem);line-height:1.5;color:var(--ink)}
-.quote::before{content:"\201C"}.quote::after{content:"\201D"}
+/* 6 Oct 2026 · the quotation marks now travel with the first and last words, so a mark is never left alone on a line */
 
 /* the turns taken, as small lights along the path */
 .trail{display:flex;gap:9px;justify-content:center;min-height:14px;margin:14px 0 6px}
@@ -156,6 +177,7 @@ body.insite .mirror{margin-top:2vh}
   <p class="note" id="note">Nothing you write leaves this page. The Mirror is not a person, and not a therapist.</p>
   <p class="note hide" id="classicRow"><button class="btn quiet" id="classic" type="button">The balance of your light, and the unlit rooms →</button></p>
 </main>
+<div class="dw" id="doorway" role="note" aria-live="polite" hidden></div>
 
 <script>
 (function(){
@@ -177,23 +199,40 @@ body.insite .mirror{margin-top:2vh}
    Karl: "Jung, Krishnamurti, + my own insights, towards the one light (over as
    long as it takes, naturally, years if need be. No rush, intro and
    outraspection, questions that evoke self awareness)."
-   It is still not an AI. Nobody's words can talk it into anything.        */
+   It is still not an AI. Nobody's words can talk it into anything.
+   6 Oct 2026 · Karl: "its still not responsive enough... loops around to the same
+   type of questions. Other times its just coincidence it looks like its listening."
+   Five faults, found in his own screenshots, each mended here:
+     - it COUNTED words ("You've come back to 'live'") - counting is gone;
+     - with its eight questions spent it said "What else is here, now?" again and
+       again - a second, deeper path follows the first, and nothing goes round twice;
+     - questions put to the Mirror itself ("Do you know something I dont?",
+       "Since I began?") were treated as answers - they are now answered honestly;
+     - the aspired self spoke of a fear never mentioned - it now speaks from the
+       person's own two choices, in their own words;
+     - picture-words ("as if a door is only just open") - plain words now, by
+       Karl's decision; and every turn is measured to sit inside the circle.     */
 var HEAVY=/\b(kill myself|end my life|suicid|want to die|don'?t want to (live|be here)|hurt myself|self[- ]?harm|no reason to live)\b/i;
 var UNSURE=/^\s*(?:i\s+)?(?:really\s+)?(?:don'?t|do not)\s+know[.!]*\s*$|^\s*(?:dunno|no idea|not sure|unsure|maybe|perhaps|i'?m not sure|i'?m unsure)[.!?]*\s*$/i;
-var LEAVE=/^\s*(that'?s enough|enough( for now)?|i'?m done|done|bye|goodbye|stop|no more)\b/i;
+var LEAVE=/^\s*(?:that'?s enough|enough|i'?m done|done|bye|goodbye|stop|no more|good ?night)(?:[\s,.!]+(?:for now|for today|thanks|thank you|now|please|bye))*[\s,.!]*$/i;   /* 6 Oct 2026 · only a goodbye ends it: "Stop being so hard on yourself" is a wiser voice speaking, not a goodbye */
 var CONFUSED=/^\s*[\w'-]{1,14}\s*\?+\s*$|what do you mean|i don'?t (understand|get it)|\bhuh\b|what\?|meaning\?/i;
+/* 6 Oct 2026 · questions put to the Mirror itself */
+var ASKME=/\b(you|your|yourself|u)\b/i;
+var KNOWQ=/\b(do|can|did|does) (you|u) (know|see|sense|understand|feel)\b|\bwhat do (you|u) (know|see)\b|\bknow something\b/i;
+var WHATQ=/\b(are|r) (you|u) (an? )?(ai|a\.i\.|real|human|a person|person|alive|a bot|bot|conscious|a machine|machine)\b|\b(who|what) are (you|u)\b/i;
+var ADVQ=/\b(what should i do|what would you do|tell me what to do|what do you think|your advice|any advice|what do you suggest)\b/i;
 var MISSED=/doesn'?t make sense|makes no sense|are you (even )?listening|you'?re not listening|not listening|that'?s not what i (said|meant)|you don'?t (get|understand)|you'?re not (getting|hearing)|wrong question|what\?+$/i;
 
 /* the doors: each opens with its own first question, and a plainer way to say it */
 var DOORS=[
   {label:'A choice I\u2019m facing', q:'What are the choices, as you see them right now?', plain:'What are you trying to decide between?'},
-  {label:'A feeling I can\u2019t place', q:'Where do you feel it, and when did it first arrive?', plain:'Where in your body do you notice it?'},
+  {label:'A feeling I can\u2019t place', q:'Where do you feel it, and when did it first arrive?', plain:'Where in your body do you notice it?', kind:'body'},
   {label:'Something that won\u2019t leave me alone', q:'What keeps bringing it back?', plain:'When does it come back to you most?'},
   {label:'I\u2019ve been watching my own mind', q:'What do you notice, when you watch?', plain:'What did you see your mind doing?'}
 ];
 
 var S={door:-1,turn:0,stage:0,lastQ:null,turns:[],words:{},first:'',theme:'',obj:'',asked:[],felt:[],
-  hard:false,others:false,body:false,spoke:false,hedged:false,done:false};
+  hard:false,others:false,body:false,spoke:false,hedged:false,done:false,pair:null,deep:0,narrowed:false,kinds:[],stepped:false,shadowed:false};
 var $=function(id){return document.getElementById(id);};
 function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
 
@@ -207,6 +246,10 @@ var LISTEN=(function(){
   var STOP=/^(about|would|could|should|there|their|which|where|these|those|thing|things|being|really|because|every|other|still|maybe|perhaps|probably|possibly|something|anything|nothing|right|think|doesn't|don't|didn't|can't|won't|isn't|wasn't|aren't|couldn't|wouldn't|shouldn't|there's|what's|that's|you're|i've|i'll|i'd|i'm|it's|it'll|they're|we're|haven't|hasn't|through|again|always|never|going|someone|everything|anyone|actually|feels|feeling|else|little|today|while|whilst|like|want|need)$/;
   var COMMON=/^(this|that|with|have|from|they|them|what|when|just|some|very|much|more|most|your|mine|here|then|than|also|only|into|over|such|even|make|made|will|were|been|does|done|know|said|says|feel|felt|sure|kind|sort|lots|well|yeah|okay)$/;
   var HEDGE=/\b(maybe|perhaps|i think|i guess|i suppose|sort of|kind of|possibly|probably)\b/i;
+  /* 6 Oct 2026 · what a wiser voice sounds like, and what a step offered sounds like */
+  var VOICE=/^\s*(?:(?:maybe|perhaps|so)\s+)?(?:i'?d say|i would say|it would say|it'?d say|(?:she|he|they) would say|you\b|your\b|just\b|be\b|let\b|take\b|keep\b|stop\b|go\b|rest\b|trust\b|breathe\b|don'?t\b|do\b|try\b|stay\b|remember\b|slow\b|ask\b|reach\b|forgive\b|love\b|it'?s (?:ok|okay|alright|all right|fine)\b|it will be\b|everything will\b|i (?:could|can|will|would|should|must|might)\b|i'?ll\b|i need to\b|i want to\b)/i;
+  var REPORT=/\b(started|began|happened|was|were|had|used to|since|ago|been|last (?:year|week|month|night|winter|summer|spring|autumn|fall))\b/i;   /* telling what happened, not what a wiser self would say */
+  var STEP=/^\s*(?:(?:maybe|perhaps|so)\s+)?i\s+(?:could|might)\s+(?!(?:feel|see|hear|sense|tell|notice|remember|understand|imagine|picture|think|say|never|not|have|be)\b)([^.!?]{3,90})/i;
   var CYCLE=/\b(cycl\w*|loops?|looping|round and round|over and over|again and again|repeat\w*|keeps? (?:coming|going) back|same thoughts?|ruminat\w*|spiral\w*|stuck on|can'?t stop thinking)\b/i;
   var CHOICE=/\b(choose|choice|choosing|decide|decision|deciding|should i)\b/i;
   var FEAR=/\b(afraid|scared|frightened|fear|fears|terrified|dread|nervous|panic\w*)\b/i;
@@ -214,6 +257,9 @@ var LISTEN=(function(){
   var BODY=/\b(chest|stomach|belly|throat|head|shoulders?|heart|breath|breathing|jaw|tight|tense|tension|ache|gut|neck)\b/i;
   var PERSON=/\b(mum|mom|mother|dad|father|partner|wife|husband|boss|friend|son|daughter|brother|sister|him|her|he|she|colleague|teacher|neighbou?r)\b/i;
   var TURN=/\s*(?:,\s*)?\b(whilst|while|but|yet|although|though|even though)\b\s*/i;
+  /* 6 Oct 2026 · something felt that has no name yet - the heart of Aurasense */
+  var UNNAMED=/\b(?:can'?t|cannot|canoot|could ?n'?t) (?:\w+ ){0,2}(?:name|describe|explain|put (?:it )?into words|be (?:quickly )?sensed|sensed)\b|\b(?:no|without) (?:a )?(?:word|words|name) for\b|\bunseen\b|\bbeyond words\b/i;
+  var BODYPART=/\b(chest|stomach|belly|throat|head|shoulders?|heart|jaw|gut|neck|back|hands?|eyes|face)\b/i;
   var LOOSE=/^(?:it|them|this|that|these|those|him|her)\b|^(?:free|away|for good|once and for all|forever|for ever|soon|now|today|completely|somehow|at last|again)?$/i;
   var NOTOBJ=/^(?:i|i'm|i am|and|but|so|well|yes|no|ok|okay|honestly|really|actually|basically|anyway|sometimes|today|now|lately|also|though|still|yet|maybe|perhaps)$/i;
 
@@ -251,7 +297,7 @@ var LISTEN=(function(){
   function keyWord(t){
     var fl=feelings(t);if(fl.length)return fl[0];
     var ws=words(t),best='',bi=-1;
-    ws.forEach(function(w,i){if(w.length<4||STOP.test(w)||COMMON.test(w))return;if(w.length>best.length){best=w;bi=i;}});
+    ws.forEach(function(w,i){if(w.length<4||STOP.test(w)||COMMON.test(w)||BODYPART.test(w))return;if(w.length>best.length){best=w;bi=i;}});   /* 6 Oct 2026 · never "What does ‘back’ mean for you?" */
     if(bi>0){var pw=ws[bi-1];if(pw&&!STOP.test(pw)&&(/^(new|old|same|own|whole|inner|outer|deep|true|real|lost|other)$/.test(pw)||/(al|ful|ous|ive|ic|less|ish|able|ible)$/.test(pw)))best=pw+' '+best;}
     return best;
   }
@@ -279,7 +325,8 @@ var LISTEN=(function(){
       if(x.length>3&&y.length>3&&words(x).length<=12&&words(y).length<=12)r.pulls=[x,y];}
     var mw=a.match(/\b(i\s+(?:notice|noticed|watch|watched|see|saw|observe|observed|catch|caught)\s+my\s+(?:own\s+)?(?:mind|thoughts?|thinking)[^.!?]{0,70})/i);
     if(mw)r.mind=clean(mw[1]);
-    r.theme=r.mind?'mind':r.cycle?'cycle':(r.btw||r.choice||r.pulls)?'choice':r.fear?'fear':r.wish?'wish':r.feel.length?'feel':r.newish?'new':'';
+    r.unnamed=UNNAMED.test(a);
+    r.theme=r.mind?'mind':r.cycle?'cycle':(r.btw||r.choice||r.pulls)?'choice':r.fear?'fear':r.unnamed?'unnamed':r.wish?'wish':r.feel.length?'feel':r.newish?'new':'';
     return r;
   }
 
@@ -291,27 +338,48 @@ var LISTEN=(function(){
   /* what it understood, in their own words */
   function reflect(r,S){
     var w=r.wish,L=S.lastQ||{};
+    var stp=r.a.match(STEP);if(stp&&/\b(not|never|can'?t|couldn'?t|won'?t)\b/i.test(stp[0]))stp=null;if(stp)S.stepped=true;
     if(w&&w.fronted){var rest=swap(w.rest),p=/^(it|them|this|that|these|those|him|her)\b/i.test(rest)?'':' '+pron(w.obj);
       return cap(swap(w.obj))+' \u2014 and you\u2019d like to '+w.verb+p+(rest?' '+rest:'')+'.';}
     if(w&&!w.fronted){var wh=swap(w.what);
-      if(w.kind==='need')return 'You need '+wh+'.';
-      if(w.kind==='wish')return 'You wish '+wh+'.';
-      if(w.kind==='hope')return 'You hope '+wh+'.';
-      return /^to\b/i.test(wh)?'You\u2019d like '+wh+'.':'You want '+wh+'.';}
-    if(L.kind==='aspired'&&r.n<=20&&!r.theme)return 'That\u2019s your own wiser voice. Keep it close.';
+      var base=w.kind==='need'?'you need '+wh:w.kind==='wish'?'you wish '+wh:w.kind==='hope'?'you hope '+wh:(/^to\b/i.test(wh)?'you\u2019d like '+wh:'you want '+wh);
+      /* 6 Oct 2026 · "maybe I need to rest more" came back as "You need to rest more": the "maybe" is heard now */
+      if(/^(maybe|perhaps)$/.test(r.hedge)&&!S.hedged){S.hedged=true;return cap(r.hedge)+' '+base+'. That \u201c'+r.hedge+'\u201d matters \u2014 part of you is already open to it.';}
+      return cap(base)+'.';}
+    if(L.kind==='aspired'&&r.n<=20&&!r.theme){
+      if(/^\s*(yes|yeah|yep|ok|okay|sure|true|exactly|it does|that'?s me|that sounds like me|sounds like me)\b/i.test(r.a))return 'Then let that voice stay close.';
+      /* 6 Oct 2026 · "not really", or something new ("I think it started when I moved"), was being called "your own wiser voice". Only a voice is called a voice now */
+      if(/^\s*(no|nope|not really|not quite|not me|not yet|it doesn'?t|that'?s not me)\b/i.test(r.a))return 'Then your own words matter more than mine. Mine was only a guess.';
+      if(VOICE.test(r.a)||(!REPORT.test(r.a)&&!r.body))return 'That\u2019s your own wiser voice. Keep it close.';}
+    /* 6 Oct 2026 · a step they offer of their own accord is honoured, and not asked for again */
+    if(stp&&L.kind!=='step'&&L.kind!=='firststep')return 'You could '+swap(clean(stp[1]))+' \u2014 that\u2019s a real step, and it came from you.';
+    /* 6 Oct 2026 · "I would rather not look at how angry I am": the unlit room, named unasked, is honoured and not asked about again */
+    var shd=r.a.match(/\b(?:i'?d rather not|i would rather not|i'?m (?:afraid|scared|ashamed) to|i am (?:afraid|scared|ashamed) to|it'?s (?:hard|difficult) to|it is (?:hard|difficult) to) (?:look at|think about|admit|face)\b[^.!?]{0,80}/i);
+    if(shd){S.shadowed=true;S.hard=true;return cap(swap(clean(shd[0])))+'. Thank you for saying it \u2014 that takes courage.';}
     var hw=r.hedge.replace(/\bi\b/,'I'),door=/^(maybe|perhaps)$/.test(r.hedge);
     if(L.kind==='picture'&&r.n<=8){var core=clean(r.a.replace(HEDGE,' '));
-      if(core.length>2)return cap(swap(core))+' \u2014 that\u2019s what it might look like'+(r.hedge?(door?', with a \u201c'+hw+'\u201d beside it, as if a door is only just open':'. And that \u201c'+hw+'\u201d may hold more than it says'):'')+'.';}
+      if(core.length>2&&!/^(yes|yeah|yep|no|nope|ok|okay|sure|maybe|perhaps|i don'?t know|not sure)$/i.test(core))return cap(swap(core))+' — that’s what it might look like'+(r.hedge?(door?'. And you said “'+hw+'”, so part of you is open to it':'. And that “'+hw+'” may say more than it seems'):'')+'.';}
     if(r.hedge&&r.n<=8&&!S.hedged){var c2=clean(r.a.replace(HEDGE,' '));
-      if(c2.length>2){S.hedged=true;return door?cap(swap(c2))+' \u2014 and a \u201c'+hw+'\u201d beside '+pron(c2)+', as if a door is only just open.'
-        :cap(swap(c2))+', you said \u2014 and \u201c'+hw+'\u201d. Small words like that often hold more than they say.';}}
+      if(c2.length>2){S.hedged=true;return door?cap(swap(c2))+' — and you said “'+hw+'”, so part of you is open to '+pron(c2)+'.'
+        :cap(swap(c2))+', you said — and “'+hw+'”. Small words like that can say more than they seem to.';}}
     if(r.mind)return cap(swap(r.mind))+'.';
+    if(r.pulls&&r.ors)return 'Two ways, as you see them: '+swap(r.pulls[0])+', or '+swap(r.pulls[1])+'.';
     if(r.pulls)return 'Two things are pulling here: '+swap(r.pulls[0])+', and '+swap(r.pulls[1])+'.';
     if(r.btw)return 'Two ways are pulling: '+swap(clean(r.btw[1]))+', and '+swap(clean(r.btw[2]))+'.';
     if(r.list)return 'You named '+(r.list.length<=5?['','one','two','three','four','five'][r.list.length]:r.list.length)+': '+r.list.map(swap).join(', ')+'.';
-    var back=returned(r,S);if(back)return 'You\u2019ve come back to \u201c'+back+'\u201d again. It seems to matter.';
+    /* 6 Oct 2026 · counting is not listening: "You've come back to 'live'" is gone */
+    var hows=r.a.match(/\bhow to [a-z']+/gi);
+    if(hows&&hows.length&&/\b(?:can'?t|cannot|not (?:being )?able to|unable to) decide\b/i.test(r.a))
+      return 'It isn’t only this choice — it’s '+hows.map(function(h){return swap(h);}).join(', ')+'.';
+    var wf=r.a.match(/\b(?:would|will|might|could) feel ([^.!?]{3,110})/i);
+    if(wf)return 'It would feel '+swap(clean(wf[1]))+'.';
+    if(r.theme==='unnamed')return 'Some things can be felt before they can be named.';
     if(r.feel.length===1)return 'You named it: '+r.feel[0]+'. That word is yours; I\u2019m only holding it up.';
     if(r.feel.length>1)return 'More than one feeling is here: '+r.feel.slice(0,3).join(', ')+'.';
+    var kt=r.a.match(/\bi keep ((?:thinking|feeling|hearing|seeing|telling myself|wondering|asking myself|going back to|coming back to)\b[^.!?]{0,80})/i);
+    if(kt)return 'You keep '+swap(clean(kt[1]))+'.';   /* 6 Oct 2026 · "I keep thinking I failed" is given back, not passed over */
+    var ifl=r.a.match(/\bi (?:feel|felt|am feeling|'m feeling) ([^.!?]{2,80})/i);
+    if(ifl&&!r.feel.length)return 'You feel '+swap(clean(ifl[1]))+'.';
     if(r.n<=3)return 'Thank you. Stay with that a moment.';
     return '';
   }
@@ -323,9 +391,11 @@ var LISTEN=(function(){
     if(r.theme==='choice'&&r.pulls)return {q:'Which of the two is asking for you first today?',plain:'Which one needs you more right now?',kind:'choice'};
     if(r.theme==='choice')return {q:'Which one pulls harder today \u2014 and which one feels more like you?',plain:'Which one pulls harder today?',kind:'choice'};
     if(r.theme==='fear')return {q:'What is the fear trying to protect?',plain:'What are you afraid might happen?',kind:'fear'};
+    if(r.theme==='unnamed')return {q:'When it’s near, how do you know? What tells you — even without a name?',plain:'How do you notice it, without a word for it?',kind:'unnamed'};
     if(r.theme==='wish')return {q:'What would that look like, on an ordinary day?',plain:'What would it look like, day to day?',kind:'picture'};
     if(r.theme==='feel'&&r.body)return null;   /* they have already said where it lives */
     if(r.theme==='feel')return {q:'Where do you feel that, in your body?',plain:'Where in your body is it?',kind:'body'};
+    if(r.theme==='new'&&/\b(feel|feels|felt|would be|like)\b/i.test(r.a))return null;   /* 6 Oct 2026 · they have already said how it would feel */
     if(r.theme==='new'){var nm=r.a.match(/\b(?:new|fresh|different)\s+([a-z]{3,})/i),sg=nm?nm[1].toLowerCase().replace(/([^s])s$/,'$1'):'';
       return sg&&!/^(and|but|way|one|day)$/.test(sg)?{q:'What would one new '+sg+' feel like, if it came?',plain:'How would a new '+sg+' feel, next to the old ones?',kind:'new'}
         :{q:'What would something new feel like, if it came?',plain:'How would something new feel?',kind:'new'};}
@@ -355,7 +425,10 @@ var LISTEN=(function(){
     if(S.theme==='cycle'){if(S.obj){var o=swap(S.obj).toLowerCase().replace(/^(the|these|those|your|this|that)\s+/,''),pl=pron(S.obj)==='them';
       return 'You don\u2019t have to break '+(pl?'these ':'this ')+o+' by force. Each time you notice '+(pl?'them':'it')+' kindly, '+(pl?'they lose':'it loses')+' a little of '+(pl?'their':'its')+' hold.';}
       return 'You don\u2019t have to break the circle by force. Each time you notice it kindly, it\u2019s already less of a circle.';}
-    if(S.theme==='choice')return 'You don\u2019t have to see the whole road. Choose the way you could walk gently, not the one that quietens the fear fastest.';
+    /* 6 Oct 2026 · it spoke of "the fear" when no fear had been named. It speaks from their own two choices now */
+    if(S.theme==='choice'){
+      if(S.pair)return '\u2018'+cap(S.pair[0])+'\u2019 and \u2018'+S.pair[1]+'\u2019 don’t have to be enemies. Take the step that will still feel like you a year from now, and let the other keep teaching you.';
+      return 'You don’t have to see the whole road. Take the next step that will still feel like you a year from now.';}
     if(S.theme==='fear')return 'The fear is trying to protect you. You can thank it, and still take one small step.';
     if(/lonely|alone|unloved|invisible|unheard|rejected|abandoned/.test(f))return 'Feeling alone with this doesn\u2019t mean you are alone in it. Reach toward one person, just one.';
     if(/tired|exhausted|drained|heavy|overwhelmed/.test(f))return 'Rest isn\u2019t giving up. You\u2019ve carried this a long way; you\u2019re allowed to set it down for a while.';
@@ -365,38 +438,92 @@ var LISTEN=(function(){
     return 'You are more than this moment. Be as kind to yourself here as you would be to someone you love.';
   }
 
+  /* 6 Oct 2026 · an answer is heard as an answer to the question that was asked */
+  function answerLine(r,S){
+    var L=S.lastQ||{},a=r.a;
+    var yes=/^\s*(yes|yeah|yep|i do|i think so|a little|a bit|somewhat|kind of|sort of|slightly)\b/i.test(a);
+    var no=/^\s*(no|nope|not really|nothing|never|not yet|i don'?t think so)\b/i.test(a);
+    if(L.kind==='other')return 'That’s what you’d tell someone you love. It may be true for you, too.';
+    if(L.kind==='shadow')return no?'That\u2019s alright. If something comes to you later, it can be looked at then.':'Thank you for looking at that. It takes courage.';
+    if(L.kind==='pattern')return yes?'So it has come before. That’s worth knowing.':(no?'Then this may be new ground.':'');
+    if(L.kind==='shift')return yes?'Something moved. Notice what helped it move.':(no?'That’s alright. Some things shift slowly, and noticing is already a kind of movement.':'');
+    if(L.kind==='body'){
+      if(/\b(everywhere|all over|all around|all at once)\b/i.test(a))return 'Everywhere at once — not in one place.';
+      var bw=(a.match(BODYPART)||[])[0];return bw?'In your '+bw.toLowerCase()+' — your body is part of this too.':'';}
+    if(L.kind==='step'||L.kind==='firststep')return r.n>10?'That’s a big step, and it clearly matters to you.':'That’s a real step. Small is enough.';
+    if(L.kind==='choice'&&S.pair){var lo=a.toLowerCase(),hit=S.pair.filter(function(p){return lo.indexOf(String(p).toLowerCase())>=0;});
+      if(hit.length===1)return 'So “'+hit[0]+'” is asking for you more.';}
+    if(L.kind==='aspired'&&yes)return 'Then let that voice stay close.';
+    if(L.kind==='unnamed')return 'That is a way of sensing in itself.';
+    return '';
+  }
+  /* 6 Oct 2026 · when the first path has been walked, a second, quieter one - never the same question again */
+  var DEEP=[
+    {id:'witness',q:'If you look at it without naming it — just as it is — what do you notice?',plain:'What do you notice, without putting a word on it?'},
+    {id:'gift',q:'What might this be trying to show you?',plain:'Is this teaching you something?'},
+    {id:'place',q:'Is there a place where this feeling lives — a room, a street, somewhere you go?',plain:'Where do you feel this most?'},
+    {id:'others2',q:'Who else might be carrying something like this right now?',plain:'Could other people be feeling this too?'},
+    {id:'lighter',q:'What would it feel like to carry this a little more lightly?',plain:'What would “lighter” feel like?'}
+  ];
   function reply(t,S){
+    if(!S.kinds)S.kinds=[];   /* a memory made before 6 Oct 2026 still works */
     var r=read(t);S.turn++;tally(r,S);
+    /* 6 Oct 2026 · "stay in Cochrane or move to the coast": two ways named with "or" are heard as the choice they are */
+    if(!r.pulls&&!r.btw&&!r.list&&((S.door===0&&S.turn<=2)||r.choice||/\bwhether\b|\bif\s+i\s+should\b/i.test(r.a))){
+      var osrc=r.a.replace(/[.!?]+$/,'').replace(/^[^:]*:\s*/,''),owi=osrc.search(/\bwhether\b/i),oif=osrc.search(/\bif\s+i\s+(?:should|could|can|would)\b/i);
+      if(owi>=0)osrc=osrc.slice(owi).replace(/^whether\s+(?:to\s+)?/i,'');else if(oif>=0)osrc=osrc.slice(oif).replace(/^if\s+i\s+(?:should|could|can|would)\s+/i,'');
+      var om=osrc.match(/^\s*(?:(?:i\s+(?:could|can|might)|either|to)\s+)?(.{2,60}?)\s*,?\s+or\s+(?:to\s+)?(.{2,60}?)\s*$/i);
+      if(om){var o1=clean(om[1]).replace(/^(?:should|do|can|could|would)\s+i\s+/i,''),o2=clean(om[2]).replace(/^(?:should|do|can|could|would)\s+i\s+/i,'');
+        if(o1.length>1&&o2.length>1&&words(o1).length<=8&&words(o2).length<=8&&!/^(not|so|something|anything|whatever|else|both|neither)$/i.test(o2)){r.pulls=[o1,o2];r.ors=true;if(!r.mind&&!r.cycle)r.theme='choice';}}}
     if(!S.first)S.first=keyPhrase(t);
     if(r.hard)S.hard=true;if(r.others)S.others=true;if(r.body)S.body=true;
     r.feel.forEach(function(x){if(S.felt.indexOf(x)<0)S.felt.push(x);});
     if(!S.theme&&r.theme&&r.theme!=='new'&&r.theme!=='mind')S.theme=r.theme;
     if(r.wish&&r.wish.fronted&&!S.obj)S.obj=r.wish.obj;
+    if(!S.pair){if(r.pulls)S.pair=[swap(r.pulls[0]),swap(r.pulls[1])];else if(r.btw)S.pair=[swap(clean(r.btw[1])),swap(clean(r.btw[2]))];}
     var kp=keyPhrase(t),parts=[{tag:'p',cls:'quote',text:kp}],line=reflect(r,S),next=null;
+    var al=answerLine(r,S);if(al&&(!line||(line==='Thank you. Stay with that a moment.'&&/^(body|pattern|shift|shadow)$/.test((S.lastQ||{}).kind||''))))line=al;   /* 6 Oct 2026 · "in my stomach" is answered as an answer, not met with "Thank you" */
+    var bph=r.n<=8&&r.a.match(/^\s*(in|on|at|around)\s+((?:my|the)\b[^.!?,;]{1,40})/i);   /* "on the back of my neck": the place is given back in their own words */
+    if(bph&&BODYPART.test(bph[2])&&(!line||line==='Thank you. Stay with that a moment.'||/^In your /.test(line)))line=cap(bph[1].toLowerCase())+' '+swap(clean(bph[2]))+' \u2014 your body is part of this too.';
     var struggle=S.hard||/^(cycle|choice|fear|wish)$/.test(S.theme);
     /* 1 · something newly named gets its own question first */
     var tq=themeQ(r);
-    if(tq&&S.asked.indexOf(tq.kind+tq.q)<0){S.asked.push(tq.kind+tq.q);next=tq;}
+    /* 6 Oct 2026 · the same question in other words is still the same question: the body is asked about once, and "which pulls harder" once */
+    if(tq&&S.asked.indexOf(tq.q)<0&&!(tq.kind==='body'&&(S.body||S.kinds.indexOf('body')>=0))&&!(tq.kind==='choice'&&!r.pulls&&S.kinds.indexOf('choice')>=0))next=tq;
     /* 2 · a first long answer with nothing else to hold: ask about its most alive words */
-    if(!next&&S.turn===1&&r.n>4){var kw=keyWord(r.a);if(kw)next={q:'What does \u201c'+kw+'\u201d mean for you, here?',plain:'What do you mean by \u201c'+kw+'\u201d?',kind:'word'};}
+    if(!next&&S.turn===1&&r.n>4){var kw=keyWord(r.a);if(kw){var kq=r.a.match(new RegExp('\\b'+kw.replace(/[^a-z' ]/gi,'')+'\\b','i'));if(kq)kw=kq[0];}if(kw)next={q:'What does \u201c'+kw+'\u201d mean for you, here?',plain:'What do you mean by \u201c'+kw+'\u201d?',kind:'word'};}
     if(!next&&S.turn===1&&r.n<=3)next={q:'What\u2019s underneath that, if you look a little closer?',plain:'Can you say a little more?',kind:'more'};
+    /* 6 Oct 2026 · a big answer to "one small thing" is honoured, then made small enough to begin */
+    if(!next&&(S.lastQ||{}).kind==='step'&&r.n>10&&!S.narrowed){S.narrowed=true;
+      next={q:'What’s the very first small piece of it — something you could begin before tomorrow night?',plain:'What’s the first small piece of it?',kind:'firststep'};}
     /* 3 · otherwise, the next station on the path */
     while(!next&&S.stage<ARC.length){
       var st=ARC[S.stage++];
       if(st.id==='matter'&&S.theme)continue;
-      if(st.id==='body'&&S.body)continue;
-      if(st.id==='shadow'&&!S.hard)continue;
+      if(st.id==='body'&&(S.body||S.kinds.indexOf('body')>=0))continue;
+      if(st.id==='step'&&S.stepped)continue;   /* 6 Oct 2026 · they have already offered a step of their own */
+      if(st.id==='shadow'&&(!S.hard||S.shadowed))continue;
       if(st.id==='aspired'){if(!struggle||S.spoke)continue;S.spoke=true;
-        parts=[];
+        parts=[];if(line){var l1=String(line).split(/\.\s+/)[0];if(!/[.!?][\u201d\u2019"']?$/.test(l1))l1+='.';if(l1.length<=90)parts.push({cls:'line ack',text:l1});}   /* 6 Oct 2026 · what they just said is answered, briefly, before the wiser voice speaks */
         parts.push({cls:'line soft',text:'The you who has come through this might say:'});
         parts.push({cls:'line aspire',text:'\u201c'+aspire(S)+'\u201d'});
         parts.push({cls:'line q',text:'Does that sound like you \u2014 or what would your own wiser self say?'});
         return {parts:parts,rim:kp,next:{q:'Does that sound like you \u2014 or what would your own wiser self say?',plain:'Is that close to what you\u2019d tell yourself?',kind:'aspired'},done:false};}
       var v=(S.theme==='cycle'&&st.cycle)?st.cycle:(st.id==='other'&&/lonely|alone|unheard|invisible|unloved|rejected|abandoned/.test(S.felt.join(' ')))?st.lonely:(st.id==='other'&&S.others&&st.others)?st.others:st;
-      next={q:v.q,plain:v.plain,kind:st.id};
       if(st.id==='shift')S.done=true;
+      if(S.asked.indexOf(v.q)>=0)continue;
+      next={q:v.q,plain:v.plain,kind:st.id};
     }
-    if(!next)next={q:'What else is here, now?',plain:'Is there anything else?',kind:'more'};
+    while(!next&&S.deep<DEEP.length){var dp=DEEP[S.deep++];if(S.asked.indexOf(dp.q)>=0)continue;next={q:dp.q,plain:dp.plain,kind:dp.id};}
+    if(!next){
+      /* the whole path has been walked: nothing goes round again */
+      S.done=true;
+      var endQ=(S.asked.indexOf('Is there something that matters more now?')<0)?'Is there something that matters more now?':'I’m still here. Say what’s next — or let it rest.';
+      if(!line)line='We’ve walked the whole path together.';
+      next={q:endQ,plain:'Anything else that matters now?',kind:'more'};
+    }
+    if(S.asked.indexOf(next.q)<0)S.asked.push(next.q);
+    if(next.kind&&S.kinds.indexOf(next.kind)<0)S.kinds.push(next.kind);
     if(line)parts.push({cls:'line',text:line});
     parts.push({cls:'line q',text:next.q});
     return {parts:parts,rim:kp,next:next,done:S.done};
@@ -409,6 +536,149 @@ var LISTEN=(function(){
 /* 4 Oct 2026 · WORDS FALL INTO THE CLOUD, AND RISE AGAIN — the same movement as
    every one-thing-at-a-time moment on the site (Karl: "text falling into the
    cloud and re-emerging with the new part"). Reduce-motion: a quiet fade. */
+/* ═══ 6 Oct 2026 · INTO THICK SMOKE ═════════════════════════════════════
+   Karl: "the motion, of the words and symbols falling into the cloud would have
+   to be described as falling into thick smoke ... the way smoke might bend and
+   swirl if you dropped something into a thick soup of it" - "even though I want
+   the cloud to remain what it actually is".
+   So the cloud stays a cloud; only its motion becomes smoke's. Seen as one looks
+   down into a bowl of thick smoke: as each word goes in, the smoke is drawn in
+   after it and turns as it closes over the place it went, sinking toward the
+   heart of the circle and growing smaller there, as smoke does going down a
+   funnel. When the next words come forward they part it: it opens outward,
+   unwinding the other way, and goes on turning a moment after they have arrived
+   - the cloud remembering the word - then settles and clears.
+   Drawn only while words move; nothing runs at rest. With reduce-motion or Calm
+   there is no smoke at all, and the quiet fade stays. Kept identical in the map
+   file and the living Mirror. */
+var asSmoke=(function(){
+  var PAL=[[188,166,224],[228,160,154],[238,186,146],[156,186,230],[255,252,248]];
+  var WEIGHT=[.28,.22,.2,.14,.16];
+  var SPR=null,LAST={t:0,turn:1};   /* the last time words went in, anywhere on the page */
+  function sprites(){
+    if(SPR)return SPR;
+    SPR=PAL.map(function(c){var s=document.createElement('canvas');s.width=s.height=96;
+      var x=s.getContext('2d'),g=x.createRadialGradient(48,48,0,48,48,48),k=c.join(',');
+      g.addColorStop(0,'rgba('+k+',.95)');g.addColorStop(.32,'rgba('+k+',.62)');
+      g.addColorStop(.66,'rgba('+k+',.2)');g.addColorStop(1,'rgba('+k+',0)');
+      x.fillStyle=g;x.fillRect(0,0,96,96);return s;});
+    return SPR;}
+  function off(){try{
+    if(window.AS_CALM)return true;
+    if(document.body&&document.body.classList.contains('calm'))return true;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
+  function pick(){var r=Math.random(),a=0;for(var i=0;i<WEIGHT.length;i++){a+=WEIGHT[i];if(r<a)return i;}return 0;}
+  function rnd(a,b){return a+Math.random()*(b-a);}
+  function state(circle){
+    var st=circle.__smk;if(st&&st.cv.parentNode===circle)return st;
+    var cv=document.createElement('canvas');cv.className='as-smoke';cv.setAttribute('aria-hidden','true');circle.appendChild(cv);
+    st={el:circle,cv:cv,cx:cv.getContext('2d'),P:[],V:[],raf:0,last:0,w:0,h:0,d:1,t:0,stir:0,took:0,turn:1,gv:-1};
+    circle.__smk=st;return st;}
+  function size(st){var c=st.el,w=c.clientWidth||c.offsetWidth||0,h=c.clientHeight||c.offsetHeight||0,d=Math.min(window.devicePixelRatio||1,1.75);
+    if(w!==st.w||h!==st.h||d!==st.d){st.w=w;st.h=h;st.d=d;st.cv.width=Math.max(1,Math.round(w*d));st.cv.height=Math.max(1,Math.round(h*d));}}
+  /* where each word rests, measured in the circle's own size, so its breathing does not count */
+  function spots(st,root){
+    var out=[];try{var c=st.el.getBoundingClientRect(),k=st.w/(c.width||1);
+      root.querySelectorAll('.as-w').forEach(function(w,i){if(i>60)return;var b=w.getBoundingClientRect();if(!b.width)return;
+        out.push({x:(b.left-c.left+b.width/2)*k,y:(b.top-c.top+b.height/2)*k,w:b.width*k,h:b.height*k});});}catch(e){}
+    return out;}
+  function puff(st,x,y,r,life,vx,vy,body){if(st.P.length>=260)return;
+    st.P.push({x:x,y:y,vx:vx||0,vy:vy||0,r0:r,age:0,life:life,col:pick(),a:body?rnd(.025,.045):rnd(.05,.085),gr:body?rnd(.3,.55):rnd(.15,.35)});}
+  /* the flow: a slow turning everywhere, and a whirl wherever a word goes in or comes out */
+  function flow(st,x,y){
+    var D=Math.min(st.w,st.h)||1,t=st.t,u=x/D*6.2,v=y/D*6.2,A=D*.028*(.35+st.stir);
+    var vx=A*(1.1*Math.cos(1.7*v+.5*t)+.8*Math.cos(1.3*(u+v)-.37*t)),
+        vy=-A*(1.0*Math.cos(1.5*u-.43*t)+.8*Math.cos(1.3*(u+v)-.37*t));
+    for(var i=0;i<st.V.length;i++){var q=st.V[i],dx=x-q.x,dy=y-q.y,f=q.k/(6.2832*(dx*dx+dy*dy+q.c*q.c));
+      vx+=(-dy*q.g+dx*q.s)*f;vy+=(dx*q.g+dy*q.s)*f;}
+    return [vx,vy];}
+  function draw(st){
+    var x=st.cx,d=st.d,W=st.w,H=st.h,D=Math.min(W,H),cx=W/2,cy=H/2,S=sprites();
+    var thin=st.gv<0?1:1-.45*Math.min(1,st.gv/.7);   /* the next words come clear of it */
+    x.setTransform(1,0,0,1,0,0);x.globalAlpha=1;
+    /* what was drawn a moment ago fades, so each wisp leaves a trail along the way it turned */
+    x.globalCompositeOperation='destination-out';x.fillStyle='rgba(0,0,0,'+(1-Math.exp(-st.dt/.24)).toFixed(4)+')';
+    x.fillRect(0,0,st.cv.width,st.cv.height);x.globalCompositeOperation='source-over';
+    for(var i=0;i<st.P.length;i++){var p=st.P[i],k=p.age/p.life;
+      var env=Math.min(1,p.age/.28)*(k>.55?Math.max(0,1-(k-.55)/.45):1);
+      var dist=Math.sqrt((p.x-cx)*(p.x-cx)+(p.y-cy)*(p.y-cy))/(D*.5);
+      var depth=.42+.58*Math.min(1,dist*1.25);              /* smaller toward the heart: going in, away */
+      var a=p.a*env*thin*(.45+.55*Math.min(1,dist*1.6));
+      if(a<.004)continue;
+      var R=p.r0*(1+p.gr*p.age)*depth;
+      var sp=Math.sqrt(p.vx*p.vx+p.vy*p.vy),L=1+Math.min(1.5,sp/(D*.55)),Wd=1/Math.sqrt(L),th=Math.atan2(p.vy,p.vx),co=Math.cos(th),si=Math.sin(th);
+      x.setTransform(d*L*co,d*L*si,-d*Wd*si,d*Wd*co,p.x*d,p.y*d);   /* drawn out along the way it is moving: a wisp */
+      x.globalAlpha=a;x.drawImage(S[p.col],-R,-R,2*R,2*R);}
+    /* no edge anywhere: the smoke thins to nothing before the rim */
+    x.setTransform(d*W/D,0,0,d*H/D,0,0);x.globalAlpha=1;x.globalCompositeOperation='destination-in';
+    var g=x.createRadialGradient(D/2,D/2,0,D/2,D/2,D/2);
+    g.addColorStop(0,'rgba(0,0,0,1)');g.addColorStop(.72,'rgba(0,0,0,1)');g.addColorStop(.97,'rgba(0,0,0,0)');g.addColorStop(1,'rgba(0,0,0,0)');
+    x.fillStyle=g;x.fillRect(0,0,D,D);
+    x.globalCompositeOperation='source-over';x.setTransform(1,0,0,1,0,0);}
+  function run(st){
+    if(st.raf)return;st.last=0;
+    var step=function(ts){
+      st.raf=0;
+      try{
+        if(!st.cv.isConnected){st.P.length=0;st.V.length=0;return;}
+        var dt=st.last?Math.min(.05,(ts-st.last)/1000):.016;st.last=ts;st.t+=dt;st.dt=dt;
+        st.stir*=Math.exp(-dt/1.6);if(st.gv>=0)st.gv+=dt;
+        for(var i=st.V.length-1;i>=0;i--){var q=st.V[i];q.age+=dt;if(q.age>=q.life){st.V.splice(i,1);continue;}
+          var e=1-q.age/q.life;q.k=q.k0*e*e;q.x+=q.vx*dt;q.y+=q.vy*dt;var dmp=Math.exp(-dt/.6);q.vx*=dmp;q.vy*=dmp;}
+        var ease=1-Math.exp(-dt/.16);
+        for(var j=st.P.length-1;j>=0;j--){var p=st.P[j];p.age+=dt;if(p.age>=p.life){st.P.splice(j,1);continue;}
+          var fl=flow(st,p.x,p.y);p.vx+=(fl[0]-p.vx)*ease;p.vy+=(fl[1]-p.vy)*ease;p.x+=p.vx*dt;p.y+=p.vy*dt;}
+        draw(st);
+        if(st.P.length||st.V.length){st.end=0;st.raf=requestAnimationFrame(step);}
+        else if((st.end=(st.end||0)+dt)<.9)st.raf=requestAnimationFrame(step);   /* the last trails settle and clear */
+        else{st.end=0;st.cx.setTransform(1,0,0,1,0,0);st.cx.clearRect(0,0,st.cv.width,st.cv.height);}
+      }catch(err){try{st.cx.setTransform(1,0,0,1,0,0);st.cx.clearRect(0,0,st.cv.width,st.cv.height);}catch(_){}st.P.length=0;st.V.length=0;}
+    };
+    st.raf=requestAnimationFrame(step);}
+  /* the words go in */
+  function take(circle,root){try{
+    if(!circle||!root||off())return;
+    var st=state(circle);size(st);if(!st.w||!st.h)return;
+    var D=Math.min(st.w,st.h),cx=st.w/2,cy=st.h/2,S=spots(st,root),turn=(Math.random()<.5?-1:1);
+    st.took=performance.now();st.stir=1;st.turn=turn;st.gv=-1;LAST.t=st.took;LAST.turn=turn;
+    st.V.push({x:cx,y:cy,vx:0,vy:0,c:D*.07,g:turn,s:-.3,k0:D*D*.78,k:0,age:0,life:2.4});   /* the heart draws everything in, turning */
+    S.forEach(function(w,i){
+      var tx=w.x+(cx-w.x)*.6,ty=w.y+(cy-w.y)*.6,side=(w.x<cx)?1:-1;
+      if(i%2===0||S.length<10)st.V.push({x:w.x,y:w.y,vx:(tx-w.x)/.95,vy:(ty-w.y)/.95,c:Math.max(8,w.h*.9),g:side*turn,s:-.5,k0:D*D*.05,k:0,age:0,life:1.35});
+      var n=Math.max(2,Math.min(4,Math.round(w.w/22)+1));
+      for(var j=0;j<n;j++)puff(st,w.x+rnd(-.6,.6)*w.w,w.y+rnd(-.9,.9)*w.h,D*rnd(.022,.04),rnd(2.4,3.2),rnd(-1,1)*D*.05,rnd(-1,1)*D*.05);
+    });
+    for(var k=0;k<44;k++){var ang=Math.random()*6.2832,rr=D*rnd(.12,.43);   /* the soup all around, drawn into the turn */
+      puff(st,cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr*.92,D*rnd(.018,.036),rnd(2.5,3.3),0,0);}
+    for(var b=0;b<16;b++){var a2=Math.random()*6.2832,r2=D*Math.sqrt(rnd(.004,.16));   /* the body of the smoke */
+      puff(st,cx+Math.cos(a2)*r2,cy+Math.sin(a2)*r2,D*rnd(.06,.1),rnd(2.6,3.4),0,0,1);}
+    run(st);
+  }catch(e){}}
+  /* the next words come forward, and part it */
+  function give(circle,root){try{
+    if(!circle||!root||off())return;
+    var st=circle.__smk,now=performance.now(),fresh=false;
+    if(!st||!st.took||now-st.took>4000){
+      /* a path of lights shows the next step in a new circle: the smoke the words went into is carried across to it */
+      if(now-LAST.t>2500)return;   /* only after something went in */
+      st=state(circle);st.took=LAST.t;st.turn=LAST.turn;fresh=true;}
+    size(st);if(!st.w||!st.h)return;
+    var D=Math.min(st.w,st.h),cx=st.w/2,cy=st.h/2,S=spots(st,root),turn=-(st.turn||1);   /* it unwinds the other way */
+    if(fresh){for(var k=0;k<26;k++){var ang=Math.random()*6.2832,rr=D*rnd(.04,.3);
+        puff(st,cx+Math.cos(ang)*rr,cy+Math.sin(ang)*rr*.92,D*rnd(.02,.036),rnd(1.7,2.3),0,0);}
+      for(var b=0;b<10;b++){var a2=Math.random()*6.2832,r2=D*rnd(.02,.22);
+        puff(st,cx+Math.cos(a2)*r2,cy+Math.sin(a2)*r2,D*rnd(.06,.1),rnd(1.8,2.4),0,0,1);}}
+    st.stir=Math.max(st.stir,.85);st.gv=0;
+    st.V.push({x:cx,y:cy,vx:0,vy:0,c:D*.08,g:turn,s:.3,k0:D*D*.5,k:0,age:0,life:2.6});
+    S.forEach(function(w,i){
+      if(i%2===0||S.length<10)st.V.push({x:w.x,y:w.y,vx:0,vy:0,c:Math.max(8,w.h),g:(w.x<cx?-1:1)*turn*.5,s:.8,k0:D*D*.035,k:0,age:0,life:1.1});
+      if(i%3===0)puff(st,w.x,w.y,D*rnd(.02,.035),rnd(1.5,2.1),(w.x-cx)*.4,(w.y-cy)*.4);
+    });
+    st.P.forEach(function(p){p.life=Math.max(p.life,p.age+rnd(1.7,2.5));});   /* the cloud remembering the word */
+    run(st);
+  }catch(e){}}
+  return {take:take,give:give};
+})();
 function asStill(){try{return window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){return false;}}
 function asWordsOf(root){try{
   var tw=document.createTreeWalker(root,NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;
@@ -432,17 +702,41 @@ function show(parts,rimWords){
   var sp=$('speak');
   function render(){
     sp.textContent='';
-    parts.forEach(function(p){sp.appendChild(el(p.tag||'p',p.cls,p.text));});
+    parts.forEach(function(p){var tx=p.text;if(tx&&/\bquote\b/.test(p.cls||''))tx='\u201c'+tx+'\u201d';sp.appendChild(el(p.tag||'p',p.cls,tx));});
     sp.classList.toggle('full',parts.length>=4||parts.reduce(function(n,p){return n+String(p.text||'').length;},0)>230);
     if(rimWords!==undefined)setRim(rimWords);
-    sp.classList.remove('as-falling','as-rising');asWordsOf(sp);asAim(sp,$('mirror'));asCloud($('mirror'),'give');void sp.offsetWidth;sp.classList.add('as-rising');
+    sp.classList.remove('as-falling','as-rising');asWordsOf(sp);fitSpeak(sp);asAim(sp,$('mirror'));asSmoke.give($('mirror'),sp);asCloud($('mirror'),'give');void sp.offsetWidth;sp.classList.add('as-rising');
     clearTimeout(sp.__asR);sp.__asR=setTimeout(function(){sp.classList.remove('as-rising');},2200);
   }
   if(sp.__asT){clearTimeout(sp.__asT);sp.__asT=0;render();return;}
   if(!sp.textContent.trim()){render();return;}
-  sp.classList.remove('as-rising','as-falling');asWordsOf(sp);asAim(sp,$('mirror'));asCloud($('mirror'),'take');void sp.offsetWidth;sp.classList.add('as-falling');
+  sp.classList.remove('as-rising','as-falling');asWordsOf(sp);asAim(sp,$('mirror'));asSmoke.take($('mirror'),sp);asCloud($('mirror'),'take');void sp.offsetWidth;sp.classList.add('as-falling');
   sp.__asT=setTimeout(function(){sp.__asT=0;render();},asFallMs(sp));
 }
+/* 6 Oct 2026 · Karl: "the My Aura mirror text overlaps the circle." Each turn is measured once
+   its words are laid out, and set a little smaller until it sits well inside the circle. */
+function fitSpeak(sp){try{
+  /* 6 Oct 2026 · found by measuring: each line keeps its own size in the page's style, so setting the
+     size of the whole never reached them and long turns still spilled onto the rim. Each line's own size
+     is made smaller now, and in a circle the height alone is not enough - the corners of every line are
+     measured too, until none reaches the words turning on the rim. If a turn is still too full, the
+     brief answer before the wiser voice steps aside first, so nothing is ever cut mid-thought. */
+  var m=$('mirror'),D=Math.min(m.clientWidth||m.offsetWidth,m.clientHeight||m.offsetHeight);
+  var maxH=D*0.6,f=1,kids=[].slice.call(sp.children);sp.style.fontSize='';
+  kids.forEach(function(k){k.style.fontSize='';k.style.display='';});
+  var base=kids.map(function(k){return parseFloat(getComputedStyle(k).fontSize)||16;});
+  var full=function(){return sp.scrollHeight>maxH||reach(sp,m)>0.84;};
+  var set=function(){kids.forEach(function(k,i){k.style.fontSize=(base[i]*f).toFixed(2)+'px';});};
+  for(var k=0;k<9&&f>0.73&&full();k++){f-=0.03;set();}
+  if(full()){var acks=sp.querySelectorAll('.ack');if(acks.length){[].forEach.call(acks,function(x){x.style.display='none';});f=1;set();for(var j=0;j<9&&f>0.73&&full();j++){f-=0.03;set();}}}
+}catch(e){}}
+function reach(sp,m){var c=m.getBoundingClientRect(),cx=c.left+c.width/2,cy=c.top+c.height/2,R=Math.min(c.width,c.height)/2,far=0;
+  if(!R)return 0;
+  var tw=document.createTreeWalker(sp,NodeFilter.SHOW_TEXT,null),n,rg=document.createRange();
+  while((n=tw.nextNode())){if(!n.nodeValue.trim()||!n.parentNode||n.parentNode.offsetParent===null)continue;rg.selectNodeContents(n);
+    var rs=rg.getClientRects();for(var i=0;i<rs.length;i++){var b=rs[i];
+      var dx=Math.max(Math.abs(b.left-cx),Math.abs(b.right-cx)),dy=Math.max(Math.abs(b.top-cy),Math.abs(b.bottom-cy)),d=Math.sqrt(dx*dx+dy*dy)/R;if(d>far)far=d;}}
+  return far;}
 function setRim(words){var r=$('rim'),t=$('rimText');
   r.classList.remove('show');
   setTimeout(function(){t.textContent=words?('\u00b7 '+words+' \u00b7 '+words+' '):'';if(words)r.classList.add('show');},500);}
@@ -473,17 +767,141 @@ function open(){
 function begin(i){
   S.door=i; $('doors').classList.add('hide'); $('say').classList.remove('hide');
   var q=i>=0?DOORS[i]:{q:'What\u2019s here for you today?',plain:'What would you like to talk about?'};
-  ask(q);
+  ask(q);if(q.kind&&S.kinds.indexOf(q.kind)<0)S.kinds.push(q.kind);   /* 6 Oct 2026 · the door's own question counts too */
   var parts=[{cls:'line q',text:q.q}];
   show(parts,''); addTrail(parts,'');
   setTimeout(function(){try{$('words').focus();}catch(e){}},700);
+}
+
+/* ── 6 Oct 2026 · THE DOORWAY ────────────────────────────────────────────
+   Karl approved (6 Oct): when the Mirror hears a heavy feeling the Alphasense has a word for,
+   it quietly shows that word's symbol, with its doorway - the word that leads out of it -
+   glowing beside it. Outside the circle, so nothing crowds the words; shown only where there
+   is room; once for each word in a conversation; never beside a reply to real pain.
+   The words and their marks are the site's own alphabet, copied exactly. */
+var DW={"Weariness": {"w": "Weariness", "c": "#a087de", "d": "a light worn low beneath a long arc", "g": "<path d=\"M11 21 A15 15 0 0 1 37 21\"/><circle cx=\"24\" cy=\"32\" r=\"3.2\" class=\"f\"/>", "door": "Rest"}, "Exhaustion": {"w": "Exhaustion", "c": "#9680d8", "d": "nothing left to lift", "g": "<path d=\"M8 34h32\"/><ellipse cx=\"24\" cy=\"31\" rx=\"5\" ry=\"2.4\" class=\"f\"/><path d=\"M14 24q10 4 20 0\" opacity=\"0.3\"/>", "door": "Rest"}, "Burnout": {"w": "Burnout", "c": "#d57b99", "d": "a light that burned too long", "g": "<path d=\"M24 10c-6 7-8 12-5 18\" opacity=\"0.5\"/><path d=\"M26 14c3 5 4 9 1 14\" opacity=\"0.35\"/><circle cx=\"24\" cy=\"33\" r=\"3\" class=\"f\" opacity=\"0.6\"/><path d=\"M15 38h18\" opacity=\"0.5\"/>", "door": "Rest"}, "Loneliness": {"w": "Loneliness", "c": "#809ad7", "d": "one light, far from the others", "g": "<circle cx=\"15\" cy=\"32\" r=\"3.2\" class=\"f\"/><circle cx=\"15\" cy=\"32\" r=\"8\" opacity=\"0.25\"/><circle cx=\"34\" cy=\"13\" r=\"1.4\" opacity=\"0.4\"/><circle cx=\"38.5\" cy=\"17.5\" r=\"1.1\" opacity=\"0.35\"/><circle cx=\"35.5\" cy=\"21.5\" r=\"1\" opacity=\"0.3\"/>", "door": "Belonging"}, "The Loop": {"w": "The Loop", "c": "#8f80d8", "d": "a cycle not yet questioned", "g": "<circle cx=\"24\" cy=\"24\" r=\"12\"/><path d=\"M33 13l3 4-5 1M15 35l-3-4 5-1\"/><circle cx=\"24\" cy=\"24\" r=\"2.4\" class=\"f\"/>", "door": "Inquiry"}, "Fear": {"w": "Fear", "c": "#997dd7", "d": "the field contracting", "g": "<circle cx=\"24\" cy=\"24\" r=\"3\" class=\"f\"/><circle cx=\"24\" cy=\"24\" r=\"8\" opacity=\"0.6\"/><path d=\"M24 6v6M24 42v-6M6 24h6M42 24h-6\"/><path d=\"M21 9l3 3 3-3M21 39l3-3 3 3M9 21l3 3-3 3M39 21l-3 3 3 3\" opacity=\"0.7\"/>", "door": "Safety"}, "Anger": {"w": "Anger", "c": "#e8846c", "d": "heat rising from the centre", "g": "<path d=\"M15 36l3-10 4 5 3-14 3 10 3-5 2 14\" opacity=\"0.9\"/><circle cx=\"24\" cy=\"38\" r=\"2.4\" class=\"f\"/>", "door": "Clarity"}, "Melancholy": {"w": "Melancholy", "c": "#89a4e3", "d": "a light waning softly", "g": "<path d=\"M28 11a13 13 0 1 0 0 26a10 10 0 1 1 0-26z\" opacity=\"0.85\"/><circle cx=\"21\" cy=\"24\" r=\"2.6\" class=\"f\"/>", "door": "Tenderness"}, "Heaviness": {"w": "Heaviness", "c": "#8373cb", "d": "a weight bowing the field", "g": "<path d=\"M12 17 Q24 26 36 17\"/><circle cx=\"24\" cy=\"31\" r=\"3.2\" class=\"f\"/>", "door": "Relief"}, "Overstimulation": {"w": "Overstimulation", "c": "#d78ce3", "d": "too much, arriving at once", "g": "<circle cx=\"24\" cy=\"24\" r=\"2.8\" class=\"f\"/><path d=\"M14 12l3 4M33 11l-2 5M40 22l-5 1M38 35l-4-3M27 40l-1-5M15 38l2-5M8 28l5-2M9 16l5 3\" opacity=\"0.8\"/>", "door": "Grounding"}, "Unease": {"w": "Unease", "c": "#e48cad", "d": "a field that will not settle", "g": "<path d=\"M8 18l4-4 4 4 4-4 4 4 4-4 4 4 4-4 4 4\" opacity=\"0.8\"/><circle cx=\"24\" cy=\"31\" r=\"3\" class=\"f\"/>", "door": "Safety"}, "Numbness": {"w": "Numbness", "c": "#77a1d0", "d": "a light with the field turned away", "g": "<circle cx=\"24\" cy=\"24\" r=\"3\" class=\"f\"/><path d=\"M11 24a13 13 0 0 1 8-12\"/><path d=\"M37 24a13 13 0 0 1-8 12\"/>", "door": "Presence"}, "Resentment": {"w": "Resentment", "c": "#c97373", "d": "an old heat, held in a loop", "g": "<path d=\"M8 33c0-13 19-15 19-3s-12 8-10-1\"/><circle cx=\"21\" cy=\"29\" r=\"2.8\" class=\"f\"/>", "door": "Release"}, "Listlessness": {"w": "Listlessness", "c": "#9e88e1", "d": "drifting without a pull", "g": "<circle cx=\"14\" cy=\"28\" r=\"3\" class=\"f\"/><path d=\"M18 27c4-2 6 3 10 1s4-5 8-3\" opacity=\"0.6\"/>", "door": "Inquiry"}, "Rest": {"w": "Rest", "c": "#87e0af", "d": "the field held gently from below", "g": "<path d=\"M12 26q12 12 24 0\"/><circle cx=\"24\" cy=\"24\" r=\"3.4\" class=\"f\"/>", "door": null}, "Belonging": {"w": "Belonging", "c": "#f6b26b", "d": "held from both sides", "g": "<path d=\"M15 13c-8 7-8 15 0 22\"/><path d=\"M33 13c8 7 8 15 0 22\"/><circle cx=\"24\" cy=\"24\" r=\"3.4\" class=\"f\"/>", "door": null}, "Inquiry": {"w": "Inquiry", "c": "#9fb8f0", "d": "a question rising, open at the top", "g": "<path d=\"M17 20a7 7 0 1 1 9.5 6.5c-1.6.7-2.5 1.6-2.5 3\"/><circle cx=\"24\" cy=\"35\" r=\"2.4\" class=\"f\"/>", "door": null}, "Safety": {"w": "Safety", "c": "#f0b070", "d": "a dome of light held over the centre", "g": "<path d=\"M10 32a14 14 0 0 1 28 0\"/><path d=\"M15 32a9 9 0 0 1 18 0\" opacity=\"0.45\"/><circle cx=\"24\" cy=\"30\" r=\"3\" class=\"f\"/>", "door": null}, "Clarity": {"w": "Clarity", "c": "#85ceea", "d": "light with nothing in front of it", "g": "<path d=\"M24 8l12 16-12 16-12-16z\"/><circle cx=\"24\" cy=\"24\" r=\"2.8\" class=\"f\"/>", "door": null}, "Tenderness": {"w": "Tenderness", "c": "#e98694", "d": "a soft curve leaning in to hold a small light", "g": "<path d=\"M13 21c0 9 6 15 15 15\"/><circle cx=\"25\" cy=\"25\" r=\"3\" class=\"f\"/><path d=\"M31 18c3 2 4 5 3 8\" opacity=\"0.5\"/>", "door": null}, "Relief": {"w": "Relief", "c": "#f4cc90", "d": "what was held, set down", "g": "<path d=\"M13 31q11 10 22 0\"/><circle cx=\"24\" cy=\"22\" r=\"3.2\" class=\"f\"/><path d=\"M24 13v-4\"/>", "door": null}, "Grounding": {"w": "Grounding", "c": "#c8ab70", "d": "light settling into the earth", "g": "<circle cx=\"24\" cy=\"14\" r=\"3\" class=\"f\"/><path d=\"M24 18v15\"/><path d=\"M12 33h24\"/><path d=\"M24 33l-5 6M24 33l5 6M24 33v7\" opacity=\"0.6\"/>", "door": null}, "Presence": {"w": "Presence", "c": "#e6dcff", "d": "here, now — the point inside the field", "g": "<circle cx=\"24\" cy=\"24\" r=\"11\"/><circle cx=\"24\" cy=\"24\" r=\"3\" class=\"f\"/>", "door": null}, "Release": {"w": "Release", "c": "#cdb8f5", "d": "held light let go, rising", "g": "<circle cx=\"24\" cy=\"31\" r=\"3\" class=\"f\"/><path d=\"M24 25V13M15 22l-5-7M33 22l5-7\"/>", "door": null}};
+var DW_FEEL={tired:'Weariness',exhausted:'Exhaustion',drained:'Burnout',alone:'Loneliness',lonely:'Loneliness',unloved:'Loneliness',
+  invisible:'Loneliness',unheard:'Loneliness',rejected:'Loneliness',abandoned:'Loneliness',stuck:'The Loop',trapped:'The Loop',
+  afraid:'Fear',scared:'Fear',frightened:'Fear',angry:'Anger',furious:'Anger',frustrated:'Anger',sad:'Melancholy',unhappy:'Melancholy',
+  heavy:'Heaviness',overwhelmed:'Overstimulation',anxious:'Unease',worried:'Unease',nervous:'Unease',unsafe:'Unease',restless:'Unease',
+  numb:'Numbness',empty:'Numbness',resentful:'Resentment',bored:'Listlessness'};
+var dwShown=[],dwT=0;
+function dwInk(hex){   /* a pale colour deepened, so its line can be seen on the light ground */
+  var m=/^#([0-9a-f]{6})$/i.exec(hex||'');if(!m)return '#6f5a6c';
+  var n=parseInt(m[1],16),r=(n>>16&255)/255,g=(n>>8&255)/255,b=(n&255)/255,mx=Math.max(r,g,b),mn=Math.min(r,g,b),l=(mx+mn)/2,d=mx-mn,h=0,s=0;
+  if(d){s=l>.5?d/(2-mx-mn):d/(mx+mn);h=mx===r?((g-b)/d+(g<b?6:0)):mx===g?((b-r)/d+2):((r-g)/d+4);h/=6;}
+  if(l<=.62)return hex;
+  l=.5;s=Math.max(s*.75,.45);
+  var f=function(k){var t=(k+h*12)%12,a=s*Math.min(l,1-l);return Math.round(255*(l-a*Math.max(-1,Math.min(t-3,9-t,1))));};
+  return 'rgb('+f(0)+','+f(8)+','+f(4)+')';}
+function dwGlyph(w,size){
+  var k=dwInk(w.c),NS='http://www.w3.org/2000/svg',svg=document.createElementNS(NS,'svg');
+  svg.setAttribute('width',size);svg.setAttribute('height',size);svg.setAttribute('viewBox','0 0 48 48');svg.setAttribute('fill','none');
+  svg.setAttribute('stroke',k);svg.setAttribute('stroke-width','2');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');
+  svg.setAttribute('aria-hidden','true');svg.style.filter='drop-shadow(0 0 6px '+w.c+'aa) drop-shadow(0 0 12px '+w.c+'55)';
+  svg.innerHTML=w.g.replace(/class="f"/g,'fill="'+k+'" stroke="none"');   /* the site's own marks: fixed text, never anyone's words */
+  return svg;}
+function dwHide(){var d=$('doorway');if(!d)return;clearTimeout(dwT);d.classList.remove('show');
+  setTimeout(function(){if(!d.classList.contains('show'))d.hidden=true;},600);}
+function dwPlace(d){
+  var m=$('mirror').getBoundingClientRect(),W=window.innerWidth,w=d.offsetWidth,h=d.offsetHeight;
+  var cap=d.querySelector('.dw-k');
+  if(cap){cap.style.display='';d.classList.add('side');w=d.offsetWidth;h=d.offsetHeight;}
+  if(W-m.right>=w+28){d.style.left=Math.round(m.right+16)+'px';d.style.top=Math.round(m.top+m.height*.6-h/2)+'px';return true;}
+  if(cap){cap.style.display='none';d.classList.remove('side');w=d.offsetWidth;h=d.offsetHeight;}
+  var minTop=8,hm=$('home');
+  if(hm&&!hm.classList.contains('hide')){var hb=hm.getBoundingClientRect();if(hb.height)minTop=hb.bottom+8;}
+  var top=m.top-h-12;
+  if(top>=minTop){d.style.left=Math.round(Math.max(8,Math.min(W-w-8,m.left+m.width/2-w/2)))+'px';d.style.top=Math.round(top)+'px';return true;}
+  return false;}   /* no room: it does not crowd anything, it simply stays away */
+function doorway(raw){try{
+  var fl=LISTEN.read(raw).feel||[],name=null;
+  for(var i=0;i<fl.length;i++){var n=DW_FEEL[fl[i]];if(n&&dwShown.indexOf(n)<0&&DW[n]&&DW[n].door&&DW[DW[n].door]){name=n;break;}}
+  if(!name)return;
+  var a=DW[name],b=DW[a.door],d=$('doorway');if(!d)return;
+  d.textContent='';
+  var row=el('div','dw-row'),ba=el('button','dw-w'),bb=el('button','dw-w dw-door'),to=el('span','dw-to','its doorway'),line=el('div','dw-line');
+  ba.type='button';bb.type='button';
+  ba.appendChild(dwGlyph(a,32));ba.appendChild(el('span','',a.w));bb.appendChild(dwGlyph(b,32));bb.appendChild(el('span','',b.w));
+  ba.setAttribute('aria-label',a.w+', in Alphasense: '+a.d);bb.setAttribute('aria-label','Its doorway, '+b.w+': '+b.d);
+  ba.addEventListener('click',function(){line.textContent=a.w+': '+a.d;if(!dwPlace(d))dwHide();});
+  bb.addEventListener('click',function(){line.textContent=b.w+': '+b.d;if(!dwPlace(d))dwHide();});
+  row.appendChild(ba);row.appendChild(to);row.appendChild(bb);
+  var cap=el('div','dw-k','In Alphasense');d.appendChild(cap);d.appendChild(row);d.appendChild(line);
+  clearTimeout(dwT);
+  dwT=setTimeout(function(){d.hidden=false;d.style.visibility='hidden';
+    if(!dwPlace(d)){d.hidden=true;d.style.visibility='';return;}
+    d.style.visibility='';dwShown.push(name);void d.offsetWidth;d.classList.add('show');},1700);
+}catch(e){}}
+window.addEventListener('resize',function(){var d=$('doorway');if(d&&!d.hidden&&!dwPlace(d))dwHide();});
+
+/* ── 6 Oct 2026 · from the guiding light on the map ──────────────────────
+   The map's own light can hand the Mirror its question, and whatever was said to it. The Mirror
+   begins with that question; the person's words wait in the box, unsent, for them to offer.
+   A conversation already begun is never interrupted. Only this site's own page may ask. */
+function beginWith(q,a,kind){
+  if(S.turns.length)return;
+  S.door=-1; $('doors').classList.add('hide'); $('say').classList.remove('hide');
+  ask({q:q,plain:q,kind:kind||'guide'});
+  if(kind&&S.kinds.indexOf(kind)<0)S.kinds.push(kind);
+  if(S.asked.indexOf(q)<0)S.asked.push(q);
+  var parts=[{cls:'line soft',text:'From your light on the map:'},{cls:'line q',text:q}];
+  show(parts,''); addTrail(parts,'');
+  if(a)$('words').value=a;
+  setTimeout(function(){try{$('words').focus();}catch(e){}},700);
+}
+window.addEventListener('message',function(e){try{
+  if(window.parent===window||e.source!==window.parent||e.origin!==location.origin)return;
+  var m=e.data||{};if(m.as!=='mirror-host'||m.act!=='begin')return;
+  var q=String(m.q||'').replace(/\s+/g,' ').trim().slice(0,300),a=String(m.a||'').trim().slice(0,600);
+  var k=/^(body|choice)$/.test(String(m.kind||''))?String(m.kind):'';
+  if(q)beginWith(q,a,k);
+}catch(_){}});
+
+/* ── 6 Oct 2026 · questions put to the Mirror itself ─────────────────── */
+var EXPLAIN={
+  shift:'I meant since you began talking here, a few minutes ago. Has the feeling you came in with changed at all, even slightly?',
+  body:'I meant: when you think about it, does any part of your body tighten, warm or go heavy — your chest, stomach, throat or shoulders?',
+  pattern:'I meant: have you felt this before, at another time — maybe with other people, or in another place?',
+  shadow:'I meant: is there a part of this that’s uncomfortable to admit, even to yourself?',
+  other:'I meant: if someone you love told you they felt this, what would you say to them?',
+  step:'I meant something small and real — one thing you could actually do in the next day or so.',
+  firststep:'I meant the very first, smallest piece — something you could begin before tomorrow night.',
+  aspired:'I meant: picture yourself after this has eased. What would that you say to you now?',
+  unnamed:'I meant: even without a name for it, how do you notice when it’s there?',
+  witness:'I meant: just look at the feeling itself, without explaining or naming it. What’s there?',
+  matter:'I meant: of everything in this, what feels most important to you?'
+};
+function mirrorQ(t){
+  var isQ=/\?\s*$/.test(t)||/^\s*(do|does|did|are|is|can|could|will|would|what|why|how|who)\b/i.test(t);
+  if(!isQ)return null;
+  var L=S.lastQ||{};
+  var content=function(x){return (String(x).toLowerCase().match(/[a-z']+/g)||[]).filter(function(w){
+    return w.length>=3&&!/^(the|and|you|your|yours|for|was|are|did|has|have|what|this|that|with|any|anything|even|little|i'm|you're)$/.test(w);});};
+  /* an echo: the Mirror's own words, sent back with a question mark - "Since I began?" */
+  var mine=content(t.replace(/\b(i|me|my)\b/gi,'you')),theirs=content(L.q||'');
+  if(L.q&&mine.length&&mine.length<=6&&mine.filter(function(w){return theirs.indexOf(w)>=0;}).length>=Math.ceil(mine.length*0.5)){
+    var ex=EXPLAIN[L.kind]||('Let me put it more simply: '+(L.plain||L.q));
+    return {parts:[{cls:'line',text:ex}],next:{q:L.plain||L.q,plain:L.plain||L.q,kind:L.kind}};
+  }
+  if(!ASKME.test(t)&&!ADVQ.test(t))return null;   /* 6 Oct 2026 · "what should I do?" has no "you" in it, and is still a question put to the Mirror */
+  if(KNOWQ.test(t))return {parts:[{cls:'line',text:'No. I only know what you’ve written here — and even that, you know better than I do. I hold your words up so you can see them.'},
+    {cls:'line q',text:'What made you wonder that?'}],next:{q:'What made you wonder that?',plain:'Why did you ask?',kind:'wonder'}};
+  if(WHATQ.test(t))return {parts:[{cls:'line',text:'I’m not a person, and not a therapist. Right now I’m careful written rules on this page — nothing you write here leaves it.'}]
+    .concat(L.q?[{cls:'line q',text:L.q}]:[]),next:L.q?L:{q:'What’s here for you today?',plain:'What would you like to talk about?',kind:'more'}};
+  if(ADVQ.test(t))return {parts:[{cls:'line',text:'I can’t choose for you, and I won’t pretend to. You know your life from the inside; I don’t.'}]
+    .concat(S.first?[{cls:'line soft ack',text:'You began with:'},{tag:'p',cls:'quote ack',text:S.first}]:[])
+    .concat([{cls:'line q',text:'If you trusted yourself completely here, what would you do?'}]),
+    next:{q:'If you trusted yourself completely here, what would you do?',plain:'What would you do, if you trusted yourself?',kind:'trust'}};
+  return {parts:[{cls:'line',text:'That’s a question for me, and the honest answer is that I don’t have answers of my own — only yours, held up so you can see them.'},
+    {cls:'line q',text:'What would your own answer be?'}],next:{q:'What would your own answer be?',plain:'What do you think?',kind:'own'}};
 }
 
 /* ── hearing, and answering from the very first reply ────────────────── */
 function hear(){
   var raw=$('words').value.trim(); if(!raw)return;
   var t=raw.replace(/[\u2018\u2019\u02bc]/g,"'");
-  $('words').value='';
+  $('words').value='';dwHide();
   if(HEAVY.test(t)){care();return;}
   if(LEAVE.test(t)){rest();return;}
   if(MISSED.test(t)){                                 /* they feel unheard: own it, and come back to their words */
@@ -495,12 +913,20 @@ function hear(){
     var parts=[{cls:'line soft',text:'Let me put that more simply.'},{cls:'line q',text:S.lastQ.plain||S.lastQ.q}];
     ask({q:S.lastQ.plain||S.lastQ.q,plain:S.lastQ.plain||S.lastQ.q,kind:S.lastQ.kind}); show(parts); addTrail(parts); return;
   }
-  if(UNSURE.test(t)){
+  var mq=mirrorQ(t);
+  if(mq){ask(mq.next);show(mq.parts,S.first||'');addTrail(mq.parts,S.first||'');return;}
+  if(UNSURE.test(t)&&S.unsure){
+    /* 6 Oct 2026 · a second "maybe" or "I don't know" is never met with the same words again: it is let be, and the path moves on */
+    S.unsure++;var Ru=LISTEN.reply(raw,S);
+    var pu=[{cls:'line',text:'That\u2019s alright \u2014 that one can stay open.'}].concat(Ru.parts.filter(function(p){return /\bq\b/.test(p.cls||'');}));
+    ask(Ru.next);show(pu,S.first||'');addTrail(pu,S.first||'');return;
+  }
+  if(UNSURE.test(t)){S.unsure=1;
     var p2=[{cls:'line',text:'That\u2019s alright. Not knowing is a place to stand, too.'},{cls:'line q',text:'What\u2019s one small thing you do know about it?'}];
     ask({q:'What\u2019s one small thing you do know about it?',plain:'Anything at all you\u2019re sure of?',kind:'unsure'}); show(p2); addTrail(p2); return;
   }
   var R=LISTEN.reply(raw,S);
-  ask(R.next); show(R.parts,R.rim); addTrail(R.parts,R.rim);
+  ask(R.next); show(R.parts,R.rim); addTrail(R.parts,R.rim);doorway(raw);
   if(S.turn>=2)$('after').classList.remove('hide');
   if(R.done){setTimeout(function(){$('rest').textContent='Let it rest here \u2727';},900);}
 }
@@ -515,7 +941,7 @@ function care(){
 
 /* ── letting it rest: what they leave holding ────────────────────────── */
 function rest(){
-  $('say').classList.add('hide'); $('after').classList.add('hide');
+  dwHide();$('say').classList.add('hide'); $('after').classList.add('hide');
   var parts=[{cls:'line',text:'You were listened to, just as you are.'},{cls:'line q',text:'What would you like to leave with?'}];
   show(parts,S.first||'');
   var d=$('doors'); d.textContent=''; d.classList.remove('hide');
