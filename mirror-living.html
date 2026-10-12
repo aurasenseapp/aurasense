@@ -215,7 +215,7 @@ body.insite .mirror{margin-top:2vh}
 var HEAVY=/\b(kill myself|end my life|suicid|want to die|don'?t want to (live|be here)|hurt myself|self[- ]?harm|no reason to live)\b/i;
 var UNSURE=/^\s*(?:i\s+)?(?:really\s+)?(?:don'?t|do not)\s+know[.!]*\s*$|^\s*(?:dunno|no idea|not sure|unsure|maybe|perhaps|i'?m not sure|i'?m unsure)[.!?]*\s*$/i;
 var LEAVE=/^\s*(?:that'?s enough|enough|i'?m done|done|bye|goodbye|stop|no more|good ?night)(?:[\s,.!]+(?:for now|for today|thanks|thank you|now|please|bye))*[\s,.!]*$/i;   /* 6 Oct 2026 · only a goodbye ends it: "Stop being so hard on yourself" is a wiser voice speaking, not a goodbye */
-var CONFUSED=/^\s*[\w'-]{1,14}\s*\?+\s*$|what do you mean|i don'?t (understand|get it)|\bhuh\b|what\?|meaning\?/i;
+var CONFUSED=/^\s*[\w'-]{1,14}\s*\?+\s*$|^\s*which (?:part|bit|one|way)\s*\?+\s*$|what do you mean|i don'?t (understand|get it)|\bhuh\b|what\?|meaning\?/i;   /* 12 Oct 2026 · "which part?" asks for it more simply */
 /* 6 Oct 2026 · questions put to the Mirror itself */
 var ASKME=/\b(you|your|yourself|u)\b/i;
 var KNOWQ=/\b(do|can|did|does) (you|u) (know|see|sense|understand|feel)\b|\bwhat do (you|u) (know|see)\b|\bknow something\b/i;
@@ -260,6 +260,22 @@ var LISTEN=(function(){
   /* 6 Oct 2026 · something felt that has no name yet - the heart of Aurasense */
   var UNNAMED=/\b(?:can'?t|cannot|canoot|could ?n'?t) (?:\w+ ){0,2}(?:name|describe|explain|put (?:it )?into words|be (?:quickly )?sensed|sensed)\b|\b(?:no|without) (?:a )?(?:word|words|name) for\b|\bunseen\b|\bbeyond words\b/i;
   var BODYPART=/\b(chest|stomach|belly|throat|head|shoulders?|heart|jaw|gut|neck|back|hands?|eyes|face)\b/i;
+  /* 12 Oct 2026 · Karl: "not responding directly enough to answers." Three shapes it could not hear are heard
+     now, always in the person's own words: a feeling felt beyond the body ("it's outside of me"); effort that
+     feeds the very thing it fights ("the harder I try, the worse it gets"), which is part of the circle itself
+     (Krishnamurti: the observer is the observed; pushed-away thoughts rebound, Wegner 1987; acceptance, ACT);
+     and how deep a thing reaches ("deep down"). */
+  var OUTSIDE=/\b(?:outside (?:of )?(?:my ?self|me|my body|my skin|my head)|out of (?:my )?body|beyond (?:my ?self|my body|my skin)|bigger than (?:my body|my skin)|not (?:in|inside) (?:my body|me)|all around me)\b/i;
+  var FELT_OUT=/\b(?:feel|feels|felt|feeling|sense|senses|sensed|sensing|seems?|it'?s|it is|is|am|i'?m|being|lives?|sits?|happening|happens)\s+(?:it\s+|like\s+(?:it'?s\s+|it is\s+|i'?m\s+)?)?(?:(?:almost|partly|sort of|kind of|a bit|somehow|completely|totally|mostly|all)\s+)?(?:outside|out of|beyond|not (?:in|inside)|all around)\b/i;
+  var WORLD_OUT=/\b(?:world|everything|things|life|people|stuff|news|noise|chaos|it all)\s+(?:that'?s\s+|that is\s+)?(?:outside|beyond|around) (?:of )?(?:me|my ?self)\b/i;
+  var EFFORT=/\bthe (?:more|harder) (?:i|we)\s+(?:\w+\s+){0,2}?(notic\w*|watch\w*|tr(?:y|ies|ied|ying)|think\w*|fight\w*|push\w*|resist\w*|focus\w*|worr(?:y|ies|ied|ying)|analy[sz]\w*|search\w*|chas\w*|look\w*|control\w*)\b[^.!?]{0,140}?\bthe (?:more|less|worse|harder)\b/i;
+  var EFFORT_AFTER=/\b(tired|exhaust\w*|drain\w*|weary|worn|fatigu\w*|awake|anxious|worried|stuck|restless|panic\w*|upset|sad|angry|frustrat\w*|lost|confus\w*|overwhelm\w*|heav\w*|empty|numb|worse|harder|tense|wired|louder|stronger)\b/i;
+  var GER={notic:'noticing',watch:'watching',tr:'trying',think:'thinking',fight:'fighting',push:'pushing',resist:'resisting',focus:'focusing',worr:'worrying',analy:'analysing',search:'searching',chas:'chasing',look:'looking',control:'controlling'};
+  var DEEPIN=/\b(?:(?:from|in)\s+)?(?:a\s+|the\s+)?deep\s+(?:place\s+)?(?:within|inside(?:\s+me)?)\b|\bdeep down\b|\bin my (?:core|bones|soul)\b/i;
+  var TIREDISH=/\b(tired|exhaust\w*|drain\w*|weary|worn|fatigu\w*|spent)\b/i;
+  var SPACE=/\b(space|spacious|roomy|open|opening|free|freedom|freer|peace|peaceful|calm|calmer|light|lighter|expan\w*|wide|wider|vast|bigger|connected|one with|part of (?:everything|it all|something)|universe|warm|warmer|safe|relief|relieved|stillness|held)\b/i;
+  var AWAY=/\b(pull(?:ed|ing|s)?|drawn away|away from (?:my ?self|me|my body)|unreal|not real|detach\w*|numb|float\w*|scar\w*|frighten\w*|afraid|terrif\w*|disconnect\w*|empty|cut off|outside looking in|watching myself|dizzy|spinning|unsettl\w*|lost|not (?:my ?self|me))\b/i;
+  var NOSPACE=/\b(?:not|don'?t|doesn'?t|isn'?t|never|no longer|can'?t)\b(?:\s+\w+){0,2}\s+(?:space|spacious|roomy|open|free|peace\w*|calm\w*|light\w*|safe|connected|warm\w*|held)\b/i;
   var LOOSE=/^(?:it|them|this|that|these|those|him|her)\b|^(?:free|away|for good|once and for all|forever|for ever|soon|now|today|completely|somehow|at last|again)?$/i;
   var NOTOBJ=/^(?:i|i'm|i am|and|but|so|well|yes|no|ok|okay|honestly|really|actually|basically|anyway|sometimes|today|now|lately|also|though|still|yet|maybe|perhaps)$/i;
 
@@ -294,6 +310,17 @@ var LISTEN=(function(){
     var b=best.replace(/[.,;:]+$/,''),st=b.replace(/^(?:and|but|so|then|because)\s+/i,'');
     return st!==b?cap(st):b;   /* their words exactly as written; only a clause lifted from mid-sentence loses its leading "and" */
   }
+  /* 12 Oct 2026 · the exact words that place a feeling beyond the body, whole, never cut */
+  function outsidePhrase(raw){var s=String(raw||''),c=[];
+    var wh=s.match(/\bthe whole of (?:my|me)\b[^,.;!?]{0,60}/i);if(wh)c.push(wh[0]);
+    var om=s.match(/\b(?:(?:almost|partly|sort of|kind of|a bit|somehow|completely|totally)\s+)?(?:outside (?:of )?(?:my ?self|me|my body|my skin|my head)|out of (?:my )?body|beyond (?:my ?self|my body|my skin)|bigger than (?:my body|my skin)|not (?:in|inside) (?:my body|me)|all around me)\b/i);if(om)c.push(om[0]);
+    for(var i=0;i<c.length;i++){var p=c[i].trim().replace(/[\s,;:]+$/,'');if(p.length>=4&&p.length<=64)return p;}
+    return '';}
+  /* 12 Oct 2026 · the first thing noticed, in their own words, when it is short enough to give back whole */
+  function firstBit(raw){var s=(String(raw||'').trim().split(/\s*(?:[,;.!?—–]|\s-\s|\band then\b|\bthen\b|\band\b|\bbut\b)\s*/i)[0]||'').trim();
+    var n=words(s).length;if(n<1||n>6)return '';
+    if(/^(?:i|i'm|i’m|im|i am|my|it|it's|it’s|its|that|this|there|the thought|nothing|no|yes|not|maybe|perhaps)\b/i.test(s))return '';
+    return s;}
   function keyWord(t){
     var fl=feelings(t);if(fl.length)return fl[0];
     var ws=words(t),best='',bi=-1;
@@ -326,6 +353,11 @@ var LISTEN=(function(){
     var mw=a.match(/\b(i\s+(?:notice|noticed|watch|watched|see|saw|observe|observed|catch|caught)\s+my\s+(?:own\s+)?(?:mind|thoughts?|thinking)[^.!?]{0,70})/i);
     if(mw)r.mind=clean(mw[1]);
     r.unnamed=UNNAMED.test(a);
+    r.outside=OUTSIDE.test(a);
+    var efm=a.match(EFFORT);
+    if(efm&&EFFORT_AFTER.test(a.slice(Math.max(0,efm.index+efm[0].length-12)))){var gk=Object.keys(GER).filter(function(k){return efm[1].toLowerCase().indexOf(k)===0;})[0];if(gk)r.effort=GER[gk];}
+    var dpm=String(raw||'').match(DEEPIN);if(dpm)r.deep=clean(dpm[0]);   /* given back exactly as written */
+    r.tiredish=TIREDISH.test(a);
     r.theme=r.mind?'mind':r.cycle?'cycle':(r.btw||r.choice||r.pulls)?'choice':r.fear?'fear':r.unnamed?'unnamed':r.wish?'wish':r.feel.length?'feel':r.newish?'new':'';
     return r;
   }
@@ -347,10 +379,13 @@ var LISTEN=(function(){
       if(/^(maybe|perhaps)$/.test(r.hedge)&&!S.hedged){S.hedged=true;return cap(r.hedge)+' '+base+'. That \u201c'+r.hedge+'\u201d matters \u2014 part of you is already open to it.';}
       return cap(base)+'.';}
     if(L.kind==='aspired'&&r.n<=20&&!r.theme){
+      /* 12 Oct 2026 · the wiser voice now asks which part feels true: a part named is kept, "none" is honoured */
+      if(/\b(all of it|every (?:bit|word)|most of it|the (?:first|second|last) (?:part|bit|line|half)|the part about|the bit about|some of it|part of it|that last bit|the end)\b/i.test(r.a))return 'Then keep that part close. The rest can wait.';
+      if(/^\s*(none|none of it|neither)\b/i.test(r.a))return 'Then your own words matter more than mine. Mine was only a guess.';
       if(/^\s*(yes|yeah|yep|ok|okay|sure|true|exactly|it does|that'?s me|that sounds like me|sounds like me)\b/i.test(r.a))return 'Then let that voice stay close.';
       /* 6 Oct 2026 · "not really", or something new ("I think it started when I moved"), was being called "your own wiser voice". Only a voice is called a voice now */
       if(/^\s*(no|nope|not really|not quite|not me|not yet|it doesn'?t|that'?s not me)\b/i.test(r.a))return 'Then your own words matter more than mine. Mine was only a guess.';
-      if(VOICE.test(r.a)||(!REPORT.test(r.a)&&!r.body))return 'That\u2019s your own wiser voice. Keep it close.';}
+      if(!/\?\s*$/.test(r.a)&&(VOICE.test(r.a)||(!REPORT.test(r.a)&&!r.body)))return 'That\u2019s your own wiser voice. Keep it close.';}   /* 12 Oct 2026 · a question is never called a wiser voice */
     /* 6 Oct 2026 · a step they offer of their own accord is honoured, and not asked for again */
     if(stp&&L.kind!=='step'&&L.kind!=='firststep')return 'You could '+swap(clean(stp[1]))+' \u2014 that\u2019s a real step, and it came from you.';
     /* 6 Oct 2026 · "I would rather not look at how angry I am": the unlit room, named unasked, is honoured and not asked about again */
@@ -362,6 +397,10 @@ var LISTEN=(function(){
     if(r.hedge&&r.n<=8&&!S.hedged){var c2=clean(r.a.replace(HEDGE,' '));
       if(c2.length>2){S.hedged=true;return door?cap(swap(c2))+' — and you said “'+hw+'”, so part of you is open to '+pron(c2)+'.'
         :cap(swap(c2))+', you said — and “'+hw+'”. Small words like that can say more than they seem to.';}}
+    /* 12 Oct 2026 · a feeling felt beyond the body is met as exactly that, in their own words */
+    if(r.outside&&L.kind!=='outside'){var oq=outsidePhrase(r.raw);return 'So it isn’t held in one place inside you'+(oq?' — it’s “'+oq+'”':'')+'.';}
+    /* 12 Oct 2026 · effort that feeds what it fights is named as part of the circle; how deep it reaches is given back */
+    if(r.effort)return 'So the '+r.effort+' itself has become part of '+(r.cycle||S.theme==='cycle'?'the circle':'what keeps it going')+'.'+(r.deep?(r.tiredish?' It tires you “'+r.deep+'”.':' It reaches “'+r.deep+'”.'):(r.tiredish?' And it tires you.':''));
     if(r.mind)return cap(swap(r.mind))+'.';
     if(r.pulls&&r.ors)return 'Two ways, as you see them: '+swap(r.pulls[0])+', or '+swap(r.pulls[1])+'.';
     if(r.pulls)return 'Two things are pulling here: '+swap(r.pulls[0])+', and '+swap(r.pulls[1])+'.';
@@ -386,8 +425,12 @@ var LISTEN=(function(){
 
   /* the first question for each kind of thing said */
   function themeQ(r){
+    /* 12 Oct 2026 · a feeling felt beyond the body is asked about first, gently, with both ways open */
+    if(r.outside)return {q:'When you feel it beyond your body like that, is it more like space around you — or like being pulled away from yourself?',plain:'Does it feel like open space, or like being pulled away?',kind:'outside'};
+    /* 12 Oct 2026 · when effort feeds the circle, the question is not "notice more" but "let it be" */
+    if(r.effort)return {q:'What happens if, just once, you let it be there without trying to change it?',plain:'What if, just for a moment, you didn’t try to change it?',kind:'allow'};
     if(r.theme==='mind')return {q:'When you simply watch it, without judging the watching, what happens to it?',plain:'What happens when you just watch it?',kind:'notice'};
-    if(r.theme==='cycle')return {q:'When one comes round again, what\u2019s the very first thing you notice?',plain:'What happens just before the thought starts again?',kind:'notice'};
+    if(r.theme==='cycle')return {q:'When the thought comes round again, what\u2019s the very first thing you notice?',plain:'What happens just before the thought starts again?',kind:'notice'};
     if(r.theme==='choice'&&r.pulls)return {q:'Which of the two is asking for you first today?',plain:'Which one needs you more right now?',kind:'choice'};
     if(r.theme==='choice')return {q:'Which one pulls harder today \u2014 and which one feels more like you?',plain:'Which one pulls harder today?',kind:'choice'};
     if(r.theme==='fear')return {q:'What is the fear trying to protect?',plain:'What are you afraid might happen?',kind:'fear'};
@@ -415,6 +458,10 @@ var LISTEN=(function(){
       /* 4 Oct 2026 · research refresh: AI met alone can deepen loneliness over time (Stanford, Nature Human
          Behaviour; Aalto, CHI 2026; Folk and Dunn). When loneliness is named, the outward step points to people. */
       lonely:{q:'Who is one person, or one place, where a small part of this could be shared?',plain:'Who could you share a little of this with?'}},
+    /* 12 Oct 2026 · Karl: "The questionnaires directions are more pointing towards the one light aren't they?"
+       They are: the readings turn toward the light, and this path stopped at coping. This station turns it: the
+       part that stayed steady is the witness within, the light that was there before the trouble. */
+    {id:'steady',q:'What part of you has stayed steady through all of this?',plain:'Is there a part of you that stayed calm, underneath it all?'},
     {id:'step',q:'What\u2019s one small thing you could do before tomorrow night?',plain:'What\u2019s one small next step?',
       cycle:{q:'What could you do, kindly, the next time it starts?',plain:'What\u2019s one thing to try, next time it starts?'}},
     {id:'shift',q:'Has anything shifted since you began \u2014 even a little?',plain:'Does it feel any different now?'}
@@ -422,6 +469,11 @@ var LISTEN=(function(){
   /* the voice of the self they are growing into: offered, never imposed */
   function aspire(S){
     var f=S.felt.join(' ');
+    /* 12 Oct 2026 · the wiser voice speaks to this moment: what was found beyond the body, or the effort that feeds the circle */
+    if(S.away)return 'Nothing has to be pushed away or pulled back by force. Feel what holds you up. You are here, and that is enough for now.';
+    if(S.wide)return 'You were never only inside the circle. The part of you that can feel it from that wider place isn’t caught in it. Rest there a while.';
+    if(S.outside)return 'You can feel all of this from beyond your body, and still come home to it. Both are yours.';
+    if(S.effort)return 'You don’t have to win against it. Let it come and go without a fight'+(S.tiredish||/tired|exhausted|drained/.test(f)?', and the tiredness can begin to rest.':'. It often loosens when it isn’t fought.');
     if(S.theme==='cycle'){if(S.obj){var o=swap(S.obj).toLowerCase().replace(/^(the|these|those|your|this|that)\s+/,''),pl=pron(S.obj)==='them';
       return 'You don\u2019t have to break '+(pl?'these ':'this ')+o+' by force. Each time you notice '+(pl?'them':'it')+' kindly, '+(pl?'they lose':'it loses')+' a little of '+(pl?'their':'its')+' hold.';}
       return 'You don\u2019t have to break the circle by force. Each time you notice it kindly, it\u2019s already less of a circle.';}
@@ -449,11 +501,23 @@ var LISTEN=(function(){
     if(L.kind==='shift')return yes?'Something moved. Notice what helped it move.':(no?'That’s alright. Some things shift slowly, and noticing is already a kind of movement.':'');
     if(L.kind==='body'){
       if(/\b(everywhere|all over|all around|all at once)\b/i.test(a))return 'Everywhere at once — not in one place.';
-      var bw=(a.match(BODYPART)||[])[0];return bw?'In your '+bw.toLowerCase()+' — your body is part of this too.':'';}
+      var bw=(a.match(BODYPART)||[])[0];return bw?'In your '+bw.toLowerCase()+' — your body is part of this too.':(/\b(heaviness|tightness|pressure|ache|aching|weight|knot|buzzing|tingling|numbness|emptiness|warmth|fluttering|sinking)\b/i.test(a)?'Your body is carrying some of this too.':'');}   /* 12 Oct 2026 · a sensation with no place named is still met */
     if(L.kind==='step'||L.kind==='firststep')return r.n>10?'That’s a big step, and it clearly matters to you.':'That’s a real step. Small is enough.';
     if(L.kind==='choice'&&S.pair){var lo=a.toLowerCase(),hit=S.pair.filter(function(p){return lo.indexOf(String(p).toLowerCase())>=0;});
       if(hit.length===1)return 'So “'+hit[0]+'” is asking for you more.';}
     if(L.kind==='aspired'&&yes)return 'Then let that voice stay close.';
+    /* 12 Oct 2026 · the new questions' answers, each met as an answer */
+    if(L.kind==='allow'){
+      if(r.outside)return '';
+      if(/\b(quiet\w*|calm\w*|eas(?:es|ed|ier|y)|soft\w*|lighter|less|fades?|faded|pass(?:es|ed)|settl\w*|space|relief|relax\w*|slow\w*|lets? go|loosen\w*)\b/i.test(a))return 'So it softens when it isn’t fought. That’s your own discovery, not mine.';
+      if(/\b(worse|stronger|louder|grows|bigger|panic\w*|can'?t|hard|impossible|won'?t)\b/i.test(a))return 'Letting it be is hard when it’s this strong. That isn’t a failure.';
+      if(/^\s*nothing\b/i.test(a))return 'Nothing changed, then. That’s worth knowing too.';
+      if(no)return 'That’s alright. It can be tried another time, with no pressure.';
+      var fa=firstBit(r.raw);return fa?'So “'+fa+'” comes first.':'';}
+    if(L.kind==='ground')return no?'That’s alright. Pressing your feet down gently can help them wake.':'Your feet are here, and so are you.';
+    if(L.kind==='wide')return 'You found that wider place yourself, so you can find it again.';
+    if(L.kind==='steady')return no?'That’s alright. A steady part can be found again, a little at a time.':'That steady part is yours. It was there under all of this.';
+    if(L.kind==='notice'){var fb=firstBit(r.raw);if(fb&&!no)return 'So “'+fb+'” comes first.';}
     if(L.kind==='unnamed')return 'That is a way of sensing in itself.';
     return '';
   }
@@ -465,6 +529,27 @@ var LISTEN=(function(){
     {id:'others2',q:'Who else might be carrying something like this right now?',plain:'Could other people be feeling this too?'},
     {id:'lighter',q:'What would it feel like to carry this a little more lightly?',plain:'What would “lighter” feel like?'}
   ];
+  /* 12 Oct 2026 · beyond the body can be spacious, or a pulling away; the answer decides the next step.
+     A pulling away is met with the ground first, and once, quietly, a route to a real person. */
+  var GROUND={q:'What do you notice in your feet, right now?',plain:'Can you feel your feet on the floor?',kind:'ground'};
+  var WIDE={q:'What is that wider part of you like, when you rest in it?',plain:'What does that wider space feel like?',kind:'wide'};
+  function outsideFork(r,S){
+    var a=r.a,both=/\bboth\b/i.test(a),away=AWAY.test(a)||NOSPACE.test(a),space=SPACE.test(a)&&!NOSPACE.test(a);
+    if(both||(away&&space)){S.away=true;S.wide=true;return {line:'Both, then: some space, and some pull.',next:GROUND};}
+    if(away){S.away=true;var care=!S.cared&&/\b(scar\w*|frighten\w*|afraid|terrif\w*|often|always|keeps? happening|a lot|every day)\b/i.test(a);if(care)S.cared=true;
+      return {line:'Being pulled away from yourself can be unsettling. Let your feet feel the floor, and the weight of your hands.'+(care?' If this happens often, or frightens you, it’s worth telling a doctor or someone you trust.':''),next:GROUND};}
+    if(space){S.wide=true;return {line:'Space, then. Some part of you can hold this from a wider place.',next:WIDE};}
+    return null;}
+  /* 12 Oct 2026 · after the wiser voice, one whole question that is easy to answer and welcomes a "no"
+     (Karl, 6 Oct: the old closing question re-asked what had just been called unanswerable) */
+  var ASPQ={q:'Which part of that feels true for you — and which doesn’t?',plain:'Does any of it feel true for you?'};
+  /* 12 Oct 2026 · the brief answer before the wiser voice is never simply dropped: a long one is shortened at its own pause */
+  function ackOf(line){
+    var l1=String(line||'').split(/\.\s+/)[0];if(!/[.!?][”’"']?$/.test(l1))l1+='.';
+    if(l1.length<=110)return l1;
+    var d=l1.indexOf(' — ');if(d>12&&d<=100)return l1.slice(0,d).replace(/[\s,;:]+$/,'')+'.';
+    var c=l1.indexOf(', ');if(c>12&&c<=100)return l1.slice(0,c)+'.';
+    return '';}
   function reply(t,S){
     if(!S.kinds)S.kinds=[];   /* a memory made before 6 Oct 2026 still works */
     var r=read(t);S.turn++;tally(r,S);
@@ -477,19 +562,28 @@ var LISTEN=(function(){
         if(o1.length>1&&o2.length>1&&words(o1).length<=8&&words(o2).length<=8&&!/^(not|so|something|anything|whatever|else|both|neither)$/i.test(o2)){r.pulls=[o1,o2];r.ors=true;if(!r.mind&&!r.cycle)r.theme='choice';}}}
     if(!S.first)S.first=keyPhrase(t);
     if(r.hard)S.hard=true;if(r.others)S.others=true;if(r.body)S.body=true;
+    /* 12 Oct 2026 · "the world outside of me" is not a feeling's place: beyond the body is heard only when it is felt there, or answers a question about where */
+    var LQK=(S.lastQ||{}).kind||'';
+    if(r.outside&&(WORLD_OUT.test(r.a)||!(FELT_OUT.test(r.a)||/^(body|allow|notice|outside|ground|wide|unnamed)$/.test(LQK))))r.outside=false;
+    /* 12 Oct 2026 · an answer about the feet or the wider place is never misread as a choice between two things */
+    if(/^(ground|wide|steady|outside)$/.test(LQK)){r.pulls=null;r.btw=null;r.ors=false;if(r.theme==='choice'&&!r.choice)r.theme='';}
+    if(r.outside){S.outside=true;S.body=true;}if(r.effort){S.hard=true;if(!S.effort)S.effort=r.effort;}if(r.tiredish)S.tiredish=true;
     r.feel.forEach(function(x){if(S.felt.indexOf(x)<0)S.felt.push(x);});
     if(!S.theme&&r.theme&&r.theme!=='new'&&r.theme!=='mind')S.theme=r.theme;
     if(r.wish&&r.wish.fronted&&!S.obj)S.obj=r.wish.obj;
     if(!S.pair){if(r.pulls)S.pair=[swap(r.pulls[0]),swap(r.pulls[1])];else if(r.btw)S.pair=[swap(clean(r.btw[1])),swap(clean(r.btw[2]))];}
     var kp=keyPhrase(t),parts=[{tag:'p',cls:'quote',text:kp}],line=reflect(r,S),next=null;
-    var al=answerLine(r,S);if(al&&(!line||(line==='Thank you. Stay with that a moment.'&&/^(body|pattern|shift|shadow)$/.test((S.lastQ||{}).kind||''))))line=al;   /* 6 Oct 2026 · "in my stomach" is answered as an answer, not met with "Thank you" */
+    var al=answerLine(r,S);if(al&&(!line||(line==='Thank you. Stay with that a moment.'&&/^(body|pattern|shift|shadow|steady|allow|ground|wide|notice)$/.test((S.lastQ||{}).kind||''))))line=al;
+    if(al&&/^(ground|wide)$/.test(LQK))line=al;   /* 12 Oct 2026 · the feet, and the wider place, are always answered as themselves */   /* 6 Oct 2026 · "in my stomach" is answered as an answer, not met with "Thank you" */
     var bph=r.n<=8&&r.a.match(/^\s*(in|on|at|around)\s+((?:my|the)\b[^.!?,;]{1,40})/i);   /* "on the back of my neck": the place is given back in their own words */
     if(bph&&BODYPART.test(bph[2])&&(!line||line==='Thank you. Stay with that a moment.'||/^In your /.test(line)))line=cap(bph[1].toLowerCase())+' '+swap(clean(bph[2]))+' \u2014 your body is part of this too.';
-    var struggle=S.hard||/^(cycle|choice|fear|wish)$/.test(S.theme);
+    var struggle=S.hard||S.outside||/^(cycle|choice|fear|wish)$/.test(S.theme);   /* 12 Oct 2026 · beyond the body, the wiser voice speaks too */
     /* 1 · something newly named gets its own question first */
     var tq=themeQ(r);
     /* 6 Oct 2026 · the same question in other words is still the same question: the body is asked about once, and "which pulls harder" once */
-    if(tq&&S.asked.indexOf(tq.q)<0&&!(tq.kind==='body'&&(S.body||S.kinds.indexOf('body')>=0))&&!(tq.kind==='choice'&&!r.pulls&&S.kinds.indexOf('choice')>=0))next=tq;
+    if(tq&&S.asked.indexOf(tq.q)<0&&!(tq.kind==='body'&&(S.body||S.kinds.indexOf('body')>=0))&&!(tq.kind==='choice'&&!r.pulls&&S.kinds.indexOf('choice')>=0)&&!(tq.kind==='notice'&&S.effort))next=tq;   /* 12 Oct 2026 · when noticing is what tires them, they are not asked to notice more */
+    /* 12 Oct 2026 · "space, or pulled away?" is answered as an answer, and the next question follows from it */
+    if((S.lastQ||{}).kind==='outside'){var ofk=outsideFork(r,S);if(ofk){line=ofk.line;if(S.asked.indexOf(ofk.next.q)<0)next=ofk.next;}}
     /* 2 · a first long answer with nothing else to hold: ask about its most alive words */
     if(!next&&S.turn===1&&r.n>4){var kw=keyWord(r.a);if(kw){var kq=r.a.match(new RegExp('\\b'+kw.replace(/[^a-z' ]/gi,'')+'\\b','i'));if(kq)kw=kq[0];}if(kw)next={q:'What does \u201c'+kw+'\u201d mean for you, here?',plain:'What do you mean by \u201c'+kw+'\u201d?',kind:'word'};}
     if(!next&&S.turn===1&&r.n<=3)next={q:'What\u2019s underneath that, if you look a little closer?',plain:'Can you say a little more?',kind:'more'};
@@ -503,18 +597,20 @@ var LISTEN=(function(){
       if(st.id==='body'&&(S.body||S.kinds.indexOf('body')>=0))continue;
       if(st.id==='step'&&S.stepped)continue;   /* 6 Oct 2026 · they have already offered a step of their own */
       if(st.id==='shadow'&&(!S.hard||S.shadowed))continue;
+      if(st.id==='steady'&&S.kinds.indexOf('wide')>=0)continue;   /* 12 Oct 2026 · the wider place was already met */
       if(st.id==='aspired'){if(!struggle||S.spoke)continue;S.spoke=true;
-        parts=[];if(line){var l1=String(line).split(/\.\s+/)[0];if(!/[.!?][\u201d\u2019"']?$/.test(l1))l1+='.';if(l1.length<=90)parts.push({cls:'line ack',text:l1});}   /* 6 Oct 2026 · what they just said is answered, briefly, before the wiser voice speaks */
+        parts=[];if(line){var l1=ackOf(line);if(l1)parts.push({cls:'line ack',text:l1});}   /* 6 Oct 2026 · what they just said is answered, briefly, before the wiser voice speaks · 12 Oct: never simply dropped for being long */
         parts.push({cls:'line soft',text:'The you who has come through this might say:'});
         parts.push({cls:'line aspire',text:'\u201c'+aspire(S)+'\u201d'});
-        parts.push({cls:'line q',text:'Does that sound like you \u2014 or what would your own wiser self say?'});
-        return {parts:parts,rim:kp,next:{q:'Does that sound like you \u2014 or what would your own wiser self say?',plain:'Is that close to what you\u2019d tell yourself?',kind:'aspired'},done:false};}
+        parts.push({cls:'line q',text:ASPQ.q});
+        return {parts:parts,rim:kp,next:{q:ASPQ.q,plain:ASPQ.plain,kind:'aspired'},done:false};}
       var v=(S.theme==='cycle'&&st.cycle)?st.cycle:(st.id==='other'&&/lonely|alone|unheard|invisible|unloved|rejected|abandoned/.test(S.felt.join(' ')))?st.lonely:(st.id==='other'&&S.others&&st.others)?st.others:st;
       if(st.id==='shift')S.done=true;
       if(S.asked.indexOf(v.q)>=0)continue;
       next={q:v.q,plain:v.plain,kind:st.id};
     }
-    while(!next&&S.deep<DEEP.length){var dp=DEEP[S.deep++];if(S.asked.indexOf(dp.q)>=0)continue;next={q:dp.q,plain:dp.plain,kind:dp.id};}
+    while(!next&&S.deep<DEEP.length){var dp=DEEP[S.deep++];if(S.asked.indexOf(dp.q)>=0)continue;if(dp.id==='witness'&&(S.kinds.indexOf('allow')>=0||S.kinds.indexOf('wide')>=0))continue;   /* 12 Oct 2026 · "let it be" was already asked in other words */
+     next={q:dp.q,plain:dp.plain,kind:dp.id};}
     if(!next){
       /* the whole path has been walked: nothing goes round again */
       S.done=true;
@@ -867,7 +963,12 @@ var EXPLAIN={
   other:'I meant: if someone you love told you they felt this, what would you say to them?',
   step:'I meant something small and real — one thing you could actually do in the next day or so.',
   firststep:'I meant the very first, smallest piece — something you could begin before tomorrow night.',
-  aspired:'I meant: picture yourself after this has eased. What would that you say to you now?',
+  aspired:'I meant: of what that wiser voice said, which words ring true for you — and which don’t?',
+  allow:'I meant: just for a moment, let it be there, with no fixing and no pushing it away. What happens then?',
+  outside:'I meant: when you feel it beyond your body, does that feel roomy and open, or more like being pulled away from yourself?',
+  ground:'I meant: can you feel your feet, the floor under them and their weight?',
+  wide:'I meant: that wider place you felt. What is it like to rest there?',
+  steady:'I meant: underneath everything you’ve said, is there a part of you that stayed calm, or stayed itself?',
   unnamed:'I meant: even without a name for it, how do you notice when it’s there?',
   witness:'I meant: just look at the feeling itself, without explaining or naming it. What’s there?',
   matter:'I meant: of everything in this, what feels most important to you?'
