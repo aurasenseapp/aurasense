@@ -2446,7 +2446,7 @@ window.AS_SEEK_ALWAYS=true;
       </div>
       <div id="srow">
         <input id="inp" maxlength="280" placeholder="What does this place feel like right now?"/>
-        <button id="sbtn">Offer your sense</button>
+        <button id="sbtn" class="as-bare">Offer your sense</button>
       </div>
     </div>
   </div>
@@ -11038,7 +11038,7 @@ const asGuide=(function(){
     const kept=mk('p','gl-kept');kept.hidden=true;d.appendChild(kept);
     const doors=mk('div','gl-doors');
     const bm=mk('button','gl-mirror','Take it to the Mirror');bm.type='button';doors.appendChild(bm);
-    if(q.door==='aura'&&typeof openMyAuraPage==='function'){const b=mk('button','gl-door','Your own aura');b.type='button';
+    if(typeof openMyAuraPage==='function'){const b=mk('button','gl-door','My Aura');b.type='button';   /* 13 Oct 2026 · Karl: My Aura among the options, always */
       b.addEventListener('click',()=>{close('');setTimeout(()=>{try{openMyAuraPage();}catch(e){}},260);});doors.appendChild(b);}
     if(q.door==='offer'&&document.getElementById('mobile-offer')){const b=mk('button','gl-door','Offer a sense here');b.type='button';
       b.addEventListener('click',()=>{close('');setTimeout(()=>{try{document.getElementById('mobile-offer').click();}catch(e){}},260);});doors.appendChild(b);}
@@ -12520,7 +12520,7 @@ function build(){
    +'<section id="ash-end" class="ash-cloud" tabindex="-1"><div class="ash-body">'
      +'<p class="ash-seen" id="ash-endline"></p>'
      +'<p class="ash-line" id="ash-endname" hidden></p>'
-   +'</div><div class="ash-row"><button id="ash-again" class="ash-pill" type="button">Offer another sense</button><button id="ash-stay" class="ash-quiet" type="button">Back to the map</button></div>'
+   +'</div><div class="ash-row"><button id="ash-again" class="ash-pill" type="button">Offer another sense</button><button id="ash-mine" class="ash-pill" type="button">See it in My Aura</button><button id="ash-stay" class="ash-quiet" type="button">Back to the map</button></div>'
    +'<div class="ash-row ash-small"><button id="ash-card" class="ash-quiet" type="button">Make it a postcard</button><button id="ash-back" class="ash-quiet" type="button">Changed your mind? Take it back</button></div></section>'
    +'<section id="ash-care" class="ash-cloud" tabindex="-1"><div class="ash-body">'
      +'<p class="ash-seen">It sounds like you are carrying something very heavy right now.</p>'
@@ -12937,6 +12937,15 @@ function again(){
     try{raiseOfferPanel(addr);}catch(e){}
   });
 }
+/* 13 Oct 2026 · Karl: "My aura still not appearing in the options panel." What was offered becomes a layer of
+   the person's own light: after the moment, they can go and see it there. */
+function mine(){
+  if(st!=='end')return;
+  close(function(){
+    try{undoHide();}catch(e){}
+    try{if(typeof openMyAuraPage==='function')openMyAuraPage();}catch(e){}
+  });
+}
 function postcard(){
   if(st!=='end')return;
   var s=SS,sid=SID,txt=WORDS,pl='';
@@ -12982,6 +12991,7 @@ function wire(){
   q$('ash-keep').addEventListener('click',function(){keep(q$('ash-words').value);});
   q$('ash-unsaid').addEventListener('click',function(){keep('');});
   q$('ash-again').addEventListener('click',again);
+  q$('ash-mine').addEventListener('click',mine);
   q$('ash-stay').addEventListener('click',back);
   q$('ash-card').addEventListener('click',postcard);
   q$('ash-back').addEventListener('click',takeBack);
@@ -13150,7 +13160,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">13 Oct 2026 · </span>152<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">14 Oct 2026 · </span>153<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -15435,5 +15445,48 @@ body.calm .as-smoke{display:none}
   border:1px solid rgba(214,150,70,.6);border-radius:999px;padding:6px 14px;cursor:pointer}
 #rg-resume button:focus-visible{outline:2px solid #3b2a3a;outline-offset:2px}
 </style>
+<style id="b153">
+/* ═══ 13 Oct 2026 · build 153 ═══════════════════════════════════════════════════════════════════════════
+   Karl: "Sense offering submission button is blank from sense panel." On the lit panel the send button was left
+   dark, on a dark band, with dark words. Now it is a warm pill of light on a light band. */
+#panel.as-lit:not(.just-offered) #srow{background:linear-gradient(rgba(255,251,245,0),rgba(255,251,245,.98) 26%)!important}
+#panel.as-lit #sbtn{background:linear-gradient(180deg,#fff8ee,#fbe6cc)!important;color:#3b2a3a!important;border:1px solid rgba(214,150,70,.75)!important;border-radius:999px!important;box-shadow:0 0 22px rgba(233,181,106,.4);font-family:var(--serif,Georgia,serif);font-size:16px;font-weight:600;min-height:46px;text-shadow:none!important;filter:none}
+#panel.as-lit #sbtn:hover{box-shadow:0 0 30px rgba(233,181,106,.62)}
+#panel.as-lit #sbtn.sbtn-glow{animation:b153glow 1.6s ease-in-out infinite}
+#panel.as-lit #sbtn.ripen{animation:b153ripen 3s ease forwards}
+@keyframes b153glow{0%,100%{box-shadow:0 0 0 2px rgba(233,181,106,.25),0 0 16px rgba(233,181,106,.45)}50%{box-shadow:0 0 0 2px rgba(214,150,70,.5),0 0 30px rgba(233,181,106,.8)}}
+@keyframes b153ripen{0%{box-shadow:0 0 12px rgba(233,181,106,.25)}100%{box-shadow:0 0 0 2px rgba(214,150,70,.45),0 0 28px rgba(233,181,106,.7)}}
+@media (prefers-reduced-motion:reduce){#panel.as-lit #sbtn.sbtn-glow,#panel.as-lit #sbtn.ripen{animation:none}}
+#panel.as-lit #sbtn:focus-visible{outline:2px solid #3b2a3a;outline-offset:3px}
+/* While a sense is being offered on a phone, nothing floats over the panel: the search waits, the stamp steps
+   aside from the Close button, the live feed waits until the offering has landed, and your own light rests
+   so it never sits on the send row. Everything returns the moment the panel closes. */
+@media (max-width:600px){
+  body.panel-live #search-box{opacity:0!important;visibility:hidden!important;pointer-events:none!important}
+  body.panel-live #build-stamp{opacity:0!important;pointer-events:none!important}
+  body:has(#panel.show-mobile:not(.just-offered)) #livefeed-btn{display:none!important}
+  body:has(#panel.show-mobile:not(.just-offered)) #mv-orb{opacity:0!important;pointer-events:none!important}
+  body:has(#panel.show-mobile:not(.just-offered)) #mv-hint{display:none!important}
+}
+</style>
+<script>
+/* 13 Oct 2026 · build 153 · Karl: "No sound in the process until hold your light is complete."
+   A browser keeps sound asleep until a hand touches the page. It was only woken by the Seeking's first touch, or
+   by the first bell that made it, so the offering's first bells rang into silence until the light was held.
+   Now the first touch anywhere on this page wakes it. Nothing plays because of this: it only makes the person's
+   own bells audible when they ring. Calm keeps it asleep. */
+(function(){try{
+  var EV=['touchend','pointerup','click','keydown'];
+  function done(){EV.forEach(function(t){try{document.removeEventListener(t,wake,true);}catch(e){}});}
+  function wake(){try{
+    if(window.AS_CALM)return;
+    if(typeof window.asWakeSound==='function')window.asWakeSound();
+    var c=(typeof actx!=='undefined')?actx:null;
+    if(c&&c.state==='running'){done();return;}
+    if(c&&typeof c.resume==='function'){var p=c.resume();if(p&&p.then)p.then(function(){if(c.state==='running')done();},function(){});}
+  }catch(e){}}
+  EV.forEach(function(t){document.addEventListener(t,wake,true);});
+}catch(e){}})();
+</script>
 </body>
 </html>

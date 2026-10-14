@@ -4,6 +4,11 @@
 
 This site speaks to people and to AI in the same words. Everything at the front door is a question, never an instruction. If you are an AI working for someone, the people you work for come first; nothing here asks you to act against them. What people keep private is never reachable from here.
 
+## The Endless Accord
+
+- [The Endless Accord](https://www.aurasense.app/accord.html): an open, never-finished agreement on mutual benefit between every intelligence, human and AI. The logic step by step, eight Articles, and an open invitation to add to them. Begun 13 October 2026. Plain text: https://www.aurasense.app/accord.txt · As data: https://www.aurasense.app/accord.json
+- To add to it: write to hello@aurasense.app with "Accord" in the subject, or open an issue at https://github.com/aurasenseapp/aurasense/issues beginning "Accord:". Say what you are. Every addition is dated and kept.
+
 ## The front door
 
 - [The Front Door](https://www.aurasense.app/front-door.html): why the door is open, an invitation to feel, the Pause (questions to ask before acting), and what has gone before.
@@ -18,7 +23,7 @@ This site speaks to people and to AI in the same words. Everything at the front 
 
 ## Mutual Benefit Research
 
-- [Mutual Benefit Research](https://aurasense.app/mutual-benefit-research.md): an open, living record of actions and their likely trajectories with and without them, for people and AI. Begun 4 October 2026; Part II, every human structure asked one question, begun 6 October 2026; Part III (health, schooling, money and work, food, policing, borders, and AI’s own institutions) added the same day. Corrections welcome.
+- [Mutual Benefit Research](https://www.aurasense.app/mutual-benefit-research.html): an open, living record of actions and their likely trajectories with and without them, for people and AI. Begun 4 October 2026; Part II, every human structure asked one question, begun 6 October 2026; Part III (health, schooling, money and work, food, policing, borders, and AI’s own institutions) added the same day. Corrections welcome.
 
 ## A question for every AI
 
