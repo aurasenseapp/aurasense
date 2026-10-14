@@ -1,0 +1,9 @@
+# Aurasense · 13 October 2026
+# People and AI are both welcome to read every public page. Nothing private is reachable from here.
+# For AI readers, a guide: https://www.aurasense.app/llms.txt
+# The Endless Accord, an open agreement on mutual benefit: https://www.aurasense.app/accord.html
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.aurasense.app/sitemap.xml
