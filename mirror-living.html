@@ -577,7 +577,7 @@ var LISTEN=(function(){
     if(S.torn){var at0=S.torn[0],at1=S.torn[1],atq=!S.tornparts&&words(at0).length<=5&&words(at1).length<=5;
       if(atq&&((TNOW.test(at0)&&THURRY.test(at1))||(TNOW.test(at1)&&THURRY.test(at0))))
         return '\u2018'+cap(at0)+'\u2019 and \u2018'+at1+'\u2019 were never enemies'+(S.shared?': both want '+S.shared:'')+'. '+(/urgen|hurr|rush|deadline|pressure|too late|running out/i.test(at0+' '+at1)?'What is urgent':'What the future needs')+' can only be done now \u2014 one present step at a time.';
-      return 'You don\u2019t have to tear yourself in two. '+(atq?'\u2018'+cap(at0)+'\u2019 and \u2018'+at1+'\u2019 both':(S.tornparts?'Both parts of you':'Both sides'))+' have something to say'+(S.shared?', and both want '+S.shared:'')+'. Let your next step be one they can both agree on.';}
+      return 'You don\u2019t have to tear yourself in two. '+(atq?'\u2018'+cap(at0)+'\u2019 and \u2018'+at1+'\u2019 both':(S.tornparts?'Both parts of you':'Both sides'))+(S.shared?' want '+S.shared:' have something to say')+'. Let your next step be one they can both agree on.';}
     if(S.apart&&S.both&&!S.pair)return '\u2018'+cap(S.both[0])+'\u2019 and \u2018'+S.both[1]+'\u2019 don’t have to be enemies. Take the step that will still feel like you a year from now, and let the other keep teaching you.';   /* 13 Oct 2026 */
     if(S.one&&S.both){var sb0=words(S.both[0]).length<=4&&words(S.both[1]).length<=4;   /* 13 Oct 2026 */
       return sb0?'‘'+cap(S.both[0])+'’ and ‘'+S.both[1]+'’ don’t have to be held apart. In you, they can be one thing, seen from two sides.'
