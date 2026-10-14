@@ -276,7 +276,19 @@ var LISTEN=(function(){
   /* 13 Oct 2026 · Karl: "it's not quite understood the light and intelligence were two aspects of the same thing."
      How two things connect is heard as it is said: one thing seen from two sides, two that pull, or one growing from the other. */
   var ONE=/\b(?:the same|same thing|one thing|one and the same|two (?:sides|aspects|faces|halves|parts|expressions|forms|ways) of|(?:aspects|sides|faces|expressions|forms) of (?:the same|one)|inseparable|part of each other|intertwined|interwoven|woven together|(?:can'?t|cannot) be separated|not separate|aren'?t separate|(?:are|is|become|becomes|they'?re|it'?s) one|one whole|together as one)\b/i;
-  var APART=/\b(?:fight\w*|against each other|pull(?:s|ing)? (?:apart|against)|clash\w*|conflict\w*|opposite\w*|oppos\w*|tension|torn|at war)\b/i;
+  var APART=/\b(?:fight\w*|against each other|pull(?:s|ing)? (?:apart|against)|clash\w*|conflict\w*|opposite\w*|oppos\w*|tension|torn|at war|steal\w*|crowd\w* (?:it |each other |the other )?out|push\w* (?:it |each other |the other )?(?:out|away)|take\w* over|drown\w* (?:it |the other )?out|eat\w* (?:into|away at)|swallow\w*|compet\w*)\b/i;   /* 14 Oct 2026 · "urgency steals the moment" */
+  /* 14 Oct 2026 · Karl: "Build 153 mirror still limited in accuracy of context and response", with "Torn between urgency
+     and living for the moment", which came back as a quiz ("Which one pulls harder today?"). Torn between two states,
+     values or parts of a life is an inner conflict, not a menu. Both sides are given back, neither made wrong; each is
+     asked what it is asking for, then what they both want, and the wiser voice speaks from there (two-chair and parts
+     work: each side is trying to look after the person). Two actions to choose between ("staying and leaving") stay a choice. */
+  var TORN=/\b(torn|caught|stuck|pulled|split|tugged|divided|tearing)\s+(?:right\s+|in two\s+|somewhere\s+)?between\s+(.{2,80}?)\s+and\s+(?!(?:i|i'm|it|it's|that|now|then|don't|can't)\b)(.{2,80}?)(?=\s*[.,;:!?]|\s+(?:but|because|so|which|and i|and it|and that|and now|and don'?t|and can'?t)\b|\s*$)/i;
+  var IDIOM=/\b(?:(?:stuck|caught|trapped|wedged|torn)\s+)?between (?:a rock and (?:a )?hard place|the devil and the deep(?: blue)? sea)\b/i;
+  var TWOSIDES=/\b(torn|caught|stuck|pulled|split|tugged|divided|tearing)\s+between\s+(?:the\s+)?(?:two|2)\s+(choices|options|things|paths|ways|jobs|places|people|offers|careers|cities|homes|worlds|lives|sides|directions|decisions|dreams|plans)\b/i;
+  var BTWACT=/^(?:to\s+)?(?:stay(?:ing)?|mov(?:e|ing)|go(?:ing)?|leav(?:e|ing)|tak(?:e|ing)|quit(?:ting)?|accept(?:ing)?|buy(?:ing)?|sell(?:ing)?|start(?:ing)?|stop(?:ping)?|keep(?:ing)?|join(?:ing)?|apply(?:ing)?|marry(?:ing)?|return(?:ing)?|retir(?:e|ing)|chang(?:e|ing)|study(?:ing)?|rent(?:ing)?|travel(?:l?ing)?|get(?:ting)?|find(?:ing)?|break(?:ing)?|end(?:ing)?|sign(?:ing)?|switch(?:ing)?|pick(?:ing)?|choos(?:e|ing)|wait(?:ing)?|tell(?:ing)?|do(?:ing)?|mak(?:e|ing)|ask(?:ing)?|call(?:ing)?|visit(?:ing)?|liv(?:e|ing) (?:in|at|with|near|on|abroad|alone|here|there)|hav(?:e|ing) (?:a|another|kids|children|the)|try(?:ing)? (?:to|for|again)|com(?:e|ing) back|giv(?:e|ing) up|speak(?:ing)? up|say(?:ing)? (?:yes|no))\b/i;
+  var PARTSPLIT=/\b(?:a |one |another |the other |other |some )?part(?: of me)?\s+(?=(?:really |just |still |also |kind of |sort of )?(?:wants?|needs?|feels?|says?|is|isn'?t|doesn'?t|don'?t|longs?|wish(?:es)?|hopes?|thinks?|knows?|would|loves?|hates?|fears?|believes?|can'?t|cannot|won'?t|keeps?|tells? me)\b)/i;
+  var TNOW=/\b(?:the moment|this moment|the present|present moment|now|here and now|today|presence|being present|being here)\b/i;
+  var THURRY=/\b(?:urgen\w*|hurr\w*|rush\w*|deadlines?|the future|tomorrow|running out of time|time running out|too late|pressure|getting (?:it|things|everything) done|saving the world)\b/i;
   var GROWS=/\b(?:leads? to|feeds?|fed by|comes? from|grows? (?:out of|from)|flows? from|causes?|because)\b/i;
   var SEPARATE=/\b(?:not (?:really )?connected|unconnected|unrelated|separate|nothing to do with)\b/i;
   var BEFORE=/\b(?:last (?:year|winter|summer|spring|autumn|fall|month|week|time)|as a (?:child|kid|teenager)|since i was (?:a )?(?:child|kid|little|young|small|teenager)|for years|years ago|every (?:year|winter|summer|autumn|fall|spring)|(?:it'?s|it has|it'?s been|this has) (?:happened|come) before|happened before)\b/i;
@@ -345,6 +357,23 @@ var LISTEN=(function(){
   function listOf(t){
     var parts=String(t).replace(/\band\b/gi,',').split(/[,;\/]+/).map(function(x){return x.trim().replace(/[.!?]+$/,'');}).filter(Boolean);
     if(parts.length>=3&&parts.every(function(x){return x.split(/\s+/).length<=3;}))return parts;return null;}
+  /* 14 Oct 2026 · a side is "are" when it is many, "is" when it is one ("your kids are", "chaos is") */
+  function isPl(p){var w=words(p).pop()||'';if(/(?:ss|us|is|os|ness|ics|news)$/.test(w))return false;return /^(people|children|they|them|these|those)$/.test(w)||/[^s]s$/.test(w);}
+  /* 14 Oct 2026 · each side is asked what it is asking for, in their own words when they are short enough to carry */
+  function tornQ(r){
+    if(r.tornparts)return {q:'What is each part trying to look after, underneath?',plain:'What does each part care about?',kind:'torn'};
+    var x=swap(r.torn[0]),y=swap(r.torn[1]),fit=function(p){return words(p).length<=5&&!/^(?:what|how|who|where|when|whether|if|that|this|wanting|needing|wishing|trying|hoping|to)\b/i.test(p);};
+    if(fit(x)&&fit(y))return {q:'What '+(isPl(x)?'are ':'is ')+x+' asking for \u2014 and what '+(isPl(y)?'are ':'is ')+y+' asking for?',plain:'What does each side need?',kind:'torn'};
+    return {q:'What is each side asking for, underneath?',plain:'What does each side need?',kind:'torn'};}
+  /* 14 Oct 2026 · what both sides want, in the person's own words, only when it can be given back whole */
+  function sharedWant(raw){
+    var s=clean(norm(raw)).replace(/^(?:yes|yeah|yep|maybe|perhaps|probably|definitely|i think|i guess|i suppose|i feel like|deep down|underneath|in the end)\b[,.!]?\s*/i,'').replace(/^(?:i think|i guess|i suppose)\s+/i,'');
+    var m=s.match(/^(?:they|both|they both|both of them|the two of them|they each|each)\s+(?:just\s+|really\s+|actually\s+|probably\s+|both\s+|all\s+)?(?:want|wants|need|needs|long for|longs for|wish for|hope for|care about|cares about)\s+(.{2,80})$/i);
+    var w=clean(m?m[1]:(words(s).length<=4&&!/^(?:i|i'm|i'd|i've|it|it's|they|we|he|she|that|this|there|not|no|never|none)\b/i.test(s)?low(s):''));
+    if(!w||words(w).length>10)return '';
+    if(/^(?:hmm+|hm+|um+|uh+|er+|ah+|oh+|well|ok|okay|sure|maybe|perhaps|possibly|probably|yes|yeah|yep|yup|no|nope|kind of|sort of|a little|a bit|idk|dunno|not sure|could be|true|right|exactly|definitely|absolutely|of course|both|neither|they do|i do|something|anything|everything|nothing|not really|i don't know)$/i.test(w))return '';
+    if(/\b(?:you|said|think|know|mean|guess|sure|idea|question|same|already)\b/i.test(w))return '';
+    return swap(w);}
 
   function read(raw){
     var a=norm(raw),r={raw:raw,a:a,n:words(a).length};
@@ -364,7 +393,18 @@ var LISTEN=(function(){
       var w=a.match(/\b(i\s*(?:'d|would)\s+(?:really\s+|so\s+)?(?:like|love)|i\s+(?:really\s+|so\s+)?(?:want|need|wish|hope|long)|what i (?:want|need) is|all i (?:want|need) is)\s+(.{3,90}?)(?:[.!?;]|$)/i);
       if(w)r.wish={kind:/need/i.test(w[1])?'need':/wish/i.test(w[1])?'wish':/hope/i.test(w[1])?'hope':'want',what:clean(w[2])};
     }
-    r.btw=a.match(/\bbetween\s+(.{3,50}?)\s+and\s+(.{3,50}?)(?:[.,!?]|$)/i);
+    r.btw=a.match(/\bbetween\s+(.{3,50}?)\s+and\s+(?!(?:i|i'm|it|it's|that|now|then|don't|can't)\b)(.{3,50}?)(?:[.,!?]|$)/i);   /* 14 Oct 2026 · "between two choices and I don't know" is no pair */
+    /* 14 Oct 2026 · torn between two states, values or parts of a life is heard as an inner conflict; two actions stay a choice */
+    var idm=a.match(IDIOM);if(idm){r.idiom=clean(idm[0]);r.btw=null;}
+    var tsm=!r.idiom&&a.match(TWOSIDES);if(tsm){r.twosides={v:/^tearing$/i.test(tsm[1])?'torn':tsm[1].toLowerCase(),n:tsm[2].toLowerCase()};r.btw=null;}   /* "stuck between two choices": which two, first */
+    var tnm=!r.idiom&&!r.twosides&&a.match(TORN);
+    if(tnm){var tn1=clean(tnm[2]),tn2=clean(tnm[3]),tw1=words(tn1).length,tw2=words(tn2).length;
+      if(tw1&&tw2&&tw1<=12&&tw2<=12&&!BTWACT.test(tn1)&&!BTWACT.test(tn2)){r.torn=[tn1,tn2];r.tornv=/^tearing$/i.test(tnm[1])?'torn':tnm[1].toLowerCase();r.btw=null;}}
+    /* "part of me wants to rest, part of me wants to keep going": two parts of one person, both heard */
+    if(!r.torn&&!r.idiom){var pch=a.split(PARTSPLIT);
+      if(pch.length===3){var pp1=clean(pch[1].replace(/\s*[,;]\s*(?:and|but|yet|while|whilst|though|although)?\s*(?:a|an|the|my)?\s*(?:younger|older|bigger|smaller|wiser|deeper|scared|frightened|tired|little|big|small|whole|tiny|huge|quiet|loud|louder|quieter)?\s*$/i,'')
+          .replace(/\s+(?:and|but|yet|while|whilst|though|although)(?:\s+(?:a|an|the|my))?(?:\s+(?:younger|older|bigger|smaller|wiser|deeper|scared|frightened|tired|little|big|small|whole|tiny|huge|quiet|loud|louder|quieter))?\s*$/i,'')),pp2=clean(pch[2]);
+        if(words(pp1).length&&words(pp2).length&&words(pp1).length<=14&&words(pp2).length<=14){r.torn=[pp1,pp2];r.tornparts=true;r.btw=null;}}}
     r.list=listOf(a);
     /* 13 Oct 2026 · "yet", "while" and "whilst" so often hold two things together that they are no longer heard as a
        pull between two: they are given back as both, here at once, and asked how the two connect. "But", "although"
@@ -390,7 +430,8 @@ var LISTEN=(function(){
     r.tiredish=TIREDISH.test(a);
     if(UNIV.test(a)){if(UNSET.test(a))r.unsettled=true;else{r.universal=true;r.reach=REACH.test(a);}}   /* 13 Oct 2026 */
     r.manypull=MANYPULL.test(a);
-    r.theme=r.mind?'mind':r.cycle?'cycle':(r.btw||r.choice||r.pulls)?'choice':r.fear?'fear':r.unnamed?'unnamed':r.wish?'wish':r.feel.length?'feel':r.newish?'new':'';
+    if(r.torn||r.idiom||r.twosides){r.pulls=null;r.both=null;r.btw=null;r.wish=null;}   /* 14 Oct 2026 · a torn pair is not also split at its "but", nor read as a wish ("caught between what I want and…") */
+    r.theme=r.mind?'mind':r.cycle?'cycle':r.torn?'torn':(r.btw||r.choice||r.pulls||r.idiom||r.twosides)?'choice':r.fear?'fear':r.unnamed?'unnamed':r.wish?'wish':r.feel.length?'feel':r.newish?'new':'';
     return r;
   }
 
@@ -438,6 +479,12 @@ var LISTEN=(function(){
     if(r.universal&&r.reach)return 'So something true is there, even while it is hidden.';
     if(r.universal)return r.feel.length?'So even while you feel '+r.feel.slice(0,2).join(' and ')+', there is a part of you wider than any one story.':'So there is a part of you wider than any one story.';
     if(r.manypull&&!r.pulls&&!r.both)return 'Several things are pulling at once.';
+    /* 14 Oct 2026 · torn: both sides given back in their own words, neither made wrong */
+    if(r.idiom)return cap(swap(r.idiom))+' \u2014 no easy way through, from where you stand.';
+    if(r.twosides)return 'You\u2019re '+r.twosides.v+' between two '+r.twosides.n+'.';
+    if(r.torn&&r.tornparts)return 'Part of you '+swap(r.torn[0])+', and part of you '+swap(r.torn[1])+'. Both are real, and both are yours.';
+    if(r.torn){var rt0=swap(r.torn[0]),rt1=swap(r.torn[1]),rsh=words(rt0).length<=8&&words(rt1).length<=8;
+      return (r.tornv?'You\u2019re '+r.tornv+' between '+(rsh?rt0+' and '+rt1:'two things'):(rsh?'So it\u2019s '+rt0+' and '+rt1:'So there are two sides'))+'. Both are real, and both are yours.';}
     if(r.mind)return cap(swap(r.mind))+'.';
     if(r.pulls&&r.ors)return 'Two ways, as you see them: '+swap(r.pulls[0])+', or '+swap(r.pulls[1])+'.';
     if(r.pulls)return 'Two things are pulling here: '+swap(r.pulls[0])+', and '+swap(r.pulls[1])+'.';
@@ -473,6 +520,9 @@ var LISTEN=(function(){
     if(r.unsettled)return GROUND;   /* 13 Oct 2026 · only when it unsettles, the ground first */
     if(r.universal)return r.reach?{q:'In the moments when it shows itself, even a little, what is it like?',plain:'When it shows itself, what is it like?',kind:'glimpse'}
       :{q:'When you rest as that wider self, what does it see in your life right now?',plain:'What does that wider self see?',kind:'universal'};
+    if(r.idiom)return {q:'What are the two sides of it, in your own words?',plain:'What are the two sides, as you see them?',kind:'sides'};   /* 14 Oct 2026 */
+    if(r.twosides)return {q:'What are the two '+r.twosides.n+', as you see them?',plain:'What are they?',kind:'sides'};
+    if(r.torn)return tornQ(r);   /* 14 Oct 2026 · each side is asked what it is asking for */
     if(r.manypull&&!r.pulls&&!r.both)return {q:'What are they, when you name them one by one?',plain:'What are the things pulling at you?',kind:'choices'};
     if(r.theme==='mind')return {q:'When you simply watch it, without judging the watching, what happens to it?',plain:'What happens when you just watch it?',kind:'notice'};
     if(r.both)return {q:'How are those two connected, for you?',plain:'How do those two go together, for you?',kind:'link'};   /* 13 Oct 2026 */
@@ -482,6 +532,7 @@ var LISTEN=(function(){
     if(r.theme==='fear')return {q:'What is the fear trying to protect?',plain:'What are you afraid might happen?',kind:'fear'};
     if(r.theme==='unnamed')return {q:'When it’s near, how do you know? What tells you — even without a name?',plain:'How do you notice it, without a word for it?',kind:'unnamed'};
     if(r.theme==='wish')return {q:'What would that look like, on an ordinary day?',plain:'What would it look like, day to day?',kind:'picture'};
+    if(r.theme==='feel'&&r.feel.length===1&&r.feel[0]==='torn'&&!/\btorn (?:apart|up|down|to pieces|to shreds|in pieces)\b/i.test(r.a))return {q:'What are the two sides of it, as you feel them?',plain:'What are the two sides?',kind:'sides'};   /* 14 Oct 2026 · "I feel torn": between what, first */
     if(r.theme==='feel'&&r.body)return null;   /* they have already said where it lives */
     if(r.theme==='feel')return {q:'Where do you feel that, in your body?',plain:'Where in your body is it?',kind:'body'};
     if(r.theme==='new'&&/\b(feel|feels|felt|would be|like)\b/i.test(r.a))return null;   /* 6 Oct 2026 · they have already said how it would feel */
@@ -521,6 +572,12 @@ var LISTEN=(function(){
     if(S.wide)return 'You were never only inside the circle. The part of you that can feel it from that wider place isn’t caught in it. Rest there a while.';
     if(S.outside)return 'You can feel all of this from beyond your body, and still come home to it. Both are yours.';
     if(S.effort)return 'You don’t have to win against it. Let it come and go without a fight'+(S.tiredish||/tired|exhausted|drained/.test(f)?', and the tiredness can begin to rest.':'. It often loosens when it isn’t fought.');
+    /* 14 Oct 2026 · torn: neither side is the enemy, and the next step is one both can agree on.
+       Urgency and the present moment, held together: whatever is urgent can only be done now. */
+    if(S.torn){var at0=S.torn[0],at1=S.torn[1],atq=!S.tornparts&&words(at0).length<=5&&words(at1).length<=5;
+      if(atq&&((TNOW.test(at0)&&THURRY.test(at1))||(TNOW.test(at1)&&THURRY.test(at0))))
+        return '\u2018'+cap(at0)+'\u2019 and \u2018'+at1+'\u2019 were never enemies'+(S.shared?': both want '+S.shared:'')+'. '+(/urgen|hurr|rush|deadline|pressure|too late|running out/i.test(at0+' '+at1)?'What is urgent':'What the future needs')+' can only be done now \u2014 one present step at a time.';
+      return 'You don\u2019t have to tear yourself in two. '+(atq?'\u2018'+cap(at0)+'\u2019 and \u2018'+at1+'\u2019 both':(S.tornparts?'Both parts of you':'Both sides'))+(S.shared?' want '+S.shared:' have something to say')+'. Let your next step be one they can both agree on.';}
     if(S.apart&&S.both&&!S.pair)return '\u2018'+cap(S.both[0])+'\u2019 and \u2018'+S.both[1]+'\u2019 don’t have to be enemies. Take the step that will still feel like you a year from now, and let the other keep teaching you.';   /* 13 Oct 2026 */
     if(S.one&&S.both){var sb0=words(S.both[0]).length<=4&&words(S.both[1]).length<=4;   /* 13 Oct 2026 */
       return sb0?'‘'+cap(S.both[0])+'’ and ‘'+S.both[1]+'’ don’t have to be held apart. In you, they can be one thing, seen from two sides.'
@@ -554,7 +611,10 @@ var LISTEN=(function(){
       if(/\b(everywhere|all over|all around|all at once)\b/i.test(a))return 'Everywhere at once — not in one place.';
       var bw=(a.match(BODYPART)||[])[0];return bw?'In your '+bw.toLowerCase()+' — your body is part of this too.':(/\b(heaviness|tightness|pressure|ache|aching|weight|knot|buzzing|tingling|numbness|emptiness|warmth|fluttering|sinking)\b/i.test(a)?'Your body is carrying some of this too.':'');}   /* 12 Oct 2026 · a sensation with no place named is still met */
     if(L.kind==='step'||L.kind==='firststep')return r.n>10?'That’s a big step, and it clearly matters to you.':'That’s a real step. Small is enough.';
-    if(L.kind==='choice'&&S.pair){var lo=a.toLowerCase(),hit=S.pair.filter(function(p){return lo.indexOf(String(p).toLowerCase())>=0;});
+    /* 14 Oct 2026 · Karl's "urgency wants me to act now…, the moment wants me to breathe" came back as "So “urgency” is asking for
+       you more". A side is heard as chosen only when it alone is named, by its own words, and nothing says both, neither or not. */
+    if(L.kind==='choice'&&S.pair&&!/\b(?:both|neither|not|never|no|nor)\b/i.test(a)){var lo=a.toLowerCase(),hit=S.pair.filter(function(p){var pl=String(p).toLowerCase();if(lo.indexOf(pl)>=0)return true;
+        var kw=words(pl).filter(function(w){return w.length>=3&&!STOP.test(w)&&!COMMON.test(w)&&!/^(?:the|and|you|are|for|not|but|all|any|can|her|his|him|its|our|out|was|who|why|how|now|own|way|too|yet|one|two|get|got|has|had|did|may|off|put|let|say|see|saw|she|they|then)$/.test(w);}).pop();return !!kw&&new RegExp('\\b'+kw.replace(/[^a-z']/g,'')+'\\b').test(lo);});
       if(hit.length===1)return 'So “'+hit[0]+'” is asking for you more.';}
     if(L.kind==='aspired'&&yes)return 'Then let that voice stay close.';
     /* 12 Oct 2026 · the new questions' answers, each met as an answer */
@@ -579,6 +639,13 @@ var LISTEN=(function(){
       if(/\b(?:heavier|worse|harder|louder|stronger)\b/i.test(a))return 'So one makes the other stronger.';
       return '';}
     if(L.kind==='choices'&&r.n<=8&&!/\bor\b/i.test(a)){var chw=clean(r.raw);if(chw.length>2)return 'So “'+chw+'” is part of what you’re weighing.';}   /* 13 Oct 2026 */
+    /* 14 Oct 2026 · torn: each side heard, then what they both want */
+    if(L.kind==='torn'){if(no||/^\s*(?:i don'?t know|not sure|no idea|dunno|idk)\b/i.test(a))return 'That\u2019s alright. Each side can take its own time to speak.';
+      return S.tornparts?'So each part is looking after something real.':'So each side is asking for something real.';}
+    if(L.kind==='shared'){if(no||/^\s*(?:i don'?t know|not sure|no idea|dunno|idk|not much|none|neither)\b/i.test(a))return 'That\u2019s alright. For now they want different things, and both can still be heard.';
+      var shw=sharedWant(r.raw);if(shw){S.shared=shw;return 'So underneath, they both want '+shw+'.';}
+      return yes?'Then they may be closer than they seemed.':'Then that is what they share, underneath.';}
+    if(L.kind==='sides'&&!r.torn&&!r.pulls&&r.n<=8){var sdw=clean(r.raw);if(sdw.length>2)return 'So \u201c'+sdw+'\u201d is part of it.';}
     if(L.kind==='onefelt')return no?'That’s alright. It may come clearer another time.':'That is somewhere you can come back to.';
     /* 13 Oct 2026 · a glimpse of the wider self, or what it sees, is met as itself */
     if(L.kind==='glimpse')return no?'That’s alright. Some things are found by resting, not by looking.':'Then you already know something of what it is like.';
@@ -603,6 +670,7 @@ var LISTEN=(function(){
   var UQ={q:'When you rest as that wider self, what does it see in your life right now?',plain:'What does that wider self see?',kind:'universal'};
   var UQ2P={q:'What would that wider self say to the part of you that still feels pulled?',plain:'What would it say to the part that feels pulled?',kind:'universal2'};
   var UQ2D={q:'How could that wider self come with you into an ordinary day?',plain:'How could it come with you, day to day?',kind:'universal2'};   /* 13 Oct 2026 */
+  var SHAREDQ={q:'Is there something they both want, deep down?',plain:'Do they want any of the same things?',kind:'shared'};   /* 14 Oct 2026 */
   function outsideFork(r,S){
     var a=r.a,both=/\bboth\b/i.test(a),away=AWAY.test(a)||NOSPACE.test(a),space=SPACE.test(a)&&!NOSPACE.test(a);
     if(both||(away&&space)){S.away=true;S.wide=true;return {line:'Both, then: some space, and some pull.',next:GROUND};}
@@ -624,7 +692,7 @@ var LISTEN=(function(){
     if(!S.kinds)S.kinds=[];   /* a memory made before 6 Oct 2026 still works */
     var r=read(t);S.turn++;tally(r,S);
     /* 6 Oct 2026 · "stay in Cochrane or move to the coast": two ways named with "or" are heard as the choice they are */
-    if(!r.pulls&&!r.btw&&!r.list&&((S.door===0&&S.turn<=2)||r.choice||(S.lastQ||{}).kind==='choices'||/\bwhether\b|\bif\s+i\s+should\b/i.test(r.a))){
+    if(!r.pulls&&!r.btw&&!r.list&&((S.door===0&&S.turn<=2)||r.choice||/^(?:choices|sides)$/.test((S.lastQ||{}).kind||'')||/\bwhether\b|\bif\s+i\s+should\b/i.test(r.a))){
       var osrc=r.a.replace(/[.!?]+$/,'').replace(/^[^:]*:\s*/,''),owi=osrc.search(/\bwhether\b/i),oif=osrc.search(/\bif\s+i\s+(?:should|could|can|would)\b/i);
       if(owi>=0)osrc=osrc.slice(owi).replace(/^whether\s+(?:to\s+)?/i,'');else if(oif>=0)osrc=osrc.slice(oif).replace(/^if\s+i\s+(?:should|could|can|would)\s+/i,'');
       var om=osrc.match(/^\s*(?:(?:i\s+(?:could|can|might)|either|to)\s+)?(.{2,60}?)\s*,?\s+or\s+(?:to\s+)?(.{2,60}?)\s*$/i);
@@ -637,29 +705,38 @@ var LISTEN=(function(){
     var LQK=(S.lastQ||{}).kind||'';
     if(r.outside&&(WORLD_OUT.test(r.a)||!(FELT_OUT.test(r.a)||/^(body|allow|notice|outside|ground|wide|unnamed)$/.test(LQK))))r.outside=false;
     /* 12 Oct 2026 · an answer about the feet or the wider place is never misread as a choice between two things */
-    if(/^(ground|wide|steady|outside|link|onefelt|glimpse|universal|universal2)$/.test(LQK)){r.pulls=null;r.btw=null;r.ors=false;r.both=null;if(r.theme==='choice'&&!r.choice)r.theme='';}   /* 13 Oct 2026 · nor an answer about how two things connect */
+    if(/^(ground|wide|steady|outside|link|onefelt|glimpse|universal|universal2|torn|shared)$/.test(LQK)){r.pulls=null;r.btw=null;r.ors=false;r.both=null;r.torn=null;r.idiom=null;r.twosides=null;if((r.theme==='choice'&&!r.choice)||r.theme==='torn')r.theme='';}   /* 13 Oct 2026 · nor an answer about how two things connect · 14 Oct: nor what two sides ask for, or share */
+    if(LQK==='shared')r.feel=[];   /* 14 Oct 2026 · "both want me to be happy" is what they want, not a feeling of the speaker's */
+    /* 14 Oct 2026 · "my head and my heart", given as the two sides, is heard as a torn pair (or as a choice, when the sides are things to do) */
+    if(LQK==='sides'&&!r.pulls&&!r.torn){var sdm=r.a.replace(/[.!?]+$/,'').match(/^\s*(?:between\s+)?(.{2,60}?)\s+and\s+(?!(?:i|i'm|it|it's|that|now|then|don't|can't)\b)(.{2,60}?)\s*$/i);
+      if(sdm){var sd1=clean(sdm[1]),sd2=clean(sdm[2]);if(words(sd1).length&&words(sd2).length&&words(sd1).length<=8&&words(sd2).length<=8){
+        if(BTWACT.test(sd1)||BTWACT.test(sd2)){r.pulls=[sd1,sd2];if(!r.mind&&!r.cycle)r.theme='choice';}else{r.torn=[sd1,sd2];r.tornv='';if(!r.mind&&!r.cycle)r.theme='torn';}r.btw=null;r.both=null;}}}
     if(r.outside){S.outside=true;S.body=true;}if(r.effort){S.hard=true;if(!S.effort)S.effort=r.effort;}if(r.tiredish)S.tiredish=true;
     r.feel.forEach(function(x){if(S.felt.indexOf(x)<0)S.felt.push(x);});
     if(!S.theme&&r.theme&&r.theme!=='new'&&r.theme!=='mind')S.theme=r.theme;
     if(r.wish&&r.wish.fronted&&!S.obj)S.obj=r.wish.obj;
     if(!S.pair){if(r.pulls)S.pair=[swap(r.pulls[0]),swap(r.pulls[1])];else if(r.btw)S.pair=[swap(clean(r.btw[1])),swap(clean(r.btw[2]))];}
     if(!S.both&&r.both)S.both=[swap(r.both[0]),swap(r.both[1])];
+    if(!S.torn&&r.torn){S.torn=[swap(r.torn[0]),swap(r.torn[1])];S.tornparts=!!r.tornparts;if(!S.theme||S.theme==='feel')S.theme='torn';}   /* 14 Oct 2026 */
     var kp=keyPhrase(t),parts=[{tag:'p',cls:'quote',text:kp}],line=reflect(r,S),next=null;
-    var al=answerLine(r,S);if(al&&(!line||(line==='Thank you. Stay with that a moment.'&&/^(body|pattern|shift|shadow|steady|allow|ground|wide|notice|choices)$/.test((S.lastQ||{}).kind||''))))line=al;
-    if(al&&/^(ground|wide|link|onefelt|glimpse|universal|universal2)$/.test(LQK)&&!r.unsettled)line=al;   /* 12 Oct 2026 · the feet, and the wider place, are always answered as themselves */   /* 6 Oct 2026 · "in my stomach" is answered as an answer, not met with "Thank you" */
+    var al=answerLine(r,S);if(al&&(!line||(line==='Thank you. Stay with that a moment.'&&/^(body|pattern|shift|shadow|steady|allow|ground|wide|notice|choices|choice|sides)$/.test((S.lastQ||{}).kind||''))))line=al;
+    if(al&&/^(ground|wide|link|onefelt|glimpse|universal|universal2|torn|shared)$/.test(LQK)&&!r.unsettled)line=al;   /* 12 Oct 2026 · the feet, and the wider place, are always answered as themselves */   /* 6 Oct 2026 · "in my stomach" is answered as an answer, not met with "Thank you" */
     var cbm=r.a.match(BEFORE);   /* 13 Oct 2026 · "yes, last winter too" is heard, and "has this come before?" is not asked after it */
     if(cbm&&LQK!=='pattern'){S.patterned=true;if(!line||line==='Thank you. Stay with that a moment.'){var ltm=/^last \w+$/i.test(cbm[0]);line=ltm?'So it came '+cbm[0].toLowerCase()+', too.':'So it has come before. That’s worth knowing.';}}
     var bph=r.n<=8&&r.a.match(/^\s*(in|on|at|around)\s+((?:my|the)\b[^.!?,;]{1,40})/i);   /* "on the back of my neck": the place is given back in their own words */
     if(bph&&BODYPART.test(bph[2])&&(!line||line==='Thank you. Stay with that a moment.'||/^In your /.test(line)))line=cap(bph[1].toLowerCase())+' '+swap(clean(bph[2]))+' \u2014 your body is part of this too.';
-    var struggle=S.hard||S.outside||/^(cycle|choice|fear|wish)$/.test(S.theme);   /* 12 Oct 2026 · beyond the body, the wiser voice speaks too */
+    var struggle=S.hard||S.outside||!!S.torn||/^(cycle|choice|fear|wish|torn)$/.test(S.theme);   /* 12 Oct 2026 · beyond the body, the wiser voice speaks too */
     /* 1 · something newly named gets its own question first */
     var tq=themeQ(r);
     if(tq&&tq.kind==='choice'&&!r.pulls&&!r.btw&&!S.pair&&S.door!==0)tq={q:'What are you choosing between, as you see it now?',plain:'What are the options, as you see them?',kind:'choices'};   /* 13 Oct 2026 · never "which one" before any are named */
     /* 6 Oct 2026 · the same question in other words is still the same question: the body is asked about once, and "which pulls harder" once */
     if(tq&&S.asked.indexOf(tq.q)<0&&!(tq.kind==='body'&&(S.body||S.universal||S.kinds.indexOf('body')>=0))&&!(tq.kind==='choice'&&!r.pulls&&S.kinds.indexOf('choice')>=0)&&!(tq.kind==='notice'&&S.effort))next=tq;   /* 12 Oct 2026 · when noticing is what tires them, they are not asked to notice more */
+    if(/^(shared|torn)$/.test(LQK)&&next&&next.kind==='body')next=null;   /* 14 Oct 2026 · what two sides want is not then sent into the body */
+    if(LQK==='choice'&&next&&next.kind==='choice')next=null;   /* 14 Oct 2026 · never two “which one” questions in a row */
     /* 12 Oct 2026 · "space, or pulled away?" is answered as an answer, and the next question follows from it */
     if((S.lastQ||{}).kind==='outside'){var ofk=outsideFork(r,S);if(ofk){line=ofk.line;if(S.asked.indexOf(ofk.next.q)<0)next=ofk.next;}}
     if(LQK==='link'&&S.one&&S.asked.indexOf(ONEQ.q)<0)next=ONEQ;   /* 13 Oct 2026 · one thing, then: what is it like when they are one */
+    if(LQK==='torn'&&!/^\s*(?:no|nope|not really|nothing|never|i don'?t know|not sure|no idea|dunno|idk)\b/i.test(r.a)&&S.asked.indexOf(SHAREDQ.q)<0)next=SHAREDQ;   /* 14 Oct 2026 · each side heard: then what they both want */
     if(LQK==='glimpse'&&!r.unsettled&&S.asked.indexOf(UQ.q)<0)next=UQ;   /* 13 Oct 2026 · from a glimpse, to resting there */
     if(LQK==='universal'&&!r.unsettled){var fw=S.pulled?'still feels pulled':(S.felt.length?'feels '+S.felt.slice(0,2).join(' and '):'is still struggling');
       var uq2=(S.hard||S.pulled||/^(cycle|choice)$/.test(S.theme))?{q:'What would that wider self say to the part of you that '+fw+'?',plain:UQ2P.plain,kind:'universal2'}:UQ2D;
@@ -674,7 +751,7 @@ var LISTEN=(function(){
     while(!next&&S.stage<ARC.length){
       var st=ARC[S.stage++];
       if(st.id==='matter'&&S.theme)continue;
-      if(st.id==='body'&&(S.body||S.universal||S.kinds.indexOf('body')>=0))continue;   /* 13 Oct 2026 · never back into the body after the wider self */
+      if(st.id==='body'&&(S.body||S.universal||S.kinds.indexOf('body')>=0||S.kinds.indexOf('shared')>=0))continue;   /* 13 Oct 2026 · never back into the body after the wider self */
       if(st.id==='step'&&S.stepped)continue;   /* 6 Oct 2026 · they have already offered a step of their own */
       if(st.id==='pattern'&&S.patterned)continue;   /* 13 Oct 2026 · they already said it has come before */
       if(st.id==='shadow'&&(!S.hard||S.shadowed))continue;
@@ -685,7 +762,7 @@ var LISTEN=(function(){
         parts.push({cls:'line aspire',text:'\u201c'+aspire(S)+'\u201d'});
         parts.push({cls:'line q',text:ASPQ.q});
         return {parts:parts,rim:kp,next:{q:ASPQ.q,plain:ASPQ.plain,kind:'aspired'},done:false};}
-      var v=(S.theme==='cycle'&&st.cycle)?st.cycle:(st.id==='other'&&/lonely|alone|unheard|invisible|unloved|rejected|abandoned/.test(S.felt.join(' ')))?st.lonely:(st.id==='other'&&S.others&&st.others)?st.others:st;
+      var v=(st.id==='step'&&S.torn)?{q:'What\u2019s one small step '+(S.tornparts?'both parts of you':'both sides')+' could agree on, before tomorrow night?',plain:'What\u2019s one small step both could live with?'}:(S.theme==='cycle'&&st.cycle)?st.cycle:(st.id==='other'&&/lonely|alone|unheard|invisible|unloved|rejected|abandoned/.test(S.felt.join(' ')))?st.lonely:(st.id==='other'&&S.others&&st.others)?st.others:st;
       if(st.id==='shift')S.done=true;
       if(S.asked.indexOf(v.q)>=0)continue;
       next={q:v.q,plain:v.plain,kind:st.id};
@@ -1052,6 +1129,9 @@ var EXPLAIN={
   steady:'I meant: underneath everything you’ve said, is there a part of you that stayed calm, or stayed itself?',
   unnamed:'I meant: even without a name for it, how do you notice when it’s there?',
   witness:'I meant: just look at the feeling itself, without explaining or naming it. What’s there?',
+  torn:'I meant: each side seems to want something for you, or from you. What is each one hoping for?',
+  shared:'I meant: underneath their different directions, is there anything both sides are hoping for?',
+  sides:'I meant: when you feel torn, what are the two things pulling? Name them in your own words.',
   matter:'I meant: of everything in this, what feels most important to you?'
 };
 function mirrorQ(t){
