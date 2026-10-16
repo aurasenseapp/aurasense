@@ -7260,7 +7260,7 @@ function macDrawAura(ts){
          With a door list open, the names and the cards were fighting and both
          lost. A name is not competing for attention while a list is being
          read, so it steps back - and returns the moment the list closes. */
-      var _dim=(typeof window!=='undefined'&&(window._macListOpen||window._macCardOpen))?(window._macCardOpen?0.08:0.24):1;
+      var _dim=(typeof window!=='undefined'&&(window._macListOpen||window._macCardOpen))?(window._macCardOpen?0.08:0):1;   /* 16 Oct 2026 · Karl: "Text behind still showing through." At a quarter strength the names still read through the list; while a list is open they step aside completely */
       /* while one name is open, its twin stays unwritten and the others step back a little */
       var _open=(typeof macHover==='number'&&macHover>=0);
       if(_open&&macHover===li){macNamed.push({x:px,y:py,w:macAx.measureText(nm).width,i:li});macAx.restore();return;}
@@ -7414,7 +7414,7 @@ function macEnter(){
     macCv.classList.add('on'); macAur.classList.add('on');
     var w=document.getElementById('ma-cloud-words'); if(w)w.classList.add('on');
     var b=document.getElementById('ma-cloud-through'); if(b)b.classList.add('on');
-  window._macListOpen=false;
+  window._macListOpen=false;try{var _pg155b=document.getElementById('myaura-page');if(_pg155b)_pg155b.classList.remove('mac-list-open');}catch(e){}
     try{macFitChrome();}catch(e){}
   },90);
 }
@@ -7537,7 +7537,7 @@ function macFitChrome(){
     if(it){
       if(it.classList.contains('on')){
         it.style.bottom=(edge+14)+'px';
-        var room=Math.round(hr.height-edge-14-Math.max(150,hr.height*0.28));
+        var room=Math.round(hr.height-edge-14-Math.max(110,hr.height*0.2));   /* 16 Oct 2026 · Karl's photo: the last row was cut in half */
         it.style.maxHeight=Math.max(140,room)+'px';
         it.style.overflowY='auto'; it.style.webkitOverflowScrolling='touch';
         var ir=it.getBoundingClientRect();
@@ -7568,6 +7568,7 @@ function macOpenDoor(i){
   Array.prototype.forEach.call(d.children,function(c,k){ c.classList.toggle('sel',k===i); });
   var wq=document.getElementById('ma-cloud-words');
   if(wq)wq.classList.toggle('hushed',i>=0);
+  try{var _pg155=document.getElementById('myaura-page');if(_pg155)_pg155.classList.toggle('mac-list-open',i>=0);}catch(e){}   /* 16 Oct 2026 */
   if(i<0){ box.classList.remove('on'); box.innerHTML=''; window._macListOpen=false;
            try{macFitChrome();}catch(e){} return; }
   window._macListOpen=true;
@@ -13160,7 +13161,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">14 Oct 2026 · </span>154<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">16 Oct 2026 · </span>155<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -13373,6 +13374,19 @@ try{
 #myaura-page .maci b,#myaura-page .maci i,#myaura-page .maci .why{
   text-shadow:0 1px 8px rgba(255,251,244,.95)}
 #myaura-page .maci.resting::before{opacity:.45;box-shadow:0 0 8px rgba(226,168,110,.4)}
+
+/* 16 Oct 2026 · Karl: "Also see meet the symbols screen grab on my aura. Text behind still showing through."
+   While a list is open, the named light's label rests, and the light behind each row is fuller and fades later
+   at its ends, so nothing behind can be read through the words. */
+#myaura-page.mac-list-open #ma-cloud-name{opacity:0!important}
+/* the light behind each row now fits inside the list's own edges, so it is never clipped into a box,
+   and the list never scrolls a few pixels sideways or downward because of its own light */
+#myaura-page #ma-cloud-items{box-sizing:border-box;width:min(400px,94vw);padding:10px 24px;overflow-x:hidden}
+#myaura-page .maci::after{inset:-10px -24px;
+  background:linear-gradient(to right,rgba(255,250,242,0) 0%,rgba(255,250,242,.97) 10%,
+             rgba(255,250,242,.985) 50%,rgba(255,250,242,.97) 88%,rgba(255,250,242,0) 100%);
+  -webkit-mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 16%,#000 84%,rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,0) 0%,#000 16%,#000 84%,rgba(0,0,0,0) 100%)}
 
 /* THE WAY THROUGH, AND THE WAY BACK — round-ended light */
 #myaura-page #ma-cloud-through{

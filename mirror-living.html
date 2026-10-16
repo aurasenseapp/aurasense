@@ -249,7 +249,7 @@ var LISTEN=(function(){
   /* 6 Oct 2026 · what a wiser voice sounds like, and what a step offered sounds like */
   var VOICE=/^\s*(?:(?:maybe|perhaps|so)\s+)?(?:i'?d say|i would say|it would say|it'?d say|(?:she|he|they) would say|you\b|your\b|just\b|be\b|let\b|take\b|keep\b|stop\b|go\b|rest\b|trust\b|breathe\b|don'?t\b|do\b|try\b|stay\b|remember\b|slow\b|ask\b|reach\b|forgive\b|love\b|it'?s (?:ok|okay|alright|all right|fine)\b|it will be\b|everything will\b|i (?:could|can|will|would|should|must|might)\b|i'?ll\b|i need to\b|i want to\b)/i;
   var REPORT=/\b(started|began|happened|was|were|had|used to|since|ago|been|last (?:year|week|month|night|winter|summer|spring|autumn|fall))\b/i;   /* telling what happened, not what a wiser self would say */
-  var STEP=/^\s*(?:(?:maybe|perhaps|so)\s+)?i\s+(?:could|might)\s+(?!(?:feel|see|hear|sense|tell|notice|remember|understand|imagine|picture|think|say|never|not|have|be)\b)([^.!?]{3,90})/i;
+  var STEP=/^\s*(?:(?:maybe|perhaps|so)\s+)?i\s+(?:could|might)\s+(?!(?:feel|see|hear|sense|tell|notice|remember|understand|imagine|picture|think|say|never|not|have|be)\b)([^.!?]{3,400})/i;
   var CYCLE=/\b(cycl\w*|loops?|looping|round and round|over and over|again and again|repeat\w*|keeps? (?:coming|going) back|same thoughts?|ruminat\w*|spiral\w*|stuck on|can'?t stop thinking)\b/i;
   var CHOICE=/\b(choose|choice|choosing|decide|decision|deciding|should i)\b/i;
   var FEAR=/\b(afraid|scared|frightened|fear|fears|terrified|dread|nervous|panic\w*)\b/i;
@@ -320,6 +320,11 @@ var LISTEN=(function(){
   function low(x){x=String(x||'').trim();return x.charAt(0).toLowerCase()+x.slice(1);}
   function cap(x){x=String(x||'').trim();return x.charAt(0).toUpperCase()+x.slice(1);}
   function clean(x){return String(x||'').replace(/\s+/g,' ').trim().replace(/^[,;:\-\u2013\u2014\s]+|[,;:\-\u2013\u2014.!?\s]+$/g,'');}
+  /* 16 Oct 2026 · Karl's screenshot: "...yet need to generate an inco." A phrase given back is never cut mid-word:
+     whole when it fits; otherwise at its own last pause (a comma, a dash, a semicolon), or at its last whole word, marked "…" */
+  function upto(x,n){x=clean(x);if(x.length<=n)return x;var c=x.slice(0,n+1),p=Math.max(c.lastIndexOf(', '),c.lastIndexOf(' — '),c.lastIndexOf(' – '),c.lastIndexOf(' - '),c.lastIndexOf('; '));
+    if(p>=n*.55)return clean(c.slice(0,p));var sp=c.lastIndexOf(' ');return clean(c.slice(0,sp>0?sp:n))+'…';}
+  function stop(x){x=String(x||'');return /[.!?…]$/.test(x)?x:x+'.';}
   function words(t){return String(t||'').toLowerCase().match(/[a-z']+/g)||[];}
   function plural(x){var w=words(x).pop()||'';return /[^s]s$/.test(w)||/^(people|children|they|them|these|those)$/.test(w);}
   function pron(x){return (PERSON.test(x)||plural(x))?'them':'it';}
@@ -420,8 +425,8 @@ var LISTEN=(function(){
       if(/^(?:but|and|or)\b/i.test(y))continue;   /* "not yet, but soon" is no pair; "yet so different" is */
       if(x.length>3&&y.length>3&&words(x).length<=12&&words(y).length<=12){if(tw==='yet'||tw==='while'||tw==='whilst')r.both=[x,y];else r.pulls=[x,y];}
       break;}
-    var mw=a.match(/\b(i\s+(?:notice|noticed|watch|watched|see|saw|observe|observed|catch|caught)\s+my\s+(?:own\s+)?(?:mind|thoughts?|thinking)[^.!?]{0,70})/i);
-    if(mw)r.mind=clean(mw[1]);
+    var mw=a.match(/\b(i\s+(?:notice|noticed|watch|watched|see|saw|observe|observed|catch|caught)\s+my\s+(?:own\s+)?(?:mind|thoughts?|thinking)[^.!?]{0,400})/i);
+    if(mw)r.mind=upto(mw[1],110);
     r.unnamed=UNNAMED.test(a);
     r.outside=OUTSIDE.test(a);
     var efm=a.match(EFFORT);
@@ -460,10 +465,10 @@ var LISTEN=(function(){
       if(/^\s*(no|nope|not really|not quite|not me|not yet|it doesn'?t|that'?s not me)\b/i.test(r.a))return 'Then your own words matter more than mine. Mine was only a guess.';
       if(!/\?\s*$/.test(r.a)&&(VOICE.test(r.a)||(!REPORT.test(r.a)&&!r.body)))return 'That\u2019s your own wiser voice. Keep it close.';}   /* 12 Oct 2026 · a question is never called a wiser voice */
     /* 6 Oct 2026 · a step they offer of their own accord is honoured, and not asked for again */
-    if(stp&&L.kind!=='step'&&L.kind!=='firststep')return 'You could '+swap(clean(stp[1]))+' \u2014 that\u2019s a real step, and it came from you.';
+    if(stp&&L.kind!=='step'&&L.kind!=='firststep')return 'You could '+swap(upto(stp[1],110))+' \u2014 that\u2019s a real step, and it came from you.';
     /* 6 Oct 2026 · "I would rather not look at how angry I am": the unlit room, named unasked, is honoured and not asked about again */
-    var shd=r.a.match(/\b(?:i'?d rather not|i would rather not|i'?m (?:afraid|scared|ashamed) to|i am (?:afraid|scared|ashamed) to|it'?s (?:hard|difficult) to|it is (?:hard|difficult) to) (?:look at|think about|admit|face)\b[^.!?]{0,80}/i);
-    if(shd){S.shadowed=true;S.hard=true;return cap(swap(clean(shd[0])))+'. Thank you for saying it \u2014 that takes courage.';}
+    var shd=r.a.match(/\b(?:i'?d rather not|i would rather not|i'?m (?:afraid|scared|ashamed) to|i am (?:afraid|scared|ashamed) to|it'?s (?:hard|difficult) to|it is (?:hard|difficult) to) (?:look at|think about|admit|face)\b[^.!?]{0,400}/i);
+    if(shd){S.shadowed=true;S.hard=true;return stop(cap(swap(upto(shd[0],110))))+' Thank you for saying it \u2014 that takes courage.';}
     var hw=r.hedge.replace(/\bi\b/,'I'),door=/^(maybe|perhaps)$/.test(r.hedge);
     if(L.kind==='picture'&&r.n<=8){var core=clean(r.a.replace(HEDGE,' '));
       if(core.length>2&&!/^(yes|yeah|yep|no|nope|ok|okay|sure|maybe|perhaps|i don'?t know|not sure)$/i.test(core))return cap(swap(core))+' — that’s what it might look like'+(r.hedge?(door?'. And you said “'+hw+'”, so part of you is open to it':'. And that “'+hw+'” may say more than it seems'):'')+'.';}
@@ -485,7 +490,7 @@ var LISTEN=(function(){
     if(r.torn&&r.tornparts)return 'Part of you '+swap(r.torn[0])+', and part of you '+swap(r.torn[1])+'. Both are real, and both are yours.';
     if(r.torn){var rt0=swap(r.torn[0]),rt1=swap(r.torn[1]),rsh=words(rt0).length<=8&&words(rt1).length<=8;
       return (r.tornv?'You\u2019re '+r.tornv+' between '+(rsh?rt0+' and '+rt1:'two things'):(rsh?'So it\u2019s '+rt0+' and '+rt1:'So there are two sides'))+'. Both are real, and both are yours.';}
-    if(r.mind)return cap(swap(r.mind))+'.';
+    if(r.mind)return stop(cap(swap(r.mind)));
     if(r.pulls&&r.ors)return 'Two ways, as you see them: '+swap(r.pulls[0])+', or '+swap(r.pulls[1])+'.';
     if(r.pulls)return 'Two things are pulling here: '+swap(r.pulls[0])+', and '+swap(r.pulls[1])+'.';
     if(r.both)return 'Both are here at once: '+swap(r.both[0])+', and '+swap(r.both[1])+'.';   /* 13 Oct 2026 · held together, not pulled apart */
@@ -495,18 +500,18 @@ var LISTEN=(function(){
     var hows=r.a.match(/\bhow to [a-z']+/gi);
     if(hows&&hows.length&&/\b(?:can'?t|cannot|not (?:being )?able to|unable to) decide\b/i.test(r.a))
       return 'It isn’t only this choice — it’s '+hows.map(function(h){return swap(h);}).join(', ')+'.';
-    var wf=r.a.match(/\b(?:would|will|might|could) feel ([^.!?]{3,110})/i);
-    if(wf)return 'It would feel '+swap(clean(wf[1]))+'.';
+    var wf=r.a.match(/\b(?:would|will|might|could) feel ([^.!?]{3,400})/i);
+    if(wf)return stop('It would feel '+swap(upto(wf[1],130)));
     /* 13 Oct 2026 · "I've felt this for a while, and it is getting heavier" is given back as it was said */
     var gtm=r.a.match(/\b(?:it'?s|it is|this is|that'?s|that is|things are|everything is|it keeps)\s+getting\s+([a-z]+(?:\s+and\s+[a-z]+)?)\b/i);
     if(gtm&&!/^(?:to|better at|used|on|through|over|in|out|up|away)$/i.test(gtm[1]))return (/\bfor (?:a while|a long time|ages|years|months|weeks)\b|\blately\b|\brecently\b/i.test(r.a)?'It’s been here a while, and it’s getting ':'It’s getting ')+gtm[1].toLowerCase()+'.';
     if(r.theme==='unnamed')return 'Some things can be felt before they can be named.';
     if(r.feel.length===1)return 'You named it: '+r.feel[0]+'. That word is yours; I\u2019m only holding it up.';
     if(r.feel.length>1)return 'More than one feeling is here: '+r.feel.slice(0,3).join(', ')+'.';
-    var kt=r.a.match(/\bi keep ((?:thinking|feeling|hearing|seeing|telling myself|wondering|asking myself|going back to|coming back to)\b[^.!?]{0,80})/i);
-    if(kt)return 'You keep '+swap(clean(kt[1]))+'.';   /* 6 Oct 2026 · "I keep thinking I failed" is given back, not passed over */
-    var ifl=r.a.match(/\bi (?:feel|felt|am feeling|'m feeling) ([^.!?]{2,80})/i);
-    if(ifl&&!r.feel.length)return 'You feel '+swap(clean(ifl[1]))+'.';
+    var kt=r.a.match(/\bi keep ((?:thinking|feeling|hearing|seeing|telling myself|wondering|asking myself|going back to|coming back to)\b[^.!?]{0,400})/i);
+    if(kt)return stop('You keep '+swap(upto(kt[1],130)));   /* 6 Oct 2026 · "I keep thinking I failed" is given back, not passed over */
+    var ifl=r.a.match(/\bi (?:feel|felt|am feeling|'m feeling) ([^.!?]{2,400})/i);
+    if(ifl&&!r.feel.length)return stop('You feel '+swap(upto(ifl[1],130)));
     if(r.n<=3)return 'Thank you. Stay with that a moment.';
     return '';
   }
@@ -651,6 +656,12 @@ var LISTEN=(function(){
     if(L.kind==='glimpse')return no?'That’s alright. Some things are found by resting, not by looking.':'Then you already know something of what it is like.';
     if(L.kind==='universal')return no?'That’s alright. It may show itself more clearly another time.':'That is the wider self, in your own words. It is yours to return to.';
     if(L.kind==='universal2')return no?'That’s alright. It can come in its own time.':'That is the wider self speaking, in your own words. Keep it close.';
+    /* 16 Oct 2026 · Karl: "Pressing as in urgent" was met only by the next question. When an answer says plainly
+       what a word means ("as in…", "it means…", "like…"), that meaning is given back in their own words. Anything
+       else said about the word ("since my dad died") is context, not a definition, and is left as it was said. */
+    if(L.kind==='word'){var wq=(L.q||'').match(/“([^”]+)”/);
+      if(wq){var wd=wq[1],wre=wd.replace(/[^a-z' ]/gi,''),dm=a.match(new RegExp('^\\s*(?:'+wre+'\\s+)?(?:(?:it|that|this)\\s+)?(means|meaning|as in|is like|like)\\s+([^.!?]{1,90}?)[.!?]*$','i'));
+        if(dm&&wre&&words(dm[2]).length<=10)return 'So, for you, “'+wd+'” '+(/like/i.test(dm[1])?'is like ':'means ')+swap(clean(dm[2]))+'.';}}
     if(L.kind==='unnamed')return 'That is a way of sensing in itself.';
     return '';
   }
@@ -719,12 +730,15 @@ var LISTEN=(function(){
     if(!S.both&&r.both)S.both=[swap(r.both[0]),swap(r.both[1])];
     if(!S.torn&&r.torn){S.torn=[swap(r.torn[0]),swap(r.torn[1])];S.tornparts=!!r.tornparts;if(!S.theme||S.theme==='feel')S.theme='torn';}   /* 14 Oct 2026 */
     var kp=keyPhrase(t),parts=[{tag:'p',cls:'quote',text:kp}],line=reflect(r,S),next=null;
-    var al=answerLine(r,S);if(al&&(!line||(line==='Thank you. Stay with that a moment.'&&/^(body|pattern|shift|shadow|steady|allow|ground|wide|notice|choices|choice|sides)$/.test((S.lastQ||{}).kind||''))))line=al;
+    var al=answerLine(r,S);if(al&&(!line||(line==='Thank you. Stay with that a moment.'&&/^(body|pattern|shift|shadow|steady|allow|ground|wide|notice|choices|choice|sides|word)$/.test((S.lastQ||{}).kind||''))))line=al;
     if(al&&/^(ground|wide|link|onefelt|glimpse|universal|universal2|torn|shared)$/.test(LQK)&&!r.unsettled)line=al;   /* 12 Oct 2026 · the feet, and the wider place, are always answered as themselves */   /* 6 Oct 2026 · "in my stomach" is answered as an answer, not met with "Thank you" */
     var cbm=r.a.match(BEFORE);   /* 13 Oct 2026 · "yes, last winter too" is heard, and "has this come before?" is not asked after it */
     if(cbm&&LQK!=='pattern'){S.patterned=true;if(!line||line==='Thank you. Stay with that a moment.'){var ltm=/^last \w+$/i.test(cbm[0]);line=ltm?'So it came '+cbm[0].toLowerCase()+', too.':'So it has come before. That’s worth knowing.';}}
     var bph=r.n<=8&&r.a.match(/^\s*(in|on|at|around)\s+((?:my|the)\b[^.!?,;]{1,40})/i);   /* "on the back of my neck": the place is given back in their own words */
     if(bph&&BODYPART.test(bph[2])&&(!line||line==='Thank you. Stay with that a moment.'||/^In your /.test(line)))line=cap(bph[1].toLowerCase())+' '+swap(clean(bph[2]))+' \u2014 your body is part of this too.';
+    /* 16 Oct 2026 · what matters most is named as theirs, but only when nothing more particular has answered first:
+       a place in the body, "it came before", a yes, a no and a question are each heard as themselves */
+    if(!line&&LQK==='matter'&&r.n>=3&&!/\?\s*$/.test(r.a)&&!BODYPART.test(r.a)&&!/^\s*(?:yes|yeah|yep|no|nope|not really|nothing|i don'?t know|not sure|maybe|perhaps)\b/i.test(r.a))line='That is what matters most to you, right now.';
     var struggle=S.hard||S.outside||!!S.torn||/^(cycle|choice|fear|wish|torn)$/.test(S.theme);   /* 12 Oct 2026 · beyond the body, the wiser voice speaks too */
     /* 1 · something newly named gets its own question first */
     var tq=themeQ(r);
