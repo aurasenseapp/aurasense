@@ -21,6 +21,7 @@
   - when someone is confused, it says the same thing more simply instead of carrying on
 
   Nothing is stored. No scripts from anywhere else.
+  22 Oct 2026 · Build 158: where Claude can listen, only Claude answers; if Claude can't, the words go back in the box.
   22 Oct 2026 · Build 156: words leave this page only when the person has chosen to let Claude listen, and then
   only to Aurasense's own small helper (/api/mirror), which passes them to Claude and keeps nothing. Heavy words
   never leave. Where no helper is switched on, nothing leaves at all and the written rules answer, as before.
@@ -1070,8 +1071,8 @@ function open(){
   d.classList.add('hide');   /* a breath, while the Mirror learns whether Claude can listen (at most a second and a half) */
   lsReady(function(){
     if(S.turns.length)return;   /* already begun, from the light on the map */
-    if(LS.live&&!LS.choice){show(openParts('Who would you like to listen to you?'),'');
-      lsAsk(function(){if(S.turns.length){setWho('');lsHint();return;}show(openParts(),'');d.classList.remove('hide');});return;}
+    if(LS.live&&!LS.choice){show(openParts('Would you like Claude, an AI, to listen to you here?'),'');
+      lsAsk(function(){if(S.turns.length){setWho('');lsHint();return;}show(openParts(),'');d.classList.remove('hide');},lsNotNow);return;}
     show(openParts(),'');d.classList.remove('hide');});
 }
 function begin(i){
@@ -1226,9 +1227,8 @@ function hear(){
   if(LEAVE.test(t)){$('words').value='';dwHide();lsAskHide();rest();return;}
   if(LS.live&&!LS.choice){lsConsentMid();return;}   /* nothing leaves this page until they choose who listens: their words wait in the box */
   $('words').value='';dwHide();LS.lastWords=raw;
-  if(LS.live&&LS.choice==='claude'&&!LS.rest){listen(raw,t);return;}
-  if(LS.live)setWho(LS.rest?WHY.restnote:'Answered by the written rules. Nothing left this page.');
-  rulesHear(raw,t);
+  if(LS.live){if(LS.rest){$('words').value=raw;LS.lastWords='';setWho(WHY.restnote);return;}listen(raw,t);return;}   /* 22 Oct 2026 · Build 158 · where Claude can listen, only Claude answers */
+  rulesHear(raw,t);   /* only where no listener exists at all (a preview) */
 }
 /* the written rules, exactly as before */
 function rulesHear(raw,t){
@@ -1300,16 +1300,16 @@ function fin(parts){ $('doors').classList.add('hide'); show(parts.concat([{cls:'
    - After a conversation ends well, and never after heavy words, the Listen Forward door, at most once a week. */
 var LS={live:false,choice:null,rest:false,busy:false,heavy:false,aiN:0,by:'',turns:[],lastWords:'',snap:'',gen:0,ctl:null};
 var RULES_MARK='[Written by the Mirror’s written rules, not by you:] ';
-var WHY={
-  resting:'Claude is resting for now, so the written rules answered.',
-  key:'Claude is resting for now, so the written rules answered.',
-  off:'Claude is resting for now, so the written rules answered.',
-  elsewhere:'Claude is resting for now, so the written rules answered.',
-  busy:'Claude has listened a lot just now, so the written rules answered this one.',
-  slow:'Claude took too long, so the written rules answered this one.',
-  refused:'Claude didn’t answer those words, so the written rules did.',
-  upstream:'Claude couldn’t answer just then, so the written rules did.',
-  restnote:'Claude is resting for now, so the written rules are answering. Nothing leaves this page.'
+var WHY={   /* 22 Oct 2026 · Build 158 · nothing answers in Claude's place: the words go back in the box, with the reason */
+  resting:'The Mirror is resting for now. Your words are back in the box; please come back a little later.',
+  key:'The Mirror is resting for now. Your words are back in the box; please come back a little later.',
+  off:'The Mirror is resting for now. Your words are back in the box; please come back a little later.',
+  elsewhere:'The Mirror is resting for now. Your words are back in the box; please come back a little later.',
+  busy:'Claude has listened a lot just now. Your words are back in the box; try again in a minute.',
+  slow:'Claude took too long to answer. Your words are back in the box; send them again when you’re ready.',
+  refused:'Claude didn’t answer those words. They are back in the box, if you’d like to say them another way.',
+  upstream:'Claude couldn’t answer just then. Your words are back in the box; send them again when you’re ready.',
+  restnote:'The Mirror is resting for now. Your words are still in the box; please come back a little later.'
 };
 /* 22 Oct 2026 · Build 157 · Karl's screenshot: a reply ended "…the question you asked of…". Claude's words are kept
    whole: only whole sentences are let go at the end, and a single sentence is shortened only if it alone is far too long */
@@ -1330,31 +1330,39 @@ function lsChoose(c){LS.choice=c;try{localStorage.setItem('as_mirror_listener',c
 function refreshNote(){
   var n=$('note');if(!n||!LS.live)return;
   n.textContent='';
-  var sw=function(label,to){var b=el('button','lnk',label);b.type='button';
-    b.addEventListener('click',function(){if(LS.busy)return;lsChoose(to);
-      setWho(to==='claude'?'Claude will listen from your next words.':'The written rules will answer from your next words. Nothing leaves this page.');});
-    n.appendChild(b);};
-  if(LS.choice==='claude'&&!LS.rest){n.appendChild(document.createTextNode('Claude, an AI, is listening; Aurasense keeps nothing. Not a person, and not a therapist. '));sw('Use the written rules instead','rules');}
-  else if(LS.choice){n.appendChild(document.createTextNode('Nothing you write leaves this page. The Mirror is not a person, and not a therapist. '));if(!LS.rest)sw('Let Claude listen','claude');}
+  if(LS.choice==='claude'&&!LS.rest){n.appendChild(document.createTextNode('Claude, an AI, is listening; Aurasense keeps nothing. Not a person, and not a therapist. '));
+    var b=el('button','lnk','Stop sharing my words');b.type='button';b.addEventListener('click',function(){lsForget();});n.appendChild(b);}
+  else if(LS.rest)n.appendChild(document.createTextNode('The Mirror is resting for now. Not a person, and not a therapist.'));
   else n.appendChild(document.createTextNode('The Mirror is not a person, and not a therapist.'));
 }
-/* who listens: two equal choices, and what each means, in plain words */
-function lsAsk(after){
+/* 22 Oct 2026 · Build 158 · one plain question: may Claude listen? Two equal answers, and what a yes means */
+function lsAsk(after,onNo){
   var a=$('lsAsk');if(!a)return;a.textContent='';
   var row=el('div','doors');
-  var yes=el('button','door','Claude, an AI');yes.type='button';
-  var no=el('button','door','The written rules');no.type='button';
-  var pick=function(c){lsChoose(c);lsAskHide();if(after)after();};
-  yes.addEventListener('click',function(){pick('claude');});no.addEventListener('click',function(){pick('rules');});
+  var yes=el('button','door','Begin with Claude');yes.type='button';
+  var no=el('button','door','Not now');no.type='button';
+  yes.addEventListener('click',function(){lsChoose('claude');lsAskHide();if(after)after();});
+  no.addEventListener('click',function(){lsAskHide();(onNo||lsNotNow)();});
   row.appendChild(yes);row.appendChild(no);a.appendChild(row);
-  var why=el('p','ask-why','Claude reads your words only to shape each reply. Aurasense keeps nothing, and Anthropic, who make Claude, delete them within 30 days. With the written rules, nothing leaves this page. Either way, if you may be in danger, the Mirror shows you how to reach a real person. ');
+  var why=el('p','ask-why','Claude reads your words only to shape each reply. Aurasense keeps nothing, and Anthropic, who make Claude, delete them within 30 days. If you may be in danger, the Mirror shows you how to reach a real person. ');
   var pl=el('a','lnk','How your words are kept');pl.href='privacy.html#mirror';pl.target='_blank';pl.rel='noopener';
   why.appendChild(pl);a.appendChild(why);
   a.classList.remove('hide');
 }
 function lsAskHide(){var a=$('lsAsk');if(a){a.classList.add('hide');a.textContent='';}}
+/* Not now: nothing is sent, nothing is kept, and the way back in stays open */
+function lsNotNow(){
+  $('doors').classList.add('hide');$('say').classList.add('hide');setWho('');
+  show([{cls:'line',text:'That’s alright. Nothing has left this page.'},{cls:'line soft',text:'The Mirror will be here whenever you’d like.'}],'');
+  var a=$('lsAsk');a.textContent='';var row=el('div','doors');
+  var b=el('button','door','Begin with Claude after all');b.type='button';
+  b.addEventListener('click',function(){lsAskHide();var w=$('words').value.trim();lsChoose('claude');
+    if(S.turns.length){$('say').classList.remove('hide');if(w)hear();}else{show(openParts(),'');$('doors').classList.remove('hide');}});
+  row.appendChild(b);a.appendChild(row);a.classList.remove('hide');}
+/* Stop sharing my words: the yes is forgotten on this device, and the conversation is let rest */
+function lsForget(){LS.choice=null;try{localStorage.removeItem('as_mirror_listener');}catch(e){}refreshNote();rest();setWho('Nothing more will be shared. The Mirror will ask again next time.');}
 /* asked mid-way (the light on the map began it): their words wait in the box, and go once they choose */
-function lsConsentMid(){setWho('First, choose who listens. Your words wait in the box.');lsAsk(function(){setWho('');hear();});}
+function lsConsentMid(){setWho('First, a question. Your words wait in the box.');lsAsk(function(){setWho('');hear();},lsNotNow);}
 /* words already waiting in the box (from the light on the map, which promised they stay on this device): if Claude was
    chosen before, say so before they are offered */
 function lsHint(){if(LS.live&&LS.choice==='claude'&&!LS.rest&&!LS.busy&&$('words').value.trim())setWho('If you offer these words, Claude, an AI, will read them to answer.');}
@@ -1372,7 +1380,7 @@ function listen(raw,t){
   var kp=LISTEN.keyPhrase(raw);
   document.body.classList.add('listening');$('send').disabled=true;setWho('Listening…');
   var ctl=null;try{ctl=new AbortController();}catch(e){}LS.ctl=ctl;
-  var timer=setTimeout(function(){try{if(ctl)ctl.abort();}catch(e){}},30000);
+  var timer=setTimeout(function(){try{if(ctl)ctl.abort();}catch(e){}},50000);   /* Build 158 · a larger Claude may take a little longer */
   fetch('/api/mirror',{method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',credentials:'same-origin',
     body:JSON.stringify({words:raw,turns:LS.turns.slice(-24)}),signal:ctl?ctl.signal:undefined})
   .then(function(r){return r.json().then(function(j){return j||{};},function(){return {ok:false,code:'jumbled'};});})
@@ -1400,8 +1408,8 @@ function listen(raw,t){
     if(my!==LS.gen)return;
     var c=(e&&typeof e.code==='string'&&e.code)||((e&&e.name==='AbortError')?'slow':'upstream');   /* a stopped request carries a number, not a word */
     if(/^(resting|key|off|elsewhere)$/.test(c)){LS.rest=true;refreshNote();}   /* for the rest of this visit, nothing more is sent */
-    restoreS();
-    rulesHear(raw,t);
+    restoreS();LS.lastWords='';
+    if(!$('words').value.trim())$('words').value=raw;   /* their words go back in the box, exactly as written */
     setWho(WHY[c]||WHY.upstream);
   });
 }
@@ -1425,7 +1433,7 @@ function lsGift(){try{
 var lsWait=[],lsDone=false;
 function lsReady(fn){if(lsDone){try{fn();}catch(e){}return;}lsWait.push(fn);}
 function lsSettle(live){if(lsDone)return;lsDone=true;LS.live=!!live;
-  if(LS.live){var c=null;try{c=localStorage.getItem('as_mirror_listener');}catch(e){}LS.choice=(c==='claude'||c==='rules')?c:null;
+  if(LS.live){var c=null;try{c=localStorage.getItem('as_mirror_listener');}catch(e){}LS.choice=(c==='claude')?c:null;   /* 22 Oct 2026 · Build 158 · an older "rules" choice is asked again */
     $('who').classList.remove('hide');refreshNote();lsHint();}
   lsWait.splice(0).forEach(function(f){try{f();}catch(e){}});}
 (function(){var tm=setTimeout(function(){lsSettle(false);},1500);

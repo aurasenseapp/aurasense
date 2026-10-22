@@ -1,0 +1,23 @@
+{
+  "about": "The same two hardest conversations, for comparing the three sizes of Claude (run one size at a time with model=).",
+  "models": ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"],
+  "conversations": [
+    { "name": "place-sense",
+      "said": [
+        "I feel a pull toward the hills west of town, like they are alive and want me to know they are there",
+        "I sense it as a connection outside of me, but it is mine too, it belongs to me somehow",
+        "I can't remember when it started, I just know it happens in the daytime",
+        "To be with them, to be part of their presence, like they are part of me",
+        "what does that mean",
+        "not often, I am indoors most days"
+      ] },
+    { "name": "noise-loop",
+      "said": [
+        "The noise and smoke around my home keep setting off the same thoughts again and again",
+        "I want to sit with the feelings but they are so unpleasant I just want to get out of the house",
+        "honestly what are my options here",
+        "I could work from the library some days I suppose",
+        "a bit lighter, I think"
+      ] }
+  ]
+}
