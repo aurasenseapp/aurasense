@@ -1,0 +1,14 @@
+# Aurasense on Cloudflare Pages · Build 156 · 22 October 2026
+# The same rule as vercel.json: no copy is ever kept between the site and the person, so everyone gets the
+# build the stamp says (Lessons, rule 2). And four quiet protections that change nothing anyone sees:
+# files are only ever read as what they are; other sites are told only "aurasense.app", never the page;
+# no other site can frame these pages; and the site is always reached over a secure connection.
+# (The Mirror's helper, /api/mirror, sets its own rules: Cloudflare does not apply this file to it.)
+/*
+  Cache-Control: no-store, no-cache, must-revalidate, max-age=0
+  CDN-Cache-Control: no-store
+  Cloudflare-CDN-Cache-Control: no-store
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: SAMEORIGIN
+  Strict-Transport-Security: max-age=31536000

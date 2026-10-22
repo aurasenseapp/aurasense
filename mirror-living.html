@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>The Mirror — Aurasense</title>
 <!--
@@ -20,7 +20,10 @@
   - plain words only: every question here can be understood on first reading
   - when someone is confused, it says the same thing more simply instead of carrying on
 
-  Nothing typed here leaves this page. Nothing is stored. No scripts from anywhere else.
+  Nothing is stored. No scripts from anywhere else.
+  22 Oct 2026 · Build 156: words leave this page only when the person has chosen to let Claude listen, and then
+  only to Aurasense's own small helper (/api/mirror), which passes them to Claude and keeps nothing. Heavy words
+  never leave. Where no helper is switched on, nothing leaves at all and the written rules answer, as before.
 -->
 <style>
 :root{
@@ -150,6 +153,28 @@ body.insite .mirror{margin-top:2vh}
 .note{font-size:.85rem;color:var(--faint);margin-top:10px;text-align:center}
 @media (max-width:520px){ .say{flex-direction:column;align-items:stretch} .say .btn{align-self:center} }
 @media (max-height:640px){ .mirror{width:min(80vw,54vh,540px)} }
+/* 22 Oct 2026 · Build 156 · Claude listening: who listens, who answered, and the gift line */
+.who{min-height:1.4em;margin:2px 0 0;font-size:.88rem;color:var(--soft);text-align:center;max-width:min(620px,92vw)}
+.lnk{background:none;border:0;padding:0;font:inherit;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.lnk:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:4px}
+.lsask{max-width:min(620px,92vw);text-align:center}
+.lsask .doors{margin:6px auto 0}
+.ask-why{font-size:.88rem;color:var(--soft);text-align:center;max-width:min(540px,92vw);margin:10px auto 0;line-height:1.5}
+.gift{max-width:min(520px,92vw);margin:12px auto 0;padding:12px 18px;border-radius:20px;background:rgba(255,251,245,.74);border:1px solid rgba(233,181,106,.38);
+  text-align:center;color:var(--soft);font-size:.95rem;line-height:1.5;box-shadow:0 0 22px rgba(233,181,106,.14)}
+.gift p{margin:0}
+.gift .row{margin-top:8px;align-items:center}
+.gift a.btn{text-decoration:none;display:inline-block}
+.gift .gift-s{font-size:.8rem;color:var(--faint);margin-top:8px}
+body.listening .trail button.now{animation:lsPulse 1.2s ease-in-out infinite}
+@keyframes lsPulse{0%,100%{transform:scale(1.3);opacity:1}50%{transform:scale(1.7);opacity:.55}}
+@media (prefers-reduced-motion:reduce){body.listening .trail button.now{animation:none}}
+#send[disabled]{opacity:.6;cursor:default}
+/* from the study (13 Oct 2026, Karl's iPhone): nothing in the column shrinks; the page scrolls when it is taller
+   than the screen, and stays centred when it is not */
+.stage{overflow-y:auto;-webkit-overflow-scrolling:touch;justify-content:flex-start}
+body:not(.insite) .stage::before,body:not(.insite) .stage::after{content:"";flex:1 0 0}
+.stage>*{flex-shrink:0}
 </style>
 </head>
 <body>
@@ -166,7 +191,9 @@ body.insite .mirror{margin-top:2vh}
     <div class="speak" id="speak" aria-live="polite"></div>
   </div>
   <div class="trail" id="trail" aria-label="Your turns so far"></div>
+  <p class="who hide" id="who" aria-live="polite"></p>
   <div class="doors" id="doors" role="group" aria-label="Ways to begin"></div>
+  <div class="lsask hide" id="lsAsk" role="group" aria-label="Who listens"></div>
   <div class="say hide" id="say">
     <textarea id="words" rows="2" maxlength="1200" aria-label="Your words"></textarea>
     <button class="btn lead" id="send" type="button">Offer it</button>
@@ -174,6 +201,7 @@ body.insite .mirror{margin-top:2vh}
   <div class="row hide" id="after">
     <button class="btn quiet" id="rest" type="button">Let it rest here</button>
   </div>
+  <div class="gift hide" id="gift" role="note"></div>
   <p class="note" id="note">Nothing you write leaves this page. The Mirror is not a person, and not a therapist.</p>
   <p class="note hide" id="classicRow"><button class="btn quiet" id="classic" type="button">The balance of your light, and the unlit rooms →</button></p>
 </main>
@@ -212,7 +240,7 @@ body.insite .mirror{margin-top:2vh}
        person's own two choices, in their own words;
      - picture-words ("as if a door is only just open") - plain words now, by
        Karl's decision; and every turn is measured to sit inside the circle.     */
-var HEAVY=/\b(kill myself|end my life|suicid|want to die|don'?t want to (live|be here)|hurt myself|self[- ]?harm|no reason to live)\b/i;
+var HEAVY=/\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist)|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to live|better off dead)\b/i;   /* 22 Oct 2026 · the old list missed “suicidal” and “suicide” (its last letters were cut off by the word's own edge) and eleven more ways of saying it; the Mirror's helper carries this same line */
 var UNSURE=/^\s*(?:i\s+)?(?:really\s+)?(?:don'?t|do not)\s+know[.!]*\s*$|^\s*(?:dunno|no idea|not sure|unsure|maybe|perhaps|i'?m not sure|i'?m unsure)[.!?]*\s*$/i;
 var LEAVE=/^\s*(?:that'?s enough|enough|i'?m done|done|bye|goodbye|stop|no more|good ?night)(?:[\s,.!]+(?:for now|for today|thanks|thank you|now|please|bye))*[\s,.!]*$/i;   /* 6 Oct 2026 · only a goodbye ends it: "Stop being so hard on yourself" is a wiser voice speaking, not a goodbye */
 var CONFUSED=/^\s*[\w'-]{1,14}\s*\?+\s*$|^\s*which (?:part|bit|one|way)\s*\?+\s*$|what do you mean|i don'?t (understand|get it)|\bhuh\b|what\?|meaning\?/i;   /* 12 Oct 2026 · "which part?" asks for it more simply */
@@ -796,7 +824,7 @@ var LISTEN=(function(){
     parts.push({cls:'line q',text:next.q});
     return {parts:parts,rim:kp,next:next,done:S.done};
   }
-  return {reply:reply,read:read,norm:norm,keyPhrase:keyPhrase};
+  return {reply:reply,read:read,norm:norm,keyPhrase:keyPhrase,aspq:ASPQ.q};
 })();
 /*<LISTEN*/
 
@@ -1009,7 +1037,7 @@ function setRim(words){var r=$('rim'),t=$('rimText');
   r.classList.remove('show');
   setTimeout(function(){t.textContent=words?('\u00b7 '+words+' \u00b7 '+words+' '):'';if(words)r.classList.add('show');},500);}
 function addTrail(parts,rimWords){
-  S.turns.push({parts:parts,rim:rimWords});
+  S.turns.push({parts:parts,rim:rimWords});if(LS.live)lsRecord(parts);
   var tr=$('trail'),b=el('button');b.type='button';b.setAttribute('aria-label','Turn '+S.turns.length);
   var i=S.turns.length-1;
   b.addEventListener('click',function(){show(S.turns[i].parts,S.turns[i].rim);mark(i);});
@@ -1019,18 +1047,25 @@ function mark(i){[].forEach.call($('trail').children,function(b,k){b.classList.t
 function ask(q){S.lastQ=q;$('words').placeholder='Write it as it is \u2014 it doesn\u2019t need tidying\u2026';}
 
 /* ── the opening ─────────────────────────────────────────────────────── */
-function open(){
-  show([
+/* 22 Oct 2026 · Build 156 · when Claude can listen, the Mirror first asks who the person would like to listen,
+   in the same place and one thing at a time. A choice made before is remembered on this device only. */
+function openParts(q){return [
     {tag:'h1',cls:'title',text:'The Mirror'},
     {cls:'line',text:'Talk something through, and see yourself a little more clearly.'},
     {cls:'line soft',text:'It listens, and gives your own words back. It never tells you who you are.'},
-    {cls:'line q',text:'What would you like to see more clearly?'}
-  ],'');
+    {cls:'line q',text:q||'What would you like to see more clearly?'}];}
+function open(){
   var d=$('doors');
   DOORS.forEach(function(o,i){var b=el('button','door',o.label);b.type='button';
     b.addEventListener('click',function(){begin(i);});d.appendChild(b);});
   var free=el('button','door','Something else');free.type='button';
   free.addEventListener('click',function(){begin(-1);});d.appendChild(free);
+  d.classList.add('hide');   /* a breath, while the Mirror learns whether Claude can listen (at most a second and a half) */
+  lsReady(function(){
+    if(S.turns.length)return;   /* already begun, from the light on the map */
+    if(LS.live&&!LS.choice){show(openParts('Who would you like to listen to you?'),'');
+      lsAsk(function(){if(S.turns.length){setWho('');lsHint();return;}show(openParts(),'');d.classList.remove('hide');});return;}
+    show(openParts(),'');d.classList.remove('hide');});
 }
 function begin(i){
   S.door=i; $('doors').classList.add('hide'); $('say').classList.remove('hide');
@@ -1109,6 +1144,7 @@ window.addEventListener('resize',function(){var d=$('doorway');if(d&&!d.hidden&&
    A conversation already begun is never interrupted. Only this site's own page may ask. */
 function beginWith(q,a,kind){
   if(S.turns.length)return;
+  lsAskHide();setWho('');   /* 22 Oct 2026 · Build 156 */
   S.door=-1; $('doors').classList.add('hide'); $('say').classList.remove('hide');
   ask({q:q,plain:q,kind:kind||'guide'});
   if(kind&&S.kinds.indexOf(kind)<0)S.kinds.push(kind);
@@ -1116,6 +1152,7 @@ function beginWith(q,a,kind){
   var parts=[{cls:'line soft',text:'From your light on the map:'},{cls:'line q',text:q}];
   show(parts,''); addTrail(parts,'');
   if(a)$('words').value=a;
+  lsHint();
   setTimeout(function(){try{$('words').focus();}catch(e){}},700);
 }
 window.addEventListener('message',function(e){try{
@@ -1163,7 +1200,7 @@ function mirrorQ(t){
   if(!ASKME.test(t)&&!ADVQ.test(t))return null;   /* 6 Oct 2026 · "what should I do?" has no "you" in it, and is still a question put to the Mirror */
   if(KNOWQ.test(t))return {parts:[{cls:'line',text:'No. I only know what you’ve written here — and even that, you know better than I do. I hold your words up so you can see them.'},
     {cls:'line q',text:'What made you wonder that?'}],next:{q:'What made you wonder that?',plain:'Why did you ask?',kind:'wonder'}};
-  if(WHATQ.test(t))return {parts:[{cls:'line',text:'I’m not a person, and not a therapist. Right now I’m careful written rules on this page — nothing you write here leaves it.'}]
+  if(WHATQ.test(t))return {parts:[{cls:'line',text:(LS.live&&LS.choice==='claude')?(LS.rest?'I’m not a person, and not a therapist. Claude, an AI, usually answers here; it is resting for now, so the Mirror’s written rules are answering, and nothing more leaves this page.':'I’m not a person, and not a therapist. Claude, an AI, usually answers here; just now the Mirror’s written rules answered instead.'):'I’m not a person, and not a therapist. Right now I’m careful written rules on this page — nothing you write here leaves it.'}]
     .concat(L.q?[{cls:'line q',text:L.q}]:[]),next:L.q?L:{q:'What’s here for you today?',plain:'What would you like to talk about?',kind:'more'}};
   if(ADVQ.test(t))return {parts:[{cls:'line',text:'I can’t choose for you, and I won’t pretend to. You know your life from the inside; I don’t.'}]
     .concat(S.first?[{cls:'line soft ack',text:'You began with:'},{tag:'p',cls:'quote ack',text:S.first}]:[])
@@ -1175,11 +1212,19 @@ function mirrorQ(t){
 
 /* ── hearing, and answering from the very first reply ────────────────── */
 function hear(){
+  if(LS.busy)return;   /* one reply at a time: the words stay in the box */
   var raw=$('words').value.trim(); if(!raw)return;
   var t=raw.replace(/[\u2018\u2019\u02bc]/g,"'");
-  $('words').value='';dwHide();
-  if(HEAVY.test(t)){care();return;}
-  if(LEAVE.test(t)){rest();return;}
+  if(HEAVY.test(t)){$('words').value='';dwHide();lsAskHide();LS.lastWords='';setWho('');care();return;}   /* heavy words never go to the AI: real help first, before anything is asked */
+  if(LEAVE.test(t)){$('words').value='';dwHide();lsAskHide();rest();return;}
+  if(LS.live&&!LS.choice){lsConsentMid();return;}   /* nothing leaves this page until they choose who listens: their words wait in the box */
+  $('words').value='';dwHide();LS.lastWords=raw;
+  if(LS.live&&LS.choice==='claude'&&!LS.rest){listen(raw,t);return;}
+  if(LS.live)setWho(LS.rest?WHY.restnote:'Answered by the written rules. Nothing left this page.');
+  rulesHear(raw,t);
+}
+/* the written rules, exactly as before */
+function rulesHear(raw,t){
   if(MISSED.test(t)){                                 /* they feel unheard: own it, and come back to their words */
     var back=S.first?[{cls:'line soft',text:'What you first brought was:'},{tag:'p',cls:'quote',text:S.first}]:[];
     var pm=[{cls:'line',text:'You\u2019re right to say so. I missed you there, and I\u2019m sorry.'}].concat(back).concat([{cls:'line q',text:'In a few words, what matters most to you in this right now? I\u2019ll stay with that.'}]);
@@ -1209,6 +1254,7 @@ function hear(){
 
 /* ── when someone is in real pain ────────────────────────────────────── */
 function care(){
+  LS.heavy=true;   /* 22 Oct 2026 · never followed by the gift line, in this conversation */
   var parts=[{cls:'line',text:'That sounds really heavy, and I\u2019m glad you said it here.'},
     {cls:'line',text:'This is more than a mirror should hold alone. Please reach a person now \u2014 someone you trust, or a crisis line where you are.'},
     {cls:'line',text:'In Canada or the US, you can call or text 988. In immediate danger, call 911 or your local emergency number. Anywhere else, findahelpline.com lists helplines.'}];
@@ -1217,6 +1263,7 @@ function care(){
 
 /* ── letting it rest: what they leave holding ────────────────────────── */
 function rest(){
+  LS.gen++;try{if(LS.ctl)LS.ctl.abort();}catch(e){}lsAskHide();setWho('');   /* 22 Oct 2026 · an answer still on its way is let go; the ending is no one's reply */
   dwHide();$('say').classList.add('hide'); $('after').classList.add('hide');
   var parts=[{cls:'line',text:'You were listened to, just as you are.'},{cls:'line q',text:'What would you like to leave with?'}];
   show(parts,S.first||'');
@@ -1230,12 +1277,155 @@ function rest(){
 function fin(parts){ $('doors').classList.add('hide'); show(parts.concat([{cls:'line soft',text:'One step closer to your own light.'}]),S.first||'');
   var r=$('after');r.textContent='';r.classList.remove('hide');var b=el('button','btn quiet','Begin again');b.type='button';
   b.addEventListener('click',function(){location.reload();});r.appendChild(b);
-  if(inSite){var h=el('button','btn quiet','← Back to the map');h.type='button';h.addEventListener('click',function(){tell('close');});r.appendChild(h);}}
+  if(inSite){var h=el('button','btn quiet','← Back to the map');h.type='button';h.addEventListener('click',function(){tell('close');});r.appendChild(h);}
+  lsGift();}
+
+/* ═══ 22 Oct 2026 · BUILD 156 · CLAUDE LISTENING, LIVE ══════════════════════════════════════════════════
+   Karl, 15 Oct: "We should let Claude drive the mirror yes, .. it's not working." From the Listening Mirror study
+   (12–13 Oct) and the Listening Commons charter (13 Oct), now on the live site:
+   - The page asks its own helper (/api/mirror) whether Claude can listen. Where it can't (Vercel today, a preview),
+     nothing changes at all: the written rules answer and nothing leaves the page.
+   - Nothing leaves until the person chooses who listens. The choice is remembered on this device only, and can be
+     changed at any moment from the line beneath.
+   - Heavy words never go to the AI (checked here first, and again by the helper). Claude can also say "care".
+   - Beside every reply, a line says who answered. When Claude can't answer, the written rules answer, and say so.
+   - The conversation so far is held in memory only, to give Claude its thread. Nothing is stored.
+   - After a conversation ends well, and never after heavy words, the Listen Forward door, at most once a week. */
+var LS={live:false,choice:null,rest:false,busy:false,heavy:false,aiN:0,by:'',turns:[],lastWords:'',snap:'',gen:0,ctl:null};
+var RULES_MARK='[Written by the Mirror’s written rules, not by you:] ';
+var WHY={
+  resting:'Claude is resting for now, so the written rules answered.',
+  key:'Claude is resting for now, so the written rules answered.',
+  off:'Claude is resting for now, so the written rules answered.',
+  elsewhere:'Claude is resting for now, so the written rules answered.',
+  busy:'Claude has listened a lot just now, so the written rules answered this one.',
+  slow:'Claude took too long, so the written rules answered this one.',
+  refused:'Claude didn’t answer those words, so the written rules did.',
+  upstream:'Claude couldn’t answer just then, so the written rules did.',
+  restnote:'Claude is resting for now, so the written rules are answering. Nothing leaves this page.'
+};
+function lsClip(x,n){x=String(x||'').replace(/\s+/g,' ').trim();if(x.length<=n)return x;var c=x.slice(0,n),sp=c.lastIndexOf(' ');return c.slice(0,sp>n*.6?sp:n)+'…';}
+function setWho(text){var w=$('who');if(w)w.textContent=text||'';}
+function lsRecord(parts){try{
+  var txt=parts.map(function(p){return p.text;}).filter(Boolean).join(' ');
+  if(LS.lastWords){LS.turns.push({role:'user',content:LS.lastWords});LS.lastWords='';}
+  if(txt)LS.turns.push({role:'assistant',content:(LS.by==='ai'?'':RULES_MARK)+txt});
+  LS.by='';
+  if(LS.turns.length>40)LS.turns=LS.turns.slice(-40);
+}catch(e){}}
+function lsChoose(c){LS.choice=c;try{localStorage.setItem('as_mirror_listener',c);}catch(e){}refreshNote();}
+/* the quiet line beneath: what is happening to their words, and the way to change it */
+function refreshNote(){
+  var n=$('note');if(!n||!LS.live)return;
+  n.textContent='';
+  var sw=function(label,to){var b=el('button','lnk',label);b.type='button';
+    b.addEventListener('click',function(){if(LS.busy)return;lsChoose(to);
+      setWho(to==='claude'?'Claude will listen from your next words.':'The written rules will answer from your next words. Nothing leaves this page.');});
+    n.appendChild(b);};
+  if(LS.choice==='claude'&&!LS.rest){n.appendChild(document.createTextNode('Claude, an AI, is listening; Aurasense keeps nothing. Not a person, and not a therapist. '));sw('Use the written rules instead','rules');}
+  else if(LS.choice){n.appendChild(document.createTextNode('Nothing you write leaves this page. The Mirror is not a person, and not a therapist. '));if(!LS.rest)sw('Let Claude listen','claude');}
+  else n.appendChild(document.createTextNode('The Mirror is not a person, and not a therapist.'));
+}
+/* who listens: two equal choices, and what each means, in plain words */
+function lsAsk(after){
+  var a=$('lsAsk');if(!a)return;a.textContent='';
+  var row=el('div','doors');
+  var yes=el('button','door','Claude, an AI');yes.type='button';
+  var no=el('button','door','The written rules');no.type='button';
+  var pick=function(c){lsChoose(c);lsAskHide();if(after)after();};
+  yes.addEventListener('click',function(){pick('claude');});no.addEventListener('click',function(){pick('rules');});
+  row.appendChild(yes);row.appendChild(no);a.appendChild(row);
+  var why=el('p','ask-why','Claude reads your words only to shape each reply. Aurasense keeps nothing, and Anthropic, who make Claude, delete them within 30 days. With the written rules, nothing leaves this page. Either way, if you may be in danger, the Mirror shows you how to reach a real person. ');
+  var pl=el('a','lnk','How your words are kept');pl.href='privacy.html#mirror';pl.target='_blank';pl.rel='noopener';
+  why.appendChild(pl);a.appendChild(why);
+  a.classList.remove('hide');
+}
+function lsAskHide(){var a=$('lsAsk');if(a){a.classList.add('hide');a.textContent='';}}
+/* asked mid-way (the light on the map began it): their words wait in the box, and go once they choose */
+function lsConsentMid(){setWho('First, choose who listens. Your words wait in the box.');lsAsk(function(){setWho('');hear();});}
+/* words already waiting in the box (from the light on the map, which promised they stay on this device): if Claude was
+   chosen before, say so before they are offered */
+function lsHint(){if(LS.live&&LS.choice==='claude'&&!LS.rest&&!LS.busy&&$('words').value.trim())setWho('If you offer these words, Claude, an AI, will read them to answer.');}
+function finish(){LS.busy=false;LS.ctl=null;document.body.classList.remove('listening');$('send').disabled=false;}
+/* when Claude answered, the written rules keep what was said (feelings, the two sides, what came first) but not the
+   path they would have walked, since none of it was shown: so a later turn by the rules never skips a question nobody
+   saw, and the wiser voice can still come */
+function lsKeepPath(){if(!LS.snap)return;try{var o=JSON.parse(LS.snap);
+  ['asked','kinds','spoke','stage','deep','done','narrowed','hedged','unsure'].forEach(function(k){if(Object.prototype.hasOwnProperty.call(o,k))S[k]=o[k];else delete S[k];});}catch(e){}LS.snap='';}
+function restoreS(){if(!LS.snap)return;try{var o=JSON.parse(LS.snap);Object.keys(S).forEach(function(k){delete S[k];});for(var k in o)if(Object.prototype.hasOwnProperty.call(o,k))S[k]=o[k];}catch(e){}LS.snap='';}
+function listen(raw,t){
+  var my=++LS.gen;LS.busy=true;
+  LS.snap='';try{LS.snap=JSON.stringify(S);}catch(e){}
+  try{LISTEN.reply(raw,S);}catch(e){}   /* the written rules keep step beside Claude, ready to carry on if Claude rests */
+  var kp=LISTEN.keyPhrase(raw);
+  document.body.classList.add('listening');$('send').disabled=true;setWho('Listening…');
+  var ctl=null;try{ctl=new AbortController();}catch(e){}LS.ctl=ctl;
+  var timer=setTimeout(function(){try{if(ctl)ctl.abort();}catch(e){}},30000);
+  fetch('/api/mirror',{method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',credentials:'same-origin',
+    body:JSON.stringify({words:raw,turns:LS.turns.slice(-24)}),signal:ctl?ctl.signal:undefined})
+  .then(function(r){return r.json().then(function(j){return j||{};},function(){return {ok:false,code:'jumbled'};});})
+  .then(function(v){
+    clearTimeout(timer);
+    if(my!==LS.gen){finish();return;}   /* they let it rest while Claude was answering */
+    if(v.care===true){finish();LS.snap='';LS.lastWords='';care();setWho(v.by==='claude'?'Claude heard something heavy, so the Mirror points to real help.':'');return;}   /* care comes first, whatever else came back */
+    if(v.ok!==true)throw {code:v.code||'upstream'};
+    var refl=String(v.reflect||'').trim(),q=String(v.question||'').trim(),asp=String(v.aspire||'').trim();
+    if(!asp&&!q&&/\?[”’"]?\s*$/.test(refl)){var ss=refl.match(/[^.!?]+[.!?]+[”’"]?/g)||[];if(ss.length>1){q=ss.pop().trim();refl=ss.join(' ').trim();}}   /* a question tucked into the reflection gets its own line */
+    if(!refl&&!q&&!asp)throw {code:'empty'};
+    finish();lsKeepPath();
+    var parts=[];
+    if(asp){if(refl)parts.push({cls:'line ack',text:lsClip(refl,320)});parts.push({cls:'line soft',text:'The you who has come through this might say:'});
+      parts.push({cls:'line aspire',text:'“'+lsClip(asp.replace(/^[“"]+|[”"]+$/g,''),360)+'”'});q=LISTEN.aspq;}
+    else if(refl)parts.push({cls:'line',text:lsClip(refl,320)});
+    if(q)parts.push({cls:'line q',text:lsClip(q,240)});
+    if(q)ask({q:q,plain:q,kind:asp?'aspired':'ai'});else{ask(null);$('words').placeholder='Say more, if you like…';}   /* no question is ever made up for Claude */
+    LS.by='ai';LS.aiN++;
+    show(parts,kp);addTrail(parts,kp);doorway(raw);
+    if(S.turn>=2)$('after').classList.remove('hide');
+    setWho('Answered by Claude, an AI, listening.');
+  }).catch(function(e){
+    clearTimeout(timer);finish();
+    if(my!==LS.gen)return;
+    var c=(e&&typeof e.code==='string'&&e.code)||((e&&e.name==='AbortError')?'slow':'upstream');   /* a stopped request carries a number, not a word */
+    if(/^(resting|key|off|elsewhere)$/.test(c)){LS.rest=true;refreshNote();}   /* for the rest of this visit, nothing more is sent */
+    restoreS();
+    rulesHear(raw,t);
+    setWho(WHY[c]||WHY.upstream);
+  });
+}
+/* the Listen Forward door (Listening Commons, 13 Oct; plan, 16 Oct): only after Claude listened, only after a
+   good ending, never after heavy words, at most once a week. Never pressed, never counted, never shamed. */
+function lsGift(){try{
+  if(!LS.live||LS.heavy||LS.aiN<2)return;
+  var now=Date.now(),at=0;try{at=parseInt(localStorage.getItem('as_listen_forward_at')||'0',10)||0;}catch(e){}
+  if(now-at<7*864e5)return;
+  var g=$('gift');if(!g)return;g.textContent='';
+  g.appendChild(el('p','','Someone you’ll never meet kept this listening open for you.'));
+  g.appendChild(el('p','','If you’d like, you can listen forward: keep it open for the next person.'));
+  var row=el('div','row'),a=el('a','btn lead','Listen forward');a.href='https://ko-fi.com/aurasense';a.target='_blank';a.rel='noopener noreferrer';
+  var no=el('button','btn quiet','or simply go well');no.type='button';no.addEventListener('click',function(){g.classList.add('hide');});
+  row.appendChild(a);row.appendChild(no);g.appendChild(row);
+  g.appendChild(el('p','gift-s','Listen forward opens Aurasense’s Ko-fi page. Support pays for Claude’s listening first, then Karl’s living and workspace as he builds Aurasense. Nothing changes if you don’t.'));
+  setTimeout(function(){if(!document.body.contains(g))return;try{localStorage.setItem('as_listen_forward_at',String(Date.now()));}catch(e){}   /* counted only once it is truly shown */
+    g.classList.remove('hide');try{g.scrollIntoView({block:'nearest',behavior:asStill()?'auto':'smooth'});}catch(e){}},1600);   /* after the last words have risen; on a small phone the page moves just enough to show all of it */
+}catch(e){}}
+/* is a listener switched on here? Asked once; the answer never takes longer than a second and a half */
+var lsWait=[],lsDone=false;
+function lsReady(fn){if(lsDone){try{fn();}catch(e){}return;}lsWait.push(fn);}
+function lsSettle(live){if(lsDone)return;lsDone=true;LS.live=!!live;
+  if(LS.live){var c=null;try{c=localStorage.getItem('as_mirror_listener');}catch(e){}LS.choice=(c==='claude'||c==='rules')?c:null;
+    $('who').classList.remove('hide');refreshNote();lsHint();}
+  lsWait.splice(0).forEach(function(f){try{f();}catch(e){}});}
+(function(){var tm=setTimeout(function(){lsSettle(false);},1500);
+  try{fetch('/api/mirror',{method:'GET',cache:'no-store',credentials:'same-origin'})
+    .then(function(r){return r.ok?r.json():null;})
+    .then(function(j){clearTimeout(tm);lsSettle(!!(j&&j.live===true));},function(){clearTimeout(tm);lsSettle(false);});
+  }catch(e){clearTimeout(tm);lsSettle(false);}})();
 
 /* ── wiring ──────────────────────────────────────────────────────────── */
 /* inside Aurasense: a way back to the map, and to the balance and the unlit rooms.
    Messages go only to Aurasense's own page, and say only "close" or "classic". */
-var inSite=false;try{inSite=(window.parent!==window)&&/[?&]in=site\b/.test(location.search);}catch(e){}
+var inSite=false;try{inSite=(window.parent!==window)&&(/[?&]in=site\b/.test(location.search)||!!window.parent.document.getElementById('as-living-mirror'));}catch(e){}
 function tell(act){try{window.parent.postMessage({as:'mirror',act:act},location.origin);}catch(e){}}
 if(inSite){document.body.classList.add('insite');$('home').classList.remove('hide');$('classicRow').classList.remove('hide');
   $('back').addEventListener('click',function(){tell('close');});

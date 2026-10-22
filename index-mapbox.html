@@ -10635,7 +10635,7 @@ function mvOpening(mode){
   return l+'If that line kept its exact direction for a year, who arrives? And what one thing would bend it?<br><br><i>Anything you say here feeds the self that answers from further along.</i>';
 }
 /* When someone writes something heavy, the Mirror stops asking and simply stays. */
-const MV_HEAVY=/\b(kill myself|end (it|my life)|suicid|self ?harm|hurt myself|want to die|don'?t want to (live|be here)|no reason to (live|go on)|better off without me)\b/i;
+const MV_HEAVY=/\b(kill(?:ing)? my ?self|end (it|my life)|suicid\w*|self[- ]?harm\w*|hurt(?:ing)? my ?self|want to die|don'?t want to (live|be here)|no reason to (live|go on)|better off without me)\b/i;   /* 22 Oct 2026 · “suicide”, “suicidal”, “self-harming” and “hurting myself” were missed */
 function mvHeavy(){
   return 'I want to stop the questions for a moment. What you have written sounds heavy, and heavy things deserve a person, not a mirror. '
    +'Please reach someone tonight \u2014 someone who knows you, or a crisis line where you are; they are there exactly for this and you would not be a burden. '+AS_HELP_TEXT+' '
@@ -11847,7 +11847,7 @@ const MR_KINDS=[
   voice:'You would not say this to anyone else in your position. Notice who you learned to say it to yourself for.',
   ask:'Whose voice is it, when you say that to yourself?'}
 ];
-const MR_HEAVY=/\b(kill myself|end it all|suicid|want to die|self harm|self-harm|hurt myself|no reason to live|better off without me|take my own life)\b/i;
+const MR_HEAVY=/\b(kill(?:ing)? my ?self|end it all|suicid\w*|want to die|self[- ]?harm\w*|hurt(?:ing)? my ?self|no reason to live|better off without me|take my own life)\b/i;   /* 22 Oct 2026 · the same mend */
 /* the person's own words, taken whole and never rewritten */
 function mrTheirWords(t){
   const parts=String(t||'').split(/[.!?;\n]+/).map(x=>x.trim()).filter(x=>x.length>12);
@@ -11979,13 +11979,16 @@ function mrAnswer(){
 /* THE LIVING MIRROR, IN THE SITE · 30 Sep 2026 · Karl: "Still no aura circular
    My Aura functions." The Mirror now opens as the living, circular Mirror he chose,
    in its own sealed page laid over the map. It keeps nothing and sends nothing.
+   22 Oct 2026 · Build 156: where Claude can listen, the Mirror first asks who the person would like to listen;
+   only if they choose Claude do their words go, through Aurasense's own helper, and nothing is kept. The frame
+   may open one new window, so the Listen Forward door and the privacy link work from inside the map.
    The balance of your light and the unlit rooms stay one tap away inside it. */
 function mirrorOpen(opts){
   try{
     if(document.getElementById('as-living-mirror'))return;
     var ov=document.createElement('div');ov.id='as-living-mirror';ov.setAttribute('role','dialog');ov.setAttribute('aria-label','The Mirror');
     var fr=document.createElement('iframe');fr.src='/mirror-living.html?in=site';fr.title='The Mirror';
-    fr.setAttribute('referrerpolicy','no-referrer');fr.setAttribute('sandbox','allow-scripts allow-same-origin');
+    fr.setAttribute('referrerpolicy','no-referrer');fr.setAttribute('sandbox','allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox');
     /* 6 Oct 2026 · from the guiding light: the Mirror begins with the same question, and their own words wait, unsent */
     if(opts&&opts.q){fr.addEventListener('load',function(){try{fr.contentWindow.postMessage({as:'mirror-host',act:'begin',q:String(opts.q).slice(0,300),a:String(opts.a||'').slice(0,600),kind:String(opts.kind||'')},location.origin);}catch(e){}},{once:true});}
     ov.appendChild(fr);document.body.appendChild(ov);
@@ -13161,7 +13164,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">16 Oct 2026 · </span>155<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">22 Oct 2026 · </span>156<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no

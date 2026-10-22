@@ -3,9 +3,9 @@
      Pure static — no JavaScript at all, so there is nothing here to attack.
      One amber token remains: the Supabase region. Contact set to hello@aurasense.app;
      operator named as the founder (Alberta) — trade name 'Aurasense' at open launch.
-     One claim needs Karl's confirmation before launch: that Mirror text never
-     enters the saved profile (§2c "we never receive this"). If it does, one
-     sentence changes — say the word. -->
+     22 Oct 2026 · Build 156: the Mirror can let Claude listen, only when the person chooses it (§2d).
+     Each promise below was checked against the code that keeps it: mirror-living.html (nothing leaves before
+     the choice; heavy words never leave) and functions/api/mirror.js (nothing stored, nothing logged). -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -45,14 +45,15 @@ footer{margin-top:44px;font-size:12px;color:var(--dim);font-style:italic;line-he
 <body>
 <main>
 <h1>Aurasense — Privacy Policy</h1>
-<div class="sub">Plain language on purpose. Last updated: 9 October 2026.</div>
+<div class="sub">Plain language on purpose. Last updated: 22 October 2026.</div>
 
 <div class="card">
 <h2>THE SHORT, HONEST VERSION</h2>
 <ul>
 <li>We collect as little as possible. The safest data is the data we never collect.</li>
 <li>We <strong>never sell</strong> your information, and we <strong>never show ads</strong>.</li>
-<li>The most personal things stay <strong>on your own device</strong> and never reach us: your Mirror reflections and well-being notes, your life story, your inner readings, and your real name and street if you give them.</li>
+<li>The most personal things stay <strong>on your own device</strong> and never reach us: your well-being notes, your life story, your inner readings, and your real name and street if you give them.</li>
+<li><strong>In the Mirror, you choose who listens.</strong> With the written rules, nothing leaves your device. If you choose Claude, an AI, your words go to it only to shape each reply: <strong>Aurasense keeps nothing</strong>, and your words are not used to train AI.</li>
 <li>Photos you attach to offerings are visible <strong>only to you</strong>.</li>
 <li>We never analyse faces or attempt to read emotion from images.</li>
 <li>You can ask us to delete your kept account and data at any time.</li>
@@ -85,9 +86,19 @@ footer{margin-top:44px;font-size:12px;color:var(--dim);font-style:italic;line-he
 </ul>
 
 <h3>c) Kept on your device only — we never receive this</h3>
-<p>Your Mirror reflections, your well-being and Aurawellness notes, your life story, your inner readings and what they show, your real name and street if you give them, the mood and spiritual choices you make about yourself, and what you notice after an offering (whether a sense changed, and any words you write about it) all live in your browser's storage on your own device. If you clear your browser data, they are gone — and we cannot recover them, because we never had them.</p>
+<p>Your Mirror conversations when the written rules answer, your well-being and Aurawellness notes, your life story, your inner readings and what they show, your real name and street if you give them, the mood and spiritual choices you make about yourself, and what you notice after an offering (whether a sense changed, and any words you write about it) all live in your browser's storage on your own device. If you clear your browser data, they are gone — and we cannot recover them, because we never had them.</p>
 
-<h3>d) Basic technical information</h3>
+<h3 id="mirror">d) The Mirror, if you choose Claude to listen (optional)</h3>
+<ul>
+<li>Before anything you write leaves the page, the Mirror asks who you would like to listen: <strong>Claude</strong>, an AI made by Anthropic, or the Mirror's <strong>written rules</strong>, which run on your own device. Your choice is remembered on your device, and you can change it at any moment from the line beneath the Mirror.</li>
+<li>If you choose Claude, each thing you write, with the conversation so far, goes through a small Aurasense helper (run on Cloudflare) to <strong>Anthropic</strong>, only so Claude can shape its reply. <strong>Aurasense keeps none of it</strong>: not in our database, not in logs, and not on your device.</li>
+<li><strong>Anthropic deletes it within 30 days.</strong> If Anthropic's automatic safety checks flag it as breaking Anthropic's usage rules, Anthropic may keep it for up to 2 years for safety review. Anthropic does not train its AI on it. (<a href="https://privacy.claude.com/en/articles/7996866-how-long-do-you-store-my-organization-s-data">How long Anthropic keeps it</a> · <a href="https://www.anthropic.com/legal/commercial-terms">Anthropic's commercial terms</a>)</li>
+<li>Words that clearly say you may be in danger (such as wanting to end your life) are <strong>never sent</strong>: the Mirror shows you how to reach a real person instead. If Claude hears danger in other words, it points you to real help too.</li>
+<li>To keep the listening fair and affordable, the helper counts how many replies come from one internet address in a day. It counts with a scrambled code made from the address, never the address itself, kept for about a day and never joined to your words.</li>
+<li>Claude is an AI, not a person and not a therapist. What it says is a reflection, never advice.</li>
+</ul>
+
+<h3>e) Basic technical information</h3>
 <p>Like most websites, our hosting and infrastructure providers process limited technical data (such as an IP address) to deliver and secure the Service, and our database provider keeps short-term technical records of sign-ins to keep accounts safe. We use this only to run and protect Aurasense — never to build profiles of you. We use <strong>no advertising cookies and no third-party trackers</strong>; only the essential local storage the Service needs to work.</p>
 
 <h2>3 · What we do NOT do</h2>
@@ -96,7 +107,7 @@ footer{margin-top:44px;font-size:12px;color:var(--dim);font-style:italic;line-he
 <li>We do not show advertising or let advertisers target you.</li>
 <li>We do not rank, score, or profile people.</li>
 <li>We do not analyse faces or attempt to read emotion from images — ever. What you feel is yours to say, never ours to guess.</li>
-<li>We do not use your private on-device reflections — we never receive them.</li>
+<li>We never keep or read your Mirror conversations. If you choose Claude, your words pass through to it, and Aurasense keeps none of them.</li>
 </ul>
 
 <h2>4 · The services that help us run, and where</h2>
@@ -105,15 +116,18 @@ footer{margin-top:44px;font-size:12px;color:var(--dim);font-style:italic;line-he
 <li><strong>Supabase</strong> — secure storage for kept lights and shared offerings, and sign-in. Stored <strong>in Canada</strong> (its Canada Central region). Its email service, which sends the six-digit codes, may process your email address in the United States.</li>
 <li><strong>Vercel</strong> — hosting and delivery of the website. United States and the other countries where its network runs.</li>
 <li><strong>Mapbox</strong> — the map, and looking up the place names of offerings. United States.</li>
-<li><strong>Cloudflare</strong> — routing the site's address, and security. A worldwide network, run from the United States.</li>
+<li><strong>Cloudflare</strong> — routing the site's address, security, hosting the site (Cloudflare Pages), and the small helper that passes your Mirror words to Claude if you choose it. A worldwide network, run from the United States.</li>
+<li><strong>Anthropic</strong> — Claude, the AI that listens in the Mirror, only if you choose it. United States.</li>
+<li><strong>Ko-fi</strong>, with its payment partners (Stripe or PayPal) — only if you choose to support Aurasense. They handle the payment under their own terms, and we never see your card. We see only what Ko-fi shows us about a supporter, such as the name and message you choose to leave. United Kingdom and the United States.</li>
 <li><strong>jsDelivr</strong> — delivers one piece of code the site uses to talk to its database. A worldwide network.</li>
 </ul>
-<p><strong>Outside Canada:</strong> the providers above may process technical information (such as your IP address), your email address (for the sign-in code) and, for Mapbox, the location of an offering, in the <strong>United States</strong> and the other countries where they operate, for the purposes named above. While it is there, it is subject to the laws of those countries. To learn more about our policies and practices for service providers outside Canada, or to ask a question about them, write to <strong>the founder (privacy lead) at hello@aurasense.app</strong>.</p>
+<p><strong>Outside Canada:</strong> the providers above may process technical information (such as your IP address), your email address (for the sign-in code), for Mapbox the location of an offering, and for Anthropic your Mirror words if you choose Claude, in the <strong>United States</strong> and the other countries where they operate, for the purposes named above. While it is there, it is subject to the laws of those countries. To learn more about our policies and practices for service providers outside Canada, or to ask a question about them, write to <strong>the founder (privacy lead) at hello@aurasense.app</strong>.</p>
 
 <h2>5 · How long we keep things</h2>
 <ul>
 <li><strong>Shared offerings</strong> remain part of the map until you take them back, or ask us to remove them.</li>
 <li><strong>Your kept account</strong> is kept while you use it. If you ask us to delete it, we remove the account and your kept light <strong>within 30 days</strong>.</li>
+<li><strong>Mirror words sent to Claude</strong> are not kept by Aurasense at all. Anthropic deletes them within 30 days, as section 2d explains.</li>
 <li><strong>Technical records</strong> are kept by our providers only for short periods, to run and protect the Service.</li>
 <li><strong>On-device data</strong> is controlled entirely by you and stays until you clear it.</li>
 </ul>
