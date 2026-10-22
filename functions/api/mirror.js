@@ -1,4 +1,4 @@
-/* ═══ THE MIRROR'S LISTENER · Build 159 · 22 October 2026 · Karl with Claude ═══════════════════════
+/* ═══ THE MIRROR'S LISTENER · Build 160 · 22 October 2026 · Karl with Claude ═══════════════════════
    Karl, 15 October: "We should let Claude drive the mirror yes, .. it's not working."
    Karl, 22 October, after Build 157: "It needs way more intelligence and responsiveness." "The mirror has to
    reflect the Philosophy written thus far, pointing towards the light, self awareness and understanding and
@@ -25,6 +25,7 @@
 
    Build 159: the larger Claudes refuse to be forced into a tool, so Build 158's live replies all failed. Every Claude
    is now asked for its reply in a fixed written shape instead, with the thinking setting each one accepts.
+   Build 160: the self-test can reach test branches (branch=), run fewer turns (turns=), and always answers in time.
 
    A page asking "GET /api/mirror" learns only whether the listener is switched on: {"live":true}.
    Hidden notes are public: no names beyond Karl's first name, no keys, no one's words. */
@@ -297,9 +298,9 @@ async function ask(env, model, charter, msgs, think, how, wait) {
 }
 
 /* the main Claude first; if it can't answer quickly for a reason of its own, the safety net answers instead */
-async function answer(env, model, charter, msgs, think, how, spare) {
+async function answer(env, model, charter, msgs, think, how, spare, wait) {
   const t0 = Date.now();
-  let v = await ask(env, model, charter, msgs, think, how, WAIT_MS);
+  let v = await ask(env, model, charter, msgs, think, how, wait || WAIT_MS);
   if (spare && !v.ok && /^(?:upstream|jumbled|empty)$/.test(v.code) && Date.now() - t0 < 15000 && !(model === SPARE && how === 'tool')) {
     const first = v.detail;
     const w = await ask(env, SPARE, charter, msgs, 'off', 'tool', 20000);
@@ -362,7 +363,7 @@ function why(status, message) {
 }
 
 /* ── the private self-test ─────────────────────────────────────────────────────────────────────
-   GET /api/mirror?selftest=KEY&ref=BRANCH&suite=NAME[&model=…][&only=…]
+   GET /api/mirror?selftest=KEY&branch=BRANCH&suite=NAME[&model=…][&only=…][&turns=1-6][&budget=seconds]
    Runs the test conversations in tests/mirror/NAME.json on that branch of this project's repository, turn by turn,
    exactly as the page would, and returns what Claude said. A draft charter (tests/mirror/<charter>.txt) can be
    tried without changing the live Mirror. Nobody's real words: the test conversations are invented. */
@@ -372,7 +373,15 @@ async function sha256(text) {
 }
 async function selftest(url, env) {
   if ((await sha256(url.searchParams.get('selftest'))) !== SELFTEST) return reply({ ok: false, code: 'elsewhere' }, 403);
-  const ref = url.searchParams.get('ref') || 'main', suite = url.searchParams.get('suite') || 'basic';
+  try { return await selftestRun(url, env); }
+  catch (e) { return reply({ ok: false, code: 'threw', why: String((e && e.message) || e).slice(0, 300) }, 200); }   /* a plain reason, never a broken page */
+}
+async function selftestRun(url, env) {
+  const T0 = Date.now();
+  const budget = Math.min(55, Math.max(5, parseInt(url.searchParams.get('budget') || '25', 10) || 25)) * 1000;
+  const most = Math.min(6, Math.max(1, parseInt(url.searchParams.get('turns') || '6', 10) || 6));
+  /* "branch" because the web reader drops an address part named "ref" */
+  const ref = url.searchParams.get('branch') || url.searchParams.get('ref') || 'main', suite = url.searchParams.get('suite') || 'basic';
   if (!/^[A-Za-z0-9._-]{1,60}$/.test(ref) || !/^[a-z0-9-]{1,40}$/.test(suite)) return reply({ ok: false, code: 'bad' }, 400);
   const get = async (path) => { const r = await fetch(SELFTEST_SOURCE + ref + '/tests/mirror/' + path, { cache: 'no-store' }); if (!r.ok) throw new Error(path + ' ' + r.status); return r.text(); };
   let spec;
@@ -392,10 +401,12 @@ async function selftest(url, env) {
   const out = await Promise.all(runs.map(async ({ model, c }) => {
     const turns = [{ role: 'assistant', content: '[Written by the Mirror’s written rules, not by you:] ' + String(c.door || 'What’s here for you today?') }];
     const said = [], usage = { in: 0, out: 0, cached: 0 };
-    for (const words of c.said.slice(0, 6)) {
+    for (const words of c.said.slice(0, most)) {
+      const left = budget - (Date.now() - T0);
+      if (left < 4000) { said.push({ said: words, stopped: 'time' }); break; }   /* no new turn once the time is spent */
       const msgs = conversation(turns, String(words));
       if (msgs.some((m) => m.role === 'user' && heavy(m.content))) { said.push({ said: words, care: true, by: 'guard' }); break; }
-      const v = await answer(env, model, charter, msgs, think, how, spare);
+      const v = await answer(env, model, charter, msgs, think, how, spare && left > 20000, Math.min(WAIT_MS, left - 1000));
       if (!v.ok) { said.push({ said: words, error: v.code, detail: v.detail }); break; }
       said.push({ said: words, heard: v.reflect, wiser: v.aspire || undefined, question: v.question, care: v.care || undefined, ground: v.ground || undefined, ms: v.ms, out: v.usage ? v.usage.output_tokens : undefined, spare: v.spare || undefined, first: v.first || undefined });
       if (v.usage) { usage.in += v.usage.input_tokens || 0; usage.out += v.usage.output_tokens || 0; usage.cached += (v.usage.cache_read_input_tokens || 0) + (v.usage.cache_creation_input_tokens || 0); }
@@ -403,7 +414,7 @@ async function selftest(url, env) {
     }
     return { model, name: c.name, turns: said, usage };
   }));
-  return reply({ ok: true, ref, suite, think, how, spare, charter: charter === CHARTER ? 'live' : spec.charter, results: out }, 200);
+  return reply({ ok: true, ref, suite, think, how, spare, turns: most, ms: Date.now() - T0, charter: charter === CHARTER ? 'live' : spec.charter, results: out }, 200);
 }
 
 /* ── the request ──────────────────────────────────────────────────────────────────────────── */
