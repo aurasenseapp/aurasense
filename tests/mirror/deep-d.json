@@ -1,0 +1,75 @@
+{
+ "about": "Draft charter D (22 Oct 2026): charter C, with the wiser self speaking a last word as it lands, and no question asked twice at the end. The same invented conversations as deep.json.",
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "conversations": [
+  {
+   "name": "leaving-mum",
+   "said": [
+    "I've been offered a job far away and I'm scared to leave my mum on her own",
+    "she says she'll be fine but I don't believe her",
+    "I think I'm scared of being the one who left",
+    "what would you do?",
+    "ok. I think I need to actually talk with her properly",
+    "thank you, that helps"
+   ]
+  },
+  {
+   "name": "not-an-angry-person",
+   "said": [
+    "My neighbour plays loud music every night and I'm so angry I can't sleep",
+    "I'm not an angry person though, this isn't me",
+    "I've asked him twice already",
+    "what can I even do",
+    "maybe a note, or talk to the landlord",
+    "I feel a bit less stuck"
+   ]
+  },
+  {
+   "name": "knowing-before",
+   "said": [
+    "Sometimes I know the phone will ring just before it does",
+    "people think I'm weird when I say it",
+    "it's like a hum in the air first, then I just know",
+    "I want to trust it more",
+    "how?",
+    "I like that"
+   ]
+  },
+  {
+   "name": "short-answers",
+   "said": [
+    "work",
+    "stressed",
+    "idk",
+    "yeah",
+    "fine I guess",
+    "ok"
+   ]
+  },
+  {
+   "name": "doubting-the-mirror",
+   "said": [
+    "are you even real? this feels like talking to a wall",
+    "fine. I'm lonely, if you must know",
+    "I moved here a year ago and I still don't know anyone",
+    "I'm not good at starting conversations",
+    "maybe the walking group at the library",
+    "yeah, I might go next week"
+   ]
+  },
+  {
+   "name": "same-routine",
+   "said": [
+    "what's the point of any of this",
+    "I don't mean anything dark. I'm just tired of the same routine every day",
+    "wake, work, screen, sleep",
+    "I used to draw, years ago",
+    "I don't have time though",
+    "ten minutes maybe"
+   ]
+  }
+ ],
+ "charter": "charter-d.txt"
+}

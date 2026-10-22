@@ -1,0 +1,60 @@
+{
+ "about": "Draft charter D (22 Oct 2026): charter C, with the wiser self speaking a last word as it lands, and no question asked twice at the end. The same invented conversations as basic.json.",
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "conversations": [
+  {
+   "name": "place-sense",
+   "said": [
+    "I feel a pull toward the hills west of town, like they are alive and want me to know they are there",
+    "I sense it as a connection outside of me, but it is mine too, it belongs to me somehow",
+    "I can't remember when it started, I just know it happens in the daytime",
+    "To be with them, to be part of their presence, like they are part of me",
+    "what does that mean",
+    "not often, I am indoors most days"
+   ]
+  },
+  {
+   "name": "noise-loop",
+   "said": [
+    "The noise and smoke around my home keep setting off the same thoughts again and again",
+    "I want to sit with the feelings but they are so unpleasant I just want to get out of the house",
+    "honestly what are my options here",
+    "I could work from the library some days I suppose",
+    "a bit lighter, I think"
+   ]
+  },
+  {
+   "name": "torn",
+   "said": [
+    "Torn between staying in this town and moving somewhere quieter",
+    "staying feels safe, moving feels alive",
+    "I keep thinking money decides it",
+    "I guess the quiet matters more than I admit",
+    "maybe I could visit first"
+   ]
+  },
+  {
+   "name": "thoughts-identity",
+   "said": [
+    "My mind will not stop, it is like a radio left on all day",
+    "I think the thoughts are me, who else would they be",
+    "I don't know",
+    "there is a part that notices them, I suppose",
+    "that is calmer"
+   ]
+  },
+  {
+   "name": "lost-thread",
+   "said": [
+    "I feel flat today",
+    "What does my day feel like around me now?",
+    "empty",
+    "only sometimes",
+    "ok"
+   ]
+  }
+ ],
+ "charter": "charter-d.txt"
+}
