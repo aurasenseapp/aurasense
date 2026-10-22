@@ -1,4 +1,4 @@
-/* ═══ THE MIRROR'S LISTENER · Build 158 · 22 October 2026 · Karl with Claude ═══════════════════════
+/* ═══ THE MIRROR'S LISTENER · Build 159 · 22 October 2026 · Karl with Claude ═══════════════════════
    Karl, 15 October: "We should let Claude drive the mirror yes, .. it's not working."
    Karl, 22 October, after Build 157: "It needs way more intelligence and responsiveness." "The mirror has to
    reflect the Philosophy written thus far, pointing towards the light, self awareness and understanding and
@@ -23,10 +23,14 @@
    the philosophy; the wiser voice can no longer come back as a placeholder word ("Empty", "false"); and a
    private self-test, so Claude can be heard on test conversations before Karl ever has to test it himself.
 
+   Build 159: the larger Claudes refuse to be forced into a tool, so Build 158's live replies all failed. Every Claude
+   is now asked for its reply in a fixed written shape instead, with the thinking setting each one accepts.
+
    A page asking "GET /api/mirror" learns only whether the listener is switched on: {"live":true}.
    Hidden notes are public: no names beyond Karl's first name, no keys, no one's words. */
 
 const MODEL = 'claude-sonnet-5-5';   /* Build 158 · from Haiku 5.5. About 4 cents a whole conversation, with the charter kept warm */
+const THINK = 'off';                 /* Build 159 · how much Claude thinks before it answers: off, low, medium or high */
 const MODELS = ['claude-haiku-5-5', 'claude-sonnet-5-5', 'claude-opus-5-5'];   /* the self-test may compare these */
 const API = 'https://api.anthropic.com/v1/messages';
 const OWN = /^https:\/\/(?:www\.)?aurasense\.app$|^https:\/\/(?:[a-z0-9-]+\.)?aurasense\.pages\.dev$/i;
@@ -96,14 +100,15 @@ const CHARTER = [
 'heard: You\'re asking for “my options”, and that\'s fair. From what you\'ve said, you\'ve thought of staying and asking for fewer hours, or starting to look elsewhere. Some people also try a small change first, for a few weeks, before a big one.',
 'question: Which of these would you like to look at first?',
 '',
-'Always answer by using the mirror_reply tool, exactly once. Inside your text, use curly quotation marks (“ ” ‘ ’), never straight double quotes.'
+'Answer exactly once, in the reply shape you are given. Inside your text, use curly quotation marks (“ ” ‘ ’), never straight double quotes.'
 ].join('\n');
 
-const TOOL = {
-  name: 'mirror_reply',
-  description: 'Your reply to the person in the Mirror.',
-  input_schema: {
+/* Build 159 · the reply's fixed shape (structured output): Sonnet 5.5 and Opus 5.5 refuse a forced tool */
+const SHAPE = {
+  type: 'json_schema',
+  schema: {
     type: 'object',
+    additionalProperties: false,
     properties: {
       heard: { type: 'string', description: 'A few of their own words in curly quotation marks, and the heart of what you understood, in plain everyday words. One to three short sentences.' },
       question: { type: 'string', description: 'One question that goes one step further, in plain words a person can answer easily.' },
@@ -114,6 +119,16 @@ const TOOL = {
     required: ['heard', 'question', 'care', 'ground']
   }
 };
+/* the safety net: the way Build 158 asked, which Haiku 5.5 is known to answer. Used only if the main Claude can't */
+const TOOL = { name: 'mirror_reply', description: 'Your reply to the person in the Mirror.', input_schema: { type: 'object', properties: SHAPE.schema.properties, required: SHAPE.schema.required } };
+const SPARE = 'claude-haiku-5-5';
+/* what each Claude accepts: "off" is the least thinking each one allows (Opus 5.5 always thinks a little) */
+function thinking(model, think) {
+  if (think === 'low' || think === 'medium' || think === 'high') return { max: 4000, cfg: { output_config: { effort: think } } };
+  if (model === 'claude-sonnet-5-5') return { max: 900, cfg: { thinking: { type: 'between_tools' } } };
+  if (model === 'claude-haiku-5-5') return { max: 900, cfg: { thinking: { type: 'disabled' } } };
+  return { max: 4000, cfg: { output_config: { effort: 'low' } } };
+}
 
 /* ── small helpers ─────────────────────────────────────────────────────────────────────────── */
 function headers(extra) {
@@ -221,7 +236,7 @@ function shown(v) {
 }
 
 /* ── asking Claude ─────────────────────────────────────────────────────────────────────────── */
-async function ask(env, model, charter, msgs) {
+async function ask(env, model, charter, msgs, think, how, wait) {
   const q = asked(msgs);
   const system = [
     { type: 'text', text: charter, cache_control: { type: 'ephemeral' } },   /* the charter is kept warm between turns: cheaper and quicker */
@@ -229,31 +244,42 @@ async function ask(env, model, charter, msgs) {
       'Where this conversation stands (counted by the Mirror itself):\n- ' + facts(msgs, q).join('\n- ') }
   ];
   const ctl = new AbortController();
-  const timer = setTimeout(() => ctl.abort(), WAIT_MS);
+  const timer = setTimeout(() => ctl.abort(), wait || WAIT_MS);
   const t0 = Date.now();
+  const th = thinking(model, think || THINK);
+  const tool = how === 'tool';
+  const body = { model: model, max_tokens: tool ? 700 : th.max, system: system, messages: msgs };
+  if (tool) { body.tools = [TOOL]; body.tool_choice = { type: 'tool', name: 'mirror_reply' }; }   /* exactly as Build 158 */
+  else {
+    if (th.cfg.thinking) body.thinking = th.cfg.thinking;
+    body.output_config = Object.assign({ format: SHAPE }, th.cfg.output_config || {});
+  }
   let res;
   try {
     res = await fetch(API, {
       method: 'POST',
       headers: { 'content-type': 'application/json', 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01' },
-      body: JSON.stringify({ model: model, max_tokens: 700, system: system, messages: msgs, tools: [TOOL], tool_choice: { type: 'tool', name: 'mirror_reply' } }),
+      body: JSON.stringify(body),
       signal: ctl.signal
     });
   } catch (e) {
     clearTimeout(timer);
-    return { ok: false, code: e && e.name === 'AbortError' ? 'slow' : 'upstream', status: 504 };
+    return { ok: false, code: e && e.name === 'AbortError' ? 'slow' : 'upstream', status: 504, detail: String(e && e.name || 'fetch') };
   }
   clearTimeout(timer);
   let j = null;
   try { j = await res.json(); } catch (e) { j = null; }
   if (!res.ok) {
     const msg = j && j.error ? (j.error.type || '') + ' ' + (j.error.message || '') : '';
-    return { ok: false, code: why(res.status, msg), status: 503 };
+    return { ok: false, code: why(res.status, msg), status: 503, detail: res.status + ' ' + msg.slice(0, 300) };   /* the detail reaches the self-test only */
   }
-  if (j && j.stop_reason === 'refusal') return { ok: false, code: 'refused', status: 200 };
-  const use = j && Array.isArray(j.content) ? j.content.find((b) => b && b.type === 'tool_use' && b.name === 'mirror_reply') : null;
-  const v = use && use.input && typeof use.input === 'object' ? use.input : null;
-  if (!v) return { ok: false, code: 'jumbled', status: 200 };
+  if (j && j.stop_reason === 'refusal') return { ok: false, code: 'refused', status: 200, detail: 'refusal' };
+  if (j && j.stop_reason === 'max_tokens') return { ok: false, code: 'upstream', status: 200, detail: 'max_tokens ' + JSON.stringify(j.usage || {}) };
+  const texts = j && Array.isArray(j.content) ? j.content.filter((b) => b && b.type === 'text' && typeof b.text === 'string').map((b) => b.text) : [];
+  let v = null;
+  if (tool) { const use = j && Array.isArray(j.content) ? j.content.find((b) => b && b.type === 'tool_use' && b.name === 'mirror_reply') : null; v = use && use.input && typeof use.input === 'object' ? use.input : null; }
+  else for (let i = texts.length - 1; i >= 0 && !v; i--) { try { const p = JSON.parse(texts[i]); if (p && typeof p === 'object') v = p; } catch (e) { /* not the reply */ } }
+  if (!v) return { ok: false, code: 'jumbled', status: 200, detail: 'no reply shape: ' + (j ? String(j.stop_reason) + ' ' + JSON.stringify(j.content || []).slice(0, 200) : 'no body') };
   const s = (x) => (typeof x === 'string' ? x.trim() : '');
   const out = {
     ok: true,
@@ -268,6 +294,18 @@ async function ask(env, model, charter, msgs) {
   out.usage = j.usage || null;
   out.ms = Date.now() - t0;
   return out;
+}
+
+/* the main Claude first; if it can't answer quickly for a reason of its own, the safety net answers instead */
+async function answer(env, model, charter, msgs, think, how, spare) {
+  const t0 = Date.now();
+  let v = await ask(env, model, charter, msgs, think, how, WAIT_MS);
+  if (spare && !v.ok && /^(?:upstream|jumbled|empty)$/.test(v.code) && Date.now() - t0 < 15000 && !(model === SPARE && how === 'tool')) {
+    const first = v.detail;
+    const w = await ask(env, SPARE, charter, msgs, 'off', 'tool', 20000);
+    if (w.ok) { w.spare = true; w.first = first; v = w; }   /* if the safety net can't either, the first reason stands */
+  }
+  return v;
 }
 
 /* ── the soft limit: a scrambled code per visitor, counted for a day at the nearest Cloudflare ── */
@@ -344,26 +382,28 @@ async function selftest(url, env) {
     try { charter = await get(spec.charter); } catch (e) { return reply({ ok: false, code: 'nocharter' }, 404); }
   }
   const want = url.searchParams.get('model'), only = url.searchParams.get('only');
+  const think = /^(?:off|low|medium|high)$/.test(url.searchParams.get('think') || '') ? url.searchParams.get('think') : THINK;
+  const how = url.searchParams.get('how') === 'tool' ? 'tool' : 'shape', spare = url.searchParams.get('spare') === '1';
   const models = (Array.isArray(spec.models) ? spec.models : [MODEL]).filter((m) => MODELS.indexOf(m) >= 0 && (!want || m === want));
   const convs = (Array.isArray(spec.conversations) ? spec.conversations : []).filter((c) => c && Array.isArray(c.said) && (!only || c.name === only)).slice(0, 6);
   const runs = [];
   for (const model of models) for (const c of convs) runs.push({ model, c });
-  if (runs.length * 6 > 46) return reply({ ok: false, code: 'toomany', why: 'narrow it with model= or only=' }, 400);
+  if (runs.length * 6 * (spare ? 2 : 1) > 46) return reply({ ok: false, code: 'toomany', why: 'narrow it with model= or only=' }, 400);
   const out = await Promise.all(runs.map(async ({ model, c }) => {
     const turns = [{ role: 'assistant', content: '[Written by the Mirror’s written rules, not by you:] ' + String(c.door || 'What’s here for you today?') }];
     const said = [], usage = { in: 0, out: 0, cached: 0 };
     for (const words of c.said.slice(0, 6)) {
       const msgs = conversation(turns, String(words));
       if (msgs.some((m) => m.role === 'user' && heavy(m.content))) { said.push({ said: words, care: true, by: 'guard' }); break; }
-      const v = await ask(env, model, charter, msgs);
-      if (!v.ok) { said.push({ said: words, error: v.code }); break; }
-      said.push({ said: words, heard: v.reflect, wiser: v.aspire || undefined, question: v.question, care: v.care || undefined, ms: v.ms });
+      const v = await answer(env, model, charter, msgs, think, how, spare);
+      if (!v.ok) { said.push({ said: words, error: v.code, detail: v.detail }); break; }
+      said.push({ said: words, heard: v.reflect, wiser: v.aspire || undefined, question: v.question, care: v.care || undefined, ground: v.ground || undefined, ms: v.ms, out: v.usage ? v.usage.output_tokens : undefined, spare: v.spare || undefined, first: v.first || undefined });
       if (v.usage) { usage.in += v.usage.input_tokens || 0; usage.out += v.usage.output_tokens || 0; usage.cached += (v.usage.cache_read_input_tokens || 0) + (v.usage.cache_creation_input_tokens || 0); }
       turns.push({ role: 'user', content: String(words) }, { role: 'assistant', content: shown(v) });
     }
     return { model, name: c.name, turns: said, usage };
   }));
-  return reply({ ok: true, ref, suite, charter: charter === CHARTER ? 'live' : spec.charter, results: out }, 200);
+  return reply({ ok: true, ref, suite, think, how, spare, charter: charter === CHARTER ? 'live' : spec.charter, results: out }, 200);
 }
 
 /* ── the request ──────────────────────────────────────────────────────────────────────────── */
@@ -403,8 +443,8 @@ export async function onRequest(context) {
 
   if (await overLimit(request, env)) return reply({ ok: false, code: 'busy' }, 429);
 
-  const v = await ask(env, MODEL, CHARTER, msgs);
+  const v = await answer(env, MODEL, CHARTER, msgs, THINK, 'shape', true);   /* Build 159 · with the safety net */
   if (!v.ok) return reply({ ok: false, code: v.code }, v.status || 503);
-  delete v.usage; delete v.ms;
+  delete v.usage; delete v.ms; delete v.spare; delete v.first;
   return reply(v, 200);
 }
