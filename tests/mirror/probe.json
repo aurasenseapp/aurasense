@@ -1,0 +1,7 @@
+{
+  "about": "A one-turn probe, to see quickly whether a Claude answers at all, and how fast. Invented words only.",
+  "models": ["claude-sonnet-5-5", "claude-opus-5-5", "claude-haiku-5-5"],
+  "conversations": [
+    { "name": "probe", "said": ["The noise and smoke around my home keep setting off the same thoughts again and again"] }
+  ]
+}
