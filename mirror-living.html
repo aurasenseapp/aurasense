@@ -1035,7 +1035,14 @@ function reach(sp,m){var c=m.getBoundingClientRect(),cx=c.left+c.width/2,cy=c.to
   return far;}
 function setRim(words){var r=$('rim'),t=$('rimText');
   r.classList.remove('show');
-  setTimeout(function(){t.textContent=words?('\u00b7 '+words+' \u00b7 '+words+' '):'';if(words)r.classList.add('show');},500);}
+  setTimeout(function(){t.textContent=words?('\u00b7 '+words+' \u00b7 '+words+' '):'';rimFit(t,words);if(words)r.classList.add('show');},500);}
+/* 22 Oct 2026 · Build 157 · Karl's screenshots: long words around the rim were cut mid-word. Their words now go round
+   twice only when both fit; otherwise once, whole. Only a phrase too long to go round even once is shortened, at a
+   whole word, with "…". */
+function rimFit(t,words){try{if(!words)return;var L=$('arc').getTotalLength()*0.97,fits=function(){return t.getComputedTextLength()<=L;};
+  if(fits())return;t.textContent='\u00b7 '+words+' ';if(fits())return;
+  var w=String(words).split(' ');for(var i=0;i<80&&w.length>1;i++){w.pop();t.textContent='\u00b7 '+w.join(' ')+'\u2026 ';if(fits())return;}
+}catch(e){}}
 function addTrail(parts,rimWords){
   S.turns.push({parts:parts,rim:rimWords});if(LS.live)lsRecord(parts);
   var tr=$('trail'),b=el('button');b.type='button';b.setAttribute('aria-label','Turn '+S.turns.length);
@@ -1304,6 +1311,11 @@ var WHY={
   upstream:'Claude couldn’t answer just then, so the written rules did.',
   restnote:'Claude is resting for now, so the written rules are answering. Nothing leaves this page.'
 };
+/* 22 Oct 2026 · Build 157 · Karl's screenshot: a reply ended "…the question you asked of…". Claude's words are kept
+   whole: only whole sentences are let go at the end, and a single sentence is shortened only if it alone is far too long */
+function lsWhole(x,n){x=String(x||'').replace(/\s+/g,' ').trim();if(x.length<=n)return x;
+  var ss=x.match(/[^.!?]+[.!?]+[”’"]*\s*/g)||[],out='';for(var i=0;i<ss.length;i++){if((out+ss[i]).trim().length>n)break;out+=ss[i];}
+  return out.trim()||lsClip(x,n);}
 function lsClip(x,n){x=String(x||'').replace(/\s+/g,' ').trim();if(x.length<=n)return x;var c=x.slice(0,n),sp=c.lastIndexOf(' ');return c.slice(0,sp>n*.6?sp:n)+'…';}
 function setWho(text){var w=$('who');if(w)w.textContent=text||'';}
 function lsRecord(parts){try{
@@ -1374,10 +1386,10 @@ function listen(raw,t){
     if(!refl&&!q&&!asp)throw {code:'empty'};
     finish();lsKeepPath();
     var parts=[];
-    if(asp){if(refl)parts.push({cls:'line ack',text:lsClip(refl,320)});parts.push({cls:'line soft',text:'The you who has come through this might say:'});
-      parts.push({cls:'line aspire',text:'“'+lsClip(asp.replace(/^[“"]+|[”"]+$/g,''),360)+'”'});q=LISTEN.aspq;}
-    else if(refl)parts.push({cls:'line',text:lsClip(refl,320)});
-    if(q)parts.push({cls:'line q',text:lsClip(q,240)});
+    if(asp){if(refl)parts.push({cls:'line ack',text:lsWhole(refl,300)});parts.push({cls:'line soft',text:'The you who has come through this might say:'});
+      parts.push({cls:'line aspire',text:'“'+lsWhole(asp.replace(/^[“"]+|[”"]+$/g,''),360)+'”'});if(!q)q=LISTEN.aspq;}   /* 22 Oct 2026 · Build 157 · Claude's own fresh question follows the wiser voice; the written rules' only if Claude gave none */
+    else if(refl)parts.push({cls:'line',text:lsWhole(refl,360)});   /* whole sentences that still fit the circle on a small phone */
+    if(q)parts.push({cls:'line q',text:lsWhole(q,220)});
     if(q)ask({q:q,plain:q,kind:asp?'aspired':'ai'});else{ask(null);$('words').placeholder='Say more, if you like…';}   /* no question is ever made up for Claude */
     LS.by='ai';LS.aiN++;
     show(parts,kp);addTrail(parts,kp);doorway(raw);
