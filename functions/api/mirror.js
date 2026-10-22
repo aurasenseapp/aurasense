@@ -1,4 +1,4 @@
-/* ═══ THE MIRROR'S LISTENER · Build 160 · 22 October 2026 · Karl with Claude ═══════════════════════
+/* ═══ THE MIRROR'S LISTENER · Build 161 · 22 October 2026 · Karl with Claude ═══════════════════════
    Karl, 15 October: "We should let Claude drive the mirror yes, .. it's not working."
    Karl, 22 October, after Build 157: "It needs way more intelligence and responsiveness." "The mirror has to
    reflect the Philosophy written thus far, pointing towards the light, self awareness and understanding and
@@ -26,6 +26,7 @@
    Build 159: the larger Claudes refuse to be forced into a tool, so Build 158's live replies all failed. Every Claude
    is now asked for its reply in a fixed written shape instead, with the thinking setting each one accepts.
    Build 160: the self-test can reach test branches (branch=), run fewer turns (turns=), and always answers in time.
+   Build 161: the self-test can run whole conversations in the background (later=1, then job=).
 
    A page asking "GET /api/mirror" learns only whether the listener is switched on: {"live":true}.
    Hidden notes are public: no names beyond Karl's first name, no keys, no one's words. */
@@ -303,7 +304,7 @@ async function answer(env, model, charter, msgs, think, how, spare, wait) {
   let v = await ask(env, model, charter, msgs, think, how, wait || WAIT_MS);
   if (spare && !v.ok && /^(?:upstream|jumbled|empty)$/.test(v.code) && Date.now() - t0 < 15000 && !(model === SPARE && how === 'tool')) {
     const first = v.detail;
-    const w = await ask(env, SPARE, charter, msgs, 'off', 'tool', 20000);
+    const w = await ask(env, SPARE, charter, msgs, 'off', 'tool', Math.min(20000, Math.max(3000, (wait || WAIT_MS) - (Date.now() - t0))));   /* never past the time it was given */
     if (w.ok) { w.spare = true; w.first = first; v = w; }   /* if the safety net can't either, the first reason stands */
   }
   return v;
@@ -363,7 +364,8 @@ function why(status, message) {
 }
 
 /* ── the private self-test ─────────────────────────────────────────────────────────────────────
-   GET /api/mirror?selftest=KEY&branch=BRANCH&suite=NAME[&model=…][&only=…][&turns=1-6][&budget=seconds]
+   GET /api/mirror?selftest=KEY&branch=BRANCH&suite=NAME[&model=…][&only=…][&turns=1-6][&budget=seconds][&later=1]
+   GET /api/mirror?selftest=KEY&job=NUMBER   (what a background run found; "running" until it is done)
    Runs the test conversations in tests/mirror/NAME.json on that branch of this project's repository, turn by turn,
    exactly as the page would, and returns what Claude said. A draft charter (tests/mirror/<charter>.txt) can be
    tried without changing the live Mirror. Nobody's real words: the test conversations are invented. */
@@ -371,14 +373,33 @@ async function sha256(text) {
   const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(String(text || '')));
   return [...new Uint8Array(d)].map((b) => b.toString(16).padStart(2, '0')).join('');
 }
-async function selftest(url, env) {
+const jobAt = (url, id) => new Request(new URL('/__mirror_selftest/' + id, url).toString());
+async function selftest(url, env, context) {
   if ((await sha256(url.searchParams.get('selftest'))) !== SELFTEST) return reply({ ok: false, code: 'elsewhere' }, 403);
-  try { return await selftestRun(url, env); }
+  const store = typeof caches !== 'undefined' && caches.default ? caches.default : null;
+  const job = url.searchParams.get('job');
+  if (job) {   /* what a background run found */
+    if (!/^[a-f0-9]{24}$/.test(job)) return reply({ ok: false, code: 'bad' }, 400);
+    const hit = store ? await store.match(jobAt(url, job)) : null;
+    return hit ? new Response(await hit.text(), { status: 200, headers: headers() }) : reply({ ok: false, code: 'running', job }, 200);
+  }
+  if (url.searchParams.get('later') === '1' && store && context && typeof context.waitUntil === 'function') {
+    const id = [...crypto.getRandomValues(new Uint8Array(12))].map((b) => b.toString(16).padStart(2, '0')).join('');
+    context.waitUntil((async () => {
+      let r;
+      try { r = await selftestRun(url, env, true); }
+      catch (e) { r = reply({ ok: false, code: 'threw', why: String((e && e.message) || e).slice(0, 300) }, 200); }
+      await store.put(jobAt(url, id), new Response(await r.text(), { headers: { 'Content-Type': 'application/json', 'Cache-Control': 'max-age=1800' } }));
+    })());
+    return reply({ ok: true, job: id, later: true }, 200);
+  }
+  try { return await selftestRun(url, env, false); }
   catch (e) { return reply({ ok: false, code: 'threw', why: String((e && e.message) || e).slice(0, 300) }, 200); }   /* a plain reason, never a broken page */
 }
-async function selftestRun(url, env) {
+async function selftestRun(url, env, later) {
   const T0 = Date.now();
-  const budget = Math.min(55, Math.max(5, parseInt(url.searchParams.get('budget') || '25', 10) || 25)) * 1000;
+  /* the web reader waits about ten seconds; a background run may take nearly thirty */
+  const budget = Math.min(later ? 28 : 55, Math.max(5, parseInt(url.searchParams.get('budget') || (later ? '28' : '9'), 10) || 9)) * 1000;
   const most = Math.min(6, Math.max(1, parseInt(url.searchParams.get('turns') || '6', 10) || 6));
   /* "branch" because the web reader drops an address part named "ref" */
   const ref = url.searchParams.get('branch') || url.searchParams.get('ref') || 'main', suite = url.searchParams.get('suite') || 'basic';
@@ -406,7 +427,7 @@ async function selftestRun(url, env) {
       if (left < 4000) { said.push({ said: words, stopped: 'time' }); break; }   /* no new turn once the time is spent */
       const msgs = conversation(turns, String(words));
       if (msgs.some((m) => m.role === 'user' && heavy(m.content))) { said.push({ said: words, care: true, by: 'guard' }); break; }
-      const v = await answer(env, model, charter, msgs, think, how, spare && left > 20000, Math.min(WAIT_MS, left - 1000));
+      const v = await answer(env, model, charter, msgs, think, how, spare && left > 6000, Math.min(WAIT_MS, left - 1000));
       if (!v.ok) { said.push({ said: words, error: v.code, detail: v.detail }); break; }
       said.push({ said: words, heard: v.reflect, wiser: v.aspire || undefined, question: v.question, care: v.care || undefined, ground: v.ground || undefined, ms: v.ms, out: v.usage ? v.usage.output_tokens : undefined, spare: v.spare || undefined, first: v.first || undefined });
       if (v.usage) { usage.in += v.usage.input_tokens || 0; usage.out += v.usage.output_tokens || 0; usage.cached += (v.usage.cache_read_input_tokens || 0) + (v.usage.cache_creation_input_tokens || 0); }
@@ -424,7 +445,7 @@ export async function onRequest(context) {
 
   if (request.method === 'GET' || request.method === 'HEAD') {
     const url = new URL(request.url);
-    if (live && request.method === 'GET' && url.searchParams.has('selftest')) return selftest(url, env);
+    if (live && request.method === 'GET' && url.searchParams.has('selftest')) return selftest(url, env, context);
     return reply({ live: live }, 200);
   }
   if (request.method !== 'POST') return reply({ ok: false, code: 'method' }, 405, { Allow: 'GET, HEAD, POST' });
