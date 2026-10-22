@@ -1,0 +1,6 @@
+# Aurasense on Cloudflare Pages · Build 156 · 22 October 2026
+# The same side doors as on Vercel (vercel.json). "200" shows the map at the short address itself.
+# Cloudflare serves each page at its name without ".html" (it sends /seeking.html on to /seeking),
+# so the doors point at those names. /accord needs no rule here: Cloudflare serves accord.html there already.
+/m     /index-mapbox  200
+/map   /index-mapbox  200
