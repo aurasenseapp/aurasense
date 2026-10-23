@@ -1,0 +1,42 @@
+{
+ "about": "Draft charter F (23 Oct 2026): E, plus the light named plainly when it fits, feelings in layers, relief that returns is not failure, and the body gently wondered about. Same invented conversations as where-e.json.",
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "charter": "charter-f.txt",
+ "conversations": [
+  {
+   "name": "uneasy-no-reason",
+   "said": [
+    "I've felt uneasy all morning and I can't work out why",
+    "it's usually the traffic outside that sets me off but it's a quiet day",
+    "so maybe it isn't out there at all",
+    "I skipped breakfast and had three coffees, now that I think of it",
+    "huh. that might be most of it",
+    "I feel steadier just seeing that"
+   ]
+  },
+  {
+   "name": "heavy-coming-home",
+   "said": [
+    "there's a heaviness that lands on me when I walk in my front door",
+    "I always thought it was the house, it's dark and cramped",
+    "but it's there even on sunny days",
+    "I think I carry the whole work day in with me",
+    "maybe I need a few minutes before I go in",
+    "sitting in the car for a bit could work"
+   ]
+  },
+  {
+   "name": "irritated-by-everyone",
+   "said": [
+    "everyone is getting on my nerves lately, my partner especially",
+    "little things, the way they chew, the tv too loud",
+    "I haven't been sleeping well for about two weeks",
+    "so maybe it's not them",
+    "I feel a bit guilty now",
+    "I'll go easier on them tonight"
+   ]
+  }
+ ]
+}
