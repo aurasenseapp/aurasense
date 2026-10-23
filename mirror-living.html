@@ -21,6 +21,8 @@
   - when someone is confused, it says the same thing more simply instead of carrying on
 
   Nothing is stored. No scripts from anywhere else.
+  23 Oct 2026 · Build 164: Keep what you found. A few lines, gathered by Claude when a conversation rests, kept on
+  this device only if the person chooses ("Your thread"), with "Forget all of it". Aurasense keeps nothing.
   23 Oct 2026 · Build 163: the wiser voice's introduction is shown once a visit, never on repeat.
   22 Oct 2026 · Build 158: where Claude can listen, only Claude answers; if Claude can't, the words go back in the box.
   22 Oct 2026 · Build 156: words leave this page only when the person has chosen to let Claude listen, and then
@@ -168,6 +170,14 @@ body.insite .mirror{margin-top:2vh}
 .gift .row{margin-top:8px;align-items:center}
 .gift a.btn{text-decoration:none;display:inline-block}
 .gift .gift-s{font-size:.8rem;color:var(--faint);margin-top:8px}
+/* 23 Oct 2026 · Build 164 · Keep what you found, and the thread of what was kept */
+.keepnote{font-size:.8rem;color:var(--faint);text-align:center;max-width:min(520px,92vw);margin:6px auto 0;line-height:1.45}
+.thread .t-title{font-size:1.02rem;color:var(--ink)}
+.thread .t-list{max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch;text-align:left;margin-top:6px}
+.thread .t-item{margin:10px 0 0;padding-top:8px;border-top:1px solid rgba(233,181,106,.28);color:var(--ink)}
+.thread .t-item p{margin:2px 0}
+.thread .t-date{font-size:.78rem;color:var(--faint)}
+.thread .t-wiser{font-style:italic}
 body.listening .trail button.now{animation:lsPulse 1.2s ease-in-out infinite}
 @keyframes lsPulse{0%,100%{transform:scale(1.3);opacity:1}50%{transform:scale(1.7);opacity:.55}}
 @media (prefers-reduced-motion:reduce){body.listening .trail button.now{animation:none}}
@@ -204,6 +214,7 @@ body:not(.insite) .stage::before,body:not(.insite) .stage::after{content:"";flex
     <button class="btn quiet" id="rest" type="button">Let it rest here</button>
   </div>
   <div class="gift hide" id="gift" role="note"></div>
+  <div class="gift thread hide" id="thread" role="region" aria-label="Your thread of light"></div>
   <p class="note" id="note">Nothing you write leaves this page. The Mirror is not a person, and not a therapist.</p>
   <p class="note hide" id="classicRow"><button class="btn quiet" id="classic" type="button">The balance of your light, and the unlit rooms →</button></p>
 </main>
@@ -1277,11 +1288,13 @@ function rest(){
   show(parts,S.first||'');
   var d=$('doors'); d.textContent=''; d.classList.remove('hide');
   [['A question to carry',function(){fin([{cls:'line soft',text:'To carry with you:'},{cls:'line q',text:(S.lastQ&&S.lastQ.q)||'What matters most here?'},{cls:'line soft',text:'No need to answer it today.'}]);}],
-   ['What I found, in my own words',function(){var w=S.turns.map(function(x){return x.rim;}).filter(Boolean);
-      fin([{cls:'line soft',text:'In your own words:'}].concat(w.slice(-3).map(function(x){return {cls:'quote',text:x};})).concat([{cls:'line soft',text:'Only you wrote these. Keep them if they help.'}]));}],
+   [canKeep()?'Keep what I found':'What I found, in my own words',function(){if(canKeep())keepFound();else ownWords();}],   /* 23 Oct 2026 · Build 164 */
    ['Just the feeling of being met',function(){fin([{cls:'line',text:'You brought something real, and it was met.'},{cls:'line soft',text:'Come back whenever you like. The Mirror will be here.'}]);}]
   ].forEach(function(o){var b=el('button','door',o[0]);b.type='button';b.addEventListener('click',o[1]);d.appendChild(b);});
 }
+/* their own words, as before (and whenever Claude can't gather a keepsake) */
+function ownWords(){var w=S.turns.map(function(x){return x.rim;}).filter(Boolean);
+  fin([{cls:'line soft',text:'In your own words:'}].concat(w.slice(-3).map(function(x){return {cls:'quote',text:x};})).concat([{cls:'line soft',text:'Only you wrote these. Keep them if they help.'}]));}
 function fin(parts){ $('doors').classList.add('hide'); show(parts.concat([{cls:'line soft',text:'One step closer to your own light.'}]),S.first||'');
   var r=$('after');r.textContent='';r.classList.remove('hide');var b=el('button','btn quiet','Begin again');b.type='button';
   b.addEventListener('click',function(){location.reload();});r.appendChild(b);
@@ -1335,6 +1348,8 @@ function refreshNote(){
     var b=el('button','lnk','Stop sharing my words');b.type='button';b.addEventListener('click',function(){lsForget();});n.appendChild(b);}
   else if(LS.rest)n.appendChild(document.createTextNode('The Mirror is resting for now. Not a person, and not a therapist.'));
   else n.appendChild(document.createTextNode('The Mirror is not a person, and not a therapist.'));
+  var tn=threadGet().length;   /* 23 Oct 2026 · Build 164 · what was kept, on this device */
+  if(tn){n.appendChild(document.createTextNode(' '));var tb=el('button','lnk','Your thread ('+tn+')');tb.type='button';tb.addEventListener('click',threadShow);n.appendChild(tb);}
 }
 /* 22 Oct 2026 · Build 158 · one plain question: may Claude listen? Two equal answers, and what a yes means */
 function lsAsk(after,onNo){
@@ -1431,6 +1446,87 @@ function lsGift(){try{
   setTimeout(function(){if(!document.body.contains(g))return;try{localStorage.setItem('as_listen_forward_at',String(Date.now()));}catch(e){}   /* counted only once it is truly shown */
     g.classList.remove('hide');try{g.scrollIntoView({block:'nearest',behavior:asStill()?'auto':'smooth'});}catch(e){}},1600);   /* after the last words have risen; on a small phone the page moves just enough to show all of it */
 }catch(e){}}
+/* ═══ 23 Oct 2026 · BUILD 164 · KEEP WHAT YOU FOUND ═══════════════════════════════════════════════════════
+   Karl: "Already I feel like I wish I had those words I gave the mirror." When a conversation Claude listened to rests,
+   Claude gathers a few lines: what they found (mostly their own words), the step they chose, their wiser self's last
+   word. Kept on this device only, and only if they choose; each one adds to "Your thread". Aurasense keeps nothing.
+   The Mutual Pause (philosophy record, 23 Oct): nothing here is for the AI; someone else using the device could read
+   it, so it is offered, never automatic, said plainly, and one tap (then a second) forgets all of it. */
+var THREAD_KEY='as_mirror_thread';
+function canKeep(){return LS.live&&LS.choice==='claude'&&!LS.rest&&!LS.heavy&&LS.aiN>=2&&LS.turns.some(function(t){return t.role==='user';});}
+function threadGet(){try{var a=JSON.parse(localStorage.getItem(THREAD_KEY)||'[]');
+  return Array.isArray(a)?a.filter(function(x){return x&&typeof x.found==='string'&&x.found;}):[];}catch(e){return [];}}
+function threadPut(k){try{var a=threadGet();
+  a.push({at:new Date().toISOString().slice(0,10),found:String(k.found||'').slice(0,600),step:String(k.step||'').slice(0,300),wiser:String(k.wiser||'').slice(0,400)});
+  if(a.length>60)a=a.slice(-60);localStorage.setItem(THREAD_KEY,JSON.stringify(a));return threadGet().length;}catch(e){return 0;}}
+function threadForget(){try{localStorage.removeItem(THREAD_KEY);}catch(e){}}
+function niceDate(d){try{var t=new Date(String(d)+'T12:00:00');if(isNaN(t))return String(d||'');return t.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'});}catch(e){return String(d||'');}}
+function plainWiser(w){return String(w||'').replace(/^[“"]+|[”"]+$/g,'');}
+function keepText(k){var d=new Date();
+  return 'What I found: '+k.found+(k.step?'\nMy step: '+k.step:'')+(k.wiser?'\nMy wiser self’s last word: “'+plainWiser(k.wiser)+'”':'')+
+    '\n— The Mirror, Aurasense · '+d.toISOString().slice(0,10);}
+function copyText(t,done){
+  var fallback=function(){try{var a=document.createElement('textarea');a.value=t;a.setAttribute('readonly','');a.style.position='fixed';a.style.top='0';a.style.opacity='0';
+    document.body.appendChild(a);a.select();var ok=document.execCommand('copy');document.body.removeChild(a);return !!ok;}catch(e){return false;}};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){done(true);},function(){done(fallback());});return;}}catch(e){}
+  done(fallback());}
+function keepFound(){
+  $('doors').classList.add('hide');
+  show([{cls:'line soft',text:'Gathering what you found…'}],S.first||'');
+  setWho('Claude, an AI, is gathering a few lines for you to keep.');document.body.classList.add('listening');
+  var ctl=null;try{ctl=new AbortController();}catch(e){}
+  var timer=setTimeout(function(){try{if(ctl)ctl.abort();}catch(e){}},50000);
+  var done=function(){clearTimeout(timer);document.body.classList.remove('listening');};
+  fetch('/api/mirror',{method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',credentials:'same-origin',
+    body:JSON.stringify({keep:true,turns:LS.turns.slice(-24)}),signal:ctl?ctl.signal:undefined})
+  .then(function(r){return r.json().then(function(j){return j||{};},function(){return {ok:false};});})
+  .then(function(v){done();
+    var k=v&&v.keep;
+    if(v.ok!==true||v.care===true||!k||typeof k.found!=='string'||!k.found.trim())throw {code:v.code||'upstream'};
+    keepShow({found:String(k.found).trim(),step:typeof k.step==='string'?k.step.trim():'',wiser:typeof k.wiser==='string'?k.wiser.trim():''});})
+  .catch(function(){done();setWho('Claude couldn’t gather it just then, so here are your own words.');ownWords();});
+}
+function keepShow(k){
+  var parts=[{cls:'line soft',text:'What you found:'},{cls:'line',text:lsWhole(k.found,320)}];
+  if(k.step)parts.push({cls:'line soft',text:'Your step:'},{cls:'line',text:lsWhole(k.step,160)});
+  if(k.wiser)parts.push({cls:'line soft',text:'Your wiser self’s last word:'},{cls:'line aspire',text:'“'+lsWhole(plainWiser(k.wiser),240)+'”'});
+  fin(parts);
+  setWho('Gathered by Claude, an AI, from your conversation.');
+  var r=$('after');
+  var kb=el('button','btn lead','Keep it on this device');kb.type='button';
+  var cb=el('button','btn quiet','Copy it');cb.type='button';
+  kb.addEventListener('click',function(){if(kb.disabled)return;var n=threadPut(k);kb.disabled=true;kb.textContent=n?'Kept':'Not kept';
+    setWho(n?('Kept on this device only. Your thread now holds '+n+(n===1?' line.':' lines.')):'This browser wouldn’t keep it. You can copy it instead.');refreshNote();});
+  cb.addEventListener('click',function(){copyText(keepText(k),function(ok){setWho(ok?'Copied. Paste it wherever you keep things.':'Your browser didn’t allow copying. You can select the words in the circle instead.');});});
+  r.insertBefore(cb,r.firstChild);r.insertBefore(kb,r.firstChild);
+  var old=document.getElementById('keepnote');if(old)old.parentNode.removeChild(old);
+  var nt=el('p','keepnote','Kept only on this device, and only if you choose. Aurasense keeps nothing. Anyone using this device could see it.');nt.id='keepnote';
+  r.parentNode.insertBefore(nt,r.nextSibling);
+}
+/* Your thread: what was kept, newest first, with a way to forget all of it */
+function threadShow(){
+  var t=$('thread');if(!t)return;var a=threadGet();t.textContent='';
+  t.appendChild(el('p','t-title','Your thread of light'));
+  t.appendChild(el('p','gift-s','Kept on this device only. Aurasense keeps nothing.'));
+  var list=el('div','t-list');
+  a.slice().reverse().forEach(function(x){var it=el('div','t-item');
+    it.appendChild(el('p','t-date',niceDate(x.at)));it.appendChild(el('p','',x.found));
+    if(x.step)it.appendChild(el('p','','Your step: '+x.step));
+    if(x.wiser)it.appendChild(el('p','t-wiser','“'+plainWiser(x.wiser)+'”'));
+    list.appendChild(it);});
+  if(!a.length)list.appendChild(el('p','','Nothing is kept on this device.'));
+  t.appendChild(list);
+  var row=el('div','row');
+  var close=el('button','btn quiet','Close');close.type='button';close.addEventListener('click',function(){t.classList.add('hide');});
+  row.appendChild(close);
+  if(a.length){var forget=el('button','btn quiet','Forget all of it');forget.type='button';var armed=false;
+    forget.addEventListener('click',function(){if(!armed){armed=true;forget.textContent='Tap again to forget all '+a.length;return;}
+      threadForget();t.classList.add('hide');setWho('Forgotten. Nothing from the Mirror is kept on this device now.');refreshNote();});
+    row.appendChild(forget);}
+  t.appendChild(row);t.classList.remove('hide');
+  try{t.scrollIntoView({block:'nearest',behavior:asStill()?'auto':'smooth'});}catch(e){}
+}
+
 /* is a listener switched on here? Asked once; the answer never takes longer than a second and a half */
 var lsWait=[],lsDone=false;
 function lsReady(fn){if(lsDone){try{fn();}catch(e){}return;}lsWait.push(fn);}
