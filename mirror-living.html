@@ -21,6 +21,7 @@
   - when someone is confused, it says the same thing more simply instead of carrying on
 
   Nothing is stored. No scripts from anywhere else.
+  23 Oct 2026 · Build 163: the wiser voice's introduction is shown once a visit, never on repeat.
   22 Oct 2026 · Build 158: where Claude can listen, only Claude answers; if Claude can't, the words go back in the box.
   22 Oct 2026 · Build 156: words leave this page only when the person has chosen to let Claude listen, and then
   only to Aurasense's own small helper (/api/mirror), which passes them to Claude and keeps nothing. Heavy words
@@ -1298,7 +1299,7 @@ function fin(parts){ $('doors').classList.add('hide'); show(parts.concat([{cls:'
    - Beside every reply, a line says who answered. When Claude can't answer, the written rules answer, and say so.
    - The conversation so far is held in memory only, to give Claude its thread. Nothing is stored.
    - After a conversation ends well, and never after heavy words, the Listen Forward door, at most once a week. */
-var LS={live:false,choice:null,rest:false,busy:false,heavy:false,aiN:0,by:'',turns:[],lastWords:'',snap:'',gen:0,ctl:null};
+var LS={live:false,choice:null,rest:false,busy:false,heavy:false,aiN:0,wiserN:0,by:'',turns:[],lastWords:'',snap:'',gen:0,ctl:null};
 var RULES_MARK='[Written by the Mirror’s written rules, not by you:] ';
 var WHY={   /* 22 Oct 2026 · Build 158 · nothing answers in Claude's place: the words go back in the box, with the reason */
   resting:'The Mirror is resting for now. Your words are back in the box; please come back a little later.',
@@ -1319,7 +1320,7 @@ function lsWhole(x,n){x=String(x||'').replace(/\s+/g,' ').trim();if(x.length<=n)
 function lsClip(x,n){x=String(x||'').replace(/\s+/g,' ').trim();if(x.length<=n)return x;var c=x.slice(0,n),sp=c.lastIndexOf(' ');return c.slice(0,sp>n*.6?sp:n)+'…';}
 function setWho(text){var w=$('who');if(w)w.textContent=text||'';}
 function lsRecord(parts){try{
-  var txt=parts.map(function(p){return p.text;}).filter(Boolean).join(' ');
+  var txt=parts.map(function(p){return (p.say?p.say+' ':'')+p.text;}).filter(Boolean).join(' ');   /* Build 163 · Claude still hears the introduction it no longer sees on screen */
   if(LS.lastWords){LS.turns.push({role:'user',content:LS.lastWords});LS.lastWords='';}
   if(txt)LS.turns.push({role:'assistant',content:(LS.by==='ai'?'':RULES_MARK)+txt});
   LS.by='';
@@ -1394,8 +1395,9 @@ function listen(raw,t){
     if(!refl&&!q&&!asp)throw {code:'empty'};
     finish();lsKeepPath();
     var parts=[];
-    if(asp){if(refl)parts.push({cls:'line ack',text:lsWhole(refl,300)});parts.push({cls:'line soft',text:'The you who has come through this might say:'});
-      parts.push({cls:'line aspire',text:'“'+lsWhole(asp.replace(/^[“"]+|[”"]+$/g,''),360)+'”'});if(!q)q=LISTEN.aspq;}   /* 22 Oct 2026 · Build 157 · Claude's own fresh question follows the wiser voice; the written rules' only if Claude gave none */
+    if(asp){if(refl)parts.push({cls:'line ack',text:lsWhole(refl,300)});
+      if(!LS.wiserN)parts.push({cls:'line soft',text:'The you who has come through this might say:'});   /* 23 Oct 2026 · Build 163 · Karl: "on repeat too". Introduced once a visit */
+      parts.push({cls:'line aspire',text:'“'+lsWhole(asp.replace(/^[“"]+|[”"]+$/g,''),360)+'”',say:LS.wiserN?'The you who has come through this might say:':''});LS.wiserN++;if(!q)q=LISTEN.aspq;}   /* 22 Oct 2026 · Build 157 · Claude's own fresh question follows the wiser voice; the written rules' only if Claude gave none */
     else if(refl)parts.push({cls:'line',text:lsWhole(refl,360)});   /* whole sentences that still fit the circle on a small phone */
     if(q)parts.push({cls:'line q',text:lsWhole(q,220)});
     if(q)ask({q:q,plain:q,kind:asp?'aspired':'ai'});else{ask(null);$('words').placeholder='Say more, if you like…';}   /* no question is ever made up for Claude */
