@@ -1,0 +1,44 @@
+{
+ "about": "Keep what you found (Build 164): three invented conversations heard to the end, then a keepsake asked for. Live charter.",
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "conversations": [
+  {
+   "name": "leaving-mum",
+   "said": [
+    "I've been offered a job far away and I'm scared to leave my mum on her own",
+    "she says she'll be fine but I don't believe her",
+    "I think I'm scared of being the one who left",
+    "what would you do?",
+    "ok. I think I need to actually talk with her properly",
+    "thank you, that helps"
+   ],
+   "keep": true
+  },
+  {
+   "name": "knowing-before",
+   "said": [
+    "Sometimes I know the phone will ring just before it does",
+    "people think I'm weird when I say it",
+    "it's like a hum in the air first, then I just know",
+    "I want to trust it more",
+    "how?",
+    "I like that"
+   ],
+   "keep": true
+  },
+  {
+   "name": "same-routine",
+   "said": [
+    "what's the point of any of this",
+    "I don't mean anything dark. I'm just tired of the same routine every day",
+    "wake, work, screen, sleep",
+    "I used to draw, years ago",
+    "I don't have time though",
+    "ten minutes maybe"
+   ],
+   "keep": true
+  }
+ ]
+}
