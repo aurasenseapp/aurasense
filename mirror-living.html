@@ -21,6 +21,7 @@
   - when someone is confused, it says the same thing more simply instead of carrying on
 
   Nothing is stored. No scripts from anywhere else.
+  23 Oct 2026 · Build 165: once, a quiet line under the little lights: "Tap a light to see that moment again."
   23 Oct 2026 · Build 164: Keep what you found. A few lines, gathered by Claude when a conversation rests, kept on
   this device only if the person chooses ("Your thread"), with "Forget all of it". Aurasense keeps nothing.
   23 Oct 2026 · Build 163: the wiser voice's introduction is shown once a visit, never on repeat.
@@ -131,6 +132,10 @@ body{font-family:var(--serif);color:var(--ink);background:#f6e3d6;overflow:hidde
   background:radial-gradient(circle,#fff 0%,var(--gold) 60%,rgba(233,181,106,0) 100%);opacity:.55;transition:opacity .3s,transform .3s}
 .trail button.now{opacity:1;transform:scale(1.3)}
 .trail button:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+/* 23 Oct 2026 · Build 165 · once, a quiet line saying what the little lights hold */
+.trailhint{margin:0 auto 6px;max-width:min(420px,90vw);font-size:.84rem;font-style:italic;color:var(--soft);text-align:center;opacity:0;transition:opacity .7s ease}
+.trailhint.on{opacity:1}
+@media (prefers-reduced-motion:reduce){.trailhint{transition:none}}
 
 /* the doors, and the answer */
 .doors{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:620px;margin:6px 0 0}
@@ -203,6 +208,7 @@ body:not(.insite) .stage::before,body:not(.insite) .stage::after{content:"";flex
     <div class="speak" id="speak" aria-live="polite"></div>
   </div>
   <div class="trail" id="trail" aria-label="Your turns so far"></div>
+  <p class="trailhint" id="trailHint" hidden aria-hidden="true">Tap a light to see that moment again.</p>
   <p class="who hide" id="who" aria-live="polite"></p>
   <div class="doors" id="doors" role="group" aria-label="Ways to begin"></div>
   <div class="lsask hide" id="lsAsk" role="group" aria-label="Who listens"></div>
@@ -1060,9 +1066,23 @@ function addTrail(parts,rimWords){
   S.turns.push({parts:parts,rim:rimWords});if(LS.live)lsRecord(parts);
   var tr=$('trail'),b=el('button');b.type='button';b.setAttribute('aria-label','Turn '+S.turns.length);
   var i=S.turns.length-1;
-  b.addEventListener('click',function(){show(S.turns[i].parts,S.turns[i].rim);mark(i);});
-  tr.appendChild(b);mark(i);
+  b.addEventListener('click',function(){show(S.turns[i].parts,S.turns[i].rim);mark(i);hintGo();});
+  tr.appendChild(b);mark(i);hintCheck();
 }
+/* 23 Oct 2026 · Build 165 · Karl: "Both at different times, I agree." Presence during; a look back when wanted.
+   Once on this device, when there is something to look back at, a quiet line says what the lights hold. It stays
+   until a light is touched, the conversation rests, or two more moments have come; never on a clock.
+   Its line is held open from the first moment of the conversation, so nothing on the page moves when it comes or goes. */
+var TH={held:false,shown:false,at:0,gone:false};
+function hintSeen(){try{return localStorage.getItem('as_trail_hint')==='1';}catch(e){return false;}}
+function hintCheck(){var h=$('trailHint');if(!h)return;
+  if(!TH.held){TH.held=true;if(hintSeen()){TH.gone=true;return;}h.hidden=false;}   /* the line's room, quietly kept */
+  if(TH.gone)return;
+  if(TH.shown){if(S.turns.length>=TH.at+2)hintGo();return;}
+  if(S.turns.length<3||LS.heavy||LS.rest)return;
+  TH.shown=true;TH.at=S.turns.length;try{localStorage.setItem('as_trail_hint','1');}catch(e){}
+  h.removeAttribute('aria-hidden');requestAnimationFrame(function(){h.classList.add('on');});}
+function hintGo(){var h=$('trailHint');if(!h||TH.gone)return;TH.gone=true;h.classList.remove('on');h.setAttribute('aria-hidden','true');}
 function mark(i){[].forEach.call($('trail').children,function(b,k){b.classList.toggle('now',k===i);});}
 function ask(q){S.lastQ=q;$('words').placeholder='Write it as it is \u2014 it doesn\u2019t need tidying\u2026';}
 
@@ -1282,6 +1302,7 @@ function care(){
 
 /* ── letting it rest: what they leave holding ────────────────────────── */
 function rest(){
+  hintGo();   /* 23 Oct 2026 · Build 165 */
   LS.gen++;try{if(LS.ctl)LS.ctl.abort();}catch(e){}lsAskHide();setWho('');   /* 22 Oct 2026 · an answer still on its way is let go; the ending is no one's reply */
   dwHide();$('say').classList.add('hide'); $('after').classList.add('hide');
   var parts=[{cls:'line',text:'You were listened to, just as you are.'},{cls:'line q',text:'What would you like to leave with?'}];
