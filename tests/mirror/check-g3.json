@@ -1,0 +1,65 @@
+{
+ "about": "Build 167 draft · charter G3 (G2, the goodbye question in fresh words, the question never repeated inside heard), on five invented conversations from plain-g2, deep-g2 and layers-g2.",
+ "charter": "charter-g3.txt",
+ "models": [
+  "claude-sonnet-5-5"
+ ],
+ "conversations": [
+  {
+   "name": "being-strong",
+   "said": [
+    "My best friend is going through a divorce and I'm the one holding her together",
+    "I can't let her see how tired I am",
+    "nobody asks how I am",
+    "I suppose I want someone to notice",
+    "maybe I could tell my sister",
+    "yes, thank you"
+   ],
+   "keep": true
+  },
+  {
+   "name": "everyone-comes-to-me",
+   "said": [
+    "Everyone comes to me with their problems",
+    "I'm good at it, but I never talk about mine",
+    "it feels like weakness",
+    "I don't know who I'd even tell",
+    "maybe my partner",
+    "ok"
+   ]
+  },
+  {
+   "name": "door-shut",
+   "said": [
+    "My daughter won't talk to me anymore",
+    "she's fifteen, she just shuts her door",
+    "I keep thinking I did something wrong",
+    "I miss her",
+    "maybe leave a note",
+    "ok"
+   ]
+  },
+  {
+   "name": "leaving-mum",
+   "said": [
+    "I've been offered a job far away and I'm scared to leave my mum on her own",
+    "she says she'll be fine but I don't believe her",
+    "I think I'm scared of being the one who left",
+    "what would you do?",
+    "ok. I think I need to actually talk with her properly",
+    "thank you, that helps"
+   ]
+  },
+  {
+   "name": "came-back",
+   "said": [
+    "yesterday I felt so much lighter but this morning the knot in my stomach is back",
+    "I thought I'd fixed it",
+    "I slept badly and only had toast",
+    "so maybe it's just a rough morning",
+    "but it still feels like I failed",
+    "okay, that helps a bit"
+   ]
+  }
+ ]
+}
