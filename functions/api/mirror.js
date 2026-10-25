@@ -1,4 +1,4 @@
-/* ═══ THE MIRROR'S LISTENER · Build 165 · 23 October 2026 · Karl with Claude ═══════════════════════
+/* ═══ THE MIRROR'S LISTENER · Build 166 · 25 October 2026 · Karl with Claude ═══════════════════════
    Karl, 15 October: "We should let Claude drive the mirror yes, .. it's not working."
    Karl, 22 October, after Build 157: "It needs way more intelligence and responsiveness." "The mirror has to
    reflect the Philosophy written thus far, pointing towards the light, self awareness and understanding and
@@ -34,6 +34,7 @@
    lessons of 23 Oct: the light named plainly; feelings in layers; relief that returns is not failure; the body.
    Build 165: the private self-test opens only with a signed request that lasts ten minutes. The private half of its
    key never leaves the workspace where Claude tests, so no key ever appears in a message or a web address.
+   Build 166: the signed self-test's time and signature travel as "at" and "seal" (the web reader drops some names).
 
    A page asking "GET /api/mirror" learns only whether the listener is switched on: {"live":true}.
    Hidden notes are public: no names beyond Karl's first name, no keys, no one's words. */
@@ -461,9 +462,11 @@ function why(status, message) {
 }
 
 /* ── the private self-test ─────────────────────────────────────────────────────────────────────
-   GET /api/mirror?selftest=1&ts=SECONDS&branch=BRANCH&suite=NAME[&model=…][&only=…][&turns=1-6][&budget=seconds][&later=1]&sig=SIGNATURE
-   GET /api/mirror?selftest=1&ts=SECONDS&job=NUMBER&sig=SIGNATURE   (what a background run found; "running" until done)
-   Build 165 · the signature covers every other part of the address (sorted, as name=value, joined by "&").
+   GET /api/mirror?selftest=1&at=SECONDS&branch=BRANCH&suite=NAME[&model=…][&only=…][&turns=1-6][&budget=seconds][&later=1]&seal=SIGNATURE
+   GET /api/mirror?selftest=1&at=SECONDS&job=NUMBER&seal=SIGNATURE   (what a background run found; "running" until done)
+   The signature covers every other part of the address (sorted, as name=value, joined by "&").
+   Build 166 · "at" and "seal" (Build 165's "ts" and "sig" are still understood). Add why=1 to a refused request to
+   be told only which names arrived: never why a signature failed, and nothing else.
    Runs the test conversations in tests/mirror/NAME.json on that branch of this project's repository, turn by turn,
    exactly as the page would, and returns what Claude said. A draft charter (tests/mirror/<charter>.txt) can be
    tried without changing the live Mirror. Nobody's real words: the test conversations are invented. */
@@ -473,23 +476,34 @@ async function sha256(text) {
 }
 const jobAt = (url, id) => new Request(new URL('/__mirror_selftest/' + id, url).toString());
 /* Build 165 · is this request signed, recently, for exactly what it asks? */
+let lastWhy = '';   /* Build 166 · a plain reason for why=1 only: shape, time, nomatch or threw (none helps anyone forge one) */
 async function signedOk(url) {
+  lastWhy = '';
   try {
-    const sig = url.searchParams.get('sig') || '', ts = Number(url.searchParams.get('ts') || '');
-    if (!/^[A-Za-z0-9_-]{86}$/.test(sig) || !Number.isInteger(ts)) return false;
+    const seal = url.searchParams.has('seal') ? 'seal' : 'sig', sig = url.searchParams.get(seal) || '';   /* Build 166 */
+    const ts = Number(url.searchParams.get(url.searchParams.has('at') ? 'at' : 'ts') || '');
+    if (!/^[A-Za-z0-9_-]{86}$/.test(sig) || !Number.isInteger(ts)) { lastWhy = 'shape'; return false; }
     const now = Math.floor(Date.now() / 1000);
-    if (ts > now + 60 || now - ts > SELFTEST_FOR) return false;
+    if (ts > now + 60 || now - ts > SELFTEST_FOR) { lastWhy = 'time'; return false; }
     const parts = [];
-    for (const [k, v] of url.searchParams) if (k !== 'sig') parts.push(k + '=' + v);
+    for (const [k, v] of url.searchParams) if (k !== seal) parts.push(k + '=' + v);
     parts.sort();
     const raw = Uint8Array.from(atob(sig.replace(/-/g, '+').replace(/_/g, '/') + '=='), (c) => c.charCodeAt(0));
-    if (raw.length !== 64) return false;
+    if (raw.length !== 64) { lastWhy = 'shape'; return false; }
     const key = await crypto.subtle.importKey('jwk', SELFTEST_KEY, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
-    return await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, key, raw, new TextEncoder().encode(parts.join('&')));
-  } catch (e) { return false; }
+    const ok = await crypto.subtle.verify({ name: 'ECDSA', hash: 'SHA-256' }, key, raw, new TextEncoder().encode(parts.join('&')));
+    lastWhy = ok ? '' : 'nomatch';
+    return ok;
+  } catch (e) { lastWhy = 'threw'; return false; }
 }
 async function selftest(url, env, context) {
-  if (!(await signedOk(url))) return reply({ ok: false, code: 'elsewhere' }, 403);   /* Build 165 · the old key opens nothing now */
+  if (!(await signedOk(url))) {   /* Build 165 · the old key opens nothing now */
+    if (url.searchParams.get('why') === '1') {   /* Build 166 · only the names that arrived, so a dropped part can be seen */
+      const heard = [...new Set([...url.searchParams.keys()])].filter((k) => /^[a-z]{1,12}$/.test(k)).sort().slice(0, 20);
+      return reply({ ok: false, code: 'elsewhere', heard, why: lastWhy || 'names' }, 200);
+    }
+    return reply({ ok: false, code: 'elsewhere' }, 403);
+  }
   const store = typeof caches !== 'undefined' && caches.default ? caches.default : null;
   const job = url.searchParams.get('job');
   if (job) {   /* what a background run found */
