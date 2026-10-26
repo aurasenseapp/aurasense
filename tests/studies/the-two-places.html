@@ -1,11 +1,13 @@
 <title>The Mirror's Two Places</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <style>
-/* Layout: the Mirror's own world. One breathing circle, the words inside it, the choices beneath.
-   Light by choice (the Mirror is one warm, light place), so every colour is set here. */
+/* Layout: the Mirror's own world. One breathing circle; paper, fire and envelope drawn inside it; the words that
+   guide sit just beneath it. Light by choice (the Mirror is one warm, light place), so every colour is set here.
+   Letting go is warm (ember); keeping is cool (lavender and sky), so the two never look like the same thing. */
 :root{
   --ink:#3b2a3a; --soft:#6f5a6c; --faint:#8e7a8c;
   --rose:#f3c9c0; --peach:#f8dcc4; --lav:#dcd2f2; --gold:#e9b56a; --sky:#c9dcf4;
+  --ember:#e8894f; --ember-soft:#fbe2cf; --seal:#8f86c9; --seal-soft:#e6e6f8;
   --ground:#f6e3d6; --glass:rgba(255,251,245,.74); --line:rgba(233,181,106,.55);
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
   color-scheme:light;
@@ -19,35 +21,33 @@ body{margin:0;font-family:var(--serif);color:var(--ink);background:var(--ground)
   animation:drift 38s ease-in-out infinite alternate}
 @keyframes drift{0%{transform:translate(0,0) rotate(0)}50%{transform:translate(-3%,2%) rotate(4deg)}100%{transform:translate(2%,-2%) rotate(-3deg)}}
 
-.stage{position:relative;z-index:1;min-height:100%;box-sizing:border-box;overflow-x:clip;display:flex;flex-direction:column;align-items:center;gap:12px;
-  padding-block:18px 28px;justify-content:center;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.stage{position:relative;z-index:1;min-height:100%;box-sizing:border-box;overflow-x:clip;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
+  padding-block:18px 28px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .draft{margin:0;font-size:.8rem;letter-spacing:.06em;color:var(--faint);text-align:center}
 
-.mirror{position:relative;width:min(86vw,54vh,470px);max-width:100%;aspect-ratio:1;border-radius:50%;flex:none;
+.mirror{position:relative;width:min(86vw,52vh,470px);max-width:100%;aspect-ratio:1;border-radius:50%;flex:none;
   display:flex;align-items:center;justify-content:center;text-align:center;
   background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.96) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);
   animation:breathe 6s ease-in-out infinite}
-.mirror::before{content:"";position:absolute;inset:-6%;border-radius:50%;z-index:-1;
-  background:conic-gradient(from 0deg,rgba(233,181,106,.35),rgba(220,210,242,.45),rgba(243,201,192,.4),rgba(201,220,244,.45),rgba(233,181,106,.35));
-  filter:blur(26px);animation:turn 40s linear infinite}
+.glow{position:absolute;inset:-6%;border-radius:50%;z-index:-1;filter:blur(26px);transition:opacity 1.4s ease}
+.glow.base{background:conic-gradient(from 0deg,rgba(233,181,106,.35),rgba(220,210,242,.45),rgba(243,201,192,.4),rgba(201,220,244,.45),rgba(233,181,106,.35));animation:turn 40s linear infinite}
+.glow.warm{opacity:0;background:conic-gradient(from 30deg,rgba(240,150,90,.5),rgba(243,201,192,.55),rgba(233,181,106,.55),rgba(248,190,150,.5),rgba(240,150,90,.5));animation:turn 30s linear infinite}
+.glow.cool{opacity:0;background:conic-gradient(from 60deg,rgba(170,160,230,.5),rgba(201,220,244,.6),rgba(220,210,242,.6),rgba(180,200,240,.5),rgba(170,160,230,.5));animation:turn 50s linear infinite}
+body.warm .glow.warm,body.cool .glow.cool{opacity:1}
+body.warm .glow.base,body.cool .glow.base{opacity:.25}
 @keyframes breathe{0%,100%{transform:scale(.985)}50%{transform:scale(1.015)}}
 @keyframes turn{to{transform:rotate(360deg)}}
-.mirror.holding{animation:none;transform:scale(1.02);transition:transform 1.1s ease}
+/* the guided breath: in, a little more, and a long breath out */
+.mirror.guided{animation:none;transition:transform 4s cubic-bezier(.4,0,.4,1)}
+.mirror.guided.in{transform:scale(1.06)}
+.mirror.guided.more{transform:scale(1.075);transition-duration:1.1s}
+.mirror.guided.out{transform:scale(.99);transition-duration:6s}
 
-/* the holding ring: it fills while a finger holds the thought */
-.ring{position:absolute;inset:-2.5%;border-radius:50%;pointer-events:none;opacity:0;transition:opacity .3s;
-  background:conic-gradient(var(--gold) calc(var(--p,0) * 1turn),rgba(233,181,106,.12) 0);
-  -webkit-mask:radial-gradient(circle,transparent 66.5%,#000 67.5%,#000 69.5%,transparent 70.5%);
-  mask:radial-gradient(circle,transparent 66.5%,#000 67.5%,#000 69.5%,transparent 70.5%)}
-.mirror.holding .ring,.mirror.full .ring{opacity:1}
+#fx{position:absolute;left:-8%;top:-16%;width:116%;height:124%;z-index:2;pointer-events:none;touch-action:none}
+#fx.live{pointer-events:auto;cursor:grab}
+#fx.live.dragging{cursor:grabbing}
 
-/* the smoke the words fall into */
-.veil{position:absolute;left:12%;right:12%;top:18%;bottom:18%;border-radius:50%;pointer-events:none;z-index:3;opacity:0;filter:blur(10px);
-  background:radial-gradient(38% 40% at 34% 42%,rgba(243,201,192,.96) 0%,rgba(243,201,192,0) 70%),radial-gradient(36% 38% at 66% 40%,rgba(220,210,242,.96) 0%,rgba(220,210,242,0) 70%),radial-gradient(42% 40% at 50% 64%,rgba(248,220,196,.96) 0%,rgba(248,220,196,0) 72%)}
-.mirror.release .veil{animation:veil 2.2s cubic-bezier(.3,.6,.4,1) both}
-@keyframes veil{0%{opacity:0;transform:scale(.6) rotate(-10deg)}45%{opacity:.95;transform:scale(1.02) rotate(4deg)}100%{opacity:0;transform:scale(1.4) rotate(16deg)}}
-
-.speak{position:relative;z-index:2;width:72%;max-height:76%;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6em;transition:opacity .7s ease,filter .7s ease}
+.speak{position:relative;z-index:3;width:72%;max-height:76%;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.6em;transition:opacity .7s ease,filter .7s ease;pointer-events:none}
 .speak.fade{opacity:0;filter:blur(6px)}
 .line{margin:0;font-size:clamp(1.02rem,3.6vw,1.26rem);line-height:1.5;text-wrap:balance}
 .line.soft{color:var(--soft);font-size:clamp(.94rem,3.1vw,1.05rem)}
@@ -55,19 +55,20 @@ body{margin:0;font-family:var(--serif);color:var(--ink);background:var(--ground)
 .line.aspire{font-style:italic;font-size:clamp(1rem,3.3vw,1.16rem)}
 .line.small{font-size:.86rem;color:var(--faint)}
 .thought{margin:0;font-style:italic;font-size:clamp(1.05rem,3.8vw,1.3rem);line-height:1.5;overflow-wrap:anywhere}
-.thought .w{display:inline-block;white-space:pre}
 .thought.long{font-size:clamp(.95rem,3.2vw,1.12rem)}
 .thought.longer{font-size:clamp(.86rem,2.9vw,1rem);line-height:1.42}
-.release .thought .w{animation:into 1.15s cubic-bezier(.5,0,.7,.4) both;animation-delay:calc(var(--i,0) * 22ms)}
-  .release .thought .qm{animation:fade .35s ease both}
-@keyframes into{0%{opacity:1;transform:none;filter:none}100%{opacity:0;transform:translate(var(--tx,0px),var(--ty,0px)) scale(.25);filter:blur(12px)}}
+
+.guide{margin:0;min-height:1.5em;font-size:clamp(1.02rem,3.6vw,1.2rem);line-height:1.45;text-align:center;max-width:min(520px,100%);text-wrap:balance;transition:opacity .5s}
+.guide.dim{opacity:0}
+.guide .sub{display:block;font-size:.86rem;color:var(--faint);margin-top:.2em}
 
 .say{width:min(560px,100%)}
 textarea{display:block;width:100%;box-sizing:border-box;font-family:var(--serif);font-size:1.05rem;color:var(--ink);line-height:1.45;resize:none;
   min-height:3.4em;max-height:9em;padding:.8em 1.1em;border-radius:24px;border:1px solid var(--line);background:rgba(255,252,247,.88);box-shadow:inset 0 0 14px rgba(233,181,106,.12)}
 textarea::placeholder{color:var(--faint);font-style:italic}
 
-.doors{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;max-width:620px}
+.doors{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;align-items:center;max-width:620px}
+.doors.stack{flex-direction:column;gap:6px}
 .door{font-family:var(--serif);font-size:1rem;color:var(--ink);cursor:pointer;border-radius:999px;padding:.62em 1.1em;border:1px solid var(--line);
   background:var(--glass);box-shadow:0 0 18px rgba(233,181,106,.18);transition:box-shadow .3s,background .3s,transform .2s;touch-action:manipulation}
 .door:hover{box-shadow:0 0 26px rgba(233,181,106,.4);background:rgba(255,253,249,.92)}
@@ -75,16 +76,27 @@ textarea::placeholder{color:var(--faint);font-style:italic}
 .door:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
 .door.lead{background:linear-gradient(180deg,#fff8ee,#fbe6cc);border-color:rgba(214,150,70,.75)}
 .door.quiet{border-color:transparent;background:transparent;box-shadow:none;color:var(--soft);font-size:.95rem}
-.door.hold{padding:.85em 1.6em;font-size:1.06rem;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;touch-action:none}
 .door.chip{font-size:.95rem;padding:.5em .95em}
+/* the two places, never alike: ember and seal */
+.door.place{display:flex;align-items:center;gap:.7em;min-width:min(300px,86vw);justify-content:flex-start;text-align:left;padding:.7em 1.3em;border-radius:22px}
+.door.place svg{flex:none;width:26px;height:26px}
+.door.place b{display:block;font-weight:normal;font-size:1.06rem}
+.door.place small{display:block;font-size:.84rem;color:var(--soft);font-style:italic}
+.door.ember{background:linear-gradient(135deg,#fff4ea 0%,var(--ember-soft) 100%);border-color:rgba(232,137,79,.55);box-shadow:0 0 22px rgba(232,137,79,.22)}
+.door.ember:hover{box-shadow:0 0 30px rgba(232,137,79,.4);background:linear-gradient(135deg,#fff7ef 0%,#fde8d8 100%)}
+.door.seal{background:linear-gradient(135deg,#f8f8fe 0%,var(--seal-soft) 100%);border-color:rgba(143,134,201,.5);box-shadow:0 0 22px rgba(143,134,201,.2)}
+.door.seal:hover{box-shadow:0 0 30px rgba(143,134,201,.38);background:linear-gradient(135deg,#fbfbff 0%,#ececfb 100%)}
+.door.ember.lead{background:linear-gradient(180deg,#fff2e6,#f9d3b6);border-color:rgba(232,137,79,.75)}
+.door.seal.lead{background:linear-gradient(180deg,#f9f9ff,#dedcf6);border-color:rgba(143,134,201,.75)}
+.or{font-size:.85rem;color:var(--faint);font-style:italic}
 .hide{display:none!important}
 
 .who{min-height:1.4em;margin:0;font-size:.9rem;color:var(--soft);text-align:center;max-width:min(560px,100%)}
 .note{margin:0;font-size:.82rem;color:var(--faint);text-align:center;max-width:min(520px,100%);line-height:1.45}
 
-.list{width:min(520px,100%);box-sizing:border-box;padding:12px 16px;border-radius:20px;background:var(--glass);border:1px solid rgba(233,181,106,.38);display:flex;flex-direction:column;gap:8px}
+.list{width:min(520px,100%);box-sizing:border-box;padding:12px 16px;border-radius:20px;background:linear-gradient(135deg,rgba(250,250,255,.8),rgba(236,236,251,.75));border:1px solid rgba(143,134,201,.35);display:flex;flex-direction:column;gap:8px}
 .list h2{margin:0;font-size:1.02rem;font-weight:normal;font-style:italic;text-align:center}
-.moment{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--serif);font-size:1rem;color:var(--ink);background:transparent;border:0;border-top:1px solid rgba(233,181,106,.3);padding:.6em .2em;cursor:pointer;text-align:left}
+.moment{display:flex;justify-content:space-between;align-items:center;gap:10px;font-family:var(--serif);font-size:1rem;color:var(--ink);background:transparent;border:0;border-top:1px solid rgba(143,134,201,.25);padding:.6em .2em;cursor:pointer;text-align:left}
 .moment:first-of-type{border-top:0}
 .moment span:last-child{color:var(--faint);font-size:.9rem;font-variant-numeric:tabular-nums}
 .moment:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:8px}
@@ -94,22 +106,21 @@ textarea::placeholder{color:var(--faint);font-style:italic}
 .why ul{margin:.6em 0 0;padding-left:1.2em;display:flex;flex-direction:column;gap:.4em}
 
 @media (prefers-reduced-motion:reduce){
-  .ground,.mirror,.mirror::before{animation:none}
-  .release .thought .w{animation:fade .25s ease both;animation-delay:0s}
-  .mirror.release .veil{animation:none}
-  .speak{transition:none}
+  .ground,.mirror,.glow{animation:none}
+  .mirror.guided{transition:none;transform:none}
+  .speak,.guide{transition:none}
 }
-@keyframes fade{to{opacity:0}}
 </style>
 
 <div class="sky" aria-hidden="true"><div class="ground"></div></div>
 <main class="stage">
   <p class="draft">A draft for you to feel · not on the live site yet</p>
   <div class="mirror" id="mirror">
-    <div class="ring" aria-hidden="true"></div>
-    <div class="veil" aria-hidden="true"></div>
+    <div class="glow base" aria-hidden="true"></div><div class="glow warm" aria-hidden="true"></div><div class="glow cool" aria-hidden="true"></div>
+    <canvas id="fx" aria-hidden="true"></canvas>
     <div class="speak" id="speak" aria-live="polite"></div>
   </div>
+  <p class="guide dim" id="guide" aria-live="polite"></p>
   <div class="say hide" id="say"><textarea id="words" rows="2" maxlength="280" aria-label="Your words"></textarea></div>
   <div class="doors" id="doors"></div>
   <p class="who" id="who" role="status"></p>
@@ -118,10 +129,11 @@ textarea::placeholder{color:var(--faint);font-style:italic}
   <details class="why">
     <summary>Why it works this way</summary>
     <ul>
-      <li><strong>Letting go is something you do, not just imagine.</strong> People who threw a written thought away leaned on it less afterwards; people who only imagined throwing it away found no change (Briñol and colleagues, 2013). So here you hold the thought, then let go of it.</li>
-      <li><strong>Once it’s gone, it isn’t read back to you.</strong> Seeing the words again would hand them back.</li>
-      <li><strong>A thought kept for its moment stops nagging now.</strong> Naming when you’ll deal with something quietens it until then (Masicampo and Baumeister, 2011).</li>
-      <li><strong>Kept thoughts come back only when you ask.</strong> In the Mirror itself, it will offer when your words match the moment you chose, and never push.</li>
+      <li><strong>Crumple it, throw it away.</strong> People who wrote down what angered them, then crumpled the paper and threw it in the bin, saw their anger fall all the way back to where it started; keeping the paper did far less (Kanaya and Kawai, 2024).</li>
+      <li><strong>Doing it matters; only imagining it does nothing</strong> (Briñol and colleagues, 2013). Doing it on a screen still counted.</li>
+      <li><strong>A breath out goes with the letting go.</strong> A deep breath in, a little more, then a long breath out lifted mood more than meditation in a month-long trial (Balban and colleagues, 2023).</li>
+      <li><strong>Sealing something away brings closure.</strong> People who sealed a written regret in an envelope felt it less (Li, Wei and Soman, 2010). So what you keep is sealed until its moment.</li>
+      <li><strong>A small ritual gives back a sense of control</strong>, and burning or destroying letters is one people choose for themselves (Norton and Gino, 2014).</li>
       <li><strong>Heavy thoughts are never thrown away here.</strong> Real help comes first.</li>
     </ul>
   </details>
@@ -130,14 +142,17 @@ textarea::placeholder{color:var(--faint);font-style:italic}
 <script>
 (function(){
 'use strict';
-/* ── The Mirror's two places · a draft, 25 October 2026 · Karl with Claude ──────────────────────────────
-   Karl: "Where we 'bin' useless recurring thoughts and place those we want re-minding of when certain life issues
-   and challenges arise that are relevant to the thought ... A giant leap towards the one light."
+/* ── The Mirror's two places · draft 2, 25 October 2026 · Karl with Claude ──────────────────────────────
+   Karl: "Where we 'bin' useless recurring thoughts and place those we want re-minding of ... A giant leap towards
+   the one light." And on draft 1: "like paper being scrunched and thrown away, or tossed on the fire into embers"
+   ... "A deep breath .. are you ready, feel this sensation as the sentence leaves your hand and your mind".
+   Let it go: the thought on paper; crumple it; a deep breath; throw it into the fire; sparks rise and become light.
+   Keep it: the thought folds into an envelope; you seal it; it waits for its moment.
    Everything stays in this browser. Nothing is sent anywhere. Words are only ever placed as text, never as markup. */
 
-var KEY = 'as_reminding';
-var HOLD_MS = 1100;
-var MOMENTS = [
+var KEY='as_reminding';
+var SERIF='"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif';
+var MOMENTS=[
   {id:'choice', label:'A big choice', when:'a big choice',
     re:/\b(decid\w*|decision\w*|choice\w*|choos\w*|torn|should i|offer(?:ed)?|options?|which one|whether to)\b/i},
   {id:'talk', label:'A hard conversation', when:'a hard conversation',
@@ -151,18 +166,26 @@ var MOMENTS = [
   {id:'worn', label:'When I’m worn out', when:'when you’re worn out',
     re:/\b(tired|exhausted|worn (?:out|down)|drained|no energy|burn(?:t|ed)? out|can'?t keep going|wiped out)\b/i}
 ];
-/* the Mirror's own list: heavy words never go in the bin; real help comes first */
+var STOP=/^(?:before|after|when|with|that|this|from|about|into|going|will|have|some|time|next|just|them|they|their|there|what|need|feel)$/;
+/* the Mirror's own list: heavy words never go in the fire; real help comes first */
 var HEAVY=/\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist)|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to live|better off dead)\b/i;
 
-var STOP=/^(?:before|after|when|with|that|this|from|about|into|going|will|have|some|time|next|just|them|they|their|there|what|need|feel)$/;
-var $ = function(id){ return document.getElementById(id); };
-var mirror=$('mirror'), speak=$('speak'), say=$('say'), words=$('words'), doorsEl=$('doors'), who=$('who'), listEl=$('list');
+var $=function(id){ return document.getElementById(id); };
+var mirror=$('mirror'), speak=$('speak'), guideEl=$('guide'), say=$('say'), words=$('words'), doorsEl=$('doors'), who=$('who'), listEl=$('list');
 var gen=0;   /* each new screen cancels anything still waiting from the last one */
 
 function still(){ try{ return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } }
 function el(tag, cls, text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; }
 function later(fn, ms){ var g=gen; setTimeout(function(){ if(g===gen) fn(); }, ms); }
 function setWho(t){ who.textContent=t||''; }
+function mood(m){ document.body.classList.toggle('warm', m==='warm'); document.body.classList.toggle('cool', m==='cool'); }
+function guide(t, sub){
+  guideEl.textContent='';
+  if(!t){ guideEl.classList.add('dim'); return; }
+  guideEl.appendChild(document.createTextNode(t));
+  if(sub) guideEl.appendChild(el('span','sub',sub));
+  guideEl.classList.remove('dim');
+}
 
 /* ── what is kept, on this device only ── */
 function getKept(){
@@ -173,7 +196,8 @@ function getKept(){
 function putKept(a){ try{ localStorage.setItem(KEY, JSON.stringify(a.slice(-60))); return true; }catch(e){ return false; } }
 function addKept(text, moment, label){
   var a=getKept();
-  a.push({id:String(Date.now())+Math.random().toString(36).slice(2,7), at:new Date().toISOString().slice(0,10),
+  var d=new Date(), two=function(n){ return (n<10?'0':'')+n; };
+  a.push({id:String(Date.now())+Math.random().toString(36).slice(2,7), at:d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate()),
     moment:moment, label:String(label||'').slice(0,60), text:String(text).slice(0,280)});
   return putKept(a);
 }
@@ -183,23 +207,29 @@ function momentOf(x){ for(var i=0;i<MOMENTS.length;i++) if(MOMENTS[i].id===x.mom
 function whenOf(x){ var m=momentOf(x); return m ? m.when : (x.label || 'the moment you chose'); }
 function niceDate(d){ try{ var t=new Date(String(d)+'T12:00:00'); return isNaN(t) ? String(d||'') : t.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'}); }catch(e){ return String(d||''); } }
 
-/* ── showing words in the circle ── */
-function show(parts, then){
+/* ── words in the circle, choices beneath ── */
+function show(parts){
   gen++;
-  mirror.classList.remove('release','holding','full'); mirror.style.removeProperty('--p');
   var paint=function(){
     speak.textContent='';
     parts.forEach(function(p){ speak.appendChild(p.node || el('p', 'line'+(p.cls?' '+p.cls:''), p.text)); });
     speak.classList.remove('fade');
-    if(then) then();
   };
   if(still() || !speak.childNodes.length){ paint(); return; }
   speak.classList.add('fade'); later(paint, 420);
 }
-function doors(list){
-  doorsEl.textContent='';
+function clearSpeak(){ gen++; speak.classList.add('fade'); var g=gen; setTimeout(function(){ if(g===gen){ speak.textContent=''; speak.classList.remove('fade'); } }, still()?0:400); }
+var ICON={
+  flame:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5c.9 3.1 4.9 5.2 4.9 10A4.9 4.9 0 0 1 12 17.4a4.9 4.9 0 0 1-4.9-4.9c0-2.2 1.2-3.6 2.3-4.8.2 1.7 1 2.7 2 3.1-.6-2.6-.3-5.3.6-8.3z" fill="#e8894f" opacity=".85"/><path d="M12 21.5c-2 0-3.4-1.2-3.4-2.9 0-1.2.8-2 1.6-2.7.2 1 .8 1.6 1.5 1.8-.3-1.5 0-2.9.6-4.3.6 1.9 3.1 3 3.1 5.2 0 1.7-1.4 2.9-3.4 2.9z" fill="#f6c06e"/></svg>',
+  envelope:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="6" width="18" height="12.5" rx="2" fill="#f4f3fd" stroke="#8f86c9" stroke-width="1.2"/><path d="M3.6 7l8.4 6.2L20.4 7" fill="none" stroke="#8f86c9" stroke-width="1.2"/><circle cx="12" cy="13.2" r="2.1" fill="#e9b56a" opacity=".85"/></svg>'
+};
+function doors(list, stack){
+  doorsEl.textContent=''; doorsEl.classList.toggle('stack', !!stack);
   list.forEach(function(d){
-    var b=el('button','door'+(d.cls?' '+d.cls:''), d.label); b.type='button';
+    if(d.or){ doorsEl.appendChild(el('span','or','or')); return; }
+    var b=el('button','door'+(d.cls?' '+d.cls:'')); b.type='button';
+    if(d.icon){ b.insertAdjacentHTML('afterbegin', ICON[d.icon]); var t=el('span'); t.appendChild(el('b','',d.label)); if(d.sub) t.appendChild(el('small','',d.sub)); b.appendChild(t); }
+    else b.textContent=d.label;
     if(d.click) b.addEventListener('click', d.click);
     if(d.id) b.id=d.id;
     doorsEl.appendChild(b);
@@ -209,14 +239,13 @@ function ask(placeholder){
   words.value=''; words.maxLength=280; words.placeholder=placeholder; say.classList.remove('hide');
   try{ words.focus({preventScroll:true}); }catch(e){}
 }
-function hideAsk(){ say.classList.add('hide'); words.blur(); }
+function hideAsk(){ say.classList.add('hide'); words.blur(); words.maxLength=280; }
 function thoughtNode(text){
-  var n=String(text).length, p=el('p','thought'+(n>200?' longer':n>120?' long':'')); p.appendChild(el('span','qm','“'));
-  String(text).split(/(\s+)/).forEach(function(t){ if(!t) return; if(/^\s+$/.test(t)){ p.appendChild(document.createTextNode(' ')); return; } p.appendChild(el('span','w',t)); });
-  p.appendChild(el('span','qm','”')); return p;
+  var n=String(text).length, p=el('p','thought'+(n>200?' longer':n>120?' long':''));
+  p.textContent='“'+text+'”'; return p;
 }
 function care(){
-  hideAsk(); listEl.classList.add('hide'); words.value='';
+  endBreath(); hideAsk(); listEl.classList.add('hide'); words.value=''; FX.clear(); mood(''); guide('');
   show([{text:'That sounds really heavy, and I’m glad you wrote it.'},
     {text:'A thought like this shouldn’t be thrown away or kept alone. Please reach a person now: someone you trust, or a crisis line where you are.', cls:'soft'},
     {text:'In Canada or the US, call or text 988. In immediate danger, call 911. Anywhere else, findahelpline.com lists helplines.', cls:'soft'}]);
@@ -224,109 +253,394 @@ function care(){
   setWho('');
 }
 
+/* ═══ THE DRAWING: paper, crumpling, fire, sparks, envelope ═════════════════════════════════════════════ */
+var FX=(function(){
+  var cv=$('fx'), g=cv.getContext('2d'), W=0, H=0, DPR=1, M={cx:0,cy:0,R:1}, raf=0;
+  var S={paper:null, mesh:null, order:null, p:0, ball:{x:0,y:0,s:1,r:0}, alpha:1, burn:0, heat:0, heatTo:0,
+         sparks:[], ash:[], env:null, drag:null, onThrow:null, onTap:null, bob:false};
+  function geom(){
+    DPR=Math.min(2, window.devicePixelRatio||1);
+    W=cv.offsetWidth; H=cv.offsetHeight; cv.width=Math.max(1,Math.round(W*DPR)); cv.height=Math.max(1,Math.round(H*DPR));
+    M={cx:-cv.offsetLeft+mirror.offsetWidth/2, cy:-cv.offsetTop+mirror.offsetHeight/2, R:mirror.offsetWidth/2};
+  }
+  function hearth(){ return {x:M.cx, y:M.cy+M.R*0.6}; }
+  function wrap(t, text, max){
+    var out=[], line='';
+    String(text).split(/\s+/).forEach(function(w){
+      if(!w) return;
+      while(t.measureText(w).width>max && w.length>1){ var k=w.length; while(k>1 && t.measureText(w.slice(0,k)+'-').width>max) k--; if(line){ out.push(line); line=''; } out.push(w.slice(0,k)+'-'); w=w.slice(k); }
+      var tryL=line ? line+' '+w : w;
+      if(t.measureText(tryL).width>max && line){ out.push(line); line=w; } else line=tryL;
+    });
+    if(line) out.push(line);
+    return out;
+  }
+  function makePaper(text, kind){
+    var pw=Math.round(Math.min(M.R*1.3, 320)), pad=Math.round(pw*0.09), lh, fs=Math.max(13, Math.min(20, Math.round(pw/12))), lines;
+    var m=document.createElement('canvas').getContext('2d');
+    for(;;){ m.font='italic '+fs+'px '+SERIF; lines=wrap(m, '“'+text+'”', pw-2*pad); lh=fs*1.38; if(lines.length*lh <= pw*0.62-2*pad || fs<=11) break; fs--; }
+    var ph=Math.round(Math.max(pw*0.56, lines.length*lh+pad*2.2));
+    var c=document.createElement('canvas'); c.width=Math.round(pw*DPR); c.height=Math.round(ph*DPR);
+    var t=c.getContext('2d'); t.scale(DPR,DPR);
+    var gr=t.createLinearGradient(0,0,pw,ph); gr.addColorStop(0,'#fffdf8'); gr.addColorStop(1, kind==='keep'?'#f4f2fc':'#fbf0e2');
+    t.fillStyle=gr; t.fillRect(0,0,pw,ph);
+    for(var i=0;i<90;i++){ t.fillStyle='rgba(170,140,110,'+(Math.random()*0.05).toFixed(3)+')'; t.fillRect(Math.random()*pw, Math.random()*ph, 1+Math.random()*2.5, 0.8); }
+    t.strokeStyle='rgba(200,170,140,.35)'; t.lineWidth=1; t.strokeRect(0.5,0.5,pw-1,ph-1);
+    t.fillStyle='#3b2a3a'; t.font='italic '+fs+'px '+SERIF; t.textAlign='center'; t.textBaseline='middle';
+    var y0=ph/2-(lines.length-1)*lh/2;
+    lines.forEach(function(l,i){ t.fillText(l, pw/2, y0+i*lh); });
+    return {c:c, w:pw, h:ph};
+  }
+  function buildMesh(P){
+    var px=M.cx-P.w/2, py=M.cy-P.h/2-M.R*0.06, nx=12, ny=Math.max(6, Math.round(12*P.h/P.w));
+    var rest=[], uv=[], tgt=[], wob=[], bcx=px+P.w/2, bcy=py+P.h/2, R=Math.max(P.w,P.h)*0.19;
+    for(var j=0;j<=ny;j++) for(var i=0;i<=nx;i++){
+      rest.push(px+P.w*i/nx, py+P.h*j/ny); uv.push(P.c.width*i/nx, P.c.height*j/ny);
+      var u=i/nx*2-1, v=j/ny*2-1, dx=u*Math.sqrt(1-v*v/2), dy=v*Math.sqrt(1-u*u/2), a=Math.random()*Math.PI*2, n=0.2+Math.random()*0.55;
+      tgt.push(bcx+(dx*0.85+Math.cos(a)*n*0.6)*R, bcy+(dy*0.85+Math.sin(a)*n*0.6)*R);
+      wob.push((Math.random()-.5)*P.w*0.16, (Math.random()-.5)*P.w*0.16);
+    }
+    var shade=[], order=[]; for(var k=0;k<nx*ny*2;k++){ shade.push(-0.5+Math.random()*0.72); order.push(k); }
+    for(var q=order.length-1;q>0;q--){ var r=Math.floor(Math.random()*(q+1)), s=order[q]; order[q]=order[r]; order[r]=s; }
+    return {nx:nx, ny:ny, rest:rest, uv:uv, tgt:tgt, wob:wob, shade:shade, order:order, cx:bcx, cy:bcy, R:R, P:P};
+  }
+  function tri(P, ia, ib, ic, UV, img, sh, tint){
+    var x0=P[ia],y0=P[ia+1],x1=P[ib],y1=P[ib+1],x2=P[ic],y2=P[ic+1];
+    var u0=UV[ia],v0=UV[ia+1],u1=UV[ib],v1=UV[ib+1],u2=UV[ic],v2=UV[ic+1];
+    var det=(u1-u0)*(v2-v0)-(u2-u0)*(v1-v0); if(Math.abs(det)<1e-6) return;
+    var mx=(x0+x1+x2)/3, my=(y0+y1+y2)/3, e=0.7;
+    var grow=function(x,y){ var dx=x-mx, dy=y-my, l=Math.sqrt(dx*dx+dy*dy)||1; return [x+dx/l*e, y+dy/l*e]; };
+    var A=grow(x0,y0), B=grow(x1,y1), C=grow(x2,y2);
+    g.save(); g.beginPath(); g.moveTo(A[0],A[1]); g.lineTo(B[0],B[1]); g.lineTo(C[0],C[1]); g.closePath(); g.clip();
+    var a=((x1-x0)*(v2-v0)-(x2-x0)*(v1-v0))/det, c=((x2-x0)*(u1-u0)-(x1-x0)*(u2-u0))/det;
+    var b=((y1-y0)*(v2-v0)-(y2-y0)*(v1-v0))/det, d=((y2-y0)*(u1-u0)-(y1-y0)*(u2-u0))/det;
+    g.transform(a,b,c,d,x0-a*u0-c*v0,y0-b*u0-d*v0);
+    g.drawImage(img,0,0);
+    g.setTransform(DPR,0,0,DPR,0,0);
+    var lo=Math.min(A[0],B[0],C[0]), hi=Math.max(A[0],B[0],C[0]), to=Math.min(A[1],B[1],C[1]), bo=Math.max(A[1],B[1],C[1]);
+    if(sh<0){ g.fillStyle='rgba(98,72,62,'+(-sh).toFixed(3)+')'; g.fillRect(lo,to,hi-lo,bo-to); }
+    else if(sh>0){ g.fillStyle='rgba(255,255,255,'+(sh*0.8).toFixed(3)+')'; g.fillRect(lo,to,hi-lo,bo-to); }
+    if(tint){ g.fillStyle=tint; g.fillRect(lo,to,hi-lo,bo-to); }
+    g.restore();
+  }
+  function drawMesh(m, p, T, tint, alpha){
+    var Pt=[], cs=Math.cos(T.r), sn=Math.sin(T.r), w=Math.sin(Math.PI*Math.min(1,p))*(1-0.5*p), k;
+    for(k=0;k<m.rest.length;k+=2){
+      var x=m.rest[k]+(m.tgt[k]-m.rest[k])*p+m.wob[k]*w, y=m.rest[k+1]+(m.tgt[k+1]-m.rest[k+1])*p+m.wob[k+1]*w;
+      var dx=(x-m.cx)*T.s, dy=(y-m.cy)*T.s;
+      Pt.push(m.cx+T.x+dx*cs-dy*sn, m.cy+T.y+dx*sn+dy*cs);
+    }
+    // a soft shadow beneath
+    g.save(); g.globalAlpha=alpha*0.18*(1-0.5*p); g.fillStyle='#6b4a5a';
+    g.beginPath(); g.ellipse(m.cx+T.x, m.cy+T.y+m.P.h*0.55*T.s*(1-0.6*p)+6, m.P.w*0.42*T.s*(1-0.65*p), 6*T.s, 0, 0, Math.PI*2); g.fill(); g.restore();
+    g.save(); g.globalAlpha=alpha;
+    var nx=m.nx, list=p>0.02 ? m.order : null, n=m.nx*m.ny*2;
+    for(var q=0;q<n;q++){
+      var id=list ? list[q] : q, cell=id>>1, i=cell%nx, j=(cell-i)/nx;
+      var ia=(j*(nx+1)+i)*2, ib=ia+2, ic=ia+(nx+1)*2, idd=ic+2;
+      if(id&1) tri(Pt, ib, idd, ic, m.uv, m.P.c, m.shade[id]*p, tint);
+      else tri(Pt, ia, ib, ic, m.uv, m.P.c, m.shade[id]*p, tint);
+    }
+    g.restore();
+  }
+  function tongue(x, base, wd, ht, sway, a, core){
+    var tx=x+sway, ty=base-ht, gr=g.createLinearGradient(x, base, x, ty);
+    if(core){ gr.addColorStop(0,'rgba(250,200,110,'+a.toFixed(3)+')'); gr.addColorStop(0.5,'rgba(255,226,160,'+(a*0.8).toFixed(3)+')'); gr.addColorStop(1,'rgba(255,246,214,0)'); }
+    else { gr.addColorStop(0,'rgba(222,98,58,'+a.toFixed(3)+')'); gr.addColorStop(0.35,'rgba(238,142,76,'+(a*0.9).toFixed(3)+')'); gr.addColorStop(0.72,'rgba(247,190,110,'+(a*0.6).toFixed(3)+')'); gr.addColorStop(1,'rgba(252,226,176,0)'); }
+    g.fillStyle=gr; g.beginPath();
+    g.moveTo(x-wd, base);
+    g.bezierCurveTo(x-wd*1.15, base-ht*0.38, tx-wd*0.4, base-ht*0.74, tx, ty);
+    g.bezierCurveTo(tx+wd*0.4, base-ht*0.74, x+wd*1.15, base-ht*0.38, x+wd, base);
+    g.quadraticCurveTo(x, base+wd*0.55, x-wd, base); g.fill();
+  }
+  function drawFire(now){
+    if(S.heat<=0.01) return;
+    var h=hearth(), r=M.R*0.34, heat=S.heat, a=Math.min(1,heat), base=h.y+r*0.28, tall=r*(0.5+0.62*Math.min(1.8,heat));
+    g.save();
+    var rad=r*(1.4+0.6*Math.min(1.8,heat)), gl=g.createRadialGradient(h.x,base-r*0.2,0,h.x,base-r*0.2,rad);   // the fire's warm light on the circle
+    gl.addColorStop(0,'rgba(246,168,108,'+(0.42*a).toFixed(3)+')'); gl.addColorStop(0.55,'rgba(248,196,156,'+(0.18*a).toFixed(3)+')'); gl.addColorStop(1,'rgba(248,206,176,0)');
+    g.fillStyle=gl; g.beginPath(); g.arc(h.x,base-r*0.2,rad,0,Math.PI*2); g.fill();
+    [-0.6,-0.3,0,0.3,0.58].forEach(function(o,i){                                            // the outer flames
+      var fl=0.78+0.2*Math.sin(now/(150+i*41)+i*1.7)+0.08*Math.sin(now/61+i*2.9);
+      tongue(h.x+o*r, base, r*0.25*(1-Math.abs(o)*0.3), tall*fl*(1-Math.abs(o)*0.5), Math.sin(now/240+i)*r*0.13, 0.75*a, false);
+    });
+    [-0.22,0.06,0.3].forEach(function(o,i){                                                  // the bright hearts of the flames
+      var fl=0.8+0.2*Math.sin(now/(118+i*29)+i*2.3);
+      tongue(h.x+o*r, base, r*0.12, tall*0.6*fl*(1-Math.abs(o)*0.35), Math.sin(now/200+i*1.3)*r*0.08, 0.9*a, true);
+    });
+    for(var e=0;e<9;e++){                                                                    // the embers
+      var ex=h.x+(e-4)*r*0.16+Math.sin(e*7.3)*r*0.05, ey=base+r*0.04+Math.sin(e*3.1)*r*0.04, gw=0.45+0.4*Math.sin(now/(200+e*31)+e);
+      g.fillStyle='rgba(206,88,56,'+(gw*a).toFixed(3)+')'; g.beginPath(); g.arc(ex,ey,r*0.05,0,Math.PI*2); g.fill();
+      g.fillStyle='rgba(250,190,110,'+(gw*0.6*a).toFixed(3)+')'; g.beginPath(); g.arc(ex,ey-r*0.01,r*0.022,0,Math.PI*2); g.fill();
+    }
+    g.restore();
+  }
+  function drawSparks(dt){
+    var alive=[];
+    S.sparks.forEach(function(s){
+      s.t+=dt; if(s.t>s.life) return; alive.push(s);
+      s.vy+=(-18)*dt; s.vx*=0.985; s.x+=s.vx*dt+Math.sin(s.t*3+s.ph)*0.25; s.y+=s.vy*dt;
+      var k=s.t/s.life, a=(k<0.15 ? k/0.15 : 1-(k-0.15)/0.85);
+      var col=k<0.35 ? '240,150,70' : k<0.7 ? '244,186,110' : '250,220,160';
+      g.fillStyle='rgba('+col+','+(0.22*a).toFixed(3)+')'; g.beginPath(); g.arc(s.x,s.y,s.r*3.2,0,Math.PI*2); g.fill();
+      g.fillStyle='rgba('+col+','+(0.9*a).toFixed(3)+')'; g.beginPath(); g.arc(s.x,s.y,s.r,0,Math.PI*2); g.fill();
+    });
+    S.sparks=alive;
+    var ash=[];
+    S.ash.forEach(function(a){
+      a.t+=dt; if(a.t>a.life) return; ash.push(a);
+      a.x+=a.vx*dt+Math.sin(a.t*2+a.ph)*0.4; a.y+=a.vy*dt; a.rot+=a.vr*dt;
+      var k=a.t/a.life; g.save(); g.translate(a.x,a.y); g.rotate(a.rot); g.fillStyle='rgba(120,104,128,'+(0.5*(1-k)).toFixed(3)+')'; g.fillRect(-a.s/2,-a.s/3,a.s,a.s*0.66); g.restore();
+    });
+    S.ash=ash;
+  }
+  function burst(n){
+    var h=hearth(), r=M.R*0.34;
+    for(var i=0;i<n;i++) S.sparks.push({x:h.x+(Math.random()-.5)*r*0.7, y:h.y+(Math.random()-.2)*r*0.3, vx:(Math.random()-.5)*70, vy:-(50+Math.random()*130),
+      r:0.9+Math.random()*1.9, t:-Math.random()*0.5, life:1.4+Math.random()*1.6, ph:Math.random()*6});
+    for(var j=0;j<Math.round(n/7);j++) S.ash.push({x:h.x+(Math.random()-.5)*r*0.5, y:h.y, vx:(Math.random()-.5)*20, vy:-(18+Math.random()*30), s:2.5+Math.random()*3, rot:Math.random()*3, vr:(Math.random()-.5)*3, t:-Math.random()*0.4, life:1.8+Math.random()*1.4, ph:Math.random()*6});
+  }
+  function drawEnvelope(E, now){
+    var cx=M.cx+E.x, cy=M.cy+E.y, ew=E.w*E.s, eh=E.h*E.s;
+    g.save(); g.globalAlpha=E.a;
+    if(E.fold<1 || E.showPaper){
+      // the paper folding in thirds: the top third folds down, then the bottom third folds up over it
+      var P=E.P, pw=E.pw*E.s, ph=E.ph*E.s, th=ph/3, x0=cx-pw/2, mid=cy-ph/2+th-E.slide*th*0.25;
+      var t1=Math.min(1,E.fold*2), t2=Math.max(0,E.fold*2-1), sh=P.c.height/3;
+      var face=function(i){ g.drawImage(P.c,0,i*sh,P.c.width,sh,x0,0,pw,th); };
+      var back=function(){ g.fillStyle='#f7f4f9'; g.fillRect(x0,0,pw,th); g.fillStyle='rgba(120,100,140,.1)'; g.fillRect(x0,0,pw,th); g.strokeStyle='rgba(143,134,201,.3)'; g.strokeRect(x0+0.5,0.5,pw-1,th-1); };
+      g.save(); g.translate(0,mid); face(1); g.restore();                                            // the middle third stays
+      var c1=Math.cos(Math.PI*t1);                                                                    // the top third, about its lower edge
+      g.save(); g.translate(0,mid); g.scale(1,c1||0.001); g.translate(0,-th); if(c1>=0) face(0); else back(); g.restore();
+      var c2=Math.cos(Math.PI*t2);                                                                    // the bottom third, about its upper edge
+      g.save(); g.translate(0,mid+th); g.scale(1,c2||0.001); if(c2>=0) face(2); else back(); g.restore();
+      if(E.fold>=1 && E.env<=0){ g.restore(); return; }
+    }
+    if(E.env>0){
+      var a=Math.min(1,E.env), ex=cx-ew/2, ey=cy-eh/2;
+      g.globalAlpha=E.a*a;
+      g.fillStyle='rgba(107,90,140,.14)'; g.beginPath(); g.ellipse(cx,ey+eh+7,ew*0.42,6,0,0,Math.PI*2); g.fill();
+      var body=g.createLinearGradient(ex,ey,ex+ew,ey+eh); body.addColorStop(0,'#fbfbff'); body.addColorStop(1,'#e9e8f8');
+      g.fillStyle=body; g.strokeStyle='rgba(143,134,201,.6)'; g.lineWidth=1;
+      g.beginPath(); g.rect(ex,ey,ew,eh); g.fill(); g.stroke();
+      // the pocket's folds
+      g.strokeStyle='rgba(143,134,201,.35)'; g.beginPath(); g.moveTo(ex,ey+eh); g.lineTo(cx,ey+eh*0.48); g.lineTo(ex+ew,ey+eh); g.stroke();
+      // the flap: open (pointing up) to closed (pointing down)
+      var f=E.flap, sy=Math.cos(Math.PI*(1-f));
+      g.save(); g.translate(0,ey); g.scale(1,sy);
+      g.fillStyle=sy>=0 ? '#f1f0fb' : '#e2e0f4'; g.strokeStyle='rgba(143,134,201,.6)';
+      g.beginPath(); g.moveTo(ex,0); g.lineTo(cx,eh*0.56); g.lineTo(ex+ew,0); g.closePath(); g.fill(); g.stroke(); g.restore();
+      // the seal of light
+      if(E.seal>0){
+        var sx=cx, sy2=ey+eh*0.56, sr=Math.max(5,ew*0.055)*Math.min(1,E.seal*1.6);
+        if(E.seal<1){ g.strokeStyle='rgba(233,181,106,'+(0.7*(1-E.seal)).toFixed(3)+')'; g.lineWidth=2; g.beginPath(); g.arc(sx,sy2,sr+E.seal*ew*0.18,0,Math.PI*2); g.stroke(); }
+        var sg=g.createRadialGradient(sx,sy2,0,sx,sy2,sr*2.4); sg.addColorStop(0,'rgba(255,236,190,1)'); sg.addColorStop(0.4,'rgba(233,181,106,.95)'); sg.addColorStop(1,'rgba(233,181,106,0)');
+        g.fillStyle=sg; g.beginPath(); g.arc(sx,sy2,sr*2.4,0,Math.PI*2); g.fill();
+      }
+      if(E.label && E.write>0){
+        g.fillStyle='rgba(59,42,58,'+(0.85*Math.min(1,E.write)).toFixed(3)+')';
+        var fs=Math.max(11, Math.round(ew*0.075)); g.font='italic '+fs+'px '+SERIF; g.textAlign='center'; g.textBaseline='middle';
+        var lab=E.label; while(g.measureText(lab).width>ew*0.86 && lab.length>4) lab=lab.slice(0,-2)+'…';
+        g.fillText(lab, cx, ey+eh*0.8);
+      }
+    }
+    g.restore();
+  }
+  var last=0;
+  function frame(now){
+    raf=0;
+    var dt=Math.min(0.05, last ? (now-last)/1000 : 0.016); last=now;
+    S.heat+=(S.heatTo-S.heat)*Math.min(1,dt*3);
+    g.setTransform(DPR,0,0,DPR,0,0); g.clearRect(0,0,W,H);
+    drawFire(now);
+    if(S.mesh && S.alpha>0.01){
+      var T={x:S.ball.x, y:S.ball.y+(S.bob ? Math.sin(now/650)*2.5 : 0), s:S.ball.s, r:S.ball.r};
+      var tint=S.burn>0 ? (S.burn<0.5 ? 'rgba(236,128,72,'+(S.burn*1.2).toFixed(3)+')' : 'rgba(90,60,70,'+((S.burn-0.5)*1.2).toFixed(3)+')') : null;
+      drawMesh(S.mesh, S.p, T, tint, S.alpha);
+    }
+    if(S.env) drawEnvelope(S.env, now);
+    drawSparks(dt);
+    if(S.heat>0.01 || S.sparks.length || S.ash.length || S.mesh || S.env || S.heatTo>0) raf=requestAnimationFrame(frame);
+    else { last=0; g.clearRect(0,0,W,H); }
+  }
+  function run(){ if(!raf){ last=0; raf=requestAnimationFrame(frame); } }
+  function tween(ms, step, done){
+    var g0=gen, t0=performance.now();
+    if(still()) ms=Math.min(ms, 160);
+    var tick=function(now){ if(g0!==gen) return; var t=Math.min(1,(now-t0)/ms); step(t); run(); if(t<1) requestAnimationFrame(tick); else if(done) done(); };
+    requestAnimationFrame(tick);
+  }
+  var ease=function(t){ return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; };
+  var out=function(t){ return 1-Math.pow(1-t,3); };
+
+  /* pointer: tap the paper to crumple it; drag or flick the crumpled paper into the fire */
+  function local(e){ var r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width, y:(e.clientY-r.top)*H/r.height}; }
+  function onBall(p){ if(!S.mesh) return false; var bx=S.mesh.cx+S.ball.x, by=S.mesh.cy+S.ball.y, rr=S.p>0.9 ? S.mesh.R*1.6+14 : Math.max(S.mesh.P.w,S.mesh.P.h)*0.6; return Math.hypot(p.x-bx,p.y-by)<rr; }
+  cv.addEventListener('pointerdown', function(e){
+    var p=local(e);
+    if(S.onTap && onBall(p)){ e.preventDefault(); var f=S.onTap; S.onTap=null; f(); return; }
+    if(S.onThrow && onBall(p)){ e.preventDefault(); S.drag={sx:p.x, sy:p.y, bx:S.ball.x, by:S.ball.y, pts:[{x:p.x,y:p.y,t:performance.now()}]}; S.bob=false; cv.classList.add('dragging'); try{ cv.setPointerCapture(e.pointerId); }catch(x){} }
+  });
+  cv.addEventListener('pointermove', function(e){
+    if(!S.drag) return; var p=local(e); S.ball.x=S.drag.bx+(p.x-S.drag.sx); S.ball.y=S.drag.by+(p.y-S.drag.sy);
+    S.drag.pts.push({x:p.x,y:p.y,t:performance.now()}); if(S.drag.pts.length>6) S.drag.pts.shift(); run();
+  });
+  var endDrag=function(e){
+    if(!S.drag) return; cv.classList.remove('dragging'); S.drag=null;
+    if(S.onThrow){ var f=S.onThrow; S.onThrow=null; f(); }
+  };
+  cv.addEventListener('pointerup', endDrag);
+  cv.addEventListener('pointercancel', endDrag);
+
+  return {
+    clear:function(){ S.mesh=null; S.env=null; S.paper=null; S.heatTo=0; S.onTap=null; S.onThrow=null; S.drag=null; cv.classList.remove('live','dragging'); run(); },
+    paper:function(text){
+      geom(); S.env=null; S.paper=makePaper(text,'let'); S.mesh=buildMesh(S.paper); S.p=0; S.burn=0; S.alpha=0; S.bob=false;
+      S.ball={x:0,y:M.R*0.05,s:0.96,r:0}; S.heatTo=0.75;
+      tween(700, function(t){ var k=out(t); S.alpha=k; S.ball.y=M.R*0.05*(1-k); S.ball.s=0.96+0.04*k; });
+      cv.classList.add('live');
+    },
+    waitTap:function(fn){ S.onTap=fn; },
+    crumple:function(done){
+      S.onTap=null; var p0=S.p;
+      tween(1350, function(t){
+        var k=Math.floor(t*3), f=t*3-k; if(t>=1){ k=2; f=1; }
+        var squeeze=(k+out(Math.min(1,f*1.25)))/3;                    // three squeezes, each a little further
+        S.p=p0+(1-p0)*Math.min(1,squeeze); S.ball.r=0.35*Math.sin(t*Math.PI*1.5);
+      }, function(){ S.p=1; S.bob=true; if(done) done(); });
+    },
+    waitThrow:function(fn){ S.onThrow=fn; },
+    toss:function(done){
+      S.onThrow=null; S.drag=null; S.bob=false; cv.classList.remove('live','dragging');
+      var h=hearth(), x0=S.ball.x, y0=S.ball.y, s0=S.ball.s, r0=S.ball.r, tx=h.x-S.mesh.cx, ty=h.y-S.mesh.cy-M.R*0.02, arc=M.R*0.32;
+      S.heatTo=0.9;
+      tween(820, function(t){ var k=ease(t); S.ball.x=x0+(tx-x0)*k; S.ball.y=y0+(ty-y0)*k-arc*Math.sin(Math.PI*t); S.ball.s=s0+(0.62-s0)*k; S.ball.r=r0+t*5.5; },
+        function(){
+          S.heatTo=1.7; burst(still()?6:56);
+          tween(1500, function(t){ S.burn=t; S.ball.s=0.62*(1-0.75*t); S.alpha=1-t*t; if(t>0.2 && Math.random()<0.4) burst(still()?0:3); },
+            function(){ S.mesh=null; S.heatTo=0; run();                                     // the fire settles, the sparks rise into light
+              var g0=gen; setTimeout(function(){ if(g0===gen && done) done(); }, still()?0:1300); });
+        });
+    },
+    envelope:function(text, label, done){
+      geom(); S.mesh=null; S.heatTo=0; cv.classList.remove('live');
+      var P=makePaper(text,'keep'), ew=Math.min(M.R*1.15, 290), eh=Math.round(ew*0.6);
+      var pw=Math.min(P.w, ew*0.94);
+      S.env={P:P, pw:pw, ph:P.h*pw/P.w, x:0, y:-M.R*0.04, s:1, a:0, fold:0, slide:0, env:0, flap:0, seal:0, write:0, label:label, w:ew, h:eh, showPaper:true};
+      var E=S.env;
+      tween(500, function(t){ E.a=out(t); }, function(){
+        tween(1300, function(t){ E.fold=ease(t); }, function(){
+          tween(600, function(t){ E.env=out(t); E.slide=t; }, function(){
+            E.showPaper=false; E.fold=1;
+            tween(650, function(t){ E.flap=ease(t); }, function(){ if(done) done(); });
+          });
+        });
+      });
+    },
+    seal:function(done){
+      var E=S.env; if(!E){ if(done) done(); return; }
+      tween(700, function(t){ E.seal=t; }, function(){
+        tween(600, function(t){ E.write=t; }, function(){
+          setTimeout(function(){
+            tween(1200, function(t){ var k=ease(t); E.y=-M.R*0.04-k*M.R*0.5; E.s=1-0.7*k; E.a=1-k*k; }, function(){ S.env=null; run(); if(done) done(); });
+          }, still()?0:500);
+        });
+      });
+    },
+    sealed:function(label){   /* a kept envelope, shown again when its moment comes */
+      geom(); S.mesh=null; S.heatTo=0;
+      var P=makePaper(' ','keep'), ew=Math.min(M.R*1.15, 290);
+      S.env={P:P, pw:P.w, ph:P.h, x:0, y:-M.R*0.02, s:1, a:0, fold:1, slide:1, env:1, flap:1, seal:1, write:1, label:label, w:ew, h:Math.round(ew*0.6), showPaper:false};
+      var E=S.env; tween(600, function(t){ E.a=out(t); });
+    },
+    open:function(done){
+      var E=S.env; if(!E){ if(done) done(); return; }
+      tween(500, function(t){ E.seal=1-t; E.write=1-t; }, function(){
+        tween(600, function(t){ E.flap=1-ease(t); }, function(){
+          tween(500, function(t){ E.a=1-t; E.y-=0.4; }, function(){ S.env=null; run(); if(done) done(); });
+        });
+      });
+    }
+  };
+})();
+window.addEventListener('resize', function(){ /* the drawing is fitted again at the next step */ });
+
 /* ── the way in ── */
 function home(){
-  hideAsk(); listEl.classList.add('hide'); setWho('');
+  endBreath(); hideAsk(); listEl.classList.add('hide'); setWho(''); guide(''); FX.clear(); mood('');
   var n=getKept().length;
   show([{text:'A thought that keeps coming back?'},
     {text:'You can let it go, or keep it for the moment it’s really needed.', cls:'soft'}]);
-  var d=[{label:'Let it go', cls:'lead', click:letStart, id:'goLet'},
-         {label:'Keep it for when it’s needed', click:keepStart, id:'goKeep'}];
+  var d=[{label:'Let it go', sub:'into the fire, for good', icon:'flame', cls:'place ember', click:letStart, id:'goLet'},
+         {or:true},
+         {label:'Keep it for when it’s needed', sub:'sealed until its moment', icon:'envelope', cls:'place seal', click:keepStart, id:'goKeep'}];
   if(n){ d.push({label:'Something is happening now', click:nowStart, id:'goNow'});
          d.push({label:'What I’ve kept ('+n+')', cls:'quiet', click:listShow, id:'goList'}); }
-  doors(d);
+  doors(d, true);
 }
 
-/* ── LET IT GO ── */
-var letting='';
+/* ── LET IT GO: write it, crumple it, breathe, throw it into the fire ── */
 function letStart(){
-  listEl.classList.add('hide'); setWho('');
+  endBreath(); listEl.classList.add('hide'); setWho(''); guide(''); FX.clear(); mood('warm');
   show([{text:'What’s the thought?'},{text:'Write it the way it sounds in your head.', cls:'soft'}]);
   ask('The thought, in your own words…');
-  doors([{label:'It’s written', cls:'lead', click:letReady, id:'letReady'},{label:'Back', cls:'quiet', click:home}]);
+  doors([{label:'It’s written', cls:'lead ember', click:letReady, id:'letReady'},{label:'Back', cls:'quiet', click:home}]);
 }
 function letReady(){
   var t=words.value.trim();
   if(!t){ setWho('Write the thought first, in any words.'); try{ words.focus(); }catch(e){} return; }
   if(HEAVY.test(t)){ care(); return; }
-  hideAsk(); words.value=''; letting=t; setWho('');
-  holdScreen(t, 'Here it is.');
+  hideAsk(); words.value=''; setWho('');
+  letPaper(t, 'Here it is. Take a moment with it.');
 }
-function holdScreen(t, lead){
-  show([{text:lead, cls:'soft'},{node:thoughtNode(t)},{text:'When you’re ready, hold, then let go.', cls:'soft small'}]);
-  doors([{label:'Hold, then let go', cls:'lead hold', id:'hold'},{label:'Let it go without holding', cls:'quiet', click:function(){ release(); }}]);
-  wireHold($('hold'));
+function letPaper(t, lead){
+  mood('warm'); listEl.classList.add('hide'); clearSpeak();
+  var g0=gen;
+  setTimeout(function(){ if(g0!==gen) return;
+    FX.paper(t);
+    guide(lead, 'When you’re ready, tap the paper to crumple it.');
+    FX.waitTap(crumpleNow);
+    doors([{label:'Crumple it', cls:'lead ember', click:crumpleNow, id:'crumple'},{label:'Back', cls:'quiet', click:home}]);
+  }, still()?0:420);
 }
-function wireHold(b){
-  var t0=0, raf=0, on=false, full=false;
-  var tick=function(){
-    if(!on) return;
-    var p=Math.min(1,(performance.now()-t0)/HOLD_MS);
-    mirror.style.setProperty('--p', p.toFixed(3));
-    if(p>=1 && !full){ full=true; mirror.classList.add('full'); b.textContent='Now let go'; setWho('Now let go.'); }
-    raf=requestAnimationFrame(tick);
-  };
-  var start=function(e){
-    if(on) return; if(e){ if(e.type==='keydown' && e.repeat) return; if(e.cancelable) e.preventDefault(); }
-    on=true; full=false; t0=performance.now(); mirror.classList.add('holding'); setWho('Holding…');
-    if(e && e.pointerId!=null && b.setPointerCapture){ try{ b.setPointerCapture(e.pointerId); }catch(x){} }
-    raf=requestAnimationFrame(tick);
-  };
-  var end=function(e){
-    if(!on) return; on=false; cancelAnimationFrame(raf);
-    if(e && e.cancelable) e.preventDefault();
-    if(full){ release(); return; }
-    mirror.classList.remove('holding','full'); mirror.style.removeProperty('--p'); b.textContent='Hold, then let go';
-    setWho('Hold a little longer, then let go.');
-  };
-  var cancel=function(){ if(!on) return; on=false; cancelAnimationFrame(raf); mirror.classList.remove('holding','full'); mirror.style.removeProperty('--p'); b.textContent='Hold, then let go'; setWho(''); };
-  b.addEventListener('pointerdown', start);
-  b.addEventListener('pointerup', end);
-  b.addEventListener('pointercancel', cancel);
-  b.addEventListener('lostpointercapture', function(e){ if(on && full) end(e); else cancel(); });
-  b.addEventListener('keydown', function(e){ if(e.key===' '||e.key==='Enter') start(e); });
-  b.addEventListener('keyup', function(e){ if(e.key===' '||e.key==='Enter') end(e); });
-  b.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-  b.addEventListener('click', function(e){ e.preventDefault(); });   /* a plain click is not a release: holding is the act */
+function crumpleNow(){
+  doors([]); guide('');
+  var g0=gen;
+  FX.crumple(function(){ if(g0!==gen) return; breathe(); });
 }
-function release(after){
-  var th=speak.querySelector('.thought');
-  doors([]); setWho('');
-  gen++;
-  if(th){
-    var box=speak.getBoundingClientRect(), cx=box.left+box.width/2, cy=box.top+box.height/2;
-    Array.prototype.forEach.call(th.querySelectorAll('.w'), function(w,i){
-      var r=w.getBoundingClientRect();
-      w.style.setProperty('--tx', Math.round(cx-(r.left+r.width/2))+'px');
-      w.style.setProperty('--ty', Math.round(cy-(r.top+r.height/2))+'px');
-      w.style.setProperty('--i', i);
-    });
-    Array.prototype.forEach.call(speak.querySelectorAll('.line'), function(l){ l.style.transition='opacity .4s'; l.style.opacity='0'; });
-  }
-  mirror.classList.remove('holding'); mirror.classList.add('release');
-  letting='';   /* the words are let go from the page's memory too */
-  var g=gen, n=th ? th.querySelectorAll('.w').length : 0;
-  setTimeout(function(){
-    if(g!==gen) return;
-    speak.textContent=''; mirror.classList.remove('release','full'); mirror.style.removeProperty('--p');
-    (after || letDone)();
-  }, still() ? 350 : 1500 + Math.min(n,40)*22);
+/* a deep breath in, a little more, then the long breath out that carries it away */
+function breathe(){
+  var g0=gen, m=mirror;
+  var throwDoor=function(){ doors([{label:'Throw it in', cls:'lead ember', click:throwNow, id:'throw'}]); };
+  FX.waitThrow(throwNow);
+  if(still()){ guide('Take a deep breath. As you breathe out, throw it into the fire.', 'Or flick it in.'); throwDoor(); return; }
+  m.classList.add('guided'); void m.offsetWidth; m.classList.add('in');
+  guide('Take a deep breath in…'); throwDoor();
+  setTimeout(function(){ if(g0!==gen) return; m.classList.remove('in'); m.classList.add('more'); guide('…a little more…'); }, 4000);
+  setTimeout(function(){ if(g0!==gen) return; m.classList.remove('more'); m.classList.add('out');
+    guide('…and as you breathe out, throw it into the fire.', 'Feel it leave your hand. Flick it in, or tap Throw it in.'); }, 5100);
+}
+function endBreath(){ mirror.classList.remove('guided','in','more','out'); }
+function throwNow(){
+  doors([]); guide('');
+  var g0=gen;
+  FX.toss(function(){ if(g0!==gen) return; endBreath(); letDone(); });
 }
 function letDone(){
-  show([{text:'Let go.'},
-    {text:'It’s gone from this page, and from this device.', cls:'soft'},
+  show([{text:'Gone.'},
+    {text:'It has left your hand. Let it leave your mind too.', cls:'soft'},
     {text:'A thought is something passing through you. It isn’t who you are.', cls:'aspire'},
-    {text:'If it comes back, that isn’t failure. You can let it go again.', cls:'soft small'}]);
-  doors([{label:'Let another go', click:letStart},{label:'Done', cls:'quiet', click:home}]);
+    {text:'If it ever knocks again, that isn’t failure. You know the way out now.', cls:'small'}]);
+  doors([{label:'Let another go', cls:'ember', click:letStart},{label:'Done', cls:'quiet', click:home}]);
 }
 
-/* ── THE RE-MINDING ── */
+/* ── THE RE-MINDING: write it, choose its moment, seal it ── */
 var keeping='';
 function keepStart(){
-  listEl.classList.add('hide'); setWho('');
+  listEl.classList.add('hide'); setWho(''); guide(''); FX.clear(); mood('cool');
   show([{text:'What would you like to keep, for when it’s needed?'},{text:'A lesson, a reminder, words that helped.', cls:'soft'}]);
   ask('What you want to remember…');
-  doors([{label:'It’s written', cls:'lead', click:keepReady, id:'keepReady'},{label:'Back', cls:'quiet', click:home}]);
+  doors([{label:'It’s written', cls:'lead seal', click:keepReady, id:'keepReady'},{label:'Back', cls:'quiet', click:home}]);
 }
 function keepReady(){
   var t=words.value.trim();
@@ -336,41 +650,56 @@ function keepReady(){
   chooseMoment();
 }
 function chooseMoment(){
+  mood('cool');
   show([{node:thoughtNode(keeping)},{text:'When should it come back to you?', cls:'q'}]);
-  var d=MOMENTS.map(function(m){ return {label:m.label, cls:'chip', click:function(){ keepIt(m.id, ''); }}; });
-  d.push({label:'Something else…', cls:'chip', click:keepOther});
+  var d=MOMENTS.map(function(m){ return {label:m.label, cls:'chip seal', click:function(){ keepIt(m.id, ''); }}; });
+  d.push({label:'Something else…', cls:'chip seal', click:keepOther});
   doors(d);
 }
 function keepOther(){
   show([{text:'When should it come back to you?', cls:'q'},{text:'Say the moment in a few words.', cls:'soft'}]);
   ask('For example: before a job interview');
   words.maxLength=60;
-  doors([{label:'Keep it for then', cls:'lead', click:function(){
-    var l=words.value.trim(); words.maxLength=280;
+  doors([{label:'Keep it for then', cls:'lead seal', click:function(){
+    var l=words.value.trim();
     if(!l){ setWho('Say the moment in a few words.'); return; }
     if(HEAVY.test(l)){ keeping=''; care(); return; }
     hideAsk(); words.value=''; keepIt('other', l); }},
-    {label:'Back', cls:'quiet', click:function(){ words.maxLength=280; hideAsk(); words.value=''; chooseMoment(); }}]);
+    {label:'Back', cls:'quiet', click:function(){ hideAsk(); words.value=''; chooseMoment(); }}]);
 }
 function keepIt(moment, label){
-  var ok=addKept(keeping, moment, label), when=moment==='other' ? label : (momentOf({moment:moment})||{}).when;
+  var when=moment==='other' ? label : (momentOf({moment:moment})||{}).when;
+  var ok=addKept(keeping, moment, label), text=keeping;
   keeping='';
   if(!ok){ show([{text:'This browser wouldn’t keep it.'},{text:'You can copy your words somewhere safe instead.', cls:'soft'}]); doors([{label:'Back', cls:'quiet', click:home}]); return; }
-  show([{text:'Kept, for '+when+'.'},
-    {text:'Your mind can put it down now. It will wait here until that moment comes.', cls:'soft'},
-    {text:'Kept on this device only. Anyone using this device could see it.', cls:'small'}]);
-  doors([{label:'Keep another', click:keepStart},{label:'Done', cls:'quiet', click:home}]);
+  doors([]); clearSpeak();
+  var g0=gen;
+  setTimeout(function(){ if(g0!==gen) return;
+    guide('Folding it away, for '+when+'.');
+    FX.envelope(text, 'For '+when, function(){ if(g0!==gen) return;
+      guide('Seal it.', 'Your mind can put it down once it’s sealed.');
+      doors([{label:'Seal it', cls:'lead seal', id:'seal', click:function(){
+        doors([]); guide('');
+        FX.seal(function(){ if(g0!==gen) return;
+          show([{text:'Sealed, for '+when+'.'},
+            {text:'Your mind can put it down now. It will wait, sealed, until that moment comes.', cls:'soft'},
+            {text:'Kept on this device only. Anyone using this device could see it.', cls:'small'}]);
+          doors([{label:'Keep another', cls:'seal', click:keepStart},{label:'Done', cls:'quiet', click:home}]);
+        });
+      }}]);
+    });
+  }, still()?0:420);
 }
 
 /* what has been kept: only the moments show, so nothing is read again unless it's opened */
 function listShow(){
-  hideAsk(); setWho('');
+  hideAsk(); setWho(''); guide(''); FX.clear(); mood('cool');
   var a=getKept();
   if(!a.length){ home(); return; }
   show([{text:'What you’ve kept'},{text:'Open one only when its moment comes.', cls:'soft'}]);
   doors([{label:'Back', cls:'quiet', click:home}]);
   listEl.textContent='';
-  listEl.appendChild(el('h2','', 'Kept for when it’s needed'));
+  listEl.appendChild(el('h2','', 'Sealed until they’re needed'));
   var groups={}, order=[];
   a.forEach(function(x){ var k=x.moment==='other' ? 'other:'+x.label : x.moment; if(!groups[k]){ groups[k]=[]; order.push(k); } groups[k].push(x); });
   order.forEach(function(k){
@@ -383,20 +712,32 @@ function listShow(){
   var forget=el('button','door quiet','Forget all of it'); forget.type='button'; var armed=false;
   forget.addEventListener('click', function(){
     if(!armed){ armed=true; forget.textContent='Tap again to forget all '+getKept().length; return; }
-    forgetAll(); listEl.classList.add('hide'); setWho('Forgotten. Nothing is kept on this device now.'); home(); setWho('Forgotten. Nothing is kept on this device now.');
+    forgetAll(); home(); setWho('Forgotten. Nothing is kept on this device now.');
   });
   listEl.appendChild(forget);
   listEl.classList.remove('hide');
 }
 function openGroup(ids, i){
-  listEl.classList.add('hide');
+  listEl.classList.add('hide'); mood('cool');
   var a=getKept(), live=ids.filter(function(id){ return a.some(function(x){ return x.id===id; }); });
   if(!live.length){ listShow(); return; }
   if(i>=live.length) i=0;
   var x=a.filter(function(y){ return y.id===live[i]; })[0];
+  clearSpeak();
+  var g0=gen;
+  setTimeout(function(){ if(g0!==gen) return;
+    FX.sealed('For '+whenOf(x));
+    guide('Sealed '+niceDate(x.at)+', for '+whenOf(x)+'.');
+    doors([{label:'Open it', cls:'lead seal', id:'open', click:function(){
+      doors([]); guide('');
+      FX.open(function(){ if(g0!==gen) return; showKept(x, live, i); });
+    }},{label:'Back', cls:'quiet', click:listShow}]);
+  }, still()?0:420);
+}
+function showKept(x, live, i){
   show([{text:'You kept this for '+whenOf(x)+'.', cls:'soft'},{node:thoughtNode(x.text)},{text:'Kept '+niceDate(x.at), cls:'small'}]);
-  var d=[{label:'Keep it', click:function(){ setWho('Still kept.'); listShow(); setWho('Still kept.'); }},
-         {label:'Let it go now', click:function(){ removeKept(x.id); holdScreen(x.text, 'You can let this one go.'); }}];
+  var d=[{label:'Keep it', cls:'seal', click:function(){ listShow(); setWho('Still kept.'); }},
+         {label:'Let it go now', cls:'ember', click:function(){ removeKept(x.id); letPaper(x.text, 'Its moment has passed. You can let it go.'); }}];
   if(live.length>1) d.push({label:'Next', click:function(){ openGroup(live, i+1); }});
   d.push({label:'Back', cls:'quiet', click:listShow});
   doors(d);
@@ -404,7 +745,7 @@ function openGroup(ids, i){
 
 /* when a moment comes: in the Mirror this will happen by itself, from the person's own words */
 function nowStart(){
-  listEl.classList.add('hide'); setWho('');
+  listEl.classList.add('hide'); setWho(''); guide(''); FX.clear(); mood('cool');
   show([{text:'What’s happening?'},{text:'A few words, the way you’d tell the Mirror.', cls:'soft'}]);
   ask('What’s happening now…');
   doors([{label:'That’s it', cls:'lead', click:nowMatch, id:'nowGo'},{label:'Back', cls:'quiet', click:home}]);
@@ -414,18 +755,18 @@ function nowMatch(){
   if(!t){ setWho('A few words are enough.'); return; }
   if(HEAVY.test(t)){ care(); return; }
   hideAsk(); words.value='';
-  var a=getKept(), hits=a.filter(function(x){
+  var a=getKept(), lower=t.toLowerCase(), hits=a.filter(function(x){
     var m=momentOf(x); if(m) return m.re.test(t);
     var ws=(String(x.label||'').toLowerCase().match(/[a-zÀ-ɏ]{4,}/g)||[]).filter(function(w){ return !STOP.test(w); });
-    return ws.some(function(w){ return t.toLowerCase().indexOf(w)>=0; });
+    return ws.some(function(w){ return lower.indexOf(w)>=0; });
   });
   if(hits.length){
     show([{text:'You kept something for moments like this.'},{text:'Would you like to see it?', cls:'q'}]);
-    doors([{label:'Show me', cls:'lead', click:function(){ openGroup(hits.map(function(x){ return x.id; }), 0); }},
+    doors([{label:'Show me', cls:'lead seal', click:function(){ openGroup(hits.map(function(x){ return x.id; }), 0); }},
            {label:'Not now', cls:'quiet', click:function(){ home(); setWho('It’s still here whenever you want it.'); }}]);
   } else {
     show([{text:'Nothing you’ve kept is for a moment like this.'},{text:'You can still open what you’ve kept.', cls:'soft'}]);
-    doors([{label:'Open what I’ve kept', click:listShow},{label:'Back', cls:'quiet', click:home}]);
+    doors([{label:'Open what I’ve kept', cls:'seal', click:listShow},{label:'Back', cls:'quiet', click:home}]);
   }
 }
 
