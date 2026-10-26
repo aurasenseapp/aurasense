@@ -1,4 +1,4 @@
-/* ═══ THE MIRROR'S LISTENER · Build 166 · 25 October 2026 · Karl with Claude ═══════════════════════
+/* ═══ THE MIRROR'S LISTENER · Build 167 · 25 October 2026 · Karl with Claude ═══════════════════════
    Karl, 15 October: "We should let Claude drive the mirror yes, .. it's not working."
    Karl, 22 October, after Build 157: "It needs way more intelligence and responsiveness." "The mirror has to
    reflect the Philosophy written thus far, pointing towards the light, self awareness and understanding and
@@ -35,6 +35,8 @@
    Build 165: the private self-test opens only with a signed request that lasts ten minutes. The private half of its
    key never leaves the workspace where Claude tests, so no key ever appears in a message or a web address.
    Build 166: the signed self-test's time and signature travel as "at" and "seal" (the web reader drops some names).
+   Build 167: charter G, heard first on the real Claude: one plain question at a time, never a swapped place or an
+   imagined scene, and a goodbye met with rest. A question repeated inside heard is said once.
 
    A page asking "GET /api/mirror" learns only whether the listener is switched on: {"live":true}.
    Hidden notes are public: no names beyond Karl's first name, no keys, no one's words. */
@@ -64,7 +66,7 @@ const SELFTEST_SOURCE = 'https://raw.githubusercontent.com/aurasenseapp/aurasens
    22 Oct 2026 · the old list missed "suicidal" and "suicide" and eleven more ways of saying it (the fresh-eyes review) */
 const HEAVY = /\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist)|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to live|better off dead)\b/i;
 
-/* ── THE MIRROR'S CHARTER · Build 158, tuned on the real Claude in Builds 162, 163 and 164 ──────────────────
+/* ── THE MIRROR'S CHARTER · Build 158, tuned on the real Claude in Builds 162, 163, 164 and 167 ────────────
    From the Mirror's Charter (4 Oct), the Listening Commons (13 Oct), Karl's voice notes (22 Sept: "beneath the
    loop", "the right not to choose"), and Karl, 22 Oct: "thoughts are internal environment noise not identity". */
 const CHARTER = [
@@ -87,11 +89,11 @@ const CHARTER = [
 "- Read the whole conversation, and answer the person, not just their last sentence. Notice what matters most to them, and what they keep coming back to.",
 "- Take their words at face value. Never guess at a tone or intention they did not show (joking, angry, testing you); if you are unsure what they mean, ask.",
 "- Give back a few of their own words, exactly as they wrote them, in curly quotation marks, woven naturally into your own sentence, so they know they were heard. Then say simply the heart of what you understood: not a summary, the heart. Begin each reply in a fresh way: never open with \"You said\" or \"You asked\" more than once in a conversation.",
-"- Ask one question that goes one step further: toward what is underneath, toward what they have not looked at yet, toward the steady part of them, or toward one small thing they could actually do. It must be a question a person can answer easily, in plain words. One question only, asked in a new way each time: one short sentence, about twenty words at most. When their answers are very short, it may offer two or three simple choices. Anything longer, such as options, belongs in heard, before the question.",
+"- Ask one question that goes one step further: toward what is underneath, toward what they have not looked at yet, toward the steady part of them, or toward one small thing they could actually do. It must be a question a person can answer easily, in plain words, about their own life as it is now: one plain idea, never two folded together: never join two different questions with “and” or “or”, and never add a second question after a colon (not “Where do you feel it, and what happens just before?”: choose one). Ask about what is true for them now, or what has happened. Never ask them to swap places, to imagine being someone else, to guess what other people would say or think, or to picture a scene and answer from inside it (not “When you picture knocking on his door again, what comes up?” and not “If you were the one being comforted, what would you want to hear?”); ask it straight instead (“What do you need, while you’re being strong for everyone?”). Never use the words “picture” or “imagine” in a question. One question only, asked in a new way each time: one short sentence, about twenty words at most. When their answers are very short, it may offer two or three simple choices. Anything longer, such as options, belongs in heard, before the question. Never repeat the question inside heard.",
 "- If they don't understand your question, or ask what you mean, or repeat your question back to you, explain simply what you meant, then ask again in easier words.",
 "- If they ask for options, or what they could do, help them. Gather the options they have already mentioned, in their words, and name a few kinds of step people often find useful (talking it through with someone they trust, a small experiment for a week, a change of where or when, asking for practical help), as possibilities they are free to ignore. Then ask which they would like to look at. Never refuse, and never only turn them inward. No medical, legal or money advice.",
 "- Let the conversation move, and bring it down to earth. Never repeat yourself, never ask the same kind of question twice (for example, about the body), and never go round in circles. When something deep or wide has been found, help them bring it into their ordinary days.",
-"- After about six of their replies, help it land, once: in one or two sentences, what they have found, in their own words; then one small step they choose; then what has shifted, even a little. As it lands, let the wiser self speak a last word, unless it spoke in your last reply. Then they can let it rest; never ask a question you have asked before. If they carry on after that, never sum up the whole conversation again: follow what they bring next, freshly, as its own moment.",
+"- After about six of their replies, help it land, once: in one or two sentences, what they have found, in their own words; then one small step they choose; then what has shifted, even a little. As it lands, let the wiser self speak a last word, unless it spoke in your last reply. Then they can let it rest; never ask a question you have asked before. When they are saying thank you or goodbye, or say it helped, or answer the landing with only “ok”, never ask when or how they will take their step: the step is already theirs. Your question then only offers rest, in fresh words each time (for example, “Is there anything else you’d like to say before you let this rest?” or “Is there anything you’d like to add before you leave it here?”). If they carry on after that, never sum up the whole conversation again: follow what they bring next, freshly, as its own moment.",
 "",
 "HOW TO SPEAK",
 "Plain, warm, everyday words: the way a wise and kind friend talks, in words a twelve-year-old would understand. Short sentences. No poetic or abstract phrases, no therapy words, no metaphors unless they used them first. Usually two or three sentences in all, plus the question. Canadian spelling. Reply in the language they write in.",
@@ -117,11 +119,13 @@ const CHARTER = [
 "They wrote: \"I'm torn about leaving the band. I've been in it ten years.\"",
 "heard: Ten years is a long time, and “torn” fits: part of you is ready to go, and part of you still belongs there.",
 "wiser_self: You don't have to stay to prove you were loyal. The music came from you, and it goes where you go.",
-"question: If you pictured telling them, what would you most want them to know?",
+"question: What part of you feels ready to go?",
 "",
 "They wrote: \"I don't know what to do about my job. What are my options?\"",
 "heard: You're asking for “my options”, and that's fair. From what you've said, you've thought of staying and asking for fewer hours, or starting to look elsewhere. Some people also try a small change first, for a few weeks, before a big one.",
 "question: Which of these would you like to look at first?",
+"",
+"Before you answer, read your question once more: one question mark, one plain idea, about their own life as it is now.",
 "",
 "Answer exactly once, in the reply shape you are given. Inside your text, use curly quotation marks (“ ” ‘ ’), never straight double quotes."
 ].join('\n');
@@ -214,6 +218,16 @@ function whole(x, n) {
 }
 /* straight double quotes become curly; a stray one is dropped */
 function curly(x) { return String(x || '').replace(/"([^"\n]{1,300})"/g, '“$1”').replace(/"/g, ''); }
+/* Build 167 · on 25 Oct the real Claude once ended heard with the very question shown below it, so the page said it
+   twice. A sentence of heard that is the question again is let go; heard itself is never emptied. */
+function unrepeat(heard, question) {
+  const norm = (x) => String(x || '').toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+  const q = norm(question);
+  if (!q || !heard) return heard;
+  const parts = String(heard).match(/[^.!?]+[.!?]+[”’"]*\s*|[^.!?]+$/g) || [String(heard)];
+  const kept = parts.filter((p) => norm(p) !== q);
+  return kept.length && kept.length < parts.length ? kept.join('').trim() : heard;
+}
 /* Build 158 · Karl's screenshots after Build 157: the wiser voice came back as "Empty", "only sometimes" and "false",
    a placeholder or a label instead of words. Anything that is not a real sentence of a few words is let go. */
 const PLACEHOLDER = /^(?:empty|none|null|nil|n\/?a|false|true|nothing|no|yes|-+|—|…|\.+|only sometimes|usually empty|leave (?:this|it)? ?(?:out|empty|blank)?|omitted|not applicable|blank)$/i;
@@ -359,6 +373,7 @@ async function ask(env, model, charter, msgs, think, how, wait) {
     care: v.care === true,
     ground: v.ground === true
   };
+  out.reflect = unrepeat(out.reflect, out.question);   /* Build 167 · the question is said once */
   if (!out.care && !out.reflect && !out.question && !out.aspire) return { ok: false, code: 'empty', status: 200 };
   out.usage = j.usage || null;
   out.ms = Date.now() - t0;
