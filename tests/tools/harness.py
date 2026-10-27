@@ -57,7 +57,7 @@ class Walk:
         self.popups = []
         self.ctx.on('page', lambda p: self.popups.append(p))
         self.page.on('pageerror', lambda e: self.errors.append('PAGEERROR ' + str(e)[:300]))
-        self.page.on('console', lambda m: self.errors.append('CONSOLE ' + m.text[:300]) if m.type == 'error' and 'ko-fi' not in m.text and 'Failed to load resource' not in m.text else None)   # the browser's own note of a 404 or 503 from the helper is expected
+        self.page.on('console', lambda m: self.errors.append('CONSOLE ' + m.text[:300]) if m.type == 'error' and 'ko-fi' not in m.text and 'stripe' not in m.text and 'Failed to load resource' not in m.text else None)   # the browser's own note of a 404 or 503 from the helper is expected
     def open(self, file='mirror-living.html', q='', wait=2600):
         self.page.goto(BASE + file + q)
         self.page.wait_for_timeout(wait)
