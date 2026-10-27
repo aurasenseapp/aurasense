@@ -25,6 +25,9 @@
   27 Oct 2026 · Build 168: the Mirror's two places. Let it go: the thought on paper, crumpled slowly, a deep breath,
   then into the fire, where the words char and fall away as ash and light. The Re-minding: folded, sealed, kept on
   this device for the moment it is needed. Nothing written in either ever leaves the device.
+  27 Oct 2026 · Build 169: Let it go, draft 4. Dusk falls in the circle and a living fire burns at its foot; the words
+  write themselves onto the paper; it crumples slowly on the breath in; it goes into the fire on the breath out, and
+  the words glow, char and fall away. Listen Forward opens Stripe, where the person chooses the amount.
   23 Oct 2026 · Build 164: Keep what you found. A few lines, gathered by Claude when a conversation rests, kept on
   this device only if the person chooses ("Your thread"), with "Forget all of it". Aurasense keeps nothing.
   23 Oct 2026 · Build 163: the wiser voice's introduction is shown once a visit, never on repeat.
@@ -223,6 +226,12 @@ body.tp-cool .mirror::before{background:conic-gradient(from 60deg,rgba(170,160,2
 .door.seal.lead{background:linear-gradient(180deg,#f9f9ff,#dedcf6);border-color:rgba(143,134,201,.75)}
 .door.chip{font-size:.95rem;padding:.5em .95em}
 .door.pulse{animation:tpPulse 1.6s ease-in-out infinite}
+.tpdoors .door.throw{display:inline-flex;align-items:center;gap:.55em;font-size:1.2rem;padding:.8em 1.75em;border-width:1.5px;
+  background:linear-gradient(180deg,#ffe9d4,#f7c39a);border-color:rgba(214,110,50,.85);animation:tpRise .45s ease-out both,tpRipple 1.5s ease-out .45s infinite}
+.tpdoors .door.throw svg{flex:none;width:28px;height:28px}
+.tpdoors .door.throw b{font-weight:normal;font-size:1.2rem}
+@keyframes tpRise{from{opacity:0;transform:translateY(10px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes tpRipple{0%{box-shadow:0 0 0 0 rgba(232,120,60,.55),0 0 26px rgba(232,137,79,.45)}100%{box-shadow:0 0 0 18px rgba(232,120,60,0),0 0 26px rgba(232,137,79,.45)}}
 @keyframes tpPulse{0%,100%{box-shadow:0 0 18px rgba(232,137,79,.25)}50%{box-shadow:0 0 34px rgba(232,137,79,.6)}}
 .tpdoors .or{font-size:.85rem;color:var(--faint);font-style:italic}
 .tplist{width:min(520px,92vw);box-sizing:border-box;padding:12px 16px;border-radius:20px;background:linear-gradient(135deg,rgba(250,250,255,.8),rgba(236,236,251,.75));border:1px solid rgba(143,134,201,.35);display:flex;flex-direction:column;gap:8px;margin:8px auto 0}
@@ -233,7 +242,7 @@ body.tp-cool .mirror::before{background:conic-gradient(from 60deg,rgba(170,160,2
 .tpmoment:first-of-type{border-top:0}
 .tpmoment span:last-child{color:var(--faint);font-size:.9rem;font-variant-numeric:tabular-nums}
 .tpmoment:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:8px}
-@media (prefers-reduced-motion:reduce){.tpguide{transition:none}.door.pulse{animation:none}}
+@media (prefers-reduced-motion:reduce){.tpguide{transition:none}.door.pulse,.tpdoors .door.throw{animation:none}}
 /* ══ TP CSS END ══ */
 /* Build 168 · the quiet way in, and the quiet offer in a conversation */
 #tpRow .btn{font-size:.92rem}
@@ -1514,11 +1523,11 @@ function lsGift(){try{
   if(now-at<7*864e5)return;
   var g=$('gift');if(!g)return;g.textContent='';
   g.appendChild(el('p','','Someone you’ll never meet kept this listening open for you.'));
-  g.appendChild(el('p','','If you’d like, you can listen forward: keep it open for the next person.'));
-  var row=el('div','row'),a=el('a','btn lead','Listen forward');a.href='https://ko-fi.com/aurasense';a.target='_blank';a.rel='noopener noreferrer';
+  g.appendChild(el('p','','If it helped, you can pay what feels right for it, and keep it open for the next person.'));
+  var row=el('div','row'),a=el('a','btn lead','Listen forward');a.href='https://buy.stripe.com/aFacN7aoI9Eo6Ahale87K00';a.target='_blank';a.rel='noopener noreferrer';   /* 27 Oct 2026 · Build 169 · Stripe */
   var no=el('button','btn quiet','or simply go well');no.type='button';no.addEventListener('click',function(){g.classList.add('hide');});
   row.appendChild(a);row.appendChild(no);g.appendChild(row);
-  g.appendChild(el('p','gift-s','Listen forward opens Aurasense’s Ko-fi page. Support pays for Claude’s listening first, then Karl’s living and workspace as he builds Aurasense. Nothing changes if you don’t.'));
+  g.appendChild(el('p','gift-s','Listen forward opens a secure Stripe page where you choose the amount. It pays for the listening you’ve just had: Claude’s listening first, then Karl’s living and workspace as he builds Aurasense. Nothing changes if you don’t.'));
   setTimeout(function(){if(!document.body.contains(g))return;try{localStorage.setItem('as_listen_forward_at',String(Date.now()));}catch(e){}   /* counted only once it is truly shown */
     g.classList.remove('hide');try{g.scrollIntoView({block:'nearest',behavior:asStill()?'auto':'smooth'});}catch(e){}},1600);   /* after the last words have risen; on a small phone the page moves just enough to show all of it */
 }catch(e){}}
@@ -1632,8 +1641,11 @@ if(inSite){document.body.classList.add('insite');$('home').classList.remove('hid
    25–27 October 2026 · Karl with Claude. Karl: "Where we 'bin' useless recurring thoughts and place those we want
    re-minding of ... A giant leap towards the one light." On draft 2: "real slower motion crumpling to give the
    connection of satisfaction, and slower more detailed burn to see the words going up in flame and disintegrating."
-   Let it go: the thought on paper; a slow crumple; a deep breath (the fire breathes with it); throw it in; the paper
-   opens in the flames and the words char, glow and fall away as ash and light. Keep it: fold, seal, wait.
+   On draft 3 (27 Oct): "breath in on the crumple and out on the burning ... this needs to be really alive, enough to feel
+   the energy of its emotion being captured and written and then the release."
+   Let it go: dusk falls in the circle and a fire lives at its foot; the words write themselves onto paper; a slow crumple
+   on the breath in; throw it in on the breath out; the paper opens in the flames and the words glow, char and fall away
+   as ash and light. Keep it: fold, seal, wait.
    Everything stays in this browser. Nothing is sent anywhere. Words are placed as text or drawn, never as markup. */
 function TwoPlaces(env){
   var D=document, KEY='as_reminding';
@@ -1729,22 +1741,29 @@ function TwoPlaces(env){
   words.addEventListener('input', function(){ if(active) setWho(''); });
   function care(){ stop(); if(env.care) env.care(); }
 
-  /* ═══ THE DRAWING: paper, a slow crumple, the breath, fire, burning, ash and light, the envelope ═══ */
+  /* ═══ THE DRAWING (draft 4): dusk falls in the circle; a living fire; the words write themselves onto paper; a slow
+     crumple on the breath in; the throw on the breath out; the paper opens in the flames; the words glow, char and fall
+     away as ash and light. Keep it: fold, seal, wait. ═══ */
   var FX=(function(){
     var cv=el('canvas','tpfx'); cv.setAttribute('aria-hidden','true'); mirror.appendChild(cv);
-    var g=cv.getContext('2d'), W=0, H=0, DPR=1, M={cx:0,cy:0,R:1}, raf=0, last=0;
-    var S={mesh:null, p:0, ball:{x:0,y:0,s:1,r:0}, alpha:1, heat:0, heatTo:0, sparks:[], ash:[], env:null, drag:null,
-           onThrow:null, onTap:null, bob:false, breath:null, burn:null, glow:0};
+    var g=cv.getContext('2d'), W=0, H=0, DPR=1, M={cx:0,cy:0,R:1}, raf=0, last=0, clock=0;
+    var S={mesh:null, p:0, ball:{x:0,y:0,s:1,r:0,ry:0,rx:0}, alpha:1, heat:0, heatTo:0, night:0, nightTo:0, ready:0, readyTo:0,
+           sparks:[], ash:[], smoke:[], env:null, drag:null, onThrow:null, onTap:null, bob:false, breath:null, burn:null, glow:0, write:false, inFire:0};
+    var F=null;
     function geom(){
       DPR=Math.min(2, window.devicePixelRatio||1);
       W=cv.offsetWidth; H=cv.offsetHeight; cv.width=Math.max(1,Math.round(W*DPR)); cv.height=Math.max(1,Math.round(H*DPR));
       M={cx:-cv.offsetLeft+mirror.offsetWidth/2, cy:-cv.offsetTop+mirror.offsetHeight/2, R:mirror.offsetWidth/2};
+      if(!F || Math.abs(F.R-M.R)>0.5 || Math.abs(F.cx-M.cx)>0.5) fireInit();
     }
     function hearth(){ return {x:M.cx, y:M.cy+M.R*0.6}; }
     var clamp=function(v){ return v<0?0:v>1?1:v; };
     var ease=function(t){ return t<0.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; };
+    var soft=function(t){ return t*t*(3-2*t); };
     var out=function(t){ return 1-Math.pow(1-t,3); };
-    var outBack=function(t){ var c=1.4; return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2); };
+    var outBack=function(t){ var c=0.9; return 1+(c+1)*Math.pow(t-1,3)+c*Math.pow(t-1,2); };
+    var mix=function(a,b,k){ return a+(b-a)*k; };
+    function stage(s){ cv.setAttribute('data-stage', s||''); }
     function wrap(t, text, max){
       var lines=[], line='';
       String(text).split(/\s+/).forEach(function(w){
@@ -1756,233 +1775,395 @@ function TwoPlaces(env){
       if(line) lines.push(line);
       return lines;
     }
+    /* ── paper, and the words written onto it a letter at a time ── */
     function makePaper(text, kind){
       var pw=Math.round(Math.min(M.R*1.3, 330)), pad=Math.round(pw*0.09), lh, fs=Math.max(13, Math.min(21, Math.round(pw/11.5))), lines;
       var m=D.createElement('canvas').getContext('2d');
       for(;;){ m.font='italic '+fs+'px '+SERIF; lines=wrap(m, '“'+text+'”', pw-2*pad); lh=fs*1.38; if(lines.length*lh <= pw*0.62-2*pad || fs<=11) break; fs--; }
       var ph=Math.round(Math.max(pw*0.58, lines.length*lh+pad*2.2));
-      var c=D.createElement('canvas'); c.width=Math.round(pw*DPR); c.height=Math.round(ph*DPR);
-      var t=c.getContext('2d'); t.scale(DPR,DPR);
+      var blank=D.createElement('canvas'); blank.width=Math.round(pw*DPR); blank.height=Math.round(ph*DPR);
+      var t=blank.getContext('2d'); t.scale(DPR,DPR);
       var gr=t.createLinearGradient(0,0,pw,ph); gr.addColorStop(0,'#fffdf8'); gr.addColorStop(1, kind==='keep'?'#f4f2fc':'#fbf1e3');
       t.fillStyle=gr; t.fillRect(0,0,pw,ph);
       var vg=t.createRadialGradient(pw/2,ph/2,Math.min(pw,ph)*0.3,pw/2,ph/2,Math.max(pw,ph)*0.75);
       vg.addColorStop(0,'rgba(200,160,120,0)'); vg.addColorStop(1,'rgba(200,160,120,.13)'); t.fillStyle=vg; t.fillRect(0,0,pw,ph);
-      for(var i=0;i<160;i++){ t.fillStyle='rgba(160,128,98,'+(Math.random()*0.06).toFixed(3)+')'; t.fillRect(Math.random()*pw, Math.random()*ph, 0.6+Math.random()*2.6, 0.6); }
+      for(var i=0;i<220;i++){ t.fillStyle='rgba(160,128,98,'+(Math.random()*0.06).toFixed(3)+')'; t.fillRect(Math.random()*pw, Math.random()*ph, 0.6+Math.random()*3.2, 0.6); }
       t.strokeStyle='rgba(196,164,132,.4)'; t.lineWidth=1; t.strokeRect(0.5,0.5,pw-1,ph-1);
-      t.fillStyle='#35232f'; t.font='italic '+fs+'px '+SERIF; t.textAlign='center'; t.textBaseline='middle';
-      var y0=ph/2-(lines.length-1)*lh/2;
-      lines.forEach(function(l,i){ t.fillText(l, pw/2, y0+i*lh); });
-      return {c:c, w:pw, h:ph};
+      var c=D.createElement('canvas'); c.width=blank.width; c.height=blank.height;
+      m.font='italic '+fs+'px '+SERIF;
+      var P={c:c, blank:blank, w:pw, h:ph, lines:lines, fs:fs, lh:lh, y0:ph/2-(lines.length-1)*lh/2, total:0, k:-1, pen:null,
+             widths:lines.map(function(l){ return m.measureText(l).width; })};
+      lines.forEach(function(l){ P.total+=l.length; });
+      inkTo(P, 1);
+      return P;
     }
-    function buildMesh(P){
-      var px=M.cx-P.w/2, py=M.cy-P.h/2-M.R*0.1, nx=14, ny=Math.max(7, Math.round(14*P.h/P.w)), n=(nx+1)*(ny+1);
-      var rest=new Float32Array(n*2), uvn=new Float32Array(n*2), tgt=new Float32Array(n*2), wob=new Float32Array(n*2), jit=new Float32Array(n*2), delay=new Float32Array(n);
-      var bcx=px+P.w/2, bcy=py+P.h/2, R=Math.max(P.w,P.h)*0.2, f1=Math.random()*6, f2=Math.random()*6, f3=Math.random()*6, f4=Math.random()*6, k=0;
-      for(var j=0;j<=ny;j++) for(var i=0;i<=nx;i++,k++){
-        var u=i/nx, v=j/ny, U=u*2-1, V=v*2-1;
-        rest[k*2]=px+P.w*u; rest[k*2+1]=py+P.h*v; uvn[k*2]=u; uvn[k*2+1]=v;
-        var dx=U*Math.sqrt(1-V*V/2), dy=V*Math.sqrt(1-U*U/2), a=Math.random()*Math.PI*2, nn=0.2+Math.random()*0.55;
-        tgt[k*2]=bcx+(dx*0.85+Math.cos(a)*nn*0.6)*R; tgt[k*2+1]=bcy+(dy*0.85+Math.sin(a)*nn*0.6)*R;
-        wob[k*2]=Math.sin(U*2.1+f1)*Math.cos(V*1.7+f2)*P.w*0.13; wob[k*2+1]=Math.cos(U*1.6+f3)*Math.sin(V*2.3+f4)*P.w*0.13;
-        jit[k*2]=(Math.random()-.5)*P.w*0.05; jit[k*2+1]=(Math.random()-.5)*P.w*0.05;
-        delay[k]=0.3*(1-Math.min(1,Math.sqrt(U*U+V*V)/1.414));                      // the edges gather first, as hands would
+    function inkTo(P, k){
+      if(k===P.k) return; P.k=k; P.pen=null;
+      var t=P.c.getContext('2d'); t.setTransform(1,0,0,1,0,0); t.clearRect(0,0,P.c.width,P.c.height); t.drawImage(P.blank,0,0);
+      t.setTransform(DPR,0,0,DPR,0,0); t.font='italic '+P.fs+'px '+SERIF; t.textAlign='left'; t.textBaseline='middle'; t.fillStyle='#35232f';
+      var n=k*P.total, used=0;
+      for(var i=0;i<P.lines.length;i++){
+        var l=P.lines[i], x0=P.w/2-P.widths[i]/2, y=P.y0+i*P.lh;
+        if(n>=used+l.length){ t.fillText(l,x0,y); used+=l.length; continue; }
+        var whole=Math.max(0,Math.floor(n-used)), frac=n-used-whole;
+        if(whole>0) t.fillText(l.slice(0,whole),x0,y);
+        var wx=x0+t.measureText(l.slice(0,whole)).width, ch=l.charAt(whole);
+        if(frac>0 && ch){ t.globalAlpha=frac; t.fillText(ch,wx,y); t.globalAlpha=1; }
+        P.pen={x:wx+t.measureText(ch).width*frac, y:y};
+        break;
       }
-      var nt=nx*ny*2, shade=new Float32Array(nt), order=[], crease=[];
-      for(var q=0;q<nt;q++){ shade[q]=-0.5+Math.random()*0.72; order.push(q); }
-      for(var s=order.length-1;s>0;s--){ var r=Math.floor(Math.random()*(s+1)), o=order[s]; order[s]=order[r]; order[r]=o; }
-      for(var e=0;e<n;e++){ var ci=e%(nx+1), cj=(e-ci)/(nx+1); if(ci<nx && Math.random()<0.45) crease.push(e, e+1); if(cj<ny && Math.random()<0.45) crease.push(e, e+nx+1); }
-      return {nx:nx, ny:ny, rest:rest, uvn:uvn, tgt:tgt, wob:wob, jit:jit, delay:delay, shade:shade, order:order, crease:crease, cellA:(P.w/nx)*(P.h/ny), cx:bcx, cy:bcy, R:R, P:P, Pt:null};
+    }
+    /* ── the paper as a sheet that gathers into a ball: each point has a place on the ball, so it reads as one paper ── */
+    function buildMesh(P){
+      var px=M.cx-P.w/2, py=M.cy-P.h/2-M.R*0.1, nx=16, ny=Math.max(8, Math.round(16*P.h/P.w)), n=(nx+1)*(ny+1);
+      var rest=new Float32Array(n*2), uvn=new Float32Array(n*2), tgt=new Float32Array(n*3), wob=new Float32Array(n*3), delay=new Float32Array(n);
+      var bcx=px+P.w/2, bcy=py+P.h/2, Rb=Math.max(P.w,P.h)*0.2, asp=P.h/P.w, f=[], k=0, q;
+      for(q=0;q<8;q++) f.push(Math.random()*6.283);
+      for(var j=0;j<=ny;j++) for(var i=0;i<=nx;i++,k++){
+        var u=i/nx, v=j/ny, U=u*2-1, V=(v*2-1)*asp;
+        rest[k*2]=px+P.w*u; rest[k*2+1]=py+P.h*v; uvn[k*2]=u; uvn[k*2+1]=v;
+        var r=Math.min(1, Math.sqrt(U*U+V*V)/Math.sqrt(1+asp*asp)), th=Math.atan2(V,U), ph=r*Math.PI*0.92;
+        var bump=Math.sin(U*3.1+f[0])*Math.cos(V*3.7+f[1])*0.5+Math.sin(U*6.3+V*2.2+f[2])*0.3+Math.cos(-U*4.4+V*7.1+f[3])*0.2;
+        var fine=Math.sin(U*11.3+V*5.1+f[5])*Math.sin(V*9.7-U*3.3+f[6]);
+        var rr=Rb*(1+0.3*bump+0.09*fine), tw=th+0.45*Math.sin(r*5+f[4]);
+        tgt[k*3]=Math.sin(ph)*Math.cos(tw)*rr; tgt[k*3+1]=Math.sin(ph)*Math.sin(tw)*rr; tgt[k*3+2]=Math.cos(ph)*rr;
+        wob[k*3]=Math.sin(U*2.1+f[5])*Math.cos(V*1.7+f[6])*P.w*0.11; wob[k*3+1]=Math.cos(U*1.6+f[7])*Math.sin(V*2.3+f[0])*P.w*0.11;
+        wob[k*3+2]=Math.sin(U*2.7+f[1])*Math.sin(V*2.9+f[3])*P.w*0.24;
+        delay[k]=0.3*(1-r);                                                                // the edges gather first, as hands would
+      }
+      var nt=nx*ny*2, grain=new Float32Array(nt), idx=[], dep=new Float32Array(nt);
+      for(q=0;q<nt;q++){ grain[q]=Math.random()-0.5; idx.push(q); }
+      return {nx:nx, ny:ny, rest:rest, uvn:uvn, tgt:tgt, wob:wob, delay:delay, grain:grain, idx:idx, dep:dep, cellA:(P.w/nx)*(P.h/ny),
+              cx:bcx, cy:bcy, ox:px, oy:py, R:Rb, P:P, Pt:null, Z:null};
     }
     function points(m, p, T){
-      var n=m.rest.length/2, Pt=m.Pt||(m.Pt=new Float32Array(n*2)), cs=Math.cos(T.r), sn=Math.sin(T.r);
+      var n=m.rest.length/2, Pt=m.Pt||(m.Pt=new Float32Array(n*2)), Z=m.Z||(m.Z=new Float32Array(n)), B=S.burn;
+      var cs=Math.cos(T.r), sn=Math.sin(T.r), cY=Math.cos(T.ry), sY=Math.sin(T.ry), cX=Math.cos(T.rx), sX=Math.sin(T.rx);
       for(var k=0;k<n;k++){
-        var q=clamp((p-m.delay[k])/(1-m.delay[k])), w=Math.sin(Math.PI*q)*(1-0.45*q), fine=q*q;
-        var x=m.rest[k*2]+(m.tgt[k*2]-m.rest[k*2])*q+m.wob[k*2]*w+m.jit[k*2]*fine;
-        var y=m.rest[k*2+1]+(m.tgt[k*2+1]-m.rest[k*2+1])*q+m.wob[k*2+1]*w+m.jit[k*2+1]*fine;
-        var dx=(x-m.cx)*T.s, dy=(y-m.cy)*T.s;
-        Pt[k*2]=m.cx+T.x+dx*cs-dy*sn; Pt[k*2+1]=m.cy+T.y+dx*sn+dy*cs;
+        var q=clamp((p-m.delay[k])/(1-m.delay[k])), w=Math.sin(Math.PI*q)*(1-0.45*q);
+        var rx=m.rest[k*2]-m.cx, ry=m.rest[k*2+1]-m.cy;
+        var x=rx+(m.tgt[k*3]-rx)*q+m.wob[k*3]*w, y=ry+(m.tgt[k*3+1]-ry)*q+m.wob[k*3+1]*w, z=m.tgt[k*3+2]*q+m.wob[k*3+2]*w;
+        if(B){                                                                             // the paper curls up where the fire is about to reach
+          var fv=fieldAt(m.uvn[k*2],m.uvn[k*2+1])-B.b;
+          if(fv>-0.06 && fv<0.17){ var c=1-Math.abs(fv-0.03)/0.14; if(c>0){ c*=c; x*=1-0.1*c; y-=m.R*0.3*c; z+=m.R*0.7*c; } }
+        }
+        var x1=x*cY+z*sY, z1=-x*sY+z*cY, y1=y*cX-z1*sX, z2=y*sX+z1*cX, X=x1*T.s, Y=y1*T.s;
+        Pt[k*2]=m.cx+T.x+X*cs-Y*sn; Pt[k*2+1]=m.cy+T.y+X*sn+Y*cs; Z[k]=z2*T.s;
       }
       return Pt;
     }
     function fieldAt(u, v){ var B=S.burn; if(!B) return 2; var x=Math.min(B.w-1, Math.max(0, Math.round(u*(B.w-1)))), y=Math.min(B.h-1, Math.max(0, Math.round(v*(B.h-1)))); return B.field[y*B.w+x]; }
-    function tri(Pt, ia, ib, ic, uvn, img, iw, ih, sh, tint, halfA){
+    /* light: a soft light from above, and the fire's warm light from below, stronger as dusk falls */
+    var L1=[-0.4,-0.55,0.73], L2=[0,0.8,0.6];
+    function lightOf(nx, ny, nz){
+      var night=S.night, fire=night*Math.min(1.4,S.heat);
+      var d1=Math.max(0,nx*L1[0]+ny*L1[1]+nz*L1[2]), d2=Math.max(0,nx*L2[0]+ny*L2[1]+nz*L2[2]);
+      return {b:(0.62-0.13*night)+0.42*(1-0.25*night)*d1, w:0.8*fire*d2};
+    }
+    function overlay(lo, to, w, h, Lt, grain, path){
+      var b=Lt.b+grain, f=function(){ if(path) g.fill(); else g.fillRect(lo,to,w,h); };
+      if(b<1){ g.fillStyle='rgba(34,20,18,'+Math.min(0.85,(1-b)*0.95).toFixed(3)+')'; f(); }
+      else { g.fillStyle='rgba(255,255,255,'+Math.min(0.5,(b-1)*0.9).toFixed(3)+')'; f(); }
+      if(Lt.w>0.01){ g.fillStyle='rgba(255,138,58,'+Math.min(0.55,Lt.w*0.5).toFixed(3)+')'; f(); }
+    }
+    function tri(Pt, Z, a, b, c, uvn, img, iw, ih, grain, tint){
+      var ia=a*2, ib=b*2, ic=c*2;
       var x0=Pt[ia],y0=Pt[ia+1],x1=Pt[ib],y1=Pt[ib+1],x2=Pt[ic],y2=Pt[ic+1];
-      var area=((x1-x0)*(y2-y0)-(x2-x0)*(y1-y0))/2, mx=(x0+x1+x2)/3, my=(y0+y1+y2)/3, e=0.7;
-      var grow=function(x,y){ var dx=x-mx, dy=y-my, l=Math.sqrt(dx*dx+dy*dy)||1; return [x+dx/l*e, y+dy/l*e]; };
-      var A=grow(x0,y0), B=grow(x1,y1), C=grow(x2,y2);
-      var squash=1-Math.min(1, Math.abs(area)/(halfA+0.0001));
-      var lo=Math.min(A[0],B[0],C[0]), hi=Math.max(A[0],B[0],C[0]), to=Math.min(A[1],B[1],C[1]), bo=Math.max(A[1],B[1],C[1]);
-      if(area<0){                                                                      // folded over: the plain back of the paper
-        var fb=2;
-        if(S.burn){ fb=fieldAt((uvn[ia]+uvn[ib]+uvn[ic])/3,(uvn[ia+1]+uvn[ib+1]+uvn[ic+1])/3); if(fb<S.burn.b-0.035) return; }
-        g.beginPath(); g.moveTo(A[0],A[1]); g.lineTo(B[0],B[1]); g.lineTo(C[0],C[1]); g.closePath();
-        var bl=Math.round(236-60*squash+sh*30); g.fillStyle='rgb('+bl+','+Math.round(bl*0.95)+','+Math.round(bl*0.9)+')'; g.fill();
-        if(S.burn){ var d=fb-S.burn.b; if(d<0.13){ g.fillStyle=d<0.03?'rgba(252,186,100,.9)':'rgba(60,34,26,'+(0.85*(1-d/0.13)).toFixed(3)+')'; g.fill(); } }
+      var ex1=x1-x0, ey1=y1-y0, ez1=Z[b]-Z[a], ex2=x2-x0, ey2=y2-y0, ez2=Z[c]-Z[a];
+      var nx=ey1*ez2-ez1*ey2, ny=ez1*ex2-ex1*ez2, nz=ex1*ey2-ey1*ex2, len=Math.sqrt(nx*nx+ny*ny+nz*nz)||1, back=nz<0;
+      if(back){ nx=-nx; ny=-ny; nz=-nz; }
+      var Lt=lightOf(nx/len, ny/len, nz/len), mx=(x0+x1+x2)/3, my=(y0+y1+y2)/3, e=0.7;
+      var gx=function(x,y){ var dx=x-mx, dy=y-my, l=Math.sqrt(dx*dx+dy*dy)||1; return [x+dx/l*e, y+dy/l*e]; };
+      var A=gx(x0,y0), B2=gx(x1,y1), C=gx(x2,y2);
+      var lo=Math.min(A[0],B2[0],C[0]), hi=Math.max(A[0],B2[0],C[0]), to=Math.min(A[1],B2[1],C[1]), bo=Math.max(A[1],B2[1],C[1]);
+      var fb=2, front=false;
+      if(S.burn){ fb=fieldAt((uvn[ia]+uvn[ib]+uvn[ic])/3,(uvn[ia+1]+uvn[ib+1]+uvn[ic+1])/3); if(fb<S.burn.b-(back?0.035:0.06)) return; front=fb<S.burn.b+0.03; }
+      g.beginPath(); g.moveTo(A[0],A[1]); g.lineTo(B2[0],B2[1]); g.lineTo(C[0],C[1]); g.closePath();
+      if(back){                                                                            // the plain back of the paper
+        var bb=Lt.b+grain, r=Math.min(255,236*bb+255*Lt.w*0.5), gg=Math.min(255,228*bb+138*Lt.w*0.5), bl=Math.min(255,216*bb+58*Lt.w*0.5);
+        g.fillStyle='rgb('+(r|0)+','+(gg|0)+','+(bl|0)+')'; g.fill();
+        if(S.burn){ var d=fb-S.burn.b; if(d<0.13){ g.fillStyle=d<0.03?'rgba(255,190,100,.92)':'rgba(46,26,20,'+(0.88*(1-d/0.13)).toFixed(3)+')'; g.fill(); } }
         if(tint){ g.fillStyle=tint; g.fill(); }
         return;
       }
-      var front=false;
-      if(S.burn){ var fc=fieldAt((uvn[ia]+uvn[ib]+uvn[ic])/3,(uvn[ia+1]+uvn[ib+1]+uvn[ic+1])/3); if(fc<S.burn.b-0.06) return; front=fc<S.burn.b+0.03; }   // what has burnt is gone, with no shadow left behind
       var u0=uvn[ia]*iw,v0=uvn[ia+1]*ih,u1=uvn[ib]*iw,v1=uvn[ib+1]*ih,u2=uvn[ic]*iw,v2=uvn[ic+1]*ih;
       var det=(u1-u0)*(v2-v0)-(u2-u0)*(v1-v0); if(Math.abs(det)<1e-6) return;
-      g.save(); g.beginPath(); g.moveTo(A[0],A[1]); g.lineTo(B[0],B[1]); g.lineTo(C[0],C[1]); g.closePath(); g.clip();
-      var a=((x1-x0)*(v2-v0)-(x2-x0)*(v1-v0))/det, c=((x2-x0)*(u1-u0)-(x1-x0)*(u2-u0))/det;
-      var b=((y1-y0)*(v2-v0)-(y2-y0)*(v1-v0))/det, d2=((y2-y0)*(u1-u0)-(y1-y0)*(u2-u0))/det;
-      g.transform(a,b,c,d2,x0-a*u0-c*v0,y0-b*u0-d2*v0);
+      g.save(); g.clip();
+      var ta=((x1-x0)*(v2-v0)-(x2-x0)*(v1-v0))/det, tc=((x2-x0)*(u1-u0)-(x1-x0)*(u2-u0))/det;
+      var tb=((y1-y0)*(v2-v0)-(y2-y0)*(v1-v0))/det, td=((y2-y0)*(u1-u0)-(y1-y0)*(u2-u0))/det;
+      g.transform(ta,tb,tc,td,x0-ta*u0-tc*v0,y0-tb*u0-td*v0);
       g.drawImage(img,0,0);
-      g.setTransform(DPR,0,0,DPR,0,0);
-      var s=front ? 0 : sh-0.42*squash;
-      if(s<0){ g.fillStyle='rgba(98,70,56,'+Math.min(0.75,-s).toFixed(3)+')'; g.fillRect(lo,to,hi-lo,bo-to); }
-      else if(s>0){ g.fillStyle='rgba(255,255,255,'+(s*0.8).toFixed(3)+')'; g.fillRect(lo,to,hi-lo,bo-to); }
-      if(tint && !front){ g.fillStyle=tint; g.fillRect(lo,to,hi-lo,bo-to); }
       g.restore();
+      if(!front){
+        var e2=0.3;
+        var h2=function(x,y,X,Y){ return [x+(X-x)*e2/e, y+(Y-y)*e2/e]; }, P0=h2(x0,y0,A[0],A[1]), P1=h2(x1,y1,B2[0],B2[1]), P2=h2(x2,y2,C[0],C[1]);
+        g.beginPath(); g.moveTo(P0[0],P0[1]); g.lineTo(P1[0],P1[1]); g.lineTo(P2[0],P2[1]); g.closePath();
+        overlay(0,0,0,0,Lt,grain,true); if(tint){ g.fillStyle=tint; g.fill(); }
+      }
     }
     function drawMesh(m, p, T, tint, alpha){
-      var Pt=points(m, p, T), nx=m.nx, n=m.nx*m.ny*2, list=p>0.01 ? m.order : null, pp=Math.min(1,p);
-      var img=S.burn ? S.burn.c : m.P.c, iw=img.width, ih=img.height, halfA=m.cellA*T.s*T.s/2;
-      g.save(); g.globalAlpha=alpha*0.16*(1-0.5*pp); g.fillStyle='#6b4a5a';                                // a soft shadow beneath
+      var pp=Math.min(1,p), img=S.burn ? S.burn.c : m.P.c, iw=img.width, ih=img.height;
+      g.save(); g.globalAlpha=alpha*(0.18+0.18*S.night)*(1-0.5*pp); g.fillStyle=S.night>0.5?'#120806':'#6b4a5a';             // a soft shadow beneath
       g.beginPath(); g.ellipse(m.cx+T.x, m.cy+T.y+m.P.h*0.55*T.s*(1-0.6*pp)+6, m.P.w*0.42*T.s*(1-0.65*pp), 6*T.s, 0, 0, Math.PI*2); g.fill(); g.restore();
       g.save(); g.globalAlpha=alpha;
-      for(var q=0;q<n;q++){
-        var id=list ? list[q] : q, cell=id>>1, i=cell%nx, j=(cell-i)/nx;
-        var ia=(j*(nx+1)+i)*2, ib=ia+2, ic=ia+(nx+1)*2, idd=ic+2;
-        if(id&1) tri(Pt, ib, idd, ic, m.uvn, img, iw, ih, m.shade[id]*pp, tint, halfA);
-        else tri(Pt, ia, ib, ic, m.uvn, img, iw, ih, m.shade[id]*pp, tint, halfA);
-      }
-      if(pp>0.05){                                                                        // the creases
-        g.strokeStyle='rgba(96,66,52,'+(0.3*pp).toFixed(3)+')'; g.lineWidth=0.6; g.beginPath();
-        for(var e=0;e<m.crease.length;e+=2){ var a2=m.crease[e]*2, b2=m.crease[e+1]*2;
-          if(S.burn && (fieldAt(m.uvn[a2],m.uvn[a2+1])<S.burn.b || fieldAt(m.uvn[b2],m.uvn[b2+1])<S.burn.b)) continue;
-          g.moveTo(Pt[a2],Pt[a2+1]); g.lineTo(Pt[b2],Pt[b2+1]); }
-        g.stroke();
-      }
-      g.restore();
-    }
-    /* ── the fire ── */
-    function tongue(x, base, wd, ht, sway, a, core){
-      var tx=x+sway, ty=base-ht, gr=g.createLinearGradient(x, base, x, ty);
-      if(core){ gr.addColorStop(0,'rgba(250,200,110,'+a.toFixed(3)+')'); gr.addColorStop(0.5,'rgba(255,226,160,'+(a*0.8).toFixed(3)+')'); gr.addColorStop(1,'rgba(255,246,214,0)'); }
-      else { gr.addColorStop(0,'rgba(222,98,58,'+a.toFixed(3)+')'); gr.addColorStop(0.35,'rgba(238,142,76,'+(a*0.9).toFixed(3)+')'); gr.addColorStop(0.72,'rgba(247,190,110,'+(a*0.6).toFixed(3)+')'); gr.addColorStop(1,'rgba(252,226,176,0)'); }
-      g.fillStyle=gr; g.beginPath();
-      g.moveTo(x-wd, base);
-      g.bezierCurveTo(x-wd*1.15, base-ht*0.38, tx-wd*0.4, base-ht*0.74, tx, ty);
-      g.bezierCurveTo(tx+wd*0.4, base-ht*0.74, x+wd*1.15, base-ht*0.38, x+wd, base);
-      g.quadraticCurveTo(x, base+wd*0.55, x-wd, base); g.fill();
-    }
-    function drawFire(now, front){
-      if(S.heat<=0.01) return;
-      var h=hearth(), r=M.R*0.34, heat=S.heat, a=Math.min(1,heat), base=h.y+r*0.28, tall=r*(0.5+0.62*Math.min(1.8,heat));
-      g.save();
-      if(front){                                                                          // a few flames in front of the burning paper
-        [-0.34,0.04,0.38].forEach(function(o,i){ var fl=0.7+0.3*Math.sin(now/(130+i*37)+i*2.2);
-          tongue(h.x+o*r, base, r*0.17, tall*0.62*fl, Math.sin(now/210+i)*r*0.1, 0.55*a, i===1); });
+      if(pp<0.002 && !S.burn){                                                             // flat: the whole sheet at once
+        g.translate(m.cx+T.x, m.cy+T.y); g.rotate(T.r); g.scale(T.s,T.s);
+        var x=m.ox-m.cx, y=m.oy-m.cy, Lt=lightOf(0,0,1);
+        g.drawImage(m.P.c, x, y, m.P.w, m.P.h);
+        overlay(x, y, m.P.w, m.P.h, Lt, 0);
+        if(S.night>0.05){ var fl=g.createLinearGradient(0,y+m.P.h,0,y); fl.addColorStop(0,'rgba(255,140,60,'+(0.22*S.night*Math.min(1,S.heat)).toFixed(3)+')'); fl.addColorStop(1,'rgba(255,140,60,0)'); g.fillStyle=fl; g.fillRect(x,y,m.P.w,m.P.h); }
+        if(S.write && m.P.pen){                                                            // the light that writes
+          var px=x+m.P.pen.x, py=y+m.P.pen.y, r=m.P.fs*1.1, pg=g.createRadialGradient(px,py,0,px,py,r);
+          pg.addColorStop(0,'rgba(255,226,170,.85)'); pg.addColorStop(0.35,'rgba(255,190,110,.35)'); pg.addColorStop(1,'rgba(255,170,90,0)');
+          g.fillStyle=pg; g.beginPath(); g.arc(px,py,r,0,Math.PI*2); g.fill();
+        }
         g.restore(); return;
       }
-      var rad=r*(1.4+0.6*Math.min(1.8,heat)), gl=g.createRadialGradient(h.x,base-r*0.2,0,h.x,base-r*0.2,rad);
-      gl.addColorStop(0,'rgba(246,168,108,'+(0.42*a).toFixed(3)+')'); gl.addColorStop(0.55,'rgba(248,196,156,'+(0.18*a).toFixed(3)+')'); gl.addColorStop(1,'rgba(248,206,176,0)');
-      g.fillStyle=gl; g.beginPath(); g.arc(h.x,base-r*0.2,rad,0,Math.PI*2); g.fill();
-      [-0.66,-0.36,-0.08,0.2,0.46,0.68].forEach(function(o,i){
-        var fl=0.76+0.2*Math.sin(now/(150+i*41)+i*1.7)+0.08*Math.sin(now/61+i*2.9);
-        tongue(h.x+o*r, base, r*0.24*(1-Math.abs(o)*0.3), tall*fl*(1-Math.abs(o)*0.5), Math.sin(now/240+i)*r*0.13, 0.75*a, false);
-      });
-      [-0.24,0.04,0.3].forEach(function(o,i){
-        var fl=0.8+0.2*Math.sin(now/(118+i*29)+i*2.3);
-        tongue(h.x+o*r, base, r*0.12, tall*0.6*fl*(1-Math.abs(o)*0.35), Math.sin(now/200+i*1.3)*r*0.08, 0.9*a, true);
-      });
-      for(var e=0;e<10;e++){
-        var ex=h.x+(e-4.5)*r*0.16+Math.sin(e*7.3)*r*0.05, ey=base+r*0.04+Math.sin(e*3.1)*r*0.04, gw=0.45+0.4*Math.sin(now/(200+e*31)+e);
-        g.fillStyle='rgba(206,88,56,'+(gw*a).toFixed(3)+')'; g.beginPath(); g.arc(ex,ey,r*0.05,0,Math.PI*2); g.fill();
-        g.fillStyle='rgba(250,190,110,'+(gw*0.6*a).toFixed(3)+')'; g.beginPath(); g.arc(ex,ey-r*0.01,r*0.022,0,Math.PI*2); g.fill();
+      var Pt=points(m, p, T), Z=m.Z, nx=m.nx, nt=m.nx*m.ny*2, idx=m.idx, dep=m.dep, q;
+      for(q=0;q<nt;q++){ var cell=q>>1, i=cell%nx, j=(cell-i)/nx, a=j*(nx+1)+i, b=a+1, c=a+nx+1, d=c+1;
+        dep[q]=(q&1) ? Z[b]+Z[d]+Z[c] : Z[a]+Z[b]+Z[c]; }
+      idx.sort(function(s,t){ return dep[s]-dep[t]; });                                  // the far side first, the near side last
+      for(q=0;q<nt;q++){
+        var id=idx[q], cl=id>>1, ii=cl%nx, jj=(cl-ii)/nx, A=jj*(nx+1)+ii, B=A+1, C=A+nx+1, Dd=C+1, gr=m.grain[id]*0.12*pp;
+        if(id&1) tri(Pt, Z, B, Dd, C, m.uvn, img, iw, ih, gr, tint); else tri(Pt, Z, A, B, C, m.uvn, img, iw, ih, gr, tint);
       }
       g.restore();
     }
-    /* ── the breath: a ring of light that fills as you breathe in, and empties as you breathe out ── */
+    /* ── the fire: a small living flame field, fed from a bed of embers, cooled by drifting noise so it licks and sways ── */
+    function wnoise(grid, gw, gh, u, v){
+      var x=u*(gw-1), y=v*gh, x0=Math.floor(x), yf=Math.floor(y), y0=((yf%gh)+gh)%gh, x1=Math.min(gw-1,x0+1), y1=(y0+1)%gh, fx=soft(x-x0), fy=soft(y-yf);
+      var a=grid[y0*gw+x0], b=grid[y0*gw+x1], c=grid[y1*gw+x0], d=grid[y1*gw+x1];
+      return a+(b-a)*fx+(c-a)*fy+(a-b-c+d)*fx*fy;
+    }
+    function fireInit(){
+      var h=hearth(), r=M.R*0.34, sw=M.R*1.5, sh=M.R*1.62, fw=96, fh=Math.round(fw*sh/sw), CH=fh*2, i;
+      var cool=new Float32Array(fw*CH), gA=[], gB=[], gC=[];
+      for(i=0;i<9*8;i++) gA.push(Math.random()); for(i=0;i<19*16;i++) gB.push(Math.random()); for(i=0;i<31*30;i++) gC.push(Math.random());
+      for(var y=0;y<CH;y++) for(var x=0;x<fw;x++){ var u=x/(fw-1), v=y/CH, n=wnoise(gA,9,8,u,v)*0.5+wnoise(gB,19,16,u,v)*0.32+wnoise(gC,31,30,u,v)*0.18;
+        cool[y*fw+x]=0.004+0.05*n*n*n*2.2; }
+      var c=D.createElement('canvas'); c.width=fw; c.height=fh;
+      var ctx=c.getContext('2d'), lut=new Uint8ClampedArray(256*4);
+      var stops=[[0,40,6,0],[0.2,130,26,4],[0.38,214,74,14],[0.56,246,136,34],[0.72,255,188,70],[0.86,255,226,140],[1,255,248,220]];
+      for(i=0;i<256;i++){ var t=i/255, s=0; while(s<stops.length-2 && t>stops[s+1][0]) s++;
+        var A=stops[s], B=stops[s+1], k=clamp((t-A[0])/(B[0]-A[0]));
+        lut[i*4]=mix(A[1],B[1],k); lut[i*4+1]=mix(A[2],B[2],k); lut[i*4+2]=mix(A[3],B[3],k); lut[i*4+3]=255*soft(clamp((t-0.05)/0.4)); }
+      var base=h.y+r*0.28;
+      F={R:M.R, cx:M.cx, w:fw, h:fh, CH:CH, heat:new Float32Array(fw*(fh+2)), cool:cool, off:0, acc:0, t:0, c:c, ctx:ctx, img:ctx.createImageData(fw,fh), lut:lut,
+         x:h.x-sw/2, y:base-r*0.04-sh, sw:sw, sh:sh, base:base, r:r, steps:0, src:new Float32Array(fw)};
+    }
+    function fireAdd(px, py, amt){
+      if(!F) return;
+      var gx=Math.round((px-F.x)/F.sw*F.w), gy=Math.round((py-F.y)/F.sh*F.h);
+      for(var dy=-1;dy<=1;dy++) for(var dx=-2;dx<=2;dx++){ var x=gx+dx, y=gy+dy; if(x<0||x>=F.w||y<0||y>=F.h) continue;
+        var k=y*F.w+x, a=amt*(1-Math.abs(dx)*0.28-Math.abs(dy)*0.3); F.heat[k]=Math.min(1.25, F.heat[k]+a); }
+    }
+    function fireStep(){
+      var w=F.w, h=F.h, Hh=F.heat, C=F.cool, CH=F.CH, off=F.off, lvl=Math.min(1.6,S.heat), src=F.src;
+      for(var x=0;x<w;x++){                                                                // the bed of embers, never quite the same twice
+        var e=(x/(w-1)-0.5)/0.2, bed=Math.exp(-e*e*e*e)*(0.85+0.15*Math.sin(x*0.7+F.t*1.3));
+        src[x]=src[x]*0.55+0.45*bed*Math.min(1.2,lvl)*(0.5+0.62*Math.random());
+        Hh[h*w+x]=src[x]; Hh[(h+1)*w+x]=src[x]*0.92;
+      }
+      var coolK=1.3/(0.55+0.45*Math.min(1.3,lvl)), sway=Math.sin(F.t*0.7)*0.8+Math.sin(F.t*1.9)*0.4;
+      for(var y=0;y<h;y++){
+        var row=y*w, r1=row+w, r2=r1+w, cr=((y+off)%CH)*w, dx=Math.round(sway*(1-y/h)*1.2);
+        for(var xx=0;xx<w;xx++){
+          var xs=xx+dx; xs=xs<0?0:xs>=w?w-1:xs; var xm=xs>0?xs-1:0, xp=xs<w-1?xs+1:w-1;
+          var v=(Hh[r1+xs]*1.2+Hh[r1+xm]*0.9+Hh[r1+xp]*0.9+Hh[r2+xs])*0.25-C[cr+xx]*coolK;
+          Hh[row+xx]=v>0?v:0;
+        }
+      }
+      F.off=(off+1)%CH; F.t+=1/60; F.steps++;
+    }
+    function fireRender(){
+      var n=F.w*F.h, Hh=F.heat, d=F.img.data, L=F.lut;
+      for(var k=0;k<n;k++){ var v=Hh[k], li=(v>=1?255:(v*255)|0)*4, i=k*4; d[i]=L[li]; d[i+1]=L[li+1]; d[i+2]=L[li+2]; d[i+3]=L[li+3]; }
+      F.ctx.putImageData(F.img,0,0);
+    }
+    function fireTick(dt){
+      if(!F) return;
+      if(still()){ if(F.steps<90){ while(F.steps<90) fireStep(); fireRender(); } return; }    // in stillness: one quiet fire, not flickering
+      F.acc+=dt; var n=0;
+      while(F.acc>=1/60 && n<3){
+        fireStep(); F.acc-=1/60; n++;
+        if(S.inFire>0.01 && S.mesh){                                                       // the paper in the flames feeds them
+          var bx=S.mesh.cx+S.ball.x, by=S.mesh.cy+S.ball.y, br=S.mesh.R*S.ball.s;
+          for(var i=0;i<4;i++) fireAdd(bx+(Math.random()-.5)*br*2.2, by+br*(0.3+Math.random()*0.6), 0.26*S.inFire);
+        }
+      }
+      if(F.acc>0.2) F.acc=0;
+      if(n) fireRender();
+    }
+    function drawLogs(now){
+      var b=F.base, r=F.r, x=F.x+F.sw/2;
+      var log=function(x0,y0,x1,y1,th,ph){
+        var dx=x1-x0, dy=y1-y0, L=Math.sqrt(dx*dx+dy*dy), an=Math.atan2(dy,dx);
+        g.save(); g.translate(x0,y0); g.rotate(an);
+        var lg=g.createLinearGradient(0,-th/2,0,th/2); lg.addColorStop(0,'#5a3a2a'); lg.addColorStop(0.5,'#3a2219'); lg.addColorStop(1,'#1c0f0b');
+        g.fillStyle=lg; g.beginPath(); g.moveTo(th/2,-th/2); g.lineTo(L-th/2,-th/2); g.arc(L-th/2,0,th/2,-Math.PI/2,Math.PI/2); g.lineTo(th/2,th/2); g.arc(th/2,0,th/2,Math.PI/2,Math.PI*1.5); g.fill();
+        for(var c=0;c<5;c++){ var cx=L*(0.18+c*0.16), gw=0.45+0.55*Math.max(0,Math.sin(now/(380+c*90)+ph+c*1.7));
+          g.strokeStyle='rgba(255,'+(110+60*gw|0)+',40,'+(0.35+0.5*gw).toFixed(3)+')'; g.lineWidth=1.2; g.beginPath(); g.moveTo(cx-th*0.25,-th*0.18); g.lineTo(cx+th*0.1,th*0.05); g.lineTo(cx-th*0.05,th*0.3); g.stroke(); }
+        g.restore();
+      };
+      log(x-r*0.95, b+r*0.04, x+r*0.8, b-r*0.12, r*0.2, 0);
+      log(x+r*0.95, b+r*0.07, x-r*0.75, b-r*0.08, r*0.18, 2);
+      for(var e=0;e<9;e++){ var ex=x+(e-4)*r*0.2+Math.sin(e*7.3)*r*0.06, ey=b+r*0.12+Math.sin(e*3.1)*r*0.03, gw=0.5+0.5*Math.sin(now/(240+e*37)+e);
+        var eg=g.createRadialGradient(ex,ey,0,ex,ey,r*0.09); eg.addColorStop(0,'rgba(255,200,110,'+(0.9*gw).toFixed(3)+')'); eg.addColorStop(0.5,'rgba(230,90,40,'+(0.6*gw).toFixed(3)+')'); eg.addColorStop(1,'rgba(160,40,20,0)');
+        g.fillStyle=eg; g.beginPath(); g.arc(ex,ey,r*0.09,0,Math.PI*2); g.fill(); }
+    }
+    function drawFire(now, front){
+      if(!F || S.heat<=0.01) return;
+      var a=Math.min(1,S.heat*1.15);
+      g.save(); g.imageSmoothingEnabled=true; try{ g.imageSmoothingQuality='high'; }catch(e){}
+      if(front){ g.globalCompositeOperation='lighter'; g.globalAlpha=0.62*a*Math.max(0.35,S.inFire); g.drawImage(F.c, F.x, F.y, F.sw, F.sh); g.restore(); return; }
+      var hx=F.x+F.sw/2, hy=F.base-F.r*0.2, fl=1+0.05*Math.sin(now/83)+0.04*Math.sin(now/37+1), rad=M.R*(0.5+0.32*Math.min(1.5,S.heat))*fl;
+      var gl=g.createRadialGradient(hx,hy,0,hx,hy,rad);
+      gl.addColorStop(0,'rgba(255,150,70,'+(0.4*a).toFixed(3)+')'); gl.addColorStop(0.45,'rgba(230,100,46,'+(0.16*a).toFixed(3)+')'); gl.addColorStop(1,'rgba(200,70,30,0)');
+      g.fillStyle=gl; g.beginPath(); g.arc(hx,hy,rad,0,Math.PI*2); g.fill();
+      g.globalAlpha=Math.min(1,a*1.4)*Math.min(1,S.night*1.5); if(g.globalAlpha>0.01) drawLogs(now);
+      g.globalCompositeOperation='lighter';
+      g.globalAlpha=0.3*a; g.drawImage(F.c, F.x-F.sw*0.07, F.y-F.sh*0.05, F.sw*1.14, F.sh*1.06);   // a soft bloom around the flames
+      g.globalAlpha=a; g.drawImage(F.c, F.x, F.y, F.sw, F.sh);
+      g.restore();
+    }
+    /* ── dusk in the circle, so the fire can be seen as fire ── */
+    function drawNight(){
+      if(S.night<=0.005) return;
+      var a=S.night, R=M.R, gr=g.createRadialGradient(M.cx,M.cy+R*0.3,R*0.08,M.cx,M.cy,R);
+      gr.addColorStop(0,'rgba(70,36,26,'+(0.95*a).toFixed(3)+')'); gr.addColorStop(0.7,'rgba(42,22,19,'+(0.96*a).toFixed(3)+')');
+      gr.addColorStop(0.94,'rgba(30,16,17,'+(0.88*a).toFixed(3)+')'); gr.addColorStop(1,'rgba(30,16,17,0)');
+      g.fillStyle=gr; g.beginPath(); g.arc(M.cx,M.cy,R,0,Math.PI*2); g.fill();
+    }
+    /* ── the breath: a ring of light that fills as you breathe in while it crumples, and empties as you breathe out while it burns ── */
+    function breathRad(now){
+      var B=S.breath, t=(now-B.t0)/1000, d=B.dur||4;
+      if(still()) return 0.72;
+      if(B.phase==='in') return 0.4+0.46*ease(Math.min(1,t/d));
+      if(B.phase==='more') return 0.86+0.08*out(Math.min(1,t/d));
+      if(B.phase==='hold') return 0.94+0.01*Math.sin(now/280);
+      if(B.phase==='out') return 0.94-0.58*soft(Math.min(1,t/d));
+      return 0.5+0.03*Math.sin(now/900);
+    }
     function drawBreath(now){
       var B=S.breath; if(!B) return;
-      var t=(now-B.t0)/1000, k, rad, wa=Math.min(1,t/0.6);
-      if(B.phase==='in'){ k=ease(Math.min(1,t/4)); rad=0.36+0.5*k; }
-      else if(B.phase==='more'){ k=out(Math.min(1,t/1.2)); rad=0.86+0.07*k; }
-      else if(B.phase==='out'){ k=ease(Math.min(1,t/6)); rad=0.93-0.52*k; }
-      else { rad=0.42+0.04*Math.sin(now/900); }
-      if(still()) rad=0.7;
-      var R=M.R*rad, cx=S.mesh ? S.mesh.cx+S.ball.x : M.cx, cy=S.mesh ? S.mesh.cy+S.ball.y : M.cy;
+      var rad=breathRad(now), R=M.R*rad, cx=M.cx, cy=M.cy, n=S.night, glow=B.phase==='hold'?0.5+0.5*Math.sin(now/280):0;
       g.save();
+      var fill=g.createRadialGradient(cx,cy,0,cx,cy,R); fill.addColorStop(0,'rgba(255,214,150,0)'); fill.addColorStop(0.8,'rgba(255,206,140,'+(0.05+0.05*n).toFixed(3)+')'); fill.addColorStop(1,'rgba(255,200,130,'+(0.12+0.08*n).toFixed(3)+')');
+      g.fillStyle=fill; g.beginPath(); g.arc(cx,cy,R,0,Math.PI*2); g.fill();
       var halo=g.createRadialGradient(cx,cy,R*0.8,cx,cy,R*1.14);
-      halo.addColorStop(0,'rgba(233,181,106,0)'); halo.addColorStop(0.55,'rgba(240,190,120,.3)'); halo.addColorStop(1,'rgba(233,181,106,0)');
+      halo.addColorStop(0,'rgba(240,190,120,0)'); halo.addColorStop(0.55,'rgba(246,196,124,'+(0.3+0.2*glow).toFixed(3)+')'); halo.addColorStop(1,'rgba(240,190,120,0)');
       g.fillStyle=halo; g.beginPath(); g.arc(cx,cy,R*1.14,0,Math.PI*2); g.fill();
-      g.strokeStyle='rgba(214,150,70,.75)'; g.lineWidth=2.6; g.beginPath(); g.arc(cx,cy,R,0,Math.PI*2); g.stroke();
-      if(B.word){
-        var fs=Math.round(Math.max(19, M.R*0.14)); g.font='italic '+fs+'px '+SERIF; g.textAlign='center'; g.textBaseline='middle';
-        g.fillStyle='rgba(59,42,58,'+(0.92*wa).toFixed(3)+')'; g.fillText(B.word, M.cx, M.cy-M.R*0.68);
-      }
+      g.strokeStyle='rgba('+(n>0.5?'246,196,120':'214,150,70')+','+(0.8).toFixed(2)+')'; g.lineWidth=2.6; g.beginPath(); g.arc(cx,cy,R,0,Math.PI*2); g.stroke();
       g.restore();
     }
-    /* ── sparks, and ash that rises and becomes light ── */
+    function drawBreathWord(now){
+      var B=S.breath; if(!B || !B.word) return;
+      var wa=Math.min(1,(now-B.w0)/700), n=S.night, fs=Math.round(Math.max(19, M.R*0.14));
+      g.save(); g.font='italic '+fs+'px '+SERIF; g.textAlign='center'; g.textBaseline='middle';
+      g.fillStyle='rgba('+Math.round(mix(59,255,n))+','+Math.round(mix(42,236,n))+','+Math.round(mix(58,214,n))+','+(0.94*wa).toFixed(3)+')';
+      g.fillText(B.word, M.cx, M.cy-M.R*0.68); g.restore();
+    }
+    /* ── ready: the paper glows, and a stream of light shows the way into the fire ── */
+    function drawReady(now){
+      if(S.ready<=0.01 || !S.mesh || S.drag) return;
+      var a=S.ready, m=S.mesh, bx=m.cx+S.ball.x, by=m.cy+S.ball.y, h=hearth(), pulse=0.5+0.5*Math.sin(now/360), rr=m.R*S.ball.s;
+      g.save();
+      var gl=g.createRadialGradient(bx,by,rr*0.6,bx,by,rr*2.3); gl.addColorStop(0,'rgba(255,190,110,'+(0.42*a*(0.55+0.45*pulse)).toFixed(3)+')'); gl.addColorStop(1,'rgba(255,170,90,0)');
+      g.fillStyle=gl; g.beginPath(); g.arc(bx,by,rr*2.3,0,Math.PI*2); g.fill();
+      var sx=bx+rr*1.25, sy=by+rr*0.2, ex=h.x+F.r*0.55, ey=h.y-F.r*0.55, qx=bx+rr*2.6, qy=(sy+ey)/2;
+      g.strokeStyle='rgba(255,214,150,'+(0.85*a).toFixed(3)+')'; g.lineWidth=2.2; g.lineCap='round';
+      g.setLineDash([1,9]); g.lineDashOffset=-now/45; g.beginPath(); g.moveTo(sx,sy); g.quadraticCurveTo(qx,qy,ex,ey); g.stroke(); g.setLineDash([]);
+      var an=Math.atan2(ey-qy, ex-qx), hl=9;
+      g.beginPath(); g.moveTo(ex,ey); g.lineTo(ex-hl*Math.cos(an-0.5), ey-hl*Math.sin(an-0.5)); g.moveTo(ex,ey); g.lineTo(ex-hl*Math.cos(an+0.5), ey-hl*Math.sin(an+0.5)); g.stroke();
+      g.restore();
+    }
+    /* ── sparks, smoke, and ash that rises and becomes light ── */
     function drawSparks(dt){
       var alive=[];
       S.sparks.forEach(function(s){
         s.t+=dt; if(s.t>s.life) return; alive.push(s); if(s.t<0) return;
-        s.vy+=(-16)*dt; s.vx*=0.985; s.x+=s.vx*dt+Math.sin(s.t*3+s.ph)*0.25; s.y+=s.vy*dt;
-        var k=s.t/s.life, a=(k<0.15 ? k/0.15 : 1-(k-0.15)/0.85);
-        var col=k<0.35 ? '240,150,70' : k<0.7 ? '244,186,110' : '250,222,170';
-        g.fillStyle='rgba('+col+','+(0.22*a).toFixed(3)+')'; g.beginPath(); g.arc(s.x,s.y,s.r*3.2,0,Math.PI*2); g.fill();
-        g.fillStyle='rgba('+col+','+(0.9*a).toFixed(3)+')'; g.beginPath(); g.arc(s.x,s.y,s.r,0,Math.PI*2); g.fill();
+        s.vy+=(-18)*dt; s.vx*=0.985; s.x+=s.vx*dt+Math.sin(s.t*3+s.ph)*0.3; s.y+=s.vy*dt;
+        var k=s.t/s.life, a=(k<0.12 ? k/0.12 : 1-(k-0.12)/0.88);
+        var col=k<0.3 ? '255,170,70' : k<0.65 ? '255,200,120' : '255,232,180';
+        g.fillStyle='rgba('+col+','+(0.14*a).toFixed(3)+')'; g.beginPath(); g.arc(s.x,s.y,s.r*2.2,0,Math.PI*2); g.fill();
+        g.strokeStyle='rgba('+col+','+(0.95*a).toFixed(3)+')'; g.lineWidth=s.r*0.9; g.lineCap='round';
+        g.beginPath(); g.moveTo(s.x,s.y); g.lineTo(s.x-s.vx*0.035,s.y-s.vy*0.035); g.stroke();
       });
       S.sparks=alive;
-      var ash=[];
+      var ash=[], n=S.night;
       S.ash.forEach(function(a){
         a.t+=dt; if(a.t>a.life) return; ash.push(a); if(a.t<0) return;
         a.x+=a.vx*dt+Math.sin(a.t*2+a.ph)*0.5; a.y+=a.vy*dt; a.vy-=6*dt; a.rot+=a.vr*dt;
-        var k=a.t/a.life, glow=Math.max(0,1-k*2.2);
+        var k=a.t/a.life, glow=Math.max(0,1-k*3.2);
         g.save(); g.translate(a.x,a.y); g.rotate(a.rot); g.scale(1, 0.45+0.55*Math.abs(Math.cos(a.t*2.4+a.ph)));
-        g.fillStyle='rgba(70,52,58,'+(0.7*(1-k)).toFixed(3)+')'; g.beginPath(); g.moveTo(-a.s/2,-a.s/3); g.lineTo(a.s/2,-a.s/4); g.lineTo(a.s/3,a.s/3); g.lineTo(-a.s/2.4,a.s/3.2); g.closePath(); g.fill();
-        if(glow>0){ g.strokeStyle='rgba(250,150,70,'+(0.8*glow).toFixed(3)+')'; g.lineWidth=0.8; g.stroke(); }
+        g.fillStyle='rgba('+Math.round(mix(60,40,n))+','+Math.round(mix(46,30,n))+','+Math.round(mix(50,28,n))+','+(0.85*(1-k)).toFixed(3)+')';
+        g.beginPath(); g.moveTo(-a.s/2,-a.s/3); g.lineTo(-a.s/8,-a.s/2.2); g.lineTo(a.s/2,-a.s/4); g.lineTo(a.s/3.4,a.s/3); g.lineTo(-a.s/10,a.s/2.6); g.lineTo(-a.s/2.4,a.s/3.2); g.closePath(); g.fill();
+        if(glow>0){ g.strokeStyle='rgba(255,140,50,'+(0.7*glow).toFixed(3)+')'; g.lineWidth=0.7; g.stroke(); }
         g.restore();
-        if(k>0.7){ g.fillStyle='rgba(255,236,190,'+(0.5*(1-k)/0.3).toFixed(3)+')'; g.beginPath(); g.arc(a.x,a.y,1.4,0,Math.PI*2); g.fill(); }
+        if(k>0.65){ g.fillStyle='rgba(255,236,190,'+(0.6*(1-k)/0.35).toFixed(3)+')'; g.beginPath(); g.arc(a.x,a.y,1.5,0,Math.PI*2); g.fill(); }
       });
       S.ash=ash;
     }
+    function drawSmoke(dt){
+      if(!S.smoke.length) return;
+      var alive=[];
+      g.save();
+      S.smoke.forEach(function(s){
+        s.t+=dt; if(s.t>s.life) return; alive.push(s);
+        s.x+=s.vx*dt+Math.sin(s.t*1.3+s.ph)*0.4; s.y+=s.vy*dt; s.r+=dt*14;
+        var k=s.t/s.life, a=(k<0.2?k/0.2:1-(k-0.2)/0.8)*0.07*(0.4+0.6*S.night);
+        var sg=g.createRadialGradient(s.x,s.y,0,s.x,s.y,s.r); sg.addColorStop(0,'rgba(196,176,166,'+a.toFixed(3)+')'); sg.addColorStop(1,'rgba(196,176,166,0)');
+        g.fillStyle=sg; g.beginPath(); g.arc(s.x,s.y,s.r,0,Math.PI*2); g.fill();
+      });
+      g.restore(); S.smoke=alive;
+    }
     function burst(n){
       var h=hearth(), r=M.R*0.34;
-      for(var i=0;i<n;i++) S.sparks.push({x:h.x+(Math.random()-.5)*r*0.7, y:h.y+(Math.random()-.2)*r*0.3, vx:(Math.random()-.5)*70, vy:-(50+Math.random()*130),
-        r:0.9+Math.random()*1.9, t:-Math.random()*0.5, life:1.4+Math.random()*1.6, ph:Math.random()*6});
+      for(var i=0;i<n;i++) S.sparks.push({x:h.x+(Math.random()-.5)*r*0.8, y:h.y+(Math.random()-.4)*r*0.3, vx:(Math.random()-.5)*80, vy:-(60+Math.random()*150),
+        r:0.7+Math.random()*1.3, t:-Math.random()*0.5, life:1.2+Math.random()*1.6, ph:Math.random()*6});
     }
     function flake(x, y){
-      S.ash.push({x:x, y:y, vx:(Math.random()-.5)*26, vy:-(22+Math.random()*44), s:3+Math.random()*5, rot:Math.random()*6, vr:(Math.random()-.5)*4, t:0, life:2.2+Math.random()*1.8, ph:Math.random()*6});
-      if(Math.random()<0.6) S.sparks.push({x:x, y:y, vx:(Math.random()-.5)*40, vy:-(40+Math.random()*90), r:0.8+Math.random()*1.4, t:0, life:1.2+Math.random()*1.4, ph:Math.random()*6});
+      S.ash.push({x:x, y:y, vx:(Math.random()-.5)*26, vy:-(22+Math.random()*44), s:2.5+Math.random()*4, rot:Math.random()*6, vr:(Math.random()-.5)*4, t:0, life:2.2+Math.random()*1.8, ph:Math.random()*6});
+      if(Math.random()<0.6) S.sparks.push({x:x, y:y, vx:(Math.random()-.5)*40, vy:-(40+Math.random()*90), r:0.7+Math.random()*1.4, t:0, life:1.2+Math.random()*1.4, ph:Math.random()*6});
+      if(Math.random()<0.25 && S.smoke.length<36) S.smoke.push({x:x, y:y, vx:(Math.random()-.5)*10, vy:-(18+Math.random()*16), r:4+Math.random()*6, t:0, life:2.6+Math.random()*1.6, ph:Math.random()*6});
     }
-    /* ── the burn: a field across the paper; the front glows, the paper chars ahead of it, and what it passes is gone ── */
+    /* ── the burn: a field across the paper; the edge shimmers and glows, the words glow as it reaches them, then char and go ── */
     function vnoise(grid, gw, gh, u, v){
-      var x=u*(gw-1), y=v*(gh-1), x0=Math.floor(x), y0=Math.floor(y), x1=Math.min(gw-1,x0+1), y1=Math.min(gh-1,y0+1), fx=x-x0, fy=y-y0;
-      fx=fx*fx*(3-2*fx); fy=fy*fy*(3-2*fy);
+      var x=u*(gw-1), y=v*(gh-1), x0=Math.floor(x), y0=Math.floor(y), x1=Math.min(gw-1,x0+1), y1=Math.min(gh-1,y0+1), fx=soft(x-x0), fy=soft(y-y0);
       var a=grid[y0*gw+x0], b=grid[y0*gw+x1], c=grid[y1*gw+x0], d=grid[y1*gw+x1];
       return a+(b-a)*fx+(c-a)*fy+(a-b-c+d)*fx*fy;
     }
     function burnStart(){
       var P=S.mesh.P, bw=Math.round(P.w*1.25), bh=Math.round(P.h*1.25), c=D.createElement('canvas'); c.width=bw; c.height=bh;
       var bg=c.getContext('2d'); bg.drawImage(P.c,0,0,bw,bh);
-      var base=bg.getImageData(0,0,bw,bh), outI=bg.createImageData(bw,bh), field=new Float32Array(bw*bh);
-      var g1=[], g2=[], i; for(i=0;i<7*5;i++) g1.push(Math.random()); for(i=0;i<17*11;i++) g2.push(Math.random());
+      var base=bg.getImageData(0,0,bw,bh), outI=bg.createImageData(bw,bh), field=new Float32Array(bw*bh), jit=new Float32Array(bw*bh);
+      var g1=[], g2=[], g3=[], i; for(i=0;i<7*5;i++) g1.push(Math.random()); for(i=0;i<17*11;i++) g2.push(Math.random()); for(i=0;i<41*27;i++) g3.push(Math.random());
       var lo=9, hi=-9;
       for(var y=0;y<bh;y++) for(var x=0;x<bw;x++){
-        var u=x/(bw-1), v=y/(bh-1), n=vnoise(g1,7,5,u,v)*0.62+vnoise(g2,17,11,u,v)*0.38;
-        var f=(1-v)*0.55+n*0.45; field[y*bw+x]=f; if(f<lo) lo=f; if(f>hi) hi=f;
+        var u=x/(bw-1), v=y/(bh-1), n=vnoise(g1,7,5,u,v)*0.62+vnoise(g2,17,11,u,v)*0.38, k=y*bw+x;
+        var f=(1-v)*0.55+n*0.45; field[k]=f; jit[k]=vnoise(g3,41,27,u,v)-0.5; if(f<lo) lo=f; if(f>hi) hi=f;
       }
       for(i=0;i<field.length;i++) field[i]=(field[i]-lo)/(hi-lo||1);
-      S.burn={c:c, g:bg, base:base.data, out:outI, field:field, w:bw, h:bh, b:-0.05};
+      S.burn={c:c, g:bg, base:base.data, out:outI, field:field, jit:jit, w:bw, h:bh, b:-0.05};
     }
     function burnPaint(){
-      var B=S.burn, d=B.base, o=B.out.data, f=B.field, b=B.b, ew=0.045, cw=0.11;
+      var B=S.burn, d=B.base, o=B.out.data, f=B.field, J=B.jit, b=B.b, ew=0.04, cw=0.12, sh=0.05*Math.sin(clock*7.3)+0.03*Math.sin(clock*12.7+1);
       for(var k=0, n=B.w*B.h; k<n; k++){
-        var v=f[k], i=k*4;
+        var v=f[k]+J[k]*sh, i=k*4;                                                         // the burning edge shimmers
         if(v<b-ew){ o[i+3]=0; continue; }
-        if(v<b){ var t=(b-v)/ew; if(t<0.3){ o[i]=255; o[i+1]=(238-60*t)|0; o[i+2]=(176-120*t)|0; o[i+3]=255; } else { o[i]=(255-30*t)|0; o[i+1]=(200-130*t)|0; o[i+2]=(110-90*t)|0; o[i+3]=(255*(1-t*0.35))|0; } continue; }
-        if(v<b+cw){ var c=1-(v-b)/cw; c=c*c; o[i]=(d[i]*(1-c)+50*c)|0; o[i+1]=(d[i+1]*(1-c)+30*c)|0; o[i+2]=(d[i+2]*(1-c)+24*c)|0; o[i+3]=d[i+3]; continue; }
+        if(v<b){ var t=(b-v)/ew, fl=0.85+0.3*J[k]*Math.sin(clock*9+k);
+          if(t<0.35){ o[i]=255; o[i+1]=Math.min(255,(232-70*t)*fl)|0; o[i+2]=Math.min(255,(150-110*t)*fl)|0; o[i+3]=255; }
+          else { o[i]=(250-60*t)|0; o[i+1]=(150-110*t)|0; o[i+2]=(60-50*t)|0; o[i+3]=(255*(1-t*0.45))|0; }
+          continue; }
+        if(v<b+cw){ var c=1-(v-b)/cw; c*=c;
+          if(d[i]<150 && c>0.2){ var gk=(c-0.2)/0.8; o[i]=255; o[i+1]=(120+110*gk)|0; o[i+2]=(40+80*gk)|0; o[i+3]=255; continue; }   // the words glow as the fire reaches them
+          o[i]=(d[i]*(1-c)+44*c)|0; o[i+1]=(d[i+1]*(1-c)+26*c)|0; o[i+2]=(d[i+2]*(1-c)+20*c)|0; o[i+3]=d[i+3]; continue; }
+        if(v<b+cw*2.2){ var s=1-(v-b-cw)/(cw*1.2); s=0.4*s*s; o[i]=(d[i]*(1-s)+150*s)|0; o[i+1]=(d[i+1]*(1-s)+96*s)|0; o[i+2]=(d[i+2]*(1-s)+52*s)|0; o[i+3]=d[i+3]; continue; }   // it browns before it burns
         o[i]=d[i]; o[i+1]=d[i+1]; o[i+2]=d[i+2]; o[i+3]=d[i+3];
       }
       B.g.putImageData(B.out,0,0);
     }
-    function spawnFromFront(nf){
+    function spawnFromFront(nf, feed){
       var B=S.burn, m=S.mesh; if(!B || !m || !m.Pt) return;
       for(var s=0;s<nf;s++){
         for(var tries=0;tries<24;tries++){
@@ -1990,7 +2171,8 @@ function TwoPlaces(env){
           if(Math.abs(fieldAt(u,v)-B.b)<0.03){
             var nx=m.nx, ny=m.ny, gx=u*nx, gy=v*ny, i=Math.min(nx-1,Math.floor(gx)), j=Math.min(ny-1,Math.floor(gy)), fx=gx-i, fy=gy-j, P=m.Pt;
             var a=(j*(nx+1)+i)*2, b=a+2, c=a+(nx+1)*2, d=c+2;
-            flake((P[a]*(1-fx)+P[b]*fx)*(1-fy)+(P[c]*(1-fx)+P[d]*fx)*fy, (P[a+1]*(1-fx)+P[b+1]*fx)*(1-fy)+(P[c+1]*(1-fx)+P[d+1]*fx)*fy);
+            var x=(P[a]*(1-fx)+P[b]*fx)*(1-fy)+(P[c]*(1-fx)+P[d]*fx)*fy, y=(P[a+1]*(1-fx)+P[b+1]*fx)*(1-fy)+(P[c+1]*(1-fx)+P[d+1]*fx)*fy;
+            if(feed) fireAdd(x, y, 0.38); else flake(x, y);
             break;
           }
         }
@@ -2041,20 +2223,27 @@ function TwoPlaces(env){
     }
     function frame(now){
       raf=0;
-      var dt=Math.min(0.05, last ? (now-last)/1000 : 0.016); last=now;
-      S.heat+=(S.heatTo-S.heat)*Math.min(1,dt*2.4);
+      var dt=Math.min(0.05, last ? (now-last)/1000 : 0.016); last=now; clock=now/1000;
+      S.heat+=(S.heatTo-S.heat)*Math.min(1,dt*2);
+      S.night+=(S.nightTo-S.night)*Math.min(1,dt*1.5); if(S.nightTo===0 && S.night<0.004) S.night=0;
+      S.ready+=(S.readyTo-S.ready)*Math.min(1,dt*5);
+      if(S.heat>0.01 || S.heatTo>0) fireTick(dt);
       g.setTransform(DPR,0,0,DPR,0,0); g.clearRect(0,0,W,H);
+      drawNight();
       drawBreath(now);
       drawFire(now, false);
+      drawSmoke(dt);
+      drawReady(now);
       if(S.mesh && S.alpha>0.01){
         if(S.burn) burnPaint();
-        var T={x:S.ball.x, y:S.ball.y+(S.bob ? Math.sin(now/650)*2.5 : 0), s:S.ball.s, r:S.ball.r};
-        drawMesh(S.mesh, S.p, T, S.glow>0 ? 'rgba(240,130,70,'+(0.24*S.glow).toFixed(3)+')' : null, S.alpha);
-        if(S.burn) drawFire(now, true);
+        var T={x:S.ball.x, y:S.ball.y+(S.bob ? Math.sin(now/650)*2.5 : 0), s:S.ball.s, r:S.ball.r, ry:S.ball.ry, rx:S.ball.rx};
+        drawMesh(S.mesh, S.p, T, S.glow>0 ? 'rgba(255,130,60,'+(0.22*S.glow).toFixed(3)+')' : null, S.alpha);
+        if(S.inFire>0.01) drawFire(now, true);
       }
       if(S.env) drawEnvelope(S.env);
       drawSparks(dt);
-      if(S.heat>0.01 || S.sparks.length || S.ash.length || S.mesh || S.env || S.heatTo>0 || S.breath) raf=requestAnimationFrame(frame);
+      drawBreathWord(now);
+      if(S.heat>0.01 || S.sparks.length || S.ash.length || S.smoke.length || S.mesh || S.env || S.heatTo>0 || S.breath || S.night>0 || S.nightTo>0 || S.ready>0.01) raf=requestAnimationFrame(frame);
       else { last=0; g.clearRect(0,0,W,H); }
     }
     function run(){ if(!raf){ last=0; raf=requestAnimationFrame(frame); } }
@@ -2064,9 +2253,9 @@ function TwoPlaces(env){
       var tick=function(now){ if(g0!==gen) return; var t=Math.min(1,(now-t0)/ms); step(t); run(); if(t<1) requestAnimationFrame(tick); else if(done) done(); };
       requestAnimationFrame(tick);
     }
-    /* pointer: tap the paper to crumple it; drag or flick the crumpled paper into the fire */
+    /* pointer: tap the paper to crumple it; tap, drag or flick the crumpled paper into the fire */
     function local(e){ var r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*W/r.width, y:(e.clientY-r.top)*H/r.height}; }
-    function onBall(p){ if(!S.mesh) return false; var bx=S.mesh.cx+S.ball.x, by=S.mesh.cy+S.ball.y, rr=S.p>0.9 ? S.mesh.R*1.7+16 : Math.max(S.mesh.P.w,S.mesh.P.h)*0.6; return Math.hypot(p.x-bx,p.y-by)<rr; }
+    function onBall(p){ if(!S.mesh) return false; var bx=S.mesh.cx+S.ball.x, by=S.mesh.cy+S.ball.y, rr=S.p>0.9 ? S.mesh.R*1.9+18 : Math.max(S.mesh.P.w,S.mesh.P.h)*0.6; return Math.hypot(p.x-bx,p.y-by)<rr; }
     cv.addEventListener('pointerdown', function(e){
       var p=local(e);
       if(S.onTap && onBall(p)){ e.preventDefault(); var f=S.onTap; S.onTap=null; f(); return; }
@@ -2078,55 +2267,65 @@ function TwoPlaces(env){
     cv.addEventListener('pointercancel', endDrag);
 
     return {
-      clear:function(){ S.mesh=null; S.env=null; S.burn=null; S.breath=null; S.glow=0; S.heatTo=0; S.onTap=null; S.onThrow=null; S.drag=null; cv.classList.remove('live','dragging'); run(); },
-      paper:function(text){
-        geom(); S.env=null; S.burn=null; S.breath=null; S.glow=0;
-        S.mesh=buildMesh(makePaper(text,'let')); S.p=0; S.alpha=0; S.bob=false;
-        S.ball={x:0,y:M.R*0.05,s:0.96,r:0}; S.heatTo=0.75;
-        tween(800, function(t){ var k=out(t); S.alpha=k; S.ball.y=M.R*0.05*(1-k); S.ball.s=0.96+0.04*k; });
+      clear:function(){ S.mesh=null; S.env=null; S.burn=null; S.breath=null; S.glow=0; S.heatTo=0; S.nightTo=0; S.readyTo=0; S.inFire=0; S.write=false;
+        S.onTap=null; S.onThrow=null; S.drag=null; stage(''); cv.classList.remove('live','dragging'); run(); },
+      paper:function(text, written){
+        geom(); S.env=null; S.burn=null; S.breath=null; S.glow=0; S.readyTo=0; S.inFire=0;
+        var m=buildMesh(makePaper(text,'let')), P=m.P; S.mesh=m; S.p=0; S.alpha=0; S.bob=false;
+        cv.setAttribute('data-paper', [m.ox, m.oy, P.w, P.h].map(Math.round).join(','));
+        S.ball={x:0,y:M.R*0.05,s:0.96,r:0,ry:0,rx:0}; S.heatTo=0.7; S.nightTo=1; stage('writing');
+        inkTo(P, still()?1:0);
+        tween(700, function(t){ var k=out(t); S.alpha=k; S.ball.y=M.R*0.05*(1-k); S.ball.s=0.96+0.04*k; }, function(){
+          var ms=Math.max(1300, Math.min(3200, P.total*60)); S.write=true;
+          tween(ms, function(t){ inkTo(P, t); }, function(){ S.write=false; inkTo(P,1); stage('paper'); if(written) written(); });
+        });
         cv.classList.add('live');
       },
       waitTap:function(fn){ S.onTap=fn; },
-      crumple:function(done){
-        /* a slow crumple, in three squeezes with a moment of stillness between, each further than the last */
-        S.onTap=null; var stops=[0,0.4,0.74,1], dur=[1150,1000,950], i=0;
+      /* a slow crumple on the breath in: three squeezes, the third on "a little more" */
+      crumple:function(more, done){
+        S.onTap=null; stage('crumpling');
+        var st=[{a:0,b:0.46,ms:2100,dr:0.4,dy:0.9},{a:0.46,b:0.8,ms:1850,dr:-0.5,dy:-1.3},{a:0.8,b:1,ms:1500,dr:0.36,dy:1.1}], i=0;
         var next=function(){
-          if(i>=3){ S.p=1; S.bob=true; if(done) done(); return; }
-          var a=stops[i], b=stops[i+1], r0=S.ball.r, dr=(i===1?-0.5:0.42);
-          tween(dur[i], function(t){ S.p=a+(b-a)*outBack(t); S.ball.r=r0+dr*ease(t); S.ball.s=1-0.05*Math.sin(Math.PI*t); },
-            function(){ i++; wait(next, still()?0:260); });
+          if(i>=3){ S.p=1; S.bob=true; stage('ball'); cv.setAttribute('data-p','1'); if(done) done(); return; }
+          if(i===2 && more) more();
+          var s=st[i], r0=S.ball.r, y0=S.ball.ry;
+          tween(s.ms, function(t){ S.p=s.a+(s.b-s.a)*outBack(t); S.ball.r=r0+s.dr*ease(t); S.ball.ry=y0+s.dy*ease(t); S.ball.s=1-0.05*Math.sin(Math.PI*t);
+              S.ball.x=Math.sin(t*47)*0.7*Math.sin(Math.PI*t); cv.setAttribute('data-p', S.p.toFixed(2)); },
+            function(){ i++; S.ball.x=0; wait(next, still()||i>=2?0:320); });
         };
         next();
       },
-      breath:function(phase, word){ if(!S.mesh) return; S.breath={phase:phase, t0:performance.now(), word:word}; S.heatTo=phase==='out'?1.15:phase==='in'?0.55:phase==='more'?0.48:0.75; run(); },
-      waitThrow:function(fn){ S.onThrow=fn; cv.classList.add('live'); },
+      breath:function(phase, word, dur){ var now=performance.now(); S.breath={phase:phase, t0:now, w0:now, word:word||'', dur:dur||4};
+        S.heatTo=phase==='out'?1.15:phase==='in'?0.62:phase==='more'?0.55:phase==='hold'?0.8:0.75; run(); },
+      word:function(w){ if(S.breath){ S.breath.word=w; S.breath.w0=performance.now(); } },
+      waitThrow:function(fn){ S.onThrow=fn; S.readyTo=1; cv.classList.add('live'); },
+      /* thrown on the breath out: it tumbles into the fire, catches, opens, and the words burn away */
       toss:function(done){
-        S.onThrow=null; S.drag=null; S.bob=false; S.breath=null; cv.classList.remove('live','dragging');
-        var h=hearth(), x0=S.ball.x, y0=S.ball.y, s0=S.ball.s, r0=S.ball.r, tx=h.x-S.mesh.cx, ty=h.y-S.mesh.cy-M.R*0.12, arc=M.R*0.34;
+        S.onThrow=null; S.drag=null; S.bob=false; S.readyTo=0; cv.classList.remove('live','dragging'); stage('thrown');
+        var h=hearth(), x0=S.ball.x, y0=S.ball.y, s0=S.ball.s, r0=S.ball.r, ry0=S.ball.ry, rx0=S.ball.rx, tx=h.x-S.mesh.cx, ty=h.y-S.mesh.cy-F.r*0.2, arc=M.R*0.3;
         S.heatTo=0.95;
-        tween(950, function(t){ var k=ease(t); S.ball.x=x0+(tx-x0)*k; S.ball.y=y0+(ty-y0)*k-arc*Math.sin(Math.PI*t); S.ball.s=s0+(0.62-s0)*k; S.ball.r=r0+t*5.2; },
+        tween(1100, function(t){ var k=ease(t); S.ball.x=x0+(tx-x0)*k; S.ball.y=y0+(ty-y0)*k-arc*Math.sin(Math.PI*t); S.ball.s=s0+(0.64-s0)*k; S.ball.r=r0+t*1.6; S.ball.ry=ry0+t*4.2; S.ball.rx=rx0+t*2.1; },
           function(){
-            S.heatTo=1.5; burst(still()?4:30);                                            // it catches
-            var rr=S.ball.r, rt=Math.round(rr/(Math.PI*2))*Math.PI*2;
-            tween(700, function(t){ S.glow=t; }, function(){
-              burnStart();                                                                 // the paper opens in the flames; the words char, glow and fall away
-              var p0=S.p, s1=S.ball.s, y1=S.ball.y;
-              tween(4600, function(t){
-                var k=out(Math.min(1,t/0.45));
-                S.p=p0-(p0-0.42)*k; S.ball.s=s1+(0.92-s1)*k; S.ball.r=rr+(rt-rr)*k; S.ball.y=y1-M.R*0.06*k;
-                S.glow=1-0.88*k; S.burn.b=-0.05+1.18*ease(t);
-                if(!still()) spawnFromFront(3);
-                if(t>0.85) S.alpha=1-(t-0.85)/0.15;
-              }, function(){
-                S.mesh=null; S.burn=null; S.glow=0; S.heatTo=0.35; burst(still()?0:24); run();
-                wait(function(){ S.heatTo=0; run(); }, still()?0:900);
-                wait(function(){ if(done) done(); }, still()?0:2200);
-              });
+            S.heatTo=1.25; S.inFire=1; burst(still()?4:30); stage('burning');                  // it catches
+            burnStart();
+            var p0=S.p, s1=S.ball.s, y1=S.ball.y, rr=S.ball.r, ry1=S.ball.ry, rx1=S.ball.rx, TAU=Math.PI*2;
+            var rrT=Math.round(rr/TAU)*TAU, ryT=Math.round(ry1/TAU)*TAU, rxT=Math.round(rx1/TAU)*TAU;
+            tween(7000, function(t){
+              var k=out(Math.min(1,Math.max(0,(t-0.08)/0.42)));                                // the paper opens in the flames, so the words can be seen going
+              S.p=p0-(p0-0.4)*k; S.ball.s=s1+(0.92-s1)*k; S.ball.r=rr+(rrT-rr)*k; S.ball.ry=ry1+(ryT-ry1)*k; S.ball.rx=rx1+(rxT-rx1)*k; S.ball.y=y1-M.R*0.08*k;
+              S.glow=Math.max(0,1-t*5)*0.8; S.burn.b=-0.05+1.18*ease(t); S.inFire=1-0.7*t;
+              if(!still()){ spawnFromFront(2, false); spawnFromFront(4, true); }
+              if(t>0.86) S.alpha=1-(t-0.86)/0.14;
+            }, function(){
+              S.mesh=null; S.burn=null; S.glow=0; S.inFire=0; S.heatTo=0.35; S.breath=null; S.nightTo=0; stage('gone'); burst(still()?0:26); run();
+              wait(function(){ S.heatTo=0; run(); }, still()?0:900);
+              wait(function(){ if(done) done(); }, still()?0:2200);
             });
           });
       },
       envelope:function(text, label, done){
-        geom(); S.mesh=null; S.burn=null; S.breath=null; S.heatTo=0; cv.classList.remove('live');
+        geom(); S.mesh=null; S.burn=null; S.breath=null; S.heatTo=0; S.nightTo=0; cv.classList.remove('live');
         var P=makePaper(text,'keep'), ew=Math.min(M.R*1.15, 290), eh=Math.round(ew*0.6), pw=Math.min(P.w, ew*0.94);
         S.env={P:P, pw:pw, ph:P.h*pw/P.w, x:0, y:-M.R*0.04, s:1, a:0, fold:0, slide:0, env:0, flap:0, seal:0, write:0, label:label, w:ew, h:eh, showPaper:true};
         var E=S.env;
@@ -2150,7 +2349,7 @@ function TwoPlaces(env){
         });
       },
       sealed:function(label){
-        geom(); S.mesh=null; S.burn=null; S.breath=null; S.heatTo=0;
+        geom(); S.mesh=null; S.burn=null; S.breath=null; S.heatTo=0; S.nightTo=0;
         var P=makePaper(' ','keep'), ew=Math.min(M.R*1.15, 290);
         S.env={P:P, pw:P.w, ph:P.h, x:0, y:-M.R*0.02, s:1, a:0, fold:1, slide:1, env:1, flap:1, seal:1, write:1, label:label, w:ew, h:Math.round(ew*0.6), showPaper:false};
         var E=S.env; tween(600, function(t){ E.a=out(t); });
@@ -2199,32 +2398,43 @@ function TwoPlaces(env){
   }
   function letPaper(t, lead){
     active=true; breathing=false; mood('warm'); listEl.classList.add('hide'); clearSpeak(); doors([]); guide('');
+    var g0=gen;
     wait(function(){
-      FX.paper(t);
-      guide(lead, 'When you’re ready, tap the paper to crumple it.');
-      FX.waitTap(crumpleNow);
-      doors([{label:'Crumple it', cls:'lead ember', click:crumpleNow, id:'tpCrumple'},{label:'Back', cls:'quiet', click:back}]);
+      guide(lead);
+      FX.paper(t, function(){ if(g0!==gen) return;
+        guide(lead, 'When you’re ready, breathe in slowly as you crumple it.');
+        FX.waitTap(crumpleNow);
+        doors([{label:'Crumple it', cls:'lead ember', click:crumpleNow, id:'tpCrumple'},{label:'Back', cls:'quiet', click:back}]);
+      });
     }, still()?0:(env.fadeMs||420));
   }
+  /* the breath in goes with the crumple; the breath out goes with the fire */
   function crumpleNow(){
-    doors([]); guide('Crumpling it…');
+    doors([]); breathing=true;
     var g0=gen;
-    FX.crumple(function(){ if(g0!==gen) return; breathe(); });
+    if(still()) guide('Breathe in as you crumple it…');
+    else { FX.breath('in', 'Breathe in…', 4.27); guide('Breathe in slowly…', 'Feel it crumple in your hand.'); }
+    FX.crumple(function(){ if(g0!==gen || still()) return; FX.breath('more', '…a little more…', 1.5); guide('…a little more…'); },
+      function(){ if(g0!==gen) return; readyToThrow(); });
   }
-  /* a deep breath in, a little more, then the long breath out that carries it into the fire */
-  function breathe(){
-    var g0=gen; breathing=true;
-    var throwDoor=function(){ doors([{label:'Throw it in', cls:'lead ember pulse', click:throwNow, id:'tpThrow'}]); FX.waitThrow(throwNow); };
-    if(still()){ FX.breath('rest', ''); guide('Take a deep breath in, a little more, and as you breathe out, throw it into the fire.', 'Feel it leave your hand.'); throwDoor(); return; }
-    FX.breath('in', 'Breathe in…'); guide('Take a deep breath in…', 'Watch the ring of light fill.');
-    setTimeout(function(){ if(g0!==gen || !breathing) return; FX.breath('more', '…a little more…'); guide('…a little more…'); }, 4000);
-    setTimeout(function(){ if(g0!==gen || !breathing) return; FX.breath('out', '…and let it go.');
-      guide('As you breathe out, throw it into the fire.', 'Feel it leave your hand. Flick it in, or tap Throw it in.'); throwDoor(); }, 5200);
-    setTimeout(function(){ if(g0!==gen || !breathing) return; FX.breath('rest', ''); }, 11200);
+  function readyToThrow(){
+    var g0=gen;
+    doors([{label:'Throw it in', icon:'flame', cls:'lead ember throw', click:throwNow, id:'tpThrow'}]);
+    FX.waitThrow(throwNow);
+    if(still()){ FX.breath('rest', ''); guide('Now throw it into the fire as you breathe out.', 'Tap Throw it in, or tap the paper.'); return; }
+    FX.breath('hold', '…and let it go.');
+    guide('Now throw it into the fire, and breathe out.', 'Tap Throw it in, or tap or flick the paper into the flames.');
+    wait(function(){ if(!breathing) return; FX.breath('rest', ''); guide('Breathe however feels easy.', 'Throw it in whenever you’re ready.'); }, 4500);
   }
   function throwNow(){
-    breathing=false; doors([]); guide('');
+    breathing=false; doors([]);
     var g0=gen;
+    if(still()) guide('Breathe out.');
+    else {
+      FX.breath('out', '…breathe out…', 8.2); guide('Breathe out slowly…', 'Watch it go.');
+      wait(function(){ FX.word('…slowly…'); }, 3200);
+      wait(function(){ FX.word('…all the way.'); guide('…all the way out.'); }, 6200);
+    }
     FX.toss(function(){ if(g0!==gen) return; letDone(); });
   }
   function letDone(){
