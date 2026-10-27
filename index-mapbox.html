@@ -1421,6 +1421,7 @@ body.ma-incloud .as-rail{display:none!important}
   display:flex;flex-direction:column;justify-content:center;
   transition:opacity .18s ease}
 #ra-modal #ra-body>*{flex:0 0 auto}
+#ra-modal #ra-body{justify-content:safe center;overflow-y:auto}   /* 27 Oct 2026 · Build 170 · a tall page no longer loses its first line under the heading: it starts at the top, and can be scrolled */
 #ra-modal .ra-art{display:flex;justify-content:center;margin:6px 0 2px}
 #ra-modal .ra-art svg{width:min(300px,92%);height:auto;filter:drop-shadow(0 0 16px rgba(124,92,255,.25))}
 #ra-modal .ra-h{font-size:18px;color:var(--ink);text-align:center;margin:6px 0 8px;letter-spacing:.01em}
@@ -1434,7 +1435,7 @@ body.ma-incloud .as-rail{display:none!important}
 #ra-modal #ra-count{display:block;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--label);margin-bottom:5px}
 #ra-modal #ra-dots{letter-spacing:5px;font-size:8px;color:#6c639a}
 #ra-modal #ra-dots .on{color:#c4b5fd;text-shadow:0 0 8px rgba(167,139,250,.9)}
-#ra-modal .ra-x{display:block;width:100%;margin-top:10px;background:none;border:none;color:var(--mute);font-size:13px;cursor:pointer;font-family:var(--serif)}
+#ra-modal .ra-x{display:block;width:100%;margin-top:2px;padding:8px 0;min-height:32px;background:none;border:none;color:var(--mute);font-size:13px;cursor:pointer;font-family:var(--serif)}
 #ma-retake-ask{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(.94);z-index:100004;background:rgba(12,10,26,.97);border:.5px solid rgba(233,221,255,.5);border-radius:18px;padding:18px 20px;text-align:center;opacity:0;transition:opacity .35s ease,transform .35s ease;box-shadow:0 0 40px rgba(0,0,0,.7)}
 #ma-retake-ask.show{opacity:1;transform:translate(-50%,-50%) scale(1)}
 #ma-retake-ask .mra-t{font-size:15px;color:#e9ddff;margin-bottom:13px}
@@ -1611,7 +1612,7 @@ body.ma-incloud .as-rail{display:none!important}
 #quest-page .qzc-say{width:72%;font-size:clamp(1.05rem,3.6vw,1.3rem);line-height:1.5;color:#3b2a3a;transition:opacity .26s ease,filter .26s ease}
 #quest-page .qzc-say.fade{opacity:0;filter:blur(5px)}
 #quest-page .qzc-answers{display:flex;justify-content:center;gap:8px;margin:14px auto 4px;max-width:440px}
-#quest-page .qzc-answers .qz-dot{flex:0 0 auto;width:64px;background:none;border:0;border-radius:12px;padding:0;color:#6f5a6c;font-size:11.5px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;box-shadow:none}
+#quest-page .qzc-answers .qz-dot{flex:0 0 auto;width:64px;background:none;border:0;border-radius:12px;padding:0;color:#5d4a5b;font-size:13px;line-height:1.2;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;box-shadow:none}
 #quest-page .qzc-answers .qz-dot:nth-child(2),#quest-page .qzc-answers .qz-dot:nth-child(4){transform:translateY(9px)}
 #quest-page .qzc-answers .qz-dot:nth-child(3){transform:translateY(13px)}
 #quest-page .qzc-light{width:42px;height:42px;border-radius:50%;background:radial-gradient(circle,rgba(255,252,247,.96) 0%,rgba(248,220,196,.82) 55%,rgba(233,181,106,.2) 100%);box-shadow:0 0 14px rgba(233,181,106,.24);transition:transform .2s,box-shadow .3s,background .3s}
@@ -1619,7 +1620,7 @@ body.ma-incloud .as-rail{display:none!important}
 #quest-page .qzc-answers .qz-dot.on{background:none;border:0;color:#3b2a3a;box-shadow:none}
 #quest-page .qz-dot.on .qzc-light{background:radial-gradient(circle,#fff 0%,#f3c98a 50%,rgba(233,181,106,.6) 100%);box-shadow:0 0 26px rgba(233,181,106,.75);transform:scale(1.14)}
 #quest-page .qzc-answers .qz-dot:focus-visible{outline:2px solid #3b2a3a;outline-offset:3px}
-#quest-page .qzc-back{display:block;margin:26px auto 0;background:none;border:0;color:#7a6577;font-family:inherit;font-size:14px;cursor:pointer}
+#quest-page .qzc-back{display:block;margin:16px auto 0;padding:10px 18px;min-height:44px;background:none;border:0;color:#6f5a6c;font-family:inherit;font-size:14px;cursor:pointer}
 #quest-page #qz-active.qzc-complete .qzc-answers{opacity:.35}
 #quest-page #qz-submit{width:auto;margin:16px auto 10px;padding:13px 26px;border-radius:999px;background:linear-gradient(180deg,#fff8ee,#fbe6cc);border:1px solid rgba(214,150,70,.7);color:#3b2a3a;box-shadow:0 0 22px rgba(233,181,106,.35)}
 #quest-page #qz-thanks{background:rgba(246,227,214,.86)}
@@ -1627,7 +1628,7 @@ body.ma-incloud .as-rail{display:none!important}
 #quest-page #qz-thanks .sm{color:#6f5a6c}
 @media (prefers-reduced-motion:reduce){#quest-page .qz-card,#quest-page .qzc-circle{animation:none}}
 @media (max-width:520px){#quest-page .qz-card{width:112px;height:112px;padding:12px 9px}#quest-page .qz-card .qn{font-size:12.5px}#quest-page .qz-card .qf{display:none}
-  #quest-page #qz-menu{gap:10px 8px}#quest-page .qzc-answers{gap:3px}#quest-page .qzc-answers .qz-dot{width:60px;font-size:10.5px}}
+  #quest-page #qz-menu{gap:10px 8px}#quest-page .qzc-answers{gap:3px}#quest-page .qzc-answers .qz-dot{width:60px;font-size:12.5px}}
 
 #qz-thanks .big{font-size:24px;color:#efe8ff;font-weight:300;text-shadow:0 0 26px rgba(167,139,250,.8)}
 #qz-thanks .sm{font-size:13px;color:#b4a9d8;margin-top:12px;max-width:380px;line-height:1.6}
@@ -2726,8 +2727,8 @@ window.AS_SEEK_ALWAYS=true;
     </div>
 
     <div class="rg-card rg-quest">
-      <div class="rg-h">Shape your aura <span class="rg-opt">optional · coming</span></div>
-      <div class="rg-sub">Soon you will be able to take gentle, private questionnaires that open your aura further — revealing its colours, its energy, and the areas most alive in you. A space held here for when you are ready. We will always be clear about what each one is for.</div>
+      <div class="rg-h">Shape your aura <span class="rg-opt">optional</span></div>
+      <div class="rg-sub">Gentle, private readings that open your aura further — its colours, its energy, and the areas most alive in you. They wait in My Aura, under Add to your aura, for whenever you are ready. Each one says plainly what it is for.</div>
     </div>
 
     <button id="rg-create">Create my aura</button>
@@ -8409,24 +8410,30 @@ const QUESTS=[
     {q:'I am content not to have an answer to this',pol:'pos'}]}
 ];
 let qzCur=-1,qzAns={};
-/* Shown at most once a fortnight, and never as a verdict. */
+/* Never as a verdict. 27 Oct 2026 · Build 170: a second heavy reading within a fortnight is never met with silence.
+   Karl: "we can't ignore someone in need." The way to a person is always shown; the second time, in fewer words. */
 function qzHeavy(q,negA,negN){
   if(!negN||negA<4.2)return;                        /* only the far end of the scale */
   if(['phq','gad','dass'].indexOf(q.id)<0)return;   /* only the readings that warrant it */
+  let again=false;
   try{
     const k='as_heavy_seen', last=parseInt(localStorage.getItem(k)||'0',10)||0;
-    if(Date.now()-last < 12*24*3600*1000)return;
+    if(Date.now()-last < 12*24*3600*1000)again=true;
     localStorage.setItem(k,String(Date.now()));
   }catch(e){}
   setTimeout(()=>{
     try{
       const w=document.createElement('div'); w.id='as-heavy';
       w.innerHTML='<div class="ah-in">'
-        +'<div class="ah-t">That reading came back heavy.</div>'
-        +'<div class="ah-b">Aurasense is not able to tell you what that means, and it will not try.<br><br>'
-        +'But a reading like that is worth saying out loud to somebody \u2014 someone you trust, or a doctor, '
-        +'or a helpline if that is easier tonight.<br><br>'
-        +'<b>It costs nothing to say it to one person.</b></div>'
+        +(again
+          ?'<div class="ah-t">That reading came back heavy again.</div>'
+           +'<div class="ah-b">You do not have to carry it on your own. Please say it out loud to somebody \u2014 someone you trust, '
+           +'a doctor, or a helpline if that is easier tonight.</div>'
+          :'<div class="ah-t">That reading came back heavy.</div>'
+           +'<div class="ah-b">Aurasense is not able to tell you what that means, and it will not try.<br><br>'
+           +'But a reading like that is worth saying out loud to somebody \u2014 someone you trust, or a doctor, '
+           +'or a helpline if that is easier tonight.<br><br>'
+           +'<b>It costs nothing to say it to one person.</b></div>')
         +'<div class="ah-l">'+AS_HELP_HTML+'</div>'
         +'<button type="button" class="ah-x">I have read this</button></div>';
       document.body.appendChild(w);
@@ -10635,7 +10642,11 @@ function mvOpening(mode){
   return l+'If that line kept its exact direction for a year, who arrives? And what one thing would bend it?<br><br><i>Anything you say here feeds the self that answers from further along.</i>';
 }
 /* When someone writes something heavy, the Mirror stops asking and simply stays. */
-const MV_HEAVY=/\b(kill(?:ing)? my ?self|end (it|my life)|suicid\w*|self[- ]?harm\w*|hurt(?:ing)? my ?self|want to die|don'?t want to (live|be here)|no reason to (live|go on)|better off without me)\b/i;   /* 22 Oct 2026 · “suicide”, “suicidal”, “self-harming” and “hurting myself” were missed */
+/* ═══ 27 Oct 2026 · BUILD 170 · ONE LIST OF HEAVY WORDS ═══════════════════════════════════════════════════════
+   The same line as the Mirror's page and its helper. Of 38 test sentences, this Mirror's own list missed 16 and the
+   held moment's missed 25; neither could read an iPhone's curly apostrophe, so "I don’t want to live" passed.
+   Each list here is now that one line, read with plain apostrophes. Despair is always met with a way to a person. */
+const MV_HEAVY=(function(){const AS_ONE=/\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|(?:want(?:ing)?|wanna|going|ready|need) to end it(?: all| now| tonight| today)?(?!\s*(?:with|on|before|after|between|for|by|at|in|amicably|properly|early|there|here|so|because|but)\b)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist|wake up(?=\s*(?:again|anymore|any more|tomorrow|ever|[.!?…]|$)))|wish (?:i|i'd) (?:was|were|had been) dead|wish i'?d never been born|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to (?:live|go on)|better off (?:dead|without me))\b/i;return {test:function(t){try{return AS_ONE.test(String(t||'').replace(/[\u2018\u2019\u02bc]/g,"'"));}catch(e){return false;}}};})();
 function mvHeavy(){
   return 'I want to stop the questions for a moment. What you have written sounds heavy, and heavy things deserve a person, not a mirror. '
    +'Please reach someone tonight \u2014 someone who knows you, or a crisis line where you are; they are there exactly for this and you would not be a burden. '+AS_HELP_TEXT+' '
@@ -10925,6 +10936,9 @@ function mvPanel(){
       const busy=document.querySelector('[id$="-page"].show,#mv-panel.show,#explore-panel.open,#gv.show');
       if(busy){if(++tries<6)setTimeout(when,5000);else go();return;}
       h.classList.add('show');setTimeout(go,11000);
+      /* 27 Oct 2026 · Build 170 · if a page opens while it is speaking, it steps aside (and will speak another day) */
+      const aside=setInterval(()=>{try{if(!document.body.contains(h)||!h.classList.contains('show')){clearInterval(aside);return;}
+        if(document.querySelector('[id$="-page"].show,#mv-panel.show,#explore-panel.open,#gv.show,#ra-modal,#as-age,#as-heavy,#as-living-mirror,#mr-modal')){clearInterval(aside);h.classList.remove('show');setTimeout(()=>{try{h.remove();}catch(e){}},700);}}catch(e){clearInterval(aside);}},500);
     }catch(e){}};
     setTimeout(when,4200);
     const go=()=>{h.classList.remove('show');setTimeout(()=>{try{h.remove();}catch(e){}},700);try{localStorage.setItem('as_gl_seen','1');}catch(e){}};
@@ -11847,7 +11861,7 @@ const MR_KINDS=[
   voice:'You would not say this to anyone else in your position. Notice who you learned to say it to yourself for.',
   ask:'Whose voice is it, when you say that to yourself?'}
 ];
-const MR_HEAVY=/\b(kill(?:ing)? my ?self|end it all|suicid\w*|want to die|self[- ]?harm\w*|hurt(?:ing)? my ?self|no reason to live|better off without me|take my own life)\b/i;   /* 22 Oct 2026 · the same mend */
+const MR_HEAVY=(function(){const AS_ONE=/\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|(?:want(?:ing)?|wanna|going|ready|need) to end it(?: all| now| tonight| today)?(?!\s*(?:with|on|before|after|between|for|by|at|in|amicably|properly|early|there|here|so|because|but)\b)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist|wake up(?=\s*(?:again|anymore|any more|tomorrow|ever|[.!?…]|$)))|wish (?:i|i'd) (?:was|were|had been) dead|wish i'?d never been born|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to (?:live|go on)|better off (?:dead|without me))\b/i;return {test:function(t){try{return AS_ONE.test(String(t||'').replace(/[\u2018\u2019\u02bc]/g,"'"));}catch(e){return false;}}};})();   /* 27 Oct 2026 · Build 170 · the one list (it answered "I wish I was dead" with a question about the first hour) */
 /* the person's own words, taken whole and never rewritten */
 function mrTheirWords(t){
   const parts=String(t||'').split(/[.!?;\n]+/).map(x=>x.trim()).filter(x=>x.length>12);
@@ -13164,7 +13178,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">27 Oct 2026 · </span>169<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">27 Oct 2026 · </span>170<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -15265,6 +15279,10 @@ body.calm .asn-flow,body.calm .as-reach-flow{animation:none}
 #livefeed-page .as-one>.lf-row.as-now .lf-sym{width:76px;height:76px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 42%,rgba(255,252,247,.97) 0%,rgba(255,247,240,.9) 52%,rgba(255,240,232,.55) 72%,rgba(255,236,226,0) 100%);box-shadow:0 0 22px rgba(233,181,106,.22)}
 #livefeed-page .as-one>.lf-row.as-now .lf-sym svg{width:44px!important;height:44px!important}
 .as-onenav .as-onetrail button.fresh{animation:asFresh 1.6s ease-in-out 2}
+/* 27 Oct 2026 · Build 170 · every little step-light keeps its look and answers a fingertip: a 26px touch area (WCAG 2.2 · 2.5.8) */
+#quest-page .qzc-trail,#register-page .rg-trail,#trajectory-page .tj-trail,#op-nav .op-trail,.as-onenav .as-onetrail,.asp-trail{position:relative;z-index:3}   /* above the breathing circle's glow, which covered them so a touch never reached them */
+#quest-page .qzc-trail button,#register-page .rg-trail button,#trajectory-page .tj-trail button,#op-nav .op-trail button,.as-onenav .as-onetrail button,.asp-trail button{position:relative}
+#quest-page .qzc-trail button::after,#register-page .rg-trail button::after,#trajectory-page .tj-trail button::after,#op-nav .op-trail button::after,.as-onenav .as-onetrail button::after,.asp-trail button::after{content:"";position:absolute;left:50%;top:50%;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%}
 @keyframes asFresh{50%{transform:scale(1.9);box-shadow:0 0 14px rgba(233,181,106,.95)}}
 @media (prefers-reduced-motion:reduce){.asp-circle,#work-page .wk-circle{animation:none}.as-onenav .as-onetrail button.fresh{animation:none;box-shadow:0 0 0 3px rgba(233,181,106,.9)}}
 #gp-back.as-lit{background:rgba(246,227,214,.84)!important}
