@@ -64,7 +64,8 @@ const SELFTEST_SOURCE = 'https://raw.githubusercontent.com/aurasenseapp/aurasens
 
 /* the same line the Mirror page carries: heavy words go to real help, never to the AI.
    22 Oct 2026 · the old list missed "suicidal" and "suicide" and eleven more ways of saying it (the fresh-eyes review) */
-const HEAVY = /\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist)|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to live|better off dead)\b/i;
+/* 27 Oct 2026 · Build 170 · ONE LIST for all of Aurasense: the Mirror page and the map carry this same line */
+const HEAVY = /\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|(?:want(?:ing)?|wanna|going|ready|need) to end it(?: all| now| tonight| today)?(?!\s*(?:with|on|before|after|between|for|by|at|in|amicably|properly|early|there|here|so|because|but)\b)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist|wake up(?=\s*(?:again|anymore|any more|tomorrow|ever|[.!?…]|$)))|wish (?:i|i'd) (?:was|were|had been) dead|wish i'?d never been born|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to (?:live|go on)|better off (?:dead|without me))\b/i;
 
 /* ── THE MIRROR'S CHARTER · Build 158, tuned on the real Claude in Builds 162, 163, 164 and 167 ────────────
    From the Mirror's Charter (4 Oct), the Listening Commons (13 Oct), Karl's voice notes (22 Sept: "beneath the

@@ -28,6 +28,9 @@
   27 Oct 2026 · Build 169: Let it go, draft 4. Dusk falls in the circle and a living fire burns at its foot; the words
   write themselves onto the paper; it crumples slowly on the breath in; it goes into the fire on the breath out, and
   the words glow, char and fall away. Listen Forward opens Stripe, where the person chooses the amount.
+  27 Oct 2026 · Build 170: one list of heavy words for all of Aurasense (wider, and read the same with an iPhone's
+  curly apostrophe); the Mirror is for people 18 and over, said and confirmed once when Claude is chosen; the note
+  that Claude is an AI and not a therapist is easy to read.
   23 Oct 2026 · Build 164: Keep what you found. A few lines, gathered by Claude when a conversation rests, kept on
   this device only if the person chooses ("Your thread"), with "Forget all of it". Aurasense keeps nothing.
   23 Oct 2026 · Build 163: the wiser voice's introduction is shown once a visit, never on repeat.
@@ -165,7 +168,7 @@ textarea::placeholder{color:var(--faint);font-style:italic}
 .home .btn{background:rgba(255,251,245,.6);border:1px solid rgba(233,181,106,.4)}
 body.insite .stage{padding-top:calc(env(safe-area-inset-top,0px) + 74px);justify-content:flex-start}
 body.insite .mirror{margin-top:2vh}
-.note{font-size:.85rem;color:var(--faint);margin-top:10px;text-align:center}
+.note{font-size:.85rem;color:var(--soft);margin-top:10px;text-align:center}   /* 27 Oct 2026 · Build 170 · AI, not a therapist: said where it can be read (it was 2.7 to 1 against its ground; WCAG asks 4.5) */
 @media (max-width:520px){ .say{flex-direction:column;align-items:stretch} .say .btn{align-self:center} }
 @media (max-height:640px){ .mirror{width:min(80vw,54vh,540px)} }
 /* 22 Oct 2026 · Build 156 · Claude listening: who listens, who answered, and the gift line */
@@ -244,6 +247,7 @@ body.tp-cool .mirror::before{background:conic-gradient(from 60deg,rgba(170,160,2
 .tpmoment:focus-visible{outline:2px solid var(--ink);outline-offset:2px;border-radius:8px}
 @media (prefers-reduced-motion:reduce){.tpguide{transition:none}.door.pulse,.tpdoors .door.throw{animation:none}}
 /* ══ TP CSS END ══ */
+.line.small{color:var(--soft)}   /* 27 Oct 2026 · Build 170 · small words that carry meaning stay readable */
 /* Build 168 · the quiet way in, and the quiet offer in a conversation */
 #tpRow .btn{font-size:.92rem}
 #tpPeek .quote{font-size:clamp(.98rem,3.4vw,1.12rem)}
@@ -322,7 +326,7 @@ body.tp-cool .mirror::before{background:conic-gradient(from 60deg,rgba(170,160,2
        person's own two choices, in their own words;
      - picture-words ("as if a door is only just open") - plain words now, by
        Karl's decision; and every turn is measured to sit inside the circle.     */
-var HEAVY=/\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist)|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to live|better off dead)\b/i;   /* 22 Oct 2026 · the old list missed “suicidal” and “suicide” (its last letters were cut off by the word's own edge) and eleven more ways of saying it; the Mirror's helper carries this same line */
+var HEAVY=/\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|(?:want(?:ing)?|wanna|going|ready|need) to end it(?: all| now| tonight| today)?(?!\s*(?:with|on|before|after|between|for|by|at|in|amicably|properly|early|there|here|so|because|but)\b)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist|wake up(?=\s*(?:again|anymore|any more|tomorrow|ever|[.!?…]|$)))|wish (?:i|i'd) (?:was|were|had been) dead|wish i'?d never been born|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to (?:live|go on)|better off (?:dead|without me))\b/i;   /* 27 Oct 2026 · Build 170 · ONE LIST for all of Aurasense (the map's Mirrors and the helper carry this same line): also "I want to end it", "I wish I was dead", "better off without me", "I don't want to wake up again" · 22 Oct 2026 · the old list missed “suicidal” and “suicide” (its last letters were cut off by the word's own edge) and eleven more ways of saying it; the Mirror's helper carries this same line */
 var UNSURE=/^\s*(?:i\s+)?(?:really\s+)?(?:don'?t|do not)\s+know[.!]*\s*$|^\s*(?:dunno|no idea|not sure|unsure|maybe|perhaps|i'?m not sure|i'?m unsure)[.!?]*\s*$/i;
 var LEAVE=/^\s*(?:that'?s enough|enough|i'?m done|done|bye|goodbye|stop|no more|good ?night)(?:[\s,.!]+(?:for now|for today|thanks|thank you|now|please|bye))*[\s,.!]*$/i;   /* 6 Oct 2026 · only a goodbye ends it: "Stop being so hard on yourself" is a wiser voice speaking, not a goodbye */
 var CONFUSED=/^\s*[\w'-]{1,14}\s*\?+\s*$|^\s*which (?:part|bit|one|way)\s*\?+\s*$|what do you mean|i don'?t (understand|get it)|\bhuh\b|what\?|meaning\?/i;   /* 12 Oct 2026 · "which part?" asks for it more simply */
@@ -1440,24 +1444,27 @@ function refreshNote(){
 function lsAsk(after,onNo){
   var a=$('lsAsk');if(!a)return;a.textContent='';
   var row=el('div','doors');
-  var yes=el('button','door','Begin with Claude');yes.type='button';
+  var adult=lsAdult();   /* 27 Oct 2026 · Build 170 · the Mirror is for people 18 and over: one answer for all of Aurasense, kept on this device only */
+  var yes=el('button','door',adult?'Begin with Claude':'I’m 18 or over · Begin with Claude');yes.type='button';
   var no=el('button','door','Not now');no.type='button';
-  yes.addEventListener('click',function(){lsChoose('claude');lsAskHide();if(after)after();});
+  yes.addEventListener('click',function(){lsAdultYes();lsChoose('claude');lsAskHide();if(after)after();});
   no.addEventListener('click',function(){lsAskHide();(onNo||lsNotNow)();});
   row.appendChild(yes);row.appendChild(no);a.appendChild(row);
-  var why=el('p','ask-why','Claude reads your words only to shape each reply. Aurasense keeps nothing, and Anthropic, who make Claude, delete them within 30 days. If you may be in danger, the Mirror shows you how to reach a real person. ');
+  var why=el('p','ask-why',(adult?'':'The Mirror is for people 18 and over. ')+'Claude reads your words only to shape each reply. Aurasense keeps nothing, and Anthropic, who make Claude, delete them within 30 days. If you may be in danger, the Mirror shows you how to reach a real person. ');
   var pl=el('a','lnk','How your words are kept');pl.href='privacy.html#mirror';pl.target='_blank';pl.rel='noopener';
   why.appendChild(pl);a.appendChild(why);
   a.classList.remove('hide');
 }
+function lsAdult(){try{return localStorage.getItem('as_age18')==='1';}catch(e){return false;}}
+function lsAdultYes(){try{localStorage.setItem('as_age18','1');}catch(e){}}
 function lsAskHide(){var a=$('lsAsk');if(a){a.classList.add('hide');a.textContent='';}}
 /* Not now: nothing is sent, nothing is kept, and the way back in stays open */
 function lsNotNow(){
   $('doors').classList.add('hide');$('say').classList.add('hide');setWho('');
   show([{cls:'line',text:'That’s alright. Nothing has left this page.'},{cls:'line soft',text:'The Mirror will be here whenever you’d like.'}],'');
   var a=$('lsAsk');a.textContent='';var row=el('div','doors');
-  var b=el('button','door','Begin with Claude after all');b.type='button';
-  b.addEventListener('click',function(){lsAskHide();var w=$('words').value.trim();lsChoose('claude');
+  var b=el('button','door',lsAdult()?'Begin with Claude after all':'I’m 18 or over · Begin with Claude');b.type='button';
+  b.addEventListener('click',function(){lsAdultYes();lsAskHide();var w=$('words').value.trim();lsChoose('claude');
     if(S.turns.length){$('say').classList.remove('hide');if(w)hear();}else{show(openParts(),'');$('doors').classList.remove('hide');tpRowShow();}});
   row.appendChild(b);a.appendChild(row);a.classList.remove('hide');}
 /* Stop sharing my words: the yes is forgotten on this device, and the conversation is let rest */
