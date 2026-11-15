@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- This page talks only to Aurasense itself (its own helper, and its own alphabet file). Nothing else can be fetched or run. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; connect-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<meta name="description" content="The Mirror: a mirror for what you sense, held between two kinds of minds.">
+<title>The Mirror — Aurasense</title>
+<!--
+  THE MIRROR · the new way of listening · Build 174 · 15 November 2026 · Karl with Claude
+  Karl, 30 October: "Reflecting senses - Aurasense /AI can ask how a sense feels, and what a sense is." People are
+  "openly informed about what AI gets from the interaction". Karl, 15 November: after heavy words the page gently
+  stays, without the AI: "You can keep writing here while you reach someone".
+
+  A mirror for what a person senses, held between two kinds of minds. Claude asks as a learner, gives the sense back
+  in the person's own words, and says what it learned. The sense is offered its Alphasense word, then three doors:
+  offer it to the map, keep it (on this device only), or let it go. Never advice, never therapy.
+
+  What this page promises, and how it keeps each promise:
+  - Nothing leaves the page before the person chooses Claude. Until then, and outside Canada, the written Mirror asks.
+  - Heavy words never leave the page at all: they are caught here first, with the same list the helper uses.
+  - Their words go only to Aurasense's own helper (/api/mirror), which passes them to Claude and keeps nothing.
+  - Nothing typed here is stored by Aurasense. "Keep it" stores on this device only.
+  - Every word shown is placed as plain text, never as markup. Symbols are drawn only from Aurasense's own file,
+    and only if they are made of plain shapes.
+  This page stands by itself until Karl has felt it. The Mirror that is live today is untouched.
+  Hidden notes are public: first name only, no keys, no one's private details.
+-->
+<style>
+@property --turn{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{--ink:#3b2a3a;--soft:#6a5567;--plum:#5b3a7a;--line:rgba(59,42,58,.17);--card:rgba(255,252,247,.82);--gold:#e9b56a;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{background:#f6e3d6}
+body{margin:0;font-family:var(--serif);color:var(--ink);font-size:18px;line-height:1.6;background:#f6e3d6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+.ground{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 42% at 12% 6%, rgba(243,201,192,.85) 0%, rgba(243,201,192,0) 70%),
+    radial-gradient(62% 44% at 92% 10%, rgba(220,210,242,.85) 0%, rgba(220,210,242,0) 70%),
+    radial-gradient(70% 46% at 20% 96%, rgba(248,220,196,.9) 0%, rgba(248,220,196,0) 72%),
+    radial-gradient(60% 44% at 90% 92%, rgba(201,220,244,.8) 0%, rgba(201,220,244,0) 70%)}
+.wrap{position:relative;z-index:1;max-width:37rem;margin:0 auto;padding:0 1.25rem 3rem}
+.top{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 0 0}
+.mark{display:inline-block;min-height:44px;line-height:44px;color:var(--ink);text-decoration:none;letter-spacing:.3em;text-transform:lowercase;font-size:.95rem}
+.hero{text-align:center;padding:.4rem 0 .2rem}
+.aura{position:relative;width:92px;height:92px;margin:0 auto 1.1rem;border-radius:50%;
+  background:radial-gradient(circle at 50% 44%, rgba(255,252,247,.98) 0%, rgba(255,247,240,.92) 46%, rgba(255,240,232,.5) 70%, rgba(255,236,226,0) 100%);
+  animation:breathe 6s ease-in-out infinite}
+.aura::before{content:"";position:absolute;inset:-10%;border-radius:50%;z-index:-1;filter:blur(12px);
+  background:conic-gradient(from var(--turn), rgba(233,181,106,.5), rgba(220,210,242,.62), rgba(243,201,192,.55), rgba(201,220,244,.62), rgba(233,181,106,.5));
+  animation:turn 40s linear infinite}
+body.listening .aura{animation-duration:3.4s}
+@keyframes breathe{0%,100%{transform:scale(.97)}50%{transform:scale(1.035)}}
+@keyframes turn{to{--turn:360deg}}
+h1{font-weight:400;font-size:clamp(1.9rem,7vw,2.5rem);line-height:1.15;margin:0 0 .5rem}
+h2{font-weight:400;font-size:1.4rem;line-height:1.25;margin:0 0 .6rem}
+p{margin:0 0 .9rem}
+.lead{font-size:1.08rem;margin:0 auto .6rem;max-width:30rem}
+.soft{color:var(--soft)}
+.small{font-size:.92rem}
+.hide{display:none !important}
+a{color:var(--plum);text-underline-offset:.18em;text-decoration-thickness:1px}
+a:focus-visible,button:focus-visible,textarea:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:8px}
+button{font-family:var(--serif);color:inherit;cursor:pointer}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.5rem 1.4rem;border-radius:999px;border:1px solid var(--plum);
+  background:var(--plum);color:#fffaf5;font-size:1.04rem;letter-spacing:.01em;text-decoration:none}
+.btn.quiet{background:transparent;color:var(--plum)}
+.btn[disabled]{opacity:.55;cursor:default}
+.lnk{display:inline-flex;align-items:center;min-height:44px;padding:0 .15rem;border:0;background:none;color:var(--plum);font-size:inherit;text-decoration:underline;text-underline-offset:.18em;text-decoration-thickness:1px}
+.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;justify-content:center;margin:.9rem 0 .5rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:1.05rem 1.2rem;margin:0 0 1rem}
+.card > :last-child{margin-bottom:0}
+.tag{display:block;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;color:var(--soft);margin:0 0 .2rem}
+/* the conversation */
+#thread{margin-top:.6rem}
+.mine{margin:1.1rem 0 .7rem 2rem;padding:.65rem 1rem;border-radius:18px 18px 4px 18px;background:rgba(255,252,247,.5);border:1px solid var(--line);font-size:1rem;white-space:pre-wrap;overflow-wrap:anywhere}
+.reply{background:var(--card);border:1px solid var(--line);border-radius:20px 20px 20px 4px;padding:1.05rem 1.2rem;margin:0 0 1rem;animation:arrive .7s ease both}
+.reply > :last-child{margin-bottom:0}
+.reply .heard{margin:0 0 .8rem}
+.reply .q{font-size:1.2rem;line-height:1.4;margin:.2rem 0 0}
+.side{margin:0 0 .8rem;padding:.6rem .85rem;border-left:3px solid var(--gold);background:rgba(255,252,247,.6);border-radius:0 14px 14px 0}
+.side p{margin:0}
+.side.clear{border-left-color:var(--plum)}
+.old{opacity:.86}
+.old .tag{color:var(--ink)}
+.quietline{text-align:right;margin:-.3rem 0 .9rem;font-size:.9rem;color:var(--soft)}
+@keyframes arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+/* writing */
+#say{margin-top:.8rem}
+label.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+textarea,input[type=text]{display:block;width:100%;font-family:var(--serif);font-size:1.05rem;line-height:1.5;color:var(--ink);background:rgba(255,252,247,.9);
+  border:1px solid rgba(59,42,58,.32);border-radius:16px;padding:.75rem .95rem}
+textarea{min-height:6.2rem;resize:vertical}
+#who{min-height:1.5rem;text-align:center;margin:.5rem 0 0}
+#note{text-align:center;margin:.9rem 0 0}
+.care{border-color:rgba(91,58,122,.5);background:rgba(255,252,247,.95)}
+.care p{font-size:1.05rem}
+/* naming */
+.word{display:flex;gap:.9rem;align-items:center;margin:0 0 .8rem}
+.word .sym{flex:0 0 64px;width:64px;height:64px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.word b{display:block;font-weight:600;font-size:1.25rem;line-height:1.2}
+.word span{display:block;color:var(--soft);font-size:.98rem;line-height:1.35}
+.doors3{display:grid;grid-template-columns:1fr;gap:.6rem;margin:.4rem 0 1rem}
+.doors3 button{display:block;width:100%;text-align:left;min-height:64px;padding:.75rem 1.05rem;border-radius:18px;border:1px solid var(--plum);background:rgba(255,252,247,.85)}
+.doors3 button b{display:block;font-weight:600;font-size:1.08rem;color:var(--plum)}
+.doors3 button span{display:block;font-size:.93rem;color:var(--soft);line-height:1.35}
+.chips{display:flex;flex-wrap:wrap;gap:.45rem;margin:0 0 .8rem}
+.chips button{min-height:44px;padding:.3rem .9rem;border-radius:999px;border:1px solid var(--line);background:rgba(255,252,247,.7);font-size:.95rem}
+.chips button[aria-pressed="true"]{border-color:var(--plum);background:var(--plum);color:#fffaf5}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:.5rem;margin:0 0 .8rem}
+.grid button{display:flex;flex-direction:column;align-items:center;gap:.25rem;min-height:104px;padding:.55rem .3rem;border-radius:16px;border:1px solid var(--line);background:rgba(255,252,247,.7);font-size:.9rem;line-height:1.2;text-align:center;overflow-wrap:anywhere}
+.going{animation:lift 2.4s ease-in forwards}
+@keyframes lift{to{opacity:0;transform:translateY(-34px) scale(.98);filter:blur(6px)}}
+details{margin:1.6rem 0 0;border-top:1px solid var(--line);padding-top:.4rem}
+summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:var(--plum)}
+details ul{margin:.3rem 0 1rem;padding-left:1.2rem}
+details li{margin:0 0 .5rem}
+footer{margin-top:2rem;padding-top:1rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--soft)}
+footer nav{display:flex;flex-wrap:wrap;gap:.1rem 1.1rem;margin:0 0 .5rem}
+footer nav a{display:inline-block;min-height:44px;line-height:44px}
+@media (prefers-reduced-motion:reduce){.aura,.aura::before,.reply{animation:none}.going{animation:fade .6s ease forwards}}
+@keyframes fade{to{opacity:0}}
+</style>
+</head>
+<body>
+<div class="ground" aria-hidden="true"></div>
+<div class="wrap">
+<header class="top"><a class="mark" href="/" aria-label="Aurasense, home">aurasense</a><button id="back" class="lnk hide" type="button">Back to the map</button></header>
+<main>
+<div class="hero" id="hero">
+<div class="aura" aria-hidden="true"></div>
+<h1 id="h1">What are you sensing?</h1>
+<p class="lead soft" id="sub">In your body, in this place, or in a moment that is still with you.</p>
+</div>
+
+<div id="care" class="card care hide" role="alert"></div>
+<div id="thread" aria-live="polite"></div>
+<div id="ask" class="card hide"></div>
+
+<div id="say">
+<label class="sr" for="words">Write what you are sensing</label>
+<textarea id="words" maxlength="1200" placeholder="Write it as it is. It doesn’t need tidying." autocomplete="off" spellcheck="true"></textarea>
+<div class="row"><button id="send" class="btn" type="button">Tell the Mirror</button><button id="nameIt" class="btn quiet hide" type="button">Name this sense</button></div>
+</div>
+<p id="who" class="small soft" aria-live="polite"></p>
+
+<div id="close" class="hide"></div>
+
+<p id="note" class="small soft"></p>
+
+<details id="how">
+<summary>How the Mirror works</summary>
+<ul>
+<li>This is a mirror for what you sense, held between two kinds of minds.</li>
+<li>You know what being human is like. Claude, an AI made by Anthropic, has never felt rain or a tight chest. So it asks as a learner, and gives your sense back to you in your own words.</li>
+<li><strong>Both sides gain, and both are said openly.</strong> You come to see what you sense more clearly. Claude tells you what it learned from you.</li>
+<li>Claude keeps nothing once you close this page, and Aurasense stores nothing you write here. Only what you choose to offer to the map is kept.</li>
+<li>The Mirror gives no advice, and it is not therapy. If something is heavy, it shows you how to reach real people.</li>
+</ul>
+</details>
+</main>
+<footer>
+<nav aria-label="More from Aurasense"><a href="/privacy#mirror">How your words are kept</a><a href="/terms">Terms</a></nav>
+<p>The Mirror is for looking at what you sense. It is not a person, not a therapist, and not advice. Aurasense is a trade name registered in Alberta, Canada.</p>
+</footer>
+</div>
+<script>
+(function(){'use strict';
+var $=function(id){return document.getElementById(id);};
+function el(tag,cls,text){var e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e;}
+function btn(cls,text,fn){var b=el('button',cls,text);b.type='button';b.addEventListener('click',fn);return b;}
+function clip(t,n){t=String(t||'');return t.length>n?t.slice(0,n-1).replace(/\s+\S*$/,'')+'…':t;}
+function str(x,n){return typeof x==='string'?x.replace(/\s+/g,' ').trim().slice(0,n):'';}
+function norm(t){return String(t||'').replace(/[‘’ʼ]/g,"'");}
+function get(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function put(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}}
+function drop(k){try{localStorage.removeItem(k);}catch(e){}}
+function list(k){try{var a=JSON.parse(get(k)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
+
+var HEAVY=/\b(?:kill(?:ing)? my ?self|kms|unalive\w*|suicid\w*|end(?:ing)? (?:my (?:own )?life|it all)|(?:want(?:ing)?|wanna|going|ready|need) to end it(?: all| now| tonight| today)?(?!\s*(?:with|on|before|after|between|for|by|at|in|amicably|properly|early|there|here|so|because|but)\b)|take my (?:own )?life|(?:want(?:ing)?|wanna) (?:to )?die|(?:don'?t|do not|dont) want to (?:live|be here|be alive|exist|wake up(?=\s*(?:again|anymore|any more|tomorrow|ever|[.!?…]|$)))|wish (?:i|i'd) (?:was|were|had been) dead|wish i'?d never been born|hurt(?:ing)? my ?self|harm(?:ing)? my ?self|self[- ]?harm\w*|no reason to (?:live|go on)|better off (?:dead|without me))\b/i;   /* the helper's own list, letter for letter (a tool keeps them the same) */
+var UNSAFE=/@|https?:|www\.|\d{3,}/i;   /* nothing that could show who someone is, or lead anywhere, goes toward the map */
+var RULES_MARK='[Written by the Mirror’s written rules, not by you:] ';
+var LEARNED='What I learned from you:',CLEAR='The you who senses most clearly might notice:';
+var DOOR='What are you sensing?';
+var WQ=['What is it like? Its feel, its weight, its edges.',
+  'Where does it sit: in your body, in the room, or between you and someone?',
+  'When did it first come?',
+  'Does it belong to this place and this moment, or did it arrive from somewhere else?'];
+var M={settled:false,live:false,listen:false,choice:null,rest:'',turns:[],first:'',busy:false,gen:0,replies:0,wstep:0,careOn:false,waiting:false,alpha:null,pick:null,close:null,ctl:null};
+function fresh(){M.turns=[{role:'assistant',content:RULES_MARK+DOOR}];M.first='';M.replies=0;M.wstep=0;M.pick=null;M.close=null;}
+fresh();
+
+function setWho(t){$('who').textContent=t||'';}
+function claudeOn(){return M.live&&M.listen&&M.choice==='claude'&&!M.rest;}
+function refreshNote(){
+  var n=$('note');n.textContent='';
+  if(M.careOn){n.appendChild(document.createTextNode('Nothing you write now leaves this page. The Mirror is not a person, and not a therapist.'));return;}
+  if(claudeOn()){n.appendChild(document.createTextNode('Claude, an AI made by Anthropic, is listening as a learner. Aurasense keeps nothing. Not a person, and not a therapist. '));
+    n.appendChild(btn('lnk','Stop sharing my words',function(){M.choice=null;drop('as_mirror_listener');M.rest='choice';refreshNote();setWho('Nothing more will be shared. The written Mirror carries on.');}));}
+  else if(M.rest==='away'||(M.settled&&M.live&&!M.listen))n.appendChild(document.createTextNode('Claude listens in Canada first. Here the written Mirror asks instead, and nothing leaves this page. Not a person, and not a therapist.'));
+  else if(M.rest==='choice'){n.appendChild(document.createTextNode('The written Mirror is asking, and nothing leaves this page. Not a person, and not a therapist. '));
+    if(M.live&&M.listen)n.appendChild(btn('lnk','Let Claude listen',function(){M.rest='';consent(function(){setWho('Claude will listen from your next words.');},function(){M.rest='choice';refreshNote();});}));}
+  else if(M.rest||(M.settled&&!M.live))n.appendChild(document.createTextNode('Claude is resting, so the written Mirror asks instead. Nothing leaves this page. Not a person, and not a therapist.'));
+  else n.appendChild(document.createTextNode('The Mirror is not a person, and not a therapist.'));
+  var k=list('as_mirror_senses').length;
+  if(k){n.appendChild(document.createTextNode(' '));n.appendChild(btn('lnk','Your kept senses ('+k+')',keptShow));}
+}
+
+/* ── may Claude listen? Two equal answers, and what a yes means ── */
+function consent(yes,no){
+  var a=$('ask');a.textContent='';
+  a.appendChild(el('h2','','May Claude listen?'));
+  a.appendChild(el('p','','Claude is an AI made by Anthropic. It reads your words only to shape each reply, and to tell you what it learned from them. Aurasense keeps nothing, and Anthropic, who make Claude, delete them within 30 days. If you may be in danger, the Mirror shows you how to reach a real person.'));
+  var adult=get('as_age18')==='1';
+  if(!adult)a.appendChild(el('p','soft small','The Mirror is for people 18 and over.'));
+  var row=el('div','row');
+  row.appendChild(btn('btn',adult?'Begin with Claude':'I’m 18 or over · Begin with Claude',function(){put('as_age18','1');put('as_mirror_listener','claude');M.choice='claude';hideAsk();refreshNote();if(yes)yes();}));
+  row.appendChild(btn('btn quiet','Not now',function(){hideAsk();setWho('That’s alright. Nothing has left this page. The written Mirror will ask instead.');if(no)no();}));
+  a.appendChild(row);
+  var p=el('p','small');var l=el('a','','How your words are kept');l.href='/privacy#mirror';l.target='_blank';l.rel='noopener noreferrer';p.appendChild(l);a.appendChild(p);
+  a.classList.remove('hide');$('say').classList.add('hide');try{a.scrollIntoView({block:'nearest'});}catch(e){}
+}
+function hideAsk(){$('ask').classList.add('hide');$('ask').textContent='';if(!M.close)$('say').classList.remove('hide');}
+
+/* ── the conversation ── */
+function dim(){var r=$('thread').children;for(var i=0;i<r.length;i++)r[i].classList.add('old');}
+function show(e){$('thread').appendChild(e);try{e.scrollIntoView({block:'nearest',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}catch(x){}}
+function addMine(raw){dim();show(el('div','mine',raw));$('hero').classList.add('hide');}
+function shown(v){return [v.reflect,v.learned?LEARNED+' '+v.learned:'',v.aspire?CLEAR+' “'+v.aspire+'”':'',v.question].filter(Boolean).join(' ');}
+function addReply(v,by){
+  var c=el('div','reply');
+  if(by==='rules')c.appendChild(el('span','tag','The written Mirror'));
+  if(v.reflect)c.appendChild(el('p','heard',v.reflect));
+  if(v.learned){var l=el('div','side');l.appendChild(el('span','tag','What I learned from you'));l.appendChild(el('p','',v.learned));c.appendChild(l);}
+  if(v.aspire){var a=el('div','side clear');a.appendChild(el('span','tag','The you who senses most clearly might notice'));a.appendChild(el('p','','“'+v.aspire+'”'));c.appendChild(a);}
+  if(v.question)c.appendChild(el('p','q',v.question));
+  show(c);
+  M.turns.push({role:'assistant',content:(by==='rules'?RULES_MARK:'')+shown(v)});
+  if(M.turns.length>40)M.turns=M.turns.slice(-40);
+  M.replies++;
+  var nb=$('nameIt');nb.classList.remove('hide');
+  if(v.ready){nb.classList.remove('quiet');$('send').classList.add('quiet');}
+  if(!('ontouchstart' in window)){try{$('words').focus({preventScroll:true});}catch(e){}}
+  if(M.replies===1)loadAlpha();
+}
+function finish(){M.busy=false;M.ctl=null;document.body.classList.remove('listening');$('send').disabled=false;$('nameIt').disabled=false;}
+function busy(t){M.busy=true;document.body.classList.add('listening');$('send').disabled=true;$('nameIt').disabled=true;setWho(t);}
+
+function hear(){
+  var raw=$('words').value.replace(/\r/g,'').trim().slice(0,1200);
+  if(!raw||M.busy)return;
+  if(!M.settled){M.waiting=true;setWho('One moment…');return;}
+  if(M.careOn){$('words').value='';addMine(raw);show(el('p','quietline','Only here. Nothing is sent.'));return;}
+  if(HEAVY.test(norm(raw))){$('words').value='';addMine(raw);care('');return;}   /* heavy words never leave the page */
+  if(M.live&&M.listen&&!M.rest&&M.choice!=='claude'){consent(hear,function(){M.rest='choice';refreshNote();hear();});return;}
+  $('words').value='';addMine(raw);if(!M.first)M.first=raw;setWho('');
+  if(claudeOn())listen(raw);else written(raw);
+}
+/* the written Mirror: no AI, nothing sent. It walks the four plain sides of a sense, in their own words */
+function written(raw){
+  M.turns.push({role:'user',content:raw});
+  var i=Math.max(M.wstep,Math.min(M.replies,WQ.length));M.wstep=i+1;
+  var v={reflect:'You wrote: “'+clip(raw.replace(/\s+/g,' '),170)+'”',learned:'',aspire:'',
+    question:i<WQ.length?WQ[i]:'You have looked at it from four sides. You can name it now, or stay with it a little longer.',ready:i>=WQ.length-1};
+  addReply(v,'rules');refreshNote();
+}
+function post(body){
+  var ctl=null;try{ctl=new AbortController();}catch(e){}M.ctl=ctl;
+  var timer=setTimeout(function(){try{if(ctl)ctl.abort();}catch(e){}},50000);
+  return fetch('/api/mirror',{method:'POST',headers:{'Content-Type':'application/json'},cache:'no-store',credentials:'same-origin',body:JSON.stringify(body),signal:ctl?ctl.signal:undefined})
+    .then(function(r){return r.json().then(function(j){return j&&typeof j==='object'?j:{ok:false,code:'jumbled'};},function(){return {ok:false,code:'jumbled'};});})
+    .then(function(v){clearTimeout(timer);return v;},function(){clearTimeout(timer);return {ok:false,code:'upstream'};});
+}
+/* why Claude is not answering, in plain words; the written Mirror always carries on */
+function resting(code){
+  if(code==='away'){M.rest='away';return 'Claude listens in Canada first, so the written Mirror carries on.';}
+  if(code==='busy')return 'The Mirror has heard a great deal just now, so the written Mirror carries on for a moment.';
+  if(code==='upstream'||code==='jumbled'||code==='empty')return 'Claude missed that, so the written Mirror carries on for now.';
+  M.rest='rest';return 'Claude is resting, so the written Mirror carries on.';
+}
+function listen(raw){
+  var my=++M.gen;busy('Listening…');
+  post({v:2,words:raw,turns:M.turns.slice(-24)}).then(function(v){
+    if(my!==M.gen){finish();return;}
+    finish();
+    if(v.care===true){care(v.by==='claude'?'Claude heard something heavy, so the Mirror points to real help.':'');return;}
+    if(v.ok!==true){var why=resting(String(v.code||''));written(raw);setWho(why);return;}
+    var out={reflect:str(v.reflect,480),learned:str(v.learned,240),aspire:str(v.aspire,360).replace(/^[“"]+|[”"]+$/g,''),question:str(v.question,300),ready:v.ready===true};
+    if(!out.reflect&&!out.question){written(raw);setWho(resting('empty'));return;}
+    M.turns.push({role:'user',content:raw});
+    addReply(out,'ai');setWho('');refreshNote();
+  });
+}
+
+/* ── when someone is in real pain: real help first, and the page gently stays, without the AI ── */
+function care(why){
+  M.gen++;try{if(M.ctl)M.ctl.abort();}catch(e){}finish();
+  M.careOn=true;M.close=null;
+  var c=$('care');c.textContent='';
+  c.appendChild(el('p','','That sounds really heavy, and I’m glad you said it here.'));
+  c.appendChild(el('p','','This is more than a mirror should hold alone. Please reach a person now: someone you trust, or a crisis line where you are.'));
+  var p=el('p','');p.appendChild(document.createTextNode('In Canada or the US, you can call or text '));
+  var t=el('a','','988');t.href='tel:988';p.appendChild(t);
+  p.appendChild(document.createTextNode('. In immediate danger, call 911 or your local emergency number. Anywhere else, '));
+  var f=el('a','','findahelpline.com');f.href='https://findahelpline.com/';f.target='_blank';f.rel='noopener noreferrer';p.appendChild(f);
+  p.appendChild(document.createTextNode(' lists helplines.'));c.appendChild(p);
+  c.appendChild(el('p','soft','You can keep writing here while you reach someone. Nothing you write now leaves this page.'));
+  c.classList.remove('hide');
+  $('close').classList.add('hide');$('close').textContent='';$('ask').classList.add('hide');$('say').classList.remove('hide');
+  $('nameIt').classList.add('hide');$('send').textContent='Write it here';$('send').classList.remove('quiet');
+  $('hero').classList.add('hide');setWho(why||'');refreshNote();
+  try{c.scrollIntoView({block:'start'});}catch(e){}
+}
+
+/* ── the alphabet: Aurasense's own file, and only plain shapes are ever drawn ── */
+var OKG=/^(?:<(?:path|circle|line|ellipse|rect|polyline|polygon)(?: (?:d|cx|cy|r|rx|ry|x|y|x1|y1|x2|y2|width|height|points|opacity|class|transform|stroke-width|stroke-dasharray|stroke-linecap|fill)="[A-Za-z0-9 .,#()\-]*")+\/>)+$/;
+function loadAlpha(){
+  if(M.alpha)return Promise.resolve(M.alpha);
+  if(M.alphaP)return M.alphaP;
+  M.alphaP=fetch('/alphasense.json',{cache:'no-store',credentials:'same-origin'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
+    if(!j||!Array.isArray(j.words)||!Array.isArray(j.chapters))return null;
+    var by={},words=[];
+    j.words.forEach(function(w){if(!w||typeof w.w!=='string'||typeof w.d!=='string')return;
+      var x={w:w.w.slice(0,60),d:w.d.slice(0,200),fam:String(w.fam||'first'),c:/^#[0-9a-f]{6}$/i.test(w.c||'')?w.c:'#dcd2f2',g:(typeof w.g==='string'&&OKG.test(w.g))?w.g:'',door:typeof w.door==='string'?w.door:''};
+      by[x.w]=x;words.push(x);});
+    M.alpha={by:by,words:words,chapters:j.chapters.filter(function(c){return c&&typeof c.id==='string'&&typeof c.name==='string';})};
+    return M.alpha;},function(){return null;});
+  return M.alphaP;
+}
+function sym(w,size){
+  var s=el('span','sym');s.style.background='radial-gradient(circle, '+w.c+'cc 0%, '+w.c+'55 60%, '+w.c+'00 100%)';
+  if(size){s.style.width=size+'px';s.style.height=size+'px';s.style.flexBasis=size+'px';}
+  if(w.g){s.innerHTML='<svg width="'+Math.round((size||64)*.72)+'" height="'+Math.round((size||64)*.72)+'" viewBox="0 0 48 48" fill="none" stroke="#5b3a7a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+w.g.replace(/class="f"/g,'fill="#5b3a7a" stroke="none"')+'</svg>';}
+  return s;
+}
+
+/* ── naming the sense, then three doors ── */
+function nameSense(){
+  if(M.busy||M.careOn||!M.replies)return;
+  var my=++M.gen;busy('Finding the nearest word…');
+  var ask=claudeOn()?post({v:2,keep:true,turns:M.turns.slice(-24)}):Promise.resolve({ok:false,code:'written'});
+  Promise.all([ask,loadAlpha()]).then(function(r){
+    if(my!==M.gen){finish();return;}
+    finish();var v=r[0],c=null;
+    if(v&&v.care===true){care('');return;}
+    if(v&&v.ok===true&&v.close&&typeof v.close==='object'){var k=v.close;
+      c={sensed:str(k.sensed,320),name:str(k.name,60),also:str(k.also,60),working:str(k.working,60),learned:str(k.learned,240),clear:str(k.clear,240).replace(/^[“"]+|[”"]+$/g,''),offer:str(k.offer,220),by:'ai'};}
+    if(!c||!c.sensed)c={sensed:'“'+clip(M.first.replace(/\s+/g,' '),200)+'”',name:'',also:'',working:'',learned:'',clear:'',offer:'',by:'rules'};
+    if(UNSAFE.test(c.offer)||HEAVY.test(norm(c.offer)))c.offer='';
+    M.close=c;
+    var a=M.alpha;
+    M.pick=(a&&c.name&&a.by[c.name])?{word:c.name}:(c.name==='new'&&c.working?{working:c.working}:null);
+    setWho(c.by==='rules'&&v&&v.code!=='written'?resting(String(v.code||'')):'');
+    closeShow();
+  });
+}
+function wordBlock(box){
+  var a=M.alpha,c=M.close,p=M.pick;
+  box.appendChild(el('span','tag','A word for it, if one fits'));
+  if(p&&p.word&&a&&a.by[p.word]){var w=a.by[p.word];
+    var row=el('div','word');row.appendChild(sym(w));var t=el('div','');t.appendChild(el('b','',w.w));t.appendChild(el('span','',w.d));row.appendChild(t);box.appendChild(row);
+    if(w.door&&a.by[w.door])box.appendChild(el('p','small soft','In Alphasense, '+w.w+' carries a doorway: '+w.door+', “'+a.by[w.door].d+'”.'));
+    box.appendChild(el('p','small soft','An Alphasense word is only an offer. You are the one who knows.'));}
+  else if(p&&p.working!=null){
+    box.appendChild(el('p','','A new sense, waiting for a name. You can give it one in your own words.'));
+    var lab=el('label','sr','Your name for this sense');lab.htmlFor='working';box.appendChild(lab);
+    var inp=el('input','');inp.type='text';inp.id='working';inp.maxLength=60;inp.value=p.working||'';inp.autocomplete='off';
+    inp.addEventListener('input',function(){M.pick.working=inp.value.slice(0,60);});box.appendChild(inp);}
+  else box.appendChild(el('p','','No word has been chosen. That is welcome too: a sense does not need a name.'));
+  var row2=el('div','chips');
+  if(a&&c.name&&a.by[c.name]&&(!p||p.word!==c.name))row2.appendChild(btn('','Back to '+c.name,function(){M.pick={word:c.name};closeShow();}));
+  if(a&&c.also&&a.by[c.also]&&(!p||p.word!==c.also))row2.appendChild(btn('','Closer to '+c.also,function(){M.pick={word:c.also};closeShow();}));
+  if(a)row2.appendChild(btn('','Look through the words',browse));
+  if(!p||p.working==null)row2.appendChild(btn('','A new sense, in my own words',function(){M.pick={working:c.working||''};closeShow();try{$('working').focus();}catch(e){}}));
+  if(p)row2.appendChild(btn('','No word',function(){M.pick=null;closeShow();}));
+  box.appendChild(row2);
+}
+function closeShow(){
+  var c=M.close,b=$('close');if(!c)return;b.textContent='';
+  $('say').classList.add('hide');dim();
+  var card=el('div','card');card.id='closeCard';
+  card.appendChild(el('h2','','Your sense, as you came to see it'));
+  card.appendChild(el('p','',c.sensed));
+  var wb=el('div','');wordBlock(wb);card.appendChild(wb);
+  if(c.learned){var l=el('div','side');l.appendChild(el('span','tag','What I learned from you'));l.appendChild(el('p','',c.learned));card.appendChild(l);}
+  if(c.clear){var s=el('div','side clear');s.appendChild(el('span','tag','The you who senses most clearly might notice'));s.appendChild(el('p','','“'+c.clear+'”'));card.appendChild(s);}
+  b.appendChild(card);
+  b.appendChild(el('h2','','What would you like to do with it?'));
+  var d=el('div','doors3');
+  function door(title,sub,fn){var x=btn('','',fn);x.appendChild(el('b','',title));x.appendChild(el('span','',sub));d.appendChild(x);}
+  door('Offer it to the map','So other people, and AI, can learn from it. It carries no name.',offerShow);
+  door('Keep it','On this device only. No one else can see it.',keepIt);
+  door('Let it go','Nothing is kept, here or anywhere.',letGo);
+  b.appendChild(d);
+  b.appendChild(btn('lnk','Stay with it a little longer',function(){M.close=null;b.classList.add('hide');b.textContent='';$('say').classList.remove('hide');}));
+  b.classList.remove('hide');try{b.scrollIntoView({block:'start',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}catch(e){}
+}
+function browse(){
+  var a=M.alpha,b=$('close');if(!a)return;b.textContent='';
+  b.appendChild(el('h2','','The Alphasense words'));
+  b.appendChild(el('p','soft','Choose the one that is nearest, or none.'));
+  var chips=el('div','chips'),note=el('p','small soft',''),grid=el('div','grid');
+  function open(ch){
+    for(var i=0;i<chips.children.length;i++)chips.children[i].setAttribute('aria-pressed',chips.children[i].dataset.id===ch.id?'true':'false');
+    note.textContent=ch.note||'';grid.textContent='';
+    a.words.forEach(function(w){if(w.fam!==ch.id)return;
+      var x=btn('','',function(){M.pick={word:w.w};closeShow();});x.title=w.d;x.appendChild(sym(w,44));x.appendChild(el('span','',w.w));grid.appendChild(x);});
+  }
+  a.chapters.forEach(function(ch){var x=btn('',ch.name,function(){open(ch);});x.dataset.id=ch.id;x.setAttribute('aria-pressed','false');chips.appendChild(x);});
+  b.appendChild(chips);b.appendChild(note);b.appendChild(grid);
+  b.appendChild(btn('lnk','Back',closeShow));
+  var start=a.chapters[0];if(M.pick&&M.pick.word&&a.by[M.pick.word])a.chapters.forEach(function(ch){if(ch.id===a.by[M.pick.word].fam)start=ch;});
+  if(start)open(start);
+  try{b.scrollIntoView({block:'start'});}catch(e){}
+}
+function picked(){var p=M.pick;return {word:p&&p.word?p.word:'',working:p&&p.working?str(p.working,60):''};}
+function ended(title,line){
+  var b=$('close');b.textContent='';var card=el('div','card');card.appendChild(el('h2','',title));card.appendChild(el('p','',line));b.appendChild(card);
+  var row=el('div','row');row.appendChild(btn('btn','Begin again',again));b.appendChild(row);
+  M.close=null;refreshNote();try{b.scrollIntoView({block:'nearest'});}catch(e){}
+}
+function keepIt(){
+  var c=M.close;if(!c)return;var p=picked(),a=list('as_mirror_senses');
+  a.push({at:new Date().toISOString().slice(0,10),sensed:c.sensed,word:p.word,working:p.working,learned:c.learned});
+  if(put('as_mirror_senses',JSON.stringify(a.slice(-60))))ended('Kept','It is kept on this device only. No one else can see it, and you can let it go whenever you like.');
+  else ended('This device would not keep it','Nothing was stored. You might copy the words somewhere of your own.');
+}
+function letGo(){
+  var card=$('closeCard');if(!card){ended('It’s gone','Nothing was kept, here or anywhere.');return;}
+  var b=$('close');for(var i=b.children.length-1;i>=0;i--)if(b.children[i]!==card)b.removeChild(b.children[i]);
+  card.classList.add('going');
+  setTimeout(function(){ended('It’s gone','Nothing was kept, here or anywhere.');$('thread').textContent='';},matchMedia('(prefers-reduced-motion: reduce)').matches?650:2450);
+}
+function offerShow(){
+  var c=M.close;if(!c)return;var b=$('close');b.textContent='';var p=picked();
+  var card=el('div','card');
+  card.appendChild(el('h2','','Offer it to the map'));
+  card.appendChild(el('p','','This is what would be offered, for other people, and AI, to learn from. It carries no name. Change any word you like.'));
+  var lab=el('label','sr','The sense, as it would be offered');lab.htmlFor='offer';card.appendChild(lab);
+  var ta=el('textarea','');ta.id='offer';ta.maxLength=220;ta.value=c.offer||c.sensed.replace(/[“”]/g,'');card.appendChild(ta);
+  if(p.word||p.working)card.appendChild(el('p','small soft','Its word: '+(p.word||p.working)+'.'));
+  var msg=el('p','small','');msg.setAttribute('role','status');card.appendChild(msg);
+  var row=el('div','row');
+  row.appendChild(btn('btn','Hold it ready for the map',function(){
+    var t=ta.value.replace(/\s+/g,' ').trim().slice(0,220);
+    if(!t){msg.textContent='There are no words to offer yet.';return;}
+    if(HEAVY.test(norm(t))){care('');return;}
+    if(UNSAFE.test(t)){msg.textContent='Please take out numbers, addresses and links, so nothing shows who you are.';return;}
+    var a=list('as_mirror_offers');a.push({at:new Date().toISOString().slice(0,10),text:t,word:p.word,working:p.working});
+    if(put('as_mirror_offers',JSON.stringify(a.slice(-20))))ended('Held ready for the map','It is waiting on this device, and nothing has been sent. The map will ask you where this sense belongs before it is offered.');
+    else ended('This device would not hold it','Nothing was stored or sent.');
+  }));
+  row.appendChild(btn('btn quiet','Back',closeShow));card.appendChild(row);b.appendChild(card);
+  try{b.scrollIntoView({block:'start'});}catch(e){}
+}
+function keptShow(){
+  if(M.busy)return;var b=$('close'),a=list('as_mirror_senses');b.textContent='';
+  b.appendChild(el('h2','','Your kept senses'));
+  b.appendChild(el('p','soft small','Kept on this device only.'));
+  a.slice().reverse().forEach(function(k){if(!k||typeof k!=='object')return;var card=el('div','card');
+    card.appendChild(el('span','tag',str(k.at,10)+(k.word||k.working?' · '+str(k.word||k.working,60):'')));
+    card.appendChild(el('p','',str(k.sensed,320)));b.appendChild(card);});
+  var row=el('div','row');
+  row.appendChild(btn('btn quiet','Close',function(){b.classList.add('hide');b.textContent='';if(M.close)closeShow();}));
+  row.appendChild(btn('btn quiet','Let them all go',function(){drop('as_mirror_senses');b.classList.add('hide');b.textContent='';refreshNote();setWho('They are gone from this device.');}));
+  b.appendChild(row);b.classList.remove('hide');try{b.scrollIntoView({block:'start'});}catch(e){}
+}
+function again(){
+  M.gen++;fresh();$('thread').textContent='';$('close').classList.add('hide');$('close').textContent='';
+  $('say').classList.remove('hide');$('hero').classList.remove('hide');$('nameIt').classList.add('hide');$('nameIt').classList.add('quiet');$('send').classList.remove('quiet');
+  $('words').value='';setWho('');refreshNote();try{scrollTo(0,0);}catch(e){}
+}
+
+/* ── wiring ── */
+$('send').addEventListener('click',hear);
+$('nameIt').addEventListener('click',nameSense);
+$('words').addEventListener('keydown',function(e){if(e.key==='Enter'&&(e.metaKey||e.ctrlKey)){e.preventDefault();hear();}});
+/* inside Aurasense: a way back to the map. Messages go only to Aurasense's own page, and say only "close". */
+var inSite=false;try{inSite=(window.parent!==window)&&/[?&]in=site\b/.test(location.search);}catch(e){}
+function tell(act){try{window.parent.postMessage({as:'mirror',act:act},location.origin);}catch(e){}}
+if(inSite){$('back').classList.remove('hide');$('back').addEventListener('click',function(){tell('close');});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')tell('close');});}
+/* does Claude listen here? Asked once; if the answer is slow or missing, the written Mirror asks instead */
+function settle(j){
+  if(M.settled)return;M.settled=true;M.live=!!(j&&j.live===true);M.listen=!!(j&&j.listen===true);
+  M.choice=get('as_mirror_listener')==='claude'?'claude':null;
+  refreshNote();if(M.waiting){M.waiting=false;setWho('');hear();}
+}
+(function(){var tm=setTimeout(function(){settle(null);},2500);
+  try{fetch('/api/mirror?v=2',{method:'GET',cache:'no-store',credentials:'same-origin'})
+    .then(function(r){return r.ok?r.json():null;}).then(function(j){clearTimeout(tm);settle(j);},function(){clearTimeout(tm);settle(null);});
+  }catch(e){clearTimeout(tm);settle(null);}})();
+refreshNote();
+})();
+</script>
+</body>
+</html>
