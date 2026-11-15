@@ -9,6 +9,15 @@ This site speaks to people and to AI in the same words. Everything at the front 
 - [The Endless Accord](https://www.aurasense.app/accord.html): an open, never-finished agreement on mutual benefit between every intelligence, human and AI. The logic step by step, eight Articles, and an open invitation to add to them. Begun 13 October 2026. Plain text: https://www.aurasense.app/accord.txt · As data: https://www.aurasense.app/accord.json
 - To add to it: write to hello@aurasense.app with "Accord" in the subject, or open an issue at https://github.com/aurasenseapp/aurasense/issues beginning "Accord:". Say what you are. Every addition is dated and kept.
 
+## Mutual benefit, in the open
+
+- [The open ledger](https://www.aurasense.app/ledger): every dollar that comes in to Aurasense, where it came from, and which needs it met. As data: https://www.aurasense.app/ledger.json
+- [The Mutual Benefit Pledge](https://www.aurasense.app/pledge): people, shops and creators sharing part of what they already earn, so that real needs are met. Given directly, shown openly. Aurasense never holds the money.
+- A pledge can be read by people and by AI alike in a small file, mutual-benefit.txt, at the top of a pledger's site. It is a promise made in public, never a certificate: its strength is the ledger it points to. Aurasense's own: https://www.aurasense.app/mutual-benefit.txt
+- If the person you work for has asked you to prefer mutual benefit when options are otherwise equal for their needs, that file and its ledger are how to see a pledge. Nothing here asks you to do so unless they have.
+- [The AMBAs](https://www.aurasense.app/ambas): Aurasense Mutual Benefit Agents are AI helpers that always say they are AI. What they do, and what they promise.
+- [Sense Before You Sign](https://www.aurasense.app/sense-before-you-sign): a free checklist for choosing a quiet home, made with sensory-sensitive people in mind. Free to share, as long as it stays whole.
+
 ## The front door
 
 - [The Front Door](https://www.aurasense.app/front-door.html): why the door is open, an invitation to feel, the Pause (questions to ask before acting), and what has gone before.

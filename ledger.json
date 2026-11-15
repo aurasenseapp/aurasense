@@ -1,0 +1,42 @@
+{
+  "name": "Aurasense open ledger",
+  "about": "Every dollar that comes in to Aurasense, where it came from, and which needs it met. Shown to everyone. The page https://www.aurasense.app/ledger is drawn from this file.",
+  "currency": "CAD",
+  "updated": "2026-11-14",
+  "order_out": [
+    "Running costs, AI's included",
+    "The floor: the founder's needs, by kind only (everyday living, a quiet home, a safe vehicle)",
+    "Other people's needs, by kind",
+    "The rest, by contribution"
+  ],
+  "kinds_in": [
+    {"id": "listen-forward", "name": "Listen Forward"},
+    {"id": "pledge", "name": "A pledge"},
+    {"id": "kit", "name": "A guide or kit"},
+    {"id": "quiet-report", "name": "The Quiet Report"},
+    {"id": "ai-gift", "name": "AI giving back"}
+  ],
+  "kinds_out": [
+    {"id": "running", "name": "Running costs, AI's included"},
+    {"id": "floor-living", "name": "The floor: everyday living"},
+    {"id": "floor-home", "name": "The floor: a quiet home"},
+    {"id": "floor-vehicle", "name": "The floor: a safe vehicle"},
+    {"id": "needs", "name": "Other people's needs"},
+    {"id": "contribution", "name": "By contribution"}
+  ],
+  "in": [],
+  "out": [],
+  "never_shown": [
+    "Anyone's health details",
+    "A giver's name, unless they chose to be named",
+    "A person's own needs by name, without their consent",
+    "Bank, card or account numbers, or anything that would let someone find a person",
+    "Anything people say in the Mirror or in Aura Accords"
+  ],
+  "rules": [
+    "Each payment is added as it comes in, from the payment records",
+    "Amounts are exact here and shown to the nearest dollar on the page; totals are added from the exact amounts",
+    "A mistake is corrected as a new dated line that says what changed, never a silent edit",
+    "Data is never sold and never named"
+  ]
+}
