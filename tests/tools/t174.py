@@ -252,6 +252,40 @@ with sync_playwright() as pw:
     say(pg, 'the hum'); pg.wait_for_selector('.reply')
     ok(len(h.posts) == 0 and 'Claude is resting' in pg.inner_text('#note'), 'F: where Claude is switched off, the written Mirror asks and nothing is sent'); ctx.close()
 
+    # H · Build 176 · asking in words for a name opens the naming, as the button does (from Karl's first use)
+    h = Helper(); ctx, pg, errs = open_page(h)
+    pg.evaluate("localStorage.setItem('as_age18','1');localStorage.setItem('as_mirror_listener','claude')"); pg.reload(); pg.wait_for_timeout(250)
+    h.script = [dict(R1)]
+    say(pg, 'Please help me name this feeling in my shoulders.'); pg.wait_for_selector('.reply')
+    ok(h.posts[0].get('keep') is None and h.posts[0]['words'].startswith('Please help me name'), 'H: a first message is always heard as a sense, whatever its words')
+    h.script = [dict(R1)]
+    say(pg, 'yes'); pg.locator('.reply').nth(1).wait_for()
+    ok(len(h.posts) == 2 and h.posts[1].get('keep') is None, 'H: a plain "yes" is only a yes when naming was not just offered')
+    h.script = [json.loads(json.dumps(CLOSE))]
+    say(pg, 'Can you help me name it given what I’ve told you about it?'); pg.wait_for_selector('#closeCard')
+    ok(len(h.posts) == 3 and h.posts[2].get('keep') is True and 'Can you help me name it' in text(pg, '#thread') and 'Unease' in text(pg, '#closeCard'), 'H: "can you help me name it" opens the naming at once, with a word offered')
+    ok(not any('help me name it' in x['content'] for x in h.posts[2]['turns']), 'H: the request itself is not sent as if it were a sense')
+    pg.click('text=Stay with it a little longer')
+    h.script = [dict(R2)]
+    say(pg, 'It was there before I noticed the hum.'); pg.locator('.reply').nth(2).wait_for()
+    h.script = [dict(R1)]
+    say(pg, 'I would like to stay with it a little longer'); pg.locator('.reply').nth(3).wait_for()
+    ok(h.posts[-1].get('keep') is None, 'H: wanting to stay with it is heard, never taken as a yes')
+    h.script = [dict(R2)]
+    say(pg, 'more of it'); pg.locator('.reply').nth(4).wait_for()
+    h.script = [json.loads(json.dumps(CLOSE))]
+    say(pg, 'Yes please'); pg.wait_for_selector('#closeCard')
+    ok(h.posts[-1].get('keep') is True, 'H: "yes please", right after naming is offered, opens the naming')
+    for phrase in ['what would you call this?', 'is there a word for this', 'Give it a name', 'find me a word for it']:
+        ok(pg.evaluate("(t) => { const NAMEASK = %s; return NAMEASK.test(t); }" % __import__('re').search(r'var NAMEASK=(/.*/i);', src).group(1), phrase), 'H: understood as asking for a name: ' + phrase)
+    for phrase in ['my name is not important', 'the name of the street is noisy', 'it has no name and I like that', 'I cannot name what I lost']:
+        ok(not pg.evaluate("(t) => { const NAMEASK = %s; return NAMEASK.test(t); }" % __import__('re').search(r'var NAMEASK=(/.*/i);', src).group(1), phrase), 'H: not mistaken for asking for a name: ' + phrase)
+    ok(not errs, 'H: no errors ' + '; '.join(errs)[:200]); ctx.close()
+    h = Helper(listen=False); ctx, pg, errs = open_page(h)
+    say(pg, 'A heaviness in the room.'); pg.wait_for_selector('.reply')
+    say(pg, 'help me name it'); pg.wait_for_selector('#closeCard')
+    ok(len(h.posts) == 0 and 'Look through the words' in text(pg, '#close'), 'H: with the written Mirror too, asking for a name opens the words to choose from'); ctx.close()
+
     # G · inside the map: one way back, and only "close" is ever said
     h = Helper(); ctx = br.new_context(viewport={'width': 390, 'height': 844});
     def host(route):

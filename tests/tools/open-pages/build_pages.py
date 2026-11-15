@@ -469,8 +469,11 @@ def door():
             rows.append('<li><span class="no">Symbol %d · open</span><p><strong>%s</strong></p><p>%s</p><p class="soft small">First written down on %s.</p></li>'
                         % (x['n'], html.escape(x['symbol']), html.escape(x['meaning']), nice_date(x['recorded'])))
         else:
-            rows.append('<li><span class="no">Symbol %d · sealed</span><p>Recalled and written down on %s. Its words are kept closed.</p><p class="small soft">Fingerprint: <span class="fp">%s</span></p></li>'
-                        % (x['n'], nice_date(x['recorded']), x['sha256']))
+            dr = x.get('drawn')
+            if dr: assert len(dr['sha256']) == 64 and set(dr) == {'recorded', 'sha256'}
+            rows.append('<li><span class="no">Symbol %d · sealed</span><p>Recalled and written down on %s. Its words are kept closed.</p><p class="small soft">Fingerprint: <span class="fp">%s</span></p>%s</li>'
+                        % (x['n'], nice_date(x['recorded']), x['sha256'],
+                           ('<p>Drawn on %s. The drawing is kept closed too.</p><p class="small soft">Fingerprint: <span class="fp">%s</span></p>' % (nice_date(dr['recorded']), dr['sha256'])) if dr else ''))
     rows.append('<li class="wait"><span class="no">After these</span><p>Empty places, waiting.</p></li>')
     if D['answers']:
         ans = '<ul class="seq">' + ''.join('<li><span class="no">%s · %s</span><p>%s</p></li>' % (nice_date(a['date']), html.escape(a['from']), html.escape(a['words'])) for a in D['answers']) + '</ul>'
