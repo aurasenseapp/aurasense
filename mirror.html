@@ -10,7 +10,7 @@
 <meta name="description" content="The Mirror: a mirror for what you sense, held between two kinds of minds.">
 <title>The Mirror — Aurasense</title>
 <!--
-  THE MIRROR · the new way of listening · Build 174 · 15 November 2026 · Karl with Claude
+  THE MIRROR · the new way of listening · Build 176 · 15 November 2026 · Karl with Claude
   Karl, 30 October: "Reflecting senses - Aurasense /AI can ask how a sense feels, and what a sense is." People are
   "openly informed about what AI gets from the interaction". Karl, 15 November: after heavy words the page gently
   stays, without the AI: "You can keep writing here while you reach someone".
@@ -26,6 +26,7 @@
   - Nothing typed here is stored by Aurasense. "Keep it" stores on this device only.
   - Every word shown is placed as plain text, never as markup. Symbols are drawn only from Aurasense's own file,
     and only if they are made of plain shapes.
+  Build 176, from Karl's first use: asking in words for a name ("help me name it") opens the naming at once.
   This page stands by itself until Karl has felt it. The Mirror that is live today is untouched.
   Hidden notes are public: first name only, no keys, no one's private details.
 -->
@@ -191,8 +192,13 @@ var WQ=['What is it like? Its feel, its weight, its edges.',
   'Where does it sit: in your body, in the room, or between you and someone?',
   'When did it first come?',
   'Does it belong to this place and this moment, or did it arrive from somewhere else?'];
+/* asking in words for a name is the same as pressing "Name this sense": the person is never sent back to choose alone */
+var NAMEASK=/\b(?:help me (?:to )?(?:name|find a (?:name|word))|name (?:it|this|that)\b|(?:give|find|suggest|offer)(?: (?:it|me|this|that))? (?:a|the) (?:name|word)|what (?:would|could|do|should) (?:you|we|i) (?:call|name) (?:it|this|that)|what(?:'s| is) (?:it|this|that) called|(?:a|the) (?:name|word) for (?:it|this|that))\b/i;
+var YESNAME=/^(?:yes|yeah|yep|yup|ok|okay|sure|please|now|go ahead|let's|lets|i would|i'd like to|name it)\b/i;
+function asksName(raw){var t=norm(raw).replace(/\s+/g,' ').trim();
+  return NAMEASK.test(t)||(M.lastReady&&t.length<=40&&YESNAME.test(t)&&!/\b(?:stay|longer|not yet|no|wait)\b/i.test(t));}
 var M={settled:false,live:false,listen:false,choice:null,rest:'',turns:[],first:'',busy:false,gen:0,replies:0,wstep:0,careOn:false,waiting:false,alpha:null,pick:null,close:null,ctl:null};
-function fresh(){M.turns=[{role:'assistant',content:RULES_MARK+DOOR}];M.first='';M.replies=0;M.wstep=0;M.pick=null;M.close=null;}
+function fresh(){M.turns=[{role:'assistant',content:RULES_MARK+DOOR}];M.first='';M.replies=0;M.wstep=0;M.pick=null;M.close=null;M.lastReady=false;}
 fresh();
 
 function setWho(t){$('who').textContent=t||'';}
@@ -242,7 +248,7 @@ function addReply(v,by){
   show(c);
   M.turns.push({role:'assistant',content:(by==='rules'?RULES_MARK:'')+shown(v)});
   if(M.turns.length>40)M.turns=M.turns.slice(-40);
-  M.replies++;
+  M.replies++;M.lastReady=v.ready===true;
   var nb=$('nameIt');nb.classList.remove('hide');
   if(v.ready){nb.classList.remove('quiet');$('send').classList.add('quiet');}
   if(!('ontouchstart' in window)){try{$('words').focus({preventScroll:true});}catch(e){}}
@@ -257,6 +263,7 @@ function hear(){
   if(!M.settled){M.waiting=true;setWho('One moment…');return;}
   if(M.careOn){$('words').value='';addMine(raw);show(el('p','quietline','Only here. Nothing is sent.'));return;}
   if(HEAVY.test(norm(raw))){$('words').value='';addMine(raw);care('');return;}   /* heavy words never leave the page */
+  if(M.replies>=1&&asksName(raw)){$('words').value='';addMine(raw);nameSense();return;}
   if(M.live&&M.listen&&!M.rest&&M.choice!=='claude'){consent(hear,function(){M.rest='choice';refreshNote();hear();});return;}
   $('words').value='';addMine(raw);if(!M.first)M.first=raw;setWho('');
   if(claudeOn())listen(raw);else written(raw);
