@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Sense Before You Sign · a quiet home checklist</title>
+<style>
+  @page { size: Letter; margin: 0; }
+  :root{
+    --ink:#3b2a3a; --soft:#6f5a6c; --faint:#9a8796; --line:#e7d9cf; --sand:#fbf4ef; --sand2:#f6e9e0;
+    --dusk:#3d3059; --sound:#6f61b0; --light:#b9832a; --air:#3f8a7a; --vib:#b4603c; --feel:#a4558c;
+  }
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; background:#fff; color:var(--ink);
+    font-family:"Inter", "DejaVu Sans", sans-serif; font-size:11.5pt; line-height:1.45;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .page{ width:8.5in; height:11in; padding:0.7in 0.75in 0.6in; position:relative; overflow:hidden;
+    page-break-after:always; break-after:page; }
+  .page:last-child{ page-break-after:auto; break-after:auto; }
+  h1,h2,h3{ font-family:"Lora","DejaVu Serif",serif; color:var(--dusk); font-weight:600; margin:0; }
+  h2{ font-size:24pt; line-height:1.15; margin-bottom:4pt; }
+  .lead{ color:var(--soft); font-size:12pt; margin:0 0 14pt; max-width:6.2in; }
+  h3{ font-size:14pt; display:flex; align-items:center; gap:8pt; margin:12pt 0 5pt; }
+  h3 svg{ flex:0 0 auto; }
+  ul.check{ list-style:none; margin:0; padding:0; }
+  ul.check li{ position:relative; padding:4.6pt 0 4.6pt 21pt; border-bottom:0.6pt solid var(--line); }
+  ul.check li:last-child{ border-bottom:none; }
+  ul.check.plain li::before{ width:6pt; height:6pt; border:none; border-radius:50%; background:var(--feel); top:9.5pt; left:3pt; }
+  ul.check li::before{ content:""; position:absolute; left:0; top:6.6pt; width:11pt; height:11pt;
+    border:1.1pt solid var(--soft); border-radius:2pt; background:#fff; }
+  .two{ display:grid; grid-template-columns:1fr 1fr; gap:0 24pt; }
+  .panel{ background:var(--sand); border:0.8pt solid var(--line); border-radius:8pt; padding:10pt 14pt; }
+  .foot{ position:absolute; left:0.75in; right:0.75in; bottom:0.38in; display:flex; justify-content:space-between;
+    font-size:8pt; color:var(--faint); border-top:0.6pt solid var(--line); padding-top:5pt; }
+  .tip{ font-size:10pt; color:var(--soft); margin-top:6pt; }
+  .tag{ display:inline-block; font-size:8pt; letter-spacing:0.12em; text-transform:uppercase; color:var(--soft);
+    margin-bottom:6pt; }
+
+  /* cover */
+  .cover{ padding:0; background:linear-gradient(180deg,#fff 0%, var(--sand) 100%); }
+  .cover .inner{ position:absolute; inset:0.8in 0.85in 0.7in; display:flex; flex-direction:column; }
+  .cover h1{ font-size:44pt; line-height:1.02; letter-spacing:-0.01em; margin-top:0.25in; }
+  .cover .sub{ font-family:"Lora",serif; font-size:16pt; color:var(--soft); margin-top:10pt; }
+  .cover .aura{ display:flex; justify-content:center; margin:0.45in 0 0.35in; }
+  .cover .steps{ display:grid; grid-template-columns:repeat(4,1fr); gap:10pt; margin-top:auto; }
+  .cover .step{ background:#fff; border:0.8pt solid var(--line); border-radius:8pt; padding:10pt 11pt; font-size:10.5pt; }
+  .cover .step b{ display:block; font-family:"Lora",serif; color:var(--dusk); font-size:15pt; margin-bottom:2pt; }
+  .cover .by{ margin-top:16pt; font-size:9pt; color:var(--soft); display:flex; justify-content:space-between; }
+
+  /* tables */
+  table{ width:100%; border-collapse:collapse; font-size:10pt; }
+  th,td{ border:0.7pt solid var(--line); padding:6pt 8pt; text-align:left; vertical-align:top; }
+  th{ background:var(--sand2); color:var(--dusk); font-weight:600; }
+  td.blank{ height:0.62in; }
+  .score td{ height:0.44in; }
+  .score td:first-child{ width:2.6in; }
+  .score .scale{ display:block; font-size:8pt; color:var(--faint); font-weight:400; }
+  .lines .l{ border-bottom:0.7pt solid var(--line); height:0.32in; }
+  .answer{ display:flex; gap:22pt; margin-top:8pt; font-size:11pt; }
+  .answer span::before{ content:""; display:inline-block; width:11pt; height:11pt; border:1.1pt solid var(--soft);
+    border-radius:2pt; margin-right:6pt; vertical-align:-2pt; }
+  .close{ margin-top:16pt; display:flex; gap:16pt; align-items:center; }
+  .close p{ margin:0; font-family:"Lora",serif; font-size:12.5pt; color:var(--dusk); }
+</style>
+</head>
+<body>
+
+<!-- 1 · COVER -->
+<section class="page cover">
+  <div class="inner">
+    <span class="tag">A quiet home checklist · for renters and buyers</span>
+    <h1>Sense Before<br>You Sign</h1>
+    <div class="sub">Notice how a place sounds, looks, smells and feels before you commit to it.</div>
+    <div class="aura">
+      <svg width="300" height="300" viewBox="0 0 300 300" aria-hidden="true">
+        <defs>
+          <radialGradient id="a1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="38%" stop-color="#f3e6f0"/>
+            <stop offset="64%" stop-color="#e3dcf2"/>
+            <stop offset="84%" stop-color="#dcece6" stop-opacity="0.7"/>
+            <stop offset="100%" stop-color="#fbf4ef" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="150" cy="150" r="148" fill="url(#a1)"/>
+        <circle cx="150" cy="150" r="104" fill="none" stroke="#6f61b0" stroke-opacity="0.35" stroke-width="1.2"/>
+        <circle cx="150" cy="150" r="78" fill="none" stroke="#a4558c" stroke-opacity="0.32" stroke-width="1.2"/>
+        <circle cx="150" cy="150" r="52" fill="none" stroke="#3f8a7a" stroke-opacity="0.35" stroke-width="1.2"/>
+        <path d="M108 168 L150 128 L192 168 L192 206 L108 206 Z" fill="#fff" stroke="#3d3059" stroke-width="2.2" stroke-linejoin="round"/>
+        <rect x="140" y="178" width="20" height="28" fill="#fbf4ef" stroke="#3d3059" stroke-width="1.6"/>
+        <path d="M72 120 q-14 30 0 60" fill="none" stroke="#6f61b0" stroke-width="2" stroke-linecap="round" stroke-opacity="0.75"/>
+        <path d="M56 108 q-22 42 0 84" fill="none" stroke="#6f61b0" stroke-width="2" stroke-linecap="round" stroke-opacity="0.45"/>
+        <path d="M228 120 q14 30 0 60" fill="none" stroke="#6f61b0" stroke-width="2" stroke-linecap="round" stroke-opacity="0.75"/>
+        <path d="M244 108 q22 42 0 84" fill="none" stroke="#6f61b0" stroke-width="2" stroke-linecap="round" stroke-opacity="0.45"/>
+      </svg>
+    </div>
+    <div class="steps">
+      <div class="step"><b>1</b>Spend 20 minutes checking online before you visit.</div>
+      <div class="step"><b>2</b>Visit with all your senses, and tick as you go.</div>
+      <div class="step"><b>3</b>Come back at another time. Night can change everything.</div>
+      <div class="step"><b>4</b>Score each visit, compare, and trust what your body noticed.</div>
+    </div>
+    <div class="by"><span>Aurasense · a map of how places feel, from the people who live there</span><span>aurasense.app</span></div>
+  </div>
+</section>
+
+<!-- 2 · BEFORE YOU VISIT -->
+<section class="page">
+  <span class="tag">Step 1</span>
+  <h2>Before you visit: 20 minutes online</h2>
+  <p class="lead">Most surprises can be spotted from home. Open a map with satellite and street view, and look around the home for about a kilometre in every direction.</p>
+
+  <div class="two">
+    <div>
+      <h3>What makes noise nearby</h3>
+      <ul class="check">
+        <li>Busy roads, highways, truck or bus routes</li>
+        <li>Railway lines or rail yards (trains often run at night)</li>
+        <li>An airport, and whether the home sits under its flight paths</li>
+        <li>Gravel pits, quarries, factories or industrial yards</li>
+        <li>Bars, venues, stadiums, schools, playgrounds or dog parks</li>
+        <li>Hospitals or fire stations (sirens)</li>
+      </ul>
+      <h3>What’s planned</h3>
+      <ul class="check">
+        <li>Empty lots or old buildings nearby that could be rebuilt</li>
+        <li>The city or county website: development permits and planned construction near the address</li>
+        <li>Search the street name with “construction”, “noise” or “complaint”</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Light and air</h3>
+      <ul class="check">
+        <li>A light pollution map: how bright are the nights here?</li>
+        <li>Large signs, car lots or sports fields lit late at night</li>
+        <li>Farms, wastewater plants, restaurant exhaust or wood smoke nearby</li>
+        <li>Which way the wind usually blows, and what it carries</li>
+      </ul>
+      <h3>The building itself</h3>
+      <ul class="check">
+        <li>Detached, or shared walls? Who is above, below and beside?</li>
+        <li>Where the bedrooms face: the street, or the quiet side?</li>
+        <li>The windows: single, double or triple pane? (Ask if the listing doesn’t say)</li>
+        <li>Parking lots, garbage bins or loading areas under the windows</li>
+      </ul>
+      <p class="tip">Many airports publish maps of their flight paths. Many towns and counties publish maps of building permits.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Sense Before You Sign · Aurasense</span><span>2</span></div>
+</section>
+
+<!-- 3 · AT THE VISIT -->
+<section class="page">
+  <span class="tag">Step 2</span>
+  <h2>At the visit: use every sense</h2>
+  <p class="lead">Slow down. A viewing is designed to show a place at its best; your senses are there to show you the rest.</p>
+  <div class="two">
+    <div>
+      <h3><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="5" cy="10" r="2.2" fill="#6f61b0"/><path d="M9 5.5q3 4.5 0 9M12.5 3q5 7 0 14" fill="none" stroke="#6f61b0" stroke-width="1.6" stroke-linecap="round"/></svg>Sound</h3>
+      <ul class="check">
+        <li>Stand still for two minutes with the windows closed. What do you hear?</li>
+        <li>Open a bedroom window and listen again</li>
+        <li>Hums: fridge, furnace, air conditioning, pumps, power lines</li>
+        <li>Neighbours: footsteps, voices, TV, music, plumbing, doors</li>
+        <li>Knock gently on a shared wall. Does it sound hollow?</li>
+        <li>Record 30 seconds of sound on your phone in the empty bedroom, to compare later</li>
+      </ul>
+      <h3><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3.6" fill="#b9832a"/><g stroke="#b9832a" stroke-width="1.5" stroke-linecap="round"><path d="M10 1.5v2.5M10 16v2.5M1.5 10h2.5M16 10h2.5M4 4l1.7 1.7M14.3 14.3L16 16M4 16l1.7-1.7M14.3 5.7L16 4"/></g></svg>Light</h3>
+      <ul class="check">
+        <li>Where will streetlights, signs or headlights shine at night?</li>
+        <li>Neighbours’ security lights aimed at the windows?</li>
+        <li>Can the bedrooms be made fully dark?</li>
+        <li>How much daylight reaches the rooms you’ll use most?</li>
+      </ul>
+    </div>
+    <div>
+      <h3><svg width="20" height="20" viewBox="0 0 20 20"><g fill="none" stroke="#3f8a7a" stroke-width="1.6" stroke-linecap="round"><path d="M2 6q4-3 8 0t8 0"/><path d="M2 10.5q4-3 8 0t8 0"/><path d="M2 15q4-3 8 0t8 0"/></g></svg>Air and smell</h3>
+      <ul class="check">
+        <li>Smoke, cannabis, cooking or chemical smells from other homes</li>
+        <li>Damp or mould: a musty smell, stains, peeling paint</li>
+        <li>Do the windows open? Does fresh air move through?</li>
+        <li>Scented candles or sprays can hide smells. Notice if they’re everywhere</li>
+      </ul>
+      <h3><svg width="20" height="20" viewBox="0 0 20 20"><path d="M1.5 10h3l2-5 3 10 3-10 3 10 2-5h1" fill="none" stroke="#b4603c" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>Vibration</h3>
+      <ul class="check">
+        <li>Feel the floor when a truck, bus or train passes</li>
+        <li>Lifts, laundry machines or garage doors on the other side of a wall</li>
+      </ul>
+      <h3><svg width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="8" fill="none" stroke="#a4558c" stroke-width="1.5"/><circle cx="10" cy="10" r="3.2" fill="#a4558c"/></svg>How it feels</h3>
+      <ul class="check">
+        <li>After ten minutes, does your body feel calmer, or tenser than when you arrived?</li>
+        <li>Could you sleep well here?</li>
+        <li>Anything that felt wrong but you can’t yet name? Write it down anyway</li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot"><span>Sense Before You Sign · Aurasense</span><span>3</span></div>
+</section>
+
+<!-- 4 · COME BACK, AND ASK -->
+<section class="page">
+  <span class="tag">Step 3</span>
+  <h2>Come back, and ask</h2>
+  <p class="lead">A place you viewed on a quiet Tuesday morning can be a different place on a Friday night. Even a short drive-by after dark tells you a lot.</p>
+  <table>
+    <tr><th style="width:1.2in">Visit</th><th style="width:1.9in">Day and time</th><th>What you noticed</th></tr>
+    <tr><td>1</td><td class="blank"></td><td></td></tr>
+    <tr><td>2 · evening or weekend</td><td class="blank"></td><td></td></tr>
+    <tr><td>3 · after dark</td><td class="blank"></td><td></td></tr>
+  </table>
+
+  <div class="two" style="margin-top:6pt">
+    <div>
+      <h3>Ask the landlord or seller</h3>
+      <ul class="check">
+        <li>Is any construction planned nearby, or on this street?</li>
+        <li>Have there been noise complaints here?</li>
+        <li>Is there a quiet-hours rule? Is smoking allowed in other units or on balconies?</li>
+        <li>What’s above, below and beside this home?</li>
+        <li>When do garbage pickup and snow clearing come by?</li>
+        <li>Why did the last people leave?</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Ask a neighbour, if you can</h3>
+      <ul class="check">
+        <li>“What’s it like living here? Is it quiet at night?”</li>
+        <li>“Anything you wish you’d known before you moved in?”</li>
+      </ul>
+      <div class="panel" style="margin-top:12pt">
+        <b style="font-family:Lora,serif;color:var(--dusk)">Write the answers down.</b>
+        <div class="tip" style="margin-top:3pt">Answers given in person are easy to forget once you’ve fallen for a place. A note in your own hand keeps you honest with yourself.</div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Sense Before You Sign · Aurasense</span><span>4</span></div>
+</section>
+
+<!-- 5 · SCORE SHEET -->
+<section class="page">
+  <span class="tag">Step 4 · print one for each home</span>
+  <h2>Score sheet</h2>
+  <table style="margin:8pt 0 10pt">
+    <tr><th style="width:1.5in">Home</th><td></td></tr>
+    <tr><th>Address</th><td></td></tr>
+  </table>
+  <table class="score">
+    <tr><th>Sense</th><th>Visit 1</th><th>Visit 2</th><th>Visit 3</th></tr>
+    <tr><td><b>Sound</b><span class="scale">1 noisy · 5 quiet</span></td><td></td><td></td><td></td></tr>
+    <tr><td><b>Light at night</b><span class="scale">1 bright · 5 dark</span></td><td></td><td></td><td></td></tr>
+    <tr><td><b>Air and smell</b><span class="scale">1 poor · 5 fresh</span></td><td></td><td></td><td></td></tr>
+    <tr><td><b>Vibration</b><span class="scale">1 a lot · 5 none</span></td><td></td><td></td><td></td></tr>
+    <tr><td><b>How my body felt</b><span class="scale">1 tense · 5 calm</span></td><td></td><td></td><td></td></tr>
+    <tr><th>Total (out of 25)</th><td></td><td></td><td></td></tr>
+  </table>
+  <h3>Deal-breakers I noticed</h3>
+  <div class="lines"><div class="l"></div><div class="l"></div></div>
+  <h3>What I loved</h3>
+  <div class="lines"><div class="l"></div><div class="l"></div></div>
+  <h3>My answer</h3>
+  <div class="answer"><span>Yes</span><span>Maybe, after one more visit</span><span>No</span></div>
+  <div class="foot"><span>Sense Before You Sign · Aurasense</span><span>5</span></div>
+</section>
+
+<!-- 6 · IF YOUR SENSES ARE STRONGER -->
+<section class="page">
+  <span class="tag">Extra care</span>
+  <h2>If sound, light or smell<br>affect you more than most</h2>
+  <p class="lead">Light sleepers, people who work nights, and people who simply feel places deeply: these are for you.</p>
+  <ul class="check">
+    <li>Fewer shared walls means fewer surprises: a detached home, or a top-floor corner unit</li>
+    <li>Choose a bedroom on the side away from the street, the parking lot and the bins</li>
+    <li>Visit when the place is at its loudest, not only when it’s at its best</li>
+    <li>Keep headphones off during the visit, so you hear what you would live with</li>
+    <li>Bring someone you trust to notice what you might miss, and to notice how you seem</li>
+    <li>Ask whether you may come back once more, quietly, before you decide</li>
+    <li>Trust your first sense. If something felt wrong, it is worth a second look</li>
+  </ul>
+  <h3 style="margin-top:16pt">What no viewing can show you</h3>
+  <p class="tip" style="margin-top:0;font-size:11pt">Some things only show up once you have lived somewhere for a whole week:</p>
+  <ul class="check plain" style="margin-top:2pt">
+    <li>Smoke drifting in at 2 a.m., but only on certain nights</li>
+    <li>The garbage truck at 7:30 a.m. on two mornings every week</li>
+    <li>A car alarm locked three times beneath your window at midnight</li>
+  </ul>
+  <div class="close" style="margin-top:12pt">
+    <svg width="72" height="72" viewBox="0 0 72 72" aria-hidden="true" style="flex:0 0 72px">
+      <defs><radialGradient id="a2"><stop offset="0%" stop-color="#fff"/><stop offset="55%" stop-color="#e9dff3"/><stop offset="100%" stop-color="#e9dff3" stop-opacity="0"/></radialGradient></defs>
+      <circle cx="36" cy="36" r="35" fill="url(#a2)"/><circle cx="36" cy="36" r="22" fill="none" stroke="#6f61b0" stroke-opacity="0.5"/><circle cx="36" cy="36" r="12" fill="none" stroke="#a4558c" stroke-opacity="0.5"/>
+    </svg>
+    <p>The people who live there already know. On Aurasense, they share what a place is really like, any day and any hour. Once you move in, add what you notice, so the next person knows before they sign.</p>
+  </div>
+  <div class="panel" style="margin-top:18pt;font-size:9pt;color:var(--soft)">
+    Free to print, copy and share, as long as it stays whole. General information to help you notice more. It isn’t professional, legal or housing advice, and no checklist can promise a quiet home. Made by Aurasense, with help from AI. © 2026 Aurasense · aurasense.app
+  </div>
+  <div class="foot"><span>Sense Before You Sign · Aurasense</span><span>6</span></div>
+</section>
+
+</body>
+</html>
