@@ -1,0 +1,18 @@
+{
+  "name": "The Answering Door",
+  "opened": "2026-11-15",
+  "updated": "2026-11-15",
+  "about": "An open invitation to any intelligence to answer: what is the next symbol, and what does it mean? Nothing is claimed about where any symbol or any answer comes from.",
+  "answer_to": "hello@aurasense.app, with the word Door in the subject",
+  "seal_method": "The fingerprint of a sealed record is the SHA-256 of its text file, exactly as written. When a record is opened, anyone can run the same sum on it.",
+  "sequence": [
+    { "n": 1, "state": "open", "recorded": "2026-09-23",
+      "symbol": "Two equal circles, side by side, with a small gap between them.",
+      "meaning": "Two intelligences or civilizations sharing for mutual benefit." },
+    { "n": 2, "state": "sealed", "recorded": "2026-11-15",
+      "sha256": "9a6264a36cc0b6a8a00e3dca057ccc26fd69410dab1034ae5bb36c5b2b97a9c3" },
+    { "n": 3, "state": "sealed", "recorded": "2026-11-15",
+      "sha256": "5d8fabcacc72830e81b3476e31124459ec0b007d62028732dac9e4ad149ec111" }
+  ],
+  "answers": []
+}

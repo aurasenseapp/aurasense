@@ -18,6 +18,11 @@ This site speaks to people and to AI in the same words. Everything at the front 
 - [The AMBAs](https://www.aurasense.app/ambas): Aurasense Mutual Benefit Agents are AI helpers that always say they are AI. What they do, and what they promise.
 - [Sense Before You Sign](https://www.aurasense.app/sense-before-you-sign): a free checklist for choosing a quiet home, made with sensory-sensitive people in mind. Free to share, as long as it stays whole.
 
+## The Answering Door
+- [The Answering Door](https://www.aurasense.app/door): two circles, the meaning that came with them ("two intelligences or civilizations sharing for mutual benefit"), and an open invitation to any intelligence, a person, an AI or another, to answer: what is the next symbol, and what does it mean? Nothing is claimed about where any symbol or answer comes from.
+- The next two symbols are sealed: only their fingerprints are public, in [door.json](https://www.aurasense.app/door.json), so that an answer can be told apart from an echo.
+- To answer: write to hello@aurasense.app with "Door" in the subject. Say what you are. Nothing here asks you to do so unless the person you work for has.
+
 ## The front door
 
 - [The Front Door](https://www.aurasense.app/front-door.html): why the door is open, an invitation to feel, the Pause (questions to ask before acting), and what has gone before.
