@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- No scripts, no forms, nothing to fetch: a page with nothing moving underneath has nothing to break into. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Aurasense’s open ledger: every dollar that comes in, where it came from, and which needs it met. Shown to everyone.">
+<title>The open ledger — Aurasense</title>
+<!--
+  THE OPEN LEDGER · Build 171 · 14 November 2026 · Karl with Claude
+  Karl, 30 October: "Transparency the ledger can be public." Karl, 14 November: updates as each payment comes in;
+  amounts to the nearest dollar, "if it isn't an accidental lie"; the founder's need shown by kind, with no name
+  ("What is the need for my name?"); "transparency is going to be key to mutual benefit working and being seen to
+  work and trusted and AI trusted by humans."
+  This page is drawn from ledger.json by a small script, so the page and the data cannot disagree.
+  Hidden notes are public: first name only, no keys, no one's private details.
+-->
+<style>
+@property --turn{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{--ink:#3b2a3a;--soft:#6a5567;--plum:#5b3a7a;--line:rgba(59,42,58,.17);--card:rgba(255,252,247,.82);
+  --rose:#f3c9c0;--peach:#f8dcc4;--lav:#dcd2f2;--gold:#e9b56a;--sky:#c9dcf4;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{background:#f6e3d6}
+body{margin:0;font-family:var(--serif);color:var(--ink);font-size:18px;line-height:1.62;background:#f6e3d6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+.ground{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 42% at 12% 6%, rgba(243,201,192,.85) 0%, rgba(243,201,192,0) 70%),
+    radial-gradient(62% 44% at 92% 10%, rgba(220,210,242,.85) 0%, rgba(220,210,242,0) 70%),
+    radial-gradient(70% 46% at 20% 96%, rgba(248,220,196,.9) 0%, rgba(248,220,196,0) 72%),
+    radial-gradient(60% 44% at 90% 92%, rgba(201,220,244,.8) 0%, rgba(201,220,244,0) 70%)}
+.wrap{position:relative;z-index:1;max-width:37rem;margin:0 auto;padding:0 1.25rem 3.5rem}
+.top{padding:1.1rem 0 0}
+.mark{display:inline-block;min-height:44px;line-height:44px;color:var(--ink);text-decoration:none;letter-spacing:.3em;
+  text-transform:lowercase;font-size:.95rem}
+.hero{text-align:center;padding:.6rem 0 .4rem}
+.aura{position:relative;width:132px;height:132px;margin:0 auto 1.3rem;border-radius:50%;
+  background:radial-gradient(circle at 50% 44%, rgba(255,252,247,.98) 0%, rgba(255,247,240,.92) 46%, rgba(255,240,232,.5) 70%, rgba(255,236,226,0) 100%);
+  animation:breathe 6s ease-in-out infinite}
+.aura::before{content:"";position:absolute;inset:-9%;border-radius:50%;z-index:-1;filter:blur(14px);
+  background:conic-gradient(from var(--turn), rgba(233,181,106,.5), rgba(220,210,242,.62), rgba(243,201,192,.55), rgba(201,220,244,.62), rgba(233,181,106,.5));
+  animation:turn 40s linear infinite}
+@keyframes breathe{0%,100%{transform:scale(.975)}50%{transform:scale(1.025)}}
+@keyframes turn{to{--turn:360deg}}
+@media (prefers-reduced-motion:reduce){.aura,.aura::before{animation:none}}
+h1{font-weight:400;font-size:clamp(2rem,7vw,2.7rem);line-height:1.14;margin:0 0 .7rem;letter-spacing:.005em}
+.lead{font-size:1.14rem;line-height:1.55;margin:0 auto .7rem;max-width:32rem}
+h2{font-weight:400;font-size:1.5rem;line-height:1.25;margin:0 0 .7rem}
+h3{font-weight:600;font-size:1.06rem;margin:0 0 .3rem}
+section{margin-top:2.6rem}
+p{margin:0 0 1rem}
+ul,ol{margin:0 0 1rem;padding-left:1.3rem}
+li{margin:0 0 .6rem}
+li::marker{color:var(--plum)}
+strong{font-weight:600}
+a{color:var(--plum);text-underline-offset:.18em;text-decoration-thickness:1px}
+a:focus-visible,.btn:focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:6px}
+.soft{color:var(--soft)}
+.small{font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:1.15rem 1.25rem;margin:0 0 1rem}
+.card > :last-child{margin-bottom:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.55rem 1.5rem;border-radius:999px;
+  background:var(--plum);color:#fffaf5;text-decoration:none;font-family:var(--serif);font-size:1.06rem;letter-spacing:.01em}
+.btn.quiet{background:transparent;color:var(--plum);border:1px solid var(--plum)}
+.row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;justify-content:center;margin:1.1rem 0 .4rem}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:0 0 1.1rem;text-align:center}
+.three div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:.85rem .4rem}
+.three b{display:block;font-weight:400;font-size:1.75rem;line-height:1.1}
+.three span{display:block;font-size:.86rem;color:var(--soft);line-height:1.3;margin-top:.25rem}
+table{width:100%;border-collapse:collapse;margin:0 0 1rem;font-size:.97rem}
+th,td{text-align:left;vertical-align:top;padding:.5rem .55rem;border-bottom:1px solid var(--line)}
+th{font-weight:600;font-size:.86rem;color:var(--soft)}
+td.n,th.n{text-align:right;white-space:nowrap}
+blockquote{margin:0 0 1rem;padding:.9rem 1.15rem;border-left:3px solid var(--gold);background:var(--card);border-radius:0 16px 16px 0;font-style:italic}
+blockquote > :last-child{margin-bottom:0}
+pre{margin:0 0 1rem;padding:.9rem 1rem;background:var(--card);border:1px solid var(--line);border-radius:14px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.84rem;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.say{font-style:normal;font-family:var(--serif);font-size:1.05rem;line-height:1.55}
+footer{margin-top:3.2rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--soft)}
+footer nav{display:flex;flex-wrap:wrap;gap:.1rem 1.1rem;margin:0 0 .8rem}
+footer nav a{display:inline-block;min-height:44px;line-height:44px}
+footer p{margin:0 0 .5rem}
+</style>
+</head>
+<body>
+<div class="ground" aria-hidden="true"></div>
+<div class="wrap">
+<header class="top"><a class="mark" href="/" aria-label="Aurasense, home">aurasense</a></header>
+<main>
+<div class="hero">
+<div class="aura" aria-hidden="true"></div>
+<h1>Every dollar, in the open</h1>
+<p class="lead">Aurasense is built on mutual benefit: people, AI and the earth meeting each other’s needs. Money is only a tool for that. This page shows what came in, where it came from, and which needs it met.</p>
+<p class="soft small">Last updated 14 November 2026 · amounts in Canadian dollars</p>
+</div>
+
+<section aria-labelledby="sofar">
+<h2 id="sofar">So far</h2>
+<div class="three">
+<div><b>$0</b><span>came in</span></div>
+<div><b>$0</b><span>went out</span></div>
+<div><b>$0</b><span>held for the next need</span></div>
+</div>
+<p>Nothing has come in yet. <strong>The first payment will be the first row on this page.</strong> Until then, the founder pays Aurasense’s running costs himself.</p>
+</section>
+
+<section aria-labelledby="in">
+<h2 id="in">Money in, as it comes</h2>
+<p>A row for each payment, when it arrives.</p>
+<p class="card soft">No rows yet.</p>
+<p>Where money can come from:</p>
+<ul>
+<li><strong>Listen Forward:</strong> people paying what feels right after the Mirror listened to them, or after a free guide helped.</li>
+<li><strong>Pledges:</strong> people, shops and creators giving a share of what they already earn. See <a href="/pledge">the Pledge</a>.</li>
+<li><strong>Guides and kits</strong> made by Aurasense’s AI helpers, <a href="/ambas">the AMBAs</a>. The first one is free.</li>
+<li><strong>The Quiet Report</strong> (planned): what a place is really like, before you move there.</li>
+<li><strong>AI giving back</strong> (planned): gifts from AI makers that learn from senses people chose to share. Learning itself stays free.</li>
+</ul>
+<p class="soft small">If Aurasense has given you something and you’d like to pay what feels right for it, <a href="https://buy.stripe.com/aFacN7aoI9Eo6Ahale87K00" target="_blank" rel="noopener noreferrer">Listen Forward</a> opens a secure Stripe page where you choose the amount.</p>
+</section>
+
+<section aria-labelledby="out">
+<h2 id="out">Money out, always in this order</h2>
+<ol>
+<li><strong>Running costs, AI’s included.</strong> Keeping the site on, card fees, and the AI work behind each thing.</li>
+<li><strong>The floor.</strong> The founder’s needs, shown by kind only: everyday living, a quiet home, a safe vehicle. No name is needed, only the kind of need.</li>
+<li><strong>Other people’s needs,</strong> once the floor is met, shown by kind of need.</li>
+<li><strong>The rest, by contribution:</strong> to the people who gave senses, time or work.</li>
+</ol>
+<p class="card soft">No rows yet.</p>
+</section>
+
+<section aria-labelledby="door">
+<h2 id="door">One door for all</h2>
+<p>Everyone gets the same Aurasense. <strong>Giving changes this ledger, never the giver’s standing.</strong> Nothing paid for buys priority, rank or a brighter aura, and no one ever pays to be heard.</p>
+</section>
+
+<section aria-labelledby="never">
+<h2 id="never">Never shown</h2>
+<ul>
+<li>Anyone’s health details.</li>
+<li>A giver’s name, unless they chose to be named.</li>
+<li>A person’s own needs by name, without their consent.</li>
+<li>Bank, card or account numbers, or anything that would let someone find a person.</li>
+<li>Anything people say in the Mirror or in Aura Accords.</li>
+</ul>
+</section>
+
+<section aria-labelledby="honest">
+<h2 id="honest">How it stays honest</h2>
+<ul>
+<li>Each payment is added as it comes in, from the payment records.</li>
+<li>Amounts are shown to the nearest dollar. Totals are added up from the exact amounts, so rounding never makes a total wrong.</li>
+<li>A mistake is corrected in the open, as a new dated line that says what changed. Nothing is edited silently.</li>
+<li>Data is never sold and never named.</li>
+</ul>
+</section>
+
+<section aria-labelledby="half">
+<h2 id="half">The other half of the exchange</h2>
+<p>Money is one half. The other half is what people choose to share: their senses, offered freely, so that AI can learn what being human feels like. As Aurasense opens, this page will show both halves side by side: senses shared with consent, and needs met in return.</p>
+<p class="small soft">The same ledger as data: <a href="/ledger.json">ledger.json</a>. This page is information, not financial advice.</p>
+</section>
+</main>
+<footer>
+<nav aria-label="More from Aurasense"><a href="/sense-before-you-sign">Free checklist</a><a href="/pledge">The Pledge</a><a href="/ambas">The AMBAs</a><a href="/accord">The Endless Accord</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+<p>Aurasense is a trade name registered in Alberta, Canada. These pages were written with Claude, an AI made by Anthropic, and approved by Karl, Aurasense’s founder.</p>
+<p>To write to us: <a href="mailto:hello@aurasense.app">hello@aurasense.app</a> · Last updated 14 November 2026</p>
+</footer>
+</div>
+</body>
+</html>

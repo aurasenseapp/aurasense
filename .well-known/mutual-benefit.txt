@@ -1,0 +1,12 @@
+# mutual-benefit.txt - version 0.1 - https://www.aurasense.app/pledge
+# A promise made in public. Self-declared: it is not a certificate. Its strength is the ledger it points to.
+Name: Aurasense
+Pledge: all of it. Every dollar that comes in goes out in the ledger's fixed, public order
+Since: 2026-11-14
+Goes-To: running costs (AI's included); then the floor of needs; then other people's needs; then contribution
+Ledger: https://www.aurasense.app/ledger
+Ledger-Data: https://www.aurasense.app/ledger.json
+Data: never sold, never named
+AI: our agents always say they are AI
+Contact: hello@aurasense.app
+Declared-By: self

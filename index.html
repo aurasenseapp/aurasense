@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aurasense</title>
-<meta name="description" content="Aurasense — coming soon.">
+<meta name="description" content="Aurasense, a map of how places feel, is coming soon. Open now: a free checklist for choosing a quiet home, the Mutual Benefit Pledge, and the open ledger.">
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%}
@@ -46,12 +46,18 @@
   }
   .soon{
     margin-top:2.1em;
-    font-size:clamp(.66rem,2.4vw,.8rem);
+    font-size:.8rem;
     letter-spacing:.5em;
     text-transform:uppercase;
     color:#9a90c2;
     padding-left:.5em;
   }
+  /* 14 Nov 2026 · Build 171 · what is open now, while the map is made ready */
+  .open{position:relative;z-index:1;margin-top:3em;display:flex;flex-direction:column;align-items:center}
+  .open p{font-size:.8rem;letter-spacing:.4em;text-transform:uppercase;color:#9a90c2;padding-left:.4em;margin-bottom:.5em}
+  .open a{display:inline-flex;align-items:center;min-height:44px;padding:0 .6em;color:#d9cdfc;font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+    font-size:clamp(.98rem,3.6vw,1.08rem);text-decoration:underline;text-decoration-color:rgba(196,181,253,.45);text-underline-offset:.22em}
+  .open a:focus-visible{outline:2px solid #c4b5fd;outline-offset:2px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){
     .glow{animation:none;opacity:.95}
   }
@@ -64,6 +70,12 @@
       <div class="word">aurasense</div>
       <div class="soon">coming soon</div>
     </div>
+    <nav class="open" aria-label="Open now">
+      <p>open now</p>
+      <a href="/sense-before-you-sign">A free checklist for choosing a quiet home</a>
+      <a href="/pledge">The Mutual Benefit Pledge</a>
+      <a href="/ledger">The open ledger</a>
+    </nav>
   </div>
 </body>
 </html>
