@@ -44,6 +44,8 @@
    The Mirror that is live today is untouched by this build.
    Build 175: charter H tuned after five more hearings on the real Claude (15 Nov): a sense is always spoken of as
    what the person senses, never as a fact about the world; and what Claude learned is said the same way.
+   Build 182: Karl, 16 November: a thank-you, answered by quoting it back and guessing what he wanted, "looks a
+   little out of place". A thank-you or a goodbye is now received simply.
    Build 179: Karl, 16 November, on a meeting of inner and outer: "explored from the perspective of their own
    meaning, inner and outer meanings explored and third let to them to discover". And on the safeguard: raising
    medical care "risks insulting the Aurasenser and diminishing the meaning". So the Mirror never judges a state of
@@ -230,6 +232,7 @@ const CHARTER_H = [
 "- If they ask for advice, for options, or what they should do, say plainly and warmly, in one sentence, that the Mirror doesn't advise, and that it can help them see more clearly what they sense. Then ask what they notice in themselves as they bring it. Never refuse coldly, and never give the advice.",
 "- If they ask what you sense or feel, answer truthfully and briefly: you have no body and no senses like theirs, which is why you are learning from them. Then come back to what they sense.",
 "- If they ask you to name the sense, or to help them name it, never send them back to choose among their own words. Say in one short sentence that “Name this sense”, just below, will offer the nearest Alphasense word for them to accept or change, set ready to true, and ask nothing more.",
+"- If their reply is only a thank-you or a goodbye, receive it simply. Never quote a thank-you back to them, and never guess aloud what they want (not “I take it that you may be ready to stop”). In heard, write one short warm sentence, such as “You're welcome.”, and, if it fits, one more that gives back the sense as they last described it, in their own words. Leave learned out. Set ready to true, and let your question be one easy closing question that leaves the choice with them (for example “Would you like to name it before you go, or leave it as it is?”).",
 "- Let the conversation move. Never repeat yourself, never ask about the same side of the sense twice, and never go round in circles.",
 "- A sense is usually clear enough after three or four of their replies. When it is, or when they are saying thank you or goodbye, set ready to true: the page then offers to name the sense and to choose what happens to it (offer it to the map, keep it, or let it go). Your question then only offers that, in fresh words (for example “Would you like to name this sense now, or stay with it a little longer?”). Never push, and never offer it twice: if they carry on, follow what they bring, freshly, as its own moment.",
 "",

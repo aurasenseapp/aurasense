@@ -160,6 +160,7 @@ footer nav a{display:inline-block;min-height:44px;line-height:44px}
 <div id="say">
 <label class="sr" for="words">Write what you are sensing</label>
 <textarea id="words" maxlength="1200" placeholder="Write it as it is. It doesn’t need tidying." autocomplete="off" spellcheck="true"></textarea>
+<p id="pre" class="small soft hide"></p>
 <div class="row"><button id="send" class="btn" type="button">Tell the Mirror</button><button id="nameIt" class="btn quiet hide" type="button">Name this sense</button></div>
 </div>
 <p id="who" class="small soft" aria-live="polite"></p>
@@ -217,7 +218,20 @@ fresh();
 
 function setWho(t){$('who').textContent=t||'';}
 function claudeOn(){return M.live&&M.listen&&M.choice==='claude'&&!M.rest;}
+/* Build 182 · Karl: "This two step to access needs to be one." What a yes means is told beside the box, before a word
+   is sent, and the first press of the button is the yes. The other answer sits beside it, equal and one press away. */
+function asking(){return !!(M.settled&&M.live&&M.listen&&!M.rest&&!M.careOn&&M.choice!=='claude');}
+function preShow(){
+  var p=$('pre'),on=asking();p.textContent='';p.classList.toggle('hide',!on);
+  if(!M.careOn)$('send').textContent=on&&get('as_age18')!=='1'?'I’m 18 or over · Tell the Mirror':'Tell the Mirror';
+  if(!on)return;
+  p.appendChild(document.createTextNode('Claude, an AI made by Anthropic, will listen. It reads your words only to shape each reply, and to tell you what it learned from them. Aurasense keeps nothing, and Anthropic, who make Claude, delete them within 30 days. For people 18 and over. '));
+  var l=el('a','','How your words are kept');l.href='/privacy#mirror';l.target='_blank';l.rel='noopener noreferrer';p.appendChild(l);
+  p.appendChild(document.createTextNode(' · '));
+  p.appendChild(btn('lnk','Write without the AI',function(){M.rest='choice';refreshNote();setWho('That’s alright. Nothing will leave this page. The written Mirror will ask instead.');try{$('words').focus();}catch(e){}}));
+}
 function refreshNote(){
+  try{preShow();}catch(e){}
   var n=$('note');n.textContent='';
   if(M.careOn){n.appendChild(document.createTextNode('Nothing you write now leaves this page. The Mirror is not a person, and not a therapist.'));return;}
   if(claudeOn()){n.appendChild(document.createTextNode('Claude, an AI made by Anthropic, is listening as a learner. Aurasense keeps nothing. Not a person, and not a therapist. '));
@@ -278,7 +292,7 @@ function hear(){
   if(M.careOn){$('words').value='';addMine(raw);show(el('p','quietline','Only here. Nothing is sent.'));return;}
   if(HEAVY.test(norm(raw))){$('words').value='';addMine(raw);care('');return;}   /* heavy words never leave the page */
   if(M.replies>=1&&asksName(raw)){$('words').value='';addMine(raw);nameSense();return;}
-  if(M.live&&M.listen&&!M.rest&&M.choice!=='claude'){consent(hear,function(){M.rest='choice';refreshNote();hear();});return;}
+  if(asking()){put('as_age18','1');put('as_mirror_listener','claude');M.choice='claude';refreshNote();}   /* Build 182: pressing the button, beside what it means, is the yes */
   $('words').value='';addMine(raw);if(!M.first)M.first=raw;setWho('');
   if(claudeOn())listen(raw);else written(raw);
 }
@@ -609,7 +623,7 @@ if(inSite){$('back').classList.remove('hide');$('back').addEventListener('click'
 function settle(j){
   if(M.settled)return;M.settled=true;M.live=!!(j&&j.live===true);M.listen=!!(j&&j.listen===true);
   M.choice=get('as_mirror_listener')==='claude'?'claude':null;
-  refreshNote();if(M.waiting){M.waiting=false;setWho('');hear();}
+  refreshNote();if(M.waiting){M.waiting=false;setWho('');if(!asking())hear();}   /* Build 182: a yes is only ever given with its meaning in view */
 }
 (function(){var tm=setTimeout(function(){settle(null);},2500);
   try{fetch('/api/mirror?v=2',{method:'GET',cache:'no-store',credentials:'same-origin'})
