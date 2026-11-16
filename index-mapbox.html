@@ -7578,6 +7578,8 @@ function macOpenDoor(i){
   if(i<0){ box.classList.remove('on'); box.innerHTML=''; window._macListOpen=false;
            try{macFitChrome();}catch(e){} return; }
   window._macListOpen=true;
+  /* Build 181 · Karl: "the my aura text is overlapping again". A sense's story closes when a list opens. */
+  try{window._macCardOpen=false;var _sc181=document.getElementById('ma-sense-card');if(_sc181)_sc181.classList.remove('on');}catch(e){}
   box.innerHTML='';
   MAC_DOORS[i].items.forEach(function(it){
     var b=document.createElement('button');
@@ -7689,6 +7691,7 @@ function macOpenDoor(i){
   }
   function macOpenSense(i){
     var c=document.getElementById('ma-sense-card'); if(!c)return;
+    try{if(window._macListOpen)macOpenDoor(-1);}catch(e){}   /* Build 181: and a list closes when a sense's story opens */
     window._macCardOpen=true;
     var L=(typeof maLayers!=='undefined'&&maLayers)?maLayers:[];
     var la=L[i]; if(!la)return;
@@ -12020,7 +12023,12 @@ function mirrorOpen(opts){
     var shut=function(then){gone=true;try{mirrorLandCard(null);}catch(e){}try{ov.classList.remove('on');setTimeout(function(){try{ov.remove();}catch(e){}if(then)then();},450);}catch(e){}};
     var post=function(m){try{m.as='mirror-host';fr.contentWindow.postMessage(m,location.origin);}catch(e){}};
     var away=function(){ov.classList.remove('on');ov.classList.add('away');};
-    var back=function(){try{mirrorLandCard(null);}catch(e){}if(gone)return;ov.classList.remove('away');requestAnimationFrame(function(){ov.classList.add('on');});};
+    var back=function(){try{mirrorLandCard(null);}catch(e){}if(gone)return;
+      /* Build 181 · Karl: "the final button was unresponsive". The held moment after a landing puts the rest of the page to
+         rest, and the Mirror was left resting when the person came back to it. Coming back ends that moment and wakes it. */
+      try{if(typeof window.asHeldStop==='function')window.asHeldStop();}catch(e){}
+      try{ov.removeAttribute('inert');}catch(e){}
+      ov.classList.remove('away');requestAnimationFrame(function(){ov.classList.add('on');});};
     ov._back=back;
     var onMsg=function(e){
       try{if(e.origin!==location.origin||e.source!==fr.contentWindow)return;
@@ -12132,7 +12140,10 @@ function mirrorOffer(m,h){
           var was=selSense;selSense=kind;AS_MIRROR_LANDING=true;
           try{submit(p.lat,p.lng,full);}finally{selSense=was;AS_MIRROR_LANDING=false;}
           h.post({act:'landed',area:name||''});
-          setTimeout(function(){if(!h.alive())return;
+          var _t0=Date.now();
+          setTimeout(function show(){if(!h.alive())return;
+            /* Build 181 · Karl: "The view of the landing was somewhat blocked." The landing is seen first. */
+            try{if(typeof window.asHeldOn==='function'&&window.asHeldOn()&&Date.now()-_t0<12000){setTimeout(show,600);return;}}catch(e){}
             mirrorLandCard({text:'✧ Your sense rests '+(name?'in the area of '+name:'in the area where you are')+'.',
               buttons:[['Back to the Mirror',h.back],['Begin a new one',function(){h.post({act:'fresh'});h.back();}],['Stay on the map',function(){mirrorLandCard(null);},1]]});},4200);
         }catch(e){held('The map could not take it just now. Your sense is still in the Mirror.');}
@@ -13107,7 +13118,7 @@ var lastPD=0,INERT=[];
 function rest(on2){
   try{
     if(on2){Array.prototype.forEach.call(document.body.children,function(el){
-      if(!el||el===root||el===dim||el===deep||el===cv||el.id==='as-reach-svg'||/^(SCRIPT|STYLE|LINK)$/.test(el.tagName))return;
+      if(!el||el===root||el===dim||el===deep||el===cv||el.id==='as-reach-svg'||el.id==='as-mirror-land'||/^(SCRIPT|STYLE|LINK)$/.test(el.tagName))return;   /* Build 181: the way back to the Mirror is never put to rest */
       if(!el.hasAttribute('inert')){el.setAttribute('inert','');INERT.push(el);}});}
     else{INERT.forEach(function(el){try{el.removeAttribute('inert');}catch(e){}});INERT=[];}
   }catch(e){}
@@ -13209,6 +13220,8 @@ window.asHeld=function(ap,sid,text){
   }catch(e){return false;}
 };
 window.asHeldOn=function(){return on;};
+/* Build 181 · going back to the Mirror ends the held moment, so nothing is left resting underneath it. */
+window.asHeldStop=function(){try{gen++;if(on)stop();}catch(e){}};
 })();
 
 /* ═══ THE BRIDGE ═══ 29 Aug 2026
@@ -13308,7 +13321,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">16 Nov 2026 · </span>180<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">16 Nov 2026 · </span>181<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -15123,10 +15136,10 @@ body.calm .asn-flow,body.calm .as-reach-flow{animation:none}
 #as-living-mirror{position:fixed;inset:0;z-index:2700;opacity:0;transition:opacity .45s ease;background:#f6e3d6}
 #as-living-mirror.on{opacity:1}
 #as-living-mirror.away{opacity:0;visibility:hidden;pointer-events:none;transition:opacity .45s ease,visibility 0s .45s}
-#as-mirror-land{position:fixed;left:50%;top:max(14px,env(safe-area-inset-top));transform:translate(-50%,-12px);z-index:2600;width:min(92vw,430px);box-sizing:border-box;padding:13px 15px 12px;border-radius:16px;background:rgba(20,16,38,.94);border:1px solid rgba(196,181,253,.45);box-shadow:0 10px 34px rgba(0,0,0,.45);color:#f3eeff;font:15px/1.45 system-ui,-apple-system,'Segoe UI',sans-serif;opacity:0;transition:opacity .5s ease,transform .5s ease}
+#as-mirror-land{position:fixed;left:50%;top:max(14px,env(safe-area-inset-top));transform:translate(-50%,-12px);z-index:2600;width:min(92vw,430px);box-sizing:border-box;padding:10px 13px 10px;border-radius:16px;background:rgba(20,16,38,.9);border:1px solid rgba(196,181,253,.45);box-shadow:0 10px 34px rgba(0,0,0,.45);color:#f3eeff;font:14px/1.4 system-ui,-apple-system,'Segoe UI',sans-serif;opacity:0;transition:opacity .5s ease,transform .5s ease}
 #as-mirror-land.on{opacity:1;transform:translate(-50%,0)}
-#as-mirror-land .ml-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-#as-mirror-land button{min-height:44px;padding:9px 14px;border-radius:999px;border:1px solid rgba(196,181,253,.7);background:rgba(196,181,253,.2);color:#fff;font:inherit;font-size:14px;cursor:pointer}
+#as-mirror-land .ml-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+#as-mirror-land button{min-height:44px;padding:8px 12px;border-radius:999px;border:1px solid rgba(196,181,253,.7);background:rgba(196,181,253,.2);color:#fff;font:inherit;font-size:14px;cursor:pointer}
 #as-mirror-land button.ml-quiet{background:transparent;border-color:rgba(196,181,253,.3);color:#d9cffb}
 #as-mirror-land button:focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media (prefers-reduced-motion: reduce){#as-mirror-land{transition:none}}
