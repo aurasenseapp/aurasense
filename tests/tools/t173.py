@@ -86,11 +86,15 @@ D = json.load(io.open(SITE + '/door.json', encoding='utf-8'))
 dh = io.open(SITE + '/door.html', encoding='utf-8').read()
 ok(D['sequence'][0]['state'] == 'open' and D['sequence'][0]['meaning'] == 'Two intelligences or civilizations sharing for mutual benefit.', 'door: the first symbol is open, in the words first written down')
 sealed = [x for x in D['sequence'] if x['state'] == 'sealed']
-ok(len(sealed) == 2 and all(set(x) <= {'n', 'state', 'recorded', 'sha256', 'drawn'} for x in sealed), 'door: two sealed records, with nothing in the data but dates and fingerprints')
+ok(len(sealed) == 2 and all(set(x) <= {'n', 'state', 'recorded', 'sha256', 'drawn', 'told'} for x in sealed), 'door: two sealed records, with nothing in the data but dates and fingerprints')
 for x in sealed:
     ok(x['sha256'] in dh, 'door: fingerprint %d is on the page' % x['n'])
     f = '/home/claude/work/sealed/Sequence-%d-sealed-15Nov2026.txt' % x['n']
     if os.path.exists(f): ok(hashlib.sha256(open(f, 'rb').read()).hexdigest() == x['sha256'], 'door: fingerprint %d matches the private sealed record' % x['n'])
+    if x.get('told'):
+        ok(x['told']['sha256'] in dh and set(x['told']) == {'recorded', 'sha256'} and 'More was told about it on' in dh, 'door: what was told later about %d is shown only as a fingerprint' % x['n'])
+        g2 = '/home/claude/work/sealed/Sequence-%d-told-sealed-15Nov2026.txt' % x['n']
+        if os.path.exists(g2): ok(hashlib.sha256(open(g2, 'rb').read()).hexdigest() == x['told']['sha256'], 'door: that fingerprint %d matches the private sealed record' % x['n'])
     if x.get('drawn'):
         ok(x['drawn']['sha256'] in dh and set(x['drawn']) == {'recorded', 'sha256'}, 'door: the drawing of %d is shown only as a fingerprint' % x['n'])
         g = '/home/claude/work/sealed/Sequence-%d-drawn-sealed-15Nov2026.txt' % x['n']
