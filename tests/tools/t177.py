@@ -106,11 +106,13 @@ with sync_playwright() as pw:
         ok(pg.inner_text('h1') == 'What are you sensing?' and h.gets == 1, tag + ': opens on the question, and asks once whether Claude listens here')
         layout(pg, tag + ' arrival')
         if vname == 'phone': pg.screenshot(path=SHOTS + '/1-arrival.png', full_page=True)
-        say(pg, 'The fridge hum gets into my shoulders.')
-        ok(vis(pg, '#ask') and len(h.posts) == 0 and 'May Claude listen?' in text(pg), tag + ': first, the choice; nothing has been sent')
+        pre = pg.inner_text('#pre')
+        ok(vis(pg, '#pre') and 'Claude, an AI made by Anthropic, will listen' in pre and '18 and over' in pre and 'delete them within 30 days' in pre and len(h.posts) == 0, tag + ': 182: what a yes means is told beside the box, before a word is sent')
+        ok(pg.inner_text('#send') == 'I’m 18 or over · Tell the Mirror' and pg.locator('#pre button:has-text("Write without the AI")').count() == 1 and pg.locator('#pre a[href="/privacy#mirror"]').count() == 1, tag + ': 182: the button says what pressing it means, and the other answer is one press away')
         layout(pg, tag + ' choice')
         h.script = [dict(R1)]
-        pg.click('#ask button.btn:not(.quiet)'); pg.wait_for_selector('.reply')
+        say(pg, 'The fridge hum gets into my shoulders.'); pg.wait_for_selector('.reply')
+        ok(not vis(pg, '#ask') and not vis(pg, '#pre') and pg.inner_text('#send') == 'Tell the Mirror' and len(h.posts) == 1, tag + ': 182: one step: the first press is the yes, and the words go')
         b = h.posts[0]
         ok(b.get('v') == 2 and b['words'] == 'The fridge hum gets into my shoulders.' and b['turns'][0]['content'].endswith('What are you sensing?') and b['turns'][0]['content'].startswith('[Written by the Mirror’s written rules'), tag + ': the words go the new way, after the yes')
         t = text(pg)
@@ -251,7 +253,8 @@ with sync_playwright() as pw:
 
     # F · not now; stop sharing; the helper missing altogether
     h = Helper(); ctx, pg, errs = open_page(h)
-    say(pg, 'the hum'); pg.click('#ask button.quiet'); pg.wait_for_selector('.reply')
+    pg.click('#pre button:has-text("Write without the AI")'); ok(not vis(pg, '#pre') and pg.inner_text('#send') == 'Tell the Mirror', 'F: 182: the other answer puts the note away')
+    say(pg, 'the hum'); pg.wait_for_selector('.reply')
     ok(len(h.posts) == 0 and 'THE WRITTEN MIRROR' in text(pg).upper() and pg.evaluate("localStorage.getItem('as_mirror_listener')") is None, 'F: "Not now" sends nothing, and the written Mirror asks instead')
     ok(pg.locator('#note button:has-text("Let Claude listen")').count() == 1, 'F: the way back to Claude stays open')
     pg.click('#note button:has-text("Let Claude listen")'); pg.click('#ask button.btn:not(.quiet)'); h.script = [dict(R1)]
