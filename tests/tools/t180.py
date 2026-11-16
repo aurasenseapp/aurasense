@@ -17,6 +17,7 @@ def ok(cond, what, detail=''):
 src = io.open(SITE + '/mirror.html', encoding='utf-8').read()
 mp = io.open(SITE + '/index-mapbox.html', encoding='utf-8').read()
 ok(len(re.findall(r'innerHTML', src)) == 1 and not re.search(r'__T=|__t\b|sk-ant|harvey', src, flags=re.I), 'the Mirror page: still one checked place for markup, no test hooks, first name only')
+ok("el.id==='as-mirror-land'||" in mp and 'window.asHeldStop=function' in mp and "if(window._macListOpen)macOpenDoor(-1)" in mp, '181: the held moment never rests the way back; a story closes its list')
 ok(not re.search(r'__T=|window\.__t\b|window\.__m\b', mp) and not re.search(r'sk-ant|harvey', mp, flags=re.I), 'the map: no test hooks, no keys, first name only')
 ok("fr.src='/mirror.html?in=site'" in mp and "/mirror-living.html?in=site" not in mp, 'the map opens the new Mirror')
 ok(os.path.isfile(SITE + '/mirror-living.html') and 'function mirrorOpenClassic(){' in mp, 'the older Mirrors are kept, not retired')
@@ -157,7 +158,7 @@ for vname, ww, hh in [('phone', 390, 844), ('laptop', 1280, 800)]:
     MW.prep(SITE + '/', True)
     t = io.open(TEST + '/index-mapbox.html', encoding='utf-8').read()
     a = '  window.openMyAuraPage = openMyAuraPage;\n'; assert t.count(a) == 1
-    t = t.replace(a, a + "  try{window.__m={get auraPoints(){return auraPoints;},get selSense(){return selSense;},get myOfferings(){return myOfferings;},get AREAS(){return AS_MIRROR_AREAS;},mirrorOpen:mirrorOpen,haversine:haversine,reverseAddress:reverseAddress,gateRow:gateRow,showSharedPopup:showSharedPopup,mirrorParse:mirrorParse,mirrorPopLine:mirrorPopLine,mirrorKind:mirrorKind,hookPopup:function(){openPopup=function(a,b,h){window.__pop=h;throw new Error('stand-in');};}};}catch(e){console.error('expose '+e);}\n")
+    t = t.replace(a, a + "  try{window.__m={get auraPoints(){return auraPoints;},get selSense(){return selSense;},get myOfferings(){return myOfferings;},get AREAS(){return AS_MIRROR_AREAS;},mirrorOpen:mirrorOpen,macOpenDoor:(typeof macOpenDoor==='function'?macOpenDoor:null),haversine:haversine,reverseAddress:reverseAddress,gateRow:gateRow,showSharedPopup:showSharedPopup,mirrorParse:mirrorParse,mirrorPopLine:mirrorPopLine,mirrorKind:mirrorKind,hookPopup:function(){openPopup=function(a,b,h){window.__pop=h;throw new Error('stand-in');};}};}catch(e){console.error('expose '+e);}\n")
     io.open(TEST + '/index-mapbox.html', 'w', encoding='utf-8').write(t)
     for f in ['mirror.html', 'alphasense.json']: shutil.copy(SITE + '/' + f, TEST + '/' + f)
     fake = io.open('/home/claude/scripts/fakemap.js', encoding='utf-8').read()
@@ -194,7 +195,15 @@ for vname, ww, hh in [('phone', 390, 844), ('laptop', 1280, 800)]:
     w.shot('180/B-land-' + vname) if os.path.isdir(WORK + '/shots/180') else None
     w.js("document.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));window.dispatchEvent(new KeyboardEvent('keydown',{key:'Escape'}))"); w.page.wait_for_timeout(700)
     ok(w.js("!!document.getElementById('as-living-mirror')"), T + ': Escape on the map does not throw the waiting conversation away')
+    # Build 181 · the held moment after a real landing rests the page; coming back must wake the Mirror
+    w.js("(()=>{document.getElementById('as-living-mirror').setAttribute('inert','');window.__stops=0;const f=window.asHeldStop;window.asHeldStop=function(){window.__stops++;return f&&f();};})()")
     w.click_text('#as-mirror-land button', 'Back to the Mirror'); w.page.wait_for_timeout(700)
+    ok(w.js("!document.getElementById('as-living-mirror').hasAttribute('inert')&&window.__stops===1"), T + ': 181: back to the Mirror ends the held moment and wakes the Mirror (its buttons answer again)')
+    try:
+        w.page.locator('#as-living-mirror iframe').click(timeout=3000, trial=True)
+        ok(True, T + ': 181: a button inside the returned Mirror can be pressed')
+    except Exception as e:
+        ok(False, T + ': 181: a button inside the returned Mirror can be pressed (' + str(e)[:80] + ')')
     ok(w.js("(()=>{const o=document.getElementById('as-living-mirror');return o.classList.contains('on')&&!o.classList.contains('away')&&getComputedStyle(o).visibility==='visible'&&!document.getElementById('as-mirror-land');})()") and fr.evaluate("window.__mark") == 7, T + ': back to the Mirror: the very same page, never reloaded')
     # again, then a new one
     fr.evaluate(OFFER, dict(M1, words=['Unease'], text='A hum in the flat seemed to get into my shoulders.')); w.page.wait_for_timeout(1400)
@@ -238,6 +247,10 @@ for vname, ww, hh in [('phone', 390, 844), ('laptop', 1280, 800)]:
     # the Mirror closed: everything is cleared
     fr.evaluate("window.parent.postMessage({as:'mirror',act:'close'},location.origin)"); w.page.wait_for_timeout(900)
     ok(w.js("!document.getElementById('as-living-mirror')&&!document.getElementById('as-mirror-land')"), T + ': closing the Mirror leaves nothing behind')
+    # Build 181 · My Aura: a sense's story and a list are never open on top of each other
+    r = w.js("(()=>{try{const c=document.getElementById('ma-sense-card'),d=document.getElementById('ma-cloud-doors');if(!c||!d||!__m.macOpenDoor)return 'none';c.classList.add('on');window._macCardOpen=true;__m.macOpenDoor(0);return (c.classList.contains('on')||window._macCardOpen)?'still':'closed';}catch(e){return 'err '+e.message;}})()")
+    ok(r == 'closed', T + ': 181: opening a My Aura list closes the open story of a sense (' + str(r) + ')')
+    w.js("try{__m.macOpenDoor(-1);}catch(e){}")
     w.js("__m.mirrorOpen()"); w.page.wait_for_timeout(1200)
     fr = [f for f in w.page.frames if 'mirror.html' in f.url][0]
     fr.evaluate("window.parent.postMessage({as:'mirror',act:'classic'},location.origin)"); w.page.wait_for_timeout(1400)
