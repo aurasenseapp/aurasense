@@ -85,6 +85,15 @@
         "It's not calm exactly. It's more like being included in something very large and very quiet.",
         "It only comes with the first snow of the year. Never the second."
       ]
+    },
+    {
+      "name": "inner-outer",
+      "keep": true,
+      "said": [
+        "All week I kept thinking about my grandmother's blue teapot. Today one just like it was in the window of a shop I never walk past.",
+        "It felt like the street answered me.",
+        "Warm, and a bit dizzy. Like being noticed."
+      ]
     }
   ]
 }
