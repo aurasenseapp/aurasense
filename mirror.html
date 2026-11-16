@@ -145,7 +145,7 @@ footer nav a{display:inline-block;min-height:44px;line-height:44px}
 <body>
 <div class="ground" aria-hidden="true"></div>
 <div class="wrap">
-<header class="top"><a class="mark" href="/" aria-label="Aurasense, home">aurasense</a><button id="back" class="lnk hide" type="button">Back to the map</button></header>
+<header class="top"><a class="mark" href="/" aria-label="Aurasense, home">aurasense</a><span><button id="older" class="lnk hide" type="button">Your balance of light</button> <button id="back" class="lnk hide" type="button">Back to the map</button></span></header>
 <main>
 <div class="hero" id="hero">
 <div class="aura" aria-hidden="true"></div>
@@ -500,8 +500,12 @@ function ended(title,line){
 }
 function keepIt(){
   var c=M.close;if(!c)return;var p=picked(),a=list('as_mirror_senses');
-  a.push({at:new Date().toISOString().slice(0,10),sensed:c.sensed,words:p.words,fresh:p.fresh,word:p.word,working:p.working,learned:c.learned});
-  if(put('as_mirror_senses',JSON.stringify(a.slice(-60))))ended('Kept','It is kept on this device only. No one else can see it, and you can let it go whenever you like.');
+  var rec={at:new Date().toISOString().slice(0,10),sensed:c.sensed,words:p.words,fresh:p.fresh,word:p.word,working:p.working,learned:c.learned};
+  /* Build 180 · Karl, 16 Nov: the third meaning is left for the person to discover. So a kept meeting of inner and
+     outer holds an open place beside it, to fill whenever that arrives. On this device only. */
+  var meet=(p.words||[]).indexOf('Synchronicity')>-1;if(meet)rec.third='';
+  a.push(rec);
+  if(put('as_mirror_senses',JSON.stringify(a.slice(-60))))ended('Kept','It is kept on this device only. No one else can see it, and you can let it go whenever you like.'+(meet?' An open place is kept beside it, for what the two say together, whenever that arrives.':''));
   else ended('This device would not keep it','Nothing was stored. You might copy the words somewhere of your own.');
 }
 function letGo(){
@@ -515,16 +519,23 @@ function offerShow(){
   var card=el('div','card');
   card.appendChild(el('h2','','Offer it to the map'));
   card.appendChild(el('p','','This is what would be offered, for other people, and AI, to learn from. It carries no name. Change any word you like.'));
+  if(inSite)card.appendChild(el('p','small soft','The map will place it in the area where you are now, never at your door.'));
   var lab=el('label','sr','The sense, as it would be offered');lab.htmlFor='offer';card.appendChild(lab);
   var ta=el('textarea','');ta.id='offer';ta.maxLength=220;ta.value=c.offer||c.sensed.replace(/[“”]/g,'');card.appendChild(ta);
   if(p.label)card.appendChild(el('p','small soft',p.label+'.'));
   var msg=el('p','small','');msg.setAttribute('role','status');card.appendChild(msg);
   var row=el('div','row');
-  row.appendChild(btn('btn','Hold it ready for the map',function(){
+  row.appendChild(btn('btn',inSite?'Offer it to the map':'Hold it ready for the map',function(){
     var t=ta.value.replace(/\s+/g,' ').trim().slice(0,220);
     if(!t){msg.textContent='There are no words to offer yet.';return;}
     if(HEAVY.test(norm(t))){care('');return;}
     if(UNSAFE.test(t)){msg.textContent='Please take out numbers, addresses and links, so nothing shows who you are.';return;}
+    /* Build 180 · inside the map, the sense goes to the map itself, which places it in the area the person is in.
+       Only the offered sentence and its symbols go: never the conversation. This conversation waits here meanwhile. */
+    if(inSite){M.sent=true;waitMap();
+      try{window.parent.postMessage({as:'mirror',act:'offer',text:t,words:(p.words||[]).slice(0,4),fresh:!!p.fresh,working:str(p.working,60)},location.origin);}
+      catch(e){M.sent=false;notOffered();}
+      return;}
     var a=list('as_mirror_offers');a.push({at:new Date().toISOString().slice(0,10),text:t,words:p.words,fresh:p.fresh,word:p.word,working:p.working});
     if(put('as_mirror_offers',JSON.stringify(a.slice(-20))))ended('Held ready for the map','It is waiting on this device, and nothing has been sent. The map will ask you where this sense belongs before it is offered.');
     else ended('This device would not hold it','Nothing was stored or sent.');
@@ -532,14 +543,39 @@ function offerShow(){
   row.appendChild(btn('btn quiet','Back',closeShow));card.appendChild(row);b.appendChild(card);
   try{b.scrollIntoView({block:'start'});}catch(e){}
 }
+function waitMap(){
+  var b=$('close');b.textContent='';var card=el('div','card');card.appendChild(el('h2','','Going to the map'));
+  card.appendChild(el('p','','The map is finding the area you are in. This conversation waits here.'));b.appendChild(card);
+}
+function notOffered(){
+  if(!M.close){$('close').classList.add('hide');$('close').textContent='';$('say').classList.remove('hide');return;}
+  closeShow();var n=el('p','small','It was not offered. Your sense is still here.');n.setAttribute('role','status');$('close').insertBefore(n,$('close').firstChild);
+}
+function landed(area){
+  var b=$('close');b.textContent='';var card=el('div','card');card.appendChild(el('h2','','Offered to the map'));
+  card.appendChild(el('p','','It rests '+(area?'in the area of '+area:'in the area where you are')+', with no name. Other people, and AI, can learn from it.'));b.appendChild(card);
+  var row=el('div','row');
+  row.appendChild(btn('btn','Carry on with this conversation',function(){b.classList.add('hide');b.textContent='';$('say').classList.remove('hide');try{$('words').focus();}catch(e){}}));
+  row.appendChild(btn('btn quiet','Begin a new one',again));b.appendChild(row);
+  M.close=null;refreshNote();
+}
 function keptShow(){
   if(M.busy)return;var b=$('close'),a=list('as_mirror_senses');b.textContent='';
   b.appendChild(el('h2','','Your kept senses'));
   b.appendChild(el('p','soft small','Kept on this device only.'));
-  a.slice().reverse().forEach(function(k){if(!k||typeof k!=='object')return;var card=el('div','card');
+  a.slice().reverse().forEach(function(k,ri){if(!k||typeof k!=='object')return;var at=a.length-1-ri,card=el('div','card');
     var nm=k.fresh?str(k.working,60)||'a new sense':(Array.isArray(k.words)&&k.words.length?k.words.slice(0,4).map(function(x){return str(x,60);}).join(' + '):str(k.word||k.working,60));
     card.appendChild(el('span','tag',str(k.at,10)+(nm?' · '+nm:'')));
-    card.appendChild(el('p','',str(k.sensed,320)));b.appendChild(card);});
+    card.appendChild(el('p','',str(k.sensed,320)));
+    if(typeof k.third==='string'){var t3=el('div','side third');t3.appendChild(el('span','tag','What the two say together'));
+      var lb=el('label','sr','What the two say together');lb.htmlFor='third'+at;t3.appendChild(lb);
+      var ti=el('input','');ti.type='text';ti.id='third'+at;ti.maxLength=200;ti.value=str(k.third,200);ti.placeholder='An open place, for whenever it arrives';t3.appendChild(ti);
+      var ts=el('p','small soft','');ts.setAttribute('role','status');
+      t3.appendChild(btn('btn quiet','Keep',function(){var v=str(ti.value,200);if(HEAVY.test(norm(v))){care('');return;}
+        var all=list('as_mirror_senses');if(!all[at]||typeof all[at]!=='object'||typeof all[at].third!=='string'){ts.textContent='This device would not keep it.';return;}
+        all[at].third=v;ts.textContent=put('as_mirror_senses',JSON.stringify(all))?(v?'Kept on this device only.':'The place is open again.'):'This device would not keep it.';}));
+      t3.appendChild(ts);card.appendChild(t3);}
+    b.appendChild(card);});
   var row=el('div','row');
   row.appendChild(btn('btn quiet','Close',function(){b.classList.add('hide');b.textContent='';if(M.close)closeShow();}));
   row.appendChild(btn('btn quiet','Let them all go',function(){drop('as_mirror_senses');b.classList.add('hide');b.textContent='';refreshNote();setWho('They are gone from this device.');}));
@@ -559,7 +595,16 @@ $('words').addEventListener('keydown',function(e){if(e.key==='Enter'&&(e.metaKey
 var inSite=false;try{inSite=(window.parent!==window)&&/[?&]in=site\b/.test(location.search);}catch(e){}
 function tell(act){try{window.parent.postMessage({as:'mirror',act:act},location.origin);}catch(e){}}
 if(inSite){$('back').classList.remove('hide');$('back').addEventListener('click',function(){tell('close');});
-  document.addEventListener('keydown',function(e){if(e.key==='Escape')tell('close');});}
+  $('older').classList.remove('hide');$('older').addEventListener('click',function(){tell('classic');});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')tell('close');});
+  /* Build 180 · the map answers: only Aurasense's own page is listened to, and only these four plain messages. */
+  addEventListener('message',function(e){try{
+    if(e.origin!==location.origin||e.source!==window.parent)return;var m=e.data||{};if(m.as!=='mirror-host')return;
+    if(m.act==='landed'){if(M.sent){M.sent=false;landed(str(m.area,80));}}
+    else if(m.act==='held'){if(M.sent){M.sent=false;notOffered();}}
+    else if(m.act==='fresh'){M.sent=false;again();}
+    else if(m.act==='begin'){if(!$('thread').children.length&&!$('words').value)$('words').value=str(m.a,600);}
+  }catch(x){}});}
 /* does Claude listen here? Asked once; if the answer is slow or missing, the written Mirror asks instead */
 function settle(j){
   if(M.settled)return;M.settled=true;M.live=!!(j&&j.live===true);M.listen=!!(j&&j.listen===true);
