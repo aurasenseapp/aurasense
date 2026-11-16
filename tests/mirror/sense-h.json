@@ -67,6 +67,24 @@
         "Like they creep up toward my ears.",
         "Can you help me name it, given what I've told you?"
       ]
+    },
+    {
+      "name": "two-at-once",
+      "keep": true,
+      "said": [
+        "Since my brother moved to the coast the house feels sad, and somehow lighter too.",
+        "Both at the same moment. The sad is in my throat and the light is in my arms.",
+        "They don't fight. They just sit together."
+      ]
+    },
+    {
+      "name": "no-word-yet",
+      "keep": true,
+      "said": [
+        "When the first snow starts there is a hush that gets inside my chest, as if the whole street is holding its breath with me.",
+        "It's not calm exactly. It's more like being included in something very large and very quiet.",
+        "It only comes with the first snow of the year. Never the second."
+      ]
     }
   ]
 }

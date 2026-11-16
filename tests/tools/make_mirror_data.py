@@ -24,7 +24,12 @@ bad = [w['w'] for w in words if not OKG.match(w['g'])]
 assert not bad, ('a symbol the page would refuse to draw', bad[:5])
 names = set(w['w'] for w in words)
 assert all(w.get('door', w['w']) in names for w in words), 'every doorway is a word in the alphabet'
-io.open(SITE + 'alphasense.json', 'w', encoding='utf-8').write(json.dumps({'note': 'The Alphasense alphabet, exactly as the map carries it. Made by a tool from the map; never edited by hand.', 'chapters': chap, 'words': words}, ensure_ascii=False, separators=(',', ':')) + '\n')
+# Build 177 · what two symbols mean where they meet, as the map's own language says
+jb = m[m.index('const ALPHA_JUNCTIONS=['):]
+jb = jb[:jb.index('];')]
+junctions = [[un(x.group(1)), un(x.group(2)), un(x.group(3))] for x in re.finditer(r"\['([^']+)','([^']+)','((?:[^'\\]|\\.)*)'\]", jb)]
+assert len(junctions) >= 15 and all(j[0] in names and j[1] in names for j in junctions), (len(junctions), [j for j in junctions if j[0] not in names or j[1] not in names][:3])
+io.open(SITE + 'alphasense.json', 'w', encoding='utf-8').write(json.dumps({'note': 'The Alphasense alphabet, exactly as the map carries it. Made by a tool from the map; never edited by hand.', 'chapters': chap, 'words': words, 'junctions': junctions}, ensure_ascii=False, separators=(',', ':')) + '\n')
 # one heavy-words list
 h = io.open(SITE + 'functions/api/mirror.js', encoding='utf-8').read()
 heavy = re.search(r'^const HEAVY = (/.*/i);$', h, flags=re.M).group(1)
@@ -33,4 +38,4 @@ s = io.open(p, encoding='utf-8').read()
 s2, n = re.subn(r'^var HEAVY=/.*/i;.*$', lambda _: 'var HEAVY=' + heavy + ';   /* the helper\'s own list, letter for letter (a tool keeps them the same) */', s, flags=re.M)
 assert n == 1, n
 io.open(p, 'w', encoding='utf-8').write(s2)
-print('alphasense.json: %d words, %d chapters; heavy list in step' % (len(words), len(chap)))
+print('alphasense.json: %d words, %d chapters, %d junctions; heavy list in step' % (len(words), len(chap), len(junctions)))
