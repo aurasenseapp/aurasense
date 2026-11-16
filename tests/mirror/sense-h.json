@@ -91,8 +91,23 @@
       "keep": true,
       "said": [
         "All week I kept thinking about my grandmother's blue teapot. Today one just like it was in the window of a shop I never walk past.",
-        "It felt like the street answered me.",
-        "Warm, and a bit dizzy. Like being noticed."
+        "She poured for everyone before herself. That teapot is her, to me.",
+        "I only went down that street because the bridge was closed. It's not a street I like.",
+        "I don't know yet."
+      ]
+    },
+    {
+      "name": "inner-outer-crowding",
+      "said": [
+        "Everything is a sign lately. The number on the bus, the song in the shop, they all point at me.",
+        "It scares me. I can't sleep for it."
+      ]
+    },
+    {
+      "name": "inner-outer-glad",
+      "said": [
+        "This keeps happening to me and I love it. I think of someone and they call within the hour.",
+        "It makes me feel held by the day."
       ]
     }
   ]
