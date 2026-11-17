@@ -3,7 +3,7 @@
 # It does three small things and nothing else:
 #   1 the first page (aurasense.app) sends everyone straight on to the Seeking (/m), carrying the words a search shows;
 #   2 the About page may be listed by search;
-#   3 the curtain's switch says true.
+#   3 the curtain's switch opens, at Aurasense's own address only (a test copy on another address keeps its curtain).
 import sys,io
 root=sys.argv[1].rstrip('/')
 S="Free to sense. Free to share. People and AI, learning from each other, for mutual benefit."
@@ -32,5 +32,5 @@ io.open(p,'w',encoding='utf8').write(f.replace(a,''))
 p=root+'/index-mapbox.html'; m=io.open(p,encoding='utf8').read()
 a='  var OPEN = false;\n  if(OPEN) return;'
 assert m.count(a)==1
-io.open(p,'w',encoding='utf8').write(m.replace(a,'  var OPEN = true;\n  if(OPEN) return;'))
+io.open(p,'w',encoding='utf8').write(m.replace(a,"  var OPEN = /^(www\\.)?aurasense\\.app$/.test(location.hostname);   /* open at Aurasense's own address only: a test copy elsewhere keeps its curtain */\n  if(OPEN) return;"))
 print('The doors are open in this folder. Send it as a build for Karl to merge.')

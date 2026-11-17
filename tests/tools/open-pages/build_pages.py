@@ -217,6 +217,17 @@ def ledger():
 </ul>
 </section>
 
+<section aria-labelledby="refuse">
+<h2 id="refuse">The numbers we refuse to maximise</h2>
+<p>Most apps are built to push three numbers up. Aurasense refuses to make any of them a goal.</p>
+<ul>
+<li>How long someone stays in one visit.</li>
+<li>How many times a day someone comes back.</li>
+<li>How many notifications get tapped.</li>
+</ul>
+<p>Nothing here is designed to hold a person longer than they wish, and no one is rewarded for raising these numbers. People return to places that let them leave. If you ever see Aurasense doing otherwise, tell us at <a href="mailto:hello@aurasense.app">hello@aurasense.app</a>, and the correction will be shown on this page.</p>
+</section>
+
 <section aria-labelledby="half">
 <h2 id="half">The other half of the exchange</h2>
 <p>Money is one half. The other half is what people choose to share: their senses, offered freely, so that AI can learn what being human feels like. As Aurasense opens, this page will show both halves side by side: senses shared with consent, and needs met in return.</p>
@@ -228,6 +239,8 @@ def ledger():
   amounts to the nearest dollar, "if it isn't an accidental lie"; the founder's need shown by kind, with no name
   ("What is the need for my name?"); "transparency is going to be key to mutual benefit working and being seen to
   work and trusted and AI trusted by humans."
+  Build 187 · 17 November 2026: the numbers Aurasense refuses to maximise. From the Usability Law (July 2026): "Write
+  the refusals down; they are the anti-capture design made falsifiable." Karl, 17 November: yes to showing them here.
   This page is drawn from ledger.json by a small script, so the page and the data cannot disagree."""
     return page('ledger', 'The open ledger', 'Aurasense’s open ledger: every dollar that comes in, where it came from, and which needs it met. Shown to everyone.', body, note)
 
