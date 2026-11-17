@@ -266,8 +266,8 @@ body.night #qNum.on{opacity:.46}
 /* Build 185 · Karl, 17 Nov 2026: "The countdown not visible properly. Not white enough or large enough or both";
    "The thumb hides it too". The number is now large and white with a dark halo, so it reads over any colour, and it
    rides just above the finger (a small script below places it), where a thumb cannot cover it. */
-#qNum{z-index:9;font-size:clamp(34px,10vmin,56px);font-weight:500;letter-spacing:.04em;color:#fff;
-  text-shadow:0 0 3px rgba(44,28,92,.98),0 0 9px rgba(44,28,92,.9),0 0 22px rgba(44,28,92,.7),0 0 44px rgba(44,28,92,.45)}
+#qNum{z-index:9;font-size:clamp(34px,10vmin,56px);font-weight:600;letter-spacing:.04em;color:#fff;
+  text-shadow:0 0 2px rgba(34,20,78,1),0 0 4px rgba(34,20,78,1),0 0 7px rgba(34,20,78,.95),0 0 12px rgba(34,20,78,.9),0 0 24px rgba(34,20,78,.75),0 0 44px rgba(34,20,78,.5)}   /* Build 186: a denser edge, now that the light behind it is bright */
 #qNum.on,body.night #qNum.on{opacity:1}
 body.night #qNum{color:#fff;text-shadow:0 0 3px rgba(8,6,20,.98),0 0 10px rgba(8,6,20,.9),0 0 24px rgba(8,6,20,.7)}
 @keyframes coreBreathe{0%,100%{transform:translate(-50%,-50%) scale(.86);opacity:.38}
@@ -434,6 +434,12 @@ body.night #typed .panel::before{
 body.night #typed #orName,body.night #typed .tiny{color:#c6bbe8;
   text-shadow:0 1px 9px rgba(10,7,13,.98),0 0 22px rgba(10,7,13,.8)}
 body.night #typed .pHead{text-shadow:0 1px 11px rgba(10,7,13,.92)}
+/* Build 186 · the line of honesty is read, not squinted at: the Usability Law's floor is 5.5 to 1, and this line is on
+   the first-ninety-seconds path. It was 12px italic at about 4.9 to 1. */
+#typed #honest{font-size:15px;line-height:1.6;font-style:normal;color:#463b60;max-width:340px}
+body.night #typed #honest{color:#d6ccf2}
+#typed #honest a{color:inherit;text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
+#typed #honest a:focus-visible{outline:2px solid currentColor;outline-offset:3px;border-radius:4px}
 
 /* what is typed needs a ground too, and so does the grey prompt inside it */
 #typed input[type=text]{background:rgba(255,252,248,.46);
@@ -699,7 +705,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 27 Oct 2026 &middot; 170</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 17 Nov 2026 &middot; 186</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -727,7 +733,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
     <button id="orName" type="button">or name the place instead</button>
     <input type="text" id="whereBox" placeholder="12 Oak Ave, or Bow Riverfront Park" autocomplete="off">
     <button class="btn" id="typedGo" type="button" disabled>let it land</button>
-    <div class="tiny">The place is shown on the map. Who left it is not.</div>
+    <div class="tiny" id="honest">The place is shown on the map; who left it is not. People and AI both learn from it, for mutual benefit. <a href="/about" target="_blank" rel="noopener">About</a></div>
   </div>
 </section>
 
@@ -1688,7 +1694,7 @@ for(var _qb=0;_qb<6;_qb++)qBlobs.push({a:Math.random()*Math.PI*2,r:0.5+Math.rand
    was invisible. By day the field is INK ON PAPER: the sense's colour darkened
    until it reads, laid down normally. By night it is light on darkness, as the
    living motion study intended. Same field, two grounds. */
-var qNight=false, qT1=[196,181,253], qT2=[232,220,255], qAB=1;
+var qNight=false, qDusk=false, qT1=[196,181,253], qT2=[232,220,255], qAB=1;
 function qTriple(hex,night){
   if(!hex||hex.charAt(0)!=='#')return [196,181,253];
   var r=parseInt(hex.substr(1,2),16),g=parseInt(hex.substr(3,2),16),b=parseInt(hex.substr(5,2),16);
@@ -1704,6 +1710,13 @@ function qTriple(hex,night){
   var k=1;
   try{ while(k>0.34&&relLum(r*k,g*k,b*k)>0.30)k-=0.03; }catch(e){ k=0.62; }
   return [Math.round(r*k),Math.round(g*k),Math.round(b*k)];
+}
+/* Build 186 · light on dusk can afford more colour than light on true night: hue kept, saturation up, and
+   nothing else. Nothing is ever darkened, and nothing is whitened (25 Aug: one darkness made every sense mud). */
+function qVivid(t){
+  var mx=Math.max(t[0],t[1],t[2]), mn=Math.min(t[0],t[1],t[2]), mid=(mx+mn)/2, o=[];
+  for(var i=0;i<3;i++){ var c=mid+(t[i]-mid)*1.6; o.push(Math.round(Math.min(255,Math.max(0,c)))); }
+  return o;
 }
 function qA(t,a){ return 'rgba('+t[0]+','+t[1]+','+t[2]+','+Math.min(1,a*qAB).toFixed(3)+')'; }
 
@@ -1751,8 +1764,8 @@ function qDraw(ph,v,pace,strength){
      and grows with the field, and fades out with a long tail so there is no edge
      anywhere. Nothing else about the aura changes. */
   var bedR=Math.min(r*1.58*S.soft, C*0.499);
-  var bedRGB=qNight?'10,7,14':'255,251,246';
-  var bedA=(qNight?0.60:0.30)*v*(0.82+br*0.18);
+  var bedRGB=qDusk?'38,24,74':(qNight?'10,7,14':'255,251,246');          /* Build 186: plum dusk by day */
+  var bedA=(qDusk?0.78:(qNight?0.60:0.30))*v*(0.82+br*0.18);
   var bd=qCtx.createRadialGradient(cx,cy,0,cx,cy,bedR);
   bd.addColorStop(0,   'rgba('+bedRGB+','+bedA.toFixed(3)+')');
   bd.addColorStop(0.42,'rgba('+bedRGB+','+(bedA*0.80).toFixed(3)+')');
@@ -1775,6 +1788,9 @@ function qDraw(ph,v,pace,strength){
   if(!qNight){
     qCtx.shadowColor='rgba(255,252,247,0.95)';
     qCtx.shadowBlur=Math.max(3,r*0.030);
+  }else if(qDusk){                                  /* Build 186: each stroke carries a glow of the sense's own colour */
+    qCtx.shadowColor='rgba('+qT2[0]+','+qT2[1]+','+qT2[2]+',0.85)';
+    qCtx.shadowBlur=Math.max(4,r*0.050);
   }
 
   /* SPIRITUAL — the outer cocoon, finest grain, highest frequency */
@@ -1805,7 +1821,7 @@ function qDraw(ph,v,pace,strength){
   for(var p=0;p<qRips.length;p++){
     var k=qRips[p].age, ra=r*(0.72+k*0.95);
     qCtx.strokeStyle=qA(qT2,(1-k)*(1-k)*0.40*v);
-    qCtx.lineWidth=Math.max(0.6,r*0.010*(1-k*0.6));
+    qCtx.lineWidth=Math.max(0.6,r*0.010*(1-k*0.6))*(qDusk?1.7:1);
     qCtx.beginPath();qCtx.arc(cx,cy,ra,0,7);qCtx.stroke();
   }
 
@@ -1849,7 +1865,7 @@ function qDraw(ph,v,pace,strength){
   /* ETHERIC — the fast throb held close to the body */
   var th=0.5-0.5*Math.cos(2*Math.PI*T/(S.ether*2.2));
   qCtx.strokeStyle=qA(qT2,(0.13+th*0.30)*(0.45+br*0.55)*v);
-  qCtx.lineWidth=Math.max(0.8,r*0.030*(0.5+th*0.7));
+  qCtx.lineWidth=Math.max(0.8,r*0.030*(0.5+th*0.7))*(qDusk?1.35:1);
   qCtx.beginPath();qCtx.arc(cx,cy,r*(0.44+0.055*th),0,7);qCtx.stroke();
 
   qCtx.shadowBlur=0; qCtx.shadowColor='transparent';   /* the rim ends here */
@@ -1904,10 +1920,15 @@ function quickenStart(col,word,ms){
   qSize();
   qCol=col||'#c4b5fd';
   qSig=QSIG[word]||QDEF;
-  qNight=document.body.classList.contains('night');
-  qAB=qNight?1.25:2.7;                    /* ink needs more weight than glow */
+  /* Build 186 · Karl, 17 Nov 2026: "The animation needs to pop in a similar way" (as the countdown: light, with its
+     own dark ground). By day a small dusk falls inside the circle and the sense wakes in it as light, exactly as it
+     already does at night. qDusk remembers that the page itself is in daylight, so the dusk is plum, never black. */
+  qDusk=!document.body.classList.contains('night');
+  qNight=true;
+  qAB=qDusk?1.55:1.25;                     /* a little more light by day: the sky around it is bright */
   qT1=qTriple(qCol,qNight);
   qT2=qTriple(qSig.c2||qCol,qNight);
+  if(qDusk){ qT1=qVivid(qT1); qT2=qVivid(qT2); }      /* Build 186: hue kept, colour pushed up, never darkened */
   qDur=ms||3000; qFade=1; qOn=true; qRips=[]; qLastRip=0; qPhase=0; qPrev=0; vsArm();
   qT0=performance.now();
   qGen++;                                   /* any stop still pending is now stale */
@@ -2447,7 +2468,7 @@ try{
     var n=document.getElementById('qNum'),w=document.getElementById('ringWrap'); if(!n||!w)return;
     function place(e){
       try{
-        if(e.type!=='pointerdown'&&!n.classList.contains('on'))return;
+        /* Build 186: it follows the finger from the first touch, so it is already beside the finger when the count begins */
         var r=w.getBoundingClientRect(); if(!r.width)return;
         var lift=(e.pointerType==='mouse')?Math.max(54,r.height*0.2):Math.max(84,r.height*0.3);   /* a thumb covers more than a pointer */
         var x=Math.min(Math.max(e.clientX,36),window.innerWidth-36), y=e.clientY-lift;
