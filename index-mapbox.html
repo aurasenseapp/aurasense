@@ -23,7 +23,7 @@
 (function(){
   /* Build 183 · THE OPENING SWITCH. While this says false, the curtain stays as it is. On the day Karl says so,
      it becomes true (the tool open_doors.py does it, together with the front door), and everyone may come in. */
-  var OPEN = true;
+  var OPEN = /^(www\.)?aurasense\.app$/.test(location.hostname);   /* open at Aurasense's own address only: a test copy elsewhere keeps its curtain */
   if(OPEN) return;
   var WORDS = ['Atest','BDtest','BOCtest','MAtest','KHtest','lightone','lighttwo','lightthree'];   /* three more, 26 Sep 2026: one word per person, so each light can be traced to its invitation */
 
