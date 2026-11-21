@@ -1271,12 +1271,12 @@ body.ma-incloud .as-rail{display:none!important}
    button sat over "Add to your aura" and "Send from your aura". The face now rests at the heart of the aura,
    softly lit, away from the doors; tapping it retakes it. While the senses are spread, or a sense is open,
    the face steps aside so nothing is written over anything else. */
-#myaura-page.cloudfirst.faceon:not(.ma-cam-live) #ma-cloud-view #ma-selfie-wrap{top:40%;bottom:auto;transform:translate(-50%,-50%)}
-#myaura-page.cloudfirst.ma-has-photo:not(.ma-cam-live) #ma-cloud-view #ma-selfie-btn{display:none!important}
-#myaura-page.cloudfirst #ma-cloud-view #ma-selfie-thumb{width:112px;height:112px;opacity:.92;border:0;
+#myaura-page.cloudfirst:not(.ma-cam-live) #ma-selfie-wrap{bottom:auto!important;transform:translate(-50%,-50%)!important}   /* its height is set by macPlaceFace, to the aura's own heart */
+#myaura-page.cloudfirst.ma-has-photo:not(.ma-cam-live) #ma-selfie-btn{display:none!important}
+#myaura-page.cloudfirst #ma-selfie-thumb{width:112px;height:112px;opacity:.92;border:0;
   box-shadow:0 0 0 6px rgba(255,246,236,.35),0 0 46px 18px rgba(255,240,228,.75)}
-#myaura-page.ma-spread #ma-cloud-view #ma-selfie-wrap{display:none!important}
-#myaura-page:has(#ma-sense-card.on) #ma-cloud-view #ma-selfie-wrap{display:none!important}
+#myaura-page.ma-spread #ma-selfie-wrap{display:none!important}
+#myaura-page:has(#ma-sense-card.on) #ma-selfie-wrap{display:none!important}
 /* a sense, opened: the words behind it step back, so they are never written over it */
 #myaura-page:has(#ma-sense-card.on) #ma-cloud-words{opacity:0!important;visibility:hidden}
 #myaura-page.cloudfirst.faceon #ma-cloud-view #ma-selfie-btn{background:rgba(255,248,238,.72);
@@ -7422,8 +7422,19 @@ function macShowName(i){
   el.style.top=Math.round(ny2)+'px';
   el.classList.add('on');
 }
+/* Build 193 · the face rests exactly where the aura's heart is drawn (macDrawAura: 40% of the screen's height),
+   wherever its box happens to sit. While the camera is live it goes back to its own place. */
+var _macFaceN=0;
+function macPlaceFace(){
+  var pg=document.getElementById('myaura-page'),w=document.getElementById('ma-selfie-wrap');if(!pg||!w)return;
+  if(!pg.classList.contains('cloudfirst')||pg.classList.contains('ma-cam-live')){if(w.style.top)w.style.top='';return;}
+  var par=w.offsetParent;if(!par)return;
+  var y=innerHeight*0.40-par.getBoundingClientRect().top;
+  var t=Math.round(y)+'px';if(w.style.top!==t)w.style.top=t;
+}
 function macAuraLoop(ts){
   try{ macDrawAura(ts); }catch(e){}
+  if((_macFaceN++%20)===0){ try{ macPlaceFace(); }catch(e){} }
   macAraf=requestAnimationFrame(macAuraLoop);
 }
 
@@ -7462,6 +7473,7 @@ function macEnter(){
 function macLeave(keepPage){
   var page=document.getElementById('myaura-page');
   if(page)page.classList.remove('cloudfirst','faceon');
+  try{var _w193=document.getElementById('ma-selfie-wrap');if(_w193)_w193.style.top='';}catch(e){}   /* Build 193 */
   try{ if(macFaceHome){ var v=document.getElementById('ma-video'),w=document.getElementById('ma-selfie-wrap');
     if(w&&macFaceHome.p)macFaceHome.p.appendChild(w);
     if(v&&macFaceHome.vp)macFaceHome.vp.appendChild(v); macFaceHome=null; } }catch(e){}
