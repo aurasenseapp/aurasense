@@ -4,79 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Aurasense</title>
-<meta name="description" content="Aurasense, a map of how places feel, is coming soon. Open now: a free checklist for choosing a quiet home, the Mutual Benefit Pledge, and the open ledger.">
-<style>
-  *{margin:0;padding:0;box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    background:radial-gradient(62% 60% at 50% 40%, #17142e 0%, #0c0a18 55%, #07060e 100%);
-    color:#f3eeff;
-    font-family:"Helvetica Neue","Segoe UI",system-ui,-apple-system,sans-serif;
-    display:flex;align-items:center;justify-content:center;
-    min-height:100svh;overflow:hidden;position:relative;
-  }
-  .stage{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;padding:6vw}
-  .glow{
-    position:absolute;top:50%;left:50%;
-    width:min(80vw,560px);height:min(80vw,560px);
-    transform:translate(-50%,-58%);
-    border-radius:50%;
-    background:
-      radial-gradient(closest-side at 45% 43%, rgba(196,181,253,.55), transparent 72%),
-      radial-gradient(closest-side at 59% 57%, rgba(255,159,192,.42), transparent 72%),
-      radial-gradient(closest-side at 52% 52%, rgba(255,214,166,.30), transparent 64%),
-      radial-gradient(closest-side at 50% 46%, rgba(255,255,255,.75), transparent 22%);
-    filter:blur(6px);
-    animation:breathe 6.5s ease-in-out infinite;
-    pointer-events:none;
-  }
-  @keyframes breathe{
-    0%,100%{transform:translate(-50%,-58%) scale(1);opacity:.82}
-    50%{transform:translate(-50%,-58%) scale(1.06);opacity:1}
-  }
-  .mark{position:relative;z-index:1}
-  .word{
-    font-weight:300;
-    font-size:clamp(2.1rem,9vw,4.6rem);
-    letter-spacing:.34em;
-    text-transform:lowercase;
-    color:#f5f1ff;
-    text-shadow:0 0 36px rgba(196,181,253,.55), 0 0 14px rgba(255,255,255,.22);
-    padding-left:.34em;
-  }
-  .soon{
-    margin-top:2.1em;
-    font-size:.8rem;
-    letter-spacing:.5em;
-    text-transform:uppercase;
-    color:#9a90c2;
-    padding-left:.5em;
-  }
-  /* 14 Nov 2026 · Build 171 · what is open now, while the map is made ready */
-  .open{position:relative;z-index:1;margin-top:3em;display:flex;flex-direction:column;align-items:center}
-  .open p{font-size:.8rem;letter-spacing:.4em;text-transform:uppercase;color:#9a90c2;padding-left:.4em;margin-bottom:.5em}
-  .open a{display:inline-flex;align-items:center;min-height:44px;padding:0 .6em;color:#d9cdfc;font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
-    font-size:clamp(.98rem,3.6vw,1.08rem);text-decoration:underline;text-decoration-color:rgba(196,181,253,.45);text-underline-offset:.22em}
-  .open a:focus-visible{outline:2px solid #c4b5fd;outline-offset:2px;border-radius:6px}
-  @media (prefers-reduced-motion:reduce){
-    .glow{animation:none;opacity:.95}
-  }
-</style>
+<meta name="description" content="Free to sense. Free to share. People and AI, learning from each other, for mutual benefit. A living map of how places feel, made from what people sense there.">
+<meta property="og:title" content="Aurasense">
+<meta property="og:description" content="Free to sense. Free to share. People and AI, learning from each other, for mutual benefit.">
+<meta http-equiv="refresh" content="0; url=/m">
+<link rel="canonical" href="https://www.aurasense.app/m">
+<style>html,body{height:100%;margin:0;background:#0c0a18;color:#e9e2ff;font-family:Georgia,serif}body{display:flex;align-items:center;justify-content:center;text-align:center;padding:24px}a{color:#d9cdfc}</style>
 </head>
 <body>
-  <div class="stage">
-    <div class="glow"></div>
-    <div class="mark">
-      <div class="word">aurasense</div>
-      <div class="soon">coming soon</div>
-    </div>
-    <nav class="open" aria-label="Open now">
-      <p>open now</p>
-      <a href="/sense-before-you-sign">A free checklist for choosing a quiet home</a>
-      <a href="/pledge">The Mutual Benefit Pledge</a>
-      <a href="/ledger">The open ledger</a>
-      <a href="/door">The Answering Door</a>
-    </nav>
-  </div>
+<p>Free to sense. Free to share. People and AI, learning from each other, for mutual benefit.<br><br><a href="/m">Enter Aurasense</a> · <a href="/about">About</a></p>
 </body>
 </html>
