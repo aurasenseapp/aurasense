@@ -1267,6 +1267,18 @@ body.ma-incloud .as-rail{display:none!important}
 #myaura-page.cloudfirst.ma-cam-live #ma-cloud-view #ma-selfie-note{display:block}
 #ma-selfie-thumb{width:64px;height:64px;border-radius:50%;object-fit:cover;cursor:pointer;
   border:1px solid rgba(120,74,50,.34);box-shadow:0 0 18px rgba(255,236,220,.85)}
+/* Build 193 (21 Nov 2026) · Karl: "Photo doesn't go or remain in centre of my aura", and the photo and its
+   button sat over "Add to your aura" and "Send from your aura". The face now rests at the heart of the aura,
+   softly lit, away from the doors; tapping it retakes it. While the senses are spread, or a sense is open,
+   the face steps aside so nothing is written over anything else. */
+#myaura-page.cloudfirst.faceon:not(.ma-cam-live) #ma-cloud-view #ma-selfie-wrap{top:40%;bottom:auto;transform:translate(-50%,-50%)}
+#myaura-page.cloudfirst.ma-has-photo:not(.ma-cam-live) #ma-cloud-view #ma-selfie-btn{display:none!important}
+#myaura-page.cloudfirst #ma-cloud-view #ma-selfie-thumb{width:112px;height:112px;opacity:.92;border:0;
+  box-shadow:0 0 0 6px rgba(255,246,236,.35),0 0 46px 18px rgba(255,240,228,.75)}
+#myaura-page.ma-spread #ma-cloud-view #ma-selfie-wrap{display:none!important}
+#myaura-page:has(#ma-sense-card.on) #ma-cloud-view #ma-selfie-wrap{display:none!important}
+/* a sense, opened: the words behind it step back, so they are never written over it */
+#myaura-page:has(#ma-sense-card.on) #ma-cloud-words{opacity:0!important;visibility:hidden}
 #myaura-page.cloudfirst.faceon #ma-cloud-view #ma-selfie-btn{background:rgba(255,248,238,.72);
   color:#4a2a1a;border-color:rgba(120,74,50,.34)}
 /* a sense, opened — what it is, and what it is doing to the whole */
@@ -6907,6 +6919,7 @@ function openMyAuraPage(){
   const sa=document.getElementById('ma-selfie-actions');if(sa)sa.style.display='none';
   const sb=document.getElementById('ma-selfie-btn');if(sb){sb.style.display='';sb.textContent=maSelfieImg?'Retake photo':'📷 Take a selfie';}   /* Build 192: always a way to retake */
   try{const _th=document.getElementById('ma-selfie-thumb');if(_th){if(maSelfieImg&&maSelfieImg.src){_th.src=maSelfieImg.src;_th.style.display='block';}else _th.style.display='none';}}catch(_){}
+  try{const _pg=document.getElementById('myaura-page');if(_pg)_pg.classList.toggle('ma-has-photo',!!maSelfieImg);}catch(_){}   /* Build 193 */
   const _sn=document.getElementById('ma-selfie-note');if(_sn)_sn.textContent=maSelfieImg?'Tap your photo to retake it — only you will see it, unless you choose otherwise':'(Only you will see this, unless you choose otherwise)';
   maSizeCanvas();
   if(!maRaf)maRaf=requestAnimationFrame(maDraw);
@@ -7841,7 +7854,7 @@ if(maCapture)maCapture.addEventListener('click',()=>{
   maStopStream();if(maVideo)maVideo.style.display='none';if(maSelfieActions)maSelfieActions.style.display='none';
   /* Build 192: the photo is shown where the person is looking, and the way to retake it stays */
   try{const _th=document.getElementById('ma-selfie-thumb');if(_th){_th.src=_url;_th.style.display='block';}}catch(_){}
-  try{const _pg=document.getElementById('myaura-page');if(_pg)_pg.classList.remove('ma-cam-live');}catch(_){}
+  try{const _pg=document.getElementById('myaura-page');if(_pg){_pg.classList.remove('ma-cam-live');_pg.classList.add('ma-has-photo');}}catch(_){}   /* Build 193 */
   if(maSelfieBtn){maSelfieBtn.style.display='';maSelfieBtn.textContent='Retake photo';}
   const _sn2=document.getElementById('ma-selfie-note');if(_sn2)_sn2.textContent='Tap your photo to retake it — only you will see it, unless you choose otherwise';
 });
