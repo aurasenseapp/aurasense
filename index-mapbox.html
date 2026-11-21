@@ -10063,7 +10063,9 @@ var AS_TENDER=['stress','pain','anxiety','socialanxiety','overwhelm','loneliness
                'numbness','weariness','heaviness','hunger','safety'];
 function asTender(sense){return AS_TENDER.indexOf(sense)>-1;}
 function asSoftPoint(sense,lat,lng){
-  if(!asTender(sense)||!isFinite(lat)||!isFinite(lng))return {lat:lat,lng:lng};
+  /* Build 191 (21 Nov 2026, the doors open): EVERY shared light is softened, not only tender ones.
+     A light offered from "where I am" is often offered from home; nobody's home is ever shown. */
+  if(!isFinite(lat)||!isFinite(lng))return {lat:lat,lng:lng};
   var STEP=0.0018;                                            /* about 200 metres */
   var c=Math.max(0.2,Math.cos(lat*Math.PI/180)),stepLng=STEP/c;
   var gl=Math.round(lat/STEP)*STEP,gn=Math.round(lng/stepLng)*stepLng;
@@ -10073,7 +10075,7 @@ function asSoftPoint(sense,lat,lng){
   return {lat:+gl.toFixed(6),lng:+gn.toFixed(6)};
 }
 function asSoftPlace(sense,place){
-  if(!asTender(sense)||!place)return place;
+  if(!place)return place;                                     /* Build 191: every light, not only tender ones */
   return String(place).replace(/^\s*\d+[A-Za-z]?\s*[-\u2013]?\s*\d*\s+/,'');   /* the street, not the door */
 }
 function asSoftTime(sense,born){
