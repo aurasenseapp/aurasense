@@ -1260,6 +1260,13 @@ body.ma-incloud .as-rail{display:none!important}
 #myaura-page.cloudfirst.faceon #ma-cloud-view #ma-video{display:block;top:42%}
 #myaura-page.cloudfirst.faceon #ma-cloud-view #ma-selfie-wrap{top:auto;bottom:36%}
 #myaura-page.cloudfirst.faceon #ma-cloud-view #ma-selfie-note{color:#7a5540;text-shadow:none}
+/* Build 192 (21 Nov 2026) · Karl: the small line about the photo was written over "Send from your aura"
+   and "Learn the symbols", and the photo itself never appeared. In the cloud the line now shows only
+   while the camera is live, and a taken photo is shown as a small round light that can be tapped to retake. */
+#myaura-page.cloudfirst #ma-cloud-view #ma-selfie-note{display:none}
+#myaura-page.cloudfirst.ma-cam-live #ma-cloud-view #ma-selfie-note{display:block}
+#ma-selfie-thumb{width:64px;height:64px;border-radius:50%;object-fit:cover;cursor:pointer;
+  border:1px solid rgba(120,74,50,.34);box-shadow:0 0 18px rgba(255,236,220,.85)}
 #myaura-page.cloudfirst.faceon #ma-cloud-view #ma-selfie-btn{background:rgba(255,248,238,.72);
   color:#4a2a1a;border-color:rgba(120,74,50,.34)}
 /* a sense, opened — what it is, and what it is doing to the whole */
@@ -2621,6 +2628,7 @@ window.AS_SEEK_ALWAYS=true;
       <div id="ma-branch-tip"></div>
       <div id="ma-explain">This is to help you visualise what your personal aura is like — how your emotional and psychological state influences the energy from your physical body. Everyday decisions. <span class="mae-hint">Tap any layer of light to see where that energy came from.</span></div>
       <div id="ma-selfie-wrap">
+        <img id="ma-selfie-thumb" alt="Your photo. Tap to take it again." style="display:none">
         <button id="ma-selfie-btn">📷 Upload a selfie here</button>
         <div id="ma-selfie-actions"><button id="ma-capture">Capture</button><button id="ma-cancel-selfie">Cancel</button></div>
         <div id="ma-selfie-note">(Only you will see this, unless you choose otherwise)</div>
@@ -6894,7 +6902,8 @@ function openMyAuraPage(){
   maStopStream();
   const v=document.getElementById('ma-video');if(v)v.style.display='none';
   const sa=document.getElementById('ma-selfie-actions');if(sa)sa.style.display='none';
-  const sb=document.getElementById('ma-selfie-btn');if(sb){sb.style.display=maSelfieImg?'none':'';sb.textContent='📷 Take a selfie';}
+  const sb=document.getElementById('ma-selfie-btn');if(sb){sb.style.display='';sb.textContent=maSelfieImg?'Retake photo':'📷 Take a selfie';}   /* Build 192: always a way to retake */
+  try{const _th=document.getElementById('ma-selfie-thumb');if(_th){if(maSelfieImg&&maSelfieImg.src){_th.src=maSelfieImg.src;_th.style.display='block';}else _th.style.display='none';}}catch(_){}
   const _sn=document.getElementById('ma-selfie-note');if(_sn)_sn.textContent=maSelfieImg?'Tap your photo to retake it — only you will see it, unless you choose otherwise':'(Only you will see this, unless you choose otherwise)';
   maSizeCanvas();
   if(!maRaf)maRaf=requestAnimationFrame(maDraw);
@@ -7806,6 +7815,7 @@ if(maSelfieBtn)maSelfieBtn.addEventListener('click',async()=>{
     if(maVideo){maVideo.srcObject=maStream;maVideo.style.display='block';try{await maVideo.play();}catch(e){}}
     if(maSelfieActions)maSelfieActions.style.display='flex';
     maSelfieBtn.style.display='none';
+    try{const _pg=document.getElementById('myaura-page');if(_pg)_pg.classList.add('ma-cam-live');const _th=document.getElementById('ma-selfie-thumb');if(_th)_th.style.display='none';}catch(_){}   /* Build 192 */
   }catch(e){
     /* 3 Sep 2026 - it used to say this forever, so a person who fixed the
        permission had no way of knowing they could try again. It says it,
@@ -7823,13 +7833,19 @@ if(maCapture)maCapture.addEventListener('click',()=>{
   const tmp=document.createElement('canvas');tmp.width=sz;tmp.height=sz;const tc=tmp.getContext('2d');
   tc.translate(sz,0);tc.scale(-1,1);
   tc.drawImage(maVideo,(vw-sz)/2,(vh-sz)/2,sz,sz,0,0,sz,sz);
-  const img=new Image();img.onload=()=>{maSelfieImg=img;};img.src=tmp.toDataURL('image/png');
+  const _url=tmp.toDataURL('image/png');
+  const img=new Image();img.onload=()=>{maSelfieImg=img;};img.src=_url;
   maStopStream();if(maVideo)maVideo.style.display='none';if(maSelfieActions)maSelfieActions.style.display='none';
-  if(maSelfieBtn){maSelfieBtn.style.display='none';}
+  /* Build 192: the photo is shown where the person is looking, and the way to retake it stays */
+  try{const _th=document.getElementById('ma-selfie-thumb');if(_th){_th.src=_url;_th.style.display='block';}}catch(_){}
+  try{const _pg=document.getElementById('myaura-page');if(_pg)_pg.classList.remove('ma-cam-live');}catch(_){}
+  if(maSelfieBtn){maSelfieBtn.style.display='';maSelfieBtn.textContent='Retake photo';}
   const _sn2=document.getElementById('ma-selfie-note');if(_sn2)_sn2.textContent='Tap your photo to retake it — only you will see it, unless you choose otherwise';
 });
 const maCancelSelfie=document.getElementById('ma-cancel-selfie');
-if(maCancelSelfie)maCancelSelfie.addEventListener('click',()=>{maStopStream();if(maVideo)maVideo.style.display='none';if(maSelfieActions)maSelfieActions.style.display='none';if(maSelfieBtn)maSelfieBtn.style.display='';});
+if(maCancelSelfie)maCancelSelfie.addEventListener('click',()=>{maStopStream();if(maVideo)maVideo.style.display='none';if(maSelfieActions)maSelfieActions.style.display='none';if(maSelfieBtn)maSelfieBtn.style.display='';
+  try{const _pg=document.getElementById('myaura-page');if(_pg)_pg.classList.remove('ma-cam-live');const _th=document.getElementById('ma-selfie-thumb');if(_th&&maSelfieImg&&maSelfieImg.src)_th.style.display='block';}catch(_){}});   /* Build 192 */
+(function(){const _th=document.getElementById('ma-selfie-thumb');if(_th)_th.addEventListener('click',()=>{try{if(maSelfieBtn)maSelfieBtn.click();}catch(_){}});})();
 const maBackBtn=document.getElementById('ma-back');if(maBackBtn)maBackBtn.onclick=()=>{const _o=document.getElementById('pt-ov');if(_o)_o.remove();closeMyAuraPage();};
 window.addEventListener('resize',()=>{const p=document.getElementById('myaura-page');if(p&&p.classList.contains('show'))maSizeCanvas();});
 const maPolicy=document.getElementById('ma-policy');
