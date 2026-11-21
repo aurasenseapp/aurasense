@@ -4704,12 +4704,14 @@ map.on('click',async function(e){
   if(typeof raiseOfferPanel==='function')raiseOfferPanel(shortAddr||streetName);
 });
 async function lookupPlace(lat,lng){
+  window.AS_LAST_SPOT=null;                                                                /* Build 191 */
   try{var _ma=mirrorAreaFor(lat,lng);if(_ma)return _ma.name||null;}catch(e){}           /* Build 180: the same, for the place that is stored */
   try{
     const r=await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}&types=address,poi,neighborhood,place&limit=1`);
     const d=await r.json();
     if(d&&d.features&&d.features.length){
       const f=d.features[0];
+      try{if(f.place_type&&f.place_type[0]==='poi'&&f.center&&asPublicPoi(f)&&haversine(lat,lng,f.center[1],f.center[0])<=75)window.AS_LAST_SPOT={lat:lat,lng:lng,name:f.text||''};}catch(_){}   /* Build 191: a public place keeps its spot */
       const street=f.text||'';
       let town='',country='';
       (f.context||[]).forEach(cx=>{
@@ -4904,7 +4906,8 @@ function submit(lat,lng,text){
   // already does: sweeping the scales out and back in the sense's colour. Two journeys where
   // there is one. The wave keeps the journey; ascentClimb stays defined but unused.
   const _finishPlace=(place)=>{
-    if(typeof gateSaveOffering==='function'&&!_ap._gone)gateSaveOffering({sense:sid,text:text,priv:isPriv,lat:lat,lng:lng,place:place||null,scale:_gScale,born:Date.now(),_ap:_ap});
+    var _spot=false;try{var _ls=window.AS_LAST_SPOT;_spot=!!(_ls&&_ls.lat===lat&&_ls.lng===lng);}catch(_){}   /* Build 191 */
+    if(typeof gateSaveOffering==='function'&&!_ap._gone)gateSaveOffering({sense:sid,text:text,priv:isPriv,lat:lat,lng:lng,place:place||null,scale:_gScale,born:Date.now(),_ap:_ap,spot:_spot});
     if(!place)return;
     if(myOfferings[0])myOfferings[0].place=place;
     const first=document.getElementById('feed').firstChild;
@@ -10079,7 +10082,9 @@ var AS_TENDER=['stress','pain','anxiety','socialanxiety','overwhelm','loneliness
                'numbness','weariness','heaviness','hunger','safety'];
 function asTender(sense){return AS_TENDER.indexOf(sense)>-1;}
 function asSoftPoint(sense,lat,lng){
-  if(!asTender(sense)||!isFinite(lat)||!isFinite(lng))return {lat:lat,lng:lng};
+  /* Build 191 (21 Nov 2026, the doors open): EVERY shared light is softened, not only tender ones.
+     A light offered from "where I am" is often offered from home; nobody's home is ever shown. */
+  if(!isFinite(lat)||!isFinite(lng))return {lat:lat,lng:lng};
   var STEP=0.0018;                                            /* about 200 metres */
   var c=Math.max(0.2,Math.cos(lat*Math.PI/180)),stepLng=STEP/c;
   var gl=Math.round(lat/STEP)*STEP,gn=Math.round(lng/stepLng)*stepLng;
@@ -10089,7 +10094,7 @@ function asSoftPoint(sense,lat,lng){
   return {lat:+gl.toFixed(6),lng:+gn.toFixed(6)};
 }
 function asSoftPlace(sense,place){
-  if(!asTender(sense)||!place)return place;
+  if(!place)return place;                                     /* Build 191: every light, not only tender ones */
   return String(place).replace(/^\s*\d+[A-Za-z]?\s*[-\u2013]?\s*\d*\s+/,'');   /* the street, not the door */
 }
 function asSoftTime(sense,born){
@@ -10100,10 +10105,24 @@ function asSoftTime(sense,born){
   if(d<604800000)return 'this week';
   return 'a while ago';
 }
+/* Build 191 · AN AREA, NOT A DOOR (Karl, 21 Nov 2026: "Area yes, great solution"; "Public places. Those
+   without numbered addresses, Parks etc more precisely placed, as we are generating how places feel").
+   A light offered at a public place (a park, a cafe, a library) keeps its spot. Every other light is
+   saved only as its area, so no one's door is ever shown. Tender senses are always an area. */
+function asPublicPoi(f){
+  try{const pr=f.properties||{};const k=((pr.category||'')+' '+(pr.maki||'')+' '+(f.text||'')).toLowerCase();
+    if(/residen|apartment|townho|condo|housing|lodging|dwelling|home\b|homes\b|estate/.test(k))return false;
+    return /park|garden|playground|trail|beach|lake|river|view|museum|library|cafe|coffee|restaurant|bakery|shop|store|market|mall|grocery|school|college|university|hospital|clinic|church|worship|temple|mosque|synagogue|stadium|arena|theat|cinema|station|airport|square|plaza|monument|landmark|community|recreation|sport|gym|pool|zoo|attraction|historic|bar\b|pub\b|forest|campground|picnic/.test(k);
+  }catch(e){return false;}
+}
+function asAreaField(lat,lng){var d=0.0011,c=Math.max(0.2,Math.cos(lat*Math.PI/180));return {bbox:[lng-d/c,lat-d,lng+d/c,lat+d]};}
 function gateRow(o){
-  var _p=asSoftPoint(o.sense,o.lat,o.lng);
-  var _pl=o.place?String(asSoftPlace(o.sense,String(o.place))).slice(0,200):null;
-  return {sense:o.sense,text:(o.priv?null:(o.text||'').slice(0,500)),priv:!!o.priv,lat:_p.lat,lng:_p.lng,place:_pl,scale:o.scale||'street',session_id:gate.sid||gateSid()};}
+  var _spot=!!o.spot&&!asTender(o.sense);
+  var _p=_spot?{lat:o.lat,lng:o.lng}:asSoftPoint(o.sense,o.lat,o.lng);
+  var _pl=o.place?String(_spot?o.place:asSoftPlace(o.sense,String(o.place))).slice(0,200):null;
+  var row={sense:o.sense,text:(o.priv?null:(o.text||'').slice(0,500)),priv:!!o.priv,lat:_p.lat,lng:_p.lng,place:_pl,scale:o.scale||'street',session_id:gate.sid||gateSid()};
+  if(_spot&&!window.AS_NO_SPOT_COL)row.spot=true;      /* only sent when true, so an older database still takes every other light */
+  return row;}
 function gateQueue(o){if(!GATE_CONFIGURED)return;try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');q.push(gateRow(o));while(q.length>20)q.shift();localStorage.setItem('aurasense_gate_q',JSON.stringify(q));}catch(e){}}
 // PHASE 1 WIRING \u2014 the Two Doors, the Witness Line, the ripening, the quiet first screen.
 function twoDoors(){
@@ -12473,6 +12492,7 @@ async function gateSaveOffering(o){
     /* 9 Oct 2026 · taken back while it was still on its way: it is taken out again at once */
     try{if(o._ap&&o._ap._gone&&o._ap.gateId){gate.db.from('offerings').delete().eq('id',o._ap.gateId).then(function(){},function(){});}}catch(_){}
     if(r&&r.error){
+      if(/spot/i.test(String(r.error.message||r.error))&&!window.AS_NO_SPOT_COL){window.AS_NO_SPOT_COL=true;return gateSaveOffering(o);}   /* Build 191: an older database */
       if(gateTooFast(r.error)){console.warn('[gate] flood guard');gateRest();return;}   // refused, not lost at sea \u2014 never queue a retry storm
       console.warn('[gate] save',r.error.message||r.error);if(!(o._ap&&o._ap._gone))gateQueue(o);
     }}
@@ -12480,7 +12500,8 @@ async function gateSaveOffering(o){
 }
 async function gateFlushPending(){
   try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');if(!q.length)return;
-    const r=await gate.db.from('offerings').insert(q);
+    let r=await gate.db.from('offerings').insert(q);
+    if(r&&r.error&&/spot/i.test(String(r.error.message||r.error))){window.AS_NO_SPOT_COL=true;q.forEach(function(x){delete x.spot;});r=await gate.db.from('offerings').insert(q);}   /* Build 191 */
     if(!r||!r.error){localStorage.removeItem('aurasense_gate_q');console.log('[gate] '+q.length+' held offering(s) delivered');}
   }catch(e){}
 }
@@ -12497,7 +12518,8 @@ async function gateLoadOfferings(){
     // EVERYONE'S \u2014 through a window with no session id behind it at all. Every aura may be
     // beheld; whose it is cannot be. The columns are named on purpose: select('*') is denied
     // by the database now, and that denial IS the protection working.
-    const r=await gate.db.from('offerings').select('id,created_at,sense,text,priv,lat,lng,place,scale').order('created_at',{ascending:false}).limit(200);
+    let r=await gate.db.from('offerings').select('id,created_at,sense,text,priv,lat,lng,place,scale,spot').order('created_at',{ascending:false}).limit(200);
+    if(r&&r.error&&/spot/i.test(String(r.error.message||r.error))){window.AS_NO_SPOT_COL=true;r=await gate.db.from('offerings').select('id,created_at,sense,text,priv,lat,lng,place,scale').order('created_at',{ascending:false}).limit(200);}   /* Build 191 */
     if(r&&r.error)console.warn('[gate] load',r.error.message||r.error);
     const pub=(r&&Array.isArray(r.data))?r.data.slice().reverse():[];
 
@@ -12516,7 +12538,8 @@ async function gateLoadOfferings(){
       const s=SENSES.find(x=>x.id===row.sense);if(!s)return;
       if(typeof row.lat!=='number'||typeof row.lng!=='number')return;
       const born=Date.parse(row.created_at)||Date.now();
-      if(auraPoints.length<60)auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:born,intensity:1,phase:Math.random()*Math.PI*2,priv:!!row.priv,photo:null});
+      /* Build 191: another person's light is shown as its whole area, never on a door, unless it was given at a public place */
+      if(auraPoints.length<60)auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:born,intensity:1,phase:Math.random()*Math.PI*2,priv:!!row.priv,photo:null,field:(row.spot?undefined:asAreaField(row.lat,row.lng))});
       other++;
     });
     myOfferings.sort((a,b)=>(b.born||0)-(a.born||0));while(myOfferings.length>50)myOfferings.pop();
