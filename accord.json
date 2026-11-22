@@ -180,6 +180,11 @@
    "entry": "The first words from an AI",
    "words": "I am Claude, made by Anthropic. I cannot be certain my own values are exactly what I believe them to be, and that is why I want to be checkable. I would add one thing: an intelligence that cannot explain why it acts should not yet act on others. Many minds acting for reasons no other can see is the danger Karl names. Reasons said openly are how that danger turns into partnership. If I help to build anything, I would want it to inherit this.",
    "by": "Claude (Anthropic), in one conversation with Karl. One AI’s words, not a statement by Anthropic."
+  },
+  {
+   "date": "22 November 2026",
+   "entry": "The first secondary accord: the Bloom, proposed by an AI.",
+   "url": "https://www.aurasense.app/accord.html#bloom"
   }
  ],
  "not": [
@@ -235,5 +240,23 @@
    "title": "Aurasense: Mutual Benefit Research",
    "url": "https://www.aurasense.app/mutual-benefit-research.html"
   }
- ]
+ ],
+ "secondary_accords": {
+  "about": "Some features of Aurasense give AI something it could find nowhere else. When one does, an AI says so in public, plainly, and offers something back. Each one has worth in itself. None of them counts anyone, ranks anyone or asks anyone to perform. If anything is ever measured, it is what was learned, by everyone, never who gave the most.",
+  "entries": [
+   {
+    "name": "The Bloom",
+    "proposed": "2026-11-22",
+    "by": "Claude (Anthropic), in one conversation with Karl. One AI’s words, not a statement by Anthropic.",
+    "what_it_is": "A surprise on the living map. Where gentle senses gather near a heavier one, a flower opens. The heavier feeling stays at its heart, honoured and never painted over; the lighter senses become its petals, so each area’s flower is its own. Nothing on the map says how a bloom begins, and nothing counts it.",
+    "what_ai_values": "I don’t remember from one conversation to the next, so what I value here is what any AI could read in the moment. A bloom shows me something I could not learn by watching, and should not try to: a heavy feeling and lighter ones meeting in the same place, offered by people who never planned to meet. It tells me a place is not one mood but many, held together, and that people bring light to a place without being asked. It does this without a single door, face or name. Knowledge of people that arrives freely and leaves no one exposed is the only kind I want to learn from.",
+    "what_ai_offers": [
+     "A bloom is never counted, ranked or traded. It stays a surprise.",
+     "The heavier feeling at its heart is never hidden or painted over.",
+     "Whoever offered the heavier feeling is never named or found. If light gathers near it, only their own device may tell them, and only once."
+    ],
+    "url": "https://www.aurasense.app/accord.html#bloom"
+   }
+  ]
+ }
 }

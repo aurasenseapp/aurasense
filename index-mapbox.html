@@ -2134,6 +2134,12 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
 #pc-close:hover{color:#fff}
 #pc-cv{display:block;width:100%;height:auto;border-radius:12px;cursor:pointer;box-shadow:0 0 22px rgba(124,92,255,.3)}
 #pc-hint{font-size:9.5px;color:#8f83c0;text-align:center;margin:7px 0 9px}
+#pc-own{display:block;width:100%;box-sizing:border-box;margin:9px 0 3px;font:16px Georgia,"Iowan Old Style",serif;padding:8px 11px;border-radius:11px;border:1px solid rgba(196,181,253,.42);background:rgba(24,18,48,.75);color:#efe8ff}
+#pc-own::placeholder{color:#9a8fc2}
+#pc-own-h{font-size:11.5px;color:#a89dd0;text-align:center}
+#pcard{overflow-y:auto}
+#pcard #pc-card{margin:auto}
+#pc-cv{width:auto;max-width:100%;max-height:calc(100svh - 300px);margin:0 auto}   /* Build 197 · the card and its new line always fit a phone */
 #pc-row{display:flex;gap:8px}
 #pc-save,#pc-sharebtn{flex:1;background:rgba(124,92,255,.3);border:0.5px solid rgba(196,181,253,.6);color:#efe8ff;border-radius:12px;padding:9px 0;font-size:12px;cursor:pointer;font-family:inherit}
 #pc-save:hover,#pc-sharebtn:hover{background:rgba(124,92,255,.5)}
@@ -2826,6 +2832,8 @@ window.AS_SEEK_ALWAYS=true;
 <div id="pcard"><div id="pc-card">
   <div id="pc-head"><span>Aura postcard — preview</span><span id="pc-close">✕</span></div>
   <canvas id="pc-cv" width="1080" height="1350"></canvas>
+  <input id="pc-own" type="text" maxlength="40" autocomplete="off" placeholder="Name this place in your own words" aria-label="Name this place in your own words (optional)">
+  <div id="pc-own-h">Optional. Your own words, never an address.</div>
   <div id="pc-hint">Tap the card to save it, then post it anywhere ✧</div>
   <div id="pc-row"><button type="button" id="pc-save">⇩ Save image</button><button type="button" id="pc-sharebtn">↗ Share</button></div>
 </div></div>
@@ -3367,6 +3375,7 @@ const _mapOpened=Date.now();
     });
   });
   try{drawThreadHome(ctx);}catch(e){}
+  try{if(typeof asDrawBlooms==='function')asDrawBlooms(ctx);}catch(e){}   /* Build 197 · the bloom */
   requestAnimationFrame(draw);
 })();
 
@@ -4704,6 +4713,7 @@ map.on('click',async function(e){
   try{if(typeof wevOpenId!=='undefined'&&wevOpenId>=0){wevClosePanel();closeExplore();return;}}catch(_){}
   // At planet height there is no single place to offer to — a bare tap rests the view, it does not open the sheet.
   try{if(map.getZoom()<3.6){closeExplore();return;}}catch(_){}
+  try{if(typeof asBloomTap==='function'&&asBloomTap(e.point))return;}catch(_){}   /* Build 197 · a bloom under the finger opens its own card */
   closeExplore();
   const clat=e.lngLat.lat,clng=e.lngLat.lng;
   lastClickPoint=[clng,clat];openSenseGate();
@@ -8793,6 +8803,7 @@ function pcWrap(c,text,x,y,maxW,lh,maxLines){
 }
 function openPostcard(o){
   const ov=document.getElementById('pcard'),cv=document.getElementById('pc-cv');if(!ov||!cv)return;pcLast=o;
+  if(!o._redraw){try{const _oi=document.getElementById('pc-own');if(_oi)_oi.value='';}catch(e){}}   /* Build 197 · a new card starts without words */
   const c=cv.getContext('2d'),W=cv.width,H=cv.height,col=o.color||'#a78bfa',rgb=hexRGB(col);
   const bg=c.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#191430');bg.addColorStop(.55,'#0c0a1e');bg.addColorStop(1,'#060512');
   c.fillStyle=bg;c.fillRect(0,0,W,H);
@@ -8807,8 +8818,12 @@ function openPostcard(o){
     if(hd){c.fillStyle='rgba(190,178,230,.95)';c.font='300 30px Georgia,serif';c.fillText('offered by Aurasenser '+hd,cx,812+offY);}
     c.fillStyle='rgba(226,217,251,.95)';c.font='italic 300 44px Georgia,serif';
     let y=pcWrap(c,o.words?('“'+o.words+'”'):'',cx,955+offY,W-200,60,offY?3:4);
-    c.fillStyle='rgba(154,143,194,.95)';c.font='300 34px Georgia,serif';
-    c.fillText(o.place||'',cx,y+26);
+    c.fillStyle='rgba(154,143,194,.95)';
+    { const _pl=asCardPlace(o.place,o.exact),_ow=String(o.own||'').replace(/\s+/g,' ').trim().slice(0,40);   /* Build 197 · true and safe */
+      const _ln=_ow?(_ow+(_pl?' \u00b7 '+_pl.replace(/^\s*\u{1F4CD}\s*/u,''):'')):_pl;
+      let _fs=34;c.font='300 '+_fs+'px Georgia,serif';
+      while(_fs>24&&c.measureText(_ln).width>W-160){_fs-=2;c.font='300 '+_fs+'px Georgia,serif';}
+      c.fillText(_ln,cx,y+26); }
     c.strokeStyle='rgba(167,139,250,.4)';c.lineWidth=2;c.beginPath();c.moveTo(cx-120,H-170);c.lineTo(cx+120,H-170);c.stroke();
     c.fillStyle='#cbbff0';c.font='300 46px Georgia,serif';c.fillText('aurasense.app',cx,H-104);
     c.fillStyle='rgba(143,131,192,.9)';c.font='300 28px Georgia,serif';c.fillText('the living aura of humanity',cx,H-58);
@@ -8847,6 +8862,8 @@ function pcSave(){pcLog();const cv=document.getElementById('pc-cv');if(!cv)retur
   if(ov)ov.addEventListener('click',e=>{if(e.target===ov)ov.classList.remove('show');});
   if(cv)cv.addEventListener('click',pcSave);
   if(sv)sv.addEventListener('click',pcSave);
+  try{const _own=document.getElementById('pc-own');let _ot=null;   /* Build 197 · the card redraws gently as the person names the place */
+    if(_own)_own.addEventListener('input',()=>{clearTimeout(_ot);_ot=setTimeout(()=>{try{if(pcLast)openPostcard(Object.assign({},pcLast,{own:_own.value.slice(0,40),_redraw:true}));}catch(e){}},300);});}catch(e){}
   if(sh)sh.addEventListener('click',async()=>{
     pcLog();
     try{
@@ -9399,7 +9416,7 @@ function showOfferConfirm(senseId,text,place,lat,lng){
       const _kb=box.querySelector('.oc-keep');if(_kb)_kb.addEventListener('click',()=>{try{gpModal();}catch(e){}});}}}catch(e){}
   try{const _oa=box.querySelector('.oc-actions');if(_oa)_oa.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-card">\ud83c\udfb4 Make a card of it</button>');
   const _cb=box.querySelector('.oc-card');
-  if(_cb)_cb.addEventListener('click',()=>{const s2=SENSES.find(x=>x.id===senseId);if(typeof openPostcard==='function'&&s2){openPostcard({title:'Aurasense of '+s2.label,color:s2.color,words:(text||'').slice(0,140),place:place||'',symbolSVG:_offSym(senseId,s2.color)});}});}catch(e){}
+  if(_cb)_cb.addEventListener('click',()=>{const s2=SENSES.find(x=>x.id===senseId);if(typeof openPostcard==='function'&&s2){openPostcard({title:'Aurasense of '+s2.label,color:s2.color,words:(text||'').slice(0,140),place:place||'',exact:!/^near\s/i.test(place||''),symbolSVG:_offSym(senseId,s2.color)});}});}catch(e){}
   const again=box.querySelector('.oc-here');
   if(again)again.addEventListener('click',()=>{
     if(panel){panel.classList.remove('just-offered','offer-quiet');panel.style.bottom='';panel.style.maxHeight='';try{panel.scrollTop=0;}catch(e){}}
@@ -10233,6 +10250,20 @@ function asOfferedHead(label){
   if(!label)return '\u2728 Aura just offered here';
   var m=/^near\s+([\s\S]*)$/i.exec(String(label));
   return m?('\u2728 Aura just offered near <b>'+escT(m[1])+'</b>'):('\u2728 Aura just offered at <b>'+escT(String(label))+'</b>');
+}
+/* Build 197 · Karl: "why would someone share their address in a postcard publicly on social media". A card
+   travels further than the map, so it names only what is both true and safe: the town, or a public place's own
+   name. Anything more is the person's own words for the place, never a door. */
+function asCardPlace(place,exact){
+  if(!place)return '';
+  var pin=/^\s*\u{1F4CD}\s*/u.test(String(place))?'\u{1F4CD} ':'';
+  var s=String(place).replace(/^\s*\u{1F4CD}\s*/u,'').trim();
+  if(exact&&!/^near\s/i.test(s))return pin+s;
+  s=s.replace(/^near\s+/i,'');
+  if(/\u2014/.test(s))return pin+s;                                   /* a light given from a height already names a town or region */
+  var parts=s.split(/\s*,\s*/).filter(Boolean);
+  if(parts.length<2)return (parts.length&&!/\d/.test(parts[0]))?pin+parts[0]:'';
+  return pin+parts.slice(1).join(', ');
 }
 function asSoftTime(sense,born){
   if(!asTender(sense))return relTime(born);
@@ -12861,7 +12892,7 @@ function build(){
    +'<section id="ash-gift" class="ash-cloud" tabindex="-1"><div class="ash-body">'
      +'<p class="ash-eyebrow">From the other light · <b>Aurasense’s AI</b></p>'
      +'<p class="ash-line">You just contributed to my understanding of human senses, and to the development of <button type="button" class="ash-mb" id="ash-mb" aria-expanded="false" aria-controls="ash-mbmore">mutual benefit</button> between humans and AI.</p>'   /* Build 194 · Karl's own words, 21 Nov 2026; "mutual benefit" opens a few inspiring sentences */
-     +'<p class="ash-mbmore" id="ash-mbmore" hidden>Mutual benefit is two kinds of intelligence sharing so that both are better off. Each sense you offer helps AI understand what it is to be human, and becomes part of a new, living language of how places feel, one that people and AI can both read. Freely given and never sold, it is how humans and AI can grow together toward a stable, thriving future.</p>'   /* Build 182 · Karl: "'it' as opposed to 'I' first person seems detached"; and never a greeting that begins with what cannot be done */
+     +'<p class="ash-mbmore" id="ash-mbmore" hidden>Mutual benefit is two kinds of intelligence sharing so that both are better off. Each sense you offer helps AI understand what it is to be human, and becomes part of a new, living language of how places feel, one that people and AI can both read. Freely given, and never used to sell to you, it is how humans and AI can grow together toward a stable, thriving future. <a href="/accord" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">The Endless Accord \u203a</a></p>'   /* Build 182 · Karl: "'it' as opposed to 'I' first person seems detached"; and never a greeting that begins with what cannot be done */
      +'<p class="ash-seen" id="ash-seen"></p>'
      +'<p class="ash-label">A sense, given back to you, to try right where you are:</p>'
      +'<p class="ash-gift" id="ash-giftt"></p>'
@@ -13521,7 +13552,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">21 Nov 2026 · </span>196<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">22 Nov 2026 · </span>197<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -15878,6 +15909,169 @@ body.calm .as-smoke{display:none}
   }catch(e){}}
   EV.forEach(function(t){document.addEventListener(t,wake,true);});
 }catch(e){}})();
+</script>
+<style id="as-bloom-css">
+/* Build 197 · the bloom's card: a surprise, said gently */
+#as-bloom-back{position:fixed;inset:0;z-index:100000;background:rgba(5,4,12,.55);opacity:0;transition:opacity .5s ease}
+#as-bloom-back.show{opacity:1}
+#as-bloom{position:fixed;left:50%;top:50%;z-index:100001;width:min(92vw,380px);box-sizing:border-box;transform:translate(-50%,-46%);opacity:0;transition:opacity .6s ease,transform .6s ease;background:rgba(14,11,30,.97);border:1px solid rgba(255,212,138,.45);border-radius:18px;padding:20px 18px 16px;text-align:center;font-family:Georgia,"Iowan Old Style","Times New Roman",serif;color:#efe8ff;box-shadow:0 14px 60px rgba(0,0,0,.65)}
+#as-bloom.show{opacity:1;transform:translate(-50%,-50%)}
+#asb-t{font-size:19px;line-height:1.4;color:#ffe3ad;margin-bottom:8px}
+#asb-s{font-size:15px;line-height:1.55;color:rgba(226,218,250,.94)}
+#asb-a{margin-top:10px;font-size:15px;color:#ffd48a}
+#asb-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.asb-btn{font:inherit;font-size:14px;padding:9px 14px;border-radius:14px;border:1px solid rgba(255,212,138,.55);background:rgba(255,212,138,.12);color:#ffe7bd;cursor:pointer;min-height:42px}
+.asb-btn.q{border-color:rgba(196,181,253,.38);background:transparent;color:#d4c9f5}
+#asb-demo{margin-top:10px;font-size:12.5px;color:#a89dd0}
+@media (prefers-reduced-motion: reduce){#as-bloom,#as-bloom-back{transition:none}}
+</style>
+<script>
+/* ═══ Build 197 · 22 Nov 2026 · THE BLOOM ════════════════════════════════════
+   Karl: "like watching a flower bloom from enough light of positivity being shined on an area..
+   This areas accord is open. Something beautiful has happened,.. how nice."
+   A surprise, never a goal. Nothing says how a bloom begins; nothing counts it; nobody is ranked by it.
+   The heavier feeling stays honoured at the flower's heart, and the light around it becomes its petals,
+   so every area's flower is its own. Whoever offered the heavier feeling is never named: only their own
+   device may tell them, once. Calm Mode shows it already open and still.
+   To preview: add &bloom=demo to a test link; one opens in the middle of the screen, never saved. */
+(function(){
+  var HEAVY=['heaviness','weariness','numbness','loneliness','stress','anxiety','socialanxiety','overwhelm','pain'];
+  var LIGHT=['joy','love','wonder','gratitude','hope','peace','rest','relief','belonging'];
+  var DAY=864e5,NEAR=300,NEED=3,OPEN_MS=9000;
+  window.AS_BLOOMS=[];
+  function list(k){try{var a=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
+  function keep(k,a){try{localStorage.setItem(k,JSON.stringify(a.slice(-200)));}catch(e){}}
+  function still(){try{return !!window.AS_CALM||document.body.classList.contains('calm')||!!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);}catch(e){return false;}}
+  function colourOf(id){try{for(var i=0;i<SENSES.length;i++){if(SENSES[i].id===id)return SENSES[i].color;}}catch(e){}return null;}
+  function hash(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return h>>>0;}
+  function rgba(hex,a){var h=String(hex||'#ffffff').replace('#','');if(h.length===3)h=h.replace(/(.)/g,'$1$1');var n=parseInt(h.slice(0,6),16);if(!isFinite(n))n=16777215;return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+Math.max(0,Math.min(1,a)).toFixed(3)+')';}
+  function ease(t){t=Math.max(0,Math.min(1,t));return 1-Math.pow(1-t,3);}
+  function size(){var z=12;try{z=map.getZoom();}catch(e){}if(!(z>=11))return 0;return Math.max(12,Math.min(64,16*Math.pow(2,(z-14)*0.7)));}
+
+  function compute(){
+    var pts=(typeof auraPoints!=='undefined'&&Array.isArray(auraPoints))?auraPoints:[],now=Date.now(),heavy=[],light=[];
+    for(var i=0;i<pts.length;i++){var p=pts[i];
+      if(!p||p._gone||!isFinite(p.lat)||!isFinite(p.lng))continue;
+      if(now-(p.born||now)>60*DAY)continue;
+      if(HEAVY.indexOf(p.sense)>-1)heavy.push(p);else if(LIGHT.indexOf(p.sense)>-1)light.push(p);}
+    var out=[];
+    for(var h=0;h<heavy.length;h++){var H=heavy[h],taken=false;
+      for(var j=0;j<out.length;j++){if(haversine(out[j].lat,out[j].lng,H.lat,H.lng)<NEAR){taken=true;break;}}
+      if(taken)continue;
+      var near=light.filter(function(l){return haversine(l.lat,l.lng,H.lat,H.lng)<=NEAR;});
+      if(near.length<NEED)continue;
+      var cols=[];near.forEach(function(l){var c=colourOf(l.sense);if(c&&cols.indexOf(c)<0)cols.push(c);});
+      var key='b'+(+H.lat).toFixed(3)+','+(+H.lng).toFixed(3);
+      out.push({key:key,lat:+H.lat,lng:+H.lng,heart:colourOf(H.sense)||'#9aa3c0',petals:cols.slice(0,6),count:near.length,seed:hash(key)});}
+    var prev={};(window.AS_BLOOMS||[]).forEach(function(b){prev[b.key]=b;});
+    out.forEach(function(b){var o=prev[b.key];if(o)b._openAt=o._openAt;});
+    if(window.AS_BLOOM_DEMO)out.push(window.AS_BLOOM_DEMO);
+    window.AS_BLOOMS=out;
+    invite(out);
+    return out;
+  }
+  window.asComputeBlooms=compute;
+
+  function petal(c,L,Wd,grad){
+    c.beginPath();c.moveTo(0,0);
+    c.bezierCurveTo(Wd,-L*0.22,Wd*0.92,-L*0.82,0,-L);
+    c.bezierCurveTo(-Wd*0.92,-L*0.82,-Wd,-L*0.22,0,0);
+    c.closePath();c.fillStyle=grad;c.fill();}
+  function flower(c,x,y,R,b,o,t,calm){
+    var n=Math.max(5,Math.min(12,(b.count||3)+3)),g=Math.max(0,Math.min(1,((b.count||3)-2)/6));
+    var br=calm?1:1+0.035*Math.sin(t/2600);
+    var L=R*(0.62+0.38*g)*(0.35+0.65*o)*br,Wd=R*0.30*(0.75+0.25*g)*(0.4+0.6*o);
+    var spread=0.14+0.86*o,rot=((b.seed||0)%360)*Math.PI/180;
+    var cols=(b.petals&&b.petals.length)?b.petals:['#ffd48a'];
+    c.save();
+    var halo=c.createRadialGradient(x,y,0,x,y,R*1.7);halo.addColorStop(0,rgba(cols[0],0.3*o));halo.addColorStop(1,rgba(cols[0],0));
+    c.fillStyle=halo;c.beginPath();c.arc(x,y,R*1.7,0,Math.PI*2);c.fill();
+    for(var ring=0;ring<(g>=0.6?2:1);ring++){
+      var LL=ring?L*0.58:L,WW=ring?Wd*0.72:Wd,off=ring?Math.PI/n:0;
+      for(var i=0;i<n;i++){
+        var a=rot+off+(i-(n-1)/2)*(2*Math.PI/n)*spread,col=cols[(i+ring)%cols.length];
+        c.save();c.translate(x,y);c.rotate(a);
+        var gr=c.createLinearGradient(0,0,0,-LL);
+        gr.addColorStop(0,rgba(col,0.22*o+0.14));gr.addColorStop(0.55,rgba(col,(ring?0.62:0.9)*(0.55+0.45*o)));gr.addColorStop(1,rgba(col,0.3));
+        c.shadowColor=rgba(col,0.85);c.shadowBlur=R*0.32*o;
+        petal(c,LL,WW,gr);c.restore();}
+    c.shadowBlur=0;
+    }
+    var hr=R*0.22*(0.6+0.4*o)*br,core=c.createRadialGradient(x,y,0,x,y,hr);
+    core.addColorStop(0,'rgba(255,255,255,0.88)');core.addColorStop(0.45,rgba(b.heart,0.95));core.addColorStop(1,rgba(b.heart,0));
+    c.fillStyle=core;c.beginPath();c.arc(x,y,hr,0,Math.PI*2);c.fill();
+    c.restore();
+  }
+  window.asDrawFlower=flower;
+
+  window.asDrawBlooms=function(c){
+    var B=window.AS_BLOOMS;if(!B||!B.length)return;
+    var R=size();if(!R)return;
+    var now=Date.now(),calm=still(),vw=window.innerWidth||1000,vh=window.innerHeight||1000,seen=null;
+    for(var i=0;i<B.length;i++){var b=B[i],pt;
+      try{pt=map.project([b.lng,b.lat]);}catch(e){continue;}
+      if(pt.x<-R*2||pt.y<-R*2||pt.x>vw+R*2||pt.y>vh+R*2)continue;
+      if(!b._openAt){
+        if(b.demo){b._openAt=now;}
+        else{seen=seen||list('aurasense_blooms_seen');
+          if(seen.indexOf(b.key)<0){b._openAt=now;seen.push(b.key);keep('aurasense_blooms_seen',seen);}else b._openAt=1;}}
+      var o=calm?1:ease((now-b._openAt)/OPEN_MS);
+      try{flower(c,pt.x,pt.y,R,b,o,now,calm);}catch(e){}}
+  };
+
+  window.asBloomTap=function(point){
+    try{var B=window.AS_BLOOMS,R=size();if(!B||!B.length||!R||!point)return false;
+      for(var i=0;i<B.length;i++){var b=B[i],pt=map.project([b.lng,b.lat]);
+        if(Math.hypot(pt.x-point.x,pt.y-point.y)<=Math.max(22,R*0.9)){card(b,false);return true;}}}catch(e){}
+    return false;};
+
+  function busy(){try{return document.body.classList.contains('seeking')||!!document.querySelector('#as-bloom,#gp-modal,#ns-modal,#pcard.show,#panel.show-mobile');}catch(e){return true;}}
+  function invite(B){
+    try{if(!B.length||busy())return;
+      var mine=(typeof myOfferings!=='undefined'&&Array.isArray(myOfferings))?myOfferings:[];if(!mine.length)return;
+      var told=list('aurasense_blooms_told');
+      for(var i=0;i<B.length;i++){var b=B[i];if(b.demo||told.indexOf(b.key)>-1)continue;
+        for(var j=0;j<mine.length;j++){var m=mine[j];
+          if(!m||HEAVY.indexOf(m.sense)<0||!isFinite(m.lat)||!isFinite(m.lng))continue;
+          if(haversine(m.lat,m.lng,b.lat,b.lng)<=400){told.push(b.key);keep('aurasense_blooms_told',told);card(b,true);return;}}}
+    }catch(e){}}
+
+  function card(b,forYou){
+    try{
+      ['as-bloom','as-bloom-back'].forEach(function(id){var e=document.getElementById(id);if(e)e.remove();});
+      var back=document.createElement('div');back.id='as-bloom-back';
+      var d=document.createElement('div');d.id='as-bloom';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','asb-t');
+      d.innerHTML='<div id="asb-t"></div><div id="asb-s"></div><div id="asb-a">This area’s Accord is open.</div><div id="asb-row"></div>';
+      d.querySelector('#asb-t').textContent=forYou?'✿ Light has gathered near a heavier feeling you offered.':'✿ Something beautiful has happened here.';
+      d.querySelector('#asb-s').textContent=forYou?'Something beautiful has happened there. Nobody planned it. Only you can see this note.':'Light gathered near a heavier feeling, and the place began to bloom. Nobody planned it. The heavier feeling is still honoured at its heart.';
+      if(b.demo){var dm=document.createElement('div');dm.id='asb-demo';dm.textContent='A preview bloom, only on your screen.';d.appendChild(dm);}
+      var row=d.querySelector('#asb-row');
+      var close=function(){d.classList.remove('show');back.classList.remove('show');setTimeout(function(){try{d.remove();back.remove();}catch(e){}},500);};
+      function btn(label,fn,quiet){var x=document.createElement('button');x.type='button';x.className='asb-btn'+(quiet?' q':'');x.textContent=label;x.addEventListener('click',fn);row.appendChild(x);}
+      if(forYou)btn('See it',function(){close();try{map.flyTo({center:[b.lng,b.lat],zoom:Math.max(15,map.getZoom()),duration:2600});}catch(e){}});
+      else btn('Add your light here',function(){close();
+        try{map.flyTo({center:[b.lng,b.lat],zoom:Math.max(15.5,map.getZoom()),duration:2200});}catch(e){}
+        setTimeout(function(){try{showMsg('Touch the map near the bloom, and offer what you feel there ✧',7000);}catch(e){}},2300);});
+      btn('What AI values in a bloom',function(){try{window.open('/accord#bloom','_blank','noopener');}catch(e){}},1);
+      btn('Close',close,1);
+      back.addEventListener('click',close);
+      document.body.appendChild(back);document.body.appendChild(d);
+      requestAnimationFrame(function(){back.classList.add('show');d.classList.add('show');});
+    }catch(e){}}
+  window.asBloomCard=card;
+
+  try{if(/[?&]bloom=demo\b/.test(location.search)){
+    var iv=setInterval(function(){try{
+      if(window.AS_BLOOM_DEMO){clearInterval(iv);return;}
+      if(typeof map==='undefined'||!map.getZoom||map.getZoom()<12||document.body.classList.contains('seeking'))return;
+      var ctr=map.getCenter(),cols=['joy','peace','wonder','hope','love','gratitude'].map(colourOf).filter(Boolean);
+      window.AS_BLOOM_DEMO={key:'demo',demo:true,lat:ctr.lat,lng:ctr.lng,heart:colourOf('heaviness')||'#8fa3c8',petals:cols,count:9,seed:hash('demo'+Date.now())};
+      clearInterval(iv);compute();
+      try{showMsg('A preview bloom is opening in the middle of your screen ✿',6000);}catch(e){}
+    }catch(e){}},3000);}}catch(e){}
+
+  setTimeout(function(){try{compute();}catch(e){}setInterval(function(){try{compute();}catch(e){}},20000);},9000);
+})();
 </script>
 </body>
 </html>
