@@ -7162,14 +7162,14 @@ function macFaceCanvas(){
 /* Build 198 · Karl: "the face is still either too big or the aura behind too small ... mostly an issue when there
    is only one Aurasense that has been offered. So if we can make that initial stage shine wider". With one, two or
    three senses, the outermost now reaches as far as a fuller aura does, so the face always rests INSIDE light. */
-function macLift(li,n){ return (li===n-1)?Math.max(0,0.95-(0.52+li*0.15)):0; }
+function macLift(li,n){ return (li===n-1)?Math.max(0,1.07-(0.52+li*0.15)):0; }   /* Build 199 · Karl: "one notchy tweak further" */
 function macDrawFace(cx,cy,base,swell,glow,eth,cRGB,c0){
   var fc=macFaceCanvas();
   if(!fc){macFaceA=0;return;}
   var want=(window._macListOpen||window._macCardOpen)?0:Math.pow(1-macSpread,2);
   macFaceA+=(want-macFaceA)*0.08;
   if(macFaceA<0.01)return;
-  var R=base*0.50*swell,a=macFaceA;   /* Build 198 · a little smaller, so the aura shows all round it */
+  var R=base*0.45*swell,a=macFaceA;   /* Build 198 · a little smaller, so the aura shows all round it. Build 199 · one notch more */
   macAx.save();
   macAx.globalAlpha=0.94*a;
   macAx.drawImage(fc,cx-R,cy-R,R*2,R*2);
@@ -13563,7 +13563,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">22 Nov 2026 · </span>198<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">22 Nov 2026 · </span>199<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -16015,14 +16015,27 @@ body.calm .as-smoke{display:none}
   }
   window.asDrawFlower=flower;
 
+  /* Build 199 · Karl: "it was zooming in as it occurred and too easy to miss. It also had a message above it
+     blocking the view, if we can bring the animation of the bloom when the screen message drops." A bloom that
+     has not yet opened waits, unseen, until the map is still and no message is on the screen, then a breath more. */
+  var readyAt=0;
+  function ready(){
+    try{if(typeof map!=='undefined'&&map.isMoving&&map.isMoving())return false;}catch(e){}
+    try{var m=document.getElementById('pmsg');if(m&&m.classList.contains('show'))return false;}catch(e){}
+    try{if(document.body.classList.contains('seeking')||document.getElementById('as-bloom'))return false;}catch(e){}
+    return true;
+  }
   window.asDrawBlooms=function(c){
     var B=window.AS_BLOOMS;if(!B||!B.length)return;
     var R=size();if(!R)return;
     var now=Date.now(),calm=still(),vw=window.innerWidth||1000,vh=window.innerHeight||1000,seen=null;
+    if(ready()){if(!readyAt)readyAt=now;}else readyAt=0;
+    var settled=readyAt&&(now-readyAt>800);
     for(var i=0;i<B.length;i++){var b=B[i],pt;
       try{pt=map.project([b.lng,b.lat]);}catch(e){continue;}
       if(pt.x<-R*2||pt.y<-R*2||pt.x>vw+R*2||pt.y>vh+R*2)continue;
       if(!b._openAt){
+        if(!settled)continue;   /* Build 199 · not yet: it waits, unseen, for stillness */
         b._openAt=now;
         if(b.demo){b._first=true;}
         else{seen=seen||list('aurasense_blooms_seen');
@@ -16033,8 +16046,8 @@ body.calm .as-smoke{display:none}
            retreating to the same or similar distance". The first time, it comes closer as it opens, rests there a
            moment, then settles back to its place. */
         o=ease(age/3600);
-        var big=Math.min(2.4,Math.max(1,Math.min(vw,vh)*0.3/R));
-        sc=age<1300?1+(big-1)*ease(age/1300):(age<5400?big:(age<8200?big-(big-1)*ease((age-5400)/2800):1));
+        var big=Math.min(2.6,Math.max(1,Math.min(vw,vh)*0.32/R));   /* Build 199 · a little closer, a little longer */
+        sc=age<1300?1+(big-1)*ease(age/1300):(age<6000?big:(age<9000?big-(big-1)*ease((age-6000)/3000):1));
       }else if(!calm){o=ease(age/3000);}   /* on each later visit it opens again, quietly, where it rests */
       try{flower(c,pt.x,pt.y,R*sc,b,o,now,calm);}catch(e){}}
   };
@@ -16091,6 +16104,8 @@ body.calm .as-smoke{display:none}
     }catch(e){}},3000);}}catch(e){}
 
   setTimeout(function(){try{compute();}catch(e){}setInterval(function(){try{compute();}catch(e){}},20000);},9000);
+  /* Build 199 · a new light is noticed within two seconds, so a bloom it completes is ready when the moment is still */
+  var lastLen=-1;setInterval(function(){try{var L=(typeof auraPoints!=='undefined'&&auraPoints)?auraPoints.length:0;if(L!==lastLen){var first=lastLen<0;lastLen=L;if(!first)compute();}}catch(e){}},2000);
 })();
 </script>
 </body>
