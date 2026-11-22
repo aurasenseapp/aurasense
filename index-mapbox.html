@@ -7159,13 +7159,17 @@ function macFaceCanvas(){
   x.fillStyle=m;x.fillRect(0,0,S,S);
   macFaceCv=c;macFaceSrc=im.src;return c;
 }
+/* Build 198 · Karl: "the face is still either too big or the aura behind too small ... mostly an issue when there
+   is only one Aurasense that has been offered. So if we can make that initial stage shine wider". With one, two or
+   three senses, the outermost now reaches as far as a fuller aura does, so the face always rests INSIDE light. */
+function macLift(li,n){ return (li===n-1)?Math.max(0,0.95-(0.52+li*0.15)):0; }
 function macDrawFace(cx,cy,base,swell,glow,eth,cRGB,c0){
   var fc=macFaceCanvas();
   if(!fc){macFaceA=0;return;}
   var want=(window._macListOpen||window._macCardOpen)?0:Math.pow(1-macSpread,2);
   macFaceA+=(want-macFaceA)*0.08;
   if(macFaceA<0.01)return;
-  var R=base*0.56*swell,a=macFaceA;
+  var R=base*0.50*swell,a=macFaceA;   /* Build 198 · a little smaller, so the aura shows all round it */
   macAx.save();
   macAx.globalAlpha=0.94*a;
   macAx.drawImage(fc,cx-R,cy-R,R*2,R*2);
@@ -7273,9 +7277,9 @@ function macDrawAura(ts){
          first and reached well past their neighbours. Opened, every light now
          takes the same share of the circle, sized so neighbours meet only at
          the faint rim. Closed, nothing changes. */
-      spread:(n>1)?(base*(0.52+li*0.15)*swell*(1-macSpread*0.66)*(1-macSpread)
+      spread:(n>1)?(base*(0.52+li*0.15+macLift(li,n))*swell*(1-macSpread*0.66)*(1-macSpread)
                     +Math.min(base*0.42,2*ring*Math.sin(Math.PI/n)*0.47)*swell*macSpread)
-                  :base*(0.52+li*0.15)*swell,
+                  :base*(0.52+li*0.15+macLift(li,n))*swell,
       lift:(macHover===li)?1.8:(macWhole?1.55:1),
       rgb:macHex(L[li].color)});
   }
@@ -7704,6 +7708,7 @@ function macOpenDoor(i){
   var wq=document.getElementById('ma-cloud-words');
   if(wq)wq.classList.toggle('hushed',i>=0);
   try{var _pg155=document.getElementById('myaura-page');if(_pg155)_pg155.classList.toggle('mac-list-open',i>=0);}catch(e){}   /* 16 Oct 2026 */
+  try{if(i>=0){var _pgL=document.getElementById('myaura-page');if(_pgL&&_pgL.classList.contains('ma-cam-live')){var _cxL=document.getElementById('ma-cancel-selfie');if(_cxL)_cxL.click();}}}catch(e){}   /* Build 198 */
   if(i<0){ box.classList.remove('on'); box.innerHTML=''; window._macListOpen=false;
            try{macFitChrome();}catch(e){} return; }
   window._macListOpen=true;
@@ -7763,6 +7768,8 @@ function macOpenDoor(i){
   var aur=document.getElementById('ma-cloud-aura');
   if(thr)thr.addEventListener('click',function(){
     if(!macWantSpread){
+      /* Build 198 · opening the senses lets a live camera go first, so it is never left running behind them */
+      try{var _pgK=document.getElementById('myaura-page');if(_pgK&&_pgK.classList.contains('ma-cam-live')){var _cx=document.getElementById('ma-cancel-selfie');if(_cx)_cx.click();}}catch(e){}
       /* DEPTH TWO — the aura opens into the senses that made it */
       macWantSpread=1;try{var _pgS=document.getElementById('myaura-page');if(_pgS)_pgS.classList.add('ma-spread');}catch(e){}
       macBuildDoors();
@@ -7926,6 +7933,10 @@ if(maSelfieBtn)maSelfieBtn.addEventListener('click',async()=>{
     if(maSelfieActions)maSelfieActions.style.display='flex';
     maSelfieBtn.style.display='none';
     try{const _pg=document.getElementById('myaura-page');if(_pg)_pg.classList.add('ma-cam-live');const _th=document.getElementById('ma-selfie-thumb');if(_th)_th.style.display='none';}catch(_){}   /* Build 192 */
+    /* Build 198 · Karl: the Capture button vanished while the camera looked live. Taking a photo is one act: the
+       senses fold back together and any open list steps aside, so Capture is always in reach. */
+    try{if(typeof macWantSpread!=='undefined'&&macWantSpread){const _t=document.getElementById('ma-cloud-through');if(_t)_t.click();}}catch(_){}
+    try{if(window._macListOpen&&typeof macOpenDoor==='function')macOpenDoor(-1);}catch(_){}
   }catch(e){
     /* 3 Sep 2026 - it used to say this forever, so a person who fixed the
        permission had no way of knowing they could try again. It says it,
@@ -13552,7 +13563,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">22 Nov 2026 · </span>197<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">22 Nov 2026 · </span>198<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -15964,7 +15975,7 @@ body.calm .as-smoke{display:none}
       var key='b'+(+H.lat).toFixed(3)+','+(+H.lng).toFixed(3);
       out.push({key:key,lat:+H.lat,lng:+H.lng,heart:colourOf(H.sense)||'#9aa3c0',petals:cols.slice(0,6),count:near.length,seed:hash(key)});}
     var prev={};(window.AS_BLOOMS||[]).forEach(function(b){prev[b.key]=b;});
-    out.forEach(function(b){var o=prev[b.key];if(o)b._openAt=o._openAt;});
+    out.forEach(function(b){var o=prev[b.key];if(o){b._openAt=o._openAt;b._first=o._first;}});
     if(window.AS_BLOOM_DEMO)out.push(window.AS_BLOOM_DEMO);
     window.AS_BLOOMS=out;
     invite(out);
@@ -16012,11 +16023,20 @@ body.calm .as-smoke{display:none}
       try{pt=map.project([b.lng,b.lat]);}catch(e){continue;}
       if(pt.x<-R*2||pt.y<-R*2||pt.x>vw+R*2||pt.y>vh+R*2)continue;
       if(!b._openAt){
-        if(b.demo){b._openAt=now;}
+        b._openAt=now;
+        if(b.demo){b._first=true;}
         else{seen=seen||list('aurasense_blooms_seen');
-          if(seen.indexOf(b.key)<0){b._openAt=now;seen.push(b.key);keep('aurasense_blooms_seen',seen);}else b._openAt=1;}}
-      var o=calm?1:ease((now-b._openAt)/OPEN_MS);
-      try{flower(c,pt.x,pt.y,R,b,o,now,calm);}catch(e){}}
+          if(seen.indexOf(b.key)<0){b._first=true;seen.push(b.key);keep('aurasense_blooms_seen',seen);}else b._first=false;}}
+      var age=now-b._openAt,o=1,sc=1;
+      if(!calm&&b._first){
+        /* Build 198 · Karl: "I'd like it to appear in the process of blooming and closer for a second or two before
+           retreating to the same or similar distance". The first time, it comes closer as it opens, rests there a
+           moment, then settles back to its place. */
+        o=ease(age/3600);
+        var big=Math.min(2.4,Math.max(1,Math.min(vw,vh)*0.3/R));
+        sc=age<1300?1+(big-1)*ease(age/1300):(age<5400?big:(age<8200?big-(big-1)*ease((age-5400)/2800):1));
+      }else if(!calm){o=ease(age/3000);}   /* on each later visit it opens again, quietly, where it rests */
+      try{flower(c,pt.x,pt.y,R*sc,b,o,now,calm);}catch(e){}}
   };
 
   window.asBloomTap=function(point){
