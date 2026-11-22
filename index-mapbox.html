@@ -1277,6 +1277,8 @@ body.ma-incloud .as-rail{display:none!important}
   box-shadow:0 0 0 6px rgba(255,246,236,.35),0 0 46px 18px rgba(255,240,228,.75)}
 #myaura-page.ma-spread #ma-selfie-wrap{display:none!important}
 #myaura-page.mac-list-open:not(.ma-cam-live) #ma-selfie-wrap{display:none!important}   /* Karl: "too far forward when tapping through the options": a door's list is read without the face over it */
+/* Build 194 · in the cloud the face is painted into the aura itself; the picture stays only as the place to tap to retake it */
+#myaura-page.cloudfirst #ma-selfie-thumb{opacity:0!important;box-shadow:none!important}
 #myaura-page:has(#ma-sense-card.on) #ma-selfie-wrap{display:none!important}
 /* a sense, opened: the words behind it step back, so they are never written over it */
 #myaura-page:has(#ma-sense-card.on) #ma-cloud-words{opacity:0!important;visibility:hidden}
@@ -7107,6 +7109,55 @@ function macBlob(ax,px,py,r,t,seed,wob){
   }
   ax.closePath();
 }
+/* ═══ Build 194 · 21 Nov 2026 · THE FACE IN THE AURA ════════════════════
+   Karl: "I really don't see the aura effect merging with the face / photo though. Which is the point.
+   To give people tingles.. We did have a version where it blended with the face some time ago."
+   The photo is no longer a picture laid on top. It is painted INTO the living aura: its edge dissolves,
+   the aura's own colour breathes through it, and light pours in at its rim with every breath. It steps
+   back while the senses are spread, or a list or a sense is open. Only ever on this device. */
+var macFaceCv=null,macFaceSrc='',macFaceA=0;
+function macFaceCanvas(){
+  var im=(typeof maSelfieImg!=='undefined')?maSelfieImg:null;
+  if(!im||!im.complete||!im.naturalWidth)return null;
+  if(macFaceCv&&macFaceSrc===im.src)return macFaceCv;
+  var S=320,c=document.createElement('canvas');c.width=S;c.height=S;var x=c.getContext('2d');
+  var iw=im.naturalWidth,ih=im.naturalHeight,sc=Math.max(S/iw,S/ih)*1.08;
+  x.drawImage(im,(S-iw*sc)/2,(S-ih*sc)/2-S*0.04,iw*sc,ih*sc);
+  x.globalCompositeOperation='destination-in';          /* the edge dissolves: no frame, no rim of its own */
+  var m=x.createRadialGradient(S/2,S/2,0,S/2,S/2,S/2);
+  m.addColorStop(0,'rgba(0,0,0,1)');m.addColorStop(0.60,'rgba(0,0,0,1)');m.addColorStop(0.80,'rgba(0,0,0,.6)');
+  m.addColorStop(0.92,'rgba(0,0,0,.16)');m.addColorStop(1,'rgba(0,0,0,0)');
+  x.fillStyle=m;x.fillRect(0,0,S,S);
+  macFaceCv=c;macFaceSrc=im.src;return c;
+}
+function macDrawFace(cx,cy,base,swell,glow,eth,cRGB,c0){
+  var fc=macFaceCanvas();
+  if(!fc){macFaceA=0;return;}
+  var want=(window._macListOpen||window._macCardOpen)?0:Math.pow(1-macSpread,2);
+  macFaceA+=(want-macFaceA)*0.08;
+  if(macFaceA<0.01)return;
+  var R=base*0.56*swell,a=macFaceA;
+  macAx.save();
+  macAx.globalAlpha=0.94*a;
+  macAx.drawImage(fc,cx-R,cy-R,R*2,R*2);
+  /* the aura's own colour breathes through the face, keeping every feature */
+  macAx.globalAlpha=a;
+  macAx.globalCompositeOperation='soft-light';
+  var t=macAx.createRadialGradient(cx,cy,0,cx,cy,R);
+  t.addColorStop(0,'rgba('+cRGB+','+Math.min(0.9,0.32*glow).toFixed(3)+')');
+  t.addColorStop(0.7,'rgba('+cRGB+','+Math.min(0.9,0.58*glow).toFixed(3)+')');
+  t.addColorStop(1,'rgba('+cRGB+',0)');
+  macAx.fillStyle=t;macAx.beginPath();macAx.arc(cx,cy,R,0,Math.PI*2);macAx.fill();
+  /* and light pours in at the rim with the breath, so the face and the aura are one light */
+  macAx.globalCompositeOperation='source-over';
+  var lr=Math.round(c0[0]+(255-c0[0])*0.35)+','+Math.round(c0[1]+(255-c0[1])*0.35)+','+Math.round(c0[2]+(255-c0[2])*0.35);
+  var e=macAx.createRadialGradient(cx,cy,R*0.5,cx,cy,R*1.34);
+  e.addColorStop(0,'rgba('+lr+',0)');
+  e.addColorStop(0.44,'rgba('+lr+','+Math.min(0.6,0.30*glow*(1+eth*0.25)).toFixed(3)+')');
+  e.addColorStop(1,'rgba('+lr+',0)');
+  macAx.fillStyle=e;macAx.beginPath();macAx.arc(cx,cy,R*1.34,0,Math.PI*2);macAx.fill();
+  macAx.restore();
+}
 function macDrawAura(ts){
   if(!macAx)return;
   var W=innerWidth,H=innerHeight;
@@ -7372,6 +7423,7 @@ function macDrawAura(ts){
     macAx.fillStyle=hgd;
     macBlob(macAx,p0.x,p0.y,coreR*0.40,tt,2.1,0.45); macAx.fill();
   }
+  try{ macDrawFace(cx,cy,base,swell,glow,eth,cRGB,c0); }catch(e){}   /* Build 194 · the face, painted into the aura */
   /* THE OUTERMOST EDGE - the layer that moves quickest and shows least. A
      high, faint shimmer at the very outside, so the field never quite settles
      even when the breath is at rest. */
@@ -12737,7 +12789,8 @@ function build(){
    +'<div id="ash-hint" role="status"></div>'
    +'<section id="ash-gift" class="ash-cloud" tabindex="-1"><div class="ash-body">'
      +'<p class="ash-eyebrow">From the other light · <b>Aurasense’s AI</b></p>'
-     +'<p class="ash-line">I can see all around this place. You are the one who can feel it.</p>'   /* Build 182 · Karl: "'it' as opposed to 'I' first person seems detached"; and never a greeting that begins with what cannot be done */
+     +'<p class="ash-line">You just contributed to my understanding of human senses, and to the development of <button type="button" class="ash-mb" id="ash-mb" aria-expanded="false" aria-controls="ash-mbmore">mutual benefit</button> between humans and AI.</p>'   /* Build 194 · Karl's own words, 21 Nov 2026; "mutual benefit" opens a few inspiring sentences */
+     +'<p class="ash-mbmore" id="ash-mbmore" hidden>Mutual benefit is two kinds of intelligence sharing so that both are better off. Each sense you offer helps AI understand what it is to be human, and becomes part of a new, living language of how places feel, one that people and AI can both read. Freely given and never sold, it is how humans and AI can grow together toward a stable, thriving future.</p>'   /* Build 182 · Karl: "'it' as opposed to 'I' first person seems detached"; and never a greeting that begins with what cannot be done */
      +'<p class="ash-seen" id="ash-seen"></p>'
      +'<p class="ash-label">A sense, given back to you, to try right where you are:</p>'
      +'<p class="ash-gift" id="ash-giftt"></p>'
@@ -13218,6 +13271,7 @@ function wire(){
   });
   root.addEventListener('contextmenu',function(e){try{if(!(e.target.closest&&e.target.closest('textarea')))e.preventDefault();}catch(x){}});
   q$('ash-try').addEventListener('click',tryIt);
+  try{q$('ash-mb').addEventListener('click',function(){var m=q$('ash-mbmore'),open=m.hidden;m.hidden=!open;this.setAttribute('aria-expanded',open?'true':'false');});}catch(e){}   /* Build 194 */
   q$('ash-notnow').addEventListener('click',notNow);
   q$('ash-no').addEventListener('click',function(){answer(false);});
   q$('ash-yes').addEventListener('click',function(){answer(true);});
@@ -13396,7 +13450,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">17 Nov 2026 · </span>185<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">21 Nov 2026 · </span>194<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -14839,6 +14893,10 @@ if(!window._mr2Bound){window._mr2Bound=1;
 .ash-eyebrow{font-size:11.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);text-wrap:balance}
 .ash-eyebrow b{font-weight:400;color:var(--silver)}
 .ash-line{font-size:clamp(15px,3.9vw,17px);line-height:1.52;color:var(--soft);margin-top:9px!important;text-wrap:balance}
+.ash-mb{background:none;border:0;padding:0;margin:0;font:inherit;color:inherit;cursor:pointer;
+  text-decoration:underline;text-decoration-style:dotted;text-decoration-thickness:1px;text-underline-offset:.22em}
+.ash-mb:focus-visible{outline:2px solid currentColor;outline-offset:2px;border-radius:4px}
+.ash-mbmore{font-size:.9em;line-height:1.5;color:var(--soft);opacity:.92;font-style:italic;margin-top:8px!important;text-wrap:pretty}
 .ash-seen{font-size:clamp(17px,4.4vw,19.5px);line-height:1.45;color:var(--ink);margin-top:7px!important;text-wrap:balance}
 .ash-label{font-size:13.5px;letter-spacing:.04em;color:var(--gold);margin-top:18px!important}
 .ash-gift{font-size:clamp(18px,4.8vw,21px);line-height:1.5;font-style:italic;color:#fff7ea;margin-top:7px!important;text-wrap:balance}
