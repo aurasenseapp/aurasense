@@ -87,6 +87,8 @@
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, interactive-widget=resizes-content">
 <title>Aurasense — The Living Aura of Humanity</title>
+<meta name="apple-mobile-web-app-title" content="Aurasense">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=196">
 <!-- Build 185 · the words a search or a shared link shows. Karl, 17 Nov 2026: "Free to sense, free to share", with "more mention and anticipation of mutual benefit". -->
 <meta name="description" content="Free to sense. Free to share. People and AI, learning from each other, for mutual benefit. A living map of how places feel, made from what people sense there.">
 <meta property="og:title" content="Aurasense">
@@ -3848,11 +3850,13 @@ try{map.on('dragstart',function(){try{if(typeof window.asUnhushOffer==='function
 const stip=document.getElementById('stip');
 const allEl=document.getElementById('scats-all');
 const SGRP_ICONS=[
+'<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffd48a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="filter:drop-shadow(0 0 3px rgba(255,212,138,.6))"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/><circle cx="12" cy="11.2" r="1.3" fill="#ffd48a" stroke="none"/></svg>',
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9fc4ff" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(159,196,255,.6))"><path d="M3 15 Q12 6 21 15"/><path d="M5 18.5 H19" opacity=".5"/><circle cx="12" cy="11.5" r="1.6" fill="#eaf3ff" stroke="none"/></svg>',
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f0b090" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(240,176,144,.6))"><rect x="8" y="6" width="8" height="12" rx="4"/><path d="M12 3 v3 M12 18 v3" opacity=".6"/><circle cx="12" cy="12" r="1.6" fill="#ffe9dc" stroke="none"/></svg>',
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f0a8c0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(240,168,192,.6))"><path d="M4 16 Q8 8 12 12 M20 16 Q16 8 12 12"/><circle cx="12" cy="12" r="1.6" fill="#ffe4ee" stroke="none"/></svg>',
 '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#cf9ff0" stroke-width="1.5" stroke-linecap="round" style="filter:drop-shadow(0 0 3px rgba(207,159,240,.6))"><circle cx="12" cy="12" r="5" opacity=".55"/><path d="M12 3 v3 M12 18 v3 M3 12 h3 M18 12 h3" opacity=".8"/><circle cx="12" cy="12" r="1.5" fill="#f3e8ff" stroke="none"/></svg>'];
 const SENSE_CATS=[
+ {t:'Heart senses',s:'Affect \u2014 joy, love, wonder, and the heavier ones too',ids:['joy','love','wonder','gratitude','hope','peace','rest','relief','numbness','weariness','heaviness']},   /* Build 196 */
  {t:'External senses',s:'Exteroception \u2014 the physical world around you',ids:['light','sound','taste','touch','smell','heat','cold','vibration','atmosphere','nature']},
  {t:'Internal senses',s:'Interoception \u2014 the felt state of your own body',ids:['hunger','hydration','innertemp','pain','proprioception']},
  {t:'Socio-emotional',s:'Neuroception \u2014 safety, stress and connection',ids:['safety','stress','belonging','anxiety','socialanxiety','overwhelm','loneliness']},
@@ -4613,14 +4617,15 @@ async function reverseAddress(lat,lng){
     const d=await r.json();
     if(d&&d.features&&d.features.length){
       const f=d.features[0];
+      /* Build 196 · NEAR, NOT AT (Karl, 21 Nov 2026: "Address was actually incorrect.") A phone's sense of where it
+         is drifts by a house or a street, so no house number is ever shown: the street, or the public place's name. */
       let line=f.text||'';
-      if(f.place_type&&f.place_type[0]==='address'&&f.address)line=f.address+' '+line;
       return line||(f.place_name?f.place_name.split(',')[0]:null);
     }
   }catch(e){}
   return null;
 }
-// The arrowed box after an offering: confirms the share, the address with house number,
+// The arrowed box after an offering: confirms the share, the street it is near (Build 196: never a house number),
 // the symbol and sense, and links to share again or share to social.
 function fmtAuraTime(born){
   if(!born)return 'just now';
@@ -4956,17 +4961,17 @@ function submit(lat,lng,text){
     window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
   }catch(e){}
   if(_gScale==='street'){
-    lookupPlace(lat,lng).then(_finishPlace);
-    // Leave the shared sense showing in the arrowed box, with the full house-number address.
+    const _named=lookupPlace(lat,lng);   /* Build 196 · one lookup names the light everywhere: its record, its landing words, its card */
+    _named.then(_finishPlace);
     /* The strip rises on the same breath every time. If the place-name arrives later, it simply
        fills itself in — the senser never waits on a lookup to know their light landed. */
     try{offerUndoOffer(_ap,_held?900000:120000);}catch(e){}   /* held: the moment closes it */ // ↩ two minutes to take it back
     let _addr=null,_done=false;
     if(_held){try{lastOfferInfo={senseId:sid,text:text,place:null,lat:lat,lng:lng,born:Date.now()};}catch(e){}}
-    reverseAddress(lat,lng).then(a=>{_addr=a;
+    _named.then(a=>{a=asNearLabel(a,!!(window.AS_LAST_SPOT&&window.AS_LAST_SPOT.lat===lat&&window.AS_LAST_SPOT.lng===lng));_addr=a;
       if(_held&&a){try{if(lastOfferInfo&&lastOfferInfo.lat===lat&&lastOfferInfo.lng===lng)lastOfferInfo.place=a;}catch(e){}}
       if(_done&&a){try{const h=document.querySelector('#offer-confirm .oc-head');
-        if(h)h.innerHTML='\u2728 Aura just offered at <b>'+escT(a)+'</b>';}catch(e){}}}).catch(()=>{});
+        if(h)h.innerHTML=asOfferedHead(a);}catch(e){}}}).catch(()=>{});
     setTimeout(()=>{if(_held)return;_done=true;if(typeof showOfferConfirm==='function')showOfferConfirm(sid,text,_addr,lat,lng);},2600);
   } else {
     // Given from a height, the offering belongs to the whole place being beheld — its label says so, honestly.
@@ -9351,7 +9356,7 @@ function showOfferConfirm(senseId,text,place,lat,lng){
   const box=document.getElementById('offer-confirm');if(!box)return;
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const body=(senseId==='memory'&&(text||'').indexOf('kept private')<0&&typeof memoryPrivate!=='undefined'&&memoryPrivate)?'a memory, kept private':esc(text);
-  box.innerHTML='<div class="oc-head">'+(place?('✨ Aura just offered at <b>'+esc(place)+'</b>'):'✨ Aura just offered here')+'</div>'
+  box.innerHTML='<div class="oc-head">'+asOfferedHead(place)+'</div>'
     +'<div class="oc-actions"><span class="oc-lbl">Offer another aura</span><button type="button" class="oc-btn oc-here">Here</button><button type="button" class="oc-btn oc-elsewhere">Elsewhere</button><button type="button" class="oc-btn oc-social">Share</button></div>';
   /* THE HUSH. At the peak this strip says only what happened, and keeps the
      way back. Its other choices arrive when the invitation has finished. */
@@ -9385,8 +9390,12 @@ function showOfferConfirm(senseId,text,place,lat,lng){
   /* Build 195 · Karl: "introduce the registration option earlier, as My Aura seems detached from the experience."
      The light's own moment now offers to keep it (the same email-and-code door as My Aura), and the postcard
      says what it is, so there are never two buttons that both say "keep". */
-  try{if(!(typeof gate!=='undefined'&&gate&&gate.user)&&typeof gpModal==='function'){const _oa2=box.querySelector('.oc-actions');
-    if(_oa2){_oa2.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-keep">\u25c7 Keep my light, on any device</button>');
+  try{const _oa2=box.querySelector('.oc-actions');if(_oa2){
+    if(typeof gate!=='undefined'&&gate&&gate.user){   /* Build 196 · signed in: the light is already kept, and My Aura is one tap away */
+      _oa2.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-keep">\u25c7 Kept in your aura \u00b7 see it</button>');
+      const _kb=box.querySelector('.oc-keep');if(_kb)_kb.addEventListener('click',()=>{try{openMyAuraPage();}catch(e){}});
+    }else if(typeof gpModal==='function'){
+      _oa2.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-keep">\u25c7 Keep my light, on any device</button>');
       const _kb=box.querySelector('.oc-keep');if(_kb)_kb.addEventListener('click',()=>{try{gpModal();}catch(e){}});}}}catch(e){}
   try{const _oa=box.querySelector('.oc-actions');if(_oa)_oa.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-card">\ud83c\udfb4 Make a card of it</button>');
   const _cb=box.querySelector('.oc-card');
@@ -10209,6 +10218,21 @@ function asSoftPoint(sense,lat,lng){
 function asSoftPlace(sense,place){
   if(!place)return place;                                     /* Build 191: every light, not only tender ones */
   return String(place).replace(/^\s*\d+[A-Za-z]?\s*[-\u2013]?\s*\d*\s+/,'');   /* the street, not the door */
+}
+/* Build 196 · the words a light is named by, for the person who offered it and for its card: the street it is
+   near and the town, never a door. Only a named public place it was given at is said to be "at". */
+function asNearLabel(place,exact){
+  if(!place)return place;
+  var p=String(place).replace(/^\s*\d+[A-Za-z]?\s*[-\u2013]?\s*\d*\s+/,'').trim();
+  var parts=p.split(/\s*,\s*/).filter(Boolean);if(parts.length>=3)parts=parts.slice(0,2);
+  p=parts.join(', ');if(!p)return place;
+  if(exact||/^near\s/i.test(p))return p;
+  return 'near '+p;
+}
+function asOfferedHead(label){
+  if(!label)return '\u2728 Aura just offered here';
+  var m=/^near\s+([\s\S]*)$/i.exec(String(label));
+  return m?('\u2728 Aura just offered near <b>'+escT(m[1])+'</b>'):('\u2728 Aura just offered at <b>'+escT(String(label))+'</b>');
 }
 function asSoftTime(sense,born){
   if(!asTender(sense))return relTime(born);
@@ -13497,7 +13521,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">21 Nov 2026 · </span>195<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">21 Nov 2026 · </span>196<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
