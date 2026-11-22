@@ -705,7 +705,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 22 Nov 2026 &middot; 198</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 22 Nov 2026 &middot; 199</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -1014,7 +1014,7 @@ var holdTimer=null,dwellTimer=null,restTimer=null,beadList=[],lastQ=null,symFlip
 var known=false;
 /* The quiet second before the arc appeared was built for a finger resting on
    glass. With a mouse it reads as the app not responding at all. */
-function dwellMs(){ return stage==='sense' ? (known?200:320) : 200; }
+function dwellMs(){ return stage==='sense' ? (known?1200:1500) : 1000; }   /* Build 199 · Karl: "a second or two before the count starts", so the finger can wander and find */
 function holdMs(){  return stage==='sense' ? (known?3000:4000) : 3000; }
 /* A SECOND LONGER — 25 Aug 2026, Karl's call. Long enough to be watched rather
    than waited out. The count says real seconds now, so a four-second hold
@@ -1406,8 +1406,8 @@ function restDown(){
 /* Build 198 · Karl, 22 Nov 2026: "more cloud detail to help contrast against the glowing white animated aura
    shapes". One finer layer of wisps, and a little more light and shade on each mass. */
 var CLD = (Math.min(innerWidth,innerHeight)<560)
-  ? {size:34,cover:75,depth:33,oct:6,warp:22,light:40,bed:4,drift:41,res:240}   /* phone  */
-  : {size:48,cover:90,depth: 9,oct:6,warp:21,light: 9,bed:4,drift:92,res:229};  /* laptop */
+  ? {size:34,cover:75,depth:36,oct:6,warp:22,light:46,bed:4,drift:41,res:240}   /* phone  · Build 199: one notch more */
+  : {size:48,cover:90,depth:11,oct:6,warp:21,light:13,bed:4,drift:92,res:229};  /* laptop · Build 199: one notch more */
 
 var PERM=new Uint8Array(512);
 (function(){var p=new Uint8Array(256),i,j,t;
@@ -1929,7 +1929,7 @@ function quickenStart(col,word,ms){
   qDusk=!document.body.classList.contains('night');
   qNight=true;
   try{ qCalm=!!seekSmokeOff(); }catch(e){ qCalm=false; }   /* Calm Mode on the map behind, or reduced motion: the Law's question 6 */
-  qAB=qDusk?1.36:1.12;                     /* a little more light by day. Build 198 · Karl: "a touch strong in terms of brightness" */
+  qAB=qDusk?1.22:1.02;   /* Build 199 · one notch softer again */                     /* a little more light by day. Build 198 · Karl: "a touch strong in terms of brightness" */
   qT1=qTriple(qCol,qNight);
   qT2=qTriple(qSig.c2||qCol,qNight);
   if(qDusk){ qT1=qVivid(qT1); qT2=qVivid(qT2); }      /* Build 186: hue kept, colour pushed up, never darkened */
