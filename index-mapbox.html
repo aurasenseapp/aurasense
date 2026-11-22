@@ -1887,6 +1887,7 @@ body.ma-incloud .as-rail{display:none!important}
   #srow #sbtn{width:100%}
   #offer-confirm .oc-actions{flex-wrap:wrap}
   #offer-confirm .oc-card{flex:1 1 100%;text-align:center}
+  #offer-confirm .oc-keep{flex:1 1 100%;text-align:center}   /* Build 195 */
 
   #ui.offer-open #wev-chips,#ui.offer-open #wbal,#ui.offer-open #wbal-panel,#ui.offer-open #wev-panel,#ui.offer-open #locality-btn,#ui.offer-open #explore-btn,#ui.offer-open #register-btn,#ui.offer-open #aura-views,#ui.offer-open #place-mini{display:none}
   /* the live feed stays: it is a destination now, and a thread is pointing at it */
@@ -2042,6 +2043,13 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
 #memory-btn.sel-mem{background:rgba(232,183,107,.2);box-shadow:0 0 15px rgba(232,183,107,.4)}
 #mem-priv-wrap{display:none;margin-top:7px}
 #mem-priv-wrap.show{display:block}
+/* Build 195 · LIGHT BY CHOICE (Karl, 21 Nov 2026): a joyful sense may be pinned exactly, only if the person
+   chooses; every other sense shows as the colour of its area. */
+#pin-wrap{display:none;margin-top:7px}
+#pin-wrap.show{display:block}
+#panel:not(.sense-picked) #pin-wrap{display:none!important}
+#pin-wrap .pin-note{display:block;margin-top:5px;font-size:10.5px;line-height:1.4;color:rgba(214,206,236,.78)}
+.mem-priv.pin-on{background:rgba(255,214,140,.16);border-color:rgba(255,214,140,.6);color:#ffe3ad}
 .mem-priv{background:rgba(232,183,107,.08);border:0.5px solid rgba(232,183,107,.35);color:#e8c794;font-size:11px;padding:6px 12px;border-radius:14px;cursor:pointer}
 .mem-priv.priv{background:rgba(120,110,150,.18);border-color:rgba(167,139,250,.4);color:#cbbff0}
 /* 6 Sep 2026 - Karl: "the cloud in the seeking, I would like to be the one
@@ -2472,6 +2480,7 @@ window.AS_SEEK_ALWAYS=true;
       <div class="srealm-label" id="memory-label">Light up this spot with the aura of a personal memory</div>
       <div id="memory-row"><button id="memory-btn">A Memory</button><div id="mem-priv-wrap"><button id="mem-private" class="mem-priv">Memory words: Public</button></div></div>
       <div id="sense-confirm"></div>
+      <div id="pin-wrap"><button id="pin-here" class="mem-priv" type="button" aria-pressed="false">◌ Shown softly, as this area</button><span class="pin-note">A joyful sense can be pinned to this exact spot, if you choose. Every other sense shows only as its area, never on a door.</span></div>
       <div id="photo-row">
         <button id="photo-btn" type="button">📷 Add a photo</button>
         <input id="photo-input" type="file" accept="image/*" style="display:none">
@@ -4544,6 +4553,7 @@ function atBegin(){
   }
   showMsg('Asking your device where you are \u2014 an Auratour follows your feet, and your path never leaves this phone.',6000,'witness','#c4b5fd');
   navigator.geolocation.getCurrentPosition(pos=>{
+    try{asRememberHere(pos.coords.latitude,pos.coords.longitude);}catch(e){}   /* Build 195 */
     atOn=true;atPath=[];atDist=0;atMet=0;atSenses=[];atStart=Date.now();atLastFix=Date.now();
     try{for(const p of auraPoints){p._walked=false;p._met=0;}}catch(e){}
     const row=document.getElementById('at-senses');if(row)row.innerHTML='';
@@ -4851,6 +4861,9 @@ function submit(lat,lng,text){
   const pp=(typeof pendingPhoto!=='undefined')?pendingPhoto:null;
   const sid=selSense;
   const s=SENSES.find(x=>x.id===sid);if(!s)return;
+  /* Build 195 · the person's own choice to pin a joyful light, read once and then let go */
+  const _pinned=!!window.AS_PIN_HERE&&asJoyful(sid)&&!AS_MIRROR_LANDING;
+  try{window.AS_PIN_HERE=false;if(window.asPinPaint)window.asPinPaint();}catch(e){}
   // Offering from a height: the aura lands where you are looking, and the map descends to meet it.
   // The scale it was given from travels with it — a town offering belongs to the town, honestly labelled.
   let _oz=15;try{_oz=map.getZoom();}catch(e){}
@@ -4922,6 +4935,7 @@ function submit(lat,lng,text){
   // there is one. The wave keeps the journey; ascentClimb stays defined but unused.
   const _finishPlace=(place)=>{
     var _spot=false;try{var _ls=window.AS_LAST_SPOT;_spot=!!(_ls&&_ls.lat===lat&&_ls.lng===lng);}catch(_){}   /* Build 191 */
+    if(_pinned&&_gScale==='street')_spot=true;                                                                /* Build 195: joy, pinned by choice */
     if(typeof gateSaveOffering==='function'&&!_ap._gone)gateSaveOffering({sense:sid,text:text,priv:isPriv,lat:lat,lng:lng,place:place||null,scale:_gScale,born:Date.now(),_ap:_ap,spot:_spot});
     if(!place)return;
     if(myOfferings[0])myOfferings[0].place=place;
@@ -9368,7 +9382,13 @@ function showOfferConfirm(senseId,text,place,lat,lng){
         if(pl){pl.classList.remove('just-offered','offer-quiet','has-last');}box.innerHTML='';}catch(e){}},4200);
     });
   }catch(e){}
-  try{const _oa=box.querySelector('.oc-actions');if(_oa)_oa.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-card">\ud83c\udfb4 Keep this light</button>');
+  /* Build 195 · Karl: "introduce the registration option earlier, as My Aura seems detached from the experience."
+     The light's own moment now offers to keep it (the same email-and-code door as My Aura), and the postcard
+     says what it is, so there are never two buttons that both say "keep". */
+  try{if(!(typeof gate!=='undefined'&&gate&&gate.user)&&typeof gpModal==='function'){const _oa2=box.querySelector('.oc-actions');
+    if(_oa2){_oa2.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-keep">\u25c7 Keep my light, on any device</button>');
+      const _kb=box.querySelector('.oc-keep');if(_kb)_kb.addEventListener('click',()=>{try{gpModal();}catch(e){}});}}}catch(e){}
+  try{const _oa=box.querySelector('.oc-actions');if(_oa)_oa.insertAdjacentHTML('beforeend','<button type="button" class="oc-btn oc-card">\ud83c\udfb4 Make a card of it</button>');
   const _cb=box.querySelector('.oc-card');
   if(_cb)_cb.addEventListener('click',()=>{const s2=SENSES.find(x=>x.id===senseId);if(typeof openPostcard==='function'&&s2){openPostcard({title:'Aurasense of '+s2.label,color:s2.color,words:(text||'').slice(0,140),place:place||'',symbolSVG:_offSym(senseId,s2.color)});}});}catch(e){}
   const again=box.querySelector('.oc-here');
@@ -9638,6 +9658,21 @@ function closePlaceAura(){const p=document.getElementById('placeaura-page');if(p
     if(sx<=30&&dx>60){if(typeof openMyAuraPage==='function')openMyAuraPage();}
     else if(sx>=window.innerWidth-30&&dx<-60){if(typeof openLiveFeed==='function')openLiveFeed();}
   },{passive:true});
+})();
+// ---- Build 195 · Light by choice: only joyful senses may be pinned, and only when the person chooses ----
+var AS_JOYFUL=['joy','love','wonder','gratitude','hope','peace','rest'];   /* not relief: it always answers something heavier, which a neighbour could read */
+function asJoyful(id){return AS_JOYFUL.indexOf(id)>-1;}
+window.AS_PIN_HERE=false;
+(function(){
+  var b=document.getElementById('pin-here'),w=document.getElementById('pin-wrap');if(!b||!w)return;
+  function paint(){var on=!!window.AS_PIN_HERE;b.textContent=on?'\u2726 Pinned to this exact spot, for all to see':'\u25cc Shown softly, as this area';
+    b.classList.toggle('pin-on',on);b.setAttribute('aria-pressed',on?'true':'false');}
+  window.asPinPaint=paint;
+  b.addEventListener('click',function(){window.AS_PIN_HERE=!window.AS_PIN_HERE;paint();});
+  /* a sense can be chosen from many places, so the choice simply follows whichever sense is held */
+  var last=null;
+  setInterval(function(){try{var j=!!(selSense&&asJoyful(selSense));
+    if(j!==last){last=j;w.classList.toggle('show',j);if(!j&&window.AS_PIN_HERE){window.AS_PIN_HERE=false;paint();}}}catch(e){}},400);
 })();
 // ---- Memory offering button ----
 let memoryPrivate=false;
@@ -10202,6 +10237,12 @@ function gateRow(o){
   if(_spot&&!window.AS_NO_SPOT_COL)row.spot=true;      /* only sent when true, so an older database still takes every other light */
   return row;}
 function gateQueue(o){if(!GATE_CONFIGURED)return;try{const q=JSON.parse(localStorage.getItem('aurasense_gate_q')||'[]');q.push(gateRow(o));while(q.length>20)q.shift();localStorage.setItem('aurasense_gate_q',JSON.stringify(q));}catch(e){}}
+/* Build 195 · ASKED ONCE (Karl, 21 Nov 2026: "it asked a second time").
+   When the Seeking, or any step on the map, has just learned where the person is, the map holds it for
+   a quarter of an hour in this open page only, and does not ask the phone again in that time.
+   Never saved, never sent anywhere. */
+function asRememberHere(lat,lng){try{lat=+lat;lng=+lng;if(isFinite(lat)&&isFinite(lng)&&Math.abs(lat)<=90&&Math.abs(lng)<=180)window.AS_HERE={lat:lat,lng:lng,t:Date.now()};}catch(e){}}
+function asKnownHere(){try{var h=window.AS_HERE;if(h&&(Date.now()-h.t)<900000)return h;}catch(e){}return null;}
 // PHASE 1 WIRING \u2014 the Two Doors, the Witness Line, the ripening, the quiet first screen.
 function twoDoors(){
   try{
@@ -10225,9 +10266,13 @@ function twoDoors(){
       else if(typeof openPlacePrompt==='function'){openPlacePrompt('Find a place you love \u2014 the world is listening.');}});
     document.getElementById('td-here').addEventListener('click',()=>{
       close();
+      const _k=asKnownHere();   /* Build 195 · already known: no second question */
+      if(_k){try{flyProgrammatic({center:[_k.lng,_k.lat],zoom:15.8,duration:2600});}catch(e){try{map.flyTo({center:[_k.lng,_k.lat],zoom:15.8,duration:2600});}catch(e2){}}
+        setTimeout(()=>{if(typeof showMsg==='function')showMsg('You are here. Touch the map where you stand, and offer what you feel.');},2700);return;}
       if(!navigator.geolocation){if(typeof showMsg==='function')showMsg('Your device keeps its place to itself \u2014 find a place you love above instead.');return;}
       if(typeof showMsg==='function')showMsg('Listening for where you are\u2026');
       navigator.geolocation.getCurrentPosition(pos=>{
+        asRememberHere(pos.coords.latitude,pos.coords.longitude);
         try{flyProgrammatic({center:[pos.coords.longitude,pos.coords.latitude],zoom:15.8,duration:2600});}catch(e){try{map.flyTo({center:[pos.coords.longitude,pos.coords.latitude],zoom:15.8,duration:2600});}catch(_){}}
         setTimeout(()=>{if(typeof showMsg==='function')showMsg('You are here. Touch the map where you stand, and offer what you feel.');},2700);
       },()=>{if(typeof showMsg==='function')showMsg('No matter \u2014 find a place you love in the search above, and offer what you feel there.');},{enableHighAccuracy:false,timeout:9000,maximumAge:120000});
@@ -12277,9 +12322,11 @@ function mirrorOffer(m,h){
         buttons:[['Offer it where the map is looking',function(){mirrorLandCard(null);var c=map.getCenter();land(c.lat,c.lng);}],['Back to the Mirror',function(){held('');},1]]});
     };
     try{showMsg('Finding the area you are in…',5000);}catch(e){}
+    var _k=(typeof asKnownHere==='function')?asKnownHere():null;   /* Build 195 · already known: no second question */
+    if(_k){land(_k.lat,_k.lng);return;}
     if(!navigator.geolocation){ask();return;}
     var done=false,tm=setTimeout(function(){if(!done){done=true;ask();}},15000);
-    navigator.geolocation.getCurrentPosition(function(pos){if(done)return;done=true;clearTimeout(tm);land(pos.coords.latitude,pos.coords.longitude);},
+    navigator.geolocation.getCurrentPosition(function(pos){if(done)return;done=true;clearTimeout(tm);try{asRememberHere(pos.coords.latitude,pos.coords.longitude);}catch(e){}land(pos.coords.latitude,pos.coords.longitude);},
       function(){if(done)return;done=true;clearTimeout(tm);ask();},{enableHighAccuracy:false,maximumAge:600000,timeout:12000});
   }catch(e){held('The map could not take it just now. Your sense is still in the Mirror.');}
 }
@@ -13450,7 +13497,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">21 Nov 2026 · </span>194<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">21 Nov 2026 · </span>195<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -14273,6 +14320,7 @@ body:has(#myaura-page.show) #build-stamp:hover{opacity:1}
 
     if(d.aurasense!=='seeking-complete')return;
     const spot=await place(d.where);
+    try{if(d.here&&spot&&spot.kind==='point')asRememberHere(spot.lat,spot.lng);}catch(e){}   /* Build 195 · the Seeking already asked */
     const id=senseIdFor(d.senseKey,d.sense);
     if(id)selSense=id;
     leave();

@@ -705,7 +705,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 21 Nov 2026 &middot; 194</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 21 Nov 2026 &middot; 195</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -2226,7 +2226,7 @@ $('hereBtn').addEventListener('click',function(){
   if(!navigator.geolocation){toNaming('Where should this light land?');return;}
   navigator.geolocation.getCurrentPosition(function(pos){
     coords=pos.coords.latitude.toFixed(4)+', '+pos.coords.longitude.toFixed(4);
-    state.where=coords;              /* the live app names the street here */
+    state.where=coords; state.here=true;   /* the live app names the street here; Build 195: and remembers it was asked */
     land();
   },function(){
     b.textContent='Use where I am';
@@ -2261,7 +2261,7 @@ $('whereBox').addEventListener('input',function(){
   $('typedGo').disabled=!$('whereBox').value.trim();
 });
 $('typedGo').addEventListener('click',function(){
-  state.where=$('whereBox').value.trim();
+  state.where=$('whereBox').value.trim(); state.here=false;
   /* Checked in the box it was typed into, not two screens later on the map. */
   if(/^(a|an|the)\s+\w+$|^(park|street|road|town|city|home|work|here|beach|forest|shop|school)$/i.test(state.where)){
     var wb=$('whereBox');
@@ -2299,7 +2299,7 @@ function land(){
         strength:state.strength, strengthValue:(function(){
           for(var i=0;i<STRENGTHS.length;i++) if(STRENGTHS[i].w===state.strength) return STRENGTHS[i].s;
           return null; })(),
-        where:state.where, words:'', doing:null},'*');
+        where:state.where, here:!!state.here, words:'', doing:null},'*');
     }catch(e){}
     return;
   }
@@ -2380,7 +2380,7 @@ $('doneBtn').addEventListener('click',function(){
           strength:state.strength, strengthValue:(function(){
             for(var i=0;i<STRENGTHS.length;i++) if(STRENGTHS[i].w===state.strength) return STRENGTHS[i].s;
             return null; })(),
-          where:state.where, words:state.words, doing:state.doing},'*');
+          where:state.where, here:!!state.here, words:state.words, doing:state.doing},'*');
       }catch(e){}
     },2600);
     return;
