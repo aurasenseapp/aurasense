@@ -16114,7 +16114,7 @@ body.calm .as-smoke{display:none}
       if(typeof map==='undefined'||!map.getZoom||map.getZoom()<12||document.body.classList.contains('seeking'))return;
       try{if(map.isMoving&&map.isMoving())return;}catch(e){}   /* Build 201 · placed only once the flight has landed */
       var ctr=map.getCenter(),cols=['joy','peace','wonder','hope','love','gratitude'].map(colourOf).filter(Boolean);
-      window.AS_BLOOM_DEMO={key:'demo',demo:true,lat:ctr.lat,lng:ctr.lng,heart:colourOf('heaviness')||'#8fa3c8',petals:cols,count:9,seed:hash('demo'+Date.now())};
+      window.AS_BLOOM_DEMO={key:'demo',demo:true,_placedAt:Date.now(),lat:ctr.lat,lng:ctr.lng,heart:colourOf('heaviness')||'#8fa3c8',petals:cols,count:9,seed:hash('demo'+Date.now())};
       clearInterval(iv);compute();
       try{showMsg('A preview bloom is about to open in the middle of your screen ✿',3600);}catch(e){}
     }catch(e){}},3000);}}catch(e){}
@@ -16240,7 +16240,13 @@ body.calm .as-smoke{display:none}
       if(window.AS_AGREE_DEMO){clearInterval(iv);return;}
       if(typeof map==='undefined'||!map.getZoom||map.getZoom()<12||document.body.classList.contains('seeking'))return;
       try{if(map.isMoving&&map.isMoving())return;}catch(e){}   /* Build 201 · placed only once the flight has landed */
-      var vw=window.innerWidth||400,vh=window.innerHeight||800,p=map.unproject([vw*0.3,vh*0.42]);
+      /* Build 201 · when both previews are asked for, the bloom goes first, and the two lights meet only after it
+         has opened and settled, a little above it, so neither covers the other */
+      var both=/[?&]bloom=demo\b/.test(location.search);
+      if(both){var bd=window.AS_BLOOM_DEMO;if(!bd)return;
+        var since=bd._openAt?Date.now()-bd._openAt:-1;
+        if(since<9800&&Date.now()-(bd._placedAt||0)<30000)return;}
+      var vw=window.innerWidth||400,vh=window.innerHeight||800,p=map.unproject(both?[vw*0.5,vh*0.28]:[vw*0.3,vh*0.42]);
       window.AS_AGREE_DEMO={key:'agree-demo',demo:true,sense:'peace',lat:p.lat,lng:p.lng,people:2,color:colourOf('peace')};
       clearInterval(iv);window.AS_AGREE=(window.AS_AGREE||[]).filter(function(x){return !x.demo;}).concat([window.AS_AGREE_DEMO]);
       try{showMsg('A preview agreement is about to meet on your screen ◎',3600);}catch(e){}
