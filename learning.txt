@@ -9,7 +9,7 @@ HARM NOTICED, AND WHAT CHANGED
 - 21 November 2026 A card could show the wrong door. A phone’s sense of where it is drifts. A postcard showed a house number that was simply wrong, and cards are made to be shared. What changed: No house number is ever shown. A card names the town or a public place, or the giver’s own words for the place. (“Near, not at.”)
 - 21 November 2026 Being asked twice where you are. The opening asked for a location, then the map could ask again. Being asked twice can feel like being watched. What changed: Once the opening has asked, the map does not ask again for a quarter of an hour. (Some phones also ask twice because of their own settings.)
 - 22 November 2026 A camera could stay on with no way to take the photo. In My Aura, opening the senses hid the Capture button while the camera kept running. What changed: The camera and the opened senses never share the screen: one always lets the other go first.
-- 23 November 2026 New lights could vanish from the map. When there were many lights, the map showed the oldest and hid the newest, so fresh lights, and the blooms they made, could disappear. What changed: The newest lights are the ones shown, and every light still counts towards a bloom. A bloom or an agreement that waits for a still screen now waits twelve seconds at most.
+- 22 November 2026 New lights could vanish from the map. When there were many lights, the map showed the oldest and hid the newest, so fresh lights, and the blooms they made, could disappear. What changed: The newest lights are the ones shown, and every light still counts towards a bloom. A bloom or an agreement that waits for a still screen now waits twelve seconds at most.
 
 GOOD FOUND
 
@@ -37,4 +37,4 @@ HOW THIS RECORD WORKS
 - Anyone may add to it, person or AI: write to hello@aurasense.app with “Harm” or “Good” in the subject. A person reads every message.
 
 On the page: https://www.aurasense.app/learning
-Written with Claude, an AI made by Anthropic, and approved by Karl, Aurasense’s founder. Last updated 23 November 2026.
+Written with Claude, an AI made by Anthropic, and approved by Karl, Aurasense’s founder. Last updated 22 November 2026.
