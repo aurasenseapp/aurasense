@@ -656,6 +656,24 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
       return sang>0;
     }catch(e){ return false; }
   };
+  /* Build 202 · 23 Nov 2026 · Karl: "I'd still like some nice gentle sounds upon offering an Aurasense. From the
+     seeking moment to the landing. I find it so satisfying and sensorily speaking its makes sense, even if it's just
+     singular gentle confirmation sounds."
+     Until now the Seeking made no sound of its own. Now a choice confirmed, and a light let go to land, each answer
+     with one soft bell: only once a hand has woken the sound, never in Calm, never louder than a breath. A phone set
+     to silent stays silent, as its owner asked. */
+  function calmNow(){try{if(window.AS_CALM)return true;if(document.body&&document.body.classList.contains('calm'))return true;
+    var P=window.parent;if(P&&P!==window){if(P.AS_CALM)return true;if(P.document&&P.document.body&&P.document.body.classList.contains('calm'))return true;}}catch(e){}return false;}
+  function note(f,delay,peak,dur){var t0=ctx.currentTime+delay;
+    [[1,1,1],[2,0.2,0.55]].forEach(function(h){var o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f*h[0];
+      var end=t0+dur*h[2];g.gain.setValueAtTime(0.0001,t0);g.gain.linearRampToValueAtTime(Math.max(0.0002,peak*h[1]),t0+0.025);
+      g.gain.exponentialRampToValueAtTime(0.0001,end);o.connect(g);g.connect(ctx.destination);o.start(t0);o.stop(end+0.05);});}
+  var CHIMES={choose:[[523.25,0,.085,1.7],[783.99,.13,.065,2.1]],deeper:[[587.33,0,.07,1.6]],
+              release:[[659.25,0,.06,1.8],[987.77,.16,.045,2.2]],land:[[392,0,.08,2.4],[587.33,.1,.06,2.6]]};
+  window.asSeekChime=function(kind){
+    try{if(calmNow())return false;wake();if(!ctx||ctx.state!=='running')return false;
+      (CHIMES[kind]||CHIMES.choose).forEach(function(a){note(a[0],a[1],a[2],a[3]);});return true;}catch(e){return false;}
+  };
 })();
 </script>
 </head>
@@ -705,7 +723,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 22 Nov 2026 &middot; 201</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 23 Nov 2026 &middot; 202</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -2094,6 +2112,7 @@ function commit(){
   if(restTimer){clearTimeout(restTimer);restTimer=null;}
   $('holdArc').classList.add('pulse');
   var o=SET[lit];
+  try{ if(window.asSeekChime) window.asSeekChime((stage==='sense'&&FAMILIES[o.k])?'deeper':'choose'); }catch(e){}   /* Build 202 · a choice confirmed, softly */
   if(stage==='sense'&&FAMILIES[o.k]){ openFamily(o); return; }
   if(stage==='sense'||stage==='family'){
     state.sense=o.w; state.senseColor=o.c; state.senseKey=o.k; state.senseMark=o.m||o.k;
@@ -2287,6 +2306,7 @@ function openTheWorld(){
 }
 function land(){
   known=true;
+  try{ if(window.asSeekChime) window.asSeekChime('release'); }catch(e){}   /* Build 202 · the light let go; the map sings its own note as it lands */
   /* and now the cloud parts altogether */
   if(document.body.classList.contains('embedded'))
     document.body.classList.add('parting');                        /* it is known now — the next one is lighter */
@@ -2327,7 +2347,7 @@ function land(){
     $('mapLines').innerHTML='This light is yours.'+(bits.length?'<br>'+bits.join(' &middot; '):'');
     $('map').classList.add('on');
     setTimeout(function(){L.classList.add('fall');},800);
-    setTimeout(function(){$('mapRipple').classList.add('go');},3300);
+    setTimeout(function(){$('mapRipple').classList.add('go');try{if(window.asSeekChime)window.asSeekChime('land');}catch(e){}},3300);   /* Build 202 */
     setTimeout(function(){L.style.opacity='0';},3500);
     setTimeout(function(){$('mapWord').classList.add('on');},3900);
     setTimeout(function(){$('mapSym').classList.add('on');},4500);
