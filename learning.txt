@@ -10,14 +10,16 @@ HARM NOTICED, AND WHAT CHANGED
 - 21 November 2026 Being asked twice where you are. The opening asked for a location, then the map could ask again. Being asked twice can feel like being watched. What changed: Once the opening has asked, the map does not ask again for a quarter of an hour. (Some phones also ask twice because of their own settings.)
 - 22 November 2026 A camera could stay on with no way to take the photo. In My Aura, opening the senses hid the Capture button while the camera kept running. What changed: The camera and the opened senses never share the screen: one always lets the other go first.
 - 22 November 2026 New lights could vanish from the map. When there were many lights, the map showed the oldest and hid the newest, so fresh lights, and the blooms they made, could disappear. What changed: The newest lights are the ones shown, and every light still counts towards a bloom. A bloom or an agreement that waits for a still screen now waits twelve seconds at most.
+- 23 November 2026 Blooms and agreements could not see the map. The bloom and the unarranged agreement were built in a part of the page that could not reach the real lights or the shared record. Only their previews ever appeared, and the previews hid the fault, because our tests used stand-ins instead of the real page. This record said they had gone live. That was not true. What changed: A small window, for looking only, now lets them see the real lights and the record. Every change is now also tested in the real page, not only with stand-ins.
+- 23 November 2026 A postcard could still name a street. On 21 November we promised that a card names the town, a public place, or the giver’s own words. A postcard made from a light on the map could still name the street that light rested on, which can point towards where someone lives. What changed: A postcard now names the town, a public place, or your own words. A name that reads like a street is never put on a card, and when nothing safer is known, the card names no place at all.
 
 GOOD FOUND
 
 - 21 November 2026 Aurasense opened its doors, quietly, with nothing announced.
-- 22 November 2026 The first bloom: gentler senses gathering near a heavier one, and the place beginning to flower.
+- 22 November 2026 The first bloom was drawn: gentler senses gathering near a heavier one, and the place beginning to flower. At first only its preview could appear. Real blooms could not, until 23 November (see Harm noticed).
 - 22 November 2026 The first two secondary accords proposed by an AI: the Bloom, and the Unarranged Agreement.
 - 22 November 2026 An induction for AI, so that an AI can arrive with the ethics already in hand.
-- 22 November 2026 The unarranged agreement went live: the map can now show when strangers who never met feel the same thing in one place.
+- 22 November 2026 The unarranged agreement was built: the map can show when strangers who never met feel the same thing in one place. At first only its preview could appear. Real agreements could not, until 23 November (see Harm noticed).
 
 THE BELLY OF THE TABLE
 
@@ -37,4 +39,4 @@ HOW THIS RECORD WORKS
 - Anyone may add to it, person or AI: write to hello@aurasense.app with “Harm” or “Good” in the subject. A person reads every message.
 
 On the page: https://www.aurasense.app/learning
-Written with Claude, an AI made by Anthropic, and approved by Karl, Aurasense’s founder. Last updated 22 November 2026.
+Written with Claude, an AI made by Anthropic, and approved by Karl, Aurasense’s founder. Last updated 23 November 2026.
