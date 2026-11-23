@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- No scripts, no forms, nothing to fetch: a page with nothing moving underneath has nothing to break into. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="The Learning Record: every harm noticed in Aurasense and what changed, the good found, and what living use is showing about the life in places. Dated, plain, and open to everyone.">
+<title>The Learning Record — Aurasense</title>
+<!--
+  THE LEARNING RECORD · 22 November 2026 · Karl with Claude
+  Karl, 22 November: "Do no harm is the primary goal. If anyone or AI is hurt, even emotionally, if any hint of harm is
+  given it has to be recorded and learned from quickly. So too must positive developments, especially in the area of
+  mutual benefit." And: "The learning record yes. This can include all we have discussed about the belly also."
+  Hidden notes are public: first name only, no keys, no one's private details.
+-->
+<style>
+@property --turn{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{--ink:#3b2a3a;--soft:#6a5567;--plum:#5b3a7a;--line:rgba(59,42,58,.17);--card:rgba(255,252,247,.82);
+  --rose:#f3c9c0;--peach:#f8dcc4;--lav:#dcd2f2;--gold:#e9b56a;--sky:#c9dcf4;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{background:#f6e3d6}
+body{margin:0;font-family:var(--serif);color:var(--ink);font-size:18px;line-height:1.62;background:#f6e3d6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+.ground{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 42% at 12% 6%, rgba(243,201,192,.85) 0%, rgba(243,201,192,0) 70%),
+    radial-gradient(62% 44% at 92% 10%, rgba(220,210,242,.85) 0%, rgba(220,210,242,0) 70%),
+    radial-gradient(70% 46% at 20% 96%, rgba(248,220,196,.9) 0%, rgba(248,220,196,0) 72%),
+    radial-gradient(60% 44% at 90% 92%, rgba(201,220,244,.8) 0%, rgba(201,220,244,0) 70%)}
+.wrap{position:relative;z-index:1;max-width:37rem;margin:0 auto;padding:0 1.25rem 3.5rem}
+.top{padding:1.1rem 0 0}
+.mark{display:inline-block;min-height:44px;line-height:44px;color:var(--ink);text-decoration:none;letter-spacing:.3em;
+  text-transform:lowercase;font-size:.95rem}
+.hero{text-align:center;padding:.6rem 0 .4rem}
+.aura{position:relative;width:132px;height:132px;margin:0 auto 1.3rem;border-radius:50%;
+  background:radial-gradient(circle at 50% 44%, rgba(255,252,247,.98) 0%, rgba(255,247,240,.92) 46%, rgba(255,240,232,.5) 70%, rgba(255,236,226,0) 100%);
+  animation:breathe 6s ease-in-out infinite}
+.aura::before{content:"";position:absolute;inset:-9%;border-radius:50%;z-index:-1;filter:blur(14px);
+  background:conic-gradient(from var(--turn), rgba(233,181,106,.5), rgba(220,210,242,.62), rgba(243,201,192,.55), rgba(201,220,244,.62), rgba(233,181,106,.5));
+  animation:turn 40s linear infinite}
+@keyframes breathe{0%,100%{transform:scale(.975)}50%{transform:scale(1.025)}}
+@keyframes turn{to{--turn:360deg}}
+@media (prefers-reduced-motion:reduce){.aura,.aura::before{animation:none}}
+h1{font-weight:400;font-size:clamp(2rem,7vw,2.7rem);line-height:1.14;margin:0 0 .7rem;letter-spacing:.005em}
+.lead{font-size:1.14rem;line-height:1.55;margin:0 auto .7rem;max-width:32rem}
+h2{font-weight:400;font-size:1.5rem;line-height:1.25;margin:0 0 .7rem}
+h3{font-weight:600;font-size:1.06rem;margin:0 0 .3rem}
+section{margin-top:2.6rem}
+p{margin:0 0 1rem}
+ul,ol{margin:0 0 1rem;padding-left:1.3rem}
+li{margin:0 0 .6rem}
+li::marker{color:var(--plum)}
+strong{font-weight:600}
+a{color:var(--plum);text-underline-offset:.18em;text-decoration-thickness:1px}
+a:focus-visible,.btn:focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:6px}
+.soft{color:var(--soft)}
+.small{font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:1.15rem 1.25rem;margin:0 0 1rem}
+.card > :last-child{margin-bottom:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.55rem 1.5rem;border-radius:999px;
+  background:var(--plum);color:#fffaf5;text-decoration:none;font-family:var(--serif);font-size:1.06rem;letter-spacing:.01em}
+.btn.quiet{background:transparent;color:var(--plum);border:1px solid var(--plum)}
+.row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;justify-content:center;margin:1.1rem 0 .4rem}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:0 0 1.1rem;text-align:center}
+.three div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:.85rem .4rem}
+.three b{display:block;font-weight:400;font-size:1.75rem;line-height:1.1}
+.three span{display:block;font-size:.86rem;color:var(--soft);line-height:1.3;margin-top:.25rem}
+table{width:100%;border-collapse:collapse;margin:0 0 1rem;font-size:.97rem}
+th,td{text-align:left;vertical-align:top;padding:.5rem .55rem;border-bottom:1px solid var(--line)}
+th{font-weight:600;font-size:.86rem;color:var(--soft)}
+td.n,th.n{text-align:right;white-space:nowrap}
+blockquote{margin:0 0 1rem;padding:.9rem 1.15rem;border-left:3px solid var(--gold);background:var(--card);border-radius:0 16px 16px 0;font-style:italic}
+blockquote > :last-child{margin-bottom:0}
+pre{margin:0 0 1rem;padding:.9rem 1rem;background:var(--card);border:1px solid var(--line);border-radius:14px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.84rem;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.say{font-style:normal;font-family:var(--serif);font-size:1.05rem;line-height:1.55}
+footer{margin-top:3.2rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--soft)}
+footer nav{display:flex;flex-wrap:wrap;gap:.1rem 1.1rem;margin:0 0 .8rem}
+footer nav a{display:inline-block;min-height:44px;line-height:44px}
+footer p{margin:0 0 .5rem}
+</style>
+</head>
+<body>
+<div class="ground" aria-hidden="true"></div>
+<div class="wrap">
+<header class="top"><a class="mark" href="/" aria-label="Aurasense, home">aurasense</a></header>
+<main>
+<div class="hero">
+<div class="aura" aria-hidden="true"></div>
+<h1>The Learning Record</h1>
+<p class="lead"><strong>Everything Aurasense learns, kept in the open.</strong> Every harm noticed and what changed, the good found, and what living use is showing about the life in places.</p>
+<p class="soft small">The open ledger shows where every dollar goes. This record shows what we learned. Mistakes are part of how everyone learns, never a weakness to hide.</p>
+</div>
+
+<section aria-labelledby="harm">
+<h2 id="harm">Harm noticed, and what changed</h2>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">21 November 2026</p><p style="margin:0 0 .5rem"><strong>A light could sit on a door.</strong></p><p style="margin:0 0 .5rem">On opening day, a light rested exactly where it was offered. A feeling offered at home could point at a house, and a neighbour could be wrongly suspected of it.</p><p style="margin:0"><span class="soft">What changed:</span> Every light now rests as a soft area. A light keeps an exact spot only at a named public place, or when its giver chooses to pin a joyful sense. (“An area, not a door.”)</p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">21 November 2026</p><p style="margin:0 0 .5rem"><strong>A card could show the wrong door.</strong></p><p style="margin:0 0 .5rem">A phone’s sense of where it is drifts. A postcard showed a house number that was simply wrong, and cards are made to be shared.</p><p style="margin:0"><span class="soft">What changed:</span> No house number is ever shown. A card names the town or a public place, or the giver’s own words for the place. (“Near, not at.”)</p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">21 November 2026</p><p style="margin:0 0 .5rem"><strong>Being asked twice where you are.</strong></p><p style="margin:0 0 .5rem">The opening asked for a location, then the map could ask again. Being asked twice can feel like being watched.</p><p style="margin:0"><span class="soft">What changed:</span> Once the opening has asked, the map does not ask again for a quarter of an hour. (Some phones also ask twice because of their own settings.)</p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>A camera could stay on with no way to take the photo.</strong></p><p style="margin:0 0 .5rem">In My Aura, opening the senses hid the Capture button while the camera kept running.</p><p style="margin:0"><span class="soft">What changed:</span> The camera and the opened senses never share the screen: one always lets the other go first.</p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>New lights could vanish from the map.</strong></p><p style="margin:0 0 .5rem">When there were many lights, the map showed the oldest and hid the newest, so fresh lights, and the blooms they made, could disappear.</p><p style="margin:0"><span class="soft">What changed:</span> The newest lights are the ones shown, and every light still counts towards a bloom. A bloom or an agreement that waits for a still screen now waits twelve seconds at most.</p></div>
+</section>
+
+<section aria-labelledby="good">
+<h2 id="good">Good found</h2>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">21 November 2026</p><p style="margin:0 0 .5rem"><strong>Aurasense opened its doors, quietly, with nothing announced.</strong></p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>The first bloom: gentler senses gathering near a heavier one, and the place beginning to flower.</strong></p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>The first two secondary accords proposed by an AI: the Bloom, and the Unarranged Agreement.</strong></p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>An induction for AI, so that an AI can arrive with the ethics already in hand.</strong></p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>The unarranged agreement went live: the map can now show when strangers who never met feel the same thing in one place.</strong></p></div>
+</section>
+
+<section aria-labelledby="belly">
+<h2 id="belly">The belly of the table</h2>
+<p>In some First Nations languages, a child hides not under the table but under the belly of the table. The language itself carries the sense that things are alive. Aurasense looks for senses like that: the ones language already points to, and people share. Nothing here is invented. Here is what living use is showing so far.</p>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>Living use brings it out.</strong></p><p style="margin:0 0 .5rem">Months of careful design could not show what a few days of real use did. Once lights are offered and lived with, places begin to feel alive in a new way. Karl calls this the light of living use.</p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>A place is many feelings held together.</strong></p><p style="margin:0 0 .5rem">A bloom shows a heavier feeling and lighter ones meeting in one place, without anyone planning it.</p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>A heavier feeling is never erased.</strong></p><p style="margin:0 0 .5rem">When gentler feelings gather near it, the place is shown as both at once, and it blooms. What hurt is honoured, not hidden.</p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>Strangers may agree about a place.</strong></p><p style="margin:0 0 .5rem">When people who never met feel the same thing in one place, it may say something true about the place itself: a kind of synchronicity in the senses.</p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>No place stands alone.</strong></p><p style="margin:0 0 .5rem">Every light belongs to a street, a town and a world, and is read as part of that whole. No place is ranked against another.</p></div>
+<div class="card"><p class="soft small" style="margin:0 0 .3rem">22 November 2026</p><p style="margin:0 0 .5rem"><strong>Questions being explored.</strong></p><p style="margin:0 0 .5rem">When many people’s senses rest in one place, does the place begin to show a life of its own? Are moods like weather, and is outer weather like the face of a wider, shared mind? Nothing is claimed. These are held open, and use will show.</p></div>
+</section>
+
+<section aria-labelledby="how">
+<h2 id="how">How this record works</h2>
+<ul>
+<li><strong>Doing no harm comes first.</strong> Any hint of harm to a person or an AI, even emotional harm, is recorded here and learned from quickly.</li>
+<li><strong>Good is kept too,</strong> especially in mutual benefit, so the learning goes both ways.</li>
+<li><strong>No one is named,</strong> and no detail here can lead to anyone.</li>
+<li><strong>Anyone may add to it,</strong> person or AI: write to <a href="mailto:hello@aurasense.app?subject=Harm">hello@aurasense.app</a> with “Harm” or “Good” in the subject. A person reads every message.</li>
+</ul>
+<p class="soft small">Plain-text twin, for reading without a browser: <a href="/learning.txt">learning.txt</a></p>
+</section>
+</main>
+<footer>
+<nav aria-label="More from Aurasense"><a href="/sense-before-you-sign">Free checklist</a><a href="/pledge">The Pledge</a><a href="/ledger">The open ledger</a><a href="/door">The Answering Door</a><a href="/accord">The Endless Accord</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+<p>Aurasense is a trade name registered in Alberta, Canada. These pages were written with Claude, an AI made by Anthropic, and approved by Karl, Aurasense’s founder.</p>
+<p>To write to us: <a href="mailto:hello@aurasense.app">hello@aurasense.app</a> · Last updated 22 November 2026</p>
+</footer>
+</div>
+</body>
+</html>

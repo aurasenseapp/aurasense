@@ -12717,6 +12717,10 @@ async function gateLoadOfferings(){
     const pub=(r&&Array.isArray(r.data))?r.data.slice().reverse():[];
 
     let own=0,other=0;
+    /* Build 201 · Karl: "I can't see the blooms on the map now." The map shows at most sixty other lights, and it was
+       keeping the OLDEST sixty of the newest two hundred, so fresh lights (and the blooms they complete) could vanish.
+       Now the newest are the ones shown, and every loaded light still counts towards a bloom. */
+    window.AS_LIGHTS_UNDRAWN=[];window.AS_SHOWN_SET=null;
     mineRows.slice().reverse().forEach(row=>{
       const s=SENSES.find(x=>x.id===row.sense);if(!s)return;
       if(typeof row.lat!=='number'||typeof row.lng!=='number')return;
@@ -12726,15 +12730,20 @@ async function gateLoadOfferings(){
       myOfferings.push({photo:null,sense:row.sense,label:s.label,color:s.color,text:row.text||'',time:relTime(born),born:born,place:row.place||null,lat:row.lat,lng:row.lng});
       own++;
     });
+    const _room=()=>Math.max(0,60-auraPoints.length);
+    const _fit=pub.filter(row=>!(row.id&&mineIds[row.id])&&SENSES.find(x=>x.id===row.sense)&&typeof row.lat==='number'&&typeof row.lng==='number');
     pub.forEach(row=>{
       if(row.id&&mineIds[row.id])return;                       // already mine \u2014 never counted twice
       const s=SENSES.find(x=>x.id===row.sense);if(!s)return;
       if(typeof row.lat!=='number'||typeof row.lng!=='number')return;
       const born=Date.parse(row.created_at)||Date.now();
       /* Build 191: another person's light is shown as its whole area, never on a door, unless it was given at a public place */
-      if(auraPoints.length<60)auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:born,intensity:1,phase:Math.random()*Math.PI*2,priv:!!row.priv,photo:null,field:(row.spot?undefined:asAreaField(row.lat,row.lng))});
+      if(!window.AS_SHOWN_SET){const _n=_room();window.AS_SHOWN_SET=new Set(_n>0?_fit.slice(-_n):[]);}   /* Build 201 · the newest */
+      if(!window.AS_SHOWN_SET.has(row)){window.AS_LIGHTS_UNDRAWN.push({lat:row.lat,lng:row.lng,sense:row.sense,born:born});other++;return;}
+      auraPoints.push({lat:row.lat,lng:row.lng,sense:row.sense,text:row.text||'',born:born,intensity:1,phase:Math.random()*Math.PI*2,priv:!!row.priv,photo:null,field:(row.spot?undefined:asAreaField(row.lat,row.lng))});
       other++;
     });
+    window.AS_SHOWN_SET=null;   /* Build 201 · chosen afresh at every load */
     myOfferings.sort((a,b)=>(b.born||0)-(a.born||0));while(myOfferings.length>50)myOfferings.pop();
     pub.slice(-12).forEach(row=>{
       if(row.id&&mineIds[row.id])return;
@@ -13565,7 +13574,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">22 Nov 2026 · </span>200<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">22 Nov 2026 · </span>201<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -15963,6 +15972,7 @@ body.calm .as-smoke{display:none}
 
   function compute(){
     var pts=(typeof auraPoints!=='undefined'&&Array.isArray(auraPoints))?auraPoints:[],now=Date.now(),heavy=[],light=[];
+    if(Array.isArray(window.AS_LIGHTS_UNDRAWN)&&window.AS_LIGHTS_UNDRAWN.length)pts=pts.concat(window.AS_LIGHTS_UNDRAWN);   /* Build 201 */
     for(var i=0;i<pts.length;i++){var p=pts[i];
       if(!p||p._gone||!isFinite(p.lat)||!isFinite(p.lng))continue;
       if(now-(p.born||now)>60*DAY)continue;
@@ -15977,7 +15987,7 @@ body.calm .as-smoke{display:none}
       var key='b'+(+H.lat).toFixed(3)+','+(+H.lng).toFixed(3);
       out.push({key:key,lat:+H.lat,lng:+H.lng,heart:colourOf(H.sense)||'#9aa3c0',petals:cols.slice(0,6),count:near.length,seed:hash(key)});}
     var prev={};(window.AS_BLOOMS||[]).forEach(function(b){prev[b.key]=b;});
-    out.forEach(function(b){var o=prev[b.key];if(o){b._openAt=o._openAt;b._first=o._first;}});
+    out.forEach(function(b){var o=prev[b.key];if(o){b._openAt=o._openAt;b._first=o._first;b._waitAt=o._waitAt;}});
     if(window.AS_BLOOM_DEMO)out.push(window.AS_BLOOM_DEMO);
     window.AS_BLOOMS=out;
     invite(out);
@@ -16037,7 +16047,10 @@ body.calm .as-smoke{display:none}
       try{pt=map.project([b.lng,b.lat]);}catch(e){continue;}
       if(pt.x<-R*2||pt.y<-R*2||pt.x>vw+R*2||pt.y>vh+R*2)continue;
       if(!b._openAt){
-        if(!settled)continue;   /* Build 199 · not yet: it waits, unseen, for stillness */
+        if(!b._waitAt)b._waitAt=now;
+        /* Build 199 · not yet: it waits, unseen, for stillness. Build 201 · but never for longer than twelve seconds,
+           so nothing on a phone can hold a bloom back for ever. */
+        if(!settled&&now-b._waitAt<12000)continue;
         b._openAt=now;
         if(b.demo){b._first=true;}
         else{seen=seen||list('aurasense_blooms_seen');
@@ -16099,10 +16112,11 @@ body.calm .as-smoke{display:none}
     var iv=setInterval(function(){try{
       if(window.AS_BLOOM_DEMO){clearInterval(iv);return;}
       if(typeof map==='undefined'||!map.getZoom||map.getZoom()<12||document.body.classList.contains('seeking'))return;
+      try{if(map.isMoving&&map.isMoving())return;}catch(e){}   /* Build 201 · placed only once the flight has landed */
       var ctr=map.getCenter(),cols=['joy','peace','wonder','hope','love','gratitude'].map(colourOf).filter(Boolean);
-      window.AS_BLOOM_DEMO={key:'demo',demo:true,lat:ctr.lat,lng:ctr.lng,heart:colourOf('heaviness')||'#8fa3c8',petals:cols,count:9,seed:hash('demo'+Date.now())};
+      window.AS_BLOOM_DEMO={key:'demo',demo:true,_placedAt:Date.now(),lat:ctr.lat,lng:ctr.lng,heart:colourOf('heaviness')||'#8fa3c8',petals:cols,count:9,seed:hash('demo'+Date.now())};
       clearInterval(iv);compute();
-      try{showMsg('A preview bloom is opening in the middle of your screen ✿',6000);}catch(e){}
+      try{showMsg('A preview bloom is about to open in the middle of your screen ✿',3600);}catch(e){}
     }catch(e){}},3000);}}catch(e){}
 
   setTimeout(function(){try{compute();}catch(e){}setInterval(function(){try{compute();}catch(e){}},20000);},9000);
@@ -16118,7 +16132,7 @@ body.calm .as-smoke{display:none}
    as one, a surprise like the bloom: never announced, never counted, never ranked, never who.
    To preview: add &agree=demo to a test link; one appears near the middle of the screen, never saved. */
 (function(){
-  var MEET_MS=3200;
+  var MEET_MS=5600;   /* Build 201 · Karl saw them "already merged": now they drift from further apart, slowly */
   window.AS_AGREE=[];
   var fails=0,polling=null,readyAt=0;
   function colourOf(id){try{for(var i=0;i<SENSES.length;i++){if(SENSES[i].id===id)return SENSES[i].color;}}catch(e){}return '#c4b5fd';}
@@ -16139,7 +16153,7 @@ body.calm .as-smoke{display:none}
     var out=(Array.isArray(rows)?rows:[]).filter(function(x){return x&&isFinite(x.lat)&&isFinite(x.lng)&&x.sense&&(x.people|0)>=2;}).slice(0,50).map(function(x){
       var key='a'+String(x.sense)+':'+(+x.lat).toFixed(3)+','+(+x.lng).toFixed(3);
       var o={key:key,sense:String(x.sense),lat:+x.lat,lng:+x.lng,people:Math.min(9,x.people|0),color:colourOf(x.sense)};
-      if(prev[key])o._at=prev[key]._at;
+      if(prev[key]){o._at=prev[key]._at;o._waitAt=prev[key]._waitAt;}
       return o;});
     if(window.AS_AGREE_DEMO)out.push(window.AS_AGREE_DEMO);
     window.AS_AGREE=out;
@@ -16156,10 +16170,10 @@ body.calm .as-smoke{display:none}
     }catch(e){}
   }
 
-  function twin(c,x,y,R,a,t,now,calm){
+  function twin(c,x,y,R,a,t,now,calm,fa){
     var n=Math.max(2,Math.min(5,a.people||2)),col=a.color||'#c4b5fd';
-    var spin=calm?0.6:0.6+now/9000,apart=R*(1.3-1.0*t);
-    c.save();
+    var spin=calm?0.6:0.6+now/9000,apart=R*(2.4-2.1*t);
+    c.save();c.globalAlpha=(fa==null?1:Math.max(0,Math.min(1,fa)));
     var h=c.createRadialGradient(x,y,0,x,y,R*1.8);h.addColorStop(0,rgba(col,0.42*t));h.addColorStop(1,rgba(col,0));
     c.fillStyle=h;c.beginPath();c.arc(x,y,R*1.8,0,Math.PI*2);c.fill();
     c.shadowColor=rgba(col,0.9);c.shadowBlur=R*0.6;
@@ -16186,9 +16200,9 @@ body.calm .as-smoke{display:none}
     for(var i=0;i<A.length;i++){var a=A[i],pt;
       try{pt=map.project([a.lng,a.lat]);}catch(e){continue;}
       if(pt.x<-R*3||pt.y<-R*3||pt.x>vw+R*3||pt.y>vh+R*3)continue;
-      if(!a._at){if(!settled)continue;a._at=now;}   /* they meet only once the screen is still */
-      var t=calm?1:ease((now-a._at)/MEET_MS);
-      try{twin(c,pt.x,pt.y,R,a,t,now,calm);}catch(e){}}
+      if(!a._at){if(!a._waitAt)a._waitAt=now;if(!settled&&now-a._waitAt<12000)continue;a._at=now;}   /* they meet once the screen is still (Build 201 · or after twelve seconds at most) */
+      var u=Math.max(0,Math.min(1,(now-a._at)/MEET_MS)),t=calm?1:u*u*(3-2*u),fa=calm?1:Math.min(1,(now-a._at)/900);   /* slow at first, then settling */
+      try{twin(c,pt.x,pt.y,R,a,t,now,calm,fa);}catch(e){}}
   };
 
   window.asAgreeTap=function(point){
@@ -16225,10 +16239,17 @@ body.calm .as-smoke{display:none}
     var iv=setInterval(function(){try{
       if(window.AS_AGREE_DEMO){clearInterval(iv);return;}
       if(typeof map==='undefined'||!map.getZoom||map.getZoom()<12||document.body.classList.contains('seeking'))return;
-      var vw=window.innerWidth||400,vh=window.innerHeight||800,p=map.unproject([vw*0.3,vh*0.42]);
+      try{if(map.isMoving&&map.isMoving())return;}catch(e){}   /* Build 201 · placed only once the flight has landed */
+      /* Build 201 · when both previews are asked for, the bloom goes first, and the two lights meet only after it
+         has opened and settled, a little above it, so neither covers the other */
+      var both=/[?&]bloom=demo\b/.test(location.search);
+      if(both){var bd=window.AS_BLOOM_DEMO;if(!bd)return;
+        var since=bd._openAt?Date.now()-bd._openAt:-1;
+        if(since<9800&&Date.now()-(bd._placedAt||0)<30000)return;}
+      var vw=window.innerWidth||400,vh=window.innerHeight||800,p=map.unproject(both?[vw*0.5,vh*0.28]:[vw*0.3,vh*0.42]);
       window.AS_AGREE_DEMO={key:'agree-demo',demo:true,sense:'peace',lat:p.lat,lng:p.lng,people:2,color:colourOf('peace')};
       clearInterval(iv);window.AS_AGREE=(window.AS_AGREE||[]).filter(function(x){return !x.demo;}).concat([window.AS_AGREE_DEMO]);
-      try{showMsg('A preview agreement is meeting on your screen ◎',6000);}catch(e){}
+      try{showMsg('A preview agreement is about to meet on your screen ◎',3600);}catch(e){}
     }catch(e){}},3000);}}catch(e){}
 
   setTimeout(function(){fetchNow();polling=setInterval(fetchNow,60000);},6000);
