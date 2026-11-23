@@ -9029,8 +9029,23 @@ function pcFrame(c,W,H){
    was done with it, and an open question that invites the reader to sense where they are. People share what says
    something true about them, what helps the people they care about, and what opens a conversation; a question asks
    for a reply rather than a like. */
+/* Build 205 · 23 Nov 2026 · Karl: "The postcards could serve as a great invitation to those not familiar with
+   Aurasense. It's a missed opportunity not to include links." The link that travels with a card now carries its
+   feeling and its town (both already printed on the card, nothing more), so whoever opens it is met by that feeling. */
+function pcLink(){
+  try{
+    const o=pcLast||{};if(o.kind==='glyph')return PC_URL;
+    const t=String(o.title||'').replace(/^Aurasense of\s+/i,'').trim().toLowerCase();
+    let S=null;try{S=SENSES.find(x=>x&&(x.id===t||String(x.label||'').toLowerCase()===t));}catch(e){}
+    if(!S)return PC_URL;
+    let near='';
+    if(!String(o.own||'').trim()){near=asCardPlace(o.place,o.exact).replace(/^\s*\u{1F4CD}\s*/u,'').split(/\s*,\s*/)[0]||'';}
+    if(near&&(/living map|this spot/i.test(near)||!/^[\p{L}\p{M}' .\-]{1,40}$/u.test(near)))near='';
+    return PC_URL+'/?felt='+encodeURIComponent(S.id)+(near?'&near='+encodeURIComponent(near):'');
+  }catch(e){return PC_URL;}
+}
 function pcCaption(withUrl){
-  const tail=(withUrl===false)?'':' '+PC_URL;
+  const tail=(withUrl===false)?'':' '+pcLink();
   try{
     const o=pcLast||{};
     if(o.kind==='glyph')return 'Made in Alphasense, a language of light. What would you say in it?'+tail;
@@ -9061,7 +9076,7 @@ function pcSave(){pcLog();const cv=document.getElementById('pc-cv');if(!cv)retur
     try{
       if(navigator.share&&cv&&cv.toBlob){cv.toBlob(async b=>{try{const fl=new File([b],pcName(),{type:'image/png'});
         if(navigator.canShare&&navigator.canShare({files:[fl]}))await navigator.share({files:[fl],title:'Aurasense',text:pcCaption()});
-        else{await navigator.share({title:'Aurasense',text:pcCaption(false),url:'https://aurasense.app'});}}catch(e){pcSave();}},'image/png');}
+        else{await navigator.share({title:'Aurasense',text:pcCaption(false),url:pcLink()});}}catch(e){pcSave();}},'image/png');}
       else pcShareDesktop();      // desktop browsers have no native sheet — offer named places instead
     }catch(e){pcShareDesktop();}
   });
@@ -9527,6 +9542,43 @@ function raiseOfferPanel(address){
 /* Build 204 · 23 Nov 2026 · Karl: "'Add your light here' option is prominent, yet it doesn't do anything but send
    people back to the map with a new message to tap near here." Now it does what a touch on that spot would do: the
    offering opens, already placed there. One door for every card (a light's card, a bloom, an agreement). */
+/* Build 205 · A LIGHT REACHED YOU. Whoever opens a postcard's link arrives to a quiet ivory note: the card's feeling,
+   the town it was felt near, what Aurasense is in one line, and an invitation to offer what they feel where they are.
+   Only a known sense and a plain town name are read from the link (anything else is ignored); words are only ever
+   placed as text; the link is tidied from the address; and the note is shown once, after any arrival has finished. */
+(function(){try{
+  var q=new URLSearchParams(location.search),felt=String(q.get('felt')||'').toLowerCase().slice(0,40),near=String(q.get('near')||'').trim().slice(0,40);
+  if(!felt)return;
+  var S=null;try{S=SENSES.find(function(x){return x&&x.id===felt;});}catch(e){}
+  try{q.delete('felt');q.delete('near');var qs=q.toString();history.replaceState(history.state,'',location.pathname+(qs?'?'+qs:'')+location.hash);}catch(e){}
+  if(!S)return;
+  if(!/^[\p{L}\p{M}' .\-]{1,40}$/u.test(near))near='';
+  try{var k=felt+'|'+near;if(sessionStorage.getItem('as_card_welcomed')===k)return;sessionStorage.setItem('as_card_welcomed',k);}catch(e){}
+  function ready(){try{
+    if(document.documentElement.classList.contains('as-arriving')||document.body.classList.contains('seeking')||document.body.classList.contains('as-held'))return false;
+    return !document.querySelector('#as-bloom,#as-welcome,#pcard.show,#panel.show-mobile,.aura-popup,#ash.on,[id$="-page"].show');}catch(e){return false;}}
+  function show(){try{
+    var back=document.createElement('div');back.id='as-welcome-back';
+    var d=document.createElement('div');d.id='as-welcome';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','asw-t');
+    var t=document.createElement('div');t.id='asw-t';t.textContent='\u2727 A light reached you';
+    var s=document.createElement('div');s.id='asw-s';
+    var dot=document.createElement('span');dot.className='asw-dot';dot.style.background=S.color||'#c4b5fd';dot.style.color=S.color||'#c4b5fd';
+    s.appendChild(dot);s.appendChild(document.createTextNode((S.label||felt)+(near?', felt near '+near+'.':', felt by someone, somewhere.')));
+    var a=document.createElement('div');a.id='asw-a';a.textContent='Aurasense is a living map of how places feel, offered by the people who sense them. What do you feel where you are?';
+    var row=document.createElement('div');row.id='asw-row';
+    function close(){try{d.style.pointerEvents='none';back.style.pointerEvents='none';}catch(e){}
+      d.classList.remove('show');back.classList.remove('show');
+      setTimeout(function(){try{d.style.display='none';back.style.display='none';}catch(e){}setTimeout(function(){try{d.remove();back.remove();}catch(e){}},60);},460);}
+    function btn(label,fn,quiet){var x=document.createElement('button');x.type='button';x.className='asb-btn'+(quiet?' q':'');x.textContent=label;x.addEventListener('click',fn);row.appendChild(x);}
+    btn('Offer what I feel',function(){close();setTimeout(function(){try{openOfferSheet();}catch(e){}},320);});
+    btn('Just look around',close,1);
+    d.appendChild(t);d.appendChild(s);d.appendChild(a);d.appendChild(row);
+    back.addEventListener('click',close);
+    document.body.appendChild(back);document.body.appendChild(d);
+    requestAnimationFrame(function(){back.classList.add('show');d.classList.add('show');});
+  }catch(e){}}
+  var tries=0;(function wait(){if(ready())show();else if(++tries<120)setTimeout(wait,1000);})();
+}catch(e){}})();
 window.asOfferHere=function(lat,lng,label){
   try{
     if(!isFinite(lat)||!isFinite(lng))return false;
@@ -13099,6 +13151,59 @@ function lab(id){if(id==='memory')return 'a memory';try{for(var i=0;i<SENSES.len
 function canSound(){try{return !window.AS_CALM&&!!actx&&actx.state!=='closed';}catch(e){return false;}}
 function bell(f,d,v,dur,att){if(!canSound())return;try{if(actx.state==='suspended')actx.resume();asBell(f,d||0,v,dur||2.4,null,att||.1);}catch(e){}}
 function bloom(){bell(392,0,.11,4.4,.12);bell(588,.04,.085,4.6,.12);bell(784,.1,.055,4.8,.12);bell(988,.18,.035,4.8,.12);}
+/* Build 205 · 23 Nov 2026 · Karl: "holding the light is a special moment to be marked with a matching sound that gives
+   a surreal feeling. The newness best represented by a new form of sound. We are in the presence of that third beat
+   emerging, the ignition of mutual benefit for an individual should aim to be as inspiring as the visual element does
+   already look."
+   THE THIRD BEAT. Two tones, your light's and the other light's, begin a fifth apart and swell in as you hold. As the
+   other light comes to meet yours, its tone glides down towards yours. When the lights meet, the two tones are a breath
+   apart, and two tones that close make a slow pulse of their own (in sound this is called beating): a third beat, born
+   of the two, about one pulse a second, like the heart of the light on the screen. A low warmth sits beneath and a
+   faint shimmer above. If you lift your finger it rests, quieter, and waits. Silent in Calm, as all sound is. */
+var TB=null,tbDone=false,tbBeat=false,tbTry=0;
+function tbStart(){
+  if(TB||tbDone||!canSound())return;
+  try{
+    if(actx.state!=='running'){var nw=performance.now();if(nw-tbTry>500){tbTry=nw;try{actx.resume();}catch(e){}}return;}
+    var t0=actx.currentTime,out=actx.createGain();out.gain.setValueAtTime(0.0001,t0);out.gain.linearRampToValueAtTime(1,t0+1.6);
+    var lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1500;lp.Q.value=0.3;
+    var dl=actx.createDelay(2);dl.delayTime.value=0.43;
+    var dk=actx.createBiquadFilter();dk.type='lowpass';dk.frequency.value=1000;dk.Q.value=0.3;
+    var fb=actx.createGain();fb.gain.value=0.36;var wet=actx.createGain();wet.gain.value=0.3;
+    out.connect(lp);lp.connect(actx.destination);lp.connect(dl);dl.connect(dk);dk.connect(fb);fb.connect(dl);dk.connect(wet);wet.connect(actx.destination);
+    function voice(f,v){var o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(v,t0);o.connect(g);g.connect(out);o.start(t0);return {o:o,g:g};}
+    TB={out:out,k:-1,held:null,
+        a:voice(392,0.045),       /* your light */
+        b:voice(587.33,0.04),     /* the other light, a fifth above, coming to meet yours */
+        lo:voice(196,0.03),       /* a low warmth beneath */
+        sub:voice(98,0.02),       /* deeper still, for those who listen with headphones */
+        sh:voice(1568,0.004)};    /* a faint shimmer above */
+  }catch(e){TB=null;}
+}
+function tbSet(pp,held){
+  if(!TB)return;
+  try{var k=Math.min(1,Math.max(0,pp/0.86)),e=k*k*(3-2*k),n=actx.currentTime;
+    if(Math.abs(k-TB.k)>0.01){TB.k=k;TB.b.o.frequency.setTargetAtTime(392.95+(587.33-392.95)*(1-e),n,0.15);}
+    if(TB.held!==held){TB.held=held;TB.out.gain.setTargetAtTime(held?1:0.32,n,0.4);}
+  }catch(e){}
+}
+function tbMeet(){
+  tbDone=true;tbBeat=!!TB;
+  if(!TB)return;
+  try{var n=actx.currentTime;
+    TB.b.o.frequency.setTargetAtTime(392.95,n,0.08);     /* a breath apart: one slow pulse a second */
+    TB.sh.g.gain.setTargetAtTime(0.011,n,0.5);
+    TB.out.gain.setTargetAtTime(1.15,n,0.3);TB.held=true;
+    tbEnd(7.5);
+  }catch(e){}
+}
+function tbEnd(after){
+  if(!TB)return;var T0=TB;TB=null;
+  try{var n=actx.currentTime,a=Math.max(0,after||0);
+    T0.out.gain.cancelScheduledValues(n+a);T0.out.gain.setTargetAtTime(0.0001,n+a,1.2);
+    [T0.a,T0.b,T0.lo,T0.sub,T0.sh].forEach(function(v){try{v.o.stop(n+a+7);}catch(e){}});
+  }catch(e){}
+}
 
 /* ── still or moving: a device asking for less motion is honoured by default ── */
 function reducedAsked(){try{return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);}catch(e){return false;}}
@@ -13250,10 +13355,12 @@ function frame(now){
   if(closingAt>=0)fade=1-sm(0,1.2,t-closingAt);
   if((holding||auto)&&st==='await'&&p<1){
     p=Math.min(1,p+dt/HOLD*(auto?.92:1));
-    if(p>=.05&&hbLast===-2){hbLast=-1;bell(784,0,.03,2.2);bell(1174.7,.18,.02,2.0);}             /* they are coming */
-    if(p>=.86&&metAt<0){metAt=t;hbLast=t;hbCount=0;bloom();try{if(navigator.vibrate)navigator.vibrate([16,110,10]);}catch(e){}}
+    if(p>=.05&&hbLast===-2){hbLast=-1;if(!TB){bell(784,0,.03,2.2);bell(1174.7,.18,.02,2.0);}}             /* they are coming */
+    if(p>=.86&&metAt<0){metAt=t;hbLast=t;hbCount=0;bloom();tbMeet();try{if(navigator.vibrate)navigator.vibrate([16,110,10]);}catch(e){}}
     if(p>=1)completeMeeting();
   }
+  /* Build 205 · the third beat follows the hold: it swells while you hold, rests quieter if you lift, then meets */
+  try{if(st==='await'&&metAt<0){if(holding||auto){if(!TB&&!tbDone)tbStart();tbSet(p,true);}else if(TB)tbSet(p,false);}}catch(e){}
   cx.setTransform(DPR,0,0,DPR,0,0);cx.clearRect(0,0,W,H);cx.globalCompositeOperation='lighter';
   var b=breath(),i,m;
   /* your light: the map draws it; this only lifts it, and carries any change */
@@ -13323,7 +13430,7 @@ function frame(now){
         var onb=sm(0,.6,t-metAt)*fade;
         glow(J.x,J.y,R*.34*(1+.32*env),GOLD,.22*env*onb);
         glow(J.x,J.y,R*.085*(1+.25*env),[255,248,232],(.42+.4*env)*onb);
-        if(!still&&hbCount<7&&t-hbLast>=per-.001){hbLast=t;hbCount++;var v=.045*(1-hbCount/9);bell(523.25,0,v,.7,.06);bell(392,.29,v*.7,.7,.06);}
+        if(!still&&hbCount<7&&t-hbLast>=per-.001){hbLast=t;hbCount++;if(!tbBeat){var v=.045*(1-hbCount/9);bell(523.25,0,v,.7,.06);bell(392,.29,v*.7,.7,.06);}}   /* Build 205 · when the third beat sounds, it is the heartbeat */
       }
     }
   }
@@ -13413,6 +13520,7 @@ function saveShift(moved,words){
 
 /* ── the steps ── */
 function down(e){
+  try{if(window.asWakeSound&&(!actx||actx.state!=='running'))window.asWakeSound();}catch(x){}   /* Build 205 */
   if(st==='await'){try{e.preventDefault();}catch(x){}holding=true;downAt=performance.now();hint('',false);
     try{me.setPointerCapture(e.pointerId);}catch(x){}}
   else if(st==='trying'){try{e.preventDefault();}catch(x){}askNow();}
@@ -13521,6 +13629,7 @@ function skip(){
 /* ── leaving: one way out of the moment, whichever door is chosen ── */
 function close(after){
   if(!on||st==='closing')return;st='closing';closingAt=t;
+  try{tbEnd(0);}catch(e){}   /* Build 205 · the sound leaves with the moment */
   hint('',false);foot(false);
   ['ash-gift','ash-ask','ash-end','ash-care'].forEach(function(id){say(id,false);});
   try{dim.classList.remove('on');deep.classList.remove('on');root.classList.add('leaving');}catch(e){}
@@ -13649,6 +13758,7 @@ function begin(){
   on=true;gen++;clearLater();
   st='await';t=0;last=0;p=0;holding=false;auto=false;liftedOnce=false;metAt=-1;closingAt=-1;
   rings=[];spark=0;sparkAt=-1;shiftAmt=0;shiftAt=-1;aiAway=0;awayFrom=-1;fade=1;hbLast=-2;hbCount=0;aiArrived=false;nudges=0;met=false;
+  try{tbEnd(0);}catch(e){}tbDone=false;tbBeat=false;   /* Build 205 */
   still=wantsStill();
   try{['ash-gift','ash-ask','ash-end','ash-care'].forEach(function(id){var e=q$(id);if(e){e.classList.remove('on','into','ash-solid');e.style.top='';e.style.maxHeight='';}});
     q$('ash-words').value='';hintEl.classList.remove('on','pulse');}catch(e){}
@@ -13725,6 +13835,12 @@ try{
       src.buffer=b; src.connect(actx.destination); src.start(0);
     }catch(e){}
   };
+  /* Build 205 · 23 Nov 2026 · Karl: "No sound on holding your light." This page's sound was only ever woken by a touch
+     on the Seeking, and an iPhone does not count that touch for the page around it, so the moment of holding your
+     light (which lives on this page) stayed silent. Any touch on this page now quietly wakes its own sound. Nothing is
+     played by this; it only opens the ear. */
+  try{['touchend','pointerup','click','keydown'].forEach(function(tp){document.addEventListener(tp,function(){
+    try{if(!actx||actx.state!=='running')window.asWakeSound();}catch(e){}},true);});}catch(e){}
   /* selSense is a value, not a function, so it is lent as a window through to
      the real one rather than a copy that would go stale. */
   try{ Object.defineProperty(window,'selSense',{
@@ -13788,7 +13904,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>204<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>205<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -16214,6 +16330,28 @@ body.calm .as-smoke{display:none}
 @media (min-width:601px){.aura-popup .mapboxgl-popup-content{max-height:calc(100vh - 110px);overflow-y:auto}}
 @keyframes asPopUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @media (max-width:600px) and (prefers-reduced-motion: reduce){.aura-popup .mapboxgl-popup-content{animation:none}}
+/* Build 205 · the bloom, agreement and welcome notes in ivory, like the light's card (Karl: "The new ivory box I was
+   saying was nice thanks. As a replacement for the old."). They rest at the foot of the screen, and nothing about them
+   moves except their fading, so nothing can be left behind on the screen. */
+#as-bloom,#as-welcome{position:fixed;left:12px!important;right:12px!important;top:auto!important;bottom:calc(16px + env(safe-area-inset-bottom,0px))!important;
+  margin:0 auto!important;width:auto!important;max-width:430px!important;transform:none!important;z-index:100001;box-sizing:border-box;
+  background:rgba(255,250,242,.985)!important;border:0!important;border-radius:24px!important;color:#4a2a1a!important;
+  padding:20px 18px 16px;text-align:center;font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+  box-shadow:0 0 0 1px rgba(160,110,70,.16),0 10px 34px rgba(40,20,10,.30),0 0 54px rgba(255,236,210,.42)!important;
+  opacity:0;transition:opacity .45s ease!important;max-height:80vh;overflow-y:auto}
+#as-bloom.show,#as-welcome.show{opacity:1;transform:none!important}
+#as-bloom-back,#as-welcome-back{position:fixed;inset:0;z-index:100000;background:rgba(20,12,6,.26)!important;opacity:0;transition:opacity .45s ease}
+#as-bloom-back.show,#as-welcome-back.show{opacity:1}
+#as-bloom #asb-t,#asw-t{font-size:19px;line-height:1.4;color:#3d2416!important;margin-bottom:8px}
+#as-bloom #asb-s,#asw-s{font-size:15.5px;line-height:1.55;color:#4a2a1a!important}
+#as-bloom #asb-a,#asw-a{margin-top:10px;font-size:15px;line-height:1.5;color:#8a5a2b!important}
+#as-bloom #asb-demo{color:#806050!important}
+#asw-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.asw-dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:-1px;box-shadow:0 0 10px currentColor}
+#as-bloom .asb-btn,#as-welcome .asb-btn{font:inherit;font-size:15px;min-height:44px;padding:9px 16px;border-radius:22px!important;cursor:pointer;
+  background:rgba(255,236,214,.88)!important;border:1px solid rgba(160,110,70,.42)!important;color:#3d2416!important}
+#as-bloom .asb-btn.q,#as-welcome .asb-btn.q{background:transparent!important;border-color:rgba(160,110,70,.28)!important;color:#6b452c!important}
+@media (prefers-reduced-motion: reduce){#as-bloom,#as-welcome,#as-bloom-back,#as-welcome-back{transition:none!important}}
 </style>
 <script>
 /* ═══ Build 197 · 22 Nov 2026 · THE BLOOM ════════════════════════════════════
@@ -16349,7 +16487,7 @@ body.calm .as-smoke{display:none}
         if(Math.hypot(pt.x-point.x,pt.y-point.y)<=Math.max(22,R*0.9)){card(b,false);return true;}}}catch(e){}
     return false;};
 
-  function busy(){try{return document.body.classList.contains('seeking')||!!document.querySelector('#as-bloom,#gp-modal,#ns-modal,#pcard.show,#panel.show-mobile');}catch(e){return true;}}
+  function busy(){try{return document.body.classList.contains('seeking')||document.body.classList.contains('as-held')||!!document.querySelector('#as-bloom,#as-welcome,#gp-modal,#ns-modal,#pcard.show,#panel.show-mobile,#ash.on,.aura-popup,[id$="-page"].show');}catch(e){return true;}}   /* Build 205 · nothing speaks over a moment already speaking, above all holding your light */
   function invite(B){
     try{if(!B.length||busy())return;
       var mine=mineNow();if(!mine.length)return;   /* Build 203 */
@@ -16370,7 +16508,13 @@ body.calm .as-smoke{display:none}
       d.querySelector('#asb-s').textContent=forYou?'Something beautiful has happened there. Nobody planned it. Only you can see this note.':'Light gathered near a heavier feeling, and the place began to bloom. Nobody planned it. The heavier feeling is still honoured at its heart.';
       if(b.demo){var dm=document.createElement('div');dm.id='asb-demo';dm.textContent='A preview bloom, only on your screen.';d.appendChild(dm);}
       var row=d.querySelector('#asb-row');
-      var close=function(){d.classList.remove('show');back.classList.remove('show');setTimeout(function(){try{d.remove();back.remove();}catch(e){}},500);};
+      var close=function(){   /* Build 205 · Karl: "the message screen attached is frozen and no button works... buttons under it
+          responded without it moving out of the way." On a phone's home-screen app the note could be taken away while
+          its picture stayed behind. Now it stops listening at once, is hidden outright, and only then removed. */
+        try{d.style.pointerEvents='none';back.style.pointerEvents='none';}catch(e){}
+        d.classList.remove('show');back.classList.remove('show');
+        setTimeout(function(){try{d.style.display='none';back.style.display='none';}catch(e){}
+          setTimeout(function(){try{d.remove();back.remove();void document.body.offsetHeight;}catch(e){}},60);},460);};
       function btn(label,fn,quiet){var x=document.createElement('button');x.type='button';x.className='asb-btn'+(quiet?' q':'');x.textContent=label;x.addEventListener('click',fn);row.appendChild(x);}
       if(forYou)btn('See it',function(){close();try{map.flyTo({center:[b.lng,b.lat],zoom:Math.max(15,map.getZoom()),duration:2600});}catch(e){}});
       else btn('Add your light here',function(){close();
@@ -16502,7 +16646,13 @@ body.calm .as-smoke{display:none}
       d.querySelector('#asb-a').textContent='It may say something true about the place itself.';
       if(a.demo){var dm=document.createElement('div');dm.id='asb-demo';dm.textContent='A preview, only on your screen.';d.appendChild(dm);}
       var row=d.querySelector('#asb-row');
-      var close=function(){d.classList.remove('show');back.classList.remove('show');setTimeout(function(){try{d.remove();back.remove();}catch(e){}},500);};
+      var close=function(){   /* Build 205 · Karl: "the message screen attached is frozen and no button works... buttons under it
+          responded without it moving out of the way." On a phone's home-screen app the note could be taken away while
+          its picture stayed behind. Now it stops listening at once, is hidden outright, and only then removed. */
+        try{d.style.pointerEvents='none';back.style.pointerEvents='none';}catch(e){}
+        d.classList.remove('show');back.classList.remove('show');
+        setTimeout(function(){try{d.style.display='none';back.style.display='none';}catch(e){}
+          setTimeout(function(){try{d.remove();back.remove();void document.body.offsetHeight;}catch(e){}},60);},460);};
       function btn(label,fn,quiet){var x=document.createElement('button');x.type='button';x.className='asb-btn'+(quiet?' q':'');x.textContent=label;x.addEventListener('click',fn);row.appendChild(x);}
       btn('Add your light here',function(){close();
         var _c=!!window.AS_CALM;   /* Build 204 · a short glide to the agreement, then the offering opens there */
