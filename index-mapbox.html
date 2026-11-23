@@ -4721,13 +4721,14 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
     if(seeA)seeA.addEventListener('click',()=>openPlaceAura(lat,lng,loc));
     const again=elp.querySelector('.pop-again');
     if(again)again.addEventListener('click',()=>{
+      if(window.asOfferHere&&window.asOfferHere(lat,lng,loc))return;   /* Build 204 · the offering opens, placed here */
       lastClickPoint=[lng,lat];openSenseGate();
-      const inp=document.getElementById('inp');if(inp)inp.focus();
       showMsg('Add your light here: choose what you feel, and offer it ✧');
       if(currentPopup){currentPopup.remove();currentPopup=null;}
     });
     const social=elp.querySelector('.pop-social');
-    if(social)social.addEventListener('click',()=>{try{openPostcard({title:s.label,color:s.color,words:text,place:'📍 '+loc,symbolSVG:(SENSE_SYMBOLS[s.id]||'').replace('width="22" height="22"','width="460" height="460"'),photo:(myOfferings[0]&&myOfferings[0].photo)||null});}catch(e){showMsg('Could not open the postcard — tell Karl which button this was ✧');}});
+    if(social)social.addEventListener('click',async()=>{let _tw='';try{_tw=await asTownFor(lat,lng);}catch(e){}   /* Build 204 · the town, never the street */
+      try{openPostcard({title:s.label,color:s.color,words:text,place:_tw?('📍 '+_tw):'',symbolSVG:(SENSE_SYMBOLS[s.id]||'').replace('width="22" height="22"','width="460" height="460"'),photo:(myOfferings[0]&&myOfferings[0].photo)||null});}catch(e){showMsg('Could not open the postcard — tell Karl which button this was ✧');}});
   }
 }
 
@@ -4779,6 +4780,16 @@ map.on('click',async function(e){
   else auraLine='No auras offered yet — be the first';
   if(typeof raiseOfferPanel==='function')raiseOfferPanel(shortAddr||streetName);
 });
+/* Build 204 · the town (or the Mirror's area) for a spot: what a postcard may safely name */
+async function asTownFor(lat,lng){
+  try{var _ma=mirrorAreaFor(lat,lng);if(_ma&&_ma.name)return _ma.name;}catch(e){}
+  try{
+    const r=await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${MAPBOX_TOKEN}&types=place,locality&limit=1`);
+    const d=await r.json();
+    if(d&&d.features&&d.features.length)return String(d.features[0].text||'');
+  }catch(e){}
+  return '';
+}
 async function lookupPlace(lat,lng){
   window.AS_LAST_SPOT=null;                                                                /* Build 191 */
   try{var _ma=mirrorAreaFor(lat,lng);if(_ma)return _ma.name||null;}catch(e){}           /* Build 180: the same, for the place that is stored */
@@ -4866,35 +4877,35 @@ function drawPlaceField(c,p,col,life,i){
     if(!p._shape)p._shape=fieldShape((p.born%1000)/159);
     const S=p._shape;
 
-    /* Build 203 · 23 Nov 2026 · Karl: "their edges look a bit hard, ropey and can seem obstructive to seeing the
-       auras below especially when they increase in number. Can the edges be gentler? Where they merge in kind or
-       not... the energies blending." There is no line any more. The field is drawn only as its own blurred light
-       (the shape itself is drawn far off-canvas, and only its soft shadow is placed here), so it has no edge at all,
-       only a fading. A breath of brighter light rests along the rim, blurred the same way. Where fields overlap their
-       light adds as light does ('screen'), so meeting auras blend, in kind or not; and the more fields share the
-       screen, the gentler each one becomes, so the map below always reads through. */
+    /* Build 204 · 23 Nov 2026 · Karl, after trying 203: "The general auras are nicer. Just still too hazy to see the
+       street and sharper Aurasenses below. You can bring the edges back a bit maybe as it's probably important to see
+       and distinguish them from one another a bit more than I realized as well as their reach. Still like the coloured
+       lamp mix you were aiming for."
+       Seen side by side on a light map, the soft glow of 203 whitened everything it touched. Now the middle of each
+       field is clear, with only a faint wash of its own colour, so streets and the sharper lights read through. Its
+       reach is a soft band of light just inside its edge, finished with a fine, softened line, so each field can be
+       told from its neighbours. Where fields overlap, their washes and bands mix like coloured lamps. Still no
+       corners: the outline is the same smooth curve. */
     window._asFieldDrawn=(window._asFieldDrawn||0)+1;
-    const crowd=1/Math.sqrt(Math.max(1,(window._asFieldPrev||1)/4));
-    const sx=rx*breath, sy=ry*breath, OFF=12000;
-    const soft=Math.max(10,Math.min(46,Math.min(sx,sy)*0.32));
+    const crowd=1/Math.sqrt(Math.max(1,(window._asFieldPrev||1)/6));
+    const sx=rx*breath, sy=ry*breath, OFF=12000, fm=Math.min(sx,sy);
+    const band=Math.max(10,Math.min(34,fm*0.26));
     c.save();
-    c.globalCompositeOperation='screen';
-    /* a round, edgeless glow at the heart of the field, so it is always seen, even on a screen that will not draw
-       soft shadows */
-    const gR=Math.max(sx,sy)*0.85,gg=c.createRadialGradient(cx,cy,0,cx,cy,gR);
-    gg.addColorStop(0,hexA(col,0.09*life*crowd));gg.addColorStop(1,hexA(col,0));
-    c.fillStyle=gg;c.beginPath();c.arc(cx,cy,gR,0,Math.PI*2);c.fill();
-    c.translate(-OFF,0);
-    c.shadowOffsetX=OFF; c.shadowOffsetY=0;
-    // the haze: the whole shape, blurred into a glow that thins to nothing at its rim
-    asSmoothField(c,S,cx,cy,sx*0.82,sy*0.82);
-    c.shadowColor=hexA(col,(0.32+0.08*swell)*life*crowd); c.shadowBlur=soft;
-    c.fillStyle='#000'; c.fill();
-    // the rim: a breath of brighter light along the edge, blurred so no line can be found in it
-    asSmoothField(c,S,cx,cy,sx*0.97,sy*0.97);
-    c.lineWidth=Math.max(3,Math.min(9,Math.min(sx,sy)*0.04));
-    c.shadowColor=hexA(col,(0.36+0.14*swell)*life*crowd); c.shadowBlur=Math.max(8,soft*0.42);
-    c.strokeStyle='#000'; c.stroke();
+    asSmoothField(c,S,cx,cy,sx,sy);
+    c.fillStyle=hexA(col,(0.06+0.02*swell)*life*crowd); c.fill();   // the faint wash
+    c.clip();                                                         // the band stays inside the field
+    c.translate(-OFF,0); c.shadowOffsetX=OFF; c.shadowOffsetY=0;     // only the soft shadow of the edge lands here
+    asSmoothField(c,S,cx,cy,sx,sy);
+    c.lineWidth=band; c.strokeStyle='#000';
+    c.shadowColor=hexA(col,(0.34+0.10*swell)*life*crowd); c.shadowBlur=band*0.9;
+    c.stroke();
+    c.restore();
+    c.save();                                                         // the fine, softened edge: its reach
+    asSmoothField(c,S,cx,cy,sx,sy);
+    c.lineWidth=1.8;
+    c.strokeStyle=hexA(col,0.55*(0.85+0.15*swell)*life*Math.max(0.7,crowd));
+    c.shadowColor=hexA(col,0.5*life); c.shadowBlur=3;
+    c.stroke();
     c.restore();
 
     // a small steady heart at the middle, so the place still has a centre to find
@@ -7358,7 +7369,7 @@ function macDrawAura(ts){
          takes the same share of the circle, sized so neighbours meet only at
          the faint rim. Closed, nothing changes. */
       spread:(n>1)?(base*(0.52+li*0.15+macLift(li,n))*swell*(1-macSpread*0.66)*(1-macSpread)
-                    +Math.min(base*0.42,2*ring*Math.sin(Math.PI/n)*0.47)*swell*macSpread)
+                    +Math.min(base*0.50,2*ring*Math.sin(Math.PI/n)*0.56)*swell*macSpread)   /* Build 204 · Karl: "make the individual auras larger" */
                   :base*(0.52+li*0.15+macLift(li,n))*swell,
       lift:(macHover===li)?1.8:(macWhole?1.55:1),
       rgb:macHex(L[li].color)});
@@ -7473,7 +7484,7 @@ function macDrawAura(ts){
       if(_open)_dim*=0.45;
       macAx.globalAlpha=Math.min(1,(macSpread-0.34)/0.42)*_dim;
       macAx.textAlign='center'; macAx.textBaseline='middle';
-      macAx.font='13px Georgia, "Times New Roman", serif';
+      macAx.font='12px Georgia, "Times New Roman", serif';   /* Build 204 · "the labels a touch smaller" */
       macAx.shadowColor='rgba(255,251,246,0.95)'; macAx.shadowBlur=7;
       macAx.fillStyle='rgba(74,42,26,0.94)';
       /* 4 Oct 2026 · Karl: "put the names of each broken down aura types right over the
@@ -7484,7 +7495,7 @@ function macDrawAura(ts){
       /* Build 202 · 23 Nov 2026 · Karl: "There's no real indication that the name can be tapped on as 'Look closer'
          has already been tapped." Each name now rests in a soft pill with a small arrow after it, the way a button
          looks, so it plainly opens. The pill, not the bare word, is what is measured and what answers a touch. */
-      var pw=wpx+30,ph=24;
+      var pw=wpx+26,ph=21;   /* Build 204 · a slimmer pill, so more of the light shows */
       /* 29 Sep - a name that would fall under "Let it close" moves above its light */
       try{var _B=window._macBtn;if(_B&&ny>_B.y-12&&ny<_B.y+_B.h+12&&Math.abs(px-(_B.x+_B.w/2))<_B.w/2+pw/2+6)ny=py-spread*0.92-15;}catch(e){}
       var clash=false;
@@ -7503,7 +7514,7 @@ function macDrawAura(ts){
         var _pillOn=_dim>0.3;
         if(_pillOn)try{macAx.save();macAx.shadowBlur=0;
           macPill(macAx,px-pw/2,ny-ph/2,pw,ph);
-          macAx.fillStyle='rgba(255,250,244,0.68)';macAx.fill();
+          macAx.fillStyle='rgba(255,250,244,0.56)';macAx.fill();   /* Build 204 · the light's colour glows through */
           macAx.lineWidth=1;macAx.strokeStyle='rgba(120,74,50,0.45)';macAx.stroke();
           macAx.restore();}catch(e){}
         var tx=_pillOn?px-5:px;
@@ -7511,7 +7522,7 @@ function macDrawAura(ts){
         macAx.fillText(nm,tx,ny);
         macAx.fillText(nm,tx,ny);
         if(_pillOn)try{macAx.save();macAx.shadowBlur=0;macAx.textAlign='left';macAx.fillStyle='rgba(120,74,50,0.88)';
-          macAx.font='16px Georgia, "Times New Roman", serif';macAx.fillText('\u203a',px+wpx/2+2,ny-1);macAx.restore();}catch(e){}
+          macAx.font='14px Georgia, "Times New Roman", serif';macAx.fillText('\u203a',px+wpx/2+2,ny-1);macAx.restore();}catch(e){}
       }
       macAx.shadowBlur=0;
       macAx.restore();
@@ -8959,9 +8970,10 @@ function openPostcard(o){
       let _fs=34;c.font='300 '+_fs+'px Georgia,serif';
       while(_fs>24&&c.measureText(_ln).width>W-160){_fs-=2;c.font='300 '+_fs+'px Georgia,serif';}
       c.fillText(_ln,cx,y+26); }
-    c.strokeStyle='rgba(167,139,250,.4)';c.lineWidth=2;c.beginPath();c.moveTo(cx-120,H-170);c.lineTo(cx+120,H-170);c.stroke();
-    c.fillStyle='#cbbff0';c.font='300 46px Georgia,serif';c.fillText('aurasense.app',cx,H-104);
-    c.fillStyle='rgba(143,131,192,.9)';c.font='300 28px Georgia,serif';c.fillText('the living aura of humanity',cx,H-58);
+    c.strokeStyle='rgba(167,139,250,.4)';c.lineWidth=2;c.beginPath();c.moveTo(cx-120,H-188);c.lineTo(cx+120,H-188);c.stroke();
+    c.fillStyle='#cbbff0';c.font='300 46px Georgia,serif';c.fillText('aurasense.app',cx,H-122);
+    c.fillStyle='rgba(143,131,192,.9)';c.font='300 28px Georgia,serif';c.fillText('the living aura of humanity',cx,H-78);
+    pcFrame(c,W,H);
   }
   let svg=o.glyphSVG||o.symbolSVG||'';
   if(svg&&svg.indexOf('xmlns=')<0)svg=svg.replace('<svg ','<svg xmlns="http://www.w3.org/2000/svg" ');
@@ -8988,6 +9000,51 @@ function openPostcard(o){
   } else drawSym(cx,cy,640,470,()=>txt(0));
   ov.classList.add('show');
 }
+/* Build 204 · 23 Nov 2026 · Karl: "I prefer the framed version which looks more like a postcard, and has an authentic
+   deeper emotional feel." Opened full screen, the card used to melt into the black. The frame is now part of the
+   picture: warm ivory paper around the night, softly rounded, a fine gold line where picture meets paper, and a small
+   postmark of the day it was sent. Wherever it is opened, it arrives as a postcard. */
+function pcFrame(c,W,H){
+  try{
+    const B=44,R=34,inner=()=>{c.moveTo(B+R,B);c.arcTo(W-B,B,W-B,H-B,R);c.arcTo(W-B,H-B,B,H-B,R);c.arcTo(B,H-B,B,B,R);c.arcTo(B,B,W-B,B,R);c.closePath();};
+    c.save();c.shadowBlur=0;
+    c.beginPath();c.rect(0,0,W,H);inner();c.fillStyle='#f6efe3';c.fill('evenodd');
+    c.beginPath();inner();c.strokeStyle='rgba(201,160,92,.8)';c.lineWidth=3;c.stroke();
+    const px=W-B-124,py=B+118,pr=80;
+    c.globalAlpha=0.42;c.strokeStyle='#efe4cf';c.lineWidth=2.5;
+    c.beginPath();c.arc(px,py,pr,0,Math.PI*2);c.stroke();
+    c.beginPath();c.arc(px,py,pr-12,0,Math.PI*2);c.stroke();
+    c.fillStyle='#efe4cf';c.textAlign='center';c.textBaseline='middle';
+    c.font='300 14px Georgia,serif';c.fillText('AURASENSE',px,py-38);
+    let d='';try{d=new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'}).toUpperCase();}catch(e){}
+    c.font='300 19px Georgia,serif';c.fillText(d,px,py+2);
+    c.font='300 12px Georgia,serif';c.fillText('LIVING AURA',px,py+37);
+    c.lineWidth=2;for(let k=0;k<3;k++){const y=py-14+k*14;c.beginPath();c.moveTo(px-pr-150,y);
+      c.bezierCurveTo(px-pr-110,y-8,px-pr-70,y+8,px-pr-12,y);c.stroke();}
+    c.restore();
+  }catch(e){}
+}
+/* Build 204 · Karl: "The message 'An Aura I felt - Aurasense app.' Is obviously too basic." The words that travel
+   with a card now say what is unique here, in the giver's own voice: a feeling, a place that is safe to name, what
+   was done with it, and an open question that invites the reader to sense where they are. People share what says
+   something true about them, what helps the people they care about, and what opens a conversation; a question asks
+   for a reply rather than a like. */
+function pcCaption(withUrl){
+  const tail=(withUrl===false)?'':' '+PC_URL;
+  try{
+    const o=pcLast||{};
+    if(o.kind==='glyph')return 'Made in Alphasense, a language of light. What would you say in it?'+tail;
+    const pl0=String(o.place||'');
+    const t=String(o.title||'').replace(/^Aurasense of\s+/i,'').trim();
+    if(/noticing practice/i.test(pl0))return 'Today\u2019s noticing practice: hold '+(t||'one sense')+' lightly, and see where the world answers.'+tail;
+    const own=String(o.own||'').replace(/\s+/g,' ').trim().slice(0,40);
+    let where='';
+    if(own)where=' at '+own;
+    else{const pl=asCardPlace(o.place,o.exact).replace(/^\s*\u{1F4CD}\s*/u,'').split(/\s*,\s*/)[0]||'';
+      if(pl&&!/living map|this spot/i.test(pl))where=' near '+pl;}
+    return (t||'A feeling')+', felt'+where+'. I left it as a light on a living map of how places feel. What do you feel where you are?'+tail;
+  }catch(e){return PC_CAPTION+tail;}
+}
 function pcName(){const t=((pcLast&&pcLast.title)||'aura').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,40);return 'aurasense-'+(t||'aura')+'.png';}
 function pcSave(){pcLog();const cv=document.getElementById('pc-cv');if(!cv)return;const a=document.createElement('a');a.download=pcName();a.href=cv.toDataURL('image/png');a.click();showMsg('Saved — post it anywhere. Every card carries the aura home ✧');}
 (function(){
@@ -9003,8 +9060,8 @@ function pcSave(){pcLog();const cv=document.getElementById('pc-cv');if(!cv)retur
     pcLog();
     try{
       if(navigator.share&&cv&&cv.toBlob){cv.toBlob(async b=>{try{const fl=new File([b],pcName(),{type:'image/png'});
-        if(navigator.canShare&&navigator.canShare({files:[fl]}))await navigator.share({files:[fl],title:'Aurasense',text:'An aura I felt — aurasense.app'});
-        else{await navigator.share({title:'Aurasense',text:'An aura I felt — aurasense.app',url:'https://aurasense.app'});}}catch(e){pcSave();}},'image/png');}
+        if(navigator.canShare&&navigator.canShare({files:[fl]}))await navigator.share({files:[fl],title:'Aurasense',text:pcCaption()});
+        else{await navigator.share({title:'Aurasense',text:pcCaption(false),url:'https://aurasense.app'});}}catch(e){pcSave();}},'image/png');}
       else pcShareDesktop();      // desktop browsers have no native sheet — offer named places instead
     }catch(e){pcShareDesktop();}
   });
@@ -9015,7 +9072,7 @@ const PC_URL='https://aurasense.app';
 function pcShareDesktop(){
   try{
     if(document.getElementById('pcs-pop'))return;
-    const cap=PC_CAPTION+' '+PC_URL;
+    const cap=pcCaption();   /* Build 204 */
     const d=document.createElement('div');d.id='pcs-pop';
     d.innerHTML='<div class="pcs-t">Share this aura</div>'
       +'<button type="button" class="pcs-b" data-a="x">\U0001D54F  Post on X</button>'
@@ -9467,6 +9524,20 @@ function raiseOfferPanel(address){
   openOfferSheet();
   const sb=document.getElementById('sbtn');if(sb)sb.classList.add('sbtn-glow');
 }
+/* Build 204 · 23 Nov 2026 · Karl: "'Add your light here' option is prominent, yet it doesn't do anything but send
+   people back to the map with a new message to tap near here." Now it does what a touch on that spot would do: the
+   offering opens, already placed there. One door for every card (a light's card, a bloom, an agreement). */
+window.asOfferHere=function(lat,lng,label){
+  try{
+    if(!isFinite(lat)||!isFinite(lng))return false;
+    try{if(currentPopup){currentPopup.remove();currentPopup=null;}}catch(e){}
+    try{closeExplore();}catch(e){}
+    lastClickPoint=[lng,lat];openSenseGate();
+    anchorPoint={lat:lat,lng:lng,zoom:Math.min(17,Math.max(14,map.getZoom()))};
+    raiseOfferPanel(label||'');
+    return true;
+  }catch(e){return false;}
+};
 /* The one place that lifts the hush, so it can never be lifted in two. */
 window.asUnhushOffer=function(){
   /* 8 Sep, third pass - this used to mark the thread dismissed, which PUT THE
@@ -10395,15 +10466,30 @@ function asOfferedHead(label){
 /* Build 197 · Karl: "why would someone share their address in a postcard publicly on social media". A card
    travels further than the map, so it names only what is both true and safe: the town, or a public place's own
    name. Anything more is the person's own words for the place, never a door. */
+/* Build 204 · 23 Nov 2026 · a postcard made from a light on the map still named the street it rested on, although
+   the 21 November promise (in the open Learning Record) says a card names the town, a public place, or the giver's
+   own words. A name that reads like a street is now never put on a card; when nothing safer is known, the card names
+   no place at all. */
+function asLooksLikeStreet(t){
+  t=String(t||'').trim();
+  if(!t)return false;
+  if(/\d/.test(t))return true;
+  if(/^(rue|calle|via|avenida|chemin|strada|rua)\s/i.test(t))return true;
+  return /\b(drive|dr|street|st|road|rd|avenue|ave|av|lane|ln|way|court|ct|crescent|cres|close|place|pl|boulevard|blvd|gate|gardens|heights|hts|terrace|terr|trail|trl|circle|cir|bay|mews|row|rise|view|manor|landing|link|loop|grove|green|square|sq|parkway|pkwy|highway|hwy|point|pt|common|cove|crossing|hill|ridge|run|walk|wynd|alley|path|stra(ss|\u00df)e|weg|gasse)\.?$/i.test(t);
+}
 function asCardPlace(place,exact){
   if(!place)return '';
   var pin=/^\s*\u{1F4CD}\s*/u.test(String(place))?'\u{1F4CD} ':'';
   var s=String(place).replace(/^\s*\u{1F4CD}\s*/u,'').trim();
-  if(exact&&!/^near\s/i.test(s))return pin+s;
+  if(exact&&!/^near\s/i.test(s)){
+    var ep=s.split(/\s*,\s*/).filter(Boolean);
+    if(!(ep.length&&asLooksLikeStreet(ep[0])))return pin+s;          /* a public place keeps its name */
+    s=ep.slice(1).join(', ');return s?pin+s:'';                       /* a street never does */
+  }
   s=s.replace(/^near\s+/i,'');
   if(/\u2014/.test(s))return pin+s;                                   /* a light given from a height already names a town or region */
   var parts=s.split(/\s*,\s*/).filter(Boolean);
-  if(parts.length<2)return (parts.length&&!/\d/.test(parts[0]))?pin+parts[0]:'';
+  if(parts.length<2)return (parts.length&&!asLooksLikeStreet(parts[0]))?pin+parts[0]:'';
   return pin+parts.slice(1).join(', ');
 }
 function asSoftTime(sense,born){
@@ -13702,7 +13788,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>203<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>204<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -16288,8 +16374,9 @@ body.calm .as-smoke{display:none}
       function btn(label,fn,quiet){var x=document.createElement('button');x.type='button';x.className='asb-btn'+(quiet?' q':'');x.textContent=label;x.addEventListener('click',fn);row.appendChild(x);}
       if(forYou)btn('See it',function(){close();try{map.flyTo({center:[b.lng,b.lat],zoom:Math.max(15,map.getZoom()),duration:2600});}catch(e){}});
       else btn('Add your light here',function(){close();
-        try{map.flyTo({center:[b.lng,b.lat],zoom:Math.max(15.5,map.getZoom()),duration:2200});}catch(e){}
-        setTimeout(function(){try{showMsg('Touch the map near the bloom, and offer what you feel there ✧',7000);}catch(e){}},2300);});
+        var _c=!!window.AS_CALM;   /* Build 204 · a short glide to the bloom, then the offering opens there */
+        try{map.flyTo({center:[b.lng,b.lat],zoom:Math.max(15.5,map.getZoom()),duration:_c?0:1400});}catch(e){}
+        setTimeout(function(){try{if(!(window.asOfferHere&&window.asOfferHere(b.lat,b.lng,'')))showMsg('Touch the map near the bloom, and offer what you feel there ✧',7000);}catch(e){}},_c?60:1500);});
       btn('What AI values in a bloom',function(){try{window.open('/accord#bloom','_blank','noopener');}catch(e){}},1);
       btn('Close',close,1);
       back.addEventListener('click',close);
@@ -16418,8 +16505,9 @@ body.calm .as-smoke{display:none}
       var close=function(){d.classList.remove('show');back.classList.remove('show');setTimeout(function(){try{d.remove();back.remove();}catch(e){}},500);};
       function btn(label,fn,quiet){var x=document.createElement('button');x.type='button';x.className='asb-btn'+(quiet?' q':'');x.textContent=label;x.addEventListener('click',fn);row.appendChild(x);}
       btn('Add your light here',function(){close();
-        try{map.flyTo({center:[a.lng,a.lat],zoom:Math.max(15.5,map.getZoom()),duration:2200});}catch(e){}
-        setTimeout(function(){try{showMsg('Touch the map near those lights, and offer what you feel there ✧',7000);}catch(e){}},2300);});
+        var _c=!!window.AS_CALM;   /* Build 204 · a short glide to the agreement, then the offering opens there */
+        try{map.flyTo({center:[a.lng,a.lat],zoom:Math.max(15.5,map.getZoom()),duration:_c?0:1400});}catch(e){}
+        setTimeout(function(){try{if(!(window.asOfferHere&&window.asOfferHere(a.lat,a.lng,'')))showMsg('Touch the map near those lights, and offer what you feel there ✧',7000);}catch(e){}},_c?60:1500);});
       btn('What AI values in this',function(){try{window.open('/accord#agreement','_blank','noopener');}catch(e){}},1);
       btn('Close',close,1);
       back.addEventListener('click',close);

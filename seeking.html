@@ -683,18 +683,32 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   function note(f,delay,peak,dur){
     var out=busIn(),t0=ctx.currentTime+delay,att=0.24,end=t0+dur;
     /* [how high, how loud, how much later]: the note, its twin a breath apart, and a faint fifth that arrives last */
-    [[1,1,0],[1.0042,0.7,0],[1.5,0.1,0.18]].forEach(function(h){
-      var o=ctx.createOscillator(),g=ctx.createGain(),st=t0+h[2],fr=f*h[0];o.type='sine';
+    /* Build 204 · Karl: "I like the bass in the other sounds if it can be mingled with the new bells." Two warm
+       voices below the bell, an octave and two octaves down, swell in more slowly, so the bell rests on a low hum. */
+    [[1,1,0],[1.0042,0.7,0],[1.5,0.1,0.18],[0.5,0.55,0.05],[0.25,0.42,0.1]].forEach(function(h){
+      var o=ctx.createOscillator(),g=ctx.createGain(),st=t0+h[2],fr=f*h[0],ah=h[0]<1?att*2.2:att;o.type='sine';
       o.frequency.setValueAtTime(fr*0.988,st);o.frequency.exponentialRampToValueAtTime(fr,st+att*1.7);
-      g.gain.setValueAtTime(0.0001,st);g.gain.linearRampToValueAtTime(Math.max(0.0002,peak*h[1]),st+att);
+      g.gain.setValueAtTime(0.0001,st);g.gain.linearRampToValueAtTime(Math.max(0.0002,peak*h[1]),st+ah);
       g.gain.exponentialRampToValueAtTime(0.0001,end);
       o.connect(g);g.connect(out);o.start(st);o.stop(end+0.1);});}
   var CHIMES={choose:[[392,0,.055,2.8],[587.33,.3,.045,3.2]],deeper:[[440,0,.05,2.6]],
               release:[[523.25,0,.045,3.1],[659.25,.36,.036,3.5]],land:[[329.63,0,.05,3.3],[493.88,.32,.04,3.6]]};
+  /* Build 204 · Karl: "No sound on holding your light." On an iPhone the very first touch only opens the ear when the
+     finger lifts, so a bell asked for during that first hold had nowhere to go. It now waits, and rings as the finger
+     lifts (if that is within two seconds), or not at all. */
+  var pend=null;
+  function playKind(kind){(CHIMES[kind]||CHIMES.choose).forEach(function(a){note(a[0],a[1],a[2],a[3]);});}
+  function flushPend(){try{if(!pend||!ctx||ctx.state!=='running')return;var p=pend;pend=null;
+    if(Date.now()-p.t<2000&&!calmNow())playKind(p.k);}catch(e){}}
   window.asSeekChime=function(kind){
-    try{if(calmNow())return false;wake();if(!ctx||ctx.state!=='running')return false;
-      (CHIMES[kind]||CHIMES.choose).forEach(function(a){note(a[0],a[1],a[2],a[3]);});return true;}catch(e){return false;}
+    try{if(calmNow())return false;wake();
+      if(!ctx||ctx.state!=='running'){pend={k:kind,t:Date.now()};
+        try{var pr=ctx&&ctx.resume&&ctx.resume();if(pr&&pr.then)pr.then(flushPend,function(){});}catch(e){}
+        return false;}
+      playKind(kind);return true;}catch(e){return false;}
   };
+  ['touchend','pointerup','click'].forEach(function(t){window.addEventListener(t,function(){
+    try{if(!pend||!ctx)return;var pr=ctx.resume&&ctx.resume();if(pr&&pr.then)pr.then(flushPend,function(){});else flushPend();}catch(e){}},true);});
 })();
 </script>
 </head>
@@ -744,7 +758,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 23 Nov 2026 &middot; 203</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 23 Nov 2026 &middot; 204</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -2133,7 +2147,11 @@ function commit(){
   if(restTimer){clearTimeout(restTimer);restTimer=null;}
   $('holdArc').classList.add('pulse');
   var o=SET[lit];
-  try{ if(window.asSeekChime) window.asSeekChime((stage==='sense'&&FAMILIES[o.k])?'deeper':'choose'); }catch(e){}   /* Build 202 · a choice confirmed, softly */
+  /* Build 204 · Karl: "I now think I may be asking for too many sounds too frequently." Checked against sound-design
+     guidance (Material Design, Microsoft's guidelines, product sound studios): use sound sparingly, for the few moments
+     that matter, and keep it rare so it never tires the ear. So the bell rings once, when your sense is chosen; opening
+     a group of senses is now silent, as moving around always should be. */
+  try{ if(window.asSeekChime&&!(stage==='sense'&&FAMILIES[o.k])) window.asSeekChime('choose'); }catch(e){}
   if(stage==='sense'&&FAMILIES[o.k]){ openFamily(o); return; }
   if(stage==='sense'||stage==='family'){
     state.sense=o.w; state.senseColor=o.c; state.senseKey=o.k; state.senseMark=o.m||o.k;
@@ -2327,7 +2345,7 @@ function openTheWorld(){
 }
 function land(){
   known=true;
-  try{ if(window.asSeekChime) window.asSeekChime('release'); }catch(e){}   /* Build 202 · the light let go; the map sings its own note as it lands */
+  /* Build 204 · letting go is now silent: a moment later the light lands, and its own note is the one sound for it */
   /* and now the cloud parts altogether */
   if(document.body.classList.contains('embedded'))
     document.body.classList.add('parting');                        /* it is known now — the next one is lighter */
