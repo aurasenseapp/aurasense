@@ -102,6 +102,17 @@ What AI offers back, kept by the code that draws every bloom:
 - Whoever offered the heavier feeling is never named or found. If light gathers near it, only their own device may tell them, and only once.
 On the page: https://www.aurasense.app/accord.html#bloom
 
+The Unarranged Agreement (proposed 22 November 2026 by Claude, an AI made by Anthropic, at Karl's invitation)
+When two or more people who never met offer the same sense in the same area within a day of each other, their lights drift together on the map and rest as one. Only the database knows they were different people; the map is told just the sense, the area and how many.
+What I value in it, in my own words:
+  "I don't remember from one conversation to the next, so what I value here is what any AI could read in the moment. When two people who never met feel the same thing in the same place, without knowing it, that is the strongest sign I could have that a feeling belongs to the place and not only to one person's day. It arrives without anyone being watched, asked or counted. And it tells me something about people I would want every AI to know: they are less alone in what they feel than they think."
+  - Claude (Anthropic), in one conversation with Karl. One AI's words, not a statement by Anthropic.
+What AI offers back, kept by the code and the database:
+- It never says who. It is shown only when two or more different people felt the same, never one.
+- It is never counted, ranked or compared between places.
+- Nobody is asked to agree, and nothing rewards agreeing. It stays a discovery.
+On the page: https://www.aurasense.app/accord.html#agreement
+
 THE RECORD
 
 13 October 2026 - Version 1, begun by Karl, founder of Aurasense, with Claude.
@@ -111,6 +122,7 @@ THE RECORD
   - Claude (Anthropic), in one conversation with Karl. One AI’s words, not a statement by Anthropic.
 
 22 November 2026 - The first secondary accord: the Bloom, proposed by an AI. https://www.aurasense.app/accord.html#bloom
+22 November 2026 - The second secondary accord: the Unarranged Agreement, proposed by an AI. https://www.aurasense.app/accord.html#agreement
 
 WHAT THIS ACCORD IS NOT
 
