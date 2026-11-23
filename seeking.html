@@ -664,12 +664,33 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
      to silent stays silent, as its owner asked. */
   function calmNow(){try{if(window.AS_CALM)return true;if(document.body&&document.body.classList.contains('calm'))return true;
     var P=window.parent;if(P&&P!==window){if(P.AS_CALM)return true;if(P.document&&P.document.body&&P.document.body.classList.contains('calm'))return true;}}catch(e){}return false;}
-  function note(f,delay,peak,dur){var t0=ctx.currentTime+delay;
-    [[1,1,1],[2,0.2,0.55]].forEach(function(h){var o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f*h[0];
-      var end=t0+dur*h[2];g.gain.setValueAtTime(0.0001,t0);g.gain.linearRampToValueAtTime(Math.max(0.0002,peak*h[1]),t0+0.025);
-      g.gain.exponentialRampToValueAtTime(0.0001,end);o.connect(g);g.connect(ctx.destination);o.start(t0);o.stop(end+0.05);});}
-  var CHIMES={choose:[[523.25,0,.085,1.7],[783.99,.13,.065,2.1]],deeper:[[587.33,0,.07,1.6]],
-              release:[[659.25,0,.06,1.8],[987.77,.16,.045,2.2]],land:[[392,0,.08,2.4],[587.33,.1,.06,2.6]]};
+  /* Build 203 · 23 Nov 2026 · Karl: "New sounds are touch sharp edged, if they can be more surreal in reflection of
+     the newness of the experience of what Aurasense is." Each bell now swells in instead of striking, arrives with a
+     slight glide as if from far away, shimmers between two voices tuned a breath apart, passes through a soft filter
+     that takes the edge away, and leaves a dreamlike echo that darkens and fades on its own. */
+  var bus=null;
+  function busIn(){
+    if(bus)return bus;
+    var inp=ctx.createGain();inp.gain.value=1;
+    var soft=ctx.createBiquadFilter();soft.type='lowpass';soft.frequency.value=1700;soft.Q.value=0.35;
+    var dl=ctx.createDelay(2);dl.delayTime.value=0.38;
+    var dark=ctx.createBiquadFilter();dark.type='lowpass';dark.frequency.value=1100;dark.Q.value=0.3;
+    var fb=ctx.createGain();fb.gain.value=0.42;
+    var wet=ctx.createGain();wet.gain.value=0.36;
+    inp.connect(soft);soft.connect(ctx.destination);
+    soft.connect(dl);dl.connect(dark);dark.connect(fb);fb.connect(dl);dark.connect(wet);wet.connect(ctx.destination);
+    bus=inp;return bus;}
+  function note(f,delay,peak,dur){
+    var out=busIn(),t0=ctx.currentTime+delay,att=0.24,end=t0+dur;
+    /* [how high, how loud, how much later]: the note, its twin a breath apart, and a faint fifth that arrives last */
+    [[1,1,0],[1.0042,0.7,0],[1.5,0.1,0.18]].forEach(function(h){
+      var o=ctx.createOscillator(),g=ctx.createGain(),st=t0+h[2],fr=f*h[0];o.type='sine';
+      o.frequency.setValueAtTime(fr*0.988,st);o.frequency.exponentialRampToValueAtTime(fr,st+att*1.7);
+      g.gain.setValueAtTime(0.0001,st);g.gain.linearRampToValueAtTime(Math.max(0.0002,peak*h[1]),st+att);
+      g.gain.exponentialRampToValueAtTime(0.0001,end);
+      o.connect(g);g.connect(out);o.start(st);o.stop(end+0.1);});}
+  var CHIMES={choose:[[392,0,.055,2.8],[587.33,.3,.045,3.2]],deeper:[[440,0,.05,2.6]],
+              release:[[523.25,0,.045,3.1],[659.25,.36,.036,3.5]],land:[[329.63,0,.05,3.3],[493.88,.32,.04,3.6]]};
   window.asSeekChime=function(kind){
     try{if(calmNow())return false;wake();if(!ctx||ctx.state!=='running')return false;
       (CHIMES[kind]||CHIMES.choose).forEach(function(a){note(a[0],a[1],a[2],a[3]);});return true;}catch(e){return false;}
@@ -723,7 +744,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 23 Nov 2026 &middot; 202</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 23 Nov 2026 &middot; 203</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>

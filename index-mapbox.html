@@ -3224,7 +3224,7 @@ let atOn=false, atWatch=null, atPath=[], atDist=0, atStart=0, atMet=0, atSenses=
    truly arrives afterwards is given the bloom. */
 const _mapOpened=Date.now();
 (function draw(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);T+=0.016;
+  ctx.clearRect(0,0,canvas.width,canvas.height);T+=0.016;window._asFieldPrev=window._asFieldDrawn||0;window._asFieldDrawn=0;   /* Build 203 · how many fields share the screen */
   atDrawTrail(ctx);
   auraPoints.forEach((p,i)=>{
     const pt=map.project([p.lng,p.lat]);
@@ -4618,12 +4618,33 @@ function openPopup(lng,lat,html){
   if(currentPopup){currentPopup.remove();currentPopup=null;}
   const _ma=document.getElementById('my-aura');if(_ma)_ma.classList.remove('ma-mini');
   const isCell=window.innerWidth<=600;
-  const opts={className:'aura-popup',closeButton:true,maxWidth:isCell?'80vw':'250px'};
+  const opts={className:'aura-popup',closeButton:true,maxWidth:isCell?'86vw':'300px',offset:16};   /* Build 203 · room for reading-size words, and space to see the light beneath */
   try{const pt=map.project([lng,lat]),W=map.getContainer().clientWidth,H=map.getContainer().clientHeight;
     if(isCell){opts.anchor=(pt.y<H*0.45?'top':'bottom')+'-'+(pt.x<W*0.5?'left':'right');}
     else{const top=pt.y<170;let h='';if(pt.x<250)h='left';else if(pt.x>W-250)h='right';opts.anchor=top?(h?'top-'+h:'top'):(h||'bottom');}
   }catch(e){}
   currentPopup=new mapboxgl.Popup(opts).setLngLat([lng,lat]).setHTML(html).addTo(map);
+  /* Build 203 · on a phone the card rests at the foot of the screen, where a thumb reaches it and nothing can cut it
+     off; the light that was touched glides gently up so it stays in sight above the card. A long card fades at its
+     foot while there is more to read. */
+  if(isCell){try{
+    /* nothing speaks over something already speaking: your own light and its hint step back while a card is open */
+    document.body.classList.add('as-card-open');
+    currentPopup.on('close',function(){try{document.body.classList.remove('as-card-open');}catch(e){}});
+    const _el=currentPopup.getElement(),_ct=_el&&_el.querySelector('.mapboxgl-popup-content');
+    if(_ct){const _mm=function(){_ct.classList.toggle('pop-more',_ct.scrollHeight>_ct.clientHeight+2&&(_ct.scrollTop+_ct.clientHeight<_ct.scrollHeight-2));};
+      _mm();_ct.addEventListener('scroll',function(){try{_mm();}catch(e){}},{passive:true});}
+    const _r=_el.getBoundingClientRect(),_cr=map.getContainer().getBoundingClientRect(),_p=map.project([lng,lat]);
+    const _y=_cr.top+_p.y,_want=_r.top-64;
+    if(_r.top>40&&_y>_want){const _calm=!!window.AS_CALM;map.panBy([0,Math.round(_y-_want)],{duration:_calm?0:650});}
+  }catch(e){}}
+  else{try{
+    /* on a larger screen the card stays beside its light, and the map glides just enough to keep all of it in view */
+    const _r=currentPopup.getElement().getBoundingClientRect(),TOP=72,M=14;let _dx=0,_dy=0;
+    if(_r.top<TOP)_dy=_r.top-TOP;else if(_r.bottom>innerHeight-M)_dy=Math.min(_r.bottom-(innerHeight-M),_r.top-TOP);
+    if(_r.left<M)_dx=_r.left-M;else if(_r.right>innerWidth-M)_dx=Math.min(_r.right-(innerWidth-M),_r.left-M);
+    if(_dx||_dy)map.panBy([Math.round(_dx),Math.round(_dy)],{duration:window.AS_CALM?0:650});
+  }catch(e){}}
   return currentPopup;
 }
 // Reverse-geocode to a house-number + street line (falls back to the nearest named place).
@@ -4665,7 +4686,8 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
   // A light opened by touch is not a light just given — the title tells the truth of its age.
   const _bn=(atSpot.find(p=>p.sense===senseId&&(p.text||'')===(text||''))||{}).born||0;
   const _fresh=!_bn||(Date.now()-_bn)<3600000;
-  const sharedTitle=hereCount>1?('✨ '+hereCount+' auras rest here'):(_fresh?'✨ Aurasense just offered':'✨ An aura rests here');
+  /* Build 203 · "your light", never the brand, inside a felt moment (Karl, September) */
+  const sharedTitle=hereCount>1?(hereCount+' lights rest here'):(_fresh?'Just offered':'A light rests here');
   const shortLoc=(loc||'this place').split(',')[0];
   let listInner;
   if(hereCount>1){
@@ -4673,19 +4695,24 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
       const ps=SENSES.find(x=>x.id===p.sense)||s;
       const raw=p.priv?'a memory, kept private':((p.text||'').substring(0,46)+((p.text||'').length>46?'…':''));
       const et=raw.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      return '<div class="pop-sense-item" style="border-left-color:'+ps.color+'">'+(SENSE_SYMBOLS[p.sense]||'')+' <span style="color:'+ps.color+'">'+ps.label+'</span> — "'+et+'" <span class="pop-time">'+fmtAuraTime(p.born)+'</span></div>';
+      return '<div class="pop-sense-item" style="border-left-color:'+ps.color+'">'+(SENSE_SYMBOLS[p.sense]||'')+' <b class="pop-sl">'+ps.label+'</b>'+(et?' — "'+et+'"':'')+' <span class="pop-time">'+fmtAuraTime(p.born)+'</span></div>';   /* Build 203 · names in dark ink, readable on ivory */
     }).join('');
   } else {
-    listInner='<div class="pop-sense-item" style="border-left-color:'+s.color+'">"'+safeText+'"</div>';
+    listInner='<div class="pop-sense-item" style="border-left-color:'+s.color+'">'+(safeText?'"'+safeText+'"':'<span class="pop-quiet">No words, only the feeling.</span>')+'</div>';   /* Build 203 · never empty quotation marks */
   }
+  /* Build 203 · the place is told as near, and every word from outside is made safe before it is shown */
+  const _esc=function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');};
+  const _nearLoc=/^(near |this area)/i.test(loc||'')?loc:('near '+(loc||'this spot'));
   const html=`<div class="mapboxgl-popup-content-inner">
     <div class="pop-title">${sharedTitle}</div>
-    <div class="pop-street">📍 ${loc}</div>
-    ${_mp?mirrorPopLine(_mp):`<div class="pop-aura" style="color:${s.color}">${sym} ${s.label}</div>`}
+    <div class="pop-street">${_esc(_nearLoc)}</div>
+    ${_mp?mirrorPopLine(_mp):`<div class="pop-aura"><span class="pop-dot" style="background:${s.color};box-shadow:0 0 10px ${s.color}"></span>${sym} ${s.label}</div>`}
     <div class="pop-sense-list">${listInner}</div>
-    <div class="pop-action pop-link pop-seeaura" style="margin-top:7px;color:#c4b5fd">✨ See the Aura of ${shortLoc}</div>
-    <div class="pop-action pop-link pop-again" style="margin-top:3px;color:#c4b5fd">↻ Offer another aura here</div>
-    <div class="pop-action pop-link pop-social" style="margin-top:3px">⤴ Share this aura on social media</div>
+    <div class="pop-acts">
+      <button type="button" class="pop-action pop-link pop-seeaura">See the aura of ${_esc(shortLoc)}</button>
+      <button type="button" class="pop-action pop-link pop-again">Add your light here</button>
+      <button type="button" class="pop-action pop-link pop-social">Send it as a postcard</button>
+    </div>
   </div>`;
   const p=openPopup(lng,lat,html);
   const elp=p.getElement();
@@ -4696,7 +4723,7 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
     if(again)again.addEventListener('click',()=>{
       lastClickPoint=[lng,lat];openSenseGate();
       const inp=document.getElementById('inp');if(inp)inp.focus();
-      showMsg('Offer another aura here — type below and offer it');
+      showMsg('Add your light here: choose what you feel, and offer it ✧');
       if(currentPopup){currentPopup.remove();currentPopup=null;}
     });
     const social=elp.querySelector('.pop-social');
@@ -4813,6 +4840,17 @@ function fieldShape(seed){
   }
   return pts;
 }
+/* Build 203 · a field's outline as one smooth closed curve, with no corners: the curve passes through the midpoints
+   between the shape's points, each point pulling it gently */
+function asSmoothField(c,S,cx,cy,sx,sy){
+  const n=S.length;if(!n)return;
+  const P=new Array(n);
+  for(let k=0;k<n;k++){const q=S[k];P[k]=[cx+Math.cos(q.a)*q.w*sx,cy+Math.sin(q.a)*q.w*sy];}
+  c.beginPath();
+  c.moveTo((P[n-1][0]+P[0][0])/2,(P[n-1][1]+P[0][1])/2);
+  for(let k=0;k<n;k++){const a=P[k],b=P[(k+1)%n];c.quadraticCurveTo(a[0],a[1],(a[0]+b[0])/2,(a[1]+b[1])/2);}
+  c.closePath();
+}
 function drawPlaceField(c,p,col,life,i){
   try{
     const b=p.field.bbox;
@@ -4828,31 +4866,35 @@ function drawPlaceField(c,p,col,life,i){
     if(!p._shape)p._shape=fieldShape((p.born%1000)/159);
     const S=p._shape;
 
+    /* Build 203 · 23 Nov 2026 · Karl: "their edges look a bit hard, ropey and can seem obstructive to seeing the
+       auras below especially when they increase in number. Can the edges be gentler? Where they merge in kind or
+       not... the energies blending." There is no line any more. The field is drawn only as its own blurred light
+       (the shape itself is drawn far off-canvas, and only its soft shadow is placed here), so it has no edge at all,
+       only a fading. A breath of brighter light rests along the rim, blurred the same way. Where fields overlap their
+       light adds as light does ('screen'), so meeting auras blend, in kind or not; and the more fields share the
+       screen, the gentler each one becomes, so the map below always reads through. */
+    window._asFieldDrawn=(window._asFieldDrawn||0)+1;
+    const crowd=1/Math.sqrt(Math.max(1,(window._asFieldPrev||1)/4));
+    const sx=rx*breath, sy=ry*breath, OFF=12000;
+    const soft=Math.max(10,Math.min(46,Math.min(sx,sy)*0.32));
     c.save();
-    c.translate(cx,cy);
-    c.scale(rx*breath,ry*breath);
-    c.beginPath();
-    for(let k=0;k<=S.length;k++){
-      const q=S[k%S.length];
-      const px=Math.cos(q.a)*q.w, py=Math.sin(q.a)*q.w;
-      if(k===0)c.moveTo(px,py); else c.lineTo(px,py);
-    }
-    c.closePath();
-    c.restore();
-
-    // the haze within — soft, never solid, so the map still reads through it
-    const g=c.createRadialGradient(cx,cy,0,cx,cy,Math.max(rx,ry)*breath);
-    g.addColorStop(0,   hexA(col,(0.13+0.05*swell)*life));
-    g.addColorStop(0.55,hexA(col,(0.08+0.03*swell)*life));
-    g.addColorStop(1,   hexA(col,0));
-    c.fillStyle=g; c.fill();
-
-    // the luminous edge — the outline Karl asked for, breathing rather than fixed
-    c.save();
-    c.lineWidth=1.5;
-    c.strokeStyle=hexA(col,(0.42+0.30*swell)*life);
-    c.shadowColor=col; c.shadowBlur=16+10*swell;
-    c.stroke();
+    c.globalCompositeOperation='screen';
+    /* a round, edgeless glow at the heart of the field, so it is always seen, even on a screen that will not draw
+       soft shadows */
+    const gR=Math.max(sx,sy)*0.85,gg=c.createRadialGradient(cx,cy,0,cx,cy,gR);
+    gg.addColorStop(0,hexA(col,0.09*life*crowd));gg.addColorStop(1,hexA(col,0));
+    c.fillStyle=gg;c.beginPath();c.arc(cx,cy,gR,0,Math.PI*2);c.fill();
+    c.translate(-OFF,0);
+    c.shadowOffsetX=OFF; c.shadowOffsetY=0;
+    // the haze: the whole shape, blurred into a glow that thins to nothing at its rim
+    asSmoothField(c,S,cx,cy,sx*0.82,sy*0.82);
+    c.shadowColor=hexA(col,(0.32+0.08*swell)*life*crowd); c.shadowBlur=soft;
+    c.fillStyle='#000'; c.fill();
+    // the rim: a breath of brighter light along the edge, blurred so no line can be found in it
+    asSmoothField(c,S,cx,cy,sx*0.97,sy*0.97);
+    c.lineWidth=Math.max(3,Math.min(9,Math.min(sx,sy)*0.04));
+    c.shadowColor=hexA(col,(0.36+0.14*swell)*life*crowd); c.shadowBlur=Math.max(8,soft*0.42);
+    c.strokeStyle='#000'; c.stroke();
     c.restore();
 
     // a small steady heart at the middle, so the place still has a centre to find
@@ -7725,8 +7767,9 @@ function macFitChrome(){
     }
     if(th){
       th.style.bottom=(edge+14)+'px';
-      var tr=th.getBoundingClientRect();
-      edge=Math.max(edge,Math.round(hr.bottom-tr.top));
+      /* Build 203 · while a list is open the way through rests unseen, so it no longer takes the list's room:
+         on a small phone the whole list can now be read */
+      if(!(it&&it.classList.contains('on'))){var tr=th.getBoundingClientRect();edge=Math.max(edge,Math.round(hr.bottom-tr.top));}
     }
     if(it){
       if(it.classList.contains('on')){
@@ -7734,6 +7777,11 @@ function macFitChrome(){
         var room=Math.round(hr.height-edge-14-Math.max(110,hr.height*0.2));   /* 16 Oct 2026 · Karl's photo: the last row was cut in half */
         it.style.maxHeight=Math.max(140,room)+'px';
         it.style.overflowY='auto'; it.style.webkitOverflowScrolling='touch';
+        /* Build 203 · Karl's photo: on a small phone the last row of a list was sliced off by a hard edge. When a list
+           has more below, its foot now fades, the way a page hints there is more, and the fade lifts once the end is
+           reached */
+        try{var _mm=function(){it.classList.toggle('mac-more',it.scrollHeight>it.clientHeight+2&&(it.scrollTop+it.clientHeight<it.scrollHeight-2));};_mm();
+          if(!it._macMoreHook){it._macMoreHook=1;it.addEventListener('scroll',function(){try{_mm();}catch(e){}},{passive:true});}}catch(e){}
         var ir=it.getBoundingClientRect();
         edge=Math.max(edge,Math.round(hr.bottom-ir.top));
       }else{ it.style.bottom=''; it.style.maxHeight=''; }
@@ -10297,6 +10345,12 @@ function openSeed(){
 // ---- The Gate (Supabase) — phase 1: every true offering persisted, and returned to the living map ----
 // One true offering is worth more than a thousand simulated ones — nothing here fakes success, nothing is lost silently.
 const gate={on:false,db:null,sid:null};
+/* Build 203 · 23 Nov 2026 · THE OPEN DOOR FOR THE SEPARATE PARTS. Karl: "The blooms appear to be missing again."
+   The bloom and the unarranged agreement live in scripts of their own, and a script of its own cannot see inside
+   this one. Since they were built they could see no real light and reach no database: only their previews ever
+   appeared, and the previews hid the fault. This opens a small, read-only door for them: the lights on the map,
+   one's own lights, and the gate to the shared record. */
+try{window.AS_MAP_VIEW={lights:function(){return auraPoints;},mine:function(){return myOfferings;},gate:function(){return gate;}};}catch(e){}
 function gateSid(){try{let s=localStorage.getItem('aurasense_sid');if(!s){s=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():('s-'+Date.now()+'-'+Math.random().toString(36).slice(2,10));localStorage.setItem('aurasense_sid',s);}return s;}catch(e){return 's-'+Date.now();}}
 /* ═══ SOFTENING — where and when a tender feeling shows · 23 September 2026 ═══
    Karl's guiding principle: public display of distress stays softened in place
@@ -13648,7 +13702,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>202<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>203<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -16020,6 +16074,60 @@ body.calm .as-smoke{display:none}
 .asb-btn.q{border-color:rgba(196,181,253,.38);background:transparent;color:#d4c9f5}
 #asb-demo{margin-top:10px;font-size:12.5px;color:#a89dd0}
 @media (prefers-reduced-motion: reduce){#as-bloom,#as-bloom-back{transition:none}}
+/* Build 203 · 23 Nov 2026 · Karl: "Let it close is tappable when the menu is brought up, so it does things without
+   the Aurasenser being able to see what they did." While a list or a card is open in My Aura, the way through rests:
+   unseen and untouchable, fading out and back rather than snapping. */
+#myaura-page #ma-cloud-items.mac-more{-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 38px),rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 38px),rgba(0,0,0,0) 100%)}
+#myaura-page.mac-list-open #ma-cloud-through,
+#myaura-page:has(#ma-sense-card.on) #ma-cloud-through{opacity:0!important;pointer-events:none!important;visibility:hidden;
+  transition:opacity .45s ease,visibility 0s linear .45s!important}
+/* Build 203 · THE LIGHT'S OWN CARD. Karl: "The older black box appears when an offered Aurasense is tapped from the
+   map. Can we make its appearance compliment the design of the rest of Aurasense." The same warm light as the rest
+   of Aurasense: ivory, a soft glow for an edge instead of a line, words at a reading size (15 px and up), dark enough
+   to read easily, and ways onward as soft buttons a thumb can find (at least 44 px tall). */
+.aura-popup .mapboxgl-popup-content{background:rgba(255,250,242,.97)!important;border:0!important;border-radius:22px!important;
+  box-shadow:0 0 0 1px rgba(160,110,70,.16),0 10px 34px rgba(40,20,10,.30),0 0 54px rgba(255,236,210,.42)!important;
+  color:#4a2a1a!important;font-family:Georgia,"Iowan Old Style","Times New Roman",serif;padding:0!important}
+.aura-popup .mapboxgl-popup-tip{display:none!important}
+.aura-popup .mapboxgl-popup-content-inner{margin:18px 18px 14px!important;font-size:15px!important;line-height:1.5!important}
+.aura-popup .pop-title{font-size:18px;color:#3d2416;font-weight:normal;margin:0 34px 3px 0;letter-spacing:.01em}
+.aura-popup .pop-street{font-size:14px;color:#7a5236;font-style:italic;margin-bottom:8px}
+.aura-popup .pop-aura{font-size:15.5px;color:#3d2416;margin-bottom:6px;display:flex;align-items:center;gap:7px}
+.aura-popup .pop-dot{width:12px;height:12px;border-radius:50%;flex:0 0 12px}
+.aura-popup .pop-sense-list{gap:6px;margin-top:4px}
+.aura-popup .pop-sense-item{font-size:15px;color:#4a2a1a;font-style:italic;background:rgba(255,236,214,.6);border-radius:12px;
+  padding:9px 12px;border-left-width:3px;cursor:default}
+.aura-popup .pop-sense-item:hover{background:rgba(255,232,206,.8)}
+.aura-popup .pop-sl{font-style:normal;font-weight:normal;color:#3d2416}
+.aura-popup .pop-time{color:#806050;font-size:12.5px}
+.aura-popup .pop-quiet{color:#806050}
+.aura-popup .pop-acts{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.aura-popup .pop-action.pop-link{display:flex;align-items:center;justify-content:center;min-height:44px;margin:0!important;padding:0 16px;
+  border-radius:22px;background:rgba(255,236,214,.72);border:1px solid rgba(160,110,70,.34);color:#4a2a1a!important;
+  font:inherit;font-size:15px;font-style:normal;cursor:pointer;transition:background .25s,border-color .25s;width:100%}
+.aura-popup .pop-action.pop-link:hover{background:rgba(255,228,196,.95);border-color:rgba(160,110,70,.55)}
+.aura-popup .mapboxgl-popup-close-button{color:#6b452c!important;background:rgba(160,110,70,.10)!important;
+  width:36px!important;height:36px!important;right:8px!important;top:8px!important}
+.aura-popup .mapboxgl-popup-close-button:hover{color:#3d2416!important;background:rgba(160,110,70,.2)!important}
+.aura-popup .mapboxgl-popup-content{animation:asPopIn .45s ease both}
+@keyframes asPopIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion: reduce){.aura-popup .mapboxgl-popup-content{animation:none}}
+/* Build 203 · on a phone: a resting card at the foot of the screen, never cut off at an edge */
+@media (max-width:600px){
+  .aura-popup.mapboxgl-popup{position:fixed!important;left:10px!important;right:10px!important;top:auto!important;
+    bottom:calc(12px + env(safe-area-inset-bottom,0px))!important;transform:none!important;max-width:none!important;width:auto!important;display:block!important}
+  .aura-popup .mapboxgl-popup-content{max-height:min(60vh,520px);overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+    border-radius:24px!important;animation:asPopUp .5s ease both}
+  .aura-popup .mapboxgl-popup-content.pop-more{-webkit-mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 46px),rgba(0,0,0,0) 100%);
+    mask-image:linear-gradient(to bottom,#000 0,#000 calc(100% - 46px),rgba(0,0,0,0) 100%)}
+  .aura-popup .mapboxgl-popup-close-button{width:44px!important;height:44px!important;right:6px!important;top:6px!important;font-size:22px!important}
+  .aura-popup .pop-title{margin-right:46px}
+  body.as-card-open #mv-orb,body.as-card-open #mv-hint{opacity:0!important;pointer-events:none!important;transition:opacity .35s ease!important}
+}
+@media (min-width:601px){.aura-popup .mapboxgl-popup-content{max-height:calc(100vh - 110px);overflow-y:auto}}
+@keyframes asPopUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (max-width:600px) and (prefers-reduced-motion: reduce){.aura-popup .mapboxgl-popup-content{animation:none}}
 </style>
 <script>
 /* ═══ Build 197 · 22 Nov 2026 · THE BLOOM ════════════════════════════════════
@@ -16034,6 +16142,14 @@ body.calm .as-smoke{display:none}
   var HEAVY=['heaviness','weariness','numbness','loneliness','stress','anxiety','socialanxiety','overwhelm','pain'];
   var LIGHT=['joy','love','wonder','gratitude','hope','peace','rest','relief','belonging'];
   var DAY=864e5,NEAR=300,NEED=3,OPEN_MS=9000;
+  /* Build 203 · the lights, and one's own lights, come through the map's open door (AS_MAP_VIEW); distance is
+     measured here, so nothing depends on what this script cannot see */
+  function lightsNow(){try{var V=window.AS_MAP_VIEW;if(V&&V.lights){var a=V.lights();if(Array.isArray(a))return a;}}catch(e){}
+    return (typeof auraPoints!=='undefined'&&Array.isArray(auraPoints))?auraPoints:[];}
+  function mineNow(){try{var V=window.AS_MAP_VIEW;if(V&&V.mine){var a=V.mine();if(Array.isArray(a))return a;}}catch(e){}
+    return (typeof myOfferings!=='undefined'&&Array.isArray(myOfferings))?myOfferings:[];}
+  function hv(la1,lo1,la2,lo2){var R=6371000,k=Math.PI/180,dLa=(la2-la1)*k,dLo=(lo2-lo1)*k;
+    var a=Math.sin(dLa/2)*Math.sin(dLa/2)+Math.cos(la1*k)*Math.cos(la2*k)*Math.sin(dLo/2)*Math.sin(dLo/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));}
   window.AS_BLOOMS=[];
   function list(k){try{var a=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(a)?a:[];}catch(e){return [];}}
   function keep(k,a){try{localStorage.setItem(k,JSON.stringify(a.slice(-200)));}catch(e){}}
@@ -16045,7 +16161,7 @@ body.calm .as-smoke{display:none}
   function size(){var z=12;try{z=map.getZoom();}catch(e){}if(!(z>=11))return 0;return Math.max(12,Math.min(64,16*Math.pow(2,(z-14)*0.7)));}
 
   function compute(){
-    var pts=(typeof auraPoints!=='undefined'&&Array.isArray(auraPoints))?auraPoints:[],now=Date.now(),heavy=[],light=[];
+    var pts=lightsNow(),now=Date.now(),heavy=[],light=[];   /* Build 203 · the real lights, at last */
     if(Array.isArray(window.AS_LIGHTS_UNDRAWN)&&window.AS_LIGHTS_UNDRAWN.length)pts=pts.concat(window.AS_LIGHTS_UNDRAWN);   /* Build 201 */
     for(var i=0;i<pts.length;i++){var p=pts[i];
       if(!p||p._gone||!isFinite(p.lat)||!isFinite(p.lng))continue;
@@ -16053,9 +16169,9 @@ body.calm .as-smoke{display:none}
       if(HEAVY.indexOf(p.sense)>-1)heavy.push(p);else if(LIGHT.indexOf(p.sense)>-1)light.push(p);}
     var out=[];
     for(var h=0;h<heavy.length;h++){var H=heavy[h],taken=false;
-      for(var j=0;j<out.length;j++){if(haversine(out[j].lat,out[j].lng,H.lat,H.lng)<NEAR){taken=true;break;}}
+      for(var j=0;j<out.length;j++){if(hv(out[j].lat,out[j].lng,H.lat,H.lng)<NEAR){taken=true;break;}}
       if(taken)continue;
-      var near=light.filter(function(l){return haversine(l.lat,l.lng,H.lat,H.lng)<=NEAR;});
+      var near=light.filter(function(l){return hv(l.lat,l.lng,H.lat,H.lng)<=NEAR;});
       if(near.length<NEED)continue;
       var cols=[];near.forEach(function(l){var c=colourOf(l.sense);if(c&&cols.indexOf(c)<0)cols.push(c);});
       var key='b'+(+H.lat).toFixed(3)+','+(+H.lng).toFixed(3);
@@ -16150,12 +16266,12 @@ body.calm .as-smoke{display:none}
   function busy(){try{return document.body.classList.contains('seeking')||!!document.querySelector('#as-bloom,#gp-modal,#ns-modal,#pcard.show,#panel.show-mobile');}catch(e){return true;}}
   function invite(B){
     try{if(!B.length||busy())return;
-      var mine=(typeof myOfferings!=='undefined'&&Array.isArray(myOfferings))?myOfferings:[];if(!mine.length)return;
+      var mine=mineNow();if(!mine.length)return;   /* Build 203 */
       var told=list('aurasense_blooms_told');
       for(var i=0;i<B.length;i++){var b=B[i];if(b.demo||told.indexOf(b.key)>-1)continue;
         for(var j=0;j<mine.length;j++){var m=mine[j];
           if(!m||HEAVY.indexOf(m.sense)<0||!isFinite(m.lat)||!isFinite(m.lng))continue;
-          if(haversine(m.lat,m.lng,b.lat,b.lng)<=400){told.push(b.key);keep('aurasense_blooms_told',told);card(b,true);return;}}}
+          if(hv(m.lat,m.lng,b.lat,b.lng)<=400){told.push(b.key);keep('aurasense_blooms_told',told);card(b,true);return;}}}
     }catch(e){}}
 
   function card(b,forYou){
@@ -16195,7 +16311,7 @@ body.calm .as-smoke{display:none}
 
   setTimeout(function(){try{compute();}catch(e){}setInterval(function(){try{compute();}catch(e){}},20000);},9000);
   /* Build 199 · a new light is noticed within two seconds, so a bloom it completes is ready when the moment is still */
-  var lastLen=-1;setInterval(function(){try{var L=(typeof auraPoints!=='undefined'&&auraPoints)?auraPoints.length:0;if(L!==lastLen){var first=lastLen<0;lastLen=L;if(!first)compute();}}catch(e){}},2000);
+  var lastLen=-1;setInterval(function(){try{var L=lightsNow().length;if(L!==lastLen){var first=lastLen<0;lastLen=L;if(!first)compute();}}catch(e){}},2000);
 })();
 </script>
 <script>
@@ -16236,8 +16352,11 @@ body.calm .as-smoke{display:none}
   window.asTakeAgreements=take;
   function fetchNow(){
     try{
-      if(typeof gate==='undefined'||!gate||!gate.on||!gate.db||!gate.db.rpc)return;
-      gate.db.rpc('unarranged_agreements',{since_hours:48}).then(function(r){
+      /* Build 203 · the gate comes through the map's open door: before, this part could never reach it */
+      var G=null;try{G=(window.AS_MAP_VIEW&&window.AS_MAP_VIEW.gate)?window.AS_MAP_VIEW.gate():null;}catch(e){}
+      if(!G&&typeof gate!=='undefined')G=gate;
+      if(!G||!G.on||!G.db||!G.db.rpc)return;
+      G.db.rpc('unarranged_agreements',{since_hours:48}).then(function(r){
         if(!r||r.error||!Array.isArray(r.data)){fails++;if(fails>=3&&polling){clearInterval(polling);polling=null;}return;}
         fails=0;take(r.data);
       },function(){fails++;});
