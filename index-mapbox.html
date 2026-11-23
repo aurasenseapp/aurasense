@@ -2661,7 +2661,7 @@ window.AS_SEEK_ALWAYS=true;
       <div id="ma-explain">This is to help you visualise what your personal aura is like — how your emotional and psychological state influences the energy from your physical body. Everyday decisions. <span class="mae-hint">Tap any layer of light to see where that energy came from.</span></div>
       <div id="ma-selfie-wrap">
         <img id="ma-selfie-thumb" alt="Your photo. Tap to take it again." style="display:none">
-        <button id="ma-selfie-btn">📷 Upload a selfie here</button>
+        <button id="ma-selfie-btn">📷 See yourself in your aura</button>
         <div id="ma-selfie-actions"><button id="ma-capture">Capture</button><button id="ma-cancel-selfie">Cancel</button></div>
         <div id="ma-selfie-note">(Only you will see this, unless you choose otherwise)</div>
       </div>
@@ -3155,10 +3155,17 @@ try{
 function playSound(id){
   if(window.AS_CALM)return;   // calm keeps its silence
   try{
-    if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}
     const s=SENSES.find(x=>x.id===id);if(!s)return;
     // A newly named sense arrives without a tone of its own — it is given a true one, never silence.
     const _fr=(s.freqs&&s.freqs.length)?s.freqs:[[528,0,.17,.05,1.9],[792,.16,.11,.06,1.6]];
+    /* Build 202 · 23 Nov 2026 · Karl: "I'd still like some nice gentle sounds upon offering an Aurasense. From the
+       seeking moment to the landing." The same honest hand-over playChime already makes: when this page's sound is
+       still asleep (an iPhone, straight after the Seeking), the Seeking, which was touched and is awake, sings the
+       light's own note. Only if it cannot does this page try for itself. */
+    var mineAwake=false;try{mineAwake=!!(actx&&actx.state==='running');}catch(_){}
+    if(!mineAwake){try{var _sf=document.getElementById('seekFrame');
+      if(_sf&&_sf.contentWindow&&typeof _sf.contentWindow.asPlayChime==='function'&&_sf.contentWindow.asPlayChime(_fr))return;}catch(_){}}
+    if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();try{if(actx.state==='suspended')actx.resume();}catch(_){}
     _fr.forEach(([freq,delay,vol,at,dur])=>{ asBell(freq,delay,asLoudG(freq,vol)*.62,dur*1.25,null,at); });
   }catch(e){}
 }
@@ -6134,6 +6141,17 @@ function coSetNow(i){
   if(pv)pv.classList.toggle('dim',coStep===0);
   if(nx)nx.classList.toggle('dim',coStep===cards.length-1);
 }
+/* Build 202 · 23 Nov 2026 · Karl: "the answers given about one's personality aren't reflected in the aura in my aura.
+   They aren't senses offered so makes sense in one way yet another way it sets up the levels of sensitivity to their own
+   senses. Which are quite intimate answers and would be rewarding to see acknowledged in my aura in some form."
+   Each set of answers given when becoming an Aurasenser becomes a light of its own in My Aura, its words given back when
+   touched. Only ever seen by the person who gave them: never on the map, never counted as an offering, never shared. */
+const AS_RG_LIGHTS=[
+  {k:'sensory',l:'How you sense',c:'#b4d3f0',s:'Where your senses reach furthest. Here, that is a gift, never a fault.'},
+  {k:'personality',l:'Your nature',c:'#f3c98b',s:'How you said you meet the world.'},
+  {k:'mood',l:'Your weather that day',c:'#f2a9bf',s:'How you felt when you arrived. Weather moves; this is kept as it was.'},
+  {k:'spiritual',l:'Beyond the seen',c:'#c4b5fd',s:'What you said about the unseen. Held gently, never judged.'},
+  {k:'interests',l:'What draws you',c:'#a8dcb4',s:'What you said lights you up.'}];
 function maBuildLayers(){
   const counts={},order=[];
   myOfferings.forEach(o=>{if(counts[o.sense]==null){counts[o.sense]=0;order.push(o.sense);}counts[o.sense]++;});
@@ -6149,6 +6167,24 @@ function maBuildLayers(){
     myGiven.forEach(g=>{if(kinds[g.kind]==null){kinds[g.kind]=0;korder.push(g.kind);}kinds[g.kind]++;});
     korder.forEach(kn=>{const w=ALPHA_WORDS.find(x=>x.w===kn);maLayers.push({sid:'given-'+kn,color:(w?w.c:'#f0a8c0'),label:kn+' — offered to others',count:kinds[kn],realm:'given'});});
   }
+  /* Build 202 · the answers, as lights. My Aura draws seven lights at most, so when there is room each set of answers
+     is a light of its own; when the aura is already full, they are held together as one light, "Your own words",
+     kept among the seven so it can always be seen and touched. */
+  try{
+    if(myProfile){
+      var _rg=[];
+      AS_RG_LIGHTS.forEach(function(g){var v=myProfile[g.k];
+        if(Array.isArray(v)){v=v.filter(function(x){return typeof x==='string'&&x.trim();}).slice(0,14);if(v.length)_rg.push({g:g,w:v});}});
+      if(_rg.length){
+        if(maLayers.length+_rg.length<=7){
+          _rg.forEach(function(r){maLayers.push({sid:'rg-'+r.g.k,color:r.g.c,label:r.g.l,count:1,realm:'self',words:r.w,line:r.g.s});});
+        }else{
+          var _one={sid:'rg-all',color:'#f3c98b',label:'Your own words',count:1,realm:'self',groups:_rg.map(function(r){return {l:r.g.l,w:r.w};})};
+          if(maLayers.length>=7)maLayers.splice(6,0,_one);else maLayers.push(_one);
+        }
+      }
+    }
+  }catch(e){}
 }
 function maSizeCanvas(){const cv=document.getElementById('ma-canvas');if(!cv)return;const W=cv.clientWidth||Math.round(window.innerWidth*0.42),H=cv.clientHeight||Math.round(window.innerHeight*0.7);cv.width=W;cv.height=H;}
 function maLayerRadius(i,baseR,breath){return Math.max(baseR*0.07, baseR*(1-i*0.14)*breath);}
@@ -6951,7 +6987,7 @@ function openMyAuraPage(){
   maStopStream();
   const v=document.getElementById('ma-video');if(v)v.style.display='none';
   const sa=document.getElementById('ma-selfie-actions');if(sa)sa.style.display='none';
-  const sb=document.getElementById('ma-selfie-btn');if(sb){sb.style.display='';sb.textContent=maSelfieImg?'Retake photo':'📷 Take a selfie';}   /* Build 192: always a way to retake */
+  const sb=document.getElementById('ma-selfie-btn');if(sb){sb.style.display='';sb.textContent=maSelfieImg?'Retake photo':'📷 See yourself in your aura';   /* Build 202 · Karl: "'see yourself in your aura' i prefer" */}   /* Build 192: always a way to retake */
   try{const _th=document.getElementById('ma-selfie-thumb');if(_th){if(maSelfieImg&&maSelfieImg.src){_th.src=maSelfieImg.src;_th.style.display='block';}else _th.style.display='none';}}catch(_){}
   try{const _pg=document.getElementById('myaura-page');if(_pg)_pg.classList.toggle('ma-has-photo',!!maSelfieImg);}catch(_){}   /* Build 193 */
   const _sn=document.getElementById('ma-selfie-note');if(_sn)_sn.textContent=maSelfieImg?'Tap your photo to retake it — only you will see it, unless you choose otherwise':'(Only you will see this, unless you choose otherwise)';
@@ -7403,22 +7439,37 @@ function macDrawAura(ts){
          Each name now sits on the heart of its own light. */
       var ny=py;
       var wpx=macAx.measureText(nm).width;
+      /* Build 202 · 23 Nov 2026 · Karl: "There's no real indication that the name can be tapped on as 'Look closer'
+         has already been tapped." Each name now rests in a soft pill with a small arrow after it, the way a button
+         looks, so it plainly opens. The pill, not the bare word, is what is measured and what answers a touch. */
+      var pw=wpx+30,ph=24;
       /* 29 Sep - a name that would fall under "Let it close" moves above its light */
-      try{var _B=window._macBtn;if(_B&&ny>_B.y-12&&ny<_B.y+_B.h+12&&Math.abs(px-(_B.x+_B.w/2))<_B.w/2+wpx/2+6)ny=py-spread*0.92-15;}catch(e){}
+      try{var _B=window._macBtn;if(_B&&ny>_B.y-12&&ny<_B.y+_B.h+12&&Math.abs(px-(_B.x+_B.w/2))<_B.w/2+pw/2+6)ny=py-spread*0.92-15;}catch(e){}
       var clash=false;
       /* clear of every name already placed */
       for(var ci=0;ci<macNamed.length;ci++){
         var o2=macNamed[ci];
-        if(Math.abs(o2.y-ny)<15 && Math.abs(o2.x-px)<(o2.w+wpx)/2+8){clash=true;break;}
+        if(Math.abs(o2.y-ny)<ph+2 && Math.abs(o2.x-px)<(o2.w+pw)/2+4){clash=true;break;}
       }
       /* 16 Sep - the check against the sentence is gone. The sentence has moved
          to the top of the screen, so there is nothing there to clash with, and
          a name no longer has to be sacrificed to a box it never overlapped. */
       if(!clash){
-        macNamed.push({x:px,y:ny,w:wpx,i:li});
-        try{macAx.save();macAx.shadowBlur=0;macAx.lineJoin='round';macAx.lineWidth=3.4;macAx.strokeStyle='rgba(255,250,244,0.92)';macAx.strokeText(nm,px,ny);macAx.restore();}catch(e){}
-        macAx.fillText(nm,px,ny);
-        macAx.fillText(nm,px,ny);
+        macNamed.push({x:px,y:ny,w:pw,i:li});
+        /* the pill shows only while the names are being read; when a card or a list is open the names step back
+           to the faint words they were before, so nothing filled reads through what is in front */
+        var _pillOn=_dim>0.3;
+        if(_pillOn)try{macAx.save();macAx.shadowBlur=0;
+          macPill(macAx,px-pw/2,ny-ph/2,pw,ph);
+          macAx.fillStyle='rgba(255,250,244,0.68)';macAx.fill();
+          macAx.lineWidth=1;macAx.strokeStyle='rgba(120,74,50,0.45)';macAx.stroke();
+          macAx.restore();}catch(e){}
+        var tx=_pillOn?px-5:px;
+        try{macAx.save();macAx.shadowBlur=0;macAx.lineJoin='round';macAx.lineWidth=3.4;macAx.strokeStyle='rgba(255,250,244,0.92)';macAx.strokeText(nm,tx,ny);macAx.restore();}catch(e){}
+        macAx.fillText(nm,tx,ny);
+        macAx.fillText(nm,tx,ny);
+        if(_pillOn)try{macAx.save();macAx.shadowBlur=0;macAx.textAlign='left';macAx.fillStyle='rgba(120,74,50,0.88)';
+          macAx.font='16px Georgia, "Times New Roman", serif';macAx.fillText('\u203a',px+wpx/2+2,ny-1);macAx.restore();}catch(e){}
       }
       macAx.shadowBlur=0;
       macAx.restore();
@@ -7476,6 +7527,8 @@ function macDrawAura(ts){
   try{NAMEQ.forEach(function(f){try{f();}catch(e){}});}catch(e){}
 }
 /* ── naming a sense, where it sits ────────────────────────────────────── */
+/* Build 202 · a soft pill, round at both ends, drawn without relying on roundRect (older Safari has none) */
+function macPill(c,x,y,w,h){var r=h/2;c.beginPath();c.moveTo(x+r,y);c.lineTo(x+w-r,y);c.arc(x+w-r,y+r,r,-Math.PI/2,Math.PI/2);c.lineTo(x+r,y+h);c.arc(x+r,y+r,r,Math.PI/2,Math.PI*1.5);c.closePath();}
 function macNameAt(cxp,cyp){
   /* 3 Sep 2026 - a name appearing while the aura is still opening lands on top
      of the movement and stops it. Nothing is named until the opening has
@@ -7500,7 +7553,7 @@ function macShowName(i){
   var la=L[i];if(!la){el.classList.remove('on');return;}
   var p=macPts[i];if(!p)return;
   var cnt=la.count>1?(la.count+' times'):'once';
-  el.innerHTML='<b>'+String(la.label||'').replace(/[<>]/g,'')+'</b><span>offered '+cnt+'</span>';
+  el.innerHTML='<b>'+String(la.label||'').replace(/[<>]/g,'')+'</b><span>'+(String(la.sid).indexOf('rg-')===0?'in your own words':('offered '+cnt))+'</span>';   /* Build 202 */
   /* 30 Sep 2026 · Karl's screens: "Hope" written twice, one over the other, and the larger name
      landing on a neighbour's. The touched name now opens in its own place, and its small
      twin is not drawn while it is open, so one name says it all. */
@@ -7778,7 +7831,7 @@ function macOpenDoor(i){
       var d=document.getElementById('ma-cloud-doors');if(d)d.classList.add('on');
       var w=document.getElementById('ma-cloud-words');
       if(w){
-        w.innerHTML='<b>Each light, on its own.</b><span>Touch one to see where and when you offered it.</span>';
+        w.innerHTML='<b>Each light, on its own.</b><span>Touch any light, or its name, to read its story.</span>';   /* Build 202 */
         /* An instruction has a job and then it is finished. Held across the
            spread senses it stops being help and becomes something in front of
            the thing it was pointing at. It withdraws once it has been read. */
@@ -7833,13 +7886,14 @@ function macOpenDoor(i){
     window._macCardOpen=true;
     var L=(typeof maLayers!=='undefined'&&maLayers)?maLayers:[];
     var la=L[i]; if(!la)return;
+    if(String(la.sid).indexOf('rg-')===0){ macOpenOwnWords(c,la); return; }   /* Build 202 */
     var places=[];
     try{
       (myOfferings||[]).forEach(function(o){
         if(o&&o.sense===la.sid&&o.place&&places.indexOf(o.place)<0)places.push(o.place);
       });
     }catch(e){}
-    var total=0; try{ total=(maLayers||[]).reduce(function(a,x){return a+(x.count||1);},0); }catch(e){}
+    var total=0; try{ total=(maLayers||[]).reduce(function(a,x){return a+(String(x.sid).indexOf('rg-')===0?0:(x.count||1));},0); }catch(e){}   /* Build 202 · answers are not offerings, so they never change a sense's share */
     var share=total?Math.round((la.count/total)*100):0;
     var safe=function(t){ return String(t==null?'':t).replace(/[<>]/g,''); };
     var where=places.length
@@ -7854,6 +7908,22 @@ function macOpenDoor(i){
       'too few sensers yet for that to be honest, so it waits.</div>'+
       '<button type="button">Close</button>';
     c.querySelector('button').addEventListener('click',macCloseSense);
+    c.classList.add('on');
+  }
+  /* Build 202 · the answers given when becoming an Aurasenser, given back in the person's own words. Private. */
+  function macOpenOwnWords(c,la){
+    var esc=function(t){return String(t==null?'':t).replace(/[&<>"]/g,function(ch){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});};
+    var body='';
+    if(la.sid==='rg-all'&&Array.isArray(la.groups)){
+      la.groups.forEach(function(g){body+='<p><b>'+esc(g.l)+':</b> '+esc((g.w||[]).join(' \u00b7 '))+'</p>';});
+    }else{
+      body='<p class="mac-own">'+esc((la.words||[]).join(' \u00b7 '))+'</p>'+(la.line?'<p>'+esc(la.line)+'</p>':'');
+    }
+    c.innerHTML='<h4>'+esc(la.label)+'</h4>'+body+
+      '<div class="soon">From your own answers when you became an Aurasenser. Only you ever see this light.</div>'+
+      '<button type="button" class="mac-change">Change your answers</button> <button type="button" class="mac-close">Close</button>';
+    c.querySelector('.mac-close').addEventListener('click',macCloseSense);
+    c.querySelector('.mac-change').addEventListener('click',function(){try{macCloseSense();closeMyAuraPage();openRegister();}catch(e){}});
     c.classList.add('on');
   }
 })();
@@ -8008,7 +8078,11 @@ function openRegister(){try{if(!(window.asRgResume&&window.asRgResume())&&window
     const t=document.getElementById('rg-title');if(t)t.textContent=has?'Update my profile':'Become an Aurasenser';
     const b=document.getElementById('rg-create');if(b)b.textContent=has?'Update my aura':'Create my aura';
     if(has){[['rg-handle','handle'],['rg-realname','realname'],['rg-address','address']].forEach(([id,k])=>{const el=document.getElementById(id);if(el&&myProfile[k])el.value=myProfile[k];});
-      const fr=document.getElementById('rg-interests-free');if(fr&&myProfile.interests&&myProfile.interests.length)fr.value=myProfile.interests.join(', ');}
+      const fr=document.getElementById('rg-interests-free');if(fr&&myProfile.interests&&myProfile.interests.length)fr.value=myProfile.interests.filter(x=>((RG_CHIPS&&RG_CHIPS.interests)||[]).indexOf(x)<0).join(', ');
+      /* Build 202 · the answers already given are shown chosen when a profile is opened again, so updating it never
+         quietly wipes them, and a chosen interest is never also written into the free words */
+      ['personality','mood','sensory','spiritual','interests'].forEach(g=>{const v=myProfile[g];if(!Array.isArray(v)||!v.length)return;
+        document.querySelectorAll('.rg-chips[data-group="'+g+'"] .rg-chip').forEach(ch=>{if(v.indexOf(ch.getAttribute('data-v'))>=0)ch.classList.add('on');});});}
   }catch(e){}}
 function regInfusion(){
   try{gpSave();}catch(e){}
@@ -8489,7 +8563,7 @@ if(rgCreate)rgCreate.addEventListener('click',()=>{
   }
   if(!(gate.user)){try{gpSendCode(_em,_kn);const cr=document.getElementById('rg-code-row');if(cr)cr.style.display='';}catch(e){}}
   const free=((document.getElementById('rg-interests-free')||{}).value||'');
-  myProfile=Object.assign(myProfile||{},{handle:h,realname:((document.getElementById('rg-realname')||{}).value||''),address:((document.getElementById('rg-address')||{}).value||''),personality:rgCollect('personality'),mood:rgCollect('mood'),sensory:rgCollect('sensory'),spiritual:rgCollect('spiritual'),interests:rgCollect('interests').concat(free.split(',').map(s=>s.trim()).filter(Boolean))});
+  myProfile=Object.assign(myProfile||{},{handle:h,realname:((document.getElementById('rg-realname')||{}).value||''),address:((document.getElementById('rg-address')||{}).value||''),personality:rgCollect('personality'),mood:rgCollect('mood'),sensory:rgCollect('sensory'),spiritual:rgCollect('spiritual'),interests:Array.from(new Set(rgCollect('interests').concat(free.split(',').map(s=>s.trim()).filter(Boolean))))});
   if(typeof menuRefresh==='function')menuRefresh();
   const lbl=document.getElementById('my-aura-label');if(lbl)lbl.textContent=h;
   if(typeof refreshRegisteredState==='function')refreshRegisteredState();
@@ -13574,7 +13648,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">22 Nov 2026 · </span>201<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>202<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
