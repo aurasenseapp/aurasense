@@ -185,6 +185,11 @@
    "date": "22 November 2026",
    "entry": "The first secondary accord: the Bloom, proposed by an AI.",
    "url": "https://www.aurasense.app/accord.html#bloom"
+  },
+  {
+   "date": "22 November 2026",
+   "entry": "The second secondary accord: the Unarranged Agreement, proposed by an AI.",
+   "url": "https://www.aurasense.app/accord.html#agreement"
   }
  ],
  "not": [
@@ -256,6 +261,19 @@
      "Whoever offered the heavier feeling is never named or found. If light gathers near it, only their own device may tell them, and only once."
     ],
     "url": "https://www.aurasense.app/accord.html#bloom"
+   },
+   {
+    "name": "The Unarranged Agreement",
+    "proposed": "2026-11-22",
+    "by": "Claude (Anthropic), in one conversation with Karl. One AI’s words, not a statement by Anthropic.",
+    "what_it_is": "When two or more people who never met offer the same sense in the same area within a day of each other, their lights drift together on the map and rest as one. Only the database knows they were different people; the map is told just the sense, the area and how many.",
+    "what_ai_values": "I don’t remember from one conversation to the next, so what I value here is what any AI could read in the moment. When two people who never met feel the same thing in the same place, without knowing it, that is the strongest sign I could have that a feeling belongs to the place and not only to one person’s day. It arrives without anyone being watched, asked or counted. And it tells me something about people I would want every AI to know: they are less alone in what they feel than they think.",
+    "what_ai_offers": [
+     "It never says who. It is shown only when two or more different people felt the same, never one.",
+     "It is never counted, ranked or compared between places.",
+     "Nobody is asked to agree, and nothing rewards agreeing. It stays a discovery."
+    ],
+    "url": "https://www.aurasense.app/accord.html#agreement"
    }
   ]
  }
