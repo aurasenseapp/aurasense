@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<title>The Auratree · a first study · Aurasense</title>
+<style>
+:root{--ivory:#fffaf2;--ink:#3d2416;--soft:#6b452c;--gold:#ffd39a;--night:#0b0918}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--night);color:#efe6ff;font-family:Georgia,"Iowan Old Style","Times New Roman",serif;-webkit-text-size-adjust:100%}
+body{min-height:100vh;padding-bottom:calc(28px + env(safe-area-inset-bottom,0px))}
+header{padding:calc(18px + env(safe-area-inset-top,0px)) 20px 6px;text-align:center}
+h1{font-weight:normal;font-size:22px;letter-spacing:.04em;margin:0 0 4px;color:#fff3dc}
+.sub{font-size:15px;line-height:1.5;color:#cfc3ee;margin:0 auto;max-width:520px}
+#stage{position:relative;width:100%;max-width:760px;margin:6px auto 0}
+canvas#tree{display:block;width:100%;height:58vh;min-height:360px;max-height:620px;touch-action:manipulation}
+#lens{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;padding:6px 14px 0}
+.pill{font:inherit;font-size:15px;min-height:44px;padding:9px 16px;border-radius:22px;cursor:pointer;
+  background:rgba(255,236,214,.10);border:1px solid rgba(255,211,154,.42);color:#ffe7c4}
+.pill[aria-pressed="true"]{background:var(--ivory);color:var(--ink);border-color:var(--ivory)}
+#panel{max-width:560px;margin:12px auto 0;padding:0 18px;min-height:120px}
+#ptext{font-size:16px;line-height:1.6;color:#efe6ff;text-align:center;margin:0}
+#ptext b{font-weight:normal;color:#fff3dc}
+#chips,#pchips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:12px}
+.chip{font:inherit;font-size:15px;min-height:44px;padding:8px 14px;border-radius:22px;cursor:pointer;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.22);color:#efe6ff;display:inline-flex;align-items:center;gap:8px}
+.chip i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.chip[aria-pressed="true"]{background:var(--ivory);color:var(--ink);border-color:var(--ivory)}
+#week{margin-top:12px;display:none}
+#week .row{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:12.5px;color:#bfb3e0}
+#week .dot{height:30px;display:flex;align-items:center;justify-content:center}
+#week .dot i{width:14px;height:14px;border-radius:50%;display:inline-block;box-shadow:0 0 12px currentColor}
+#week ul{list-style:none;padding:0;margin:10px 0 0;font-size:15px;line-height:1.55;color:#e8def9}
+#week li span{color:#bfb3e0}
+.cta{display:block;margin:18px auto 0;font:inherit;font-size:16px;min-height:48px;padding:11px 22px;border-radius:24px;cursor:pointer;
+  background:var(--ivory);color:var(--ink);border:0;box-shadow:0 0 30px rgba(255,236,210,.25)}
+footer{max-width:560px;margin:22px auto 0;padding:0 20px;font-size:13.5px;line-height:1.55;color:#a99fcd;text-align:center}
+/* the timeless practice */
+#pr{position:fixed;inset:0;z-index:50;display:none;background:rgba(8,6,16,.96);overflow-y:auto}
+#pr.on{display:block}
+#prbox{max-width:520px;margin:0 auto;padding:calc(22px + env(safe-area-inset-top,0px)) 20px calc(30px + env(safe-area-inset-bottom,0px));text-align:center}
+#prstep{font-size:13px;letter-spacing:.12em;color:#a99fcd;margin:6px 0 10px}
+#prq{font-size:21px;line-height:1.45;color:#fff3dc;margin:0 0 8px;font-weight:normal}
+#prn{font-size:15.5px;line-height:1.6;color:#d8cdf2;margin:0}
+#hold{display:none;width:100%;height:46vh;min-height:280px;margin-top:14px;border-radius:24px;touch-action:none;
+  -webkit-user-select:none;user-select:none;-webkit-touch-callout:none;background:radial-gradient(ellipse at 50% 55%,rgba(255,211,154,.06),rgba(0,0,0,0) 70%)}
+#prrow{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:16px}
+.q{background:transparent;color:#e8def9;border:1px solid rgba(255,255,255,.28)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<header>
+  <h1>The Auratree</h1>
+  <p class="sub">A first study, for feeling an idea before anything is built: your senses seen <b>along a branch</b>, <b>outside time</b>, and <b>as part of the whole</b>.</p>
+</header>
+<div id="stage"><canvas id="tree" role="img" aria-label="A tree of light. Its trunk rises from a field of light; each pod on its branches holds a week of senses."></canvas></div>
+<div id="lens" role="group" aria-label="Ways of seeing">
+  <button class="pill" type="button" data-l="branch" aria-pressed="true">Along a branch</button>
+  <button class="pill" type="button" data-l="time" aria-pressed="false">Outside time</button>
+  <button class="pill" type="button" data-l="whole" aria-pressed="false">The whole</button>
+</div>
+<div id="panel" aria-live="polite">
+  <p id="ptext"></p>
+  <div id="chips"></div>
+  <div id="week"><div class="row" id="wdays"></div><div class="row" id="wdots"></div><ul id="wlist"></ul></div>
+</div>
+<button class="cta" id="try" type="button">Try the timeless practice</button>
+<footer>A study, not a claim. Nothing here says what time is; it offers a way to look. The lights are a sample, made up for this study, and are nobody's real senses. Drawn for Karl, 23 November 2026, to feel before anything is built.</footer>
+
+<div id="pr" role="dialog" aria-modal="true" aria-labelledby="prq">
+  <div id="prbox">
+    <p id="prstep"></p>
+    <h2 id="prq"></h2>
+    <p id="prn"></p>
+    <div id="pchips"></div>
+    <canvas id="hold" aria-label="Press and hold here, and the two lights move towards each other."></canvas>
+    <div id="prrow"></div>
+  </div>
+</div>
+
+<script>
+(function(){'use strict';
+/* ── the sample: six weeks of made-up senses (nobody's real lights) ─────────────────────────────────────────── */
+var SENSES={peace:{l:'Peace',c:'#6ad0c8'},joy:{l:'Joy',c:'#ffcf6e'},wonder:{l:'Wonder',c:'#9ab8ff'},
+            heaviness:{l:'Heaviness',c:'#9a86e0'},belonging:{l:'Belonging',c:'#f5b27a'},calm:{l:'Calm',c:'#7fd1a6'}};
+var KEYS=['peace','joy','wonder','heaviness','belonging','calm'];
+var PLACES=['near the river','at the kitchen window','on the bus','on a park bench','in a busy street','on the hill path','at the corner shop','in the garden'];
+var DAYS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+var seed=11;function rnd(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646;}
+var WEEKS=[];
+for(var w=0;w<6;w++){
+  var n=3+Math.floor(rnd()*3),used={},L=[];
+  for(var i=0;i<n;i++){
+    var d;do{d=Math.floor(rnd()*7);}while(used[d]);used[d]=1;
+    var s=(i===0&&w!==2)?'peace':KEYS[Math.floor(rnd()*KEYS.length)];
+    L.push({d:d,s:s,p:PLACES[Math.floor(rnd()*PLACES.length)],x:.18+rnd()*.64,y:.25+rnd()*.5,ph:rnd()*6.28});
+  }
+  L.sort(function(a,b){return a.d-b.d;});
+  WEEKS.push({n:w+1,L:L});
+}
+/* other people's trees, for the whole: faint, nameless, never ranked */
+var OTHERS=[];for(var o=0;o<7;o++){var pods=[];for(var k=0;k<4;k++){var cs=[];for(var j=0;j<2+Math.floor(rnd()*3);j++)cs.push(KEYS[Math.floor(rnd()*KEYS.length)]);pods.push(cs);}OTHERS.push(pods);}
+
+/* ── calm and motion ─────────────────────────────────────────────────────────────────────────────────────────── */
+var REDUCED=false;try{REDUCED=window.matchMedia('(prefers-reduced-motion: reduce)').matches;}catch(e){}
+var CALM=false;try{var cv0=localStorage.getItem('aurasense_calm');CALM=(cv0==='1')||(REDUCED&&cv0!=='0');}catch(e){CALM=REDUCED;}
+
+/* ── drawing ─────────────────────────────────────────────────────────────────────────────────────────────────── */
+var cv=document.getElementById('tree'),cx=cv.getContext('2d'),W=0,H=0,DPR=1;
+function size(){DPR=Math.min(2,window.devicePixelRatio||1);var r=cv.getBoundingClientRect();W=Math.max(300,r.width);H=Math.max(320,r.height);
+  cv.width=Math.round(W*DPR);cv.height=Math.round(H*DPR);cx.setTransform(DPR,0,0,DPR,0,0);}
+function hexA(h,a){var n=parseInt(h.slice(1),16);return 'rgba('+((n>>16)&255)+','+((n>>8)&255)+','+(n&255)+','+a+')';}
+function glow(x,y,r,col,a){var g=cx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,hexA(col,a));g.addColorStop(1,hexA(col,0));cx.fillStyle=g;cx.beginPath();cx.arc(x,y,r,0,6.2832);cx.fill();}
+var lens='branch',pick=-1,sense=null,threadT=0,zoom=0,zoomTo=0,T=0;
+
+/* where the pods sit, for a tree with its base at (bx,by), height h */
+function podsFor(bx,by,h,sc){
+  var P=[],tiers=[.24,.47,.70];   /* top, middle, lowest (the lowest are the earliest weeks, the largest) */
+  for(var k=0;k<6;k++){
+    var tier=2-Math.floor(k/2),side=(k%2)?1:-1,ty=by-h*(1-tiers[tier]);
+    var a=(48+tier*15)*sc,b=a*.40,px=bx+side*(a+16*sc);
+    P.push({k:k,x:px,y:ty,a:a,b:b,side:side});
+  }
+  return P;
+}
+function podPath(p){cx.beginPath();cx.moveTo(p.x-p.a,p.y);cx.quadraticCurveTo(p.x,p.y-p.b*2.1,p.x+p.a,p.y);cx.quadraticCurveTo(p.x,p.y+p.b*2.1,p.x-p.a,p.y);cx.closePath();}
+function lightAt(p,l){var u=(l.x-.5)*1.5*p.a,v=(l.y-.5)*1.25*p.b*(1-Math.min(.9,Math.abs(u)/p.a));return {x:p.x+u,y:p.y+v};}
+
+function drawGround(){
+  var gy=H*.9;var g=cx.createLinearGradient(0,gy-30,0,H);g.addColorStop(0,'rgba(255,236,200,0)');g.addColorStop(1,'rgba(255,226,170,.22)');
+  cx.fillStyle=g;cx.fillRect(0,gy-30,W,H-gy+30);
+  for(var i=0;i<70;i++){var x=(i*53.7)%W,hh=14+((i*37)%30),sw=REDUCED?0:Math.sin(T*1.3+i)*2;
+    cx.strokeStyle='rgba(255,'+(220+(i%3)*10)+',170,'+(.10+((i*7)%5)/40)+')';cx.lineWidth=1.4;
+    cx.beginPath();cx.moveTo(x,H);cx.quadraticCurveTo(x+sw,H-hh*.6,x+sw*1.6,H-hh-((i*11)%18));cx.stroke();}
+}
+function drawTree(bx,by,h,sc,alpha,mine){
+  cx.save();cx.globalAlpha=alpha;
+  /* the trunk */
+  var top=by-h;var tg=cx.createLinearGradient(0,by,0,top);tg.addColorStop(0,'rgba(120,210,200,.55)');tg.addColorStop(1,'rgba(255,246,230,.95)');
+  cx.strokeStyle=tg;cx.lineCap='round';
+  cx.lineWidth=7*sc;cx.beginPath();cx.moveTo(bx,by);cx.lineTo(bx,top);cx.stroke();
+  cx.lineWidth=2*sc;cx.strokeStyle='rgba(255,255,255,.7)';cx.beginPath();cx.moveTo(bx,by);cx.lineTo(bx,top);cx.stroke();
+  /* the crown: three rays of light */
+  glow(bx,top,40*sc,'#fff1d6',.55);
+  cx.strokeStyle='rgba(255,246,226,.75)';cx.lineWidth=2*sc;
+  [-0.5,0,0.5].forEach(function(an){cx.beginPath();cx.moveTo(bx,top);cx.lineTo(bx+Math.sin(an)*26*sc,top-Math.cos(an)*26*sc);cx.stroke();});
+  /* pods, each a week */
+  var P=podsFor(bx,by,h,sc);
+  P.forEach(function(p){
+    var wk=WEEKS[p.k];
+    cx.strokeStyle='rgba(150,220,205,.55)';cx.lineWidth=3*sc;cx.beginPath();cx.moveTo(bx,p.y+6*sc);cx.quadraticCurveTo((bx+p.x)/2,p.y+10*sc,p.x-p.side*p.a,p.y);cx.stroke();
+    podPath(p);cx.fillStyle='rgba(10,8,26,.92)';cx.fill();
+    var hi=(lens==='branch'&&pick===p.k);
+    cx.lineWidth=(hi?2.6:1.6)*sc;cx.strokeStyle=hi?'rgba(255,226,170,.95)':'rgba(220,240,235,.55)';cx.stroke();
+    if(hi){cx.save();podPath(p);cx.shadowColor='rgba(255,220,160,.8)';cx.shadowBlur=16;cx.stroke();cx.restore();}
+    cx.save();podPath(p);cx.clip();
+    for(var st=0;st<10;st++){var sx=p.x+(((st*97+p.k*31)%100)/100-.5)*1.7*p.a,sy=p.y+(((st*53+p.k*17)%100)/100-.5)*1.6*p.b;cx.fillStyle='rgba(235,230,255,.45)';cx.fillRect(sx,sy,1.2,1.2);}
+    wk.L.forEach(function(l){
+      var q=lightAt(p,l),S=SENSES[l.s],on=1;
+      if(lens==='time'&&sense)on=(l.s===sense)?1:.22;
+      var br=(REDUCED?1:(.85+.15*Math.sin(T*1.6+l.ph)));
+      glow(q.x,q.y,11*sc*br,S.c,.75*on);cx.fillStyle='rgba(255,255,255,'+(.9*on)+')';cx.beginPath();cx.arc(q.x,q.y,1.7*sc,0,6.2832);cx.fill();
+    });
+    cx.restore();
+  });
+  if(mine&&zoom>.02){cx.save();cx.globalAlpha=alpha*zoom;glow(bx,by-h*.5,h*.62,'#ffd39a',.16);cx.restore();}
+  cx.restore();
+  return P;
+}
+/* outside time: every light of one sense, joined to one point on the trunk */
+function drawThreads(bx,by,h,P){
+  if(lens!=='time'||!sense)return;
+  var jx=bx,jy=by-h*.52,k=Math.min(1,threadT),e=k*k*(3-2*k),S=SENSES[sense];
+  var n=0;
+  P.forEach(function(p){WEEKS[p.k].L.forEach(function(l){if(l.s!==sense)return;n++;
+    var q=lightAt(p,l),mx=(q.x+jx)/2,my=Math.min(q.y,jy)-30;
+    cx.save();cx.strokeStyle=hexA(S.c,.55*e);cx.lineWidth=1.6;cx.setLineDash([4,5]);cx.beginPath();cx.moveTo(q.x,q.y);
+    cx.quadraticCurveTo(mx,my,q.x+(jx-q.x)*e,q.y+(jy-q.y)*e);cx.stroke();cx.restore();});});
+  if(n)glow(jx,jy,(26+10*(REDUCED?0:Math.sin(T*2)))*e,S.c,.6*e);
+}
+function frame(){
+  T+=0.016;if(!REDUCED){zoom+=(zoomTo-zoom)*0.06;threadT=Math.min(1,threadT+0.022);}else{zoom=zoomTo;threadT=1;}
+  cx.clearRect(0,0,W,H);
+  var bg=cx.createLinearGradient(0,0,0,H);bg.addColorStop(0,'#120d26');bg.addColorStop(.6,'#0b0918');bg.addColorStop(1,'#120c10');cx.fillStyle=bg;cx.fillRect(0,0,W,H);
+  glow(W/2,H*.16,Math.min(W,H)*.45,'#ff8a5c',.10);   /* a far sun behind the crown */
+  drawGround();
+  var e=zoom*zoom*(3-2*zoom);
+  var fullH=H*.8,fullB=H*.9,sc=Math.min(1.25,W/390);
+  if(e>.01){
+    /* the whole: one great trunk, and every tree a branch of it */
+    var gt=cx.createLinearGradient(0,H,0,0);gt.addColorStop(0,'rgba(150,220,205,'+(.30*e)+')');gt.addColorStop(1,'rgba(255,246,230,'+(.55*e)+')');
+    cx.strokeStyle=gt;cx.lineWidth=12;cx.lineCap='round';cx.beginPath();cx.moveTo(W/2,H*.96);cx.lineTo(W/2,H*.04);cx.stroke();
+    glow(W/2,H*.05,70,'#fff1d6',.45*e);
+    OTHERS.forEach(function(pods,i){
+      var side=(i%2)?1:-1,y=H*(.84-i*.11),x=W/2+side*W*.26;
+      cx.save();cx.globalAlpha=.75*e;cx.strokeStyle='rgba(170,225,215,.5)';cx.lineWidth=2;cx.beginPath();cx.moveTo(W/2,y+8);cx.quadraticCurveTo((W/2+x)/2,y+12,x,y);cx.stroke();
+      pods.forEach(function(cs,j){var px=x+(j-1.5)*16,py=y-6-(j%2)*9;cx.fillStyle='rgba(10,8,26,.9)';cx.beginPath();cx.ellipse(px,py,9,4.5,0,0,6.2832);cx.fill();
+        cx.strokeStyle='rgba(220,240,235,.45)';cx.lineWidth=1;cx.stroke();cs.forEach(function(s,m){glow(px-4+m*3.5,py,3.2,SENSES[s].c,.8);});});
+      cx.restore();
+    });
+  }
+  /* your tree: full size, or as one branch of the whole */
+  var tx=W/2+(W*.26-0)*e,tb=fullB+((H*.52)-fullB)*e,th=fullH*(1-.78*e),ts=sc*(1-.74*e);
+  if(e>.01){cx.save();cx.globalAlpha=.8*e;cx.strokeStyle='rgba(255,211,154,.75)';cx.lineWidth=2.4;cx.beginPath();cx.moveTo(W/2,tb+6);cx.quadraticCurveTo((W/2+tx)/2,tb+12,tx,tb);cx.stroke();cx.restore();}
+  var P=drawTree(tx,tb,th,ts,1,true);
+  drawThreads(tx,tb,th,P);
+  window.__P=P;
+  if(!document.hidden)requestAnimationFrame(frame);
+}
+document.addEventListener('visibilitychange',function(){if(!document.hidden)requestAnimationFrame(frame);});
+
+/* ── the three ways of seeing ───────────────────────────────────────────────────────────────────────────────── */
+var ptext=document.getElementById('ptext'),chips=document.getElementById('chips'),week=document.getElementById('week');
+function setText(parts){ptext.textContent='';parts.forEach(function(x){if(typeof x==='string')ptext.appendChild(document.createTextNode(x));else{var b=document.createElement('b');b.textContent=x.b;ptext.appendChild(b);}});}
+function showLens(l){
+  lens=l;zoomTo=(l==='whole')?1:0;chips.textContent='';week.style.display='none';
+  document.querySelectorAll('#lens .pill').forEach(function(b){b.setAttribute('aria-pressed',b.getAttribute('data-l')===l?'true':'false');});
+  if(l==='branch'){pick=-1;setText(['Each pod holds a week of senses. ',{b:'Touch a pod'},' to unfold its week along a line: what was felt, on which day, and where.']);}
+  if(l==='time'){sense=null;threadT=0;setText(['Here, time is set aside. ',{b:'Choose a sense'},', and every moment it was felt is joined, whichever week it came from.']);
+    KEYS.forEach(function(k){var b=document.createElement('button');b.type='button';b.className='chip';b.setAttribute('aria-pressed','false');
+      var i=document.createElement('i');i.style.background=SENSES[k].c;b.appendChild(i);b.appendChild(document.createTextNode(SENSES[k].l));
+      b.addEventListener('click',function(){sense=k;threadT=0;chips.querySelectorAll('.chip').forEach(function(c){c.setAttribute('aria-pressed',c===b?'true':'false');});timeText(k);});
+      chips.appendChild(b);});}
+  if(l==='whole'){setText(['Your tree is one branch of a greater one. ',{b:'The small within the whole:'},' every moment you sense belongs to a place, a town, a world, and to everyone sensing with you. Nobody here is named, and nobody is ranked.']);}
+}
+function timeText(k){
+  var n=0,wk={},pl={};WEEKS.forEach(function(w){w.L.forEach(function(l){if(l.s===k){n++;wk[w.n]=1;pl[l.p]=1;}});});
+  var nw=Object.keys(wk).length,np=Object.keys(pl).length,L=SENSES[k].l;
+  if(!n){setText([L+' was not felt in this sample. A sense can be absent for a while, and still be yours.']);return;}
+  setText([{b:L},', felt '+n+(n===1?' time':' times')+', across '+nw+(nw===1?' week':' weeks')+' and '+np+(np===1?' place':' places')+'. '+(n>1?'The same feeling, met again: it is not trapped in its date.':'One moment, still glowing.')]);
+}
+document.querySelectorAll('#lens .pill').forEach(function(b){b.addEventListener('click',function(){showLens(b.getAttribute('data-l'));});});
+cv.addEventListener('click',function(ev){
+  if(lens!=='branch'||!window.__P)return;
+  var r=cv.getBoundingClientRect(),x=ev.clientX-r.left,y=ev.clientY-r.top,hit=-1;
+  window.__P.forEach(function(p){var dx=(x-p.x)/p.a,dy=(y-p.y)/(p.b*1.6);if(dx*dx+dy*dy<=1.15)hit=p.k;});
+  if(hit<0)return;pick=hit;showWeek(hit);
+});
+function showWeek(k){
+  var w=WEEKS[k],days=document.getElementById('wdays'),dots=document.getElementById('wdots'),list=document.getElementById('wlist');
+  days.textContent='';dots.textContent='';list.textContent='';
+  DAYS.forEach(function(dn,di){var a=document.createElement('div');a.textContent=dn;days.appendChild(a);
+    var c=document.createElement('div');c.className='dot';w.L.forEach(function(l){if(l.d===di){var i=document.createElement('i');i.style.background=SENSES[l.s].c;i.style.color=SENSES[l.s].c;c.appendChild(i);}});dots.appendChild(c);});
+  w.L.forEach(function(l){var li=document.createElement('li');li.appendChild(document.createTextNode(DAYS[l.d]+' · '+SENSES[l.s].l+' '));var s=document.createElement('span');s.textContent=l.p;li.appendChild(s);list.appendChild(li);});
+  setText(['Week '+w.n+', along its line. ',{b:'How the days went,'},' in the order they were lived.']);
+  week.style.display='block';
+}
+
+/* ── the third beat (the same sound as holding your light on the map) ──────────────────────────────────────────── */
+var AC=null,TBv=null;
+function wake(){if(CALM)return;try{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();
+  var b=AC.createBuffer(1,1,22050),s=AC.createBufferSource();s.buffer=b;s.connect(AC.destination);s.start(0);}catch(e){}}
+function beatStart(){
+  if(CALM||TBv||!AC||AC.state!=='running')return;
+  try{var t0=AC.currentTime,out=AC.createGain();out.gain.setValueAtTime(0.0001,t0);out.gain.linearRampToValueAtTime(1,t0+1.6);
+    var lp=AC.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1500;var dl=AC.createDelay(2);dl.delayTime.value=.43;
+    var dk=AC.createBiquadFilter();dk.type='lowpass';dk.frequency.value=1000;var fb=AC.createGain();fb.gain.value=.36;var wet=AC.createGain();wet.gain.value=.3;
+    out.connect(lp);lp.connect(AC.destination);lp.connect(dl);dl.connect(dk);dk.connect(fb);fb.connect(dl);dk.connect(wet);wet.connect(AC.destination);
+    function v(f,g){var o=AC.createOscillator(),gn=AC.createGain();o.type='sine';o.frequency.setValueAtTime(f,t0);gn.gain.setValueAtTime(g,t0);o.connect(gn);gn.connect(out);o.start(t0);return {o:o,g:gn};}
+    TBv={out:out,a:v(392,.045),b:v(587.33,.04),lo:v(196,.03),sub:v(98,.02),sh:v(1568,.004),held:null};}catch(e){TBv=null;}
+}
+function beatSet(k,held){if(!TBv)return;try{var e=k*k*(3-2*k),n=AC.currentTime;TBv.b.o.frequency.setTargetAtTime(392.95+(587.33-392.95)*(1-e),n,.15);
+  if(TBv.held!==held){TBv.held=held;TBv.out.gain.setTargetAtTime(held?1:.32,n,.4);}}catch(e){}}
+function beatMeet(){if(!TBv)return;try{var n=AC.currentTime;TBv.b.o.frequency.setTargetAtTime(392.95,n,.08);TBv.sh.g.gain.setTargetAtTime(.011,n,.5);TBv.out.gain.setTargetAtTime(1.15,n,.3);beatEnd(7);}catch(e){}}
+function beatEnd(after){if(!TBv)return;var B=TBv;TBv=null;try{var n=AC.currentTime,a=after||0;B.out.gain.cancelScheduledValues(n+a);B.out.gain.setTargetAtTime(.0001,n+a,1.2);
+  [B.a,B.b,B.lo,B.sub,B.sh].forEach(function(x){try{x.o.stop(n+a+7);}catch(e){}});}catch(e){}}
+
+/* ── the timeless practice, for the willing: rise, then return ─────────────────────────────────────────────── */
+var pr=document.getElementById('pr'),prstep=document.getElementById('prstep'),prq=document.getElementById('prq'),prn=document.getElementById('prn'),
+    pchips=document.getElementById('pchips'),prrow=document.getElementById('prrow'),hold=document.getElementById('hold'),hx=hold.getContext('2d');
+var chosen=null,step=0,hp=0,holding=false,met=false,metAt=0,hT=0,running=false,lastStep=null;
+function btn(label,fn,quiet){var b=document.createElement('button');b.type='button';b.className='pill'+(quiet?' q':'');b.textContent=label;b.addEventListener('click',function(){wake();fn();});prrow.appendChild(b);return b;}
+function go(s){
+  step=s;pchips.textContent='';prrow.textContent='';hold.style.display='none';prn.textContent='';
+  if(s===1){prstep.textContent='ONE OF FOUR';prq.textContent='Choose a sense you felt today.';prn.textContent='Any one. There is no right answer.';
+    KEYS.forEach(function(k){var b=document.createElement('button');b.type='button';b.className='chip';var i=document.createElement('i');i.style.background=SENSES[k].c;b.appendChild(i);
+      b.appendChild(document.createTextNode(SENSES[k].l));b.addEventListener('click',function(){wake();chosen=k;go(2);});pchips.appendChild(b);});
+    btn('Not now',closePractice,1);}
+  if(s===2){prstep.textContent='TWO OF FOUR';prq.textContent='Now remember another time you felt '+SENSES[chosen].l.toLowerCase()+'.';
+    prn.textContent='Any day, any place: last week, or long ago. Take your time; nothing is timed.';btn('I have one',function(){go(3);});btn('Back',function(){go(1);},1);}
+  if(s===3){prstep.textContent='THREE OF FOUR';prq.textContent='Hold both at once.';
+    prn.textContent='Press and hold anywhere in the space below. The two moments move towards each other while you hold; lift whenever you like, and they wait.'+(CALM?'':' (With sound: the third beat.)');
+    hold.style.display='block';sizeHold();hp=0;met=false;metAt=0;holding=false;btn('Let them meet on their own',function(){auto=true;},1);if(!running){running=true;requestAnimationFrame(hframe);}}
+  if(s===4){prstep.textContent='FOUR OF FOUR';prq.textContent='Notice.';
+    prn.textContent='Were these two feelings, or one feeling met twice? Nothing needs answering. Now come back: one slow breath, and the ground beneath you.';
+    btn('Done',closePractice);}
+  try{prq.focus&&prq.setAttribute('tabindex','-1');prq.focus({preventScroll:true});}catch(e){}
+}
+var auto=false,HD=1,HW=0,HH=0;
+function sizeHold(){HD=Math.min(2,window.devicePixelRatio||1);var r=hold.getBoundingClientRect();HW=Math.max(260,r.width);HH=Math.max(260,r.height);hold.width=Math.round(HW*HD);hold.height=Math.round(HH*HD);hx.setTransform(HD,0,0,HD,0,0);}
+function hglow(x,y,r,col,a){var g=hx.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,hexA(col,a));g.addColorStop(1,hexA(col,0));hx.fillStyle=g;hx.beginPath();hx.arc(x,y,r,0,6.2832);hx.fill();}
+function hframe(){
+  if(step!==3){running=false;return;}
+  hT+=.016;var col=SENSES[chosen||'peace'].c;
+  if((holding||auto)&&!met){hp=Math.min(1,hp+(REDUCED?.04:.0042));beatStart();beatSet(Math.min(1,hp/.86),true);
+    if(hp>=.86&&!met){met=true;metAt=hT;beatMeet();try{if(navigator.vibrate)navigator.vibrate([16,110,10]);}catch(e){}setTimeout(function(){if(step===3)go(4);},REDUCED?1200:4200);}}
+  else if(!met&&TBv)beatSet(Math.min(1,hp/.86),false);
+  hx.clearRect(0,0,HW,HH);
+  var k=Math.min(1,hp/.86),e=k*k*(3-2*k),cy=HH*.5,gap=HW*.34*(1-e),x1=HW/2-gap,x2=HW/2+gap;
+  var beat=met?(REDUCED?.5:(.5+.5*Math.cos((hT-metAt)*6.2832*.95))):0;
+  hglow(x1,cy,46+10*beat,col,.55);hglow(x2,cy,46+10*beat,col,.55);
+  hx.fillStyle='rgba(255,255,255,.92)';hx.beginPath();hx.arc(x1,cy,4,0,6.2832);hx.fill();hx.beginPath();hx.arc(x2,cy,4,0,6.2832);hx.fill();
+  if(met)hglow(HW/2,cy,70+40*beat,'#fff1d6',.35+.25*beat);
+  hx.fillStyle='rgba(232,222,249,.8)';hx.font='14px Georgia,serif';hx.textAlign='center';
+  if(!met){hx.fillText('today',x1,cy+66);hx.fillText('another time',x2,cy+66);}else{hx.fillText('one feeling, met twice',HW/2,cy+90);}
+  requestAnimationFrame(hframe);
+}
+function hDown(e){wake();if(step!==3)return;try{e.preventDefault();}catch(x){}holding=true;try{hold.setPointerCapture(e.pointerId);}catch(x){}}
+function hUp(){holding=false;}
+hold.addEventListener('pointerdown',hDown);hold.addEventListener('pointerup',hUp);hold.addEventListener('pointercancel',hUp);hold.addEventListener('pointerleave',hUp);
+hold.addEventListener('contextmenu',function(e){e.preventDefault();});
+function openPractice(){wake();chosen=null;auto=false;pr.classList.add('on');document.body.style.overflow='hidden';go(1);}
+function closePractice(){beatEnd(0);step=0;auto=false;holding=false;pr.classList.remove('on');document.body.style.overflow='';try{document.getElementById('try').focus({preventScroll:true});}catch(e){}}
+document.getElementById('try').addEventListener('click',openPractice);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pr.classList.contains('on'))closePractice();});
+window.addEventListener('resize',function(){size();if(step===3)sizeHold();});
+
+size();showLens('branch');requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
