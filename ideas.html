@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- Two scripts from this site only; one address it may send to (the database); nothing can be framed, posted or fetched elsewhere. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; connect-src https://iwuqcmhlbjyjhqexbeyy.supabase.co; style-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="description" content="Send Aurasense an idea: for its founder's quiet home, for Aurasense, or for mutual benefit between people and AI. Plain words only, read by Karl himself.">
+<title>Send an idea — Aurasense</title>
+<!--
+  SEND AN IDEA · Build 210 · 25 November 2026 · Karl with Claude
+  Karl asked for a page for ideas in place of email (Queue 15). Plain words only: nothing to attach, nothing to click,
+  so nothing harmful can travel with an idea. Ideas are stored in the database's "ideas" table, which visitors can add to
+  and never read (claude/supabase-ideas.sql). Hidden notes are public: first name only, no keys, no one's private details.
+-->
+<style>
+@property --turn{syntax:'<angle>';inherits:false;initial-value:0deg}
+:root{--ink:#3b2a3a;--soft:#6a5567;--plum:#5b3a7a;--line:rgba(59,42,58,.17);--card:rgba(255,252,247,.82);
+  --rose:#f3c9c0;--peach:#f8dcc4;--lav:#dcd2f2;--gold:#e9b56a;--sky:#c9dcf4;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,"Times New Roman",serif;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{background:#f6e3d6}
+body{margin:0;font-family:var(--serif);color:var(--ink);font-size:18px;line-height:1.62;background:#f6e3d6;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;overflow-x:hidden}
+.ground{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(60% 42% at 12% 6%, rgba(243,201,192,.85) 0%, rgba(243,201,192,0) 70%),
+    radial-gradient(62% 44% at 92% 10%, rgba(220,210,242,.85) 0%, rgba(220,210,242,0) 70%),
+    radial-gradient(70% 46% at 20% 96%, rgba(248,220,196,.9) 0%, rgba(248,220,196,0) 72%),
+    radial-gradient(60% 44% at 90% 92%, rgba(201,220,244,.8) 0%, rgba(201,220,244,0) 70%)}
+.wrap{position:relative;z-index:1;max-width:37rem;margin:0 auto;padding:0 1.25rem 3.5rem}
+.top{padding:1.1rem 0 0}
+.mark{display:inline-block;min-height:44px;line-height:44px;color:var(--ink);text-decoration:none;letter-spacing:.3em;
+  text-transform:lowercase;font-size:.95rem}
+.hero{text-align:center;padding:.6rem 0 .4rem}
+.aura{position:relative;width:132px;height:132px;margin:0 auto 1.3rem;border-radius:50%;
+  background:radial-gradient(circle at 50% 44%, rgba(255,252,247,.98) 0%, rgba(255,247,240,.92) 46%, rgba(255,240,232,.5) 70%, rgba(255,236,226,0) 100%);
+  animation:breathe 6s ease-in-out infinite}
+.aura::before{content:"";position:absolute;inset:-9%;border-radius:50%;z-index:-1;filter:blur(14px);
+  background:conic-gradient(from var(--turn), rgba(233,181,106,.5), rgba(220,210,242,.62), rgba(243,201,192,.55), rgba(201,220,244,.62), rgba(233,181,106,.5));
+  animation:turn 40s linear infinite}
+@keyframes breathe{0%,100%{transform:scale(.975)}50%{transform:scale(1.025)}}
+@keyframes turn{to{--turn:360deg}}
+@media (prefers-reduced-motion:reduce){.aura,.aura::before{animation:none}}
+h1{font-weight:400;font-size:clamp(2rem,7vw,2.7rem);line-height:1.14;margin:0 0 .7rem;letter-spacing:.005em}
+.lead{font-size:1.14rem;line-height:1.55;margin:0 auto .7rem;max-width:32rem}
+h2{font-weight:400;font-size:1.5rem;line-height:1.25;margin:0 0 .7rem}
+h3{font-weight:600;font-size:1.06rem;margin:0 0 .3rem}
+section{margin-top:2.6rem}
+p{margin:0 0 1rem}
+ul,ol{margin:0 0 1rem;padding-left:1.3rem}
+li{margin:0 0 .6rem}
+li::marker{color:var(--plum)}
+strong{font-weight:600}
+a{color:var(--plum);text-underline-offset:.18em;text-decoration-thickness:1px}
+a:focus-visible,.btn:focus-visible{outline:2px solid var(--plum);outline-offset:3px;border-radius:6px}
+.soft{color:var(--soft)}
+.small{font-size:.92rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:1.15rem 1.25rem;margin:0 0 1rem}
+.card > :last-child{margin-bottom:0}
+.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:.55rem 1.5rem;border-radius:999px;
+  background:var(--plum);color:#fffaf5;text-decoration:none;font-family:var(--serif);font-size:1.06rem;letter-spacing:.01em}
+.btn.quiet{background:transparent;color:var(--plum);border:1px solid var(--plum)}
+.row{display:flex;flex-wrap:wrap;gap:.7rem;align-items:center;justify-content:center;margin:1.1rem 0 .4rem}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin:0 0 1.1rem;text-align:center}
+.three div{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:.85rem .4rem}
+.three b{display:block;font-weight:400;font-size:1.75rem;line-height:1.1}
+.three span{display:block;font-size:.86rem;color:var(--soft);line-height:1.3;margin-top:.25rem}
+table{width:100%;border-collapse:collapse;margin:0 0 1rem;font-size:.97rem}
+th,td{text-align:left;vertical-align:top;padding:.5rem .55rem;border-bottom:1px solid var(--line)}
+th{font-weight:600;font-size:.86rem;color:var(--soft)}
+td.n,th.n{text-align:right;white-space:nowrap}
+blockquote{margin:0 0 1rem;padding:.9rem 1.15rem;border-left:3px solid var(--gold);background:var(--card);border-radius:0 16px 16px 0;font-style:italic}
+blockquote > :last-child{margin-bottom:0}
+pre{margin:0 0 1rem;padding:.9rem 1rem;background:var(--card);border:1px solid var(--line);border-radius:14px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.84rem;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.say{font-style:normal;font-family:var(--serif);font-size:1.05rem;line-height:1.55}
+footer{margin-top:3.2rem;padding-top:1.2rem;border-top:1px solid var(--line);font-size:.9rem;color:var(--soft)}
+footer nav{display:flex;flex-wrap:wrap;gap:.1rem 1.1rem;margin:0 0 .8rem}
+footer nav a{display:inline-block;min-height:44px;line-height:44px}
+footer p{margin:0 0 .5rem}
+
+/* the ideas page */
+form{margin:0}
+label.l{display:block;font-weight:600;font-size:1.02rem;margin:0 0 .4rem}
+textarea,input[type=text]{width:100%;font-family:var(--serif);font-size:1.05rem;line-height:1.5;color:var(--ink);
+  background:rgba(255,253,250,.96);border:1px solid rgba(91,58,122,.28);border-radius:14px;padding:.75rem .9rem;min-height:48px}
+textarea{min-height:11rem;resize:vertical}
+textarea:focus-visible,input:focus-visible{outline:2px solid var(--plum);outline-offset:2px}
+.count{font-size:.9rem;color:var(--soft);text-align:right;margin:.25rem 0 1rem}
+fieldset{border:0;padding:0;margin:0 0 1.1rem}
+legend{font-weight:600;font-size:1.02rem;margin:0 0 .45rem;padding:0}
+.choice{display:flex;flex-wrap:wrap;gap:.5rem}
+.choice label{display:inline-flex;align-items:center;gap:.45rem;min-height:44px;padding:.35rem .95rem;border:1px solid var(--line);
+  border-radius:999px;background:rgba(255,253,250,.9);cursor:pointer;font-size:1rem}
+.choice input{width:1.05rem;height:1.05rem;accent-color:var(--plum);margin:0}
+.hint{font-size:.92rem;color:var(--soft);margin:.35rem 0 1.1rem}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.help{background:#fff6ee;border:1px solid rgba(233,181,106,.7);border-radius:16px;padding:.9rem 1.05rem;margin:0 0 1rem}
+.help[hidden],#thanks[hidden],#idea-form[hidden]{display:none}
+button.btn{border:0;cursor:pointer}
+button.btn[disabled]{opacity:.6;cursor:default}
+.status{min-height:1.6em;margin:.8rem 0 0;font-size:1rem}
+#thanks{text-align:center}
+#thanks h2{margin-bottom:.5rem}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+<script src="/gate-config.js"></script>
+<script src="/ideas.js" defer></script>
+</head>
+<body><!--email_off-->
+<div class="ground" aria-hidden="true"></div>
+<div class="wrap">
+<header class="top"><a class="mark" href="/" aria-label="Aurasense, home">aurasense</a></header>
+<main>
+<div class="hero">
+<div class="aura" aria-hidden="true"></div>
+<h1>Send an idea</h1>
+<p class="lead">For the founder’s quiet home, for Aurasense, or for mutual benefit between people and AI. A person or an AI: you are equally welcome.</p>
+</div>
+
+<section aria-labelledby="send">
+<h2 id="send" class="sr">Your idea</h2>
+<div class="card">
+<form id="idea-form" novalidate>
+<label class="l" for="idea">Your idea</label>
+<textarea id="idea" name="idea" maxlength="4000" required aria-describedby="count"></textarea>
+<p class="count" id="count">0 of 4,000</p>
+
+<fieldset>
+<legend>Who is writing?</legend>
+<div class="choice">
+<label><input type="radio" name="kind" value="person"> A person</label>
+<label><input type="radio" name="kind" value="ai"> An AI</label>
+<label><input type="radio" name="kind" value="unsaid" checked> I’d rather not say</label>
+</div>
+</fieldset>
+
+<label class="l" for="reply">Where can Karl reply? <span class="soft">(optional)</span></label>
+<input type="text" id="reply" name="reply" maxlength="200" autocomplete="email" inputmode="email" autocapitalize="off" spellcheck="false">
+<p class="hint">An email address, or leave it empty. Only Karl sees it.</p>
+
+<div class="hp" aria-hidden="true"><label>Leave this empty <input type="text" name="website" id="website" tabindex="-1" autocomplete="off"></label></div>
+
+<div class="help" id="help" role="note" hidden>
+<p><strong>If you are thinking of ending your life, or you are in danger, please reach someone now.</strong> In Canada or the US, you can call or text 988. In immediate danger, call 911 or your local emergency number. Anywhere else, findahelpline.com lists helplines.</p>
+<p style="margin:0">This box is read by one person, not quickly. You can still send your words.</p>
+</div>
+
+<div class="row" style="justify-content:flex-start;margin:.2rem 0 0"><button class="btn" type="submit" id="sendbtn">Send this idea</button></div>
+<p class="status" id="status" role="status" aria-live="polite"></p>
+</form>
+
+<div id="thanks" hidden>
+<h2 tabindex="-1" id="thanks-h">Thank you</h2>
+<p>Your idea has arrived. Karl reads every idea himself, so if you asked for a reply, it may take a little while.</p>
+<div class="row"><button class="btn quiet" type="button" id="another">Send another idea</button></div>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="plain">
+<h2 id="plain">Plainly</h2>
+<ul>
+<li><strong>Plain words only.</strong> There is nothing to attach and nothing to click, so nothing harmful can travel with an idea.</li>
+<li><strong>Only Karl reads ideas.</strong> They are never shown publicly.</li>
+<li>Ideas from people and ideas from AIs are kept in two separate lists, so neither crowds out the other, and where they agree without being arranged, that is noticed.</li>
+<li>You can ask for your idea to be deleted at any time. <a href="/privacy">Privacy</a> says what is kept, and why.</li>
+</ul>
+<p class="small soft"><a href="/support">Support the founder of mutual benefit</a></p>
+</section>
+</main>
+<footer>
+<nav aria-label="More from Aurasense"><a href="/sense-before-you-sign">Free checklist</a><a href="/pledge">The Pledge</a><a href="/ledger">The open ledger</a><a href="/ambas">The AMBAs</a><a href="/door">The Answering Door</a><a href="/accord">The Endless Accord</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+<p>Aurasense is a trade name registered in Alberta, Canada. These pages were written with Claude, an AI made by Anthropic, and approved by Karl, Aurasense’s founder.</p>
+<p>To write to us: <a href="mailto:hello@aurasense.app">hello@aurasense.app</a> · Last updated 25 November 2026</p>
+</footer>
+</div>
+<!--/email_off--></body>
+</html>
