@@ -7668,6 +7668,7 @@ function macEnter(){
   macPainted=false; macLast=performance.now(); macNext=0;
   macSpread=0; macWantSpread=0; macHover=-1; macOpenDoor(-1); macShowName(-1);try{var _pgS3=document.getElementById('myaura-page');if(_pgS3)_pgS3.classList.remove('ma-spread');}catch(e){}
   var _t=document.getElementById('ma-cloud-through'); if(_t)_t.textContent='Look closer';
+  try{maBackSync();}catch(e){}
   var _w=document.getElementById('ma-cloud-words');
   if(_w)_w.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here. Touch it.</span>';
   /* 6 Oct 2026 · Karl: "I think the lower menus should appear by default as look closer could be missed." */
@@ -7925,6 +7926,7 @@ function macOpenDoor(i){
         window._macHush=setTimeout(function(){ try{w.classList.add('hushed');}catch(e){} },7000);
       }
       thr.textContent='Let it close';
+      try{maBackSync();}catch(e){}
     }else{
       macWantSpread=0; macShowName(-1); macOpenDoor(-1);try{var _pgS2=document.getElementById('myaura-page');if(_pgS2)_pgS2.classList.remove('ma-spread');}catch(e){}
       var d2=document.getElementById('ma-cloud-doors');if(d2)d2.classList.add('on');   /* 6 Oct 2026 · the doors stay */
@@ -7932,6 +7934,7 @@ function macOpenDoor(i){
       if(w2)w2.innerHTML='<b>This is your aura.</b><span>Every sense you have offered is living in here. Touch it.</span>';
       var _f=document.getElementById('myaura-page'); if(_f)_f.classList.add('faceon');
       thr.textContent='Look closer';
+      try{maBackSync();}catch(e){}
     }
   });
   if(aur){
@@ -8124,7 +8127,20 @@ const maCancelSelfie=document.getElementById('ma-cancel-selfie');
 if(maCancelSelfie)maCancelSelfie.addEventListener('click',()=>{maStopStream();if(maVideo)maVideo.style.display='none';if(maSelfieActions)maSelfieActions.style.display='none';if(maSelfieBtn)maSelfieBtn.style.display='';
   try{const _pg=document.getElementById('myaura-page');if(_pg)_pg.classList.remove('ma-cam-live');const _th=document.getElementById('ma-selfie-thumb');if(_th&&maSelfieImg&&maSelfieImg.src)_th.style.display='block';}catch(_){}});   /* Build 192 */
 (function(){const _th=document.getElementById('ma-selfie-thumb');if(_th)_th.addEventListener('click',()=>{try{if(maSelfieBtn)maSelfieBtn.click();}catch(_){}});})();
-const maBackBtn=document.getElementById('ma-back');if(maBackBtn)maBackBtn.onclick=()=>{const _o=document.getElementById('pt-ov');if(_o)_o.remove();closeMyAuraPage();};
+/* Build 211 · Karl: "'return to map' at top left takes you back to main My Aura, right function wrong label. I'm a little
+   confused when I use it by instinct to move back to between look closer and let it close too." The button at the top
+   left now steps back one place at a time, and always says where it goes: from a list, or from the closer view, back to
+   My Aura as a whole; from there, to the map. */
+function maBackSync(){try{var b=document.getElementById('ma-back');if(!b)return;
+  var deeper=(macDoorOpen>=0)||!!macWantSpread;var t=deeper?'\u2190 Back to My Aura':'\u2190 Return to the map';
+  if(b.textContent!==t)b.textContent=t;}catch(e){}}
+const maBackBtn=document.getElementById('ma-back');if(maBackBtn)maBackBtn.onclick=()=>{const _o=document.getElementById('pt-ov');if(_o)_o.remove();
+  try{
+    if(macDoorOpen>=0){macOpenDoor(-1);maBackSync();return;}
+    if(macWantSpread){var _th=document.getElementById('ma-cloud-through');if(_th){_th.click();maBackSync();return;}}
+  }catch(e){}
+  closeMyAuraPage();};
+try{macOpenDoor=(function(f){return function(i){var r=f(i);maBackSync();return r;};})(macOpenDoor);}catch(e){}
 window.addEventListener('resize',()=>{const p=document.getElementById('myaura-page');if(p&&p.classList.contains('show'))maSizeCanvas();});
 const maPolicy=document.getElementById('ma-policy');
 if(maPolicy)maPolicy.textContent="When you offer an aura, others can see it — but never who placed it, unless you allow it. First, someone must offer you an aura of good intention (peace, understanding). If you accept, they see only your Aurasenser name, never your real name. To message you, they make a monetary offering to learn who you are; if you accept it, the moment they ask, they give up their own identity to you in return — so any name or detail you share is always your choice, never supplied by Aurasense. Half of every offering goes to you, half to Aurasense: one of the ways we run with no ads, and without ever selling an ounce of anyone's data. Until then, Aurasensers speak through the alphasense symbols.";
@@ -8158,7 +8174,7 @@ function rgSuggest(){
   const num=Math.random()<0.3?String(Math.floor(Math.random()*89)+10):'';
   return a+n+num;
 }
-function openRegister(){try{if(!(window.asRgResume&&window.asRgResume())&&window.asRgStep)window.asRgStep(0);}catch(e){}const p=document.getElementById('register-page');if(p)p.classList.add('show');
+function openRegister(){try{if(!(window.asRgResume&&window.asRgResume())&&window.asRgStep)window.asRgStep(0);}catch(e){}/* Build 211 · opened from My Aura, its button goes back to My Aura, and now says so */try{var _mp=document.getElementById('myaura-page'),_rb=document.getElementById('rg-back');if(_rb)_rb.textContent=(_mp&&_mp.classList.contains('show'))?'\u2190 Back to My Aura':'\u2190 Return to the map';}catch(e){}const p=document.getElementById('register-page');if(p)p.classList.add('show');
   try{const has=!!(myProfile&&myProfile.handle);
     const t=document.getElementById('rg-title');if(t)t.textContent=has?'Update my profile':'Become an Aurasenser';
     const b=document.getElementById('rg-create');if(b)b.textContent=has?'Update my aura':'Create my aura';
@@ -14020,7 +14036,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">25 Nov 2026 · </span>207<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">25 Nov 2026 · </span>211<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
