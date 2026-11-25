@@ -2004,6 +2004,18 @@ html.as-arriving,html.as-arriving body{touch-action:none!important;
 .tj-card .tjp{font-size:11px;color:#a99fd0;letter-spacing:.04em;margin-bottom:5px}
 .tj-card .tjc{font-size:13.5px;color:#e6dfff;font-weight:500;margin-bottom:6px}
 .tj-card .tju{font-size:12.5px;color:#c8c0e4;line-height:1.6;margin-bottom:7px}
+#tj-thanks{display:none;text-align:center;margin:8px auto 24px;max-width:520px;padding:22px 20px 20px;border-radius:22px;background:radial-gradient(circle at 50% 38%,rgba(255,252,246,.98) 0%,rgba(255,245,230,.95) 62%,rgba(250,233,207,.92) 100%);border:1px solid rgba(233,181,106,.55);color:#3b2a3a;box-shadow:0 0 34px rgba(233,181,106,.32);font-family:var(--serif)}
+#tj-thanks.on{display:block;animation:tjThanksIn 1.2s ease both}
+#tj-thanks .tjt-mark{font-size:22px;color:#c98a3c;line-height:1}
+#tj-thanks .tjt-h{font-size:21px;margin:6px 0 8px;letter-spacing:.02em;color:#3b2a3a}
+#tj-thanks .tjt-p{font-size:15.5px;line-height:1.6;color:#4e3a4c}
+#tj-thanks .tjt-s{font-size:13.5px;line-height:1.5;color:#7a5f72;margin-top:10px}
+.tj-card.tj-mine{box-shadow:0 0 14px 1px rgba(233,181,106,.32)}
+.tj-card.tj-new{animation:tjGlow 6s ease-out 1 both}
+.tj-card .tj-yours{display:inline-block;margin-left:6px;font-size:12.5px;color:#a86f30;letter-spacing:.02em}
+@keyframes tjThanksIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes tjGlow{0%{box-shadow:0 0 0 0 rgba(233,181,106,0)}18%{box-shadow:0 0 36px 8px rgba(233,181,106,.78)}100%{box-shadow:0 0 14px 1px rgba(233,181,106,.32)}}
+@media (prefers-reduced-motion:reduce){#tj-thanks.on,.tj-card.tj-new{animation:none}}
 .tj-card .tjr{font-size:12.5px;color:#b0e0c8;line-height:1.6;font-style:italic;border-top:0.5px solid rgba(167,139,250,.15);padding-top:7px}
 /* Life Story quiz + story */
 #ls-focus{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
@@ -3041,8 +3053,17 @@ map.on('style.load',()=>{
 });
 
 const canvas=document.getElementById('ac'),ctx=canvas.getContext('2d');
-function resize(){canvas.width=window.innerWidth;canvas.height=window.innerHeight}
+function resize(){var m=document.getElementById('map'),de=document.documentElement;
+  var w=Math.max(window.innerWidth||0,m?m.clientWidth:0,de?de.clientWidth:0),h=Math.max(window.innerHeight||0,m?m.clientHeight:0,de?de.clientHeight:0);
+  if(canvas.width!==w)canvas.width=w;if(canvas.height!==h)canvas.height=h}
 resize();window.addEventListener('resize',resize);
+/* Build 207 · Karl's photos: the auras cut off in a sudden straight line after My Aura. While typing, the phone's
+   keyboard had made the screen shorter, and the drawing layer kept that shorter size. It now measures the whole
+   map, measures again whenever the screen settles, and checks itself every second. */
+try{if(window.visualViewport)window.visualViewport.addEventListener('resize',function(){setTimeout(resize,150);});}catch(e){}
+document.addEventListener('focusout',function(){setTimeout(resize,400);});
+window.addEventListener('pageshow',resize);document.addEventListener('visibilitychange',function(){if(!document.hidden)resize();});
+setInterval(function(){var m=document.getElementById('map');if(m&&(canvas.height<m.clientHeight||canvas.width<m.clientWidth))resize();},1000);
 
 
 // Personal aura
@@ -7829,12 +7850,17 @@ function macOpenDoor(i){
   /* Build 181 · Karl: "the my aura text is overlapping again". A sense's story closes when a list opens. */
   try{window._macCardOpen=false;var _sc181=document.getElementById('ma-sense-card');if(_sc181)_sc181.classList.remove('on');}catch(e){}
   box.innerHTML='';
-  MAC_DOORS[i].items.forEach(function(it){
+  /* Build 207 · Karl: "Set up your profile / See yourself in your Aura still appear after both have been done."
+     A step already taken moves to the end of its list, marked done, and can still be opened to change it. */
+  var _it207=MAC_DOORS[i].items.map(function(it){var dn=false;try{if(it.sel.indexOf('data-mj="profile"')>=0)dn=!!(myProfile&&myProfile.handle);else if(it.face)dn=!!(typeof maSelfieImg!=='undefined'&&maSelfieImg);}catch(e){dn=false;}return {it:it,done:dn};});
+  _it207=_it207.filter(function(x){return !x.done;}).concat(_it207.filter(function(x){return x.done;}));
+  _it207.forEach(function(x){var it=x.it;
     var b=document.createElement('button');
     b.type='button'; b.className='maci';
     b.innerHTML='<b></b><i></i><span class="why"></span>';
     b.querySelector('b').textContent=it.l;
     b.querySelector('i').textContent=it.p;
+    if(x.done){b.classList.add('done');b.querySelector('b').textContent=it.face?'Your face is in your aura':'Your profile is set up';b.querySelector('i').textContent='Done \u00b7 tap to change it';}
     /* is this one still resting?  ask the existing lock, never a second copy */
     var mk=(it.sel.indexOf('data-mj=')>=0)?it.sel.split('data-mj="')[1].split('"')[0]:null;
     var rest=false;
@@ -10005,12 +10031,29 @@ const TJ_SEED=[
   {place:'A farmhouse, County Clare',choice:'Caring for my father here, or moving him to a home',unfolded:'I brought him home. The last spring was gentle. Hard, but gentle.',reflection:'There is no clean answer. I chose the one I could live beside afterward \u2014 that was my only real compass.'}
 ];
 let tjReports=TJ_SEED.slice();
+/* Build 207 · Karl: "I offered a conscious trajectory and it just goes right back to the start when done. No thanks
+   or acknowledgement… It should glow or something special and appropriate words of thanks should be given."
+   Each one offered is now thanked, glows at the top of the list, and is kept on this device (until now it vanished
+   when the page closed). Nobody else sees it: sharing waits for its own decision. */
+const TJ_MINE_KEY='as_tj_mine';let tjNewAt=0;
+function tjMineLoad(){try{const a=JSON.parse(localStorage.getItem(TJ_MINE_KEY)||'[]');if(!Array.isArray(a))return [];
+  return a.filter(r=>r&&typeof r==='object').slice(0,50).map(r=>({place:String(r.place||'').slice(0,200),choice:String(r.choice||'').slice(0,400),unfolded:String(r.unfolded||'').slice(0,4000),reflection:String(r.reflection||'').slice(0,2000),mine:1,at:+r.at||0}));}catch(e){return [];}}
+function tjMineSave(){try{localStorage.setItem(TJ_MINE_KEY,JSON.stringify(tjReports.filter(r=>r.mine).slice(0,50)));}catch(e){}}
+try{tjReports=tjMineLoad().concat(TJ_SEED);}catch(e){}
+function tjThank(){try{
+  const list=document.getElementById('tj-list'),h=document.getElementById('tj-list-h');if(!list)return;
+  let t=document.getElementById('tj-thanks');
+  if(!t){t=document.createElement('div');t.id='tj-thanks';t.setAttribute('role','status');const at=h||list;at.parentNode.insertBefore(t,at);}
+  t.innerHTML='<div class="tjt-mark" aria-hidden="true">\u2727</div><div class="tjt-h">Thank you</div><div class="tjt-p">You offered something only a lived life can teach: the choice you faced, where it led, and what you would tell the next person standing there.</div><div class="tjt-s">It is kept on this device, glowing at the top of the list below.</div>';
+  t.classList.remove('on');void t.offsetWidth;t.classList.add('on');
+  setTimeout(()=>{try{t.scrollIntoView({behavior:(typeof asStill==='function'&&asStill())?'auto':'smooth',block:'center'});}catch(e){}},140);
+}catch(e){}}
 function tjRender(){
   const list=document.getElementById('tj-list');if(!list)return;
   const esc=t=>(t||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  list.innerHTML=tjReports.map(r=>'<div class="tj-card"><div class="tjp">\ud83d\udccd '+esc(r.place)+'</div><div class="tjc">'+esc(r.choice)+'</div>'+(r.unfolded?'<div class="tju">'+esc(r.unfolded)+'</div>':'')+(r.reflection?'<div class="tjr">"'+esc(r.reflection)+'"</div>':'')+'</div>').join('');
+  list.innerHTML=tjReports.map(r=>'<div class="tj-card'+(r.mine?' tj-mine':'')+(r.mine&&tjNewAt&&r.at===tjNewAt?' tj-new':'')+'"><div class="tjp">\ud83d\udccd '+esc(r.place)+(r.mine?' <span class="tj-yours">yours \u00b7 only on this device</span>':'')+'</div><div class="tjc">'+esc(r.choice)+'</div>'+(r.unfolded?'<div class="tju">'+esc(r.unfolded)+'</div>':'')+(r.reflection?'<div class="tjr">"'+esc(r.reflection)+'"</div>':'')+'</div>').join('');
 }
-function openTrajectory(){const p=document.getElementById('trajectory-page');if(!p)return;try{tjRender();}catch(e){}p.classList.add('show');p.style.display='block';p.style.opacity='1';p.style.pointerEvents='auto';p.style.zIndex='1900';try{if(typeof closeMyAuraPage==='function')closeMyAuraPage();}catch(e){}}
+function openTrajectory(){const p=document.getElementById('trajectory-page');if(!p)return;try{tjNewAt=0;tjRender();var _tth=document.getElementById('tj-thanks');if(_tth)_tth.remove();}catch(e){}p.classList.add('show');p.style.display='block';p.style.opacity='1';p.style.pointerEvents='auto';p.style.zIndex='1900';try{if(typeof closeMyAuraPage==='function')closeMyAuraPage();}catch(e){}}
 function closeTrajectory(){const p=document.getElementById('trajectory-page');if(p){p.classList.remove('show');p.style.display='none';p.style.opacity='0';p.style.pointerEvents='none';}if(typeof openMyAuraPage==='function')openMyAuraPage();}
 (function(){
   const open=document.getElementById('ma-open-trajectory');if(open)open.addEventListener('click',openTrajectory);
@@ -10020,10 +10063,11 @@ function closeTrajectory(){const p=document.getElementById('trajectory-page');if
     const g=id=>document.getElementById(id),val=id=>(g(id)&&g(id).value.trim())||'';
     const place=val('tj-place'),choice=val('tj-choice'),unfolded=val('tj-unfolded'),reflection=val('tj-reflection');
     if(!choice&&!unfolded){showMsg('Add at least the choice and what unfolded');return;}
-    tjReports.unshift({place:place||'A place held in confidence',choice:choice||'A quiet, personal choice',unfolded:unfolded,reflection:reflection});
+    tjNewAt=Date.now();
+    tjReports.unshift({place:place||'A place held in confidence',choice:choice||'A quiet, personal choice',unfolded:unfolded,reflection:reflection,mine:1,at:tjNewAt});tjMineSave();
     if(myProfile)myProfile.auraBoost=(myProfile.auraBoost||0)+2;
     ['tj-place','tj-choice','tj-unfolded','tj-reflection'].forEach(id=>{if(g(id))g(id).value='';});
-    tjRender();showMsg('Your trajectory joins this place \u2014 and your aura deepens');
+    tjRender();tjThank();
   });
 })();
 // ---- Life Story ----
@@ -13976,7 +14020,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>206<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">25 Nov 2026 · </span>207<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -14188,6 +14232,8 @@ try{
              rgba(255,254,250,1) 46%,rgba(255,254,250,.94) 70%,rgba(255,254,250,0) 100%)}
 #myaura-page .maci b,#myaura-page .maci i,#myaura-page .maci .why{
   text-shadow:0 1px 8px rgba(255,251,244,.95)}
+#myaura-page .maci.done{opacity:.72}
+#myaura-page .maci.done b::after{content:' \2713';color:#b07a3a}
 #myaura-page .maci.resting::before{opacity:.45;box-shadow:0 0 8px rgba(226,168,110,.4)}
 
 /* 16 Oct 2026 · Karl: "Also see meet the symbols screen grab on my aura. Text behind still showing through."
@@ -15919,6 +15965,11 @@ body.calm .asn-flow,body.calm .as-reach-flow{animation:none}
 #register-page .rg-note[style*="#a99bd6"]{color:#7a6577!important}
 #register-page .rg-info{color:#8a5a2b}
 #register-page .rg-tip{background:rgba(255,251,245,.98);color:#3b2a3a;border:1px solid rgba(233,181,106,.5)}
+/* Build 207 · Karl: "Street stays on this device.. message goes out of screen". The note now opens beneath the
+   heading, centred, and never wider than the screen; its words are large enough to read. */
+#register-page .rg-h{position:relative}
+#register-page .rg-info{position:static}
+#register-page .rg-tip{left:50%;right:auto;top:calc(100% + 8px);transform:translateX(-50%);width:min(320px,calc(100vw - 40px));font-size:14px;line-height:1.55;text-align:left;z-index:20;box-shadow:0 8px 28px rgba(59,42,58,.18)}
 #register-page .rg-trail{display:flex;gap:9px;justify-content:center;margin:14px 0 4px}
 #register-page .rg-trail button{width:11px;height:11px;border-radius:50%;border:0;padding:0;cursor:pointer;background:rgba(233,181,106,.3)}
 #register-page .rg-trail button.done{background:radial-gradient(circle,#fff 0%,#e9b56a 60%,rgba(233,181,106,.45) 100%)}
