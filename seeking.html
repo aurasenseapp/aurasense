@@ -758,7 +758,7 @@ body{position:fixed!important;top:0!important;left:0!important;right:0!important
   </div>
 </div>
 
-<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 23 Nov 2026 &middot; 204</div>
+<div id="skBuild" style="position:fixed;left:0;right:0;bottom:6px;text-align:center;font-size:8.5px;color:#b9b0d6;letter-spacing:.04em;z-index:9;pointer-events:none">Build 23 Nov 2026 &middot; 206</div>
 <section class="scene on" id="intro">
   <div class="orb" id="orbL"></div><div class="orb" id="orbR"></div>
   <div id="seam"></div>
@@ -1075,7 +1075,30 @@ function holdMs(){  return stage==='sense' ? (known?3000:4000) : 3000; }
 
 /* ═══ the breath ═══ out first, then in, and the two lights come together ═══ */
 var T=[],skipped=false;
-function at(ms,fn){T.push(setTimeout(fn,ms));}
+var D=0;
+function at(ms,fn){T.push(setTimeout(fn,ms+D));}
+/* Build 206 · A LIGHT REACHED YOU. Someone who arrives by following a postcard is met first by its feeling and thanked
+   for coming (Karl: "Thank you for responding to your postcard... Then the seeking."); the breath then begins, and the
+   Seeking itself becomes their answer. Shown only when the Seeking is really in front of them. */
+(function(){try{
+  if(!(parent&&parent!==window))return;
+  var c=JSON.parse(sessionStorage.getItem('as_card_raw')||'null');if(!c||!c.felt||sessionStorage.getItem('as_card_done')==='1')return;
+  var f=String(c.felt).toLowerCase(),okp=/^[\p{L}\p{M}' .,\-]{1,60}$/u;if(!/^[a-z][a-z-]{1,39}$/.test(f))return;
+  var lab='';SENSES.forEach(function(x){if(!lab&&x&&String(x.k||x.w||'').toLowerCase()===f)lab=x.w||x.k;});
+  if(!lab)lab=(f.charAt(0).toUpperCase()+f.slice(1)).replace(/-/g,' ');
+  var inn=okp.test(String(c.inn||''))?String(c.inn):'',at=okp.test(String(c.at||''))?String(c.at):'',town=inn?inn.split(',').pop().trim():'';
+  c.line=lab+(at?', felt at '+at+(town?', in '+town:'')+'.':(inn?', felt in '+inn+'.':', felt by someone, somewhere.'));
+  D=2900;
+  var b1=document.getElementById('beat1'),b2=document.getElementById('beat2');
+  b1.textContent='A light reached you: '+c.line.slice(0,140);b2.textContent='Thank you for following it here.';
+  b1.style.fontSize='clamp(21px,5.6vw,30px)';b2.style.fontSize='clamp(19px,5vw,26px)';
+  b1.style.transition='opacity 1.2s ease';b2.style.transition='opacity 1.2s ease';
+  /* only once the Seeking is truly in front (the map sets it up a moment after this page begins) */
+  setTimeout(function(){try{if(skipped||!parent.document.body.classList.contains('seeking'))return;
+    sessionStorage.setItem('as_card_seen','1');sessionStorage.setItem('as_card_done','1');b1.classList.add('on');}catch(e){}},350);
+  setTimeout(function(){try{if(!skipped)b2.classList.add('on');}catch(e){}},1500);
+  setTimeout(function(){try{b1.classList.remove('on');b2.classList.remove('on');}catch(e){}},D+3300);
+}catch(e){}})();
 /* The written beats are gone. The two lights meeting say it without words —
    which is §3.7, show never say, applied to the app's own first breath. */
 (function(){

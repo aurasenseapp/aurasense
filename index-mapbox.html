@@ -4728,7 +4728,7 @@ function showSharedPopup(lat,lng,senseId,text,placeLabel){
     });
     const social=elp.querySelector('.pop-social');
     if(social)social.addEventListener('click',async()=>{let _tw='';try{_tw=await asTownFor(lat,lng);}catch(e){}   /* Build 204 · the town, never the street */
-      try{openPostcard({title:s.label,color:s.color,words:text,place:_tw?('📍 '+_tw):'',symbolSVG:(SENSE_SYMBOLS[s.id]||'').replace('width="22" height="22"','width="460" height="460"'),photo:(myOfferings[0]&&myOfferings[0].photo)||null});}catch(e){showMsg('Could not open the postcard — tell Karl which button this was ✧');}});
+      try{openPostcard({title:s.label,color:s.color,words:text,place:'📍 '+[loc,_tw].filter(Boolean).join(', '),   /* Build 206 · the area and the town */symbolSVG:(SENSE_SYMBOLS[s.id]||'').replace('width="22" height="22"','width="460" height="460"'),photo:(myOfferings[0]&&myOfferings[0].photo)||null});}catch(e){showMsg('Could not open the postcard — tell Karl which button this was ✧');}});
   }
 }
 
@@ -8966,7 +8966,8 @@ function openPostcard(o){
     let y=pcWrap(c,o.words?('“'+o.words+'”'):'',cx,955+offY,W-200,60,offY?3:4);
     c.fillStyle='rgba(154,143,194,.95)';
     { const _pl=asCardPlace(o.place,o.exact),_ow=String(o.own||'').replace(/\s+/g,' ').trim().slice(0,40);   /* Build 197 · true and safe */
-      const _ln=_ow?(_ow+(_pl?' \u00b7 '+_pl.replace(/^\s*\u{1F4CD}\s*/u,''):'')):_pl;
+      const _pt=asPlaceParts(o.place,o.exact).town;   /* Build 206 · your own words, then the town (never the same name twice) */
+      const _ln=_ow?(_ow+(_pt&&_pt.toLowerCase()!==_ow.toLowerCase()?' \u00b7 '+_pt:'')):_pl;
       let _fs=34;c.font='300 '+_fs+'px Georgia,serif';
       while(_fs>24&&c.measureText(_ln).width>W-160){_fs-=2;c.font='300 '+_fs+'px Georgia,serif';}
       c.fillText(_ln,cx,y+26); }
@@ -9029,8 +9030,25 @@ function pcFrame(c,W,H){
    was done with it, and an open question that invites the reader to sense where they are. People share what says
    something true about them, what helps the people they care about, and what opens a conversation; a question asks
    for a reply rather than a like. */
+/* Build 205 · 23 Nov 2026 · Karl: "The postcards could serve as a great invitation to those not familiar with
+   Aurasense. It's a missed opportunity not to include links." The link that travels with a card now carries its
+   feeling and its town (both already printed on the card, nothing more), so whoever opens it is met by that feeling. */
+function pcLink(){
+  try{
+    const o=pcLast||{};if(o.kind==='glyph')return PC_URL;
+    const t=String(o.title||'').replace(/^Aurasense of\s+/i,'').trim().toLowerCase();
+    let S=null;try{S=SENSES.find(x=>x&&(x.id===t||String(x.label||'').toLowerCase()===t));}catch(e){}
+    if(!S)return PC_URL;
+    /* Build 206 · the link carries what the card shows: the area and town, or the giver's own words and the town */
+    const P=asPlaceParts(o.place,o.exact),own=String(o.own||'').replace(/\s+/g,' ').trim().slice(0,40),okp=/^[\p{L}\p{M}' .,\-]{1,60}$/u;
+    let inn=own?(P.town||''):P.full.split(/\s*,\s*/).slice(0,2).join(', ');
+    if(inn&&(/living map|this spot/i.test(inn)||!okp.test(inn)))inn='';
+    const at=(own&&okp.test(own))?own:'';
+    return PC_URL+'/?felt='+encodeURIComponent(S.id)+(at?'&at='+encodeURIComponent(at):'')+(inn?'&in='+encodeURIComponent(inn):'');
+  }catch(e){return PC_URL;}
+}
 function pcCaption(withUrl){
-  const tail=(withUrl===false)?'':' '+PC_URL;
+  const tail=(withUrl===false)?'':' '+pcLink();
   try{
     const o=pcLast||{};
     if(o.kind==='glyph')return 'Made in Alphasense, a language of light. What would you say in it?'+tail;
@@ -9040,8 +9058,8 @@ function pcCaption(withUrl){
     const own=String(o.own||'').replace(/\s+/g,' ').trim().slice(0,40);
     let where='';
     if(own)where=' at '+own;
-    else{const pl=asCardPlace(o.place,o.exact).replace(/^\s*\u{1F4CD}\s*/u,'').split(/\s*,\s*/)[0]||'';
-      if(pl&&!/living map|this spot/i.test(pl))where=' near '+pl;}
+    else{const pl=asPlaceParts(o.place,o.exact).full.split(/\s*,\s*/).slice(0,2).join(', ');   /* Build 206 · in the area and town */
+      if(pl&&!/living map|this spot/i.test(pl))where=' in '+pl;}
     return (t||'A feeling')+', felt'+where+'. I left it as a light on a living map of how places feel. What do you feel where you are?'+tail;
   }catch(e){return PC_CAPTION+tail;}
 }
@@ -9061,7 +9079,7 @@ function pcSave(){pcLog();const cv=document.getElementById('pc-cv');if(!cv)retur
     try{
       if(navigator.share&&cv&&cv.toBlob){cv.toBlob(async b=>{try{const fl=new File([b],pcName(),{type:'image/png'});
         if(navigator.canShare&&navigator.canShare({files:[fl]}))await navigator.share({files:[fl],title:'Aurasense',text:pcCaption()});
-        else{await navigator.share({title:'Aurasense',text:pcCaption(false),url:'https://aurasense.app'});}}catch(e){pcSave();}},'image/png');}
+        else{await navigator.share({title:'Aurasense',text:pcCaption(false),url:pcLink()});}}catch(e){pcSave();}},'image/png');}
       else pcShareDesktop();      // desktop browsers have no native sheet — offer named places instead
     }catch(e){pcShareDesktop();}
   });
@@ -9527,6 +9545,56 @@ function raiseOfferPanel(address){
 /* Build 204 · 23 Nov 2026 · Karl: "'Add your light here' option is prominent, yet it doesn't do anything but send
    people back to the map with a new message to tap near here." Now it does what a touch on that spot would do: the
    offering opens, already placed there. One door for every card (a light's card, a bloom, an agreement). */
+/* Build 205 · A LIGHT REACHED YOU (Build 206: first, and personal). Karl: "Anything specific that they can see when they
+   arrive from that manner that is different from the generic seeking? Thank you for responding to your postcard...
+   Then the seeking. Feels more like a meaningful personal response to a personal invite." Whoever opens a postcard's
+   link is thanked first. Someone new is met inside the Seeking's opening breath, and the Seeking itself becomes their
+   answer. Someone who has been here before is met by a quiet ivory note, with one way to answer: their own light.
+   Only a known sense, a plain place name and the giver's own words for the place are read from the link (anything else
+   is ignored); words are only ever placed as text; the link is tidied from the address; it is shown once. */
+(function(){try{
+  var raw=null;try{raw=JSON.parse(sessionStorage.getItem('as_card_raw')||'null');}catch(e){}
+  if(!raw||!raw.felt)return;
+  try{if(sessionStorage.getItem('as_card_done')==='1')return;}catch(e){}
+  var felt=String(raw.felt),inn=String(raw.inn||''),at=String(raw.at||''),okp=/^[\p{L}\p{M}' .,\-]{1,60}$/u;
+  if(!okp.test(inn))inn='';if(!okp.test(at))at='';
+  var S=null;try{S=SENSES.find(function(x){return x&&x.id===felt;});}catch(e){}
+  if(!S)return;
+  var town=inn?inn.split(',').pop().trim():'';
+  var line=(S.label||felt)+(at?', felt at '+at+(town?', in '+town:'')+'.':(inn?', felt in '+inn+'.':', felt by someone, somewhere.'));
+  var sawSeeking=false;
+  function ready(){try{
+    if(document.body.classList.contains('seeking'))sawSeeking=true;
+    try{if(sessionStorage.getItem('as_card_seen')==='1')sawSeeking=true;}catch(e){}
+    if(sawSeeking)return false;
+    if(document.documentElement.classList.contains('as-arriving')||document.body.classList.contains('as-held'))return false;
+    if(window.asHeldBusy&&window.asHeldBusy())return false;
+    return !document.querySelector('#as-bloom,#as-welcome,#pcard.show,#panel.show-mobile,.aura-popup,#ash.on,[id$="-page"].show');}catch(e){return false;}}
+  function show(){try{
+    var back=document.createElement('div');back.id='as-welcome-back';
+    var d=document.createElement('div');d.id='as-welcome';d.setAttribute('role','dialog');d.setAttribute('aria-modal','true');d.setAttribute('aria-labelledby','asw-t');
+    var t=document.createElement('div');t.id='asw-t';t.textContent='\u2727 A light reached you';
+    var s=document.createElement('div');s.id='asw-s';
+    var dot=document.createElement('span');dot.className='asw-dot';dot.style.background=S.color||'#c4b5fd';dot.style.color=S.color||'#c4b5fd';
+    s.appendChild(dot);s.appendChild(document.createTextNode(line));
+    var a2=document.createElement('div');a2.id='asw-a';a2.textContent='Thank you for following it here. What do you feel where you are?';
+    var row=document.createElement('div');row.id='asw-row';
+    function close(){try{d.style.pointerEvents='none';back.style.pointerEvents='none';}catch(e){}
+      d.classList.remove('show');back.classList.remove('show');
+      setTimeout(function(){try{d.style.display='none';back.style.display='none';}catch(e){}setTimeout(function(){try{d.remove();back.remove();}catch(e){}},60);},460);}
+    function btn(label,fn,quiet){var x=document.createElement('button');x.type='button';x.className='asb-btn'+(quiet?' q':'');x.textContent=label;x.addEventListener('click',fn);row.appendChild(x);}
+    btn('Answer with your own light',function(){close();setTimeout(function(){try{openOfferSheet();}catch(e){}},320);});
+    btn('Not now',close,1);
+    d.appendChild(t);d.appendChild(s);d.appendChild(a2);d.appendChild(row);
+    back.addEventListener('click',close);
+    document.body.appendChild(back);document.body.appendChild(d);
+    try{sessionStorage.setItem('as_card_done','1');}catch(e){}
+    requestAnimationFrame(function(){back.classList.add('show');d.classList.add('show');});
+  }catch(e){}}
+  window.asWelcomeYield=function(){try{['as-welcome','as-welcome-back'].forEach(function(id){var e=document.getElementById(id);if(e)e.remove();});}catch(e){}};
+  var tries=0;function wait(){if(sawSeeking)return;if(ready())show();else if(++tries<120)setTimeout(wait,1000);}
+  setTimeout(wait,1600);   /* long enough to know whether the Seeking is opening */
+}catch(e){}})();
 window.asOfferHere=function(lat,lng,label){
   try{
     if(!isFinite(lat)||!isFinite(lng))return false;
@@ -10475,22 +10543,49 @@ function asLooksLikeStreet(t){
   if(!t)return false;
   if(/\d/.test(t))return true;
   if(/^(rue|calle|via|avenida|chemin|strada|rua)\s/i.test(t))return true;
-  return /\b(drive|dr|street|st|road|rd|avenue|ave|av|lane|ln|way|court|ct|crescent|cres|close|place|pl|boulevard|blvd|gate|gardens|heights|hts|terrace|terr|trail|trl|circle|cir|bay|mews|row|rise|view|manor|landing|link|loop|grove|green|square|sq|parkway|pkwy|highway|hwy|point|pt|common|cove|crossing|hill|ridge|run|walk|wynd|alley|path|stra(ss|\u00df)e|weg|gasse)\.?$/i.test(t);
+  return /\b(drive|dr|street|st|road|rd|avenue|ave|av|lane|ln|way|court|ct|crescent|cres|close|place|pl|boulevard|blvd|gate|gardens|heights|hts|terrace|terr|trail|trl|circle|cir|bay|mews|row|rise|view|manor|landing|link|loop|grove|green|square|sq|parkway|pkwy|highway|hwy|point|pt|common|cove|crossing|hill|ridge|run|walk|wynd|alley|path|stra(ss|\u00df)e|weg|gasse)\.?(\s+(n|s|e|w|ne|nw|se|sw)\.?)?$/i.test(t);
+}
+/* Build 206 · 23 Nov 2026 · Karl: "We can see its Rivercrest on the map, so it's Rivercrest specific without street
+   number, and town not near town." A card may now name the area a street belongs to: the name a few streets share,
+   with the street's own word ("Drive", "Way", "Boulevard") and any number taken away, and then the town. Never a
+   house number, never a full street name. A name too common to say anything ("Main", "Oak", "First") is left out.
+   The person sees exactly what the card says before sending it, and can put the place in their own words instead. */
+var AS_GENERIC_STEMS=/^(main|high|first|second|third|fourth|fifth|sixth|seventh|eighth|ninth|tenth|park|church|station|mill|bridge|market|king|queen|centre|center|river|lake|spring|oak|elm|maple|pine|cedar|willow|birch|ash|north|south|east|west|railway|school|college|hospital|front|back|new|old|green|hill|valley|glen|lane|bay|view|grand|broad|wood|forest|water|court|church)$/i;
+function asStreetArea(t){
+  t=String(t||'').trim();
+  if(!t||/\d/.test(t)||/^(rue|calle|via|avenida|chemin|strada|rua)\s/i.test(t))return '';
+  var st=t.replace(/\s+(n|s|e|w|ne|nw|se|sw)\.?$/i,'')
+          .replace(/\s+(drive|dr|street|st|road|rd|avenue|ave|av|lane|ln|way|court|ct|crescent|cres|close|place|pl|boulevard|blvd|gate|gardens|heights|hts|terrace|terr|trail|trl|circle|cir|bay|mews|row|rise|view|manor|landing|link|loop|grove|green|square|sq|parkway|pkwy|highway|hwy|point|pt|common|cove|crossing|hill|ridge|run|walk|wynd|alley|path)\.?$/i,'').trim();
+  if(!st||st===t||st.length<5||AS_GENERIC_STEMS.test(st)||/(stra(ss|\u00df)e|weg|gasse)$/i.test(st))return '';
+  return st;
+}
+/* the parts a card may name: {area, town, full} */
+function asPlaceParts(place,exact){
+  var s=String(place||'').replace(/^\s*\u{1F4CD}\s*/u,'').trim();
+  if(!s)return {area:'',town:'',full:''};
+  if(exact&&!/^near\s/i.test(s)){
+    var ep=s.split(/\s*,\s*/).filter(Boolean);
+    if(ep.length&&!asLooksLikeStreet(ep[0]))return {area:ep[0],town:ep[1]||'',full:s,pub:1};   /* a public place keeps its name */
+    var ea=asStreetArea(ep[0]||''),et=ep[1]||'';
+    return {area:ea,town:et,full:ea?(et?ea+', '+et:ea):et};                                   /* a street gives only its area */
+  }
+  s=s.replace(/^near\s+/i,'');
+  if(/\u2014/.test(s))return {area:'',town:s,full:s};             /* a light given from a height already names a town or region */
+  var parts=s.split(/\s*,\s*/).filter(Boolean);
+  if(parts.length<2){
+    if(!parts.length)return {area:'',town:'',full:''};
+    if(!asLooksLikeStreet(parts[0]))return {area:'',town:parts[0],full:parts[0]};
+    var a1=asStreetArea(parts[0]);return {area:a1,town:'',full:a1};
+  }
+  var ar=asLooksLikeStreet(parts[0])?asStreetArea(parts[0]):'';
+  return {area:ar,town:parts[1],full:ar?ar+', '+parts[1]:parts.slice(1).join(', ')};
 }
 function asCardPlace(place,exact){
   if(!place)return '';
   var pin=/^\s*\u{1F4CD}\s*/u.test(String(place))?'\u{1F4CD} ':'';
   var s=String(place).replace(/^\s*\u{1F4CD}\s*/u,'').trim();
-  if(exact&&!/^near\s/i.test(s)){
-    var ep=s.split(/\s*,\s*/).filter(Boolean);
-    if(!(ep.length&&asLooksLikeStreet(ep[0])))return pin+s;          /* a public place keeps its name */
-    s=ep.slice(1).join(', ');return s?pin+s:'';                       /* a street never does */
-  }
-  s=s.replace(/^near\s+/i,'');
-  if(/\u2014/.test(s))return pin+s;                                   /* a light given from a height already names a town or region */
-  var parts=s.split(/\s*,\s*/).filter(Boolean);
-  if(parts.length<2)return (parts.length&&!asLooksLikeStreet(parts[0]))?pin+parts[0]:'';
-  return pin+parts.slice(1).join(', ');
+  var P=asPlaceParts(s,exact);   /* Build 206 · an area and a town */
+  return P.full?pin+P.full:'';
 }
 function asSoftTime(sense,born){
   if(!asTender(sense))return relTime(born);
@@ -13099,6 +13194,62 @@ function lab(id){if(id==='memory')return 'a memory';try{for(var i=0;i<SENSES.len
 function canSound(){try{return !window.AS_CALM&&!!actx&&actx.state!=='closed';}catch(e){return false;}}
 function bell(f,d,v,dur,att){if(!canSound())return;try{if(actx.state==='suspended')actx.resume();asBell(f,d||0,v,dur||2.4,null,att||.1);}catch(e){}}
 function bloom(){bell(392,0,.11,4.4,.12);bell(588,.04,.085,4.6,.12);bell(784,.1,.055,4.8,.12);bell(988,.18,.035,4.8,.12);}
+/* Build 205 · 23 Nov 2026 · Karl: "holding the light is a special moment to be marked with a matching sound that gives
+   a surreal feeling. The newness best represented by a new form of sound. We are in the presence of that third beat
+   emerging, the ignition of mutual benefit for an individual should aim to be as inspiring as the visual element does
+   already look."
+   THE THIRD BEAT. Two tones, your light's and the other light's, begin a fifth apart and swell in as you hold. As the
+   other light comes to meet yours, its tone glides down towards yours. When the lights meet, the two tones are a breath
+   apart, and two tones that close make a slow pulse of their own (in sound this is called beating): a third beat, born
+   of the two, about one pulse a second, like the heart of the light on the screen. A low warmth sits beneath and a
+   faint shimmer above. If you lift your finger it rests, quieter, and waits. Silent in Calm, as all sound is. */
+var TB=null,tbDone=false,tbBeat=false,tbTry=0;
+function tbStart(){
+  if(TB||tbDone||!canSound())return;
+  try{
+    if(actx.state!=='running'){var nw=performance.now();if(nw-tbTry>500){tbTry=nw;try{actx.resume();}catch(e){}}return;}
+    var t0=actx.currentTime,out=actx.createGain();out.gain.setValueAtTime(0.0001,t0);out.gain.linearRampToValueAtTime(1,t0+1.6);
+    var lp=actx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1500;lp.Q.value=0.3;
+    var dl=actx.createDelay(2);dl.delayTime.value=0.43;
+    var dk=actx.createBiquadFilter();dk.type='lowpass';dk.frequency.value=1000;dk.Q.value=0.3;
+    var fb=actx.createGain();fb.gain.value=0.36;var wet=actx.createGain();wet.gain.value=0.3;
+    out.connect(lp);lp.connect(actx.destination);lp.connect(dl);dl.connect(dk);dk.connect(fb);fb.connect(dl);dk.connect(wet);wet.connect(actx.destination);
+    function voice(f,v){var o=actx.createOscillator(),g=actx.createGain();o.type='sine';o.frequency.setValueAtTime(f,t0);g.gain.setValueAtTime(v,t0);o.connect(g);g.connect(out);o.start(t0);return {o:o,g:g};}
+    TB={out:out,k:-1,held:null,
+        a:voice(392,0.045),       /* your light */
+        b:voice(587.33,0.04),     /* the other light, a fifth above, coming to meet yours */
+        lo:voice(196,0.03),       /* a low warmth beneath */
+        sub:voice(98,0.02),       /* deeper still, for those who listen with headphones */
+        sh:voice(1568,0.004)};    /* a faint shimmer above */
+  }catch(e){TB=null;}
+}
+function tbSet(pp,held){
+  if(!TB)return;
+  try{var k=Math.min(1,Math.max(0,pp/0.86)),e=k*k*(3-2*k),n=actx.currentTime;
+    if(Math.abs(k-TB.k)>0.01){TB.k=k;TB.b.o.frequency.setTargetAtTime(392.95+(587.33-392.95)*(1-e),n,0.15);}
+    if(TB.held!==held){TB.held=held;TB.out.gain.setTargetAtTime(held?1:0.32,n,0.4);}
+  }catch(e){}
+}
+function tbMeet(){
+  tbDone=true;tbBeat=!!TB;
+  if(!TB)return;
+  try{var n=actx.currentTime;
+    TB.b.o.frequency.setTargetAtTime(392.95,n,0.08);     /* a breath apart: one slow pulse a second */
+    TB.sh.g.gain.setTargetAtTime(0.011,n,0.5);
+    TB.out.gain.setTargetAtTime(1.15,n,0.3);TB.held=true;
+    /* Build 206 · Karl: "The vibration sound after continued quite long after.. maybe it can quieten gradually after half that
+       time to half volume." Full for a few seconds, then gently down to half, then away. */
+    TB.out.gain.setTargetAtTime(0.55,n+3.6,1.1);
+    tbEnd(6.8);
+  }catch(e){}
+}
+function tbEnd(after){
+  if(!TB)return;var T0=TB;TB=null;
+  try{var n=actx.currentTime,a=Math.max(0,after||0);
+    T0.out.gain.cancelScheduledValues(n+a);T0.out.gain.setTargetAtTime(0.0001,n+a,1.2);
+    [T0.a,T0.b,T0.lo,T0.sub,T0.sh].forEach(function(v){try{v.o.stop(n+a+7);}catch(e){}});
+  }catch(e){}
+}
 
 /* ── still or moving: a device asking for less motion is honoured by default ── */
 function reducedAsked(){try{return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches);}catch(e){return false;}}
@@ -13250,10 +13401,12 @@ function frame(now){
   if(closingAt>=0)fade=1-sm(0,1.2,t-closingAt);
   if((holding||auto)&&st==='await'&&p<1){
     p=Math.min(1,p+dt/HOLD*(auto?.92:1));
-    if(p>=.05&&hbLast===-2){hbLast=-1;bell(784,0,.03,2.2);bell(1174.7,.18,.02,2.0);}             /* they are coming */
-    if(p>=.86&&metAt<0){metAt=t;hbLast=t;hbCount=0;bloom();try{if(navigator.vibrate)navigator.vibrate([16,110,10]);}catch(e){}}
+    if(p>=.05&&hbLast===-2){hbLast=-1;if(!TB){bell(784,0,.03,2.2);bell(1174.7,.18,.02,2.0);}}             /* they are coming */
+    if(p>=.86&&metAt<0){metAt=t;hbLast=t;hbCount=0;bloom();tbMeet();try{if(navigator.vibrate)navigator.vibrate([16,110,10]);}catch(e){}}
     if(p>=1)completeMeeting();
   }
+  /* Build 205 · the third beat follows the hold: it swells while you hold, rests quieter if you lift, then meets */
+  try{if(st==='await'&&metAt<0){if(holding||auto){if(!TB&&!tbDone)tbStart();tbSet(p,true);}else if(TB)tbSet(p,false);}}catch(e){}
   cx.setTransform(DPR,0,0,DPR,0,0);cx.clearRect(0,0,W,H);cx.globalCompositeOperation='lighter';
   var b=breath(),i,m;
   /* your light: the map draws it; this only lifts it, and carries any change */
@@ -13323,7 +13476,7 @@ function frame(now){
         var onb=sm(0,.6,t-metAt)*fade;
         glow(J.x,J.y,R*.34*(1+.32*env),GOLD,.22*env*onb);
         glow(J.x,J.y,R*.085*(1+.25*env),[255,248,232],(.42+.4*env)*onb);
-        if(!still&&hbCount<7&&t-hbLast>=per-.001){hbLast=t;hbCount++;var v=.045*(1-hbCount/9);bell(523.25,0,v,.7,.06);bell(392,.29,v*.7,.7,.06);}
+        if(!still&&hbCount<7&&t-hbLast>=per-.001){hbLast=t;hbCount++;if(!tbBeat){var v=.045*(1-hbCount/9);bell(523.25,0,v,.7,.06);bell(392,.29,v*.7,.7,.06);}}   /* Build 205 · when the third beat sounds, it is the heartbeat */
       }
     }
   }
@@ -13413,6 +13566,7 @@ function saveShift(moved,words){
 
 /* ── the steps ── */
 function down(e){
+  try{if(window.asWakeSound&&(!actx||actx.state!=='running'))window.asWakeSound();}catch(x){}   /* Build 205 */
   if(st==='await'){try{e.preventDefault();}catch(x){}holding=true;downAt=performance.now();hint('',false);
     try{me.setPointerCapture(e.pointerId);}catch(x){}}
   else if(st==='trying'){try{e.preventDefault();}catch(x){}askNow();}
@@ -13521,6 +13675,7 @@ function skip(){
 /* ── leaving: one way out of the moment, whichever door is chosen ── */
 function close(after){
   if(!on||st==='closing')return;st='closing';closingAt=t;
+  try{tbEnd(0);}catch(e){}   /* Build 205 · the sound leaves with the moment */
   hint('',false);foot(false);
   ['ash-gift','ash-ask','ash-end','ash-care'].forEach(function(id){say(id,false);});
   try{dim.classList.remove('on');deep.classList.remove('on');root.classList.add('leaving');}catch(e){}
@@ -13528,7 +13683,8 @@ function close(after){
   later(1250,function(){stop();if(after){try{after();}catch(e){}}});
 }
 function stop(){
-  on=false;st='idle';gen++;clearLater();holding=false;auto=false;
+  var _was=on;on=false;st='idle';gen++;clearLater();holding=false;auto=false;pendAt=0;
+  if(_was){try{setTimeout(function(){try{window.dispatchEvent(new Event('as-held-end'));}catch(e){}},0);}catch(e){}}   /* Build 206 · the moment is over: others may speak */
   try{root.classList.remove('on','leaving');root.setAttribute('aria-hidden','true');cv.classList.remove('on');
     dim.classList.remove('on');deep.classList.remove('on');document.body.classList.remove('as-held');rest(false);
     ['ash-gift','ash-ask','ash-end','ash-care'].forEach(function(id){var e=q$(id);if(e){e.classList.remove('on','into','ash-solid');e.style.maxHeight='';}});
@@ -13649,9 +13805,12 @@ function begin(){
   on=true;gen++;clearLater();
   st='await';t=0;last=0;p=0;holding=false;auto=false;liftedOnce=false;metAt=-1;closingAt=-1;
   rings=[];spark=0;sparkAt=-1;shiftAmt=0;shiftAt=-1;aiAway=0;awayFrom=-1;fade=1;hbLast=-2;hbCount=0;aiArrived=false;nudges=0;met=false;
+  try{tbEnd(0);}catch(e){}tbDone=false;tbBeat=false;   /* Build 205 */
   still=wantsStill();
   try{['ash-gift','ash-ask','ash-end','ash-care'].forEach(function(id){var e=q$(id);if(e){e.classList.remove('on','into','ash-solid');e.style.top='';e.style.maxHeight='';}});
     q$('ash-words').value='';hintEl.classList.remove('on','pulse');}catch(e){}
+  pendAt=0;
+  try{if(window.asBloomYield)window.asBloomYield();}catch(e){}try{if(window.asWelcomeYield)window.asWelcomeYield();}catch(e){}   /* Build 206 · notes step aside */
   document.body.classList.add('as-held');rest(true);
   root.classList.remove('leaving');root.classList.add('on');root.setAttribute('aria-hidden','false');cv.classList.add('on');
   layout();
@@ -13672,6 +13831,7 @@ window.asHeld=function(ap,sid,text){
     var s=null;try{s=SENSES.find(function(x){return x.id===sid;});}catch(e){}
     if(!s)return false;
     build();if(on)stop();
+    pendAt=Date.now();   /* Build 206 · the moment is on its way: other notes wait */
     AP=ap;SID=sid;SS=s;LAT=ap.lat;LNG=ap.lng;COL=s.color||'#c4b5fd';WORDS=String(text||'');
     HEAVY=heavyWords(WORDS);
     GIFT=pickGift(sid);
@@ -13687,6 +13847,12 @@ window.asHeld=function(ap,sid,text){
   }catch(e){return false;}
 };
 window.asHeldOn=function(){return on;};
+/* Build 206 · 23 Nov 2026 · Karl: "It was frozen again and the buttons on it unresponsive." Holding your light quiets
+   everything else on the screen (it is made untouchable, so nothing distracts), and the bloom note had arrived a moment
+   before the hold began, so it was quieted with the rest and could not be touched. Now nothing else may speak from the
+   moment a light is offered until the moment is over; and anything already showing steps aside when it begins. */
+var pendAt=0;
+window.asHeldBusy=function(){return on||(pendAt>0&&Date.now()-pendAt<60000);};
 /* Build 181 · going back to the Mirror ends the held moment, so nothing is left resting underneath it. */
 window.asHeldStop=function(){try{gen++;if(on)stop();}catch(e){}};
 })();
@@ -13725,6 +13891,12 @@ try{
       src.buffer=b; src.connect(actx.destination); src.start(0);
     }catch(e){}
   };
+  /* Build 205 · 23 Nov 2026 · Karl: "No sound on holding your light." This page's sound was only ever woken by a touch
+     on the Seeking, and an iPhone does not count that touch for the page around it, so the moment of holding your
+     light (which lives on this page) stayed silent. Any touch on this page now quietly wakes its own sound. Nothing is
+     played by this; it only opens the ear. */
+  try{['touchend','pointerup','click','keydown'].forEach(function(tp){document.addEventListener(tp,function(){
+    try{if(!actx||actx.state!=='running')window.asWakeSound();}catch(e){}},true);});}catch(e){}
   /* selSense is a value, not a function, so it is lent as a window through to
      the real one rather than a copy that would go stale. */
   try{ Object.defineProperty(window,'selSense',{
@@ -13768,6 +13940,22 @@ try{
      was broken in August; embedding makes that impossible.
      Its background is see-through, so when its cloud thins the world beneath is
      ALREADY THERE. Nothing has to be swapped in. -->
+<script>
+/* Build 206 · a postcard's link is read at once, before anything else opens, so that both the Seeking and the map can
+   thank the person who followed it. Only a plain sense word and plain place words are kept; the address is tidied. */
+(function(){try{
+  var q=new URLSearchParams(location.search);
+  if(!['felt','near','in','at'].some(function(k){return q.has(k);}))return;
+  var felt=String(q.get('felt')||'').toLowerCase().slice(0,40),okp=/^[\p{L}\p{M}' .,\-]{1,60}$/u;
+  var inn=String(q.get('in')||q.get('near')||'').replace(/\s+/g,' ').trim().slice(0,60),at=String(q.get('at')||'').replace(/\s+/g,' ').trim().slice(0,40);
+  ['felt','near','in','at'].forEach(function(k){q.delete(k);});var qs=q.toString();
+  try{history.replaceState(history.state,'',location.pathname+(qs?'?'+qs:'')+location.hash);}catch(e){}   /* tidied, whatever it carried */
+  if(!felt||!/^[a-z][a-z-]{1,39}$/.test(felt))return;
+  if(!okp.test(inn))inn='';if(!okp.test(at))at='';
+  sessionStorage.setItem('as_card_raw',JSON.stringify({felt:felt,inn:inn,at:at}));
+  sessionStorage.removeItem('as_card_done');sessionStorage.removeItem('as_card_seen');
+}catch(e){}})();
+</script>
 <iframe id="seekFrame" src="seeking.html?embed=1" title="the Seeking" allow="geolocation; autoplay"></iframe>
 <style>
 /* 3 Sep 2026 - the small list a person taps their own place from. */
@@ -13788,7 +13976,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>204<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">23 Nov 2026 · </span>206<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
@@ -16214,6 +16402,28 @@ body.calm .as-smoke{display:none}
 @media (min-width:601px){.aura-popup .mapboxgl-popup-content{max-height:calc(100vh - 110px);overflow-y:auto}}
 @keyframes asPopUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @media (max-width:600px) and (prefers-reduced-motion: reduce){.aura-popup .mapboxgl-popup-content{animation:none}}
+/* Build 205 · the bloom, agreement and welcome notes in ivory, like the light's card (Karl: "The new ivory box I was
+   saying was nice thanks. As a replacement for the old."). They rest at the foot of the screen, and nothing about them
+   moves except their fading, so nothing can be left behind on the screen. */
+#as-bloom,#as-welcome{position:fixed;left:12px!important;right:12px!important;top:auto!important;bottom:calc(16px + env(safe-area-inset-bottom,0px))!important;
+  margin:0 auto!important;width:auto!important;max-width:430px!important;transform:none!important;z-index:100001;box-sizing:border-box;
+  background:rgba(255,250,242,.985)!important;border:0!important;border-radius:24px!important;color:#4a2a1a!important;
+  padding:20px 18px 16px;text-align:center;font-family:Georgia,"Iowan Old Style","Times New Roman",serif;
+  box-shadow:0 0 0 1px rgba(160,110,70,.16),0 10px 34px rgba(40,20,10,.30),0 0 54px rgba(255,236,210,.42)!important;
+  opacity:0;transition:opacity .45s ease!important;max-height:80vh;overflow-y:auto}
+#as-bloom.show,#as-welcome.show{opacity:1;transform:none!important}
+#as-bloom-back,#as-welcome-back{position:fixed;inset:0;z-index:100000;background:rgba(20,12,6,.26)!important;opacity:0;transition:opacity .45s ease}
+#as-bloom-back.show,#as-welcome-back.show{opacity:1}
+#as-bloom #asb-t,#asw-t{font-size:19px;line-height:1.4;color:#3d2416!important;margin-bottom:8px}
+#as-bloom #asb-s,#asw-s{font-size:15.5px;line-height:1.55;color:#4a2a1a!important}
+#as-bloom #asb-a,#asw-a{margin-top:10px;font-size:15px;line-height:1.5;color:#8a5a2b!important}
+#as-bloom #asb-demo{color:#806050!important}
+#asw-row{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:14px}
+.asw-dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:-1px;box-shadow:0 0 10px currentColor}
+#as-bloom .asb-btn,#as-welcome .asb-btn{font:inherit;font-size:15px;min-height:44px;padding:9px 16px;border-radius:22px!important;cursor:pointer;
+  background:rgba(255,236,214,.88)!important;border:1px solid rgba(160,110,70,.42)!important;color:#3d2416!important}
+#as-bloom .asb-btn.q,#as-welcome .asb-btn.q{background:transparent!important;border-color:rgba(160,110,70,.28)!important;color:#6b452c!important}
+@media (prefers-reduced-motion: reduce){#as-bloom,#as-welcome,#as-bloom-back,#as-welcome-back{transition:none!important}}
 </style>
 <script>
 /* ═══ Build 197 · 22 Nov 2026 · THE BLOOM ════════════════════════════════════
@@ -16349,7 +16559,7 @@ body.calm .as-smoke{display:none}
         if(Math.hypot(pt.x-point.x,pt.y-point.y)<=Math.max(22,R*0.9)){card(b,false);return true;}}}catch(e){}
     return false;};
 
-  function busy(){try{return document.body.classList.contains('seeking')||!!document.querySelector('#as-bloom,#gp-modal,#ns-modal,#pcard.show,#panel.show-mobile');}catch(e){return true;}}
+  function busy(){try{return document.body.classList.contains('seeking')||document.body.classList.contains('as-held')||(window.asHeldBusy&&window.asHeldBusy())||!!document.querySelector('#as-bloom,#as-welcome,#gp-modal,#ns-modal,#pcard.show,#panel.show-mobile,#ash.on,.aura-popup,[id$="-page"].show');}catch(e){return true;}}   /* Build 205 · nothing speaks over a moment already speaking, above all holding your light */
   function invite(B){
     try{if(!B.length||busy())return;
       var mine=mineNow();if(!mine.length)return;   /* Build 203 */
@@ -16357,7 +16567,7 @@ body.calm .as-smoke{display:none}
       for(var i=0;i<B.length;i++){var b=B[i];if(b.demo||told.indexOf(b.key)>-1)continue;
         for(var j=0;j<mine.length;j++){var m=mine[j];
           if(!m||HEAVY.indexOf(m.sense)<0||!isFinite(m.lat)||!isFinite(m.lng))continue;
-          if(hv(m.lat,m.lng,b.lat,b.lng)<=400){told.push(b.key);keep('aurasense_blooms_told',told);card(b,true);return;}}}
+          if(hv(m.lat,m.lng,b.lat,b.lng)<=400){told.push(b.key);keep('aurasense_blooms_told',told);card(b,true);try{var _d=document.getElementById('as-bloom');if(_d)_d.setAttribute('data-told',b.key);}catch(e){}return;}}}
     }catch(e){}}
 
   function card(b,forYou){
@@ -16370,7 +16580,13 @@ body.calm .as-smoke{display:none}
       d.querySelector('#asb-s').textContent=forYou?'Something beautiful has happened there. Nobody planned it. Only you can see this note.':'Light gathered near a heavier feeling, and the place began to bloom. Nobody planned it. The heavier feeling is still honoured at its heart.';
       if(b.demo){var dm=document.createElement('div');dm.id='asb-demo';dm.textContent='A preview bloom, only on your screen.';d.appendChild(dm);}
       var row=d.querySelector('#asb-row');
-      var close=function(){d.classList.remove('show');back.classList.remove('show');setTimeout(function(){try{d.remove();back.remove();}catch(e){}},500);};
+      var close=function(){   /* Build 205 · Karl: "the message screen attached is frozen and no button works... buttons under it
+          responded without it moving out of the way." On a phone's home-screen app the note could be taken away while
+          its picture stayed behind. Now it stops listening at once, is hidden outright, and only then removed. */
+        try{d.style.pointerEvents='none';back.style.pointerEvents='none';}catch(e){}
+        d.classList.remove('show');back.classList.remove('show');
+        setTimeout(function(){try{d.style.display='none';back.style.display='none';}catch(e){}
+          setTimeout(function(){try{d.remove();back.remove();void document.body.offsetHeight;}catch(e){}},60);},460);};
       function btn(label,fn,quiet){var x=document.createElement('button');x.type='button';x.className='asb-btn'+(quiet?' q':'');x.textContent=label;x.addEventListener('click',fn);row.appendChild(x);}
       if(forYou)btn('See it',function(){close();try{map.flyTo({center:[b.lng,b.lat],zoom:Math.max(15,map.getZoom()),duration:2600});}catch(e){}});
       else btn('Add your light here',function(){close();
@@ -16384,6 +16600,13 @@ body.calm .as-smoke{display:none}
       requestAnimationFrame(function(){back.classList.add('show');d.classList.add('show');});
     }catch(e){}}
   window.asBloomCard=card;
+  /* Build 206 · Karl: "The Light has gathered .. message at the same time as being asked to hold your light is too busy. It
+     should come after it is held and as an option after that." If holding your light begins while the note is showing,
+     the note steps aside and is not counted as told; once the moment is over, it returns as a quiet option. */
+  window.asBloomYield=function(){try{var d=document.getElementById('as-bloom');if(!d)return;var k=d.getAttribute('data-told');
+    if(k){var told=list('aurasense_blooms_told'),i=told.indexOf(k);if(i>-1){told.splice(i,1);keep('aurasense_blooms_told',told);}}
+    ['as-bloom','as-bloom-back'].forEach(function(id){var e=document.getElementById(id);if(e)e.remove();});}catch(e){}};
+  try{window.addEventListener('as-held-end',function(){setTimeout(function(){try{compute();}catch(e){}},2400);});}catch(e){}
 
   try{if(/[?&]bloom=demo\b/.test(location.search)){
     var iv=setInterval(function(){try{
@@ -16502,7 +16725,13 @@ body.calm .as-smoke{display:none}
       d.querySelector('#asb-a').textContent='It may say something true about the place itself.';
       if(a.demo){var dm=document.createElement('div');dm.id='asb-demo';dm.textContent='A preview, only on your screen.';d.appendChild(dm);}
       var row=d.querySelector('#asb-row');
-      var close=function(){d.classList.remove('show');back.classList.remove('show');setTimeout(function(){try{d.remove();back.remove();}catch(e){}},500);};
+      var close=function(){   /* Build 205 · Karl: "the message screen attached is frozen and no button works... buttons under it
+          responded without it moving out of the way." On a phone's home-screen app the note could be taken away while
+          its picture stayed behind. Now it stops listening at once, is hidden outright, and only then removed. */
+        try{d.style.pointerEvents='none';back.style.pointerEvents='none';}catch(e){}
+        d.classList.remove('show');back.classList.remove('show');
+        setTimeout(function(){try{d.style.display='none';back.style.display='none';}catch(e){}
+          setTimeout(function(){try{d.remove();back.remove();void document.body.offsetHeight;}catch(e){}},60);},460);};
       function btn(label,fn,quiet){var x=document.createElement('button');x.type='button';x.className='asb-btn'+(quiet?' q':'');x.textContent=label;x.addEventListener('click',fn);row.appendChild(x);}
       btn('Add your light here',function(){close();
         var _c=!!window.AS_CALM;   /* Build 204 · a short glide to the agreement, then the offering opens there */
