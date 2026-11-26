@@ -479,6 +479,12 @@ html.as-arrived #build-stamp,html.as-arrived #mv-orb
    been guessing for days.
    It is now legible on any background, and TAPPING IT fetches a guaranteed
    fresh copy - no cache anywhere can survive it. */
+#as-to-map{position:fixed;z-index:2100;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;
+  border-radius:999px;border:1px solid rgba(233,181,106,.45);background:rgba(255,251,245,.9);color:#3b2a3a;font-family:inherit;
+  font-size:15px;line-height:1;white-space:nowrap;box-shadow:0 2px 10px rgba(59,42,58,.08);cursor:pointer;-webkit-tap-highlight-color:transparent}
+#as-to-map[hidden]{display:none}
+#as-to-map:focus-visible{outline:2px solid #5b3a7a;outline-offset:2px}
+body.seeking #as-to-map{display:none}
 #build-stamp{position:fixed;left:10px;bottom:42px;z-index:2200;cursor:pointer;
   pointer-events:auto;font-family:var(--sans),system-ui,sans-serif;font-size:12px;
   font-weight:600;letter-spacing:.03em;padding:5px 11px;border-radius:999px;
@@ -8131,16 +8137,79 @@ if(maCancelSelfie)maCancelSelfie.addEventListener('click',()=>{maStopStream();if
    confused when I use it by instinct to move back to between look closer and let it close too." The button at the top
    left now steps back one place at a time, and always says where it goes: from a list, or from the closer view, back to
    My Aura as a whole; from there, to the map. */
+/* Build 212 · Karl: "I just went to the camera see yourself... and it said back to map, not back to my aura." A light's
+   story and the camera are places inside My Aura too: from them, the button says "Back to My Aura" and steps back once. */
+function maCamLive(){var p=document.getElementById('myaura-page');return !!(p&&p.classList.contains('ma-cam-live'));}
+function maCardOpen(){var c=document.getElementById('ma-sense-card');return !!(window._macCardOpen&&c&&c.classList.contains('on'));}
+function maDeeper(){try{return maCardOpen()||maCamLive()||(macDoorOpen>=0)||!!macWantSpread;}catch(e){return false;}}
 function maBackSync(){try{var b=document.getElementById('ma-back');if(!b)return;
-  var deeper=(macDoorOpen>=0)||!!macWantSpread;var t=deeper?'\u2190 Back to My Aura':'\u2190 Return to the map';
+  var t=maDeeper()?'\u2190 Back to My Aura':'\u2190 Return to the map';
   if(b.textContent!==t)b.textContent=t;}catch(e){}}
 const maBackBtn=document.getElementById('ma-back');if(maBackBtn)maBackBtn.onclick=()=>{const _o=document.getElementById('pt-ov');if(_o)_o.remove();
   try{
+    if(maCardOpen()){window._macCardOpen=false;var _sc=document.getElementById('ma-sense-card');if(_sc)_sc.classList.remove('on');maBackSync();return;}
+    if(maCamLive()){var _cx=document.getElementById('ma-cancel-selfie');if(_cx){_cx.click();maBackSync();return;}}
     if(macDoorOpen>=0){macOpenDoor(-1);maBackSync();return;}
     if(macWantSpread){var _th=document.getElementById('ma-cloud-through');if(_th){_th.click();maBackSync();return;}}
   }catch(e){}
   closeMyAuraPage();};
 try{macOpenDoor=(function(f){return function(i){var r=f(i);maBackSync();return r;};})(macOpenDoor);}catch(e){}
+/* Build 212 · Karl: "we need a back to my aura and a back to the map on each part of My Aura." Wherever you are inside
+   My Aura (a list, the closer view, a light's story, the camera, or any page opened from it), a "To the map" button
+   sits beside the back button and goes straight to the map, closing each page on the way with its own back button. */
+(function(){
+  var pill=null,last='';
+  function make(){
+    if(pill)return pill;
+    pill=document.createElement('button');pill.type='button';pill.id='as-to-map';pill.hidden=true;
+    pill.textContent='To the map';pill.setAttribute('aria-label','Straight to the map');
+    pill.addEventListener('click',toMap);document.body.appendChild(pill);return pill;
+  }
+  function onTop(el){
+    if(!el||!el.isConnected)return false;
+    var r=el.getBoundingClientRect();if(r.width<2||r.height<2)return false;
+    if(r.bottom<=0||r.right<=0||r.top>=innerHeight||r.left>=innerWidth)return false;
+    var cs=getComputedStyle(el);if(cs.visibility==='hidden'||cs.display==='none'||parseFloat(cs.opacity)===0)return false;
+    var h=document.elementFromPoint(Math.min(innerWidth-1,Math.max(0,r.left+r.width/2)),Math.min(innerHeight-1,Math.max(0,r.top+r.height/2)));
+    return !!h&&(h===el||el.contains(h));
+  }
+  function topBack(){
+    var all=document.querySelectorAll('button[id$="-back"]');
+    for(var i=all.length-1;i>=0;i--){var b=all[i];if(b.id==='ma-back'||b.id==='ash-back')continue;if(onTop(b))return b;}
+    return null;
+  }
+  function clash(a,b){return !(a.x+a.w<=b.left||b.right<=a.x||a.y+a.h<=b.top||b.bottom<=a.y);}
+  function sync(){
+    var pg=document.getElementById('myaura-page');var open=!!(pg&&pg.classList.contains('show'));
+    if(open){try{maBackSync();}catch(e){}}
+    var p=make();
+    var anchor=open?topBack():null;
+    if(open&&!anchor){var mb=document.getElementById('ma-back');if(mb&&maDeeper()&&onTop(mb))anchor=mb;}
+    if(!anchor){if(!p.hidden)p.hidden=true;return;}
+    p.hidden=false;
+    var r=anchor.getBoundingClientRect(),h=Math.max(44,Math.round(r.height)),w=p.offsetWidth||112;
+    var st=document.getElementById('build-stamp'),sr=st&&st.offsetParent?st.getBoundingClientRect():null;
+    var spots=[{x:Math.round(r.right+10),y:Math.round(r.top+(r.height-h)/2)},{x:Math.round(r.left),y:Math.round(r.bottom+8)}];
+    var pick=spots[spots.length-1];
+    for(var k=0;k<spots.length;k++){var c=spots[k];c.w=w;c.h=h;
+      if(c.x>=6&&c.x+w<=innerWidth-6&&c.y>=0&&!(sr&&clash(c,sr))){pick=c;break;}}
+    var cs=getComputedStyle(anchor),fs=Math.max(13,Math.min(17,parseFloat(cs.fontSize)||15));
+    var key=anchor.id+','+pick.x+','+pick.y+','+h+','+fs;
+    if(key!==last){last=key;p.style.left=pick.x+'px';p.style.top=pick.y+'px';p.style.height=h+'px';
+      p.style.fontFamily=cs.fontFamily;p.style.fontSize=fs+'px';}   /* it speaks in the same voice as the button beside it */
+  }
+  function toMap(){
+    var prev=null;
+    for(var k=0;k<8;k++){var b=topBack();if(!b||b===prev)break;prev=b;try{b.click();}catch(e){break;}}
+    try{var o=document.getElementById('pt-ov');if(o)o.remove();}catch(e){}
+    try{window._macCardOpen=false;var c=document.getElementById('ma-sense-card');if(c)c.classList.remove('on');}catch(e){}
+    try{closeMyAuraPage();}catch(e){}
+    sync();
+  }
+  window.asToMapSync=sync;
+  setInterval(sync,350);
+  window.addEventListener('resize',function(){last='';sync();});
+})();
 window.addEventListener('resize',()=>{const p=document.getElementById('myaura-page');if(p&&p.classList.contains('show'))maSizeCanvas();});
 const maPolicy=document.getElementById('ma-policy');
 if(maPolicy)maPolicy.textContent="When you offer an aura, others can see it — but never who placed it, unless you allow it. First, someone must offer you an aura of good intention (peace, understanding). If you accept, they see only your Aurasenser name, never your real name. To message you, they make a monetary offering to learn who you are; if you accept it, the moment they ask, they give up their own identity to you in return — so any name or detail you share is always your choice, never supplied by Aurasense. Half of every offering goes to you, half to Aurasense: one of the ways we run with no ads, and without ever selling an ounce of anyone's data. Until then, Aurasensers speak through the alphasense symbols.";
@@ -14036,7 +14105,7 @@ try{
   font-size:11.5px;color:#8a80b4;background:transparent;border:none;cursor:pointer;padding:5px 0 3px}
 #as-pick .ap-x:hover{color:#c4b5fd}
 </style>
-<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">25 Nov 2026 · </span>211<span class="bs-l"> · tap to refresh</span></div>
+<div id="build-stamp" title="Tap for a guaranteed fresh copy">Build <span class="bs-l">26 Nov 2026 · </span>212<span class="bs-l"> · tap to refresh</span></div>
 <!-- ═══ THE LANDING ═══ 3 Sep 2026 ════════════════════════════════════════
      Agreed and not built until now: land, be watched in silence, and then one
      clearly named door. Nothing is asked here. No sign-up, no sharing, no
